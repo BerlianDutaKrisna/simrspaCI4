@@ -14,10 +14,10 @@ class Users extends BaseController
         $this->UserModel = new UserModel();  // Membuat instance dari UserModel untuk dipakai di seluruh controller
     }
 
-    // Menampilkan halaman daftar pengguna
+    // Menampilkan halaman daftar users
     public function index_users()
     {
-        // Ambil semua data pengguna dari tabel 'users'
+        // Ambil semua data users dari tabel 'users'
         $data['users'] = $this->UserModel->findAll(); 
 
         // Ambil id_user dan nama_user dari session yang sedang aktif
@@ -27,14 +27,14 @@ class Users extends BaseController
         // Kirim data ke view untuk ditampilkan
         return view('users/index_users', $data);
     }
-    // Menampilkan halaman form registrasi pengguna
+    // Menampilkan halaman form registrasi users
     public function register_users()
     {
         session()->destroy(); // Menghapus semua session
         // Kirim data ke view untuk ditampilkan
         return view('users/register_users');
     }
-    // Proses insert data pengguna baru (registrasi)
+    // Proses insert data users baru (registrasi)
     public function insert()
     {
         helper(['form', 'url']); // Memanggil helper form dan url untuk mempermudah validasi dan URL
@@ -42,7 +42,7 @@ class Users extends BaseController
 
         // Menetapkan aturan validasi untuk form input
         $validation->setRules([
-            'nama_user' => 'required',  // Nama pengguna harus diisi
+            'nama_user' => 'required',  // Nama users harus diisi
             'username'  => 'required|is_unique[users.username]',  // Username harus unik
             'password'  => 'required',  // Password harus diisi
             'password2' => 'matches[password]',  // Password2 harus sama dengan password
@@ -91,7 +91,7 @@ class Users extends BaseController
         ];
 
         try {
-            // Menyimpan data pengguna ke database
+            // Menyimpan data users ke database
             $this->UserModel->insertUser($data);
 
             // Mengecek apakah data berhasil disimpan
@@ -106,5 +106,86 @@ class Users extends BaseController
             // Menangani kesalahan jika terjadi error saat proses insert
             return redirect()->back()->with('error', 'Terjadi kesalahan internal: ' . $e->getMessage());
         }
+    }
+
+    public function delete($id_user)
+    {
+        $userModel = new UserModel();
+        
+        // Cek apakah user ada
+        $user = $userModel->find($id_user);
+        if ($user) {
+            // Hapus users dari database
+            $userModel->delete($id_user);
+
+            // Set pesan berhasil
+            session()->setFlashdata('success', 'Users berhasil dihapus.');
+        } else {
+            // Set pesan error jika users tidak ditemukan
+            session()->setFlashdata('error', 'Users tidak ditemukan.');
+        }
+        
+        // Redirect kembali ke halaman users
+        return redirect()->to('/users/index_users');
+    }
+
+    // Menampilkan form edit pengguna
+    public function edit_users($id_users)
+    {
+    $userModel = new UserModel();
+    
+    // Ambil id_user dan nama_user dari session yang sedang aktif
+    $data['id_user'] = session()->get('id_user');
+    $data['nama_user'] = session()->get('nama_user');
+    
+    // Ambil data user berdasarkan ID
+    $user = $userModel->find($id_users);
+
+    // Jika user ditemukan, tampilkan form edit
+    if ($user) {
+        // Menggabungkan data user dengan session data
+        $data['user'] = $user;
+        
+        // Kirimkan data ke view
+        return view('users/edit_users', $data);
+    } else {
+        // Jika tidak ditemukan, tampilkan pesan error
+        return redirect()->to('/users/index_users')->with('message', [
+            'error' => 'User tidak ditemukan.'
+        ]);
+    }
+    }
+    // Menangani update data pengguna
+    public function update($id_user)
+    {
+        $userModel = new UserModel();
+        
+        // Validasi input
+        $validation = \Config\Services::validation();
+        if (!$this->validate([
+            'username' => 'required|min_length[3]|max_length[50]',
+            'nama_user' => 'required|min_length[3]|max_length[100]',
+            'status_user' => 'required'
+        ])) {
+            // Jika validasi gagal, kirim kembali data dan error
+            return redirect()->to('/users/edit_user/' . $id_user)->withInput()->with('message', [
+                'error' => 'Terdapat kesalahan pada form.'
+            ]);
+        }
+
+        // Ambil data yang dikirimkan form
+        $data = [
+            'username' => $this->request->getVar('username'),
+            'nama_user' => $this->request->getVar('nama_user'),
+            'status_user' => $this->request->getVar('status_user'),
+        ];
+
+        // Update data user
+        $userModel->update($id_user, $data);
+
+        // Set pesan sukses
+        return redirect()->to('/users/index_users')->with('message', [
+            'success' => 'Data pengguna berhasil diperbarui.'
+        ]);
     }
 }
