@@ -37,6 +37,6 @@ class UserModel extends Model
     // Mengecek apakah username sudah ada di database
     public function checkUsernameExists($username)
     {
-        return $this->where('username', $username)->first(); // Cek apakah username sudah ada di database
+        return $this->where('username', $username)->countAllResults() > 0; // Cek apakah username sudah ada di database
     }
 }

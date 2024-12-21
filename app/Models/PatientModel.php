@@ -36,8 +36,9 @@ class PatientModel extends Model
         }
     }
     // Mengecek apakah NORM sudah ada di database
-    public function checkNORMExists($norm_patient)
-    {
-        return $this->where('norm_patient', $norm_patient)->first(); // Cek apakah morm sudah ada di database
-    }
+    public function checkNormExists($norm_pasien)
+{
+    return $this->where('norm_pasien', $norm_pasien)->countAllResults() > 0;
+}
+
 }

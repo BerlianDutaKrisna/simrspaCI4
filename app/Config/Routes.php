@@ -23,7 +23,7 @@ $routes->get('/users', 'Users::index');
 $routes->post('users/insert', 'Users::insert'); // Menangani form POST dari register user
 
 // Route untuk Patient
-$routes->get('patient', 'Patient::index');
+$routes->get('patient/index', 'Patient::index');
 $routes->post('patient/searchPatient', 'Patient::searchPatient');
 $routes->get('patient/register_patient', 'Patient::register_patient');
 $routes->post('patient/insert', 'Patient::insert');

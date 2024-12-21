@@ -52,7 +52,6 @@ class Auth extends BaseController
         session()->destroy(); // Menghapus semua session
         // Menyimpan pesan flash untuk memberitahukan pengguna bahwa mereka telah logout
         session()->setFlashdata('success', 'Anda telah logout.');
-
         // Redirect ke halaman login setelah logout
         return redirect()->to('/login')->with('success', 'Anda telah logout.');
     }
