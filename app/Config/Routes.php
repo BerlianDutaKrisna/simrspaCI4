@@ -27,6 +27,9 @@ $routes->post('/users/update/(:segment)', 'Users::update/$1');  // Rute untuk me
 $routes->get('patient/index_patient', 'Patient::index_patient'); // Menampilkan halaman index patient
 $routes->get('patient/register_patient', 'Patient::register_patient'); // Menampilkan halaman form register patient
 $routes->post('patient/insert', 'Patient::insert'); // Menangani form POST dari register patient
+$routes->get('patient/delete/(:segment)', 'Patient::delete/$1');  // Menghapus patient
+$routes->get('/patient/edit_patient/(:segment)', 'Patient::edit_patient/$1');  // Rute untuk menampilkan form edit
+$routes->post('/patient/update/(:segment)', 'Patient::update/$1');  // Rute untuk menangani update data
 
 // Route untuk pengujian
 $routes->get('/test', 'Test::index'); // Menampilkan halaman untuk pengujian

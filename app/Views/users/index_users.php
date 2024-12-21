@@ -36,7 +36,6 @@
                                 <a href="<?= base_url('users/edit_user/' . esc($user['id_user'])) ?>" class="btn btn-warning btn-sm">
                                     Edit
                                 </a>
-                                
                                 <!-- Tombol Hapus dengan data-target dan data-id untuk modal -->
                                 <a href="#" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#deleteModal"
                                     data-id="<?= esc($user['id_user']) ?>" data-nama="<?= esc($user['nama_user']) ?>">
@@ -76,6 +75,7 @@
     </div>
 </div>
 
+
 <?= $this->include('templates/notifikasi') ?>
 <?= $this->include('templates/dashboard/footer_dashboard'); ?>
 
@@ -95,3 +95,5 @@
         modal.find('#confirmDelete').attr('href', '<?= base_url("users/delete/") ?>' + userId);
     });
 </script>
+
+

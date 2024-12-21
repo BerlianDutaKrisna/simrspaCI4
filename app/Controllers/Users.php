@@ -2,23 +2,24 @@
 
 namespace App\Controllers;
 
-use App\Models\UserModel;
+use App\Models\UsersModel;
+use Exception;
 
 class Users extends BaseController
 {
-    protected $UserModel;
+    protected $UsersModel;
 
-    // Konstruktor untuk inisialisasi UserModel
+    // Konstruktor untuk inisialisasi UsersModel
     public function __construct()
     {
-        $this->UserModel = new UserModel();  // Membuat instance dari UserModel untuk dipakai di seluruh controller
+        $this->UsersModel = new UsersModel();  // Membuat instance dari UsersModel untuk dipakai di seluruh controller
     }
 
     // Menampilkan halaman daftar users
     public function index_users()
     {
         // Ambil semua data users dari tabel 'users'
-        $data['users'] = $this->UserModel->findAll(); 
+        $data['users'] = $this->UsersModel->findAll(); 
 
         // Ambil id_user dan nama_user dari session yang sedang aktif
         $data['id_user'] = session()->get('id_user');
@@ -70,7 +71,7 @@ class Users extends BaseController
         $status_user = $this->request->getPost('status_user');
 
         // Mengecek apakah username sudah ada di database
-        if ($this->UserModel->checkUsernameExists($username)) {
+        if ($this->UsersModel->checkUsernameExists($username)) {
             return redirect()->back()->with('error', 'Username sudah terdaftar!');
         }
 
@@ -92,10 +93,10 @@ class Users extends BaseController
 
         try {
             // Menyimpan data users ke database
-            $this->UserModel->insertUser($data);
+            $this->UsersModel->insertUser($data);
 
             // Mengecek apakah data berhasil disimpan
-            if ($this->UserModel->db->affectedRows() > 0) {
+            if ($this->UsersModel->db->affectedRows() > 0) {
                 // Jika berhasil, redirect ke halaman login dengan pesan sukses
                 return redirect()->to('login')->with('success', 'Registrasi berhasil!');
             } else {
@@ -108,38 +109,38 @@ class Users extends BaseController
         }
     }
 
-    public function delete($id_user)
+    public function delete($id_users)
     {
-        $userModel = new UserModel();
-        
-        // Cek apakah user ada
-        $user = $userModel->find($id_user);
-        if ($user) {
-            // Hapus users dari database
-            $userModel->delete($id_user);
-
-            // Set pesan berhasil
-            session()->setFlashdata('success', 'Users berhasil dihapus.');
-        } else {
-            // Set pesan error jika users tidak ditemukan
-            session()->setFlashdata('error', 'Users tidak ditemukan.');
+        try {
+            // Memastikan ID valid
+            if (!$id_users || !is_numeric($id_users)) {
+                throw new Exception("ID user tidak valid.");
+            }
+            // Menghapus data user menggunakan model
+            $result = $this->UsersModel->deleteUsers($id_users);
+            // Jika penghapusan gagal, lempar pengecualian
+            if (!$result) {
+                throw new Exception("Gagal menghapus user. Silakan coba lagi.");
+            }
+            // Redirect dengan pesan sukses
+            return redirect()->to('/users/index_users')->with('success', 'User berhasil dihapus.');
+        } catch (Exception $e) {
+            // Menangani pengecualian dan memberikan pesan error
+            return redirect()->to('/users/index_users')->with('error', $e->getMessage());
         }
-        
-        // Redirect kembali ke halaman users
-        return redirect()->to('/users/index_users');
     }
 
     // Menampilkan form edit pengguna
     public function edit_users($id_users)
     {
-    $userModel = new UserModel();
+    $UsersModel = new UsersModel();
     
     // Ambil id_user dan nama_user dari session yang sedang aktif
     $data['id_user'] = session()->get('id_user');
     $data['nama_user'] = session()->get('nama_user');
     
     // Ambil data user berdasarkan ID
-    $user = $userModel->find($id_users);
+    $user = $UsersModel->find($id_users);
 
     // Jika user ditemukan, tampilkan form edit
     if ($user) {
@@ -158,21 +159,26 @@ class Users extends BaseController
     // Menangani update data pengguna
     public function update($id_user)
     {
-        $userModel = new UserModel();
+        $UsersModel = new UsersModel();
         
         // Validasi input
         $validation = \Config\Services::validation();
-        if (!$this->validate([
-            'username' => 'required|min_length[3]|max_length[50]',
-            'nama_user' => 'required|min_length[3]|max_length[100]',
-            'status_user' => 'required'
-        ])) {
-            // Jika validasi gagal, kirim kembali data dan error
-            return redirect()->to('/users/edit_user/' . $id_user)->withInput()->with('message', [
-                'error' => 'Terdapat kesalahan pada form.'
-            ]);
+        $validation->setRules([
+            'nama_user' => 'required',  // Nama users harus diisi
+            'username'  => 'required|is_unique[users.username]'  // Username harus unik
+        ], [
+            'nama_user' => [
+                'required' => 'Nama user harus diisi!'  // Pesan error jika password dan konfirmasi tidak cocok
+            ],
+            'username' => [
+                'is_unique' => 'Username sudah terdaftar!'  // Pesan error untuk username yang sudah ada
+            ]
+        ]);
+        // Mengecek apakah validasi gagal
+        if (!$validation->withRequest($this->request)->run()) {
+            // Jika validasi gagal, kembali ke form dengan inputan dan pesan error
+            return redirect()->back()->withInput()->with('error', $validation->getErrors());
         }
-
         // Ambil data yang dikirimkan form
         $data = [
             'username' => $this->request->getVar('username'),
@@ -181,7 +187,7 @@ class Users extends BaseController
         ];
 
         // Update data user
-        $userModel->update($id_user, $data);
+        $UsersModel->update($id_user, $data);
 
         // Set pesan sukses
         return redirect()->to('/users/index_users')->with('message', [

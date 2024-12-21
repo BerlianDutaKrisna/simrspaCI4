@@ -4,7 +4,7 @@ namespace App\Models;
 
 use CodeIgniter\Model;
 
-class UserModel extends Model
+class UsersModel extends Model
 {
     protected $table = 'users';
     protected $primaryKey = 'id_user';
@@ -38,5 +38,17 @@ class UserModel extends Model
     public function checkUsernameExists($username)
     {
         return $this->where('username', $username)->countAllResults() > 0; // Cek apakah username sudah ada di database
+    }
+
+    public function deleteUsers($id_users)
+    {
+        try {
+            // Menghapus data berdasarkan ID
+            return $this->db->table($this->table)->delete(['id_user' => $id_users]);
+        } catch (\Throwable $e) {
+            // Menangkap error jika terjadi
+            log_message('error', 'Error saat menghapus data user: ' . $e->getMessage());
+            return false;
+        }
     }
 }

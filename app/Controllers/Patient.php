@@ -2,6 +2,7 @@
 namespace App\Controllers;
 
 use App\Models\PatientModel;
+use Exception;
 
 class Patient extends BaseController
 {
@@ -16,7 +17,7 @@ class Patient extends BaseController
     public function index_patient()
     {
         $data['patients'] = $this->PatientModel->findAll(); // Mengambil semua data dari tabel 'patients'
-        // Mengambil id_user dan nama_user dari session
+        // Ambil id_user dan nama_user dari session yang sedang aktif
         $data['id_user'] = session()->get('id_user');
         $data['nama_user'] = session()->get('nama_user');
         // Mengirim data ke view untuk ditampilkan
@@ -108,5 +109,93 @@ class Patient extends BaseController
             // Menangani kesalahan jika terjadi error saat proses insert
             return redirect()->back()->with('error', 'Terjadi kesalahan internal: ' . $e->getMessage());  // Pesan error jika ada exception
         }
+    }
+
+    public function delete($id_patient)
+    {
+        try {
+            // Memastikan ID valid
+            if (!$id_patient || !is_numeric($id_patient)) {
+                throw new Exception("ID pasien tidak valid.");
+            }
+            // Menghapus data pasien menggunakan model
+            $result = $this->PatientModel->deletePatient($id_patient);
+            // Jika penghapusan gagal, lempar pengecualian
+            if (!$result) {
+                throw new Exception("Gagal menghapus pasien. Silakan coba lagi.");
+            }
+            // Redirect dengan pesan sukses
+            return redirect()->to('/patient/index_patient')->with('success', 'Pasien berhasil dihapus.');
+        } catch (Exception $e) {
+            // Menangani pengecualian dan memberikan pesan error
+            return redirect()->to('/patient/index_patient')->with('error', $e->getMessage());
+        }
+    }
+    // Menampilkan form edit pengguna
+    public function edit_patient($id_pasien)
+    {
+    $PatienModel = new PatientModel();
+    
+    // Ambil id_user dan nama_user dari session yang sedang aktif
+    $data['id_user'] = session()->get('id_user');
+    $data['nama_user'] = session()->get('nama_user');
+    
+    // Ambil data pasien berdasarkan ID
+    $pasien = $PatienModel->find($id_pasien);
+
+    // Jika pasien ditemukan, tampilkan form edit
+    if ($pasien) {
+        // Menggabungkan data pasien dengan session data
+        $data['pasien'] = $pasien;
+        
+        // Kirimkan data ke view
+        return view('patient/edit_patient', $data);
+    } else {
+        // Jika tidak ditemukan, tampilkan pesan error
+        return redirect()->to('/patient/index_patient')->with('message', [
+            'error' => 'pasien tidak ditemukan.'
+        ]);
+    }
+    }
+    // Menangani update data pengguna
+    public function update($id_pasien)
+    {
+        $PatientModel = new PatientModel();
+        
+        // Validasi input
+        $validation = \Config\Services::validation();
+        $validation->setRules([
+            'norm_pasien'  => 'required',
+            'nama_pasien' => 'required' 
+        ], [
+            'norm_pasien' => [
+                'required' => 'Norm harus diisi!'
+            ],
+            'nama_pasien' => [
+                'required' => 'nama_pasien harus diisi!'
+            ]
+        ]);
+        // Mengecek apakah validasi gagal
+        if (!$validation->withRequest($this->request)->run()) {
+            // Jika validasi gagal, kembali ke form dengan inputan dan pesan error
+            return redirect()->back()->withInput()->with('error', $validation->getErrors());
+        }
+        // Ambil data yang dikirimkan form
+        $data = [
+            'norm_pasien' => $this->request->getVar('norm_pasien'),
+            'nama_pasien' => $this->request->getVar('nama_pasien'),
+            'alamat_pasien' => $this->request->getVar('alamat_pasien'),
+            'tanggal_lahir_pasien' => $this->request->getVar('tanggal_lahir_pasien'),
+            'jenis_kelamin_pasien' => $this->request->getVar('jenis_kelamin_pasien'),
+            'status_pasien' => $this->request->getVar('status_pasien'),
+        ];
+
+        // Update data pasien
+        $PatientModel->update($id_pasien, $data);
+
+        // Set pesan sukses
+        return redirect()->to('/patient/index_patient')->with('message', [
+            'success' => 'Data pasien berhasil diperbarui.'
+        ]);
     }
 }

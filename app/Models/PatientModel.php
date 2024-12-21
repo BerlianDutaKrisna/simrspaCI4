@@ -40,5 +40,16 @@ class PatientModel extends Model
 {
     return $this->where('norm_pasien', $norm_pasien)->countAllResults() > 0;
 }
+    public function deletePatient($id_patient)
+    {
+        try {
+            // Menghapus data berdasarkan ID
+            return $this->db->table($this->table)->delete(['id_pasien' => $id_patient]);
+        } catch (\Throwable $e) {
+            // Menangkap error jika terjadi
+            log_message('error', 'Error saat menghapus data pasien: ' . $e->getMessage());
+            return false;
+        }
+    }
 
 }

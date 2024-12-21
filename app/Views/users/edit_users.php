@@ -50,9 +50,9 @@
                 </select>
                 <div class="invalid-feedback"><?= session('errors.status_user') ?></div>
             </div>
-
-            <!-- Tombol Submit -->
-            <button type="submit" class="btn btn-primary">Perbarui</button>
+            <div class="d-flex justify-content-end">
+                <button type="submit" class="btn btn-success">Perbarui</button>
+            </div>
         </form>
     </div>
 </div>
