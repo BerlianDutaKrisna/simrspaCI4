@@ -52,11 +52,11 @@
                     </a>
                     <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="settingsDropdown">
                         <!-- Menu untuk pengaturan user -->
-                        <a class="dropdown-item" href="<?= base_url('/users') ?>">
+                        <a class="dropdown-item" href="<?= base_url('users/index_users') ?>">
                             <i class="fas fa-user-cog fa-sm fa-fw mr-2 text-gray-400"></i> User Settings <!-- Ikon pengaturan user -->
                         </a>
                         <!-- Menu untuk pengaturan pasien -->
-                        <a class="dropdown-item" href="<?= base_url('/patient') ?>">
+                        <a class="dropdown-item" href="<?= base_url('patient/index_patient') ?>">
                             <i class="fas fa-hospital-user fa-sm fa-fw mr-2 text-gray-400"></i> Patient Settings <!-- Ikon pengaturan pasien -->
                         </a>
                     </div>
@@ -69,7 +69,7 @@
                     <div class="dropdown-divider"></div> <!-- Pembatas antara menu -->
                     
                     <!-- Link untuk logout -->
-                    <a class="dropdown-item" href="<?= base_url('/logout') ?>" data-toggle="modal" data-target="#logoutModal">
+                    <a class="dropdown-item" href="<?= base_url('auth/logout') ?>" data-toggle="modal" data-target="#logoutModal">
                         <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i> Keluar <!-- Ikon logout -->
                     </a>
                 </div>
@@ -77,3 +77,22 @@
         </ul>
     </div>
 </nav>
+<!-- Logout Modal-->
+    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Ingin Keluar?</h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">Yakin pekerjaan anda sudah selesai?</div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Batal</button>
+                    <a class="btn btn-primary" href="<?= base_url('auth/logout') ?>">Keluar</a>
+                </div>
+            </div>
+        </div>
+    </div>

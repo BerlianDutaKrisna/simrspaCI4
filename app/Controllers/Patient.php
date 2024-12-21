@@ -13,7 +13,7 @@ class Patient extends BaseController
         $this->PatientModel = new PatientModel();  // Membuat instance dari PatientModel untuk dipakai di seluruh controller
     }
 
-    public function index()
+    public function index_patient()
     {
         $data['patients'] = $this->PatientModel->findAll(); // Mengambil semua data dari tabel 'patients'
         // Mengambil id_user dan nama_user dari session

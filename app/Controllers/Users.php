@@ -15,7 +15,7 @@ class Users extends BaseController
     }
 
     // Menampilkan halaman daftar pengguna
-    public function index()
+    public function index_users()
     {
         // Ambil semua data pengguna dari tabel 'users'
         $data['users'] = $this->UserModel->findAll(); 
@@ -25,9 +25,15 @@ class Users extends BaseController
         $data['nama_user'] = session()->get('nama_user');
         
         // Kirim data ke view untuk ditampilkan
-        return view('users/users', $data);
+        return view('users/index_users', $data);
     }
-
+    // Menampilkan halaman form registrasi pengguna
+    public function register_users()
+    {
+        session()->destroy(); // Menghapus semua session
+        // Kirim data ke view untuk ditampilkan
+        return view('users/register_users');
+    }
     // Proses insert data pengguna baru (registrasi)
     public function insert()
     {
@@ -91,7 +97,7 @@ class Users extends BaseController
             // Mengecek apakah data berhasil disimpan
             if ($this->UserModel->db->affectedRows() > 0) {
                 // Jika berhasil, redirect ke halaman login dengan pesan sukses
-                return redirect()->to('/login')->with('success', 'Registrasi berhasil!');
+                return redirect()->to('login')->with('success', 'Registrasi berhasil!');
             } else {
                 // Jika gagal, tampilkan pesan error
                 return redirect()->back()->with('error', 'Terjadi kesalahan saat mendaftar.');

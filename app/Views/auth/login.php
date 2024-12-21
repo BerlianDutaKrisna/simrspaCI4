@@ -16,27 +16,39 @@
                 <!-- Input untuk Username -->
                 <div class="form-group">
                     <input type="text" name="username" id="username" class="form-control form-control-user" placeholder="Masukkan Username" autocomplete="off" value="<?= old('username'); ?>" required>
-                    <?php if (isset($validation) && $validation->getError('username')): ?>
-                        <div class="text-danger"><?= $validation->getError('username'); ?></div> <!-- Menampilkan error username -->
-                    <?php endif; ?>
                 </div>
                 <!-- Input untuk Password -->
-                <div class="form-group">
-                    <input type="password" name="password" id="password" class="form-control form-control-user" placeholder="Masukkan Password" autocomplete="off" required>
-                    <?php if (isset($validation) && $validation->getError('password')): ?>
-                        <div class="text-danger"><?= $validation->getError('password'); ?></div> <!-- Menampilkan error password -->
-                    <?php endif; ?>
+                <div class="form-group position-relative">
+                    <input type="password" name="password" id="password" class="form-control form-control-user" placeholder="Masukkan Password" autocomplete="off" value="<?= old('password'); ?>" required>
+                    <button type="button" id="togglePassword" class="btn btn-link position-absolute" style="right: 10px; top: 50%; transform: translateY(-50%); font-size: 18px; color: #000;">
+                        <i class="fas fa-star-of-life"></i>
+                    </button>
                 </div>
+                
                 <!-- Tombol Submit -->
                 <button type="submit" class="btn btn-primary btn-user btn-block">
                     Login
                 </button>
             </form>
             <div class="text-center mt-3">
-                <a class="small" href="<?= base_url('register'); ?>">Belum punya akun? Daftar sekarang!</a> <!-- Link ke halaman registrasi -->
+                <a class="small" href="<?= base_url('users/register_users'); ?>">Belum punya akun? Daftar sekarang!</a> <!-- Link ke halaman registrasi -->
             </div>
         </div>
     </div>
 </div>
 <?= $this->include('templates/notifikasi'); ?>
 <?= $this->include('templates/auth/footer_auth'); ?>
+
+<script>
+    // Script untuk menampilkan/mengubah visibility password
+    const togglePassword = document.getElementById('togglePassword');
+    const passwordField = document.getElementById('password');
+    const eyeIcon = document.getElementById('eyeIcon');
+
+    togglePassword.addEventListener('click', function () {
+        const type = passwordField.getAttribute('type') === 'password' ? 'text' : 'password';
+        passwordField.setAttribute('type', type);
+        eyeIcon.classList.toggle('fa-eye');
+        eyeIcon.classList.toggle('fa-eye-slash');
+    });
+</script>
