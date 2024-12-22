@@ -9,97 +9,107 @@
                 <a href="#" class="btn btn-primary btn-icon-split btn-sm d-flex justify-content-between m-2">
                     <span class="text">Penerimaan</span>
                     <span class="icon text-white-50">
-                        <i class="fas fa-clipboard"></i>
+                        <i class="fas fa-clipboard"></i> <!-- Ikon untuk Penerimaan -->
                     </span>
                 </a>
             </div>
+
             <!-- Tombol 2: Pengirisan -->
             <div class="col">
                 <a href="#" class="btn btn-primary btn-icon-split btn-sm d-flex justify-content-between m-2">
                     <span class="text">Pengirisan</span>
                     <span class="icon text-white-50">
-                        <i class="fas fa-puzzle-piece"></i>
+                        <i class="fas fa-puzzle-piece"></i> <!-- Ikon untuk Pengirisan -->
                     </span>
                 </a>
             </div>
+
             <!-- Tombol 3: Pemotongan -->
             <div class="col">
                 <a href="#" class="btn btn-primary btn-icon-split btn-sm d-flex justify-content-between m-2">
                     <span class="text">Pemotongan</span>
                     <span class="icon text-white-50">
-                        <i class="fas fa-cut"></i>
+                        <i class="fas fa-cut"></i> <!-- Ikon untuk Pemotongan -->
                     </span>
                 </a>
             </div>
+
             <!-- Tombol 4: Pemprosesan -->
             <div class="col">
                 <a href="#" class="btn btn-primary btn-icon-split btn-sm d-flex justify-content-between m-2">
                     <span class="text">Pemprosesan</span>
                     <span class="icon text-white-50">
-                        <i class="fas fa-sync"></i>
+                        <i class="fas fa-sync"></i> <!-- Ikon untuk Pemprosesan -->
                     </span>
                 </a>
             </div>
+
             <!-- Tombol 5: Penanaman -->
             <div class="col">
                 <a href="#" class="btn btn-primary btn-icon-split btn-sm d-flex justify-content-between m-2">
                     <span class="text">Penanaman</span>
                     <span class="icon text-white-50">
-                        <i class="fas fa-download"></i>
+                        <i class="fas fa-download"></i> <!-- Ikon untuk Penanaman -->
                     </span>
                 </a>
             </div>
+
             <!-- Tombol 6: Pemotongan Tipis -->
             <div class="col">
                 <a href="#" class="btn btn-primary btn-icon-split btn-sm d-flex justify-content-between m-2">
                     <span class="text">Pemotongan Tipis</span>
                     <span class="icon text-white-50">
-                        <i class="fas fa-grip-horizontal"></i>
+                        <i class="fas fa-grip-horizontal"></i> <!-- Ikon untuk Pemotongan Tipis -->
                     </span>
                 </a>
             </div>
+
             <!-- Tombol 7: Pewarnaan -->
             <div class="col">
                 <a href="#" class="btn btn-primary btn-icon-split btn-sm d-flex justify-content-between m-2">
                     <span class="text">Pewarnaan</span>
                     <span class="icon text-white-50">
-                        <i class="fas fa-fill-drip"></i>
+                        <i class="fas fa-fill-drip"></i> <!-- Ikon untuk Pewarnaan -->
                     </span>
                 </a>
             </div>
+
             <!-- Tombol 8: Pembacaan -->
             <div class="col">
                 <a href="#" class="btn btn-primary btn-icon-split btn-sm d-flex justify-content-between m-2">
                     <span class="text">Pembacaan</span>
                     <span class="icon text-white-50">
-                        <i class="fas fa-microscope"></i>
+                        <i class="fas fa-microscope"></i> <!-- Ikon untuk Pembacaan -->
                     </span>
                 </a>
             </div>
+
             <!-- Tombol 9: Penulisan -->
             <div class="col">
                 <a href="#" class="btn btn-primary btn-icon-split btn-sm d-flex justify-content-between m-2">
                     <span class="text">Penulisan</span>
                     <span class="icon text-white-50">
-                        <i class="fas fa-keyboard"></i>
+                        <i class="fas fa-keyboard"></i> <!-- Ikon untuk Penulisan -->
                     </span>
                 </a>
             </div>
+
             <!-- Tombol 10: Pemverivikasi -->
             <div class="col">
                 <a href="#" class="btn btn-primary btn-icon-split btn-sm d-flex justify-content-between m-2">
                     <span class="text">Pemverivikasi</span>
                     <span class="icon text-white-50">
-                        <i class="fas fa-check-square"></i>
+                        <i class="fas fa-check-square"></i> <!-- Ikon untuk Pemverivikasi -->
                     </span>
                 </a>
             </div>
+
             <!-- Tombol 11: Pencetakan -->
             <div class="col">
                 <a href="#" class="btn btn-primary btn-icon-split btn-sm d-flex justify-content-between m-2">
                     <span class="text">Pencetakan</span>
                     <span class="icon text-white-50">
-                        <i class="fas fa-print"></i>
+                        <i class="fas fa-print"></i> <!-- Ikon untuk Pencetakan -->
                     </span>
                 </a>
             </div>

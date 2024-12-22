@@ -191,28 +191,21 @@ class Patient extends BaseController
     // Fungsi untuk menangani pencarian pasien
     public function search_patient()
     {
-        if ($this->request->getMethod() === 'post') {
-            $norm_pasien = $this->request->getPost('norm_pasien'); // Ambil input norm_pasien
+        $norm_pasien = $this->request->getPost('norm_pasien');
+        $patient = $this->PatientModel->where('norm_pasien', $norm_pasien)->first(); // Cari pasien berdasarkan norm_pasien
 
-            // Cari pasien berdasarkan norm_pasien
-            $patient = $this->PatientModel->where('norm_pasien', $norm_pasien)->first();
-
-            if ($patient) {
-                // Jika pasien ditemukan
-                return $this->response->setJSON([
-                    'success' => true,
-                    'data' => $patient,
-                ]);
-            } else {
-                // Jika pasien tidak ditemukan
-                return $this->response->setJSON([
-                    'success' => false,
-                    'message' => 'Pasien tidak ditemukan.',
-                ]);
-            }
+        if ($patient) {
+            // Jika pasien ditemukan
+            return $this->response->setJSON([
+                'success' => true,
+                'data' => $patient
+            ]);
+        } else {
+            // Jika pasien tidak ditemukan
+            return $this->response->setJSON([
+                'success' => false,
+                'message' => 'Pasien belum terdaftar'
+            ]);
         }
-
-        // Jika bukan metode POST, lempar error
-        throw new \CodeIgniter\Exceptions\PageNotFoundException();
     }
 }

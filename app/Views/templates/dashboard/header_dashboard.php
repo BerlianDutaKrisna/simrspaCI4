@@ -15,7 +15,7 @@
     <!-- Meta tag untuk deskripsi halaman (digunakan oleh search engine dan media sosial) -->
     <meta name="description" content="">
     <meta name="author" content="">
-    
+
     <!-- Meta refresh, jika diaktifkan akan me-refresh halaman setiap 5 detik (komentar: jika diperlukan) -->
     <!-- <meta http-equiv="refresh" content="5"> -->
 
@@ -38,7 +38,9 @@
     <link href="<?= base_url('vendor/datatables/dataTables.bootstrap4.min.css') ?>" rel="stylesheet">
 
 </head>
+
 <body id="page-top">
+
     <!-- Page Wrapper -->
     <div id="wrapper">
         <!-- Content Wrapper -->
@@ -46,3 +48,4 @@
 
             <!-- Main Content -->
             <div id="content">
+
