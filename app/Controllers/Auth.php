@@ -2,18 +2,18 @@
 
 namespace App\Controllers;
 
-use App\Models\UserModel;  // Menggunakan model UserModel untuk akses data pengguna
+use App\Models\UsersModel;  // Menggunakan model UsersModel untuk akses data pengguna
 use CodeIgniter\HTTP\RedirectResponse;
 use CodeIgniter\Services;
 
 class Auth extends BaseController
 {
-    protected $userModel;
+    protected $UsersModel;
 
-    // Konstruktor untuk inisialisasi UserModel
+    // Konstruktor untuk inisialisasi UsersModel
     public function __construct()
     {
-        $this->userModel = new UserModel();  // Membuat instance dari UserModel untuk dipakai di seluruh controller
+        $this->UsersModel = new UsersModel();  // Membuat instance dari UsersModel untuk dipakai di seluruh controller
     }
 
     // Menampilkan halaman login
@@ -33,7 +33,7 @@ class Auth extends BaseController
             $password = $this->request->getPost('password');
 
             // Cek apakah username ada di database
-            $user = $this->userModel->where('username', $username)->first();
+            $user = $this->UsersModel->where('username', $username)->first();
 
             // Cek password dan validasi login
             if ($user && password_verify($password, $user['password_user'])) {
