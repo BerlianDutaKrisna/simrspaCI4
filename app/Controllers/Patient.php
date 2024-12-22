@@ -188,24 +188,50 @@ class Patient extends BaseController
         ]);
     }
 
-    // Fungsi untuk menangani pencarian pasien
+    // Menangani pencarian pasien
     public function search_patient()
     {
+        // Ambil data dari input form
         $norm_pasien = $this->request->getPost('norm_pasien');
-        $patient = $this->PatientModel->where('norm_pasien', $norm_pasien)->first(); // Cari pasien berdasarkan norm_pasien
 
+        // Periksa apakah norm_pasien kosong
+        if (empty($norm_pasien)) {
+            // Menyimpan pesan kesalahan ke session
+            session()->setFlashdata('message', [
+                'type' => 'error',
+                'content' => 'Norm Pasien harus diisi!'
+            ]);
+            return redirect()->back();
+        }
+
+        // Ambil model untuk pencarian pasien
+        $patientModel = new PatientModel();
+        $patient = $patientModel->where('norm_pasien', $norm_pasien)->first();
+
+        // Ambil data session user
+        $data['id_user'] = session()->get('id_user');
+        $data['nama_user'] = session()->get('nama_user');
+
+        // Periksa apakah pasien ditemukan
         if ($patient) {
-            // Jika pasien ditemukan
-            return $this->response->setJSON([
-                'success' => true,
-                'data' => $patient
+            // Menambahkan data pasien ke array data yang akan dikirim ke view
+            $data['patient'] = $patient;
+            
+            // Menyimpan pesan informasi berhasil
+            session()->setFlashdata('message', [
+                'type' => 'success',
+                'content' => 'Pasien ditemukan!'
             ]);
+            
+            // Tampilkan hasil pencarian pasien
+            return view('Patient/result_patient', $data);
         } else {
-            // Jika pasien tidak ditemukan
-            return $this->response->setJSON([
-                'success' => false,
-                'message' => 'Pasien belum terdaftar'
+            // Jika pasien tidak ditemukan, redirect kembali
+            session()->setFlashdata('message', [
+                'type' => 'error',
+                'content' => 'Pasien tidak ditemukan!'
             ]);
+            return redirect()->back();
         }
     }
 }

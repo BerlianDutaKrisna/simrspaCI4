@@ -2,13 +2,12 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-white shadow mb-4">
     <!-- Brand Logo and Text -->
     <!-- Menampilkan logo dan teks brand di sebelah kiri navbar -->
-    <div class="navbar-brand d-flex align-items-center">
+    <a href="<?= base_url('/dashboard') ?>" class="navbar-brand d-flex align-items-center">
         <i class="fas fa-binoculars" style="font-size: 2rem; color: #FF5733;"></i> <!-- Ikon brand -->
         <span class="ml-2 text-danger font-weight-bold" style="font-size: 1.5rem;">Traker Histopatologi</span> <!-- Teks brand -->
-    </div>
+    </a>
 
     <!-- Navbar Toggle for Mobile (Collapsing menu) -->
-    <!-- Tombol untuk toggle menu di tampilan mobile -->
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span> <!-- Ikon toggler untuk mobile -->
     </button>
