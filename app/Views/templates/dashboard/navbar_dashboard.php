@@ -1,12 +1,5 @@
 <!-- Topbar -->
 <nav class="navbar navbar-expand-lg navbar-light bg-white shadow mb-4">
-
-    <!-- Sidebar Toggle (Topbar) -->
-    <!-- Tombol untuk toggle sidebar pada layar kecil (mobile) -->
-    <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
-        <i class="fa fa-bars"></i> <!-- Icon menu untuk sidebar -->
-    </button>
-
     <!-- Brand Logo and Text -->
     <!-- Menampilkan logo dan teks brand di sebelah kiri navbar -->
     <div class="navbar-brand d-flex align-items-center">

@@ -14,6 +14,7 @@ class Patient extends BaseController
         $this->PatientModel = new PatientModel();  // Membuat instance dari PatientModel untuk dipakai di seluruh controller
     }
 
+    // Menampilkan halaman daftar pasien
     public function index_patient()
     {
         $data['patients'] = $this->PatientModel->findAll(); // Mengambil semua data dari tabel 'patients'
@@ -22,21 +23,6 @@ class Patient extends BaseController
         $data['nama_user'] = session()->get('nama_user');
         // Mengirim data ke view untuk ditampilkan
         return view('patient/index_patient', $data);
-    }
-    // Menangani pencarian pasien berdasarkan nomor registrasi (norm_pasien)
-    public function searchPatient()
-    {
-        $norm = $this->request->getPost('norm'); // Ambil data dari AJAX
-        // Cari data pasien berdasarkan norm_pasien
-        $patient = $this->PatientModel->where('norm_pasien', $norm)->first();
-        
-        // Jika data ditemukan, kembalikan JSON sukses
-        if ($patient) {
-            return $this->response->setJSON(['success' => true, 'data' => $patient]);
-        }
-        
-        // Jika data tidak ditemukan, kembalikan JSON error
-        return $this->response->setJSON(['success' => false, 'message' => 'Patient not found.']);
     }
 
     // Menampilkan halaman registrasi pasien
@@ -111,6 +97,7 @@ class Patient extends BaseController
         }
     }
 
+    // Menampilkan halaman detail pasien
     public function delete($id_patient)
     {
         try {
@@ -131,6 +118,7 @@ class Patient extends BaseController
             return redirect()->to('/patient/index_patient')->with('error', $e->getMessage());
         }
     }
+
     // Menampilkan form edit pengguna
     public function edit_patient($id_pasien)
     {
@@ -157,6 +145,7 @@ class Patient extends BaseController
         ]);
     }
     }
+
     // Menangani update data pengguna
     public function update($id_pasien)
     {
@@ -197,5 +186,33 @@ class Patient extends BaseController
         return redirect()->to('/patient/index_patient')->with('message', [
             'success' => 'Data pasien berhasil diperbarui.'
         ]);
+    }
+
+    // Fungsi untuk menangani pencarian pasien
+    public function search_patient()
+    {
+        if ($this->request->getMethod() === 'post') {
+            $norm_pasien = $this->request->getPost('norm_pasien'); // Ambil input norm_pasien
+
+            // Cari pasien berdasarkan norm_pasien
+            $patient = $this->PatientModel->where('norm_pasien', $norm_pasien)->first();
+
+            if ($patient) {
+                // Jika pasien ditemukan
+                return $this->response->setJSON([
+                    'success' => true,
+                    'data' => $patient,
+                ]);
+            } else {
+                // Jika pasien tidak ditemukan
+                return $this->response->setJSON([
+                    'success' => false,
+                    'message' => 'Pasien tidak ditemukan.',
+                ]);
+            }
+        }
+
+        // Jika bukan metode POST, lempar error
+        throw new \CodeIgniter\Exceptions\PageNotFoundException();
     }
 }

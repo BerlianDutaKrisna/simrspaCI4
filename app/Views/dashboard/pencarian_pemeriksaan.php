@@ -1,90 +1,86 @@
-<div class="card-body">
-    <form id="formSearchPatient">
+<div class="card shadow mb-4">
+    <div class="card-header py-4">
+        <h6 class="m-0 font-weight-bold text-primary">Tambah Pemeriksaan</h6>
+    </div>
+    <div class="card-body">
         <div class="row">
             <!-- Input dan tombol cari -->
             <div class="col-md-8 col-sm-12 mb-3">
                 <div class="input-group">
-                    <input type="text" name="norm" id="input_norm" class="form-control" placeholder="Enter Patient Number" autocomplete="off" required>
+                    <input type="text" name="norm_pasien" id="SearchPatient" class="form-control" 
+                            placeholder="Masukkan Norm pasien" autocomplete="off" required>
                     <div class="input-group-append">
-                        <button type="submit" class="btn btn-primary" id="btnSearchPatient">
-                            <i class="fas fa-search fa-sm"></i> Search
+                        <button type="button" class="btn btn-primary" id="btnSearchPatient">
+                            <i class="fas fa-search fa-sm"></i> Cari
                         </button>
                     </div>
                 </div>
             </div>
 
 <!-- Modal untuk hasil pencarian -->
-<div class="modal fade" id="SearchPatientModal" tabindex="-1" aria-labelledby="SearchPatientModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
+<div class="modal fade" id="modalPatientSearch" tabindex="-1" aria-labelledby="modalPatientSearchLabel" aria-hidden="true">
+    <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="SearchPatientModalLabel">Search Result</h5>
+                <h5 class="modal-title" id="modalPatientSearchLabel">Hasil Pencarian Pasien</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <div class="modal-body">
-                <!-- Area hasil pencarian -->
-                <div id="searchResult">
-                    <p>Enter a patient number to search.</p>
-                </div>
+            <div class="modal-body" id="modalBodyPatientSearch">
+                <!-- Hasil pencarian akan dimuat di sini -->
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
             </div>
         </div>
     </div>
 </div>
 
-<!-- JavaScript AJAX untuk pencarian -->
 <script>
-document.getElementById('formSearchPatient').addEventListener('submit', function(event) {
-    event.preventDefault(); // Mencegah form melakukan submit default
+    $(document).ready(function () {
+        // Event handler untuk tombol cari
+        $('#btnSearchPatient').on('click', function () {
+            const norm_pasien = $('#SearchPatient').val(); // Ambil nilai dari input
 
-    const norm = document.getElementById('input_norm').value; // Ambil nilai input norm_pasien
-    const searchResult = document.getElementById('searchResult'); // Area untuk menampilkan hasil pencarian
+            if (norm_pasien.trim() === '') {
+                alert('Harap masukkan No RM pasien!');
+                return;
+            }
 
-    if (!norm) {
-        searchResult.innerHTML = '<p class="text-danger">Patient number cannot be empty.</p>';
-        $('#SearchPatientModal').modal('show'); // Tampilkan modal
-        return;
-    }
+            // Kirim request AJAX ke server
+            $.ajax({
+                url: '/patient/search_patient', // Endpoint pencarian pasien
+                type: 'POST',
+                data: { norm_pasien: norm_pasien },
+                dataType: 'json',
+                success: function (response) {
+                    $('#modalBodyPatientSearch').html(''); // Kosongkan isi modal sebelumnya
 
-    // Kirim permintaan ke server menggunakan fetch
-    fetch('/patient/searchPatient', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ norm: norm }),
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            const patient = data.data;
-            // Tampilkan hasil pencarian di modal
-            searchResult.innerHTML = `
-                <p class="text-success">Patient found:</p>
-                <ul>
-                    <li><strong>Patient Number:</strong> ${patient.norm_pasien}</li>
-                    <li><strong>Name:</strong> ${patient.nama_pasien}</li>
-                    <li><strong>Address:</strong> ${patient.alamat_pasien}</li>
-                    <li><strong>Birth Date:</strong> ${patient.tanggal_lahir_pasien}</li>
-                    <li><strong>Gender:</strong> ${patient.jenis_kelamin_pasien}</li>
-                    <li><strong>Status:</strong> ${patient.status_pasien}</li>
-                </ul>
-            `;
-        } else {
-            // Jika data tidak ditemukan
-            searchResult.innerHTML = `<p class="text-warning">${data.message}</p>`;
-        }
+                    if (response.success) {
+                        // Jika data ditemukan
+                        $('#modalBodyPatientSearch').html(`
+                            <p>Nama Pasien: ${response.data.nama_pasien}</p>
+                            <p>Alamat: ${response.data.alamat_pasien}</p>
+                            <p>Tanggal Lahir: ${response.data.tanggal_lahir_pasien}</p>
+                            <p>Jenis Kelamin: ${response.data.jenis_kelamin_pasien}</p>
+                            <button class="btn btn-primary" id="btnTambahPemeriksaan">Tambah Pemeriksaan</button>
+                        `);
+                    } else {
+                        // Jika data tidak ditemukan
+                        $('#modalBodyPatientSearch').html(`
+                            <p>${response.message}</p>
+                            <button class="btn btn-secondary" id="btnTambahPasien">Tambah Pasien</button>
+                        `);
+                    }
 
-        $('#SearchPatientModal').modal('show'); // Tampilkan modal
-    })
-    .catch(error => {
-        // Jika terjadi error
-        searchResult.innerHTML = '<p class="text-danger">An error occurred while searching for the patient.</p>';
-        $('#SearchPatientModal').modal('show');
+                    // Tampilkan modal
+                    $('#modalPatientSearch').modal('show');
+                },
+                error: function () {
+                    alert('Terjadi kesalahan saat mencari data pasien.');
+                }
+            });
+        });
     });
-});
 </script>
