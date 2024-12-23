@@ -36,7 +36,8 @@
         
     <!-- Menambahkan CSS untuk styling tabel, khusus untuk penggunaan DataTables menggunakan base_url() -->
     <link href="<?= base_url('vendor/datatables/dataTables.bootstrap4.min.css') ?>" rel="stylesheet">
-
+    
+    <link rel="stylesheet" href="<?= base_url('vendor/bootstrap/css/bootstrap.min.css') ?>">
 </head>
 
 <body id="page-top">

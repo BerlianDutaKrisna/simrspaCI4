@@ -191,47 +191,46 @@ class Patient extends BaseController
     // Menangani pencarian pasien
     public function search_patient()
     {
-        // Ambil data dari input form
-        $norm_pasien = $this->request->getPost('norm_pasien');
-
-        // Periksa apakah norm_pasien kosong
-        if (empty($norm_pasien)) {
-            // Menyimpan pesan kesalahan ke session
-            session()->setFlashdata('message', [
-                'type' => 'error',
-                'content' => 'Norm Pasien harus diisi!'
-            ]);
-            return redirect()->back();
-        }
-
-        // Ambil model untuk pencarian pasien
+        $norm = $this->request->getPost('norm'); // Ambil input NoRM dari form
         $patientModel = new PatientModel();
-        $patient = $patientModel->where('norm_pasien', $norm_pasien)->first();
 
-        // Ambil data session user
-        $data['id_user'] = session()->get('id_user');
-        $data['nama_user'] = session()->get('nama_user');
+        // Cari pasien berdasarkan NoRM
+        $patient = $patientModel->where('norm_pasien', $norm)->first();
 
-        // Periksa apakah pasien ditemukan
         if ($patient) {
-            // Menambahkan data pasien ke array data yang akan dikirim ke view
-            $data['patient'] = $patient;
-            
-            // Menyimpan pesan informasi berhasil
-            session()->setFlashdata('message', [
-                'type' => 'success',
-                'content' => 'Pasien ditemukan!'
-            ]);
-            
-            // Tampilkan hasil pencarian pasien
-            return view('Patient/result_patient', $data);
+            // Kirim data pasien ke view
+            return view('patient_search_result', ['patient' => $patient]);
         } else {
-            // Jika pasien tidak ditemukan, redirect kembali
-            session()->setFlashdata('message', [
-                'type' => 'error',
-                'content' => 'Pasien tidak ditemukan!'
-            ]);
-            return redirect()->back();
+            // Kirim pesan error ke view
+            return view('patient_search_result', ['error' => 'Patient not found']);
         }
     }
+
+    public function modal_search()
+    {
+        // Ambil data 'norm' yang dikirim dari frontend
+        $norm_pasien = $this->request->getVar('norm');
+
+        // Inisialisasi model
+        $patientModel = new PatientModel();
+
+        // Cari pasien berdasarkan norm_pasien
+        $patient = $patientModel->where('norm_pasien', $norm_pasien)->first();
+
+        // Cek apakah pasien ditemukan
+        if ($patient) {
+            // Jika ditemukan, kirimkan data pasien dalam format JSON
+            return $this->response->setJSON([
+                'status' => 'success',
+                'data' => $patient
+            ]);
+        } else {
+            // Jika tidak ditemukan, kirimkan pesan kesalahan
+            return $this->response->setJSON([
+                'status' => 'error',
+                'message' => 'Pasien belum terdaftar'
+            ]);
+        }
+    }
+
 }

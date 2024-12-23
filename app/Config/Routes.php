@@ -30,7 +30,12 @@ $routes->post('patient/insert', 'Patient::insert'); // Menangani form POST dari 
 $routes->get('patient/delete/(:segment)', 'Patient::delete/$1');  // Menghapus patient
 $routes->get('/patient/edit_patient/(:segment)', 'Patient::edit_patient/$1');  // Rute untuk menampilkan form edit
 $routes->post('/patient/update/(:segment)', 'Patient::update/$1');  // Rute untuk menangani update data
-$routes->post('/patient/search_patient', 'Patient::search_patient'); // Menangani pencarian pasien
+
+// Menambahkan rute untuk pencarian pasien
+$routes->post('patient/modal_search', 'Patient::modal_search'); // Pencarian dengan NoRM
+
+
+
 
 
 

@@ -63,4 +63,6 @@
 <?= $this->include('dashboard/grafik_pemeriksaan'); ?> <!-- Menyertakan grafik pemeriksaan -->
 <?= $this->include('dashboard/data_keseluruhan_pemeriksaan'); ?> <!-- Menyertakan data keseluruhan pemeriksaan -->
 <?= $this->include('templates/notifikasi'); ?> <!-- Menyertakan notifikasi -->
+
 <?= $this->include('templates/dashboard/footer_dashboard'); ?> <!-- Menyertakan footer dashboard -->
+

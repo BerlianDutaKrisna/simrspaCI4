@@ -1,23 +1,91 @@
-<div class="card shadow mb-4">
-    <div class="card-header py-4">
-        <h6 class="m-0 font-weight-bold text-primary">Tambah Pemeriksaan</h6>
+<div class="container mt-5">
+    <!-- Input untuk Pencarian -->
+    <div class="form-group">
+        <label for="norm">Cari NoRM Pasien</label>
+        <input type="text" id="norm" name="norm" class="form-control" placeholder="Masukkan NoRM" required>
     </div>
+    <button type="button" id="searchButton" class="btn btn-primary">Cari</button>
+</div>
 
-    <div class="card-body">
-        <div class="row">
-            <div class="col-md-8 col-sm-12 mb-3">
-                <form action="<?= base_url('/patient/search_patient') ?>" method="POST">
-                    <div class="input-group">
-                        <input type="text" name="norm_pasien" id="SearchPatient" class="form-control" 
-                                placeholder="Masukkan Norm pasien" autocomplete="off" required>
-                        <div class="input-group-append">
-                            <button type="submit" class="btn btn-primary">
-                                <i class="fas fa-search fa-sm"></i> Cari
-                            </button>
-                        </div>
-                    </div>
-                </form>
+<!-- Modal untuk Menampilkan Hasil -->
+<div class="modal fade" id="resultModal" tabindex="-1" role="dialog" aria-labelledby="resultModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="resultModalLabel">Hasil Pencarian</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="modalBody">
+                <!-- Hasil pencarian akan dimasukkan di sini -->
+            </div>
+            <div class="modal-footer" id="modalFooter">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
+                <!-- Tombol akan ditambahkan di sini -->
             </div>
         </div>
     </div>
 </div>
+
+<!-- Script untuk Mengontrol Modal dan Pencarian -->
+<script>
+    document.getElementById('searchButton').addEventListener('click', function() {
+        const norm = document.getElementById('norm').value;
+
+        // Validasi input
+        if (!norm) {
+            alert('Masukkan NoRM terlebih dahulu.');
+            return;
+        }
+
+        // Mengirim permintaan AJAX
+        fetch('<?= site_url('patient/modal_search') ?>', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                norm: norm
+            }),
+        })
+        .then((response) => response.json())  // Mengonversi respons ke JSON
+        .then((data) => {
+            console.log('Data:', data);  // Menampilkan data JSON
+
+            // Jika status 'success', tampilkan hasil di modal
+            if (data.status === 'success') {
+                const patient = data.data;
+                document.getElementById('modalBody').innerHTML = `
+                    <p><strong>NoRM:</strong> ${patient.norm_pasien}</p>
+                    <p><strong>Nama:</strong> ${patient.nama_pasien}</p>
+                    <p><strong>Alamat:</strong> ${patient.alamat_pasien}</p>
+                    <p><strong>Tanggal Lahir:</strong> ${patient.tanggal_lahir_pasien}</p>
+                    <p><strong>Jenis Kelamin:</strong> ${patient.jenis_kelamin_pasien}</p>
+                    <p><strong>Status:</strong> ${patient.status_pasien}</p>
+                `;
+
+                // Tambahkan tombol 'Tambah Pemeriksaan'
+                document.getElementById('modalFooter').innerHTML = `
+                    <button type="button" class="btn btn-success">Tambah Pemeriksaan</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
+                `;
+            } else {
+                // Jika status 'error', tampilkan pesan kesalahan
+                document.getElementById('modalBody').innerHTML = `<p>${data.message}</p>`;
+
+                // Tambahkan tombol 'Tambah Pasien'
+                document.getElementById('modalFooter').innerHTML = `
+                    <button type="button" class="btn btn-success">Tambah Pasien</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
+                `;
+            }
+
+            // Menampilkan modal
+            $('#resultModal').modal('show');
+        })
+        .catch((error) => {
+            console.error('Error:', error);
+        });
+    });
+</script>
