@@ -35,57 +35,72 @@
 
         // Validasi input
         if (!norm) {
-            alert('Masukkan NoRM terlebih dahulu.');
+            document.getElementById('modalBody').innerHTML = `<p class="text-danger">Masukkan Norm pasien terlebih dahulu.</p>`;
+            $('#resultModal').modal('show'); // Menampilkan modal dengan pesan kesalahan
+            return;
+        }
+
+        // Validasi panjang NoRM (misalnya 6 karakter)
+        if (norm.length !== 6) {
+            document.getElementById('modalBody').innerHTML = `<p class="text-danger">Norm pasien harus terdiri dari 6 karakter.</p>`;
+            $('#resultModal').modal('show'); // Menampilkan modal dengan pesan kesalahan
+            return;
+        }
+
+        // Validasi apakah NoRM hanya mengandung angka
+        if (!/^\d+$/.test(norm)) {
+            document.getElementById('modalBody').innerHTML = `<p class="text-danger">norm pasien harus berupa angka.</p>`;
+            $('#resultModal').modal('show'); // Menampilkan modal dengan pesan kesalahan
             return;
         }
 
         // Mengirim permintaan AJAX
         fetch('<?= site_url('patient/modal_search') ?>', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                norm: norm
-            }),
-        })
-        .then((response) => response.json())  // Mengonversi respons ke JSON
-        .then((data) => {
-            console.log('Data:', data);  // Menampilkan data JSON
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    norm: norm
+                }),
+            })
+            .then((response) => response.json()) // Mengonversi respons ke JSON
+            .then((data) => {
+                console.log('Data:', data); // Menampilkan data JSON
 
-            // Jika status 'success', tampilkan hasil di modal
-            if (data.status === 'success') {
-                const patient = data.data;
-                document.getElementById('modalBody').innerHTML = `
-                    <p><strong>NoRM:</strong> ${patient.norm_pasien}</p>
-                    <p><strong>Nama:</strong> ${patient.nama_pasien}</p>
-                    <p><strong>Alamat:</strong> ${patient.alamat_pasien}</p>
-                    <p><strong>Tanggal Lahir:</strong> ${patient.tanggal_lahir_pasien}</p>
-                    <p><strong>Jenis Kelamin:</strong> ${patient.jenis_kelamin_pasien}</p>
-                    <p><strong>Status:</strong> ${patient.status_pasien}</p>
-                `;
+                // Jika status 'success', tampilkan hasil di modal
+                if (data.status === 'success') {
+                    const patient = data.data;
+                    document.getElementById('modalBody').innerHTML = `
+                <p><strong>NoRM:</strong> ${patient.norm_pasien}</p>
+                <p><strong>Nama:</strong> ${patient.nama_pasien}</p>
+                <p><strong>Alamat:</strong> ${patient.alamat_pasien}</p>
+                <p><strong>Tanggal Lahir:</strong> ${patient.tanggal_lahir_pasien}</p>
+                <p><strong>Jenis Kelamin:</strong> ${patient.jenis_kelamin_pasien}</p>
+                <p><strong>Status:</strong> ${patient.status_pasien}</p>
+            `;
 
-                // Tambahkan tombol 'Tambah Pemeriksaan'
-                document.getElementById('modalFooter').innerHTML = `
-                    <button type="button" class="btn btn-success">Tambah Pemeriksaan</button>
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
-                `;
-            } else {
-                // Jika status 'error', tampilkan pesan kesalahan
-                document.getElementById('modalBody').innerHTML = `<p>${data.message}</p>`;
+                    // Tambahkan tombol 'Tambah Pemeriksaan'
+                    document.getElementById('modalFooter').innerHTML = `
+                <button type="button" class="btn btn-success">Tambah Pemeriksaan</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
+            `;
+                } else {
+                    // Jika status 'error', tampilkan pesan kesalahan
+                    document.getElementById('modalBody').innerHTML = `<p>${data.message}</p>`;
 
-                // Tambahkan tombol 'Tambah Pasien'
-                document.getElementById('modalFooter').innerHTML = `
-                    <button type="button" class="btn btn-success">Tambah Pasien</button>
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
-                `;
-            }
+                    // Tambahkan tombol 'Tambah Pasien'
+                    document.getElementById('modalFooter').innerHTML = `
+                <button type="button" class="btn btn-success">Tambah Pasien</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
+            `;
+                }
 
-            // Menampilkan modal
-            $('#resultModal').modal('show');
-        })
-        .catch((error) => {
-            console.error('Error:', error);
-        });
+                // Menampilkan modal
+                $('#resultModal').modal('show');
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+            });
     });
 </script>
