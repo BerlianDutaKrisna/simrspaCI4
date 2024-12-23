@@ -18,7 +18,7 @@
                 <div class="form-group col-md-3"> <!-- Ukuran kolom lebih kecil untuk norm_pasien -->
                     <label for="norm_pasien">Nomor Rekam Medis</label>
                     <!-- Input untuk norm_pasien dengan value lama jika ada dan required -->
-                    <input type="text" class="form-control" id="norm_pasien" name="norm_pasien" placeholder="Masukkan nomor rekam medis" value="<?= old('norm_pasien'); ?>" required>
+                    <input type="text" class="form-control" id="norm_pasien" name="norm_pasien" placeholder="Masukkan Norm pasien" value="<?= old('norm_pasien'); ?>" required>
                 </div>
 
                 <!-- Form group untuk Nama Pasien dengan ukuran lebih besar -->
