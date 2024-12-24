@@ -33,8 +33,6 @@ class Exam extends BaseController
         }
     }
 
-    dd($patient);
-
     // Mengambil id_user dan nama_user dari session
     $data['id_user'] = session()->get('id_user');
     $data['nama_user'] = session()->get('nama_user');
