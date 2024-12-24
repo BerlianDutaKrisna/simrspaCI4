@@ -28,6 +28,15 @@ class Patient extends BaseController
     // Menampilkan halaman registrasi pasien
     public function register_patient()
     {
+        // Mendapatkan nilai norm_pasien dari query string
+    $norm_pasien = $this->request->getGet('norm_pasien');
+
+    // Jika nilai norm_pasien ada, gunakan untuk prapengisian
+    if ($norm_pasien) {
+        // Lakukan logika yang sesuai, misalnya prapengisian form
+        $data['norm_pasien'] = $norm_pasien;
+    }
+    
         // Mengambil id_user dan nama_user dari session untuk ditampilkan di form
         $data['id_user'] = session()->get('id_user');
         $data['nama_user'] = session()->get('nama_user');

@@ -12,13 +12,20 @@
         <!-- Form untuk input data pasien -->
         <form action="<?= base_url('patient/insert') ?>" method="POST">
             <?= csrf_field(); ?> <!-- CSRF token untuk keamanan -->
-            
+
             <div class="form-row">
                 <!-- Form group untuk Nomor Rekam Medis dengan ukuran lebih kecil -->
                 <div class="form-group col-md-3"> <!-- Ukuran kolom lebih kecil untuk norm_pasien -->
                     <label for="norm_pasien">Nomor Rekam Medis</label>
                     <!-- Input untuk norm_pasien dengan value lama jika ada dan required -->
-                    <input type="text" class="form-control" id="norm_pasien" name="norm_pasien" placeholder="Masukkan Norm pasien" value="<?= old('norm_pasien'); ?>" required>
+                    <input type="text"
+                        class="form-control"
+                        id="norm_pasien"
+                        name="norm_pasien"
+                        placeholder="Masukkan Norm pasien"
+                        value="<?= isset($_GET['norm_pasien']) ? esc($_GET['norm_pasien']) : old('norm_pasien'); ?>"
+                        required>
+
                 </div>
 
                 <!-- Form group untuk Nama Pasien dengan ukuran lebih besar -->

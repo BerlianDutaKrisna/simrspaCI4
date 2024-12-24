@@ -106,7 +106,7 @@
 
                                 // Tambahkan tombol 'Tambah Pasien'
                                 document.getElementById('modalFooter').innerHTML = `
-                    <button type="button" class="btn btn-success" onclick="window.location.href='<?= site_url('patient/register_patient') ?>'">Tambah Pasien</button>
+                    <a href="<?= site_url('patient/register_patient') ?>?norm_pasien=${norm}" class="btn btn-success">Tambah Pasien</a>
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
                 `;
                             }
