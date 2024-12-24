@@ -82,7 +82,15 @@
                         .then((response) => response.json()) // Mengonversi respons ke JSON
                         .then((data) => {
                             console.log('Data:', data); // Menampilkan data JSON
+                            // Fungsi untuk memformat tanggal menjadi d-m-Y
+                            function formatDate(dateString) {
+                                const date = new Date(dateString);
+                                const day = String(date.getDate()).padStart(2, '0');
+                                const month = String(date.getMonth() + 1).padStart(2, '0'); // Bulan dimulai dari 0
+                                const year = date.getFullYear();
 
+                                return `${day}-${month}-${year}`;
+                            }
                             // Jika status 'success', tampilkan hasil di modal
                             if (data.status === 'success') {
                                 const patient = data.data;
@@ -90,14 +98,14 @@
                     <p><strong>Norm:</strong> ${patient.norm_pasien}</p>
                     <p><strong>Nama:</strong> ${patient.nama_pasien}</p>
                     <p><strong>Alamat:</strong> ${patient.alamat_pasien}</p>
-                    <p><strong>Tanggal Lahir:</strong> ${patient.tanggal_lahir_pasien}</p>
+                    <p><strong>Tanggal Lahir:</strong> ${formatDate(patient.tanggal_lahir_pasien)}</p>
                     <p><strong>Jenis Kelamin:</strong> ${patient.jenis_kelamin_pasien}</p>
                     <p><strong>Status:</strong> ${patient.status_pasien}</p>
                 `;
 
                                 // Tambahkan tombol 'Tambah Pemeriksaan'
                                 document.getElementById('modalFooter').innerHTML = `
-                    <a href="<?= site_url('exam/register_exam') ?>" class="btn btn-success">Tambah Pameriksaan</a>
+                    <a href="<?= site_url('exam/register_exam') ?>?norm_pasien=${norm}" class="btn btn-success">Tambah Pameriksaan</a>
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
                 `;
                             } else {
