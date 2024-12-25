@@ -29,11 +29,13 @@ class Hpa extends Migration
             'unit_asal' => [
                 'type'       => 'VARCHAR',
                 'constraint' => 100,
+                'default'    => 'Belum Dipilih',
                 'null' => true,
             ],
             'dokter_pengirim' => [
                 'type'       => 'VARCHAR',
                 'constraint' => 100,
+                'default'    => 'Belum Dipilih',
                 'null' => true,
             ],
             'tanggal_permintaan' => [
@@ -47,17 +49,44 @@ class Hpa extends Migration
             'lokasi_spesimen' => [
                 'type'       => 'VARCHAR',
                 'constraint' => 100,
+                'default'    => 'Belum Diisi',
                 'null' => true,
             ],
             'tindakan_spesimen' => [
                 'type'       => 'VARCHAR',
                 'constraint' => 100,
+                'default'    => 'Belum Dipilih',
                 'null' => true,
             ],
             'diagnosa_klinik' => [
                 'type'       => 'VARCHAR',
                 'constraint' => 100,
+                'default'    => 'Belum Diisi',
                 'null' => true,
+            ],
+            'status_hpa' => [
+                'type'       => 'VARCHAR',
+                'constraint' => 100,
+                'default'    => 'Belum Diproses',
+                'null' => true,
+            ],
+            'id_penerimaan' => [
+                'type'       => 'INT',
+                'constraint' => 11,
+                'unsigned'   => true,
+                'null'       => true,
+            ],
+            'id_pengirisan' => [
+                'type'       => 'INT',
+                'constraint' => 11,
+                'unsigned'   => true,
+                'null'       => true,
+            ],
+            'id_mutu' => [
+                'type'       => 'INT',
+                'constraint' => 11,
+                'unsigned'   => true,
+                'null'       => true,
             ],
             'created_at' => [
                 'type' => 'DATETIME',
@@ -70,7 +99,12 @@ class Hpa extends Migration
         ]);
 
         $this->forge->addKey('id_hpa', true); // Primary Key
-        $this->forge->addForeignKey('id_pasien', 'patient', 'id_pasien', 'CASCADE', 'CASCADE'); // Sesuaikan dengan nama tabel patient
+        $this->forge->addForeignKey('id_pasien', 'patient', 'id_pasien', 'CASCADE', 'CASCADE');
+        // MATIKAN DENGAN COMENT DAHULU LALU AKTIFKAN DAN MIGRATE
+        $this->forge->addForeignKey('id_penerimaan', 'penerimaan', 'id_penerimaan', 'CASCADE', 'CASCADE');
+        $this->forge->addForeignKey('id_pengirisan', 'pengirisan', 'id_pengirisan', 'CASCADE', 'CASCADE');
+        $this->forge->addForeignKey('id_mutu', 'mutu', 'id_mutu', 'CASCADE', 'CASCADE');
+
         $this->forge->createTable('hpa');
     }
 

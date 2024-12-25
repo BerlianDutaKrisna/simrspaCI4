@@ -27,7 +27,9 @@ class Patient extends Migration
                 'null'       => false,
             ],
             'alamat_pasien' => [
-                'type' => 'TEXT',
+                'type'       => 'VARCHAR',
+                'constraint' => 100,
+                'default'    => 'Belum Diisi',
                 'null' => true,
             ],
             'tanggal_lahir_pasien' => [

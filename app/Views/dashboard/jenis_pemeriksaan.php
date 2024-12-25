@@ -6,7 +6,7 @@
         <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-3">
             <!-- Tombol 1: Penerimaan -->
             <div class="col">
-                <a href="#" class="btn btn-primary btn-icon-split btn-sm d-flex justify-content-between m-2">
+                <a href="<?=base_url('penerimaan/index_penerimaan') ?>" class="btn btn-primary btn-icon-split btn-sm d-flex justify-content-between m-2">
                     <span class="text">Penerimaan</span>
                     <span class="icon text-white-50">
                         <i class="fas fa-clipboard"></i> <!-- Ikon untuk Penerimaan -->
