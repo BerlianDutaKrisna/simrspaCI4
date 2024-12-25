@@ -37,6 +37,13 @@ class Users extends Migration
                 'constraint' => ['Admin', 'Analis', 'Dokter', 'Belum Dipilih'],  // Status bisa 'admin', 'analis', atau 'dokter'
                 'default' => 'Belum Dipilih',  // Default adalah 'Belum Dipilih'
                 'null'       => true,
+            ],'created_at' => [
+                'type' => 'DATETIME',
+                'null' => true,
+            ],
+            'updated_at' => [
+                'type' => 'DATETIME',
+                'null' => true,
             ],
         ]);
         

@@ -75,18 +75,12 @@ class Patient extends BaseController
             return redirect()->back()->withInput()->with('error', $validation->getErrors());  // Jika gagal, kembalikan dengan pesan error
         }
 
-        // Mengecek apakah Norm Pasien sudah terdaftar
-        $norm_pasien = $this->request->getPost('norm_pasien');
-        if ($this->PatientModel->checkNormExists($norm_pasien)) {
-            return redirect()->back()->with('error', 'Norm sudah terdaftar!');  // Jika Norm sudah ada, tampilkan pesan error
-        }
-
         // Menyiapkan data pasien yang akan disimpan
         $data = [
             'norm_pasien' => $this->request->getPost('norm_pasien'),
             'nama_pasien' => $this->request->getPost('nama_pasien'),
             'alamat_pasien' => $this->request->getPost('alamat_pasien'),
-            'tanggal_lahir_pasien' => $this->request->getPost('tanggal_lahir_pasien'),
+            'tanggal_lahir_pasien' => $this->request->getPost('tanggal_lahir_pasien') ?: null,
             'jenis_kelamin_pasien' => $this->request->getPost('jenis_kelamin_pasien'),
             'status_pasien' => $this->request->getPost('status_pasien'),
         ];
@@ -183,7 +177,7 @@ class Patient extends BaseController
             'norm_pasien' => $this->request->getVar('norm_pasien'),
             'nama_pasien' => $this->request->getVar('nama_pasien'),
             'alamat_pasien' => $this->request->getVar('alamat_pasien'),
-            'tanggal_lahir_pasien' => $this->request->getVar('tanggal_lahir_pasien'),
+            'tanggal_lahir_pasien' => $this->request->getVar('tanggal_lahir_pasien') ?: null,
             'jenis_kelamin_pasien' => $this->request->getVar('jenis_kelamin_pasien'),
             'status_pasien' => $this->request->getVar('status_pasien'),
         ];

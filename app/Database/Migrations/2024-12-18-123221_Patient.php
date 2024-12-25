@@ -45,6 +45,13 @@ class Patient extends Migration
                 'constraint' => ['PBI', 'Non PBI', 'Umum', 'Belum Dipilih'],
                 'default'    => 'Belum Dipilih',
                 'null'       => true,
+            ],'created_at' => [
+                'type' => 'DATETIME',
+                'null' => true,
+            ],
+            'updated_at' => [
+                'type' => 'DATETIME',
+                'null' => true,
             ],
         ]);
 

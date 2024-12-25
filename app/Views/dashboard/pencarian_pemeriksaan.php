@@ -97,8 +97,8 @@
                                 document.getElementById('modalBody').innerHTML = `
                     <p><strong>Norm:</strong> ${patient.norm_pasien}</p>
                     <p><strong>Nama:</strong> ${patient.nama_pasien}</p>
-                    <p><strong>Alamat:</strong> ${patient.alamat_pasien}</p>
-                    <p><strong>Tanggal Lahir:</strong> ${formatDate(patient.tanggal_lahir_pasien)}</p>
+                    <p><strong>Alamat:</strong> ${patient.alamat_pasien ? patient.alamat_pasien : 'Belum diisi'}</p>
+                    <p><strong>Tanggal Lahir:</strong> ${patient.tanggal_lahir_pasien ? formatDate(patient.tanggal_lahir_pasien) : 'Belum diisi'}</p>
                     <p><strong>Jenis Kelamin:</strong> ${patient.jenis_kelamin_pasien}</p>
                     <p><strong>Status:</strong> ${patient.status_pasien}</p>
                 `;

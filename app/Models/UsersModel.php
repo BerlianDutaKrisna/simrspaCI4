@@ -14,7 +14,7 @@ class UsersModel extends Model
         'password_user',
         'nama_user',
         'status_user'];
-    
+    protected $useTimestamps = true;
     // Menyimpan data users baru
     public function insertUser($data)
     {

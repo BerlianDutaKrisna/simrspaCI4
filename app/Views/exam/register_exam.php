@@ -12,7 +12,6 @@
 
         <!-- Menampilkan Data Pasien dalam 3 kolom 2 baris -->
         <div class="row">
-            <!-- Baris 1 -->
             <div class="col-md-4 mb-3">
                 <strong>Nomor Rekam Medis:</strong>
                 <p class="form-control-plaintext"><?= isset($patient['norm_pasien']) ? esc($patient['norm_pasien']) : ''; ?></p>
@@ -23,15 +22,17 @@
             </div>
             <div class="col-md-4 mb-3">
                 <strong>Alamat Pasien:</strong>
-                <p class="form-control-plaintext"><?= isset($patient['alamat_pasien']) ? esc($patient['alamat_pasien']) : ''; ?></p>
+                <p class="form-control-plaintext">
+                    <?= isset($patient['alamat_pasien']) && !empty($patient['alamat_pasien']) ? esc($patient['alamat_pasien']) : 'Belum diisi'; ?>
+                </p>
             </div>
         </div>
-
         <div class="row">
-            <!-- Baris 2 -->
             <div class="col-md-4 mb-3">
                 <strong>Tanggal Lahir:</strong>
-                <p class="form-control-plaintext"><?= isset($patient['tanggal_lahir_pasien']) ? esc($patient['tanggal_lahir_pasien']) : ''; ?></p>
+                <p class="form-control-plaintext">
+                    <?= isset($patient['tanggal_lahir_pasien']) && !empty($patient['tanggal_lahir_pasien']) ? esc(date('d-m-Y', strtotime($patient['tanggal_lahir_pasien']))) : 'Belum diisi'; ?>
+                </p>
             </div>
             <div class="col-md-4 mb-3">
                 <strong>Jenis Kelamin:</strong>
@@ -53,6 +54,9 @@
         <form action="<?= base_url('exam/insert') ?>" method="POST">
             <?= csrf_field(); ?> <!-- CSRF token untuk keamanan -->
 
+            <!-- Hidden input untuk id_pasien -->
+            <input type="hidden" name="id_pasien" value="<?= isset($patient['id_pasien']) ? esc($patient['id_pasien']) : ''; ?>">
+
             <div class="form-row">
                 <!-- Form group untuk Kode HPA -->
                 <div class="form-group col-md-3">
@@ -63,45 +67,61 @@
                 <!-- Form group untuk Unit Asal -->
                 <div class="form-group col-md-3">
                     <label for="unit_asal">Unit Asal</label>
-                    <input type="text" class="form-control" id="unit_asal" name="unit_asal" placeholder="Masukkan Unit Asal" value="<?= old('unit_asal'); ?>" required>
+                    <select class="form-control" id="unit_asal" name="unit_asal" onchange="handleUnitAsalChange(this)">
+                        <option value="Belum Dipilih" selected>Belum Dipilih</option>
+                        <option value="OK">OK</option>
+                        <option value="Poli">Poli</option>
+                        <option value="Ruangan">Ruangan</option>
+                        <option value="lainnya">Lainnya</option>
+                    </select>
+                    <input type="text" class="form-control mt-2 d-none" id="unit_asal_detail" name="unit_asal_detail" placeholder="Masukkan Detail (contoh: Tulip)">
                 </div>
 
                 <!-- Form group untuk Dokter Pengirim -->
                 <div class="form-group col-md-3">
                     <label for="dokter_pengirim">Dokter Pengirim</label>
-                    <input type="text" class="form-control" id="dokter_pengirim" name="dokter_pengirim" placeholder="Masukkan Dokter Pengirim" value="<?= old('dokter_pengirim'); ?>" required>
+                    <select class="form-control" id="dokter_pengirim" name="dokter_pengirim" onchange="handleDokterPengirimChange(this)">
+                        <option value="Belum Dipilih" selected>Belum Dipilih</option>
+                        <option value="dr. Ihyan">dr. Ihyan</option>
+                        <option value="dr. Andy">dr. Andy</option>
+                        <option value="dr. Agus">dr. Agus</option>
+                        <option value="lainnya">Lainnya</option>
+                    </select>
+                    <input type="text" class="form-control mt-2 d-none" id="dokter_pengirim_custom" name="dokter_pengirim_custom" placeholder="Masukkan Dokter Pengirim Lainnya">
                 </div>
 
-                <!-- Form group untuk Tanggal Terima -->
+                <!-- Form group untuk Tanggal Permintaan -->
                 <div class="form-group col-md-3">
-                    <label for="tanggal_terima">Tanggal Terima</label>
-                    <input type="date" class="form-control" id="tanggal_terima" name="tanggal_terima" value="<?= old('tanggal_terima'); ?>" required>
+                    <label for="tanggal_permintaan">Tanggal Permintaan</label>
+                    <input type="date" class="form-control" id="tanggal_permintaan" name="tanggal_permintaan" value="<?= old('tanggal_permintaan'); ?>">
                 </div>
             </div>
 
             <div class="form-row">
-                <!-- Form group untuk Tanggal Hasil -->
                 <div class="form-group col-md-3">
                     <label for="tanggal_hasil">Tanggal Hasil</label>
-                    <input type="date" class="form-control" id="tanggal_hasil" name="tanggal_hasil" value="<?= old('tanggal_hasil'); ?>" required>
+                    <input type="date" class="form-control" id="tanggal_hasil" name="tanggal_hasil" value="<?= old('tanggal_hasil'); ?>">
                 </div>
-
-                <!-- Form group untuk Lokasi Spesimen -->
                 <div class="form-group col-md-3">
                     <label for="lokasi_spesimen">Lokasi Spesimen</label>
-                    <input type="text" class="form-control" id="lokasi_spesimen" name="lokasi_spesimen" placeholder="Masukkan Lokasi Spesimen" value="<?= old('lokasi_spesimen'); ?>" required>
+                    <input type="text" class="form-control" id="lokasi_spesimen" name="lokasi_spesimen" placeholder="Masukkan Lokasi Spesimen" value="<?= old('lokasi_spesimen'); ?>">
                 </div>
 
                 <!-- Form group untuk Tindakan Spesimen -->
                 <div class="form-group col-md-3">
                     <label for="tindakan_spesimen">Tindakan Spesimen</label>
-                    <input type="text" class="form-control" id="tindakan_spesimen" name="tindakan_spesimen" placeholder="Masukkan Tindakan Spesimen" value="<?= old('tindakan_spesimen'); ?>" required>
+                    <select class="form-control" id="tindakan_spesimen" name="tindakan_spesimen" onchange="handleTindakanSpesimenChange(this)">
+                        <option value="Belum Dipilih" selected>Belum Dipilih</option>
+                        <option value="Biopsi">Biopsi</option>
+                        <option value="Extirpasi Tumor">Extirpasi Tumor</option>
+                        <option value="Kerokan">Kerokan</option>
+                        <option value="lainnya">Lainnya</option>
+                    </select>
+                    <input type="text" class="form-control mt-2 d-none" id="tindakan_spesimen_custom" name="tindakan_spesimen_custom" placeholder="Masukkan Tindakan Spesimen Lainnya">
                 </div>
-
-                <!-- Form group untuk Diagnosa Klinik -->
                 <div class="form-group col-md-3">
                     <label for="diagnosa_klinik">Diagnosa Klinik</label>
-                    <input type="text" class="form-control" id="diagnosa_klinik" name="diagnosa_klinik" placeholder="Masukkan Diagnosa Klinik" value="<?= old('diagnosa_klinik'); ?>" required>
+                    <input type="text" class="form-control" id="diagnosa_klinik" name="diagnosa_klinik" placeholder="Masukkan Diagnosa Klinik" value="<?= old('diagnosa_klinik'); ?>">
                 </div>
             </div>
 
@@ -112,6 +132,39 @@
         </form>
     </div>
 </div>
+
+<script>
+    function handleUnitAsalChange(selectElement) {
+        const customInput = document.getElementById('unit_asal_detail');
+        if (selectElement.value === 'Ruangan' || selectElement.value === 'Poli' || selectElement.value === 'lainnya') {
+            customInput.classList.remove('d-none');
+            customInput.placeholder = `Masukkan detail untuk ${selectElement.value}`;
+        } else {
+            customInput.classList.add('d-none');
+            customInput.value = '';
+        }
+    }
+
+    function handleDokterPengirimChange(selectElement) {
+        const customInput = document.getElementById('dokter_pengirim_custom');
+        if (selectElement.value === 'lainnya') {
+            customInput.classList.remove('d-none');
+        } else {
+            customInput.classList.add('d-none');
+            customInput.value = '';
+        }
+    }
+
+    function handleTindakanSpesimenChange(selectElement) {
+        const customInput = document.getElementById('tindakan_spesimen_custom');
+        if (selectElement.value === 'lainnya') {
+            customInput.classList.remove('d-none');
+        } else {
+            customInput.classList.add('d-none');
+            customInput.value = '';
+        }
+    }
+</script>
 
 <?= $this->include('templates/notifikasi'); ?>
 <?= $this->include('templates/dashboard/footer_dashboard'); ?>

@@ -35,8 +35,24 @@
                             <td><?= esc($patient['norm_pasien']) ?></td>
                             <td><?= esc($patient['nama_pasien']) ?></td>
                             <td><?= esc($patient['jenis_kelamin_pasien']) ?></td>
-                            <td><?= esc(date('d-m-Y', strtotime($patient['tanggal_lahir_pasien']))) ?></td>
-                            <td><?= esc($patient['alamat_pasien']) ?></td>
+                            <td>
+                                <?php
+                                if (empty($patient['tanggal_lahir_pasien'])) {
+                                    echo 'Belum diisi';
+                                } else {
+                                    echo esc(date('d-m-Y', strtotime($patient['tanggal_lahir_pasien'])));
+                                }
+                                ?>
+                            </td>
+                            <td>
+                                <?php
+                                if (empty($patient['alamat_pasien'])) {
+                                    echo 'Belum diisi';
+                                } else {
+                                    echo esc($patient['alamat_pasien']);
+                                }
+                                ?>
+                            </td>
                             <td><?= esc($patient['status_pasien']) ?></td>
                             <td class="text-center">
                                 <!-- Tombol Edit -->
@@ -45,7 +61,7 @@
                                 </a>
                                 <!-- Tombol Hapus -->
                                 <a href="#" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#deleteModal"
-                                    data-id_pasien="<?= esc($patient['id_pasien']) ?>" 
+                                    data-id_pasien="<?= esc($patient['id_pasien']) ?>"
                                     data-nama_pasien="<?= esc($patient['nama_pasien']) ?>">
                                     Hapus
                                 </a>
@@ -93,7 +109,7 @@
 <!-- JavaScript untuk menangani pengisian modal -->
 <script>
     // Menangani event saat modal tampil
-    $('#deleteModal').on('show.bs.modal', function (event) {
+    $('#deleteModal').on('show.bs.modal', function(event) {
         var button = $(event.relatedTarget); // Tombol yang memicu modal
         var id_pasien = button.data('id_pasien'); // Ambil data-id_pasien dari atribut
         var nama_pasien = button.data('nama_pasien'); // Ambil data-nama_pasien dari atribut

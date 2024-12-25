@@ -16,6 +16,7 @@ class PatientModel extends Model
         'jenis_kelamin_pasien',
         'status_pasien'
     ];
+    protected $useTimestamps = true;
     // Menyimpan data patient baru
     public function insertPatient($data)
     {
