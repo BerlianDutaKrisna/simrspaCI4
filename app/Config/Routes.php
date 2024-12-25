@@ -37,7 +37,7 @@ $routes->get('exam/register_exam', 'Exam::register_exam'); // Menampilkan halama
 $routes->post('exam/insert', 'Exam::insert'); // Menangani form POST dari register exam
 
 // Route untuk Penerimaan
-$routes->get('penerimaan/index_penerimaan', 'Penerimaan::index_penerimaan'); // Menampilkan halaman index penerimaan
+$routes->get('penerimaan/index_penerimaan', 'Proses/Penerimaan::index_penerimaan'); // Menampilkan halaman index penerimaan
 
 
 

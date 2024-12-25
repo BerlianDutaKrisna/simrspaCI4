@@ -7,7 +7,7 @@ class PatientModel extends Model
 {
     protected $table = 'patient'; // Nama tabel di database
     protected $primaryKey = 'id_pasien';
-    protected $returnType = 'array'; // Data akan dikembalikan sebagai array asosiatif
+    protected $returnType = 'array';
     protected $allowedFields = [
         'norm_pasien',
         'nama_pasien',
@@ -16,7 +16,12 @@ class PatientModel extends Model
         'jenis_kelamin_pasien',
         'status_pasien'
     ];
+    // Mengaktifkan timestamps otomatis
     protected $useTimestamps = true;
+
+    // Nama kolom untuk waktu dibuat dan diperbarui
+    protected $createdField  = 'created_at';
+    protected $updatedField  = 'updated_at';
     // Menyimpan data patient baru
     public function insertPatient($data)
     {

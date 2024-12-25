@@ -14,7 +14,12 @@ class UsersModel extends Model
         'password_user',
         'nama_user',
         'status_user'];
+    // Mengaktifkan timestamps otomatis
     protected $useTimestamps = true;
+
+    // Nama kolom untuk waktu dibuat dan diperbarui
+    protected $createdField  = 'created_at';
+    protected $updatedField  = 'updated_at';
     // Menyimpan data users baru
     public function insertUser($data)
     {
