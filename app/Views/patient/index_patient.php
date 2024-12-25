@@ -29,40 +29,40 @@
             </thead>
             <tbody>
                 <?php if (!empty($patients)) : ?>
-                    <?php foreach ($patients as $patient) : ?>
+                    <?php foreach ($patients as $row) : ?>
                         <tr>
                             <!-- Menampilkan data pasien -->
-                            <td><?= esc($patient['norm_pasien']) ?></td>
-                            <td><?= esc($patient['nama_pasien']) ?></td>
-                            <td><?= esc($patient['jenis_kelamin_pasien']) ?></td>
+                            <td><?= esc($row['norm_pasien']) ?></td>
+                            <td><?= esc($row['nama_pasien']) ?></td>
+                            <td><?= esc($row['jenis_kelamin_pasien']) ?></td>
                             <td>
                                 <?php
-                                if (empty($patient['tanggal_lahir_pasien'])) {
+                                if (empty($row['tanggal_lahir_pasien'])) {
                                     echo 'Belum diisi';
                                 } else {
-                                    echo esc(date('d-m-Y', strtotime($patient['tanggal_lahir_pasien'])));
+                                    echo esc(date('d-m-Y', strtotime($row['tanggal_lahir_pasien'])));
                                 }
                                 ?>
                             </td>
                             <td>
                                 <?php
-                                if (empty($patient['alamat_pasien'])) {
+                                if (empty($row['alamat_pasien'])) {
                                     echo 'Belum diisi';
                                 } else {
-                                    echo esc($patient['alamat_pasien']);
+                                    echo esc($row['alamat_pasien']);
                                 }
                                 ?>
                             </td>
-                            <td><?= esc($patient['status_pasien']) ?></td>
+                            <td><?= esc($row['status_pasien']) ?></td>
                             <td class="text-center">
                                 <!-- Tombol Edit -->
-                                <a href="<?= base_url('patient/edit_patient/' . esc($patient['id_pasien'])) ?>" class="btn btn-warning btn-sm">
+                                <a href="<?= base_url('patient/edit_patient/' . esc($row['id_pasien'])) ?>" class="btn btn-warning btn-sm">
                                     Edit
                                 </a>
                                 <!-- Tombol Hapus -->
                                 <a href="#" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#deleteModal"
-                                    data-id_pasien="<?= esc($patient['id_pasien']) ?>"
-                                    data-nama_pasien="<?= esc($patient['nama_pasien']) ?>">
+                                    data-id_pasien="<?= esc($row['id_pasien']) ?>"
+                                    data-nama_pasien="<?= esc($row['nama_pasien']) ?>">
                                     Hapus
                                 </a>
                             </td>
