@@ -1,7 +1,9 @@
 <?= $this->include('templates/auth/header_auth'); ?>
 
 <div class="row">
-    <div class="col-lg-6 d-none d-lg-block bg-login-image"></div>
+    <div class="col-lg-6 d-none d-lg-block bg-login-image">
+
+    </div>
     <div class="col-lg-6">
         <div class="p-5">
             <div class="text-center">
@@ -24,15 +26,15 @@
                         <i class="fas fa-star-of-life"></i>
                     </button>
                 </div>
-                
+
                 <!-- Tombol Submit -->
                 <button type="submit" class="btn btn-primary btn-user btn-block">
                     Login
                 </button>
             </form>
-            <div class="text-center mt-3">
-                <a class="small" href="<?= base_url('users/register_users'); ?>">Belum punya akun? Daftar sekarang!</a> <!-- Link ke halaman registrasi -->
-            </div>
+        </div>
+        <div class="text-center mt-3">
+            <a class="small" href="<?= base_url('users/register_users'); ?>" style="color: white; text-decoration: none;">Belum punya akun? Daftar sekarang!</a>
         </div>
     </div>
 </div>
@@ -45,7 +47,7 @@
     const passwordField = document.getElementById('password');
     const eyeIcon = document.getElementById('eyeIcon');
 
-    togglePassword.addEventListener('click', function () {
+    togglePassword.addEventListener('click', function() {
         const type = passwordField.getAttribute('type') === 'password' ? 'text' : 'password';
         passwordField.setAttribute('type', type);
         eyeIcon.classList.toggle('fa-eye');

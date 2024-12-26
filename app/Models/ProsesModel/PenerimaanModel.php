@@ -9,6 +9,7 @@ class PenerimaanModel extends Model
     protected $table      = 'penerimaan'; // Nama tabel
     protected $primaryKey = 'id_penerimaan'; // Nama primary key
     protected $returnType = 'array';
+
     // Kolom-kolom yang dapat diisi melalui mass-assignment
     protected $allowedFields = [
         'id_hpa',

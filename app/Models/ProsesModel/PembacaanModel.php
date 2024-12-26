@@ -4,19 +4,20 @@ namespace App\Models\ProsesModel; // Update namespace sesuai dengan folder
 
 use CodeIgniter\Model;
 
-class PengirisanModel extends Model
+class PembacaanModel extends Model
 {
-    protected $table      = 'pengirisan'; // Nama tabel
-    protected $primaryKey = 'id_pengirisan'; // Nama primary key
+    protected $table      = 'pembacaan'; // Nama tabel
+    protected $primaryKey = 'id_pembacaan'; // Nama primary key
     protected $returnType = 'array';
 
     // Kolom-kolom yang dapat diisi melalui mass-assignment
     protected $allowedFields = [
         'id_hpa',
         'id_user',
-        'status_pengirisan',
-        'mulai_pengirisan',
-        'selesai_pengirisan',
+        'id_user_dokter', // Menambahkan field id_user_dokter
+        'status_pembacaan',
+        'mulai_pembacaan',
+        'selesai_pembacaan',
         'created_at',
         'updated_at'
     ];
