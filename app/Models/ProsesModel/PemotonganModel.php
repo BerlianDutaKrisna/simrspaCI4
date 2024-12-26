@@ -28,4 +28,11 @@ class PemotonganModel extends Model
     // Nama kolom untuk waktu dibuat dan diperbarui
     protected $createdField  = 'created_at';
     protected $updatedField  = 'updated_at';
+
+    // Fungsi untuk insert data Pemotongan
+    public function insertPemotongan(array $data): bool
+    {
+        $this->insertPemotongan($data);
+        return $this->db->affectedRows() > 0;
+    }
 }

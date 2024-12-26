@@ -19,6 +19,7 @@ class Mutu extends Migration
                 'type'       => 'INT',
                 'constraint' => 11,
                 'unsigned'   => true,
+                'null'       => true,
             ],
             'indikator_1' => [
                 'type'       => 'INT',

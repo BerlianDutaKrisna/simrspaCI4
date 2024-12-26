@@ -28,4 +28,11 @@ class PembacaanModel extends Model
     // Nama kolom untuk waktu dibuat dan diperbarui
     protected $createdField  = 'created_at';
     protected $updatedField  = 'updated_at';
+
+    // Fungsi untuk insert data Pembacaan
+    public function insertPembacaan(array $data): bool
+    {
+        $this->insertPembacaan($data);
+        return $this->db->affectedRows() > 0;
+    }
 }

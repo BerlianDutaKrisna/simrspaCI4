@@ -56,12 +56,12 @@
 
             <!-- Hidden input untuk id_pasien -->
             <input type="hidden" name="id_pasien" value="<?= isset($patient['id_pasien']) ? esc($patient['id_pasien']) : ''; ?>">
-
+            <input type="hidden" name="status_hpa" value="Terdaftar">
             <div class="form-row">
                 <!-- Form group untuk Kode HPA -->
                 <div class="form-group col-md-3">
                     <label for="kode_hpa">Kode HPA</label>
-                    <input type="text" class="form-control" id="kode_hpa" name="kode_hpa" placeholder="Masukkan Kode HPA" value="<?= old('kode_hpa'); ?>" required>
+                    <input type="text" class="form-control" id="kode_hpa" name="kode_hpa" placeholder="Masukkan Kode HPA" value="<?= old('kode_hpa'); ?>">
                 </div>
 
                 <!-- Form group untuk Unit Asal -->

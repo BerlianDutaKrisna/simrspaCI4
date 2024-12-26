@@ -19,11 +19,13 @@ class Penanaman extends Migration
                 'type'       => 'INT',
                 'constraint' => 11,
                 'unsigned'   => true,
+                'null'       => true,
             ],
             'id_user' => [
                 'type'       => 'INT',
                 'constraint' => 11,
                 'unsigned'   => true,
+                'null'       => true,
             ],
             'status_penanaman' => [
                 'type'       => 'ENUM',

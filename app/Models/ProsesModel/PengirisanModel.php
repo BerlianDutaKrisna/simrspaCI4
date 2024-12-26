@@ -27,4 +27,11 @@ class PengirisanModel extends Model
     // Nama kolom untuk waktu dibuat dan diperbarui
     protected $createdField  = 'created_at';
     protected $updatedField  = 'updated_at';
+
+    // Fungsi untuk insert data Pengirisan
+    public function insertPengirisan(array $data): bool
+    {
+        $this->insertPengirisan($data);
+        return $this->db->affectedRows() > 0;
+    }
 }

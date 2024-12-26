@@ -10,49 +10,45 @@
         <h6 class="m-0 font-weight-bold text-primary">Table live proses</h6> <!-- Judul tabel -->
     </div>
     <div class="card-body">
-        <div class="mb-4">
-            <a href="samples_accepted.php" class="btn btn-primary btn-icon-split btn-sm"> <!-- Tombol untuk mengakses penerimaan sampel -->
-                <span class="icon text-white-50">
-                    <i class="fas fa-clipboard"></i> <!-- Ikon untuk penerimaan sampel -->
-                </span>
-                <span class="text">Penerimaan</span>
-            </a>
-        </div>
-        <div class="table-responsive"> <!-- Bagian untuk membuat tabel menjadi responsif -->
-            <table class="table table-bordered" width="100%" cellspacing="0">
+        <div class="table-responsive">
+            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                 <thead>
                     <tr>
-                        <th>No</th> <!-- Nomor urut -->
-                        <th>Kode Sampel</th> <!-- Kolom kode sampel -->
-                        <th>Nomer Rekamedis</th> <!-- Kolom nomor rekam medis -->
-                        <th>Nama Pasien</th> <!-- Kolom nama pasien -->
-                        <th>Status Proses</th> <!-- Kolom status proses pemeriksaan -->
-                        <th>Waktu Mulai</th> <!-- Kolom waktu mulai pemeriksaan -->
-                        <th>Janji Hasil</th> <!-- Kolom janji waktu hasil -->
-                        <th>Analis</th> <!-- Kolom analis yang menangani -->
+                        <th>Kode HPA</th>
+                        <th>Nama Pasien</th>
+                        <th>Norm Pasien</th>
+                        <th>Diagnosa</th>
+                        <th>Tindakan Spesimen</th>
+                        <th>Status Hpa</th>
+                        <th>Status Proses</th>
+                        <th>Nama User</th>
+                        <th>Tanggal Hasil</th>
                     </tr>
                 </thead>
-                <tbody>
-                    <!-- Isi Tabel -->
+                <tfoot>
                     <tr>
-                        <td>1</td> <!-- Nomor urut -->
-                        <td>SS1234</td> <!-- Kode sampel -->
-                        <td>RM5678</td> <!-- Nomor rekam medis -->
-                        <td>John Doe</td> <!-- Nama pasien -->
-                        <td>Proses</td> <!-- Status proses pemeriksaan -->
-                        <td>08:00</td> <!-- Waktu mulai pemeriksaan -->
-                        <td>09:00</td> <!-- Janji waktu hasil -->
-                        <td>Dr. Jane</td> <!-- Nama analis -->
+                        <th></th> <!-- Footer kosong untuk Kode HPA -->
+                        <th></th> <!-- Footer kosong untuk Nama Pasien -->
+                        <th></th> <!-- Footer kosong untuk No RM Pasien -->
+                        <th></th> <!-- Footer kosong untuk Diagnosa -->
+                        <th></th> <!-- Footer kosong untuk Tindakan Spesimen -->
+                        <th></th> <!-- Footer kosong untuk Status HPA -->
+                        <th></th> <!-- Footer kosong untuk Status Proses -->
+                        <th></th> <!-- Footer kosong untuk Nama User -->
+                        <th></th> <!-- Footer kosong untuk Tanggal Hasil -->
                     </tr>
+                </tfoot>
+                <tbody>
                     <tr>
-                        <td>2</td> <!-- Nomor urut -->
-                        <td>SS5678</td> <!-- Kode sampel -->
-                        <td>RM1234</td> <!-- Nomor rekam medis -->
-                        <td>Jane Smith</td> <!-- Nama pasien -->
-                        <td>Proses</td> <!-- Status proses pemeriksaan -->
-                        <td>09:00</td> <!-- Waktu mulai pemeriksaan -->
-                        <td>10:00</td> <!-- Janji waktu hasil -->
-                        <td>Dr. John</td> <!-- Nama analis -->
+                        <td></td> <!-- Data Kode HPA kosong untuk sekarang -->
+                        <td></td> <!-- Data Nama Pasien kosong untuk sekarang -->
+                        <td></td> <!-- Data Norm Pasien kosong untuk sekarang -->
+                        <td></td> <!-- Data Diagnosa kosong untuk sekarang -->
+                        <td></td> <!-- Data Tindakan Spesimen kosong untuk sekarang -->
+                        <td></td> <!-- Data Status HPA kosong untuk sekarang -->
+                        <td></td> <!-- Data Status Proses kosong untuk sekarang -->
+                        <td></td> <!-- Data Nama User kosong untuk sekarang -->
+                        <td></td> <!-- Data Tanggal Hasil kosong untuk sekarang -->
                     </tr>
                 </tbody>
             </table>
@@ -61,8 +57,6 @@
 </div>
 
 <?= $this->include('dashboard/grafik_pemeriksaan'); ?> <!-- Menyertakan grafik pemeriksaan -->
-<?= $this->include('dashboard/data_keseluruhan_pemeriksaan'); ?> <!-- Menyertakan data keseluruhan pemeriksaan -->
 <?= $this->include('templates/notifikasi'); ?> <!-- Menyertakan notifikasi -->
 
 <?= $this->include('templates/dashboard/footer_dashboard'); ?> <!-- Menyertakan footer dashboard -->
-

@@ -27,4 +27,11 @@ class PemotonganTipisModel extends Model
     // Nama kolom untuk waktu dibuat dan diperbarui
     protected $createdField  = 'created_at';
     protected $updatedField  = 'updated_at';
+
+    // Fungsi untuk insert data PemotonganTipis
+    public function insertPemotonganTipis(array $data): bool
+    {
+        $this->insertPemotonganTipis($data);
+        return $this->db->affectedRows() > 0;
+    }
 }

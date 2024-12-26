@@ -27,4 +27,11 @@ class PewarnaanModel extends Model
     // Nama kolom untuk waktu dibuat dan diperbarui
     protected $createdField  = 'created_at';
     protected $updatedField  = 'updated_at';
+
+    // Fungsi untuk insert data Pewarnaan
+    public function insertPewarnaan(array $data): bool
+    {
+        $this->insertPewarnaan($data);
+        return $this->db->affectedRows() > 0;
+    }
 }

@@ -19,11 +19,13 @@ class Pemprosesan extends Migration
                 'type'       => 'INT',
                 'constraint' => 11,
                 'unsigned'   => true,
+                'null'       => true,
             ],
             'id_user' => [
                 'type'       => 'INT',
                 'constraint' => 11,
                 'unsigned'   => true,
+                'null'       => true,
             ],
             'status_pemprosesan' => [
                 'type'       => 'ENUM',

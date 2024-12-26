@@ -1,15 +1,18 @@
 <?php
 
-namespace App\Models; // Sesuaikan dengan folder 'Model'
+namespace App\Models;
 
 use CodeIgniter\Model;
 
 class HpaModel extends Model
 {
-    protected $table      = 'hpa'; // Nama tabel
-    protected $primaryKey = 'id_hpa'; // Nama primary key
-    protected $returnType = 'array';
-    // Kolom-kolom yang dapat diisi melalui mass-assignment
+    // Nama tabel yang digunakan oleh model
+    protected $table = 'hpa';
+
+    // Primary key dari tabel
+    protected $primaryKey = 'id_hpa';
+
+    // Kolom yang dapat diisi (mass assignable)
     protected $allowedFields = [
         'kode_hpa',
         'id_pasien',
@@ -21,26 +24,42 @@ class HpaModel extends Model
         'tindakan_spesimen',
         'diagnosa_klinik',
         'status_hpa',
+        'makroskopis_hpa',
+        'foto_makroskopis_hpa',
+        'mikroskopis_hpa',
+        'foto_mikroskopis_hpa',
+        'jumlah_slide',
+        'hasil_hpa',
         'id_penerimaan',
         'id_pengirisan',
+        'id_pemotongan',
+        'id_pemprosesan',
+        'id_penanaman',
+        'id_pemotongan_tipis',
+        'id_pewarnaan',
+        'id_pembacaan',
+        'id_penulisan',
+        'id_pemverifikasi',
+        'id_pencetakan',
         'id_mutu',
         'created_at',
-        'updated_at'
+        'updated_at',
     ];
 
-    // Mengaktifkan timestamps otomatis
+    // Menentukan tipe data untuk kolom 'created_at' dan 'updated_at'
     protected $useTimestamps = true;
-
-    // Nama kolom untuk waktu dibuat dan diperbarui
     protected $createdField  = 'created_at';
     protected $updatedField  = 'updated_at';
 
-public function insertHpa(array $data): bool
-{
-    // Insert data into the table
-    $this->insert($data);
+    // Fungsi untuk insert data HPA dengan pengecekan kode_hpa
+    public function insertHpa(array $data): bool
+    {
+        // Cek jika kode_hpa sudah ada
+        if ($this->where('kode_hpa', $data['kode_hpa'])->first()) {
+            return false;  // Jika sudah ada, tidak melakukan insert
+        }
 
-    // Check if the row was affected
-    return $this->db->affectedRows() > 0;
-}
+        // Melakukan insert data
+        return $this->insertHpa($data) > 0;
+    }
 }

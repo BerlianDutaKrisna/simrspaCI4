@@ -93,6 +93,12 @@ class Hpa extends Migration
                 'constraint' => 11,
                 'null'       => true,
             ],
+            'hasil_hpa' => [
+                'type' => 'VARCHAR',
+                'constraint' => 100,
+                'default'    => 'Belum Ada Hasil',
+                'null' => true,
+            ],
             'id_penerimaan' => [
                 'type'       => 'INT',
                 'constraint' => 11,
@@ -180,7 +186,7 @@ class Hpa extends Migration
 
         // Foreign Keys
         $this->forge->addForeignKey('id_pasien', 'patient', 'id_pasien', 'CASCADE', 'CASCADE');
-        // KOMENT TERLEBIH DAHULU UNTUK MERGE PERTAMA DAN BUKA KOMENT LALU MERGE KEDUA
+        // KOMENT DULU UNTUK MIGRATION PERTAMA
         $this->forge->addForeignKey('id_penerimaan', 'penerimaan', 'id_penerimaan', 'CASCADE', 'CASCADE');
         $this->forge->addForeignKey('id_pengirisan', 'pengirisan', 'id_pengirisan', 'CASCADE', 'CASCADE');
         $this->forge->addForeignKey('id_pemotongan', 'pemotongan', 'id_pemotongan', 'CASCADE', 'CASCADE');

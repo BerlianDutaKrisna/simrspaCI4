@@ -4,6 +4,19 @@ namespace App\Controllers;
 
 use App\Models\HpaModel;
 use App\Models\PatientModel;
+use App\Models\ProsesModel\PenerimaanModel;
+use App\Models\ProsesModel\PengirisanModel;
+use App\Models\ProsesModel\PemotonganModel;
+use App\Models\ProsesModel\PemprosesanModel;
+use App\Models\ProsesModel\PenanamanModel;
+use App\Models\ProsesModel\PemotonganTipisModel;
+use App\Models\ProsesModel\PewarnaanModel;
+use App\Models\ProsesModel\PembacaanModel;
+use App\Models\ProsesModel\PenulisanModel;
+use App\Models\ProsesModel\PemverifikasiModel;
+use App\Models\ProsesModel\PencetakanModel;
+use App\Models\MutuModel;
+use CodeIgniter\Controller;
 use Exception;
 
 class Exam extends BaseController
@@ -44,11 +57,8 @@ class Exam extends BaseController
         // Mengirim data ke view untuk ditampilkan
         return view('exam/register_exam', $data);
     }
-
     public function insert()
     {
-        $model = new HpaModel();
-
         try {
             // Validasi data input hanya untuk kode_hpa
             $validation = \Config\Services::validation();
@@ -78,19 +88,50 @@ class Exam extends BaseController
                 'lokasi_spesimen'    => $this->request->getPost('lokasi_spesimen'),
                 'tindakan_spesimen'  => $this->request->getPost('tindakan_spesimen') . ' ' . $this->request->getPost('tindakan_spesimen_custom'),
                 'diagnosa_klinik'    => $this->request->getPost('diagnosa_klinik'),
+                'status_hpa'         => $this->request->getPost('status_hpa'),
             ];
 
-            // Simpan data menggunakan fungsi insertHpa di model
-            if (!$model->insertHpa($data)) {
-                throw new Exception('Gagal menyimpan data. Tidak ada perubahan pada database.');
+            // Data untuk tabel HPA
+            $hpaModel = new HpaModel();
+            $hpaData = [
+                'kode_hpa'           => $data['kode_hpa'],
+                'id_pasien'          => $data['id_pasien'],
+                'unit_asal'          => $data['unit_asal'],
+                'dokter_pengirim'    => $data['dokter_pengirim'],
+                'tanggal_permintaan' => $data['tanggal_permintaan'],
+                'tanggal_hasil'      => $data['tanggal_hasil'],
+                'lokasi_spesimen'    => $data['lokasi_spesimen'],
+                'tindakan_spesimen'  => $data['tindakan_spesimen'],
+                'diagnosa_klinik'    => $data['diagnosa_klinik'],
+                'status_hpa'         => $data['status_hpa'],
+            ];
+
+            // Simpan data HPA terlebih dahulu
+            if (!$hpaModel->insert($hpaData)) {
+                throw new Exception('Gagal menyimpan data HPA.');
             }
 
-            // Redirect ke dashboard dengan pesan sukses
+            // Ambil id_hpa yang baru saja disimpan
+            $id_hpa = $hpaModel->getInsertID();
+
+            // Data untuk tabel penerimaan
+            $penerimaanData = [
+                'id_hpa'            => $id_hpa,  // Menambahkan id_hpa yang baru
+                'id_user'           => session()->get('id_user'),
+                'status_penerimaan' => 'Belum Diperiksa',
+            ];
+
+            // Simpan data ke tabel Penerimaan
+            $penerimaanModel = new PenerimaanModel();
+            if (!$penerimaanModel->insert($penerimaanData)) {
+                throw new Exception('Gagal menyimpan data penerimaan.');
+            }
+
+            // Jika berhasil, redirect ke halaman dashboard
             return redirect()->to('/dashboard')->with('success', 'Data berhasil disimpan!');
         } catch (Exception $e) {
             // Jika terjadi error, tampilkan pesan error
             return redirect()->back()->withInput()->with('error', $e->getMessage());
         }
     }
-
 }

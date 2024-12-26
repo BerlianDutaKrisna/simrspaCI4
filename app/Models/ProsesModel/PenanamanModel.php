@@ -27,4 +27,11 @@ class PenanamanModel extends Model
     // Nama kolom untuk waktu dibuat dan diperbarui
     protected $createdField  = 'created_at';
     protected $updatedField  = 'updated_at';
+
+    // Fungsi untuk insert data Penanaman
+    public function insertPenanaman(array $data): bool
+    {
+        $this->insertPenanaman($data);
+        return $this->db->affectedRows() > 0;
+    }
 }

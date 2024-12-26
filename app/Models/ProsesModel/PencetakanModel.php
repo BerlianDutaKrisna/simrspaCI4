@@ -27,4 +27,11 @@ class PencetakanModel extends Model
     // Nama kolom untuk waktu dibuat dan diperbarui
     protected $createdField  = 'created_at';
     protected $updatedField  = 'updated_at';
+
+    // Fungsi untuk insert data Pencetakan
+    public function insertPencetakan(array $data): bool
+    {
+        $this->insertPencetakan($data);
+        return $this->db->affectedRows() > 0;
+    }
 }

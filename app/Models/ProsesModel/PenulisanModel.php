@@ -27,4 +27,11 @@ class PenulisanModel extends Model
     // Nama kolom untuk waktu dibuat dan diperbarui
     protected $createdField  = 'created_at';
     protected $updatedField  = 'updated_at';
+
+    // Fungsi untuk insert data Penulisan
+    public function insertPenulisan(array $data): bool
+    {
+        $this->insertPenulisan($data);
+        return $this->db->affectedRows() > 0;
+    }
 }

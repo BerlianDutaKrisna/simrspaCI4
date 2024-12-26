@@ -25,4 +25,11 @@ class MutuModel extends Model
     // Nama kolom untuk waktu dibuat dan diperbarui
     protected $createdField  = 'created_at';
     protected $updatedField  = 'updated_at';
+
+    // Fungsi untuk insert data Mutu
+    public function insertMutu(array $data): bool
+    {
+        $this->insertMutu($data);
+        return $this->db->affectedRows() > 0;
+    }
 }

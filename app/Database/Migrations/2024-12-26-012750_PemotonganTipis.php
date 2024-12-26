@@ -19,11 +19,13 @@ class PemotonganTipis extends Migration
                 'type'       => 'INT',
                 'constraint' => 11,
                 'unsigned'   => true,
+                'null'       => true,
             ],
             'id_user' => [
                 'type'       => 'INT',
                 'constraint' => 11,
                 'unsigned'   => true,
+                'null'       => true,
             ],
             'status_pemotongan_tipis' => [
                 'type'       => 'ENUM',
