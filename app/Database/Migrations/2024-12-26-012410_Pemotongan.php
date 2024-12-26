@@ -39,6 +39,12 @@ class Pemotongan extends Migration
                 'type' => 'DATETIME',
                 'null' => true,
             ],
+            'id_user_dokter' => [
+                'type'       => 'INT',
+                'constraint' => 11,
+                'unsigned'   => true,
+                'null'       => true,
+            ],
             'created_at' => [
                 'type' => 'DATETIME',
                 'null' => true,
@@ -52,6 +58,8 @@ class Pemotongan extends Migration
         $this->forge->addKey('id_pemotongan', true); // Primary Key
         $this->forge->addForeignKey('id_hpa', 'hpa', 'id_hpa', 'CASCADE', 'CASCADE'); // Foreign Key ke tabel hpa
         $this->forge->addForeignKey('id_user', 'users', 'id_user', 'CASCADE', 'CASCADE'); // Foreign Key ke tabel users
+        $this->forge->addForeignKey('id_user_dokter', 'users', 'id_user', 'CASCADE', 'CASCADE'); // Foreign Key ke tabel users (Dokter)
+
         $this->forge->createTable('pemotongan');
     }
 
