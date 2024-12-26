@@ -94,12 +94,12 @@
                 </a>
             </div>
 
-            <!-- Tombol 10: Pemverivikasi -->
+            <!-- Tombol 10: Pemverifikasi -->
             <div class="col">
                 <a href="#" class="btn btn-primary btn-icon-split btn-sm d-flex justify-content-between m-2">
-                    <span class="text">Pemverivikasi</span>
+                    <span class="text">Pemverifikasi</span>
                     <span class="icon text-white-50">
-                        <i class="fas fa-check-square"></i> <!-- Ikon untuk Pemverivikasi -->
+                        <i class="fas fa-check-square"></i> <!-- Ikon untuk Pemverifikasi -->
                     </span>
                 </a>
             </div>

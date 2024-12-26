@@ -32,11 +32,11 @@ class Pengirisan extends Migration
                 'null'       => true,
             ],
             'mulai_pengirisan' => [
-                'type' => 'DATE',
+                'type' => 'DATETIME',
                 'null' => true,
             ],
             'selesai_pengirisan' => [
-                'type' => 'DATE',
+                'type' => 'DATETIME',
                 'null' => true,
             ],
             'created_at' => [

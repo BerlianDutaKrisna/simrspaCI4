@@ -4,12 +4,12 @@ namespace App\Database\Migrations;
 
 use CodeIgniter\Database\Migration;
 
-class Penerimaan extends Migration
+class Pemverifikasi extends Migration
 {
     public function up()
     {
         $this->forge->addField([
-            'id_penerimaan' => [
+            'id_pemverifikasi' => [
                 'type'           => 'INT',
                 'constraint'     => 11,
                 'unsigned'       => true,
@@ -25,17 +25,17 @@ class Penerimaan extends Migration
                 'constraint' => 11,
                 'unsigned'   => true,
             ],
-            'status_penerimaan' => [
+            'status_pemverifikasi' => [
                 'type'       => 'ENUM',
-                'constraint' => ['Belum Diperiksa', 'Proses Pemeriksaan', 'Sudah Diperiksa'],
-                'default'    => 'Belum Diperiksa',
+                'constraint' => ['Belum Diverifikasi', 'Proses Verifikasi', 'Selesai Verifikasi'],
+                'default'    => 'Belum Diverifikasi',
                 'null'       => true,
             ],
-            'mulai_penerimaan' => [
+            'mulai_pemverifikasi' => [
                 'type' => 'DATETIME',
                 'null' => true,
             ],
-            'selesai_penerimaan' => [
+            'selesai_pemverifikasi' => [
                 'type' => 'DATETIME',
                 'null' => true,
             ],
@@ -49,14 +49,14 @@ class Penerimaan extends Migration
             ],
         ]);
 
-        $this->forge->addKey('id_penerimaan', true); // Primary Key
-        $this->forge->addForeignKey('id_hpa', 'hpa', 'id_hpa', 'CASCADE', 'CASCADE'); // Sesuaikan dengan tabel hpa
-        $this->forge->addForeignKey('id_user', 'users', 'id_user', 'CASCADE', 'CASCADE'); // Sesuaikan dengan tabel users
-        $this->forge->createTable('penerimaan');
+        $this->forge->addKey('id_pemverifikasi', true); // Primary Key
+        $this->forge->addForeignKey('id_hpa', 'hpa', 'id_hpa', 'CASCADE', 'CASCADE'); // Foreign Key ke tabel hpa
+        $this->forge->addForeignKey('id_user', 'users', 'id_user', 'CASCADE', 'CASCADE'); // Foreign Key ke tabel users
+        $this->forge->createTable('pemverifikasi');
     }
 
     public function down()
     {
-        $this->forge->dropTable('penerimaan');
+        $this->forge->dropTable('pemverifikasi');
     }
 }
