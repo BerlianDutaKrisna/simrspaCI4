@@ -22,6 +22,8 @@
                         <th>Status Hpa</th>
                         <th>Status Proses</th>
                         <th>Nama User</th>
+                        <th>Mulai Pengerjaan</th>
+                        <th>Selesai Pengerjaan</th>
                         <th>Tanggal Hasil</th>
                     </tr>
                 </thead>
@@ -50,7 +52,33 @@
                                 <td><?= esc($row['status_hpa']); ?></td>
                                 <td><?= esc($row['status_penerimaan']); ?></td>
                                 <td><?= esc($row['nama_user_penerimaan']); ?></td>
-                                <td><?= esc($row['tanggal_hasil']); ?></td>
+                                <td>
+                                    <?php
+                                    if (empty($row['mulai_penerimaan'])) {
+                                        echo '-';
+                                    } else {
+                                        echo esc(date('H:i, d-m-Y', strtotime($row['mulai_penerimaan'])));
+                                    }
+                                    ?>
+                                </td>
+                                <td>
+                                    <?php
+                                    if (empty($row['selesai_penerimaan'])) {
+                                        echo '-';
+                                    } else {
+                                        echo esc(date('H:i, d-m-Y', strtotime($row['selesai_penerimaan'])));
+                                    }
+                                    ?>
+                                </td>
+                                <td>
+                                    <?php
+                                    if (empty($row['tanggal_hasil'])) {
+                                        echo 'Belum diisi';
+                                    } else {
+                                        echo esc(date('d-m-Y', strtotime($row['tanggal_hasil'])));
+                                    }
+                                    ?>
+                                </td>
                             </tr>
                         <?php endforeach; ?>
                     <?php else : ?>

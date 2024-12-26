@@ -13,7 +13,7 @@ class PemprosesanModel extends Model
     // Kolom-kolom yang dapat diisi melalui mass-assignment
     protected $allowedFields = [
         'id_hpa',
-        'id_user',
+        'id_user_pemprosesan',
         'status_pemprosesan',
         'mulai_pemprosesan',
         'selesai_pemprosesan',

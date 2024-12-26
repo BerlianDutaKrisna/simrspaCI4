@@ -21,7 +21,7 @@ class PemotonganTipis extends Migration
                 'unsigned'   => true,
                 'null'       => true,
             ],
-            'id_user' => [
+            'id_user_pemotongan_tipis' => [
                 'type'       => 'INT',
                 'constraint' => 11,
                 'unsigned'   => true,
@@ -53,12 +53,14 @@ class PemotonganTipis extends Migration
 
         $this->forge->addKey('id_pemotongan_tipis', true); // Primary Key
         $this->forge->addForeignKey('id_hpa', 'hpa', 'id_hpa', 'CASCADE', 'CASCADE'); // Foreign Key ke tabel hpa
-        $this->forge->addForeignKey('id_user', 'users', 'id_user', 'CASCADE', 'CASCADE'); // Foreign Key ke tabel users
+        $this->forge->addForeignKey('id_user_pemotongan_tipis', 'users', 'id_user', 'CASCADE', 'CASCADE'); // Foreign Key ke tabel users
         $this->forge->createTable('pemotongan_tipis');
     }
 
     public function down()
     {
+        $this->forge->dropForeignKey('pemotongan_tipis', 'id_hpa');
+        $this->forge->dropForeignKey('pemotongan_tipis', 'id_user_pemotongan_tipis');
         $this->forge->dropTable('pemotongan_tipis');
     }
 }

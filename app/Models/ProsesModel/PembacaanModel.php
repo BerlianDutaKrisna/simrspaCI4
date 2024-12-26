@@ -13,8 +13,8 @@ class PembacaanModel extends Model
     // Kolom-kolom yang dapat diisi melalui mass-assignment
     protected $allowedFields = [
         'id_hpa',
-        'id_user',
-        'id_user_dokter', // Menambahkan field id_user_dokter
+        'id_user_pembacaan',
+        'id_user_dokter_pembacaan', // Menambahkan field id_user_dokter
         'status_pembacaan',
         'mulai_pembacaan',
         'selesai_pembacaan',

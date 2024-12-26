@@ -13,7 +13,7 @@ class PenulisanModel extends Model
     // Kolom-kolom yang dapat diisi melalui mass-assignment
     protected $allowedFields = [
         'id_hpa',
-        'id_user',
+        'id_user_penulisan',
         'status_penulisan',
         'mulai_penulisan',
         'selesai_penulisan',

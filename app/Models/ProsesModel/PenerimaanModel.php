@@ -13,7 +13,7 @@ class PenerimaanModel extends Model
     // Kolom-kolom yang dapat diisi melalui mass-assignment
     protected $allowedFields = [
         'id_hpa',
-        'id_user',
+        'id_user_penerimaan',
         'status_penerimaan',
         'mulai_penerimaan',
         'selesai_penerimaan',
@@ -33,5 +33,19 @@ class PenerimaanModel extends Model
     {
         $this->insertPenerimaan($data);
         return $this->db->affectedRows() > 0;
+    }
+
+    public function getPenerimaanWithRelations()
+    {
+        return $this->select('
+        penerimaan.*, 
+        hpa.*, 
+        patient.*, 
+        users_penerimaan.nama_user AS nama_user_penerimaan
+    ')
+            ->join('hpa', 'penerimaan.id_hpa = hpa.id_hpa', 'left') // Relasi dengan tabel hpa
+            ->join('patient', 'hpa.id_pasien = patient.id_pasien', 'left') // Relasi dengan tabel patient
+            ->join('users AS users_penerimaan', 'penerimaan.id_user = users_penerimaan.id_user', 'left') // Relasi dengan tabel users untuk penerimaan
+            ->findAll();
     }
 }

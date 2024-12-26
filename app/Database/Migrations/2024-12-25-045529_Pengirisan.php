@@ -21,7 +21,7 @@ class Pengirisan extends Migration
                 'unsigned'   => true,
                 'null'       => true,
             ],
-            'id_user' => [
+            'id_user_pengirisan' => [
                 'type'       => 'INT',
                 'constraint' => 11,
                 'unsigned'   => true,
@@ -53,12 +53,15 @@ class Pengirisan extends Migration
 
         $this->forge->addKey('id_pengirisan', true); // Primary Key
         $this->forge->addForeignKey('id_hpa', 'hpa', 'id_hpa', 'CASCADE', 'CASCADE'); // Sesuaikan dengan tabel hpa
-        $this->forge->addForeignKey('id_user', 'users', 'id_user', 'CASCADE', 'CASCADE'); // Sesuaikan dengan tabel users
+        $this->forge->addForeignKey('id_user_pengirisan', 'users', 'id_user', 'CASCADE', 'CASCADE'); // Sesuaikan dengan tabel users
         $this->forge->createTable('pengirisan');
     }
 
     public function down()
     {
+
+        $this->forge->dropForeignKey('pengirisan', 'id_hpa');
+        $this->forge->dropForeignKey('pengirisan', 'id_user_pengirisan');
         $this->forge->dropTable('pengirisan');
     }
 }

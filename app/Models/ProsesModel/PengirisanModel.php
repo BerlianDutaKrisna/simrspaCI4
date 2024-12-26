@@ -13,7 +13,7 @@ class PengirisanModel extends Model
     // Kolom-kolom yang dapat diisi melalui mass-assignment
     protected $allowedFields = [
         'id_hpa',
-        'id_user',
+        'id_user_pengirisan',
         'status_pengirisan',
         'mulai_pengirisan',
         'selesai_pengirisan',

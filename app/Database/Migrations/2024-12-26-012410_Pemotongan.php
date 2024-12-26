@@ -21,7 +21,7 @@ class Pemotongan extends Migration
                 'unsigned'   => true,
                 'null'       => true,
             ],
-            'id_user' => [
+            'id_user_pemotongan' => [
                 'type'       => 'INT',
                 'constraint' => 11,
                 'unsigned'   => true,
@@ -41,7 +41,7 @@ class Pemotongan extends Migration
                 'type' => 'DATETIME',
                 'null' => true,
             ],
-            'id_user_dokter' => [
+            'id_user_dokter_pemotongan' => [
                 'type'       => 'INT',
                 'constraint' => 11,
                 'unsigned'   => true,
@@ -59,14 +59,17 @@ class Pemotongan extends Migration
 
         $this->forge->addKey('id_pemotongan', true); // Primary Key
         $this->forge->addForeignKey('id_hpa', 'hpa', 'id_hpa', 'CASCADE', 'CASCADE'); // Foreign Key ke tabel hpa
-        $this->forge->addForeignKey('id_user', 'users', 'id_user', 'CASCADE', 'CASCADE'); // Foreign Key ke tabel users
-        $this->forge->addForeignKey('id_user_dokter', 'users', 'id_user', 'CASCADE', 'CASCADE'); // Foreign Key ke tabel users (Dokter)
+        $this->forge->addForeignKey('id_user_pemotongan', 'users', 'id_user', 'CASCADE', 'CASCADE'); // Foreign Key ke tabel users
+        $this->forge->addForeignKey('id_user_dokter_pemotongan', 'users', 'id_user', 'CASCADE', 'CASCADE'); // Foreign Key ke tabel users (Dokter)
 
         $this->forge->createTable('pemotongan');
     }
 
     public function down()
     {
+        $this->forge->dropForeignKey('pemotongan', 'id_hpa');
+        $this->forge->dropForeignKey('pemotongan', 'id_user_pemotongan');
+        $this->forge->dropForeignKey('pemotongan', 'id_user_dokter_pemotongan');
         $this->forge->dropTable('pemotongan');
     }
 }

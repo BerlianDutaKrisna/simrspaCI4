@@ -21,7 +21,7 @@ class Pewarnaan extends Migration
                 'unsigned'   => true,
                 'null'       => true,
             ],
-            'id_user' => [
+            'id_user_pewarnaan' => [
                 'type'       => 'INT',
                 'constraint' => 11,
                 'unsigned'   => true,
@@ -53,12 +53,14 @@ class Pewarnaan extends Migration
 
         $this->forge->addKey('id_pewarnaan', true); // Primary Key
         $this->forge->addForeignKey('id_hpa', 'hpa', 'id_hpa', 'CASCADE', 'CASCADE'); // Foreign Key ke tabel hpa
-        $this->forge->addForeignKey('id_user', 'users', 'id_user', 'CASCADE', 'CASCADE'); // Foreign Key ke tabel users
+        $this->forge->addForeignKey('id_user_pewarnaan', 'users', 'id_user', 'CASCADE', 'CASCADE'); // Foreign Key ke tabel users
         $this->forge->createTable('pewarnaan');
     }
 
     public function down()
     {
+        $this->forge->dropForeignKey('pewarnaan', 'id_hpa');
+        $this->forge->dropForeignKey('pewarnaan', 'id_user_pewarnaan');
         $this->forge->dropTable('pewarnaan');
     }
 }

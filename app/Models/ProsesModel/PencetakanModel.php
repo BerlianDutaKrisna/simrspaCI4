@@ -13,7 +13,7 @@ class PencetakanModel extends Model
     // Kolom-kolom yang dapat diisi melalui mass-assignment
     protected $allowedFields = [
         'id_hpa',
-        'id_user',
+        'id_user_pencetakan',
         'status_pencetakan',
         'mulai_pencetakan',
         'selesai_pencetakan',

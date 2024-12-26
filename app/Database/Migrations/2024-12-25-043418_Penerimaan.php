@@ -21,7 +21,7 @@ class Penerimaan extends Migration
                 'unsigned'   => true,
                 'null'       => true,
             ],
-            'id_user' => [
+            'id_user_penerimaan' => [
                 'type'       => 'INT',
                 'constraint' => 11,
                 'unsigned'   => true,
@@ -53,12 +53,14 @@ class Penerimaan extends Migration
 
         $this->forge->addKey('id_penerimaan', true); // Primary Key
         $this->forge->addForeignKey('id_hpa', 'hpa', 'id_hpa', 'CASCADE', 'CASCADE'); // Sesuaikan dengan tabel hpa
-        $this->forge->addForeignKey('id_user', 'users', 'id_user', 'CASCADE', 'CASCADE'); // Sesuaikan dengan tabel users
+        $this->forge->addForeignKey('id_user_penerimaan', 'users', 'id_user', 'CASCADE', 'CASCADE');
         $this->forge->createTable('penerimaan');
     }
 
     public function down()
     {
+        $this->forge->dropForeignKey('penerimaan', 'id_hpa');
+        $this->forge->dropForeignKey('penerimaan', 'id_user_penerimaan');
         $this->forge->dropTable('penerimaan');
     }
 }

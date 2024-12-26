@@ -13,8 +13,8 @@ class PemverifikasiModel extends Model
     // Kolom-kolom yang dapat diisi melalui mass-assignment
     protected $allowedFields = [
         'id_hpa',
-        'id_user',
-        'id_user_dokter',
+        'id_user_pemverifikasian',
+        'id_user_dokter_pemverifikasian',
         'status_pemverifikasian',
         'mulai_pemverifikasian',
         'selesai_pemverifikasian',

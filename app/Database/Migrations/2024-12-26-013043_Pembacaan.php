@@ -21,7 +21,7 @@ class Pembacaan extends Migration
                 'unsigned'   => true,
                 'null'       => true,
             ],
-            'id_user' => [
+            'id_user_pembacaan' => [
                 'type'       => 'INT',
                 'constraint' => 11,
                 'unsigned'   => true,
@@ -41,7 +41,7 @@ class Pembacaan extends Migration
                 'type' => 'DATETIME',
                 'null' => true,
             ],
-            'id_user_dokter' => [
+            'id_user_dokter_pembacaan' => [
                 'type'       => 'INT',
                 'constraint' => 11,
                 'unsigned'   => true,
@@ -59,14 +59,17 @@ class Pembacaan extends Migration
 
         $this->forge->addKey('id_pembacaan', true); // Primary Key
         $this->forge->addForeignKey('id_hpa', 'hpa', 'id_hpa', 'CASCADE', 'CASCADE'); // Foreign Key ke tabel hpa
-        $this->forge->addForeignKey('id_user', 'users', 'id_user', 'CASCADE', 'CASCADE'); // Foreign Key ke tabel users
-        $this->forge->addForeignKey('id_user_dokter', 'users', 'id_user', 'CASCADE', 'CASCADE'); // Foreign Key ke tabel users (Dokter)
+        $this->forge->addForeignKey('id_user_pembacaan', 'users', 'id_user', 'CASCADE', 'CASCADE'); // Foreign Key ke tabel users
+        $this->forge->addForeignKey('id_user_dokter_pembacaan', 'users', 'id_user', 'CASCADE', 'CASCADE'); // Foreign Key ke tabel users (Dokter)
 
         $this->forge->createTable('pembacaan');
     }
 
     public function down()
     {
+        $this->forge->dropForeignKey('pembacaan', 'id_hpa');
+        $this->forge->dropForeignKey('pembacaan', 'id_user_pembacaan');
+        $this->forge->dropForeignKey('pembacaan', 'id_user_dokter_pembacaan');
         $this->forge->dropTable('pembacaan');
     }
 }

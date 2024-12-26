@@ -13,7 +13,7 @@ class PenanamanModel extends Model
     // Kolom-kolom yang dapat diisi melalui mass-assignment
     protected $allowedFields = [
         'id_hpa',
-        'id_user',
+        'id_user_penanaman',
         'status_penanaman',
         'mulai_penanaman',
         'selesai_penanaman',

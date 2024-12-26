@@ -21,7 +21,7 @@ class Pemprosesan extends Migration
                 'unsigned'   => true,
                 'null'       => true,
             ],
-            'id_user' => [
+            'id_user_pemprosesan' => [
                 'type'       => 'INT',
                 'constraint' => 11,
                 'unsigned'   => true,
@@ -53,12 +53,14 @@ class Pemprosesan extends Migration
 
         $this->forge->addKey('id_pemprosesan', true); // Primary Key
         $this->forge->addForeignKey('id_hpa', 'hpa', 'id_hpa', 'CASCADE', 'CASCADE'); // Foreign Key ke tabel hpa
-        $this->forge->addForeignKey('id_user', 'users', 'id_user', 'CASCADE', 'CASCADE'); // Foreign Key ke tabel users
+        $this->forge->addForeignKey('id_user_pemprosesan', 'users', 'id_user', 'CASCADE', 'CASCADE'); // Foreign Key ke tabel users
         $this->forge->createTable('pemprosesan');
     }
 
     public function down()
     {
+        $this->forge->dropForeignKey('pemprosesan', 'id_hpa');
+        $this->forge->dropForeignKey('pemprosesan', 'id_user_pemprosesan');
         $this->forge->dropTable('pemprosesan');
     }
 }

@@ -17,13 +17,14 @@
                         <th>Deadline Hasil</th>
                         <th>Aksi</th>
                         <th>Status Proses</th>
+                        <th>Analis</th>
                         <th>Kualitas Sediaan</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <?php if (!empty($hpa)): ?>
+                    <?php if (!empty($penerimaanData)): ?>
                         <?php $i = 1; ?>
-                        <?php foreach ($hpa as $row): ?>
+                        <?php foreach ($penerimaanData as $row): ?>
                             <tr>
                                 <td><?= $i ?></td>
                                 <td><?= $row['kode_hpa']; ?></td>
@@ -41,6 +42,7 @@
                                     <input type="checkbox" name="aksi[<?= $row['id_hpa'] ?>]" id="aksi<?= $row['id_hpa'] ?>" class="form-control form-control-user" autocomplete="off">
                                 </td>
                                 <td><?= $row['status_hpa']; ?></td> <!-- Tampilkan Status Proses -->
+                                <td><?= $row['nama_user_penerimaan']; ?></td>
                                 <td>
                                     <!-- Custom Checkbox untuk Kualitas Sediaan -->
                                     <div class="custom-control custom-checkbox">

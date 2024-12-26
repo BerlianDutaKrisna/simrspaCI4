@@ -127,6 +127,12 @@ class Exam extends BaseController
                 throw new Exception('Gagal menyimpan data penerimaan.');
             }
 
+            // Ambil id_penerimaan yang baru saja disimpan
+            $id_penerimaan = $penerimaanModel->getInsertID();
+
+            // Update id_penerimaan pada tabel hpa
+            $hpaModel->update($id_hpa, ['id_penerimaan' => $id_penerimaan]);
+
             // Jika berhasil, redirect ke halaman dashboard
             return redirect()->to('/dashboard')->with('success', 'Data berhasil disimpan!');
         } catch (Exception $e) {

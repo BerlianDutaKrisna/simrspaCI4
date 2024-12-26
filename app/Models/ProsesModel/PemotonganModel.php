@@ -13,8 +13,8 @@ class PemotonganModel extends Model
     // Kolom-kolom yang dapat diisi melalui mass-assignment
     protected $allowedFields = [
         'id_hpa',
-        'id_user',
-        'id_user_dokter',
+        'id_user_pemotongan',
+        'id_user_dokter_pemotongan',
         'status_pemotongan',
         'mulai_pemotongan',
         'selesai_pemotongan',

@@ -21,7 +21,7 @@ class Penulisan extends Migration
                 'unsigned'   => true,
                 'null'       => true,
             ],
-            'id_user' => [
+            'id_user_penulisan' => [
                 'type'       => 'INT',
                 'constraint' => 11,
                 'unsigned'   => true,
@@ -53,12 +53,14 @@ class Penulisan extends Migration
 
         $this->forge->addKey('id_penulisan', true); // Primary Key
         $this->forge->addForeignKey('id_hpa', 'hpa', 'id_hpa', 'CASCADE', 'CASCADE'); // Foreign Key ke tabel hpa
-        $this->forge->addForeignKey('id_user', 'users', 'id_user', 'CASCADE', 'CASCADE'); // Foreign Key ke tabel users
+        $this->forge->addForeignKey('id_user_penulisan', 'users', 'id_user', 'CASCADE', 'CASCADE'); // Foreign Key ke tabel users
         $this->forge->createTable('penulisan');
     }
 
     public function down()
     {
+        $this->forge->dropForeignKey('penulisan', 'id_hpa');
+        $this->forge->dropForeignKey('penulisan', 'id_user_penulisan');
         $this->forge->dropTable('penulisan');
     }
 }
