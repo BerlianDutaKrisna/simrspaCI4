@@ -82,11 +82,15 @@ class Exam extends BaseController
                 'kode_hpa'           => $this->request->getPost('kode_hpa'),
                 'id_pasien'          => $this->request->getPost('id_pasien'),
                 'unit_asal'          => $this->request->getPost('unit_asal') . ' ' . $this->request->getPost('unit_asal_detail'),
-                'dokter_pengirim'    => $this->request->getPost('dokter_pengirim') . ' ' . $this->request->getPost('dokter_pengirim_custom'),
+                'dokter_pengirim' => $this->request->getPost('dokter_pengirim_custom')
+                ? $this->request->getPost('dokter_pengirim_custom')
+                : $this->request->getPost('dokter_pengirim'),
                 'tanggal_permintaan' => $this->request->getPost('tanggal_permintaan') ?: null,
                 'tanggal_hasil'      => $this->request->getPost('tanggal_hasil') ?: null,
                 'lokasi_spesimen'    => $this->request->getPost('lokasi_spesimen'),
-                'tindakan_spesimen'  => $this->request->getPost('tindakan_spesimen') . ' ' . $this->request->getPost('tindakan_spesimen_custom'),
+                'tindakan_spesimen' => $this->request->getPost('tindakan_spesimen_custom')
+                ? $this->request->getPost('tindakan_spesimen_custom')
+                : $this->request->getPost('tindakan_spesimen'),
                 'diagnosa_klinik'    => $this->request->getPost('diagnosa_klinik'),
                 'status_hpa'         => $this->request->getPost('status_hpa'),
             ];
@@ -117,7 +121,7 @@ class Exam extends BaseController
             // Data untuk tabel penerimaan
             $penerimaanData = [
                 'id_hpa'            => $id_hpa,  // Menambahkan id_hpa yang baru
-                'id_user'           => session()->get('id_user'),
+                'id_user_penerimaan' => session()->get('id_user'),
                 'status_penerimaan' => 'Belum Diperiksa',
             ];
 

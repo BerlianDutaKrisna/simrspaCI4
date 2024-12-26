@@ -38,7 +38,7 @@ $routes->post('exam/insert', 'Exam::insert'); // Menangani form POST dari regist
 
 // Route untuk Penerimaan
 $routes->get('penerimaan/index_penerimaan', 'Proses\Penerimaan::index_penerimaan'); // Menampilkan halaman penerimaan
-
+$routes->post('penerimaan/mulai_penerimaan', 'Proses\Penerimaan::mulai_penerimaan'); // Menangani form POST dari mulai penerimaan
 
 
 

@@ -17,11 +17,16 @@ class Dashboard extends BaseController
         $hpaModel = new HpaModel();
 
         // Mengambil data HPA beserta relasinya
-        $data['hpaData'] = $hpaModel->getHpaWithRelations();
-        // Mengambil id_user dan nama_user dari session
-        $data['id_user'] = session()->get('id_user');
-        $data['nama_user'] = session()->get('nama_user');
+        $hpaData = $hpaModel->getHpaWithRelations();
+
+        // Menggabungkan data dari model dan session
+        $data = [
+            'hpaData' => $hpaData,
+            'id_user' => session()->get('id_user'),
+            'nama_user' => session()->get('nama_user'),
+        ];
         // Mengirim data ke view untuk ditampilkan
         return view('dashboard/dashboard', $data);
     }
+
 }

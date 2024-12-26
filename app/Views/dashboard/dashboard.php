@@ -38,6 +38,8 @@
                         <th></th>
                         <th></th>
                         <th></th>
+                        <th></th>
+                        <th></th>
                     </tr>
                 </tfoot>
                 <tbody>
@@ -54,19 +56,19 @@
                                 <td><?= esc($row['nama_user_penerimaan']); ?></td>
                                 <td>
                                     <?php
-                                    if (empty($row['mulai_penerimaan'])) {
+                                    if (empty($row['waktu_pengerjaan'])) {
                                         echo '-';
                                     } else {
-                                        echo esc(date('H:i, d-m-Y', strtotime($row['mulai_penerimaan'])));
+                                        echo esc(date('H:i, d-m-Y', strtotime($row['waktu_pengerjaan'])));
                                     }
                                     ?>
                                 </td>
                                 <td>
                                     <?php
-                                    if (empty($row['selesai_penerimaan'])) {
+                                    if (empty($row['selesai_pengerjaan'])) {
                                         echo '-';
                                     } else {
-                                        echo esc(date('H:i, d-m-Y', strtotime($row['selesai_penerimaan'])));
+                                        echo esc(date('H:i, d-m-Y', strtotime($row['selesai_pengerjaan'])));
                                     }
                                     ?>
                                 </td>

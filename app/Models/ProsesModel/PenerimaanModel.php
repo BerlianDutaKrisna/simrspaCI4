@@ -41,11 +41,20 @@ class PenerimaanModel extends Model
         penerimaan.*, 
         hpa.*, 
         patient.*, 
-        users_penerimaan.nama_user AS nama_user_penerimaan
+        users.nama_user AS nama_user_penerimaan
     ')
             ->join('hpa', 'penerimaan.id_hpa = hpa.id_hpa', 'left') // Relasi dengan tabel hpa
             ->join('patient', 'hpa.id_pasien = patient.id_pasien', 'left') // Relasi dengan tabel patient
-            ->join('users AS users_penerimaan', 'penerimaan.id_user = users_penerimaan.id_user', 'left') // Relasi dengan tabel users untuk penerimaan
+            ->join('users', 'penerimaan.id_user_penerimaan = users.id_user', 'left') // Relasi dengan tabel users untuk penerimaan
             ->findAll();
+    }
+
+    // Fungsi untuk mengupdate data penerimaan
+    public function updatePenerimaan($id_penerimaan, $data)
+    {
+        $builder = $this->db->table($this->table);  // Mengambil table penerimaan
+        $builder->where('id_penerimaan', $id_penerimaan);  // Menentukan baris yang akan diupdate berdasarkan id_penerimaan
+        $builder->update($data);  // Melakukan update dengan data yang dikirimkan
+        return $this->db->affectedRows();  // Mengembalikan jumlah baris yang terpengaruh
     }
 }

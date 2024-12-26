@@ -23,6 +23,7 @@ class Auth extends BaseController
     }
 
     // Fungsi login
+    // Fungsi login
     public function login()
     {
         // Validasi form
@@ -45,10 +46,10 @@ class Auth extends BaseController
                 $data['id_user'] = session()->get('id_user');
                 $data['nama_user'] = session()->get('nama_user');
 
-                // Kirim data ke view
-                return view('dashboard/dashboard', $data);
+                // Redirect ke halaman dashboard setelah login
+                return redirect()->to('/dashboard'); // Redirect ke route 'dashboard'
             } else {
-                // Pastikan session->getFlashdata menerima array untuk error
+                // Jika username atau password salah
                 session()->setFlashdata('error', ['Username atau Password salah.']);
                 return redirect()->back();
             }
@@ -56,6 +57,7 @@ class Auth extends BaseController
 
         return redirect()->to('login'); // Redirect jika bukan method POST
     }
+
 
     // Fungsi logout
     public function logout()
