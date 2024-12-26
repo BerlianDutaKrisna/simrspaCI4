@@ -27,29 +27,37 @@
                 </thead>
                 <tfoot>
                     <tr>
-                        <th></th> <!-- Footer kosong untuk Kode HPA -->
-                        <th></th> <!-- Footer kosong untuk Nama Pasien -->
-                        <th></th> <!-- Footer kosong untuk No RM Pasien -->
-                        <th></th> <!-- Footer kosong untuk Diagnosa -->
-                        <th></th> <!-- Footer kosong untuk Tindakan Spesimen -->
-                        <th></th> <!-- Footer kosong untuk Status HPA -->
-                        <th></th> <!-- Footer kosong untuk Status Proses -->
-                        <th></th> <!-- Footer kosong untuk Nama User -->
-                        <th></th> <!-- Footer kosong untuk Tanggal Hasil -->
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
                     </tr>
                 </tfoot>
                 <tbody>
-                    <tr>
-                        <td></td> <!-- Data Kode HPA kosong untuk sekarang -->
-                        <td></td> <!-- Data Nama Pasien kosong untuk sekarang -->
-                        <td></td> <!-- Data Norm Pasien kosong untuk sekarang -->
-                        <td></td> <!-- Data Diagnosa kosong untuk sekarang -->
-                        <td></td> <!-- Data Tindakan Spesimen kosong untuk sekarang -->
-                        <td></td> <!-- Data Status HPA kosong untuk sekarang -->
-                        <td></td> <!-- Data Status Proses kosong untuk sekarang -->
-                        <td></td> <!-- Data Nama User kosong untuk sekarang -->
-                        <td></td> <!-- Data Tanggal Hasil kosong untuk sekarang -->
-                    </tr>
+                    <?php if (!empty($hpaData)) : ?>
+                        <?php foreach ($hpaData as $row) : ?>
+                            <tr>
+                                <td><?= esc($row['kode_hpa']); ?></td>
+                                <td><?= esc($row['nama_pasien']); ?></td>
+                                <td><?= esc($row['norm_pasien']); ?></td>
+                                <td><?= esc($row['diagnosa_klinik']); ?></td>
+                                <td><?= esc($row['tindakan_spesimen']); ?></td>
+                                <td><?= esc($row['status_hpa']); ?></td>
+                                <td><?= esc($row['status_penerimaan']); ?></td>
+                                <td><?= esc($row['nama_user_penerimaan']); ?></td>
+                                <td><?= esc($row['tanggal_hasil']); ?></td>
+                            </tr>
+                        <?php endforeach; ?>
+                    <?php else : ?>
+                        <tr>
+                            <td colspan="9" class="text-center">Tidak ada data yang tersedia</td>
+                        </tr>
+                    <?php endif; ?>
                 </tbody>
             </table>
         </div>
@@ -58,5 +66,4 @@
 
 <?= $this->include('dashboard/grafik_pemeriksaan'); ?> <!-- Menyertakan grafik pemeriksaan -->
 <?= $this->include('templates/notifikasi'); ?> <!-- Menyertakan notifikasi -->
-
 <?= $this->include('templates/dashboard/footer_dashboard'); ?> <!-- Menyertakan footer dashboard -->
