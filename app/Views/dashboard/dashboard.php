@@ -20,7 +20,7 @@
                         <th>Diagnosa</th>
                         <th>Tindakan Spesimen</th>
                         <th>Status Hpa</th>
-                        <th>Status Proses</th>
+                        <th>Status Proses</th> <!-- Kolom Status Proses -->
                         <th>Nama User</th>
                         <th>Mulai Pengerjaan</th>
                         <th>Selesai Pengerjaan</th>
@@ -52,24 +52,82 @@
                                 <td><?= esc($row['diagnosa_klinik']); ?></td>
                                 <td><?= esc($row['tindakan_spesimen']); ?></td>
                                 <td><?= esc($row['status_hpa']); ?></td>
-                                <td><?= esc($row['status_penerimaan']); ?></td>
-                                <td><?= esc($row['nama_user_penerimaan']); ?></td>
                                 <td>
                                     <?php
-                                    if (empty($row['waktu_pengerjaan'])) {
-                                        echo '-';
-                                    } else {
-                                        echo esc(date('H:i, d-m-Y', strtotime($row['waktu_pengerjaan'])));
+                                    // Tentukan status proses berdasarkan status hpa
+                                    switch ($row['status_hpa']) {
+                                        case 'Penerimaan':
+                                            echo esc($row['status_penerimaan']); // Menampilkan status_penerimaan jika status_hpa Penerimaan
+                                            break;
+                                        case 'Pengirisan':
+                                            echo esc($row['status_pengirisan']); // Menampilkan status_pengirisan jika status_hpa Pengirisan
+                                            break;
+                                        default:
+                                            echo '-'; // Menampilkan tanda "-" jika status_hpa tidak sesuai
+                                            break;
                                     }
                                     ?>
                                 </td>
                                 <td>
                                     <?php
-                                    if (empty($row['selesai_pengerjaan'])) {
-                                        echo '-';
-                                    } else {
-                                        echo esc(date('H:i, d-m-Y', strtotime($row['selesai_pengerjaan'])));
+                                    switch ($row['status_hpa']) {
+                                        case 'Penerimaan':
+                                            echo esc($row['nama_user_penerimaan']);
+                                            break;
+                                        case 'Pengirisan':
+                                            echo esc($row['nama_user_pengirisan']);
+                                            break;
+                                        case 'Pemotongan':
+                                            echo esc($row['nama_user_pemotongan']);
+                                            break;
+                                        default:
+                                            echo '-';
+                                            break;
                                     }
+                                    ?>
+                                </td>
+                                <!-- Mulai Pengerjaan -->
+                                <td>
+                                    <?php
+                                    $startTimeField = '';
+                                    switch ($row['status_hpa']) {
+                                        case 'Penerimaan':
+                                            $startTimeField = 'mulai_penerimaan';
+                                            break;
+                                        case 'Pengirisan':
+                                            $startTimeField = 'mulai_pengirisan';
+                                            break;
+                                        case 'Pemotongan':
+                                            $startTimeField = 'mulai_pemotongan';
+                                            break;
+                                        default:
+                                            $startTimeField = 'waktu_pengerjaan';
+                                            break;
+                                    }
+
+                                    echo empty($row[$startTimeField]) ? '-' : esc(date('H:i, d-m-Y', strtotime($row[$startTimeField])));
+                                    ?>
+                                </td>
+                                <!-- Selesai Pengerjaan -->
+                                <td>
+                                    <?php
+                                    $endTimeField = '';
+                                    switch ($row['status_hpa']) {
+                                        case 'Penerimaan':
+                                            $endTimeField = 'selesai_penerimaan';
+                                            break;
+                                        case 'Pengirisan':
+                                            $endTimeField = 'selesai_pengirisan';
+                                            break;
+                                        case 'Pemotongan':
+                                            $endTimeField = 'selesai_pemotongan';
+                                            break;
+                                        default:
+                                            $endTimeField = 'selesai_pengerjaan';
+                                            break;
+                                    }
+
+                                    echo empty($row[$endTimeField]) ? '-' : esc(date('H:i, d-m-Y', strtotime($row[$endTimeField])));
                                     ?>
                                 </td>
                                 <td>
@@ -85,7 +143,7 @@
                         <?php endforeach; ?>
                     <?php else : ?>
                         <tr>
-                            <td colspan="9" class="text-center">Tidak ada data yang tersedia</td>
+                            <td colspan="11" class="text-center">Tidak ada data yang tersedia</td>
                         </tr>
                     <?php endif; ?>
                 </tbody>

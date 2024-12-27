@@ -25,56 +25,67 @@ class Mutu extends Migration
                 'type'       => 'INT',
                 'constraint' => 100,
                 'null'       => true,
+                'default'    => 0, // Nilai default 0
             ],
             'indikator_2' => [
                 'type'       => 'INT',
                 'constraint' => 100,
                 'null'       => true,
+                'default'    => 0, // Nilai default 0
             ],
             'indikator_3' => [
                 'type'       => 'INT',
                 'constraint' => 100,
                 'null'       => true,
+                'default'    => 0, // Nilai default 0
             ],
             'indikator_4' => [
                 'type'       => 'INT',
                 'constraint' => 100,
                 'null'       => true,
+                'default'    => 0, // Nilai default 0
             ],
             'indikator_5' => [
                 'type'       => 'INT',
                 'constraint' => 100,
                 'null'       => true,
+                'default'    => 0, // Nilai default 0
             ],
             'indikator_6' => [
                 'type'       => 'INT',
                 'constraint' => 100,
                 'null'       => true,
+                'default'    => 0, // Nilai default 0
             ],
             'indikator_7' => [
                 'type'       => 'INT',
                 'constraint' => 100,
                 'null'       => true,
+                'default'    => 0, // Nilai default 0
             ],
             'indikator_8' => [
                 'type'       => 'INT',
                 'constraint' => 100,
                 'null'       => true,
+                'default'    => 0, // Nilai default 0
             ],
             'indikator_9' => [
                 'type'       => 'INT',
                 'constraint' => 100,
                 'null'       => true,
+                'default'    => 0, // Nilai default 0
             ],
             'indikator_10' => [
                 'type'       => 'INT',
                 'constraint' => 100,
                 'null'       => true,
+                'default'    => 0, // Nilai default 0
             ],
             'total_nilai_mutu' => [
                 'type'       => 'INT',
                 'constraint' => 100,
                 'null'       => true,
+                'default'    => 0, // Nilai default 0
             ],
             'created_at' => [
                 'type' => 'DATETIME',
@@ -90,6 +101,7 @@ class Mutu extends Migration
         $this->forge->addForeignKey('id_hpa', 'hpa', 'id_hpa', 'CASCADE', 'CASCADE'); // Foreign Key ke tabel hpa
         $this->forge->createTable('mutu');
     }
+
 
     public function down()
     {

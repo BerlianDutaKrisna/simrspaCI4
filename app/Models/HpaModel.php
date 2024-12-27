@@ -63,21 +63,52 @@ class HpaModel extends Model
         return $this->insertHpa($data) > 0;
     }
 
+    public function getAllData()
+    {
+        return $this->db->table($this->table)
+            ->select('
+            hpa.*, 
+            penerimaan.*, 
+            pengirisan.*, 
+            user_penerimaan.nama_user AS nama_user_penerimaan, 
+            user_pengirisan.nama_user AS nama_user_pengirisan,
+            patient.nama_pasien,
+            patient.norm_pasien
+        ')
+            ->join('penerimaan', 'hpa.id_penerimaan = penerimaan.id_penerimaan', 'left')
+            ->join('pengirisan', 'hpa.id_pengirisan = pengirisan.id_pengirisan', 'left')
+            ->join('users AS user_penerimaan', 'penerimaan.id_user_penerimaan = user_penerimaan.id_user', 'left')
+            ->join('users AS user_pengirisan', 'pengirisan.id_user_pengirisan = user_pengirisan.id_user', 'left')
+            ->join('patient AS patient', 'hpa.id_pasien = patient.id_pasien', 'left')  // Menambahkan join dengan tabel patient
+            ->get()
+            ->getResultArray();
+    }
+
     public function getHpaWithRelations()
     {
-        return $this->select('
-        hpa.*,
-        patient.nama_pasien,
-        patient.norm_pasien,
-        penerimaan.status_penerimaan,
-        users.nama_user AS nama_user_penerimaan,
-        penerimaan.mulai_penerimaan AS waktu_pengerjaan
-    ')
-            ->join('patient', 'patient.id_pasien = hpa.id_pasien', 'left') // Relasi dengan tabel patient
-            ->join('penerimaan', 'penerimaan.id_penerimaan = hpa.id_penerimaan', 'left') // Relasi dengan tabel penerimaan
-            ->join('users', 'penerimaan.id_user_penerimaan = users.id_user', 'left') // Relasi dengan tabel users untuk penerimaan
-            ->findAll();
+        return $this->db->table($this->table)
+            ->select('
+            hpa.*, 
+            patient.nama_pasien, 
+            patient.norm_pasien, 
+            penerimaan.*, 
+            pengirisan.*, 
+            user_penerimaan.nama_user AS nama_user_penerimaan, 
+            user_pengirisan.nama_user AS nama_user_pengirisan
+        ')
+            ->join('patient', 'patient.id_pasien = hpa.id_pasien', 'left')  // Mengganti 'pasien' dengan 'patient'
+            ->join('penerimaan', 'hpa.id_penerimaan = penerimaan.id_penerimaan', 'left')
+            ->join('pengirisan', 'hpa.id_pengirisan = pengirisan.id_pengirisan', 'left')
+            ->join('users AS user_penerimaan', 'penerimaan.id_user_penerimaan = user_penerimaan.id_user', 'left')
+            ->join('users AS user_pengirisan', 'pengirisan.id_user_pengirisan = user_pengirisan.id_user', 'left')
+            ->get()
+            ->getResultArray();
     }
+
+
+
+
+
 
     public function updateHpa($id_hpa, $data)
     {

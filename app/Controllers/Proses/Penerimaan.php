@@ -4,6 +4,7 @@ namespace App\Controllers\Proses;
 
 use App\Controllers\BaseController;
 use App\Models\ProsesModel\PenerimaanModel;
+use App\Models\ProsesModel\PengirisanModel;
 use App\Models\HpaModel;
 use App\Models\MutuModel;
 use Exception;
@@ -37,10 +38,6 @@ class Penerimaan extends BaseController
     }
     public function proses_penerimaan()
     {
-        // Models
-        $hpaModel = new HpaModel();
-        $penerimaanModel = new PenerimaanModel();
-
         // Get user ID from session
         $id_user = session()->get('id_user');
 
@@ -76,7 +73,10 @@ class Penerimaan extends BaseController
             if (!empty($selectedIds)) {
                 foreach ($selectedIds as $id) {
                     list($id_penerimaan, $id_hpa, $id_mutu) = explode(':', $id);
-                    $this->processAction($action, $id_penerimaan, $id_hpa, $id_user, $id_mutu, $this->request->getPost('indikator_1'), $this->request->getPost('indikator_2'));
+                    $indikator_1 = (string) ($this->request->getPost('indikator_1') ?? '0');
+                    $indikator_2 = (string) ($this->request->getPost('indikator_2') ?? '0');
+                    $total_nilai_mutu = $this->request->getPost('total_nilai_mutu');
+                    $this->processAction($action, $id_penerimaan, $id_hpa, $id_user, $id_mutu, $indikator_1, $indikator_2, $total_nilai_mutu);
                 }
 
                 return redirect()->to('/penerimaan/index_penerimaan');
@@ -87,18 +87,20 @@ class Penerimaan extends BaseController
     }
 
     // Process action based on the action value
-    private function processAction($action, $id_penerimaan, $id_hpa, $id_user, $id_mutu, $indikator_1, $indikator_2)
+    private function processAction($action, $id_penerimaan, $id_hpa, $id_user, $id_mutu, $indikator_1, $indikator_2, $total_nilai_mutu)
     {
         // Set zona waktu Indonesia/Jakarta
         date_default_timezone_set('Asia/Jakarta');
 
         $hpaModel = new HpaModel();
         $penerimaanModel = new PenerimaanModel();
+        $pengirisanModel = new PengirisanModel();
         $mutuModel = new MutuModel();
 
         try {
             switch ($action) {
-                case 'mulai_penerimaan':
+                    // TOMBOL MULAI PENGECEKAN
+                case 'mulai':
                     // Update status_hpa menjadi 'Penerimaan' pada tabel hpa
                     $hpaModel->updateHpa($id_hpa, ['status_hpa' => 'Penerimaan']);
                     // Update data penerimaan
@@ -108,8 +110,8 @@ class Penerimaan extends BaseController
                         'mulai_penerimaan' => date('Y-m-d H:i:s'),
                     ]);
                     break;
-
-                case 'selesai_penerimaan':
+                    // TOMBOL SELESAI PENGECEKAN
+                case 'selesai':
                     // Update data penerimaan ketika selesai
                     $penerimaanModel->updatePenerimaan($id_penerimaan, [
                         'id_user_penerimaan' => $id_user,  // Menggunakan id_user dari session
@@ -117,27 +119,50 @@ class Penerimaan extends BaseController
                         'selesai_penerimaan' => date('Y-m-d H:i:s'), // Menggunakan waktu lokal Asia/Jakarta
                     ]);
                     // update data mutu
-                    $total_nilai_mutu = 0; // Inisialisasi nilai total_nilai_mutu
-
-                    // Pastikan $indikator_1 dan $indikator_2 adalah array atau memiliki nilai yang valid
-                    // Periksa jika indikator_1 tidak terkirim atau bernilai null
-                    $nilai_indikator_1 = isset($indikator_1[$id_mutu]) ? 10 : 0; // Jika ada, beri nilai 10, jika tidak 0
-                    $nilai_indikator_2 = isset($indikator_2[$id_mutu]) ? 10 : 0; // Jika ada, beri nilai 10, jika tidak 0
-
-                    // Update nilai indikator_1 dan indikator_2, jika ada
+                    $keseluruhan_nilai_mutu = $total_nilai_mutu + $indikator_1 + $indikator_2;
                     $mutuModel->updateMutu($id_mutu, [
-                        'indikator_1' => $nilai_indikator_1,
-                        'indikator_2' => $nilai_indikator_2
+                        'indikator_1' => $indikator_1,  // Menggunakan id_user dari session
+                        'indikator_2' => $indikator_2, // Status menjadi 'Sudah Diperiksa'
+                        'total_nilai_mutu' => $keseluruhan_nilai_mutu, // Menggunakan waktu lokal Asia/Jakarta
                     ]);
-
-                    // Tambahkan nilai dari indikator_1 dan indikator_2 ke total_nilai_mutu
-                    $total_nilai_mutu = $nilai_indikator_1 + $nilai_indikator_2;
-
-                    // Update total_nilai_mutu pada tabel mutu
-                    $mutuModel->updateMutu($id_mutu, ['total_nilai_mutu' => $total_nilai_mutu]);
+                    break;
+                    // TOMBOL KEMBALIKAN PENGECEKAN
+                case 'kembalikan':
+                    $penerimaanModel->updatePenerimaan($id_penerimaan, [
+                        'id_user_penerimaan' => $id_user,  // Menggunakan id_user dari session
+                        'status_penerimaan' => 'Belum Diperiksa', // Status menjadi 'Belum'
+                        'mulai_penerimaan' => null,
+                        'selesai_penerimaan' => null, // Menggunakan waktu lokal Asia/Jakarta
+                    ]);
+                    $mutuModel->updateMutu($id_mutu, [
+                        'indikator_1' => '0',
+                        'indikator_2' => '0',
+                        'total_nilai_mutu' => '0',
+                    ]);
                     break;
 
-                    // Tambahkan aksi lain jika diperlukan
+                case 'lanjut':
+                    // Update status_hpa menjadi 'pengirisan' pada tabel hpa
+                    $hpaModel->updateHpa($id_hpa, ['status_hpa' => 'Pengirisan']);
+
+                    // Data untuk tabel pengirisan
+                    $pengirisanData = [
+                        'id_hpa'              => $id_hpa,  // Menambahkan id_hpa yang baru
+                        'id_user_pengirisan'    => $id_user,
+                        'status_pengirisan'     => 'Belum Diiris', // Status awal
+                    ];
+
+                    // Simpan data ke tabel pengirisan
+                    if (!$pengirisanModel->insert($pengirisanData)) {
+                        throw new Exception('Gagal menyimpan data pengirisan.');
+                    }
+
+                    // Ambil id_pengirisan yang baru saja disimpan
+                    $id_pengirisan = $pengirisanModel->getInsertID();
+
+                    // Update id_pengirisan pada tabel hpa
+                    $hpaModel->update($id_hpa, ['id_pengirisan' => $id_pengirisan]);
+                    break;
             }
         } catch (\Exception $e) {
             // Tangani error yang terjadi selama proses action

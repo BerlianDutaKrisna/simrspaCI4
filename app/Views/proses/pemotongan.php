@@ -3,14 +3,14 @@
 
 <div class="card shadow mb-4">
     <div class="card-header py-3">
-        <h6 class="m-0 font-weight-bold text-primary">Table Penerimaan</h6>
+        <h6 class="m-0 font-weight-bold text-primary">Table Pemotongan</h6>
     </div>
     <div class="card-body">
-        <h1>Daftar Penerimaan</h1>
+        <h1>Daftar Pemotongan</h1>
         <a href="<?= base_url('/dashboard') ?>" class="btn btn-primary mb-3">Kembali</a>
 
         <!-- Form -->
-        <form id="mainForm" action="<?= base_url('penerimaan/proses_penerimaan'); ?>" method="POST">
+        <form id="mainForm" action="<?= base_url('pemotongan/proses_pemotongan'); ?>" method="POST">
             <!-- Input Hidden -->
             <input type="hidden" name="action" id="action" value="">
 
@@ -21,66 +21,36 @@
                             <th>No</th>
                             <th>Kode HPA</th>
                             <th>Nama Pasien</th>
-                            <th>Status Penerimaan</th>
+                            <th>Status Pemotongan</th>
                             <th>Aksi</th>
-                            <th>Kualitas Sediaan</th>
                             <th>Analis</th>
-                            <th>Mulai Penerimaan</th>
-                            <th>Selesai Penerimaan</th>
+                            <th>Mulai Pemotongan</th>
+                            <th>Selesai Pemotongan</th>
                             <th>Deadline Hasil</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <?php if (!empty($penerimaanData)): ?>
+                        <?php if (!empty($pemotonganData)): ?>
                             <?php $i = 1; ?>
-                            <?php foreach ($penerimaanData as $row): ?>
+                            <?php foreach ($pemotonganData as $row): ?>
                                 <tr>
                                     <td><?= $i ?></td>
                                     <td><?= $row['kode_hpa']; ?></td>
                                     <td><?= $row['nama_pasien']; ?></td>
-                                    <td><?= $row['status_penerimaan']; ?></td>
+                                    <td><?= $row['status_pemotongan']; ?></td>
                                     <td>
                                         <input type="checkbox"
                                             name="id_proses[]"
-                                            value="<?= $row['id_penerimaan']; ?>:<?= $row['id_hpa']; ?>:<?= $row['id_mutu']; ?>"
+                                            value="<?= $row['id_pemotongan']; ?>:<?= $row['id_hpa']; ?>:<?= $row['id_mutu']; ?>"
                                             class="form-control form-control-user"
                                             autocomplete="off">
                                     </td>
+                                    <td><?= $row['nama_user_pemotongan']; ?></td>
                                     <td>
-                                        <?php if ($row['status_penerimaan'] === "Proses Pemeriksaan"): ?>
-                                            <input type="hidden" name="total_nilai_mutu" value="<?= $row['total_nilai_mutu']; ?>">
-                                            <!-- Menampilkan form checkbox ketika status penerimaan adalah 'Proses Pemeriksaan' -->
-                                            <div class="form-check">
-                                                <input type="checkbox"
-                                                    name="indikator_1"
-                                                    value="10"
-                                                    id="indikator_1_<?= $row['id_mutu']; ?>"
-                                                    class="form-check-input">
-                                                <label class="form-check-label" for="indikator_1_<?= $row['id_mutu']; ?>">
-                                                    Vol cairan fiksasi sesuai
-                                                </label>
-                                            </div>
-                                            <div class="form-check">
-                                                <input type="checkbox"
-                                                    name="indikator_2"
-                                                    value="10"
-                                                    id="indikator_2_<?= $row['id_mutu']; ?>"
-                                                    class="form-check-input">
-                                                <label class="form-check-label" for="indikator_2_<?= $row['id_mutu']; ?>">
-                                                    Jaringan terfiksasi merata
-                                                </label>
-                                            </div>
-                                        <?php else: ?>
-                                            <!-- Menampilkan total_nilai_mutu jika status penerimaan 'Belum Diperiksa' atau 'Sudah Diperiksa' -->
-                                            <?= $row['total_nilai_mutu']; ?> %
-                                        <?php endif; ?>
-                                    </td>
-                                    <td><?= $row['nama_user_penerimaan']; ?></td>
-                                    <td>
-                                        <?= empty($row['mulai_penerimaan']) ? '-' : esc(date('H:i , d-m-Y', strtotime($row['mulai_penerimaan']))); ?>
+                                        <?= empty($row['mulai_pemotongan']) ? '-' : esc(date('H:i , d-m-Y', strtotime($row['mulai_pemotongan']))); ?>
                                     </td>
                                     <td>
-                                        <?= empty($row['selesai_penerimaan']) ? '-' : esc(date('H:i , d-m-Y', strtotime($row['selesai_penerimaan']))); ?>
+                                        <?= empty($row['selesai_pemotongan']) ? '-' : esc(date('H:i , d-m-Y', strtotime($row['selesai_pemotongan']))); ?>
                                     </td>
                                     <td>
                                         <?= empty($row['tanggal_hasil']) ? 'Belum diisi' : esc(date('d-m-Y', strtotime($row['tanggal_hasil']))); ?>
@@ -111,7 +81,7 @@
                 </div>
                 <div class="form-group col-12">
                     <button type="button" class="btn btn-info btn-user btn-block" onclick="setAction('lanjut')">
-                        <i class="fas fa-step-forward"></i> Lanjutkan Mengiris
+                        <i class="fas fa-step-forward"></i> Lanjutkan Memotong
                     </button>
                 </div>
                 <div class="form-group col-12">

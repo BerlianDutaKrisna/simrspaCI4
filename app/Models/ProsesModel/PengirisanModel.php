@@ -31,7 +31,36 @@ class PengirisanModel extends Model
     // Fungsi untuk insert data Pengirisan
     public function insertPengirisan(array $data): bool
     {
-        $this->insertPengirisan($data);
+        $this->insert($data);
         return $this->db->affectedRows() > 0;
+    }
+
+    // Mengambil data Pengirisan dengan relasi
+    public function getPengirisanWithRelations()
+    {
+        return $this->select(
+            '
+        pengirisan.*, 
+        hpa.*, 
+        patient.*, 
+        users.nama_user AS nama_user_pengirisan,
+        mutu.total_nilai_mutu'
+        )
+            ->join('hpa', 'pengirisan.id_hpa = hpa.id_hpa', 'left') // Relasi dengan tabel hpa
+            ->join('patient', 'hpa.id_pasien = patient.id_pasien', 'left') // Relasi dengan tabel patient
+            ->join('users', 'pengirisan.id_user_pengirisan = users.id_user', 'left') // Relasi dengan tabel users untuk pengirisan
+            ->join('mutu', 'hpa.id_hpa = mutu.id_hpa', 'left') // Relasi dengan tabel mutu berdasarkan id_hpa
+            ->where('hpa.status_hpa', 'Pengirisan') // Filter berdasarkan status_hpa 'Pengirisan'
+            ->findAll();
+    }
+
+
+    // Fungsi untuk mengupdate data pengirisan
+    public function updatePengirisan($id_pengirisan, $data)
+    {
+        $builder = $this->db->table($this->table);  // Mengambil table pengirisan
+        $builder->where('id_pengirisan', $id_pengirisan);  // Menentukan baris yang akan diupdate berdasarkan id_pengirisan
+        $builder->update($data);  // Melakukan update dengan data yang dikirimkan
+        return $this->db->affectedRows();  // Mengembalikan jumlah baris yang terpengaruh
     }
 }

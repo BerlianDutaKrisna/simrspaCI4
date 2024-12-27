@@ -14,7 +14,6 @@ class PemotonganModel extends Model
     protected $allowedFields = [
         'id_hpa',
         'id_user_pemotongan',
-        'id_user_dokter_pemotongan',
         'status_pemotongan',
         'mulai_pemotongan',
         'selesai_pemotongan',
@@ -32,7 +31,35 @@ class PemotonganModel extends Model
     // Fungsi untuk insert data Pemotongan
     public function insertPemotongan(array $data): bool
     {
-        $this->insertPemotongan($data);
+        $this->insert($data);
         return $this->db->affectedRows() > 0;
+    }
+
+    // Mengambil data Pemotongan dengan relasi
+    public function getPemotonganWithRelations()
+    {
+        return $this->select(
+            '
+        pemotongan.*, 
+        hpa.*, 
+        patient.*, 
+        users.nama_user AS nama_user_pemotongan,
+        mutu.total_nilai_mutu'
+        )
+            ->join('hpa', 'pemotongan.id_hpa = hpa.id_hpa', 'left') // Relasi dengan tabel hpa
+            ->join('patient', 'hpa.id_pasien = patient.id_pasien', 'left') // Relasi dengan tabel patient
+            ->join('users', 'pemotongan.id_user_pemotongan = users.id_user', 'left') // Relasi dengan tabel users untuk pemotongan
+            ->join('mutu', 'hpa.id_hpa = mutu.id_hpa', 'left') // Relasi dengan tabel mutu berdasarkan id_hpa
+            ->where('hpa.status_hpa', 'Pemotongan') // Filter berdasarkan status_hpa 'Pemotongan'
+            ->findAll();
+    }
+
+    // Fungsi untuk mengupdate data pemotongan
+    public function updatePemotongan($id_pemotongan, $data)
+    {
+        $builder = $this->db->table($this->table);  // Mengambil table pemotongan
+        $builder->where('id_pemotongan', $id_pemotongan);  // Menentukan baris yang akan diupdate berdasarkan id_pemotongan
+        $builder->update($data);  // Melakukan update dengan data yang dikirimkan
+        return $this->db->affectedRows();  // Mengembalikan jumlah baris yang terpengaruh
     }
 }
