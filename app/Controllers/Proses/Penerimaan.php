@@ -5,6 +5,7 @@ namespace App\Controllers\Proses;
 use App\Controllers\BaseController;
 use App\Models\ProsesModel\PenerimaanModel;
 use App\Models\HpaModel;
+use App\Models\MutuModel;
 use Exception;
 
 class Penerimaan extends BaseController
@@ -36,85 +37,113 @@ class Penerimaan extends BaseController
     }
     public function proses_penerimaan()
     {
-        // Membuat instance model
+        // Models
         $hpaModel = new HpaModel();
         $penerimaanModel = new PenerimaanModel();
 
-        // Ambil data id_user dari session
+        // Get user ID from session
         $id_user = session()->get('id_user');
 
-        // Lakukan validasi form
+        // Form validation rules
         $validation = \Config\Services::validation();
         $validation->setRules([
             'id_proses' => [
-                'rules' => 'required', // Pastikan id_proses dipilih
-                'errors' => [
-                    'required' => 'Pilih data terlebih dahulu.',
-                ],
+                'rules' => 'required',
+                'errors' => ['required' => 'Pilih data terlebih dahulu.'],
             ],
             'action' => [
-                'rules' => 'required', // Pastikan action dipilih
-                'errors' => [
-                    'required' => 'Tombol aksi harus diklik.',
-                ],
+                'rules' => 'required',
+                'errors' => ['required' => 'Tombol aksi harus diklik.'],
             ],
         ]);
 
-        // Cek jika validasi gagal
+        // Check validation
         if (!$validation->run($this->request->getPost())) {
-            // Jika validasi gagal, kembali ke form dengan input yang sudah diisi
             return redirect()->back()->withInput()->with('errors', $validation->getErrors());
         }
 
         try {
-            // Ambil data id_proses yang dipilih
+            // Get the selected IDs and action
             $selectedIds = $this->request->getPost('id_proses');
-            $action = $this->request->getPost('action'); // Ambil nilai dari input hidden 'action'
-            
-            // Pastikan selectedIds adalah array, jika tidak, buat menjadi array
+            $action = $this->request->getPost('action');
+
+            // Check if selected IDs are provided
             if (!is_array($selectedIds)) {
-                $selectedIds = [$selectedIds]; // Jika hanya satu value, buat array
+                $selectedIds = [$selectedIds];
             }
 
-            // Set zona waktu Indonesia/Jakarta
-            date_default_timezone_set('Asia/Jakarta');
-
-            // Cek jika ada id yang dipilih
+            // Process the action for each selected item
             if (!empty($selectedIds)) {
-                // Loop untuk setiap data yang dipilih
                 foreach ($selectedIds as $id) {
-                    // Pisahkan id_penerimaan, id_hpa, dan id_mutu
                     list($id_penerimaan, $id_hpa, $id_mutu) = explode(':', $id);
-
-                    // Tindakan berdasarkan tombol aksi
-                    if ($action === 'mulai_penerimaan') {
-                        
-                        // Update status_hpa menjadi 'Penerimaan' pada tabel hpa menggunakan model
-                        $hpaModel->updateHpa($id_hpa, [
-                            'status_hpa' => 'Penerimaan', // Kirim perubahan untuk status_hpa saja
-                        ]);
-                        // Update data penerimaan
-                        $penerimaanModel->updatePenerimaan($id_penerimaan, [
-                            'id_user_penerimaan' => $id_user,  // Menggunakan id_user dari session
-                            'status_penerimaan' => 'Proses Pemeriksaan', // Update status menjadi 'Proses Pemeriksaan'
-                            'mulai_penerimaan' => date('Y-m-d H:i:s'), // Set tanggal dan waktu saat ini
-                        ]);
-                    } elseif ($action === 'selesai_penerimaan') {
-                        // Update data untuk selesai penerimaan
-                        $penerimaanModel->updatePenerimaan($id_penerimaan, [
-                            'status_penerimaan' => 'Selesai Pemeriksaan',
-                            'selesai_penerimaan' => date('Y-m-d H:i:s'), // Set tanggal dan waktu saat ini
-                        ]);
-                    }
-                    // Tambahkan aksi lain di sini sesuai kebutuhan
+                    $this->processAction($action, $id_penerimaan, $id_hpa, $id_user, $id_mutu, $this->request->getPost('indikator_1'), $this->request->getPost('indikator_2'));
                 }
 
-                // Redirect ke halaman index penerimaan
                 return redirect()->to('/penerimaan/index_penerimaan');
             }
         } catch (\Exception $e) {
-            // Jika ada error, kembalikan ke halaman sebelumnya
             return redirect()->back()->with('error', $e->getMessage());
+        }
+    }
+
+    // Process action based on the action value
+    private function processAction($action, $id_penerimaan, $id_hpa, $id_user, $id_mutu, $indikator_1, $indikator_2)
+    {
+        // Set zona waktu Indonesia/Jakarta
+        date_default_timezone_set('Asia/Jakarta');
+
+        $hpaModel = new HpaModel();
+        $penerimaanModel = new PenerimaanModel();
+        $mutuModel = new MutuModel();
+
+        try {
+            switch ($action) {
+                case 'mulai_penerimaan':
+                    // Update status_hpa menjadi 'Penerimaan' pada tabel hpa
+                    $hpaModel->updateHpa($id_hpa, ['status_hpa' => 'Penerimaan']);
+                    // Update data penerimaan
+                    $penerimaanModel->updatePenerimaan($id_penerimaan, [
+                        'id_user_penerimaan' => $id_user,
+                        'status_penerimaan' => 'Proses Pemeriksaan',
+                        'mulai_penerimaan' => date('Y-m-d H:i:s'),
+                    ]);
+                    break;
+
+                case 'selesai_penerimaan':
+                    // Update data penerimaan ketika selesai
+                    $penerimaanModel->updatePenerimaan($id_penerimaan, [
+                        'id_user_penerimaan' => $id_user,  // Menggunakan id_user dari session
+                        'status_penerimaan' => 'Sudah Diperiksa', // Status menjadi 'Sudah Diperiksa'
+                        'selesai_penerimaan' => date('Y-m-d H:i:s'), // Menggunakan waktu lokal Asia/Jakarta
+                    ]);
+                    // update data mutu
+                    $total_nilai_mutu = 0; // Inisialisasi nilai total_nilai_mutu
+
+                    // Pastikan $indikator_1 dan $indikator_2 adalah array atau memiliki nilai yang valid
+                    // Periksa jika indikator_1 tidak terkirim atau bernilai null
+                    $nilai_indikator_1 = isset($indikator_1[$id_mutu]) ? 10 : 0; // Jika ada, beri nilai 10, jika tidak 0
+                    $nilai_indikator_2 = isset($indikator_2[$id_mutu]) ? 10 : 0; // Jika ada, beri nilai 10, jika tidak 0
+
+                    // Update nilai indikator_1 dan indikator_2, jika ada
+                    $mutuModel->updateMutu($id_mutu, [
+                        'indikator_1' => $nilai_indikator_1,
+                        'indikator_2' => $nilai_indikator_2
+                    ]);
+
+                    // Tambahkan nilai dari indikator_1 dan indikator_2 ke total_nilai_mutu
+                    $total_nilai_mutu = $nilai_indikator_1 + $nilai_indikator_2;
+
+                    // Update total_nilai_mutu pada tabel mutu
+                    $mutuModel->updateMutu($id_mutu, ['total_nilai_mutu' => $total_nilai_mutu]);
+                    break;
+
+                    // Tambahkan aksi lain jika diperlukan
+            }
+        } catch (\Exception $e) {
+            // Tangani error yang terjadi selama proses action
+            log_message('error', 'Error in processAction: ' . $e->getMessage());
+            // Anda bisa melempar exception atau memberikan pesan error yang lebih spesifik
+            throw new \Exception('Terjadi kesalahan saat memproses aksi: ' . $e->getMessage());
         }
     }
 }

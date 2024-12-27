@@ -46,7 +46,34 @@
                                             class="form-control form-control-user"
                                             autocomplete="off">
                                     </td>
-                                    <td>Kualitas Sediaan %</td>
+                                    <td>
+                                        <?php if ($row['status_penerimaan'] === "Proses Pemeriksaan"): ?>
+                                            <!-- Menampilkan form checkbox ketika status penerimaan adalah 'Proses Pemeriksaan' -->
+                                            <div class="form-check">
+                                                <input type="checkbox"
+                                                    name="indikator_1"
+                                                    value="10"
+                                                    id="indikator_1_<?= $row['id_mutu']; ?>"
+                                                    class="form-check-input">
+                                                <label class="form-check-label" for="indikator_1_<?= $row['id_mutu']; ?>">
+                                                    Vol cairan fiksasi sesuai
+                                                </label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input type="checkbox"
+                                                    name="indikator_2"
+                                                    value="10"
+                                                    id="indikator_2_<?= $row['id_mutu']; ?>"
+                                                    class="form-check-input">
+                                                <label class="form-check-label" for="indikator_2_<?= $row['id_mutu']; ?>">
+                                                    Jaringan terfiksasi merata
+                                                </label>
+                                            </div>
+                                        <?php else: ?>
+                                            <!-- Menampilkan total_nilai_mutu jika status penerimaan 'Belum Diperiksa' atau 'Sudah Diperiksa' -->
+                                            <?= isset($row['total_nilai_mutu']) && $row['total_nilai_mutu'] !== null ? $row['total_nilai_mutu'] . '%' : '0%' ?>
+                                        <?php endif; ?>
+                                    </td>
                                     <td><?= $row['nama_user_penerimaan']; ?></td>
                                     <td>
                                         <?= empty($row['mulai_penerimaan']) ? '-' : esc(date('H:i , d-m-Y', strtotime($row['mulai_penerimaan']))); ?>
@@ -99,7 +126,7 @@
 <script>
     function setAction(action) {
         document.getElementById('action').value = action;
-        document.getElementById('mainForm').submit();  // Kirim form setelah action diset
+        document.getElementById('mainForm').submit(); // Kirim form setelah action diset
     }
 </script>
 

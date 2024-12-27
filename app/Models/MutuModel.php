@@ -32,4 +32,14 @@ class MutuModel extends Model
         $this->insertMutu($data);
         return $this->db->affectedRows() > 0;
     }
+
+    // Fungsi untuk mengupdate data mutu
+public function updateMutu($id_mutu, $data)
+{
+    // Mengambil table mutu
+    $builder = $this->db->table($this->table);  
+    $builder->where('id_mutu', $id_mutu);  
+    $builder->update($data);  
+    return $this->db->affectedRows();  
+}
 }

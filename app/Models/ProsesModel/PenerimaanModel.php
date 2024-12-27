@@ -41,12 +41,14 @@ class PenerimaanModel extends Model
         penerimaan.*, 
         hpa.*, 
         patient.*, 
-        users.nama_user AS nama_user_penerimaan
-    ')
-            ->join('hpa', 'penerimaan.id_hpa = hpa.id_hpa', 'left') // Relasi dengan tabel hpa
-            ->join('patient', 'hpa.id_pasien = patient.id_pasien', 'left') // Relasi dengan tabel patient
-            ->join('users', 'penerimaan.id_user_penerimaan = users.id_user', 'left') // Relasi dengan tabel users untuk penerimaan
-            ->findAll();
+        users.nama_user AS nama_user_penerimaan,
+        mutu.total_nilai_mutu'
+    )
+    ->join('hpa', 'penerimaan.id_hpa = hpa.id_hpa', 'left') // Relasi dengan tabel hpa
+    ->join('patient', 'hpa.id_pasien = patient.id_pasien', 'left') // Relasi dengan tabel patient
+    ->join('users', 'penerimaan.id_user_penerimaan = users.id_user', 'left') // Relasi dengan tabel users untuk penerimaan
+    ->join('mutu', 'hpa.id_hpa = mutu.id_hpa', 'left') // Relasi dengan tabel mutu berdasarkan id_hpa
+    ->findAll();
     }
 
     // Fungsi untuk mengupdate data penerimaan
