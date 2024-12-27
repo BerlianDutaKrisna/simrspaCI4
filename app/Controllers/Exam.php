@@ -137,6 +137,23 @@ class Exam extends BaseController
             // Update id_penerimaan pada tabel hpa
             $hpaModel->update($id_hpa, ['id_penerimaan' => $id_penerimaan]);
 
+             // Data untuk tabel mutu
+        $mutuData = [
+            'id_hpa'            => $id_hpa,  // Menambahkan id_hpa yang baru
+        ];
+
+        // Simpan data ke tabel mutu
+        $mutuModel = new MutuModel();
+        if (!$mutuModel->insert($mutuData)) {
+            throw new Exception('Gagal menyimpan data mutu.');
+        }
+
+        // Ambil id_mutu yang baru saja disimpan
+        $id_mutu = $mutuModel->getInsertID();
+
+        // Update id_mutu pada tabel hpa
+        $hpaModel->update($id_hpa, ['id_mutu' => $id_mutu]);
+
             // Jika berhasil, redirect ke halaman dashboard
             return redirect()->to('/dashboard')->with('success', 'Data berhasil disimpan!');
         } catch (Exception $e) {

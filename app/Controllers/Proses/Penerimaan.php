@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Controllers\Proses;
+
 use App\Controllers\BaseController;
 use App\Models\ProsesModel\PenerimaanModel;
 use App\Models\HpaModel;
@@ -33,8 +34,9 @@ class Penerimaan extends BaseController
         // Mengirim data ke view untuk ditampilkan
         return view('proses/penerimaan', $data);
     }
-    public function mulai_penerimaan()
+    public function proses_penerimaan()
     {
+        // Membuat instance model
         $hpaModel = new HpaModel();
         $penerimaanModel = new PenerimaanModel();
 
@@ -50,13 +52,14 @@ class Penerimaan extends BaseController
                     'required' => 'Pilih data terlebih dahulu.',
                 ],
             ],
-            'btn_proses_mulai' => [
-                'rules' => 'required', // Pastikan tombol ditekan
+            'action' => [
+                'rules' => 'required', // Pastikan action dipilih
                 'errors' => [
-                    'required' => 'Tombol mulai pengecekan harus diklik.',
+                    'required' => 'Tombol aksi harus diklik.',
                 ],
             ],
         ]);
+
         // Cek jika validasi gagal
         if (!$validation->run($this->request->getPost())) {
             // Jika validasi gagal, kembali ke form dengan input yang sudah diisi
@@ -64,9 +67,10 @@ class Penerimaan extends BaseController
         }
 
         try {
-
             // Ambil data id_proses yang dipilih
             $selectedIds = $this->request->getPost('id_proses');
+            $action = $this->request->getPost('action'); // Ambil nilai dari input hidden 'action'
+            
             // Pastikan selectedIds adalah array, jika tidak, buat menjadi array
             if (!is_array($selectedIds)) {
                 $selectedIds = [$selectedIds]; // Jika hanya satu value, buat array
@@ -79,18 +83,30 @@ class Penerimaan extends BaseController
             if (!empty($selectedIds)) {
                 // Loop untuk setiap data yang dipilih
                 foreach ($selectedIds as $id) {
-                    // Pisahkan id_penerimaan dan id_hpa
-                    list($id_penerimaan, $id_hpa) = explode(':', $id);
-                    // Update status_hpa menjadi 'Penerimaan' pada tabel hpa menggunakan model
-                    $hpaModel->updateHpa($id_hpa, [
-                        'status_hpa' => 'Penerimaan', // Kirim perubahan untuk status_hpa saja
-                    ]);
-                    // Update data penerimaan
-                    $penerimaanModel->updatePenerimaan($id_penerimaan, [
-                        'id_user_penerimaan' => $id_user,  // Menggunakan id_user dari session
-                        'status_penerimaan' => 'Proses Pemeriksaan', // Update status menjadi 'Proses Pemeriksaan'
-                        'mulai_penerimaan' => date('Y-m-d H:i:s'), // Set tanggal dan waktu saat ini
-                    ]);
+                    // Pisahkan id_penerimaan, id_hpa, dan id_mutu
+                    list($id_penerimaan, $id_hpa, $id_mutu) = explode(':', $id);
+
+                    // Tindakan berdasarkan tombol aksi
+                    if ($action === 'mulai_penerimaan') {
+                        
+                        // Update status_hpa menjadi 'Penerimaan' pada tabel hpa menggunakan model
+                        $hpaModel->updateHpa($id_hpa, [
+                            'status_hpa' => 'Penerimaan', // Kirim perubahan untuk status_hpa saja
+                        ]);
+                        // Update data penerimaan
+                        $penerimaanModel->updatePenerimaan($id_penerimaan, [
+                            'id_user_penerimaan' => $id_user,  // Menggunakan id_user dari session
+                            'status_penerimaan' => 'Proses Pemeriksaan', // Update status menjadi 'Proses Pemeriksaan'
+                            'mulai_penerimaan' => date('Y-m-d H:i:s'), // Set tanggal dan waktu saat ini
+                        ]);
+                    } elseif ($action === 'selesai_penerimaan') {
+                        // Update data untuk selesai penerimaan
+                        $penerimaanModel->updatePenerimaan($id_penerimaan, [
+                            'status_penerimaan' => 'Selesai Pemeriksaan',
+                            'selesai_penerimaan' => date('Y-m-d H:i:s'), // Set tanggal dan waktu saat ini
+                        ]);
+                    }
+                    // Tambahkan aksi lain di sini sesuai kebutuhan
                 }
 
                 // Redirect ke halaman index penerimaan
@@ -98,7 +114,7 @@ class Penerimaan extends BaseController
             }
         } catch (\Exception $e) {
             // Jika ada error, kembalikan ke halaman sebelumnya
-            return redirect()->to('/penerimaan/index_penerimaan');
+            return redirect()->back()->with('error', $e->getMessage());
         }
     }
 }

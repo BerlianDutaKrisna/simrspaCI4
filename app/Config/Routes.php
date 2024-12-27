@@ -36,9 +36,13 @@ $routes->post('patient/modal_search', 'Patient::modal_search'); // Pencarian den
 $routes->get('exam/register_exam', 'Exam::register_exam'); // Menampilkan halaman form register exam
 $routes->post('exam/insert', 'Exam::insert'); // Menangani form POST dari register exam
 
+
 // Route untuk Penerimaan
 $routes->get('penerimaan/index_penerimaan', 'Proses\Penerimaan::index_penerimaan'); // Menampilkan halaman penerimaan
-$routes->post('penerimaan/mulai_penerimaan', 'Proses\Penerimaan::mulai_penerimaan'); // Menangani form POST dari mulai penerimaan
+$routes->group('penerimaan', ['namespace' => 'App\Controllers\Proses'], function ($routes) {
+    // Definisikan rute untuk form penerimaan yang menerima POST request
+    $routes->post('proses_penerimaan', 'Penerimaan::proses_penerimaan');
+});
 
 
 
