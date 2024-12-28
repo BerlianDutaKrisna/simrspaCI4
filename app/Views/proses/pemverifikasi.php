@@ -3,14 +3,14 @@
 
 <div class="card shadow mb-4">
     <div class="card-header py-3">
-        <h6 class="m-0 font-weight-bold text-primary">Table Penulisan</h6>
+        <h6 class="m-0 font-weight-bold text-primary">Table Pemverifikasi</h6>
     </div>
     <div class="card-body">
-        <h1>Daftar Penulisan</h1>
+        <h1>Daftar Pemverifikasi</h1>
         <a href="<?= base_url('/dashboard') ?>" class="btn btn-primary mb-3">Kembali</a>
 
         <!-- Form -->
-        <form id="mainForm" action="<?= base_url('penulisan/proses_penulisan'); ?>" method="POST">
+        <form id="mainForm" action="<?= base_url('pemverifikasi/proses_pemverifikasi'); ?>" method="POST">
             <!-- Input Hidden -->
             <input type="hidden" name="action" id="action" value="">
 
@@ -21,36 +21,36 @@
                             <th>No</th>
                             <th>Kode HPA</th>
                             <th>Nama Pasien</th>
-                            <th>Status Penulisan</th>
+                            <th>Status Pemverifikasi</th>
                             <th>Aksi</th>
                             <th>Analis</th>
-                            <th>Mulai Penulisan</th>
-                            <th>Selesai Penulisan</th>
+                            <th>Mulai Pemverifikasi</th>
+                            <th>Selesai Pemverifikasi</th>
                             <th>Deadline Hasil</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <?php if (!empty($penulisanData)): ?>
+                        <?php if (!empty($pemverifikasiData)): ?>
                             <?php $i = 1; ?>
-                            <?php foreach ($penulisanData as $row): ?>
+                            <?php foreach ($pemverifikasiData as $row): ?>
                                 <tr>
                                     <td><?= $i ?></td>
                                     <td><?= $row['kode_hpa']; ?></td>
                                     <td><?= $row['nama_pasien']; ?></td>
-                                    <td><?= $row['status_penulisan']; ?></td>
+                                    <td><?= $row['status_pemverifikasi']; ?></td>
                                     <td>
                                         <input type="checkbox"
                                             name="id_proses[]"
-                                            value="<?= $row['id_penulisan']; ?>:<?= $row['id_hpa']; ?>:<?= $row['id_mutu']; ?>"
+                                            value="<?= $row['id_pemverifikasi']; ?>:<?= $row['id_hpa']; ?>:<?= $row['id_mutu']; ?>"
                                             class="form-control form-control-user"
                                             autocomplete="off">
                                     </td>
-                                    <td><?= $row['nama_user_penulisan']; ?></td>
+                                    <td><?= $row['nama_user_pemverifikasi']; ?></td>
                                     <td>
-                                        <?= empty($row['mulai_penulisan']) ? '-' : esc(date('H:i , d-m-Y', strtotime($row['mulai_penulisan']))); ?>
+                                        <?= empty($row['mulai_pemverifikasi']) ? '-' : esc(date('H:i , d-m-Y', strtotime($row['mulai_pemverifikasi']))); ?>
                                     </td>
                                     <td>
-                                        <?= empty($row['selesai_penulisan']) ? '-' : esc(date('H:i , d-m-Y', strtotime($row['selesai_penulisan']))); ?>
+                                        <?= empty($row['selesai_pemverifikasi']) ? '-' : esc(date('H:i , d-m-Y', strtotime($row['selesai_pemverifikasi']))); ?>
                                     </td>
                                     <td>
                                         <?= empty($row['tanggal_hasil']) ? 'Belum diisi' : esc(date('d-m-Y', strtotime($row['tanggal_hasil']))); ?>
@@ -71,22 +71,22 @@
             <div class="row">
                 <div class="form-group col-12 col-md-6">
                     <button type="button" class="btn btn-danger btn-user btn-block" onclick="setAction('mulai')">
-                        Mulai Penulisan
+                        Mulai Pemverifikasi
                     </button>
                 </div>
                 <div class="form-group col-12 col-md-6">
                     <button type="button" class="btn btn-success btn-user btn-block" onclick="setAction('selesai')">
-                        <i class="fas fa-pause"></i> Selesai Penulisan
+                        <i class="fas fa-pause"></i> Selesai Pemverifikasi
                     </button>
                 </div>
                 <div class="form-group col-12">
                     <button type="button" class="btn btn-info btn-user btn-block" onclick="setAction('lanjut')">
-                        <i class="fas fa-step-forward"></i> Lanjutkan Penulisan
+                        <i class="fas fa-step-forward"></i> Lanjutkan Pemverifikasi
                     </button>
                 </div>
                 <div class="form-group col-12">
                     <button type="button" class="btn btn-warning btn-user btn-block" onclick="setAction('kembalikan')">
-                        <i class="fas fa-undo-alt"></i> Kembalikan Penulisan
+                        <i class="fas fa-undo-alt"></i> Kembalikan Pemverifikasi
                     </button>
                 </div>
             </div>
