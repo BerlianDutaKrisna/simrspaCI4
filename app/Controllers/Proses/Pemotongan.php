@@ -4,6 +4,7 @@ namespace App\Controllers\Proses;
 
 use App\Controllers\BaseController;
 use App\Models\ProsesModel\PemotonganModel;
+use App\Models\ProsesModel\PemprosesanModel;
 use App\Models\HpaModel;
 use App\Models\MutuModel;
 use Exception;
@@ -94,13 +95,12 @@ class Pemotongan extends BaseController
 
         $hpaModel = new HpaModel();
         $pemotonganModel = new PemotonganModel();
+        $pemprosesanModel = new PemprosesanModel();
 
         try {
             switch ($action) {
                     // TOMBOL MULAI PENGECEKAN
                 case 'mulai':
-                    // Update status_hpa menjadi 'Pemotongan' pada tabel hpa
-                    $hpaModel->updateHpa($id_hpa, ['status_hpa' => 'Pemotongan']);
                     // Update data pemotongan
                     $pemotonganModel->updatePemotongan($id_pemotongan, [
                         'id_user_pemotongan' => $id_user,
@@ -116,12 +116,11 @@ class Pemotongan extends BaseController
                         'status_pemotongan' => 'Sudah Dipotong',
                         'selesai_pemotongan' => date('Y-m-d H:i:s'),
                     ]);
-
                     break;
                     // TOMBOL KEMBALIKAN PENGECEKAN
                 case 'kembalikan':
                     $pemotonganModel->updatePemotongan($id_pemotongan, [
-                        'id_user_pemotongan' => $id_user,
+                        'id_user_pemotongan' => null,
                         'status_pemotongan' => 'Belum Dipotong',
                         'mulai_pemotongan' => null,
                         'selesai_pemotongan' => null,
@@ -129,26 +128,26 @@ class Pemotongan extends BaseController
                     break;
 
                 case 'lanjut':
-                    // Update status_hpa menjadi 'Pemotongan' pada tabel hpa
-                    $hpaModel->updateHpa($id_hpa, ['status_hpa' => 'Pemotongan']);
+                    // Update status_hpa menjadi 'Pemprosesan' pada tabel hpa
+                    $hpaModel->updateHpa($id_hpa, ['status_hpa' => 'Pemprosesan']);
 
-                    // Data untuk tabel pemotongan
-                    $pemotonganData = [
-                        'id_hpa'              => $id_hpa,  // Menambahkan id_hpa yang baru
-                        'id_user_pemotongan'    => $id_user,
-                        'status_pemotongan'     => 'Belum Dipotong', // Status awal
+                    // Data untuk tabel pemprosesan
+                    $pemprosesanData = [
+                        'id_hpa'              => $id_hpa,
+                        'id_user_pemprosesan'    => $id_user,
+                        'status_pemprosesan'     => 'Belum Diproses',
                     ];
 
-                    // Simpan data ke tabel pemotongan
-                    if (!$pemotonganModel->insert($pemotonganData)) {
-                        throw new Exception('Gagal menyimpan data pemotongan.');
+                    // Simpan data ke tabel pemprosesan
+                    if (!$pemprosesanModel->insert($pemprosesanData)) {
+                        throw new Exception('Gagal menyimpan data pemprosesan.');
                     }
 
-                    // Ambil id_pemotongan yang baru saja disimpan
-                    $id_pemotongan = $pemotonganModel->getInsertID();
+                    // Ambil id_pemprosesan yang baru saja disimpan
+                    $id_pemprosesan = $pemprosesanModel->getInsertID();
 
-                    // Update id_pemotongan pada tabel hpa
-                    $hpaModel->update($id_hpa, ['id_pemotongan' => $id_pemotongan]);
+                    // Update id_pemprosesan pada tabel hpa
+                    $hpaModel->update($id_hpa, ['id_pemprosesan' => $id_pemprosesan]);
                     break;
             }
         } catch (\Exception $e) {

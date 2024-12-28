@@ -28,10 +28,10 @@ class Pembacaan extends Migration
                 'null'       => true,
             ],
             'status_pembacaan' => [
-                'type'       => 'ENUM',
-                'constraint' => ['Belum Dibaca', 'Proses Pembacaan', 'Selesai Pembacaan'],
-                'default'    => 'Belum Dibaca',
-                'null'       => true,
+                'type' => 'VARCHAR',
+                'constraint' => 100,
+                'default'    => 'Belum Dilakukan',
+                'null' => true,
             ],
             'mulai_pembacaan' => [
                 'type' => 'DATETIME',

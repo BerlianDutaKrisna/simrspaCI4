@@ -28,10 +28,10 @@ class Penanaman extends Migration
                 'null'       => true,
             ],
             'status_penanaman' => [
-                'type'       => 'ENUM',
-                'constraint' => ['Belum Ditanam', 'Proses Penanaman', 'Selesai Penanaman'],
-                'default'    => 'Belum Ditanam',
-                'null'       => true,
+                'type' => 'VARCHAR',
+                'constraint' => 100,
+                'default'    => 'Belum Dilakukan',
+                'null' => true,
             ],
             'mulai_penanaman' => [
                 'type' => 'DATETIME',

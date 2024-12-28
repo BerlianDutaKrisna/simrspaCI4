@@ -99,7 +99,8 @@ class Penerimaan extends BaseController
 
         try {
             switch ($action) {
-                    // TOMBOL MULAI PENGECEKAN
+                
+                    // TOMBOL MULAI
                 case 'mulai':
                     // Update status_hpa menjadi 'Penerimaan' pada tabel hpa
                     $hpaModel->updateHpa($id_hpa, ['status_hpa' => 'Penerimaan']);
@@ -110,7 +111,8 @@ class Penerimaan extends BaseController
                         'mulai_penerimaan' => date('Y-m-d H:i:s'),
                     ]);
                     break;
-                    // TOMBOL SELESAI PENGECEKAN
+
+                    // TOMBOL SELESAI
                 case 'selesai':
                     // Update data penerimaan ketika selesai
                     $penerimaanModel->updatePenerimaan($id_penerimaan, [
@@ -126,10 +128,11 @@ class Penerimaan extends BaseController
                         'total_nilai_mutu' => $keseluruhan_nilai_mutu, // Menggunakan waktu lokal Asia/Jakarta
                     ]);
                     break;
-                    // TOMBOL KEMBALIKAN PENGECEKAN
+                    
+                    // TOMBOL KEMBALIKAN
                 case 'kembalikan':
                     $penerimaanModel->updatePenerimaan($id_penerimaan, [
-                        'id_user_penerimaan' => $id_user,  // Menggunakan id_user dari session
+                        'id_user_penerimaan' => null,  // Menggunakan id_user dari session
                         'status_penerimaan' => 'Belum Diperiksa', // Status menjadi 'Belum'
                         'mulai_penerimaan' => null,
                         'selesai_penerimaan' => null, // Menggunakan waktu lokal Asia/Jakarta
@@ -141,6 +144,7 @@ class Penerimaan extends BaseController
                     ]);
                     break;
 
+                    // TOMBOL LANJUT
                 case 'lanjut':
                     // Update status_hpa menjadi 'pengirisan' pada tabel hpa
                     $hpaModel->updateHpa($id_hpa, ['status_hpa' => 'Pengirisan']);
@@ -148,7 +152,6 @@ class Penerimaan extends BaseController
                     // Data untuk tabel pengirisan
                     $pengirisanData = [
                         'id_hpa'              => $id_hpa,  // Menambahkan id_hpa yang baru
-                        'id_user_pengirisan'    => $id_user,
                         'status_pengirisan'     => 'Belum Diiris', // Status awal
                     ];
 

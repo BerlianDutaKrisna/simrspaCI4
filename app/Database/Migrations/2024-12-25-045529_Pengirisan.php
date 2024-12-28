@@ -28,10 +28,10 @@ class Pengirisan extends Migration
                 'null'       => true,
             ],
             'status_pengirisan' => [
-                'type'       => 'ENUM',
-                'constraint' => ['Belum Diiris', 'Proses Pengirisan', 'Sudah Diiris'],
-                'default'    => 'Belum Diiris',
-                'null'       => true,
+                'type' => 'VARCHAR',
+                'constraint' => 100,
+                'default'    => 'Belum Dilakukan',
+                'null' => true,
             ],
             'mulai_pengirisan' => [
                 'type' => 'DATETIME',

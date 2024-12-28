@@ -99,8 +99,6 @@ class Pemprosesan extends BaseController // Update nama controller
         try {
             switch ($action) {
                 case 'mulai':
-                    // Update status_hpa menjadi 'Pemprosesan' pada tabel hpa
-                    $hpaModel->updateHpa($id_hpa, ['status_hpa' => 'Pemprosesan']);
                     // Update data pemprosesan
                     $pemprosesanModel->updatePemprosesan($id_pemprosesan, [
                         'id_user_pemprosesan' => $id_user,

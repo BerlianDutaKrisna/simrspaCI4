@@ -28,10 +28,10 @@ class Penulisan extends Migration
                 'null'       => true,
             ],
             'status_penulisan' => [
-                'type'       => 'ENUM',
-                'constraint' => ['Belum Ditulis', 'Proses Penulisan', 'Selesai Penulisan'],
-                'default'    => 'Belum Ditulis',
-                'null'       => true,
+                'type' => 'VARCHAR',
+                'constraint' => 100,
+                'default'    => 'Belum Dilakukan',
+                'null' => true,
             ],
             'mulai_penulisan' => [
                 'type' => 'DATETIME',

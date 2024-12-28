@@ -28,10 +28,10 @@ class Pemprosesan extends Migration
                 'null'       => true,
             ],
             'status_pemprosesan' => [
-                'type'       => 'ENUM',
-                'constraint' => ['Belum Diproses', 'Proses Pemprosesan', 'Selesai Pemprosesan'],
-                'default'    => 'Belum Diproses',
-                'null'       => true,
+                'type' => 'VARCHAR',
+                'constraint' => 100,
+                'default'    => 'Belum Dilakukan',
+                'null' => true,
             ],
             'mulai_pemprosesan' => [
                 'type' => 'DATETIME',

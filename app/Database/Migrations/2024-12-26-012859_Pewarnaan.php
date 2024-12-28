@@ -28,10 +28,10 @@ class Pewarnaan extends Migration
                 'null'       => true,
             ],
             'status_pewarnaan' => [
-                'type'       => 'ENUM',
-                'constraint' => ['Belum Diwarnai', 'Proses Pewarnaan', 'Selesai Pewarnaan'],
-                'default'    => 'Belum Diwarnai',
-                'null'       => true,
+                'type' => 'VARCHAR',
+                'constraint' => 100,
+                'default'    => 'Belum Dilakukan',
+                'null' => true,
             ],
             'mulai_pewarnaan' => [
                 'type' => 'DATETIME',

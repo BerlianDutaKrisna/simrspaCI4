@@ -28,10 +28,10 @@ class Penerimaan extends Migration
                 'null'       => true,
             ],
             'status_penerimaan' => [
-                'type'       => 'ENUM',
-                'constraint' => ['Belum Diperiksa', 'Proses Pemeriksaan', 'Sudah Diperiksa'],
-                'default'    => 'Belum Diperiksa',
-                'null'       => true,
+                'type' => 'VARCHAR',
+                'constraint' => 100,
+                'default'    => 'Belum Dilakukan',
+                'null' => true,
             ],
             'mulai_penerimaan' => [
                 'type' => 'DATETIME',

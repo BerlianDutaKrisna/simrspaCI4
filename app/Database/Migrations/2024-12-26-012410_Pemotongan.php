@@ -28,10 +28,10 @@ class Pemotongan extends Migration
                 'null'       => true,
             ],
             'status_pemotongan' => [
-                'type'       => 'ENUM',
-                'constraint' => ['Belum Dipotong', 'Proses Pemotongan', 'Selesai Pemotongan'],
-                'default'    => 'Belum Dipotong',
-                'null'       => true,
+                'type' => 'VARCHAR',
+                'constraint' => 100,
+                'default'    => 'Belum Dilakukan',
+                'null' => true,
             ],
             'mulai_pemotongan' => [
                 'type' => 'DATETIME',

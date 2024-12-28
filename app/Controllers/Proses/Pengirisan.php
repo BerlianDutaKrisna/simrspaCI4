@@ -99,10 +99,8 @@ class Pengirisan extends BaseController
 
         try {
             switch ($action) {
-                    // TOMBOL MULAI PENGECEKAN
+                    // TOMBOL MULAI
                 case 'mulai':
-                    // Update status_hpa menjadi 'Pengirisan' pada tabel hpa
-                    $hpaModel->updateHpa($id_hpa, ['status_hpa' => 'Pengirisan']);
                     // Update data pengirisan
                     $pengirisanModel->updatePengirisan($id_pengirisan, [
                         'id_user_pengirisan' => $id_user,
@@ -120,25 +118,25 @@ class Pengirisan extends BaseController
                     ]);
                     
                     break;
-                    // TOMBOL KEMBALIKAN PENGECEKAN
+                    // TOMBOL KEMBALIKAN
                 case 'kembalikan':
                     $pengirisanModel->updatePengirisan($id_pengirisan, [
-                        'id_user_pengirisan' => $id_user,  
+                        'id_user_pengirisan' => null,  
                         'status_pengirisan' => 'Belum Diiris', 
                         'mulai_pengirisan' => null,
                         'selesai_pengirisan' => null, 
                     ]);
                     break;
 
+                    // TOMBOL LANJUT
                 case 'lanjut':
                     // Update status_hpa menjadi 'pemotongan' pada tabel hpa
-                    $hpaModel->updateHpa($id_hpa, ['status_hpa' => 'pemotongan']);
+                    $hpaModel->updateHpa($id_hpa, ['status_hpa' => 'Pemotongan']);
 
                     // Data untuk tabel pemotongan
                     $pemotonganData = [
                         'id_hpa'              => $id_hpa,  // Menambahkan id_hpa yang baru
-                        'id_user_pemotongan'    => $id_user,
-                        'status_pemotongan'     => 'Belum Diiris', // Status awal
+                        'status_pemotongan'     => 'Belum Dipotong', // Status awal
                     ];
 
                     // Simpan data ke tabel pemotongan

@@ -28,10 +28,10 @@ class PemotonganTipis extends Migration
                 'null'       => true,
             ],
             'status_pemotongan_tipis' => [
-                'type'       => 'ENUM',
-                'constraint' => ['Belum Dipotong Tipis', 'Proses Pemotongan Tipis', 'Selesai Pemotongan Tipis'],
-                'default'    => 'Belum Dipotong Tipis',
-                'null'       => true,
+                'type' => 'VARCHAR',
+                'constraint' => 100,
+                'default'    => 'Belum Dilakukan',
+                'null' => true,
             ],
             'mulai_pemotongan_tipis' => [
                 'type' => 'DATETIME',

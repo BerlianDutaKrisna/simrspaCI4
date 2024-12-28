@@ -28,10 +28,10 @@ class Pemverifikasi extends Migration
                 'null'       => true,
             ],
             'status_pemverifikasi' => [
-                'type'       => 'ENUM',
-                'constraint' => ['Belum Diverifikasi', 'Proses Verifikasi', 'Selesai Verifikasi'],
-                'default'    => 'Belum Diverifikasi',
-                'null'       => true,
+                'type' => 'VARCHAR',
+                'constraint' => 100,
+                'default'    => 'Belum Dilakukan',
+                'null' => true,
             ],
             'mulai_pemverifikasi' => [
                 'type' => 'DATETIME',

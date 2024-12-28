@@ -20,11 +20,11 @@
                         <th>Diagnosa</th>
                         <th>Tindakan Spesimen</th>
                         <th>Status Hpa</th>
-                        <th>Status Proses</th> <!-- Kolom Status Proses -->
-                        <th>Nama User</th>
+                        <th>Status Proses</th>
+                        <th>Dikerjakan Oleh</th>
                         <th>Mulai Pengerjaan</th>
                         <th>Selesai Pengerjaan</th>
-                        <th>Tanggal Hasil</th>
+                        <th>Deadline Hasil</th>
                     </tr>
                 </thead>
                 <tfoot>
@@ -57,10 +57,37 @@
                                     // Tentukan status proses berdasarkan status hpa
                                     switch ($row['status_hpa']) {
                                         case 'Penerimaan':
-                                            echo esc($row['status_penerimaan']); // Menampilkan status_penerimaan jika status_hpa Penerimaan
+                                            echo esc($row['status_penerimaan']); 
                                             break;
                                         case 'Pengirisan':
-                                            echo esc($row['status_pengirisan']); // Menampilkan status_pengirisan jika status_hpa Pengirisan
+                                            echo esc($row['status_pengirisan']); 
+                                            break;
+                                        case 'Pemotongan':
+                                            echo esc($row['status_pemotongan']); 
+                                            break;
+                                        case 'Pemprosesan':
+                                            echo esc($row['status_pemprosesan']); 
+                                            break;
+                                        case 'Penanaman':
+                                            echo esc($row['status_penanaman']);
+                                            break;
+                                        case 'Pemotongan Tipis':
+                                            echo esc($row['status_pemotongan_tipis']);
+                                            break;
+                                        case 'Pewarnaan':
+                                            echo esc($row['status_pewarnaan']);
+                                            break;
+                                        case 'Pembacaan':
+                                            echo esc($row['status_pembacaan']);
+                                            break;
+                                        case 'Penulisan':
+                                            echo esc($row['status_penulisan']);
+                                            break;
+                                        case 'Pemverifikasi':
+                                            echo esc($row['status_pemverifikasi']);
+                                            break;
+                                        case 'Pencetakan':
+                                            echo esc($row['status_pencetakan']);
                                             break;
                                         default:
                                             echo '-'; // Menampilkan tanda "-" jika status_hpa tidak sesuai
@@ -72,13 +99,37 @@
                                     <?php
                                     switch ($row['status_hpa']) {
                                         case 'Penerimaan':
-                                            echo esc($row['nama_user_penerimaan']);
+                                            echo !empty($row['nama_user_penerimaan']) ? esc($row['nama_user_penerimaan']) : '-';
                                             break;
                                         case 'Pengirisan':
-                                            echo esc($row['nama_user_pengirisan']);
+                                            echo !empty($row['nama_user_pengirisan']) ? esc($row['nama_user_pengirisan']) : '-';
                                             break;
                                         case 'Pemotongan':
-                                            echo esc($row['nama_user_pemotongan']);
+                                            echo !empty($row['nama_user_pemotongan']) ? esc($row['nama_user_pemotongan']) : '-';
+                                            break;
+                                        case 'Pemprosesan':
+                                            echo !empty($row['nama_user_pemprosesan']) ? esc($row['nama_user_pemprosesan']) : '-';
+                                            break;
+                                        case 'Penanaman':
+                                            echo !empty($row['nama_user_penanaman']) ? esc($row['nama_user_penanaman']) : '-';
+                                            break;
+                                        case 'Pemotongan Tipis':
+                                            echo !empty($row['nama_user_pemotongan_tipis']) ? esc($row['nama_user_pemotongan_tipis']) : '-';
+                                            break;
+                                        case 'Pewarnaan':
+                                            echo !empty($row['nama_user_pewarnaan']) ? esc($row['nama_user_pewarnaan']) : '-';
+                                            break;
+                                        case 'Pembacaan':
+                                            echo !empty($row['nama_user_pembacaan']) ? esc($row['nama_user_pembacaan']) : '-';
+                                            break;
+                                        case 'Penulisan':
+                                            echo !empty($row['nama_user_penulisan']) ? esc($row['nama_user_penulisan']) : '-';
+                                            break;
+                                        case 'Pemverifikasi':
+                                            echo !empty($row['nama_user_pemverifikasi']) ? esc($row['nama_user_pemverifikasi']) : '-';
+                                            break;
+                                        case 'Pencetakan':
+                                            echo !empty($row['nama_user_pencetakan']) ? esc($row['nama_user_pencetakan']) : '-';
                                             break;
                                         default:
                                             echo '-';
@@ -99,6 +150,27 @@
                                             break;
                                         case 'Pemotongan':
                                             $startTimeField = 'mulai_pemotongan';
+                                            break;
+                                        case 'Penanaman':
+                                            $startTimeField = 'mulai_penanaman';
+                                            break;
+                                        case 'Pemotongan Tipis':
+                                            $startTimeField = 'mulai_pemotongan_tipis';
+                                            break;
+                                        case 'Pewarnaan':
+                                            $startTimeField = 'mulai_pewarnaan';
+                                            break;
+                                        case 'Pembacaan':
+                                            $startTimeField = 'mulai_pembacaan';
+                                            break;
+                                        case 'Penulisan':
+                                            $startTimeField = 'mulai_penulisan';
+                                            break;
+                                        case 'Pemverifikasi':
+                                            $startTimeField = 'mulai_pemverifikasi';
+                                            break;
+                                        case 'Pencetakan':
+                                            $startTimeField = 'mulai_pencetakan';
                                             break;
                                         default:
                                             $startTimeField = 'waktu_pengerjaan';
@@ -121,6 +193,27 @@
                                             break;
                                         case 'Pemotongan':
                                             $endTimeField = 'selesai_pemotongan';
+                                            break;
+                                        case 'Penanaman':
+                                            $endTimeField = 'mulai_penanaman';
+                                            break;
+                                        case 'Pemotongan Tipis':
+                                            $endTimeField = 'mulai_pemotongan_tipis';
+                                            break;
+                                        case 'Pewarnaan':
+                                            $endTimeField = 'mulai_pewarnaan';
+                                            break;
+                                        case 'Pembacaan':
+                                            $endTimeField = 'mulai_pembacaan';
+                                            break;
+                                        case 'Penulisan':
+                                            $endTimeField = 'mulai_penulisan';
+                                            break;
+                                        case 'Pemverifikasi':
+                                            $endTimeField = 'mulai_pemverifikasi';
+                                            break;
+                                        case 'Pencetakan':
+                                            $endTimeField = 'mulai_pencetakan';
                                             break;
                                         default:
                                             $endTimeField = 'selesai_pengerjaan';

@@ -28,10 +28,10 @@ class Pencetakan extends Migration
                 'null'       => true,
             ],
             'status_pencetakan' => [
-                'type'       => 'ENUM',
-                'constraint' => ['Belum Dicetak', 'Proses Pencetakan', 'Selesai Pencetakan'],
-                'default'    => 'Belum Dicetak',
-                'null'       => true,
+                'type' => 'VARCHAR',
+                'constraint' => 100,
+                'default'    => 'Belum Dilakukan',
+                'null' => true,
             ],
             'mulai_pencetakan' => [
                 'type' => 'DATETIME',
