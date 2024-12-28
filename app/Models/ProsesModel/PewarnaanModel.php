@@ -43,7 +43,7 @@ class PewarnaanModel extends Model // Update nama model
         pewarnaan.*, 
         hpa.*, 
         patient.*, 
-        users.nama_user AS nama_user_pewarnaan, // Update alias
+        users.nama_user AS nama_user_pewarnaan,
         mutu.total_nilai_mutu'
         )
             ->join('hpa', 'pewarnaan.id_hpa = hpa.id_hpa', 'left') // Relasi dengan tabel hpa

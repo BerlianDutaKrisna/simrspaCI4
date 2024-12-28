@@ -43,7 +43,7 @@ class PemverifikasiModel extends Model // Update nama model
         pemverifikasi.*, 
         hpa.*, 
         patient.*, 
-        users.nama_user AS nama_user_pemverifikasi, // Update alias
+        users.nama_user AS nama_user_pemverifikasi,
         mutu.total_nilai_mutu'
         )
             ->join('hpa', 'pemverifikasi.id_hpa = hpa.id_hpa', 'left') // Relasi dengan tabel hpa

@@ -43,7 +43,7 @@ class PembacaanModel extends Model // Update nama model
         pembacaan.*, 
         hpa.*, 
         patient.*, 
-        users.nama_user AS nama_user_pembacaan, // Update alias
+        users.nama_user AS nama_user_pembacaan,
         mutu.total_nilai_mutu'
         )
             ->join('hpa', 'pembacaan.id_hpa = hpa.id_hpa', 'left') // Relasi dengan tabel hpa
