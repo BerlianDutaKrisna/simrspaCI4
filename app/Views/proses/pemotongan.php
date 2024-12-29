@@ -56,7 +56,7 @@
                                     <td>
                                         <?= empty($row['tanggal_hasil']) ? 'Belum diisi' : esc(date('d-m-Y', strtotime($row['tanggal_hasil']))); ?>
                                     </td>
-                                    <?php if ($row['status_pemotongan'] === "Proses Pemotongan"): ?>
+                                    <?php if (in_array($row['status_pemotongan'], ["Proses Pemotongan", "Sudah Pemotongan"])): ?>
                                         <td>
                                             <a href="#" class="btn btn-success btn-user btn-block">
                                                 <i class="fas fa-pen"></i> Detail
@@ -76,5 +76,7 @@
                     </tbody>
                 </table>
             </div>
-            <<?= $this->include('templates/proses/button_proses'); ?>
+            
+            <?= $this->include('templates/proses/button_proses'); ?>
+            <?= $this->include('templates/notifikasi'); ?>
             <?= $this->include('templates/dashboard/footer_dashboard'); ?>

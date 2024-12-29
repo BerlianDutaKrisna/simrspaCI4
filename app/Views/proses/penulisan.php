@@ -23,10 +23,11 @@
                             <th>Nama Pasien</th>
                             <th>Status Penulisan</th>
                             <th>Aksi</th>
-                            <th>Analis</th>
+                            <th>Admin</th>
                             <th>Mulai Penulisan</th>
                             <th>Selesai Penulisan</th>
                             <th>Deadline Hasil</th>
+                            <th>Detail</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -55,50 +56,27 @@
                                     <td>
                                         <?= empty($row['tanggal_hasil']) ? 'Belum diisi' : esc(date('d-m-Y', strtotime($row['tanggal_hasil']))); ?>
                                     </td>
+                                    <?php if (in_array($row['status_penulisan'], ["Proses Penulisan", "Sudah Penulisan"])): ?>
+                                        <td>
+                                            <a href="#" class="btn btn-success btn-user btn-block">
+                                                <i class="fas fa-pen"></i> Detail
+                                            </a>
+                                        </td>
+                                    <?php else: ?>
+                                        <td style="display:none;"></td>
+                                    <?php endif; ?>
                                 </tr>
                                 <?php $i++; ?>
                             <?php endforeach; ?>
                         <?php else: ?>
                             <tr>
-                                <td colspan="10" class="text-center">No data available</td>
+                                <td colspan="10" class="text-center">Belum ada sampel untuk penulisan</td>
                             </tr>
                         <?php endif; ?>
                     </tbody>
                 </table>
             </div>
 
-            <!-- Tombol -->
-            <div class="row">
-                <div class="form-group col-12 col-md-6">
-                    <button type="button" class="btn btn-danger btn-user btn-block" onclick="setAction('mulai')">
-                        Mulai Penulisan
-                    </button>
-                </div>
-                <div class="form-group col-12 col-md-6">
-                    <button type="button" class="btn btn-success btn-user btn-block" onclick="setAction('selesai')">
-                        <i class="fas fa-pause"></i> Selesai Penulisan
-                    </button>
-                </div>
-                <div class="form-group col-12">
-                    <button type="button" class="btn btn-info btn-user btn-block" onclick="setAction('lanjut')">
-                        <i class="fas fa-step-forward"></i> Lanjutkan Penulisan
-                    </button>
-                </div>
-                <div class="form-group col-12">
-                    <button type="button" class="btn btn-warning btn-user btn-block" onclick="setAction('kembalikan')">
-                        <i class="fas fa-undo-alt"></i> Kembalikan Penulisan
-                    </button>
-                </div>
-            </div>
-        </form>
-    </div>
-</div>
-
-<script>
-    function setAction(action) {
-        document.getElementById('action').value = action;
-        document.getElementById('mainForm').submit(); // Kirim form setelah action diset
-    }
-</script>
-
-<?= $this->include('templates/dashboard/footer_dashboard'); ?>
+            <?= $this->include('templates/proses/button_proses'); ?>
+            <?= $this->include('templates/notifikasi'); ?>
+            <?= $this->include('templates/dashboard/footer_dashboard'); ?>

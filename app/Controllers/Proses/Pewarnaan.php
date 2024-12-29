@@ -3,7 +3,8 @@
 namespace App\Controllers\Proses;
 
 use App\Controllers\BaseController;
-use App\Models\ProsesModel\PewarnaanModel; // Update nama model
+use App\Models\ProsesModel\PewarnaanModel;
+use App\Models\ProsesModel\PembacaanModel;
 use App\Models\HpaModel;
 use App\Models\MutuModel;
 use Exception;
@@ -93,13 +94,12 @@ class Pewarnaan extends BaseController // Update nama controller
         date_default_timezone_set('Asia/Jakarta');
 
         $hpaModel = new HpaModel();
-        $pewarnaanModel = new PewarnaanModel(); // Update model
+        $pewarnaanModel = new PewarnaanModel();
+        $pembacaanModel = new PembacaanModel();
 
         try {
             switch ($action) {
                 case 'mulai':
-                    // Update status_hpa menjadi 'Pewarnaan' pada tabel hpa
-                    $hpaModel->updateHpa($id_hpa, ['status_hpa' => 'Pewarnaan']);
                     // Update data pewarnaan
                     $pewarnaanModel->updatePewarnaan($id_pewarnaan, [
                         'id_user_pewarnaan' => $id_user,
@@ -112,41 +112,40 @@ class Pewarnaan extends BaseController // Update nama controller
                     // Update data pewarnaan ketika selesai
                     $pewarnaanModel->updatePewarnaan($id_pewarnaan, [
                         'id_user_pewarnaan' => $id_user,
-                        'status_pewarnaan' => 'Sudah Diwarnai',
+                        'status_pewarnaan' => 'Sudah Pewarnaan',
                         'selesai_pewarnaan' => date('Y-m-d H:i:s'),
                     ]);
                     break;
 
                 case 'kembalikan':
                     $pewarnaanModel->updatePewarnaan($id_pewarnaan, [
-                        'id_user_pewarnaan' => $id_user,
-                        'status_pewarnaan' => 'Belum Diwarnai',
+                        'id_user_pewarnaan' => null,
+                        'status_pewarnaan' => 'Belum Pewarnaan',
                         'mulai_pewarnaan' => null,
                         'selesai_pewarnaan' => null,
                     ]);
                     break;
 
                 case 'lanjut':
-                    // Update status_hpa menjadi 'Pewarnaan' pada tabel hpa
-                    $hpaModel->updateHpa($id_hpa, ['status_hpa' => 'Pewarnaan']);
+                    // Update status_hpa menjadi 'pembacaan' pada tabel hpa
+                    $hpaModel->updateHpa($id_hpa, ['status_hpa' => 'Pembacaan']);
 
-                    // Data untuk tabel pewarnaan
-                    $pewarnaanData = [
-                        'id_hpa'                   => $id_hpa,  // Menambahkan id_hpa yang baru
-                        'id_user_pewarnaan'        => $id_user,
-                        'status_pewarnaan'         => 'Belum Diwarnai', // Status awal
+                    // Data untuk tabel pembacaan
+                    $pembacaanData = [
+                        'id_hpa'                   => $id_hpa,
+                        'status_pembacaan'         => 'Belum pembacaan',
                     ];
 
-                    // Simpan data ke tabel pewarnaan
-                    if (!$pewarnaanModel->insert($pewarnaanData)) {
-                        throw new Exception('Gagal menyimpan data pewarnaan.');
+                    // Simpan data ke tabel pembacaan
+                    if (!$pembacaanModel->insert($pembacaanData)) {
+                        throw new Exception('Gagal menyimpan data pembacaan.');
                     }
 
-                    // Ambil id_pewarnaan yang baru saja disimpan
-                    $id_pewarnaan = $pewarnaanModel->getInsertID();
+                    // Ambil id_pembacaan yang baru saja disimpan
+                    $id_pembacaan = $pembacaanModel->getInsertID();
 
-                    // Update id_pewarnaan pada tabel hpa
-                    $hpaModel->update($id_hpa, ['id_pewarnaan' => $id_pewarnaan]);
+                    // Update id_pembacaan pada tabel hpa
+                    $hpaModel->update($id_hpa, ['id_pembacaan' => $id_pembacaan]);
                     break;
             }
         } catch (\Exception $e) {

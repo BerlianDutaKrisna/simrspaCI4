@@ -123,9 +123,9 @@ class Penerimaan extends BaseController
                     // update data mutu
                     $keseluruhan_nilai_mutu = $total_nilai_mutu + $indikator_1 + $indikator_2;
                     $mutuModel->updateMutu($id_mutu, [
-                        'indikator_1' => $indikator_1,  // Menggunakan id_user dari session
-                        'indikator_2' => $indikator_2, // Status menjadi 'Sudah Diperiksa'
-                        'total_nilai_mutu' => $keseluruhan_nilai_mutu, // Menggunakan waktu lokal Asia/Jakarta
+                        'indikator_1' => $indikator_1,
+                        'indikator_2' => $indikator_2, 
+                        'total_nilai_mutu' => $keseluruhan_nilai_mutu, 
                     ]);
                     break;
                     
@@ -137,13 +137,10 @@ class Penerimaan extends BaseController
                         'mulai_penerimaan' => null,
                         'selesai_penerimaan' => null, // Menggunakan waktu lokal Asia/Jakarta
                     ]);
-                    // Konversi VARCHAR ke INTEGER
-                    $total_nilai_mutu_int = (int)$total_nilai_mutu;
-                    $keseluruhan_nilai_mutu = $total_nilai_mutu_int - 10;
                     $mutuModel->updateMutu($id_mutu, [
                         'indikator_1' => '0',
                         'indikator_2' => '0',
-                        'total_nilai_mutu' => $keseluruhan_nilai_mutu,
+                        'total_nilai_mutu' => '0',
                     ]);
                     break;
 

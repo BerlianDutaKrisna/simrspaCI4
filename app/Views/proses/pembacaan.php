@@ -23,10 +23,12 @@
                             <th>Nama Pasien</th>
                             <th>Status Pembacaan</th>
                             <th>Aksi</th>
-                            <th>Analis</th>
+                            <th>Kualitas Sediaan</th>
+                            <th>Dokter</th>
                             <th>Mulai Pembacaan</th>
                             <th>Selesai Pembacaan</th>
                             <th>Deadline Hasil</th>
+                            <th>Detail</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -45,6 +47,65 @@
                                             class="form-control form-control-user"
                                             autocomplete="off">
                                     </td>
+                                    <td>
+                                        <?php if ($row['status_pembacaan'] === "Proses Pembacaan"): ?>
+                                            <input type="hidden" name="total_nilai_mutu" value="<?= $row['total_nilai_mutu']; ?>">
+                                            <!-- Menampilkan form checkbox ketika status pembacaan adalah 'Proses pembacaan' -->
+                                            <div class="form-check">
+                                                <input type="checkbox"
+                                                    name="indikator_4"
+                                                    value="10"
+                                                    id="indikator_4_<?= $row['id_mutu']; ?>"
+                                                    class="form-check-input">
+                                                <label class="form-check-label" for="indikator_4_<?= $row['id_mutu']; ?>">
+                                                    Sediaan tanpa lipatan
+                                                </label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input type="checkbox"
+                                                    name="indikator_5"
+                                                    value="10"
+                                                    id="indikator_5_<?= $row['id_mutu']; ?>"
+                                                    class="form-check-input">
+                                                <label class="form-check-label" for="indikator_5_<?= $row['id_mutu']; ?>">
+                                                    Sediaan tanpa goresan mata pisau
+                                                </label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input type="checkbox"
+                                                    name="indikator_6"
+                                                    value="10"
+                                                    id="indikator_6_<?= $row['id_mutu']; ?>"
+                                                    class="form-check-input">
+                                                <label class="form-check-label" for="indikator_6_<?= $row['id_mutu']; ?>">
+                                                    Kontras warna sediaan cukup jelas
+                                                </label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input type="checkbox"
+                                                    name="indikator_7"
+                                                    value="10"
+                                                    id="indikator_7_<?= $row['id_mutu']; ?>"
+                                                    class="form-check-input">
+                                                <label class="form-check-label" for="indikator_7_<?= $row['id_mutu']; ?>">
+                                                    Sediaan tanpa gelembung udara
+                                                </label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input type="checkbox"
+                                                    name="indikator_8"
+                                                    value="10"
+                                                    id="indikator_8_<?= $row['id_mutu']; ?>"
+                                                    class="form-check-input">
+                                                <label class="form-check-label" for="indikator_8_<?= $row['id_mutu']; ?>">
+                                                    Sediaan tanpa bercak / sidik jari
+                                                </label>
+                                            </div>
+                                        <?php else: ?>
+                                            <!-- Menampilkan total_nilai_mutu jika status pembacaan 'Belum Diperiksa' atau 'Sudah Diperiksa' -->
+                                            <?= $row['total_nilai_mutu']; ?> %
+                                        <?php endif; ?>
+                                    </td>
                                     <td><?= $row['nama_user_pembacaan']; ?></td>
                                     <td>
                                         <?= empty($row['mulai_pembacaan']) ? '-' : esc(date('H:i , d-m-Y', strtotime($row['mulai_pembacaan']))); ?>
@@ -55,50 +116,27 @@
                                     <td>
                                         <?= empty($row['tanggal_hasil']) ? 'Belum diisi' : esc(date('d-m-Y', strtotime($row['tanggal_hasil']))); ?>
                                     </td>
+                                    <?php if (in_array($row['status_pembacaan'], ["Proses pembacaan", "Sudah pembacaan"])): ?>
+                                        <td>
+                                            <a href="#" class="btn btn-success btn-user btn-block">
+                                                <i class="fas fa-pen"></i> Detail
+                                            </a>
+                                        </td>
+                                    <?php else: ?>
+                                        <td style="display:none;"></td>
+                                    <?php endif; ?>
                                 </tr>
                                 <?php $i++; ?>
                             <?php endforeach; ?>
                         <?php else: ?>
                             <tr>
-                                <td colspan="10" class="text-center">No data available</td>
+                                <td colspan="10" class="text-center">Belum ada sampel untuk pembacaan</td>
                             </tr>
                         <?php endif; ?>
                     </tbody>
                 </table>
             </div>
 
-            <!-- Tombol -->
-            <div class="row">
-                <div class="form-group col-12 col-md-6">
-                    <button type="button" class="btn btn-danger btn-user btn-block" onclick="setAction('mulai')">
-                        Mulai Pembacaan
-                    </button>
-                </div>
-                <div class="form-group col-12 col-md-6">
-                    <button type="button" class="btn btn-success btn-user btn-block" onclick="setAction('selesai')">
-                        <i class="fas fa-pause"></i> Selesai Pembacaan
-                    </button>
-                </div>
-                <div class="form-group col-12">
-                    <button type="button" class="btn btn-info btn-user btn-block" onclick="setAction('lanjut')">
-                        <i class="fas fa-step-forward"></i> Lanjutkan Pembacaan
-                    </button>
-                </div>
-                <div class="form-group col-12">
-                    <button type="button" class="btn btn-warning btn-user btn-block" onclick="setAction('kembalikan')">
-                        <i class="fas fa-undo-alt"></i> Kembalikan Pembacaan
-                    </button>
-                </div>
-            </div>
-        </form>
-    </div>
-</div>
-
-<script>
-    function setAction(action) {
-        document.getElementById('action').value = action;
-        document.getElementById('mainForm').submit(); // Kirim form setelah action diset
-    }
-</script>
-
-<?= $this->include('templates/dashboard/footer_dashboard'); ?>
+            <?= $this->include('templates/proses/button_proses'); ?>
+            <?= $this->include('templates/notifikasi'); ?>
+            <?= $this->include('templates/dashboard/footer_dashboard'); ?>

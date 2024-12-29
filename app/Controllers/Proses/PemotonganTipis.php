@@ -133,7 +133,7 @@ class PemotonganTipis extends BaseController // Update nama controller
                     // Data untuk tabel Pewarnaan
                     $pewarnaanData = [
                         'id_hpa'            => $id_hpa,
-                        'status_pewarnaan'  => 'Belum Pewarnaan', // Status awal
+                        'status_pewarnaan'  => 'Belum Pewarnaan',
                     ];
 
                     // Simpan data ke tabel Pewarnaan

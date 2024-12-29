@@ -119,6 +119,7 @@ class HpaModel extends Model
             ->join('users AS user_penulisan', 'penulisan.id_user_penulisan = user_penulisan.id_user', 'left')
             ->join('users AS user_pemverifikasi', 'pemverifikasi.id_user_pemverifikasi = user_pemverifikasi.id_user', 'left')
             ->join('users AS user_pencetakan', 'pencetakan.id_user_pencetakan = user_pencetakan.id_user', 'left')
+            ->where('hpa.status_hpa !=', 'Sudah Diproses') // Menambahkan kondisi untuk tidak menampilkan status_hpa "Sudah Diproses"
             ->get()
             ->getResultArray();
     }

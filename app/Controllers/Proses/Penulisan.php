@@ -3,7 +3,8 @@
 namespace App\Controllers\Proses;
 
 use App\Controllers\BaseController;
-use App\Models\ProsesModel\PenulisanModel; // Update nama model
+use App\Models\ProsesModel\PenulisanModel;
+use App\Models\ProsesModel\PemverifikasiModel;
 use App\Models\HpaModel;
 use App\Models\MutuModel;
 use Exception;
@@ -93,14 +94,12 @@ class Penulisan extends BaseController // Update nama controller
         date_default_timezone_set('Asia/Jakarta');
 
         $hpaModel = new HpaModel();
-        $penulisanModel = new PenulisanModel(); // Update nama model
+        $penulisanModel = new PenulisanModel();
+        $pemverifikasiModel = new PemverifikasiModel();
 
         try {
             switch ($action) {
                 case 'mulai':
-                    // Update status_hpa menjadi 'Penulisan' pada tabel hpa
-                    $hpaModel->updateHpa($id_hpa, ['status_hpa' => 'Penulisan']);
-                    // Update data penulisan
                     $penulisanModel->updatePenulisan($id_penulisan, [
                         'id_user_penulisan' => $id_user,
                         'status_penulisan' => 'Proses Penulisan',
@@ -112,41 +111,40 @@ class Penulisan extends BaseController // Update nama controller
                     // Update data penulisan ketika selesai
                     $penulisanModel->updatePenulisan($id_penulisan, [
                         'id_user_penulisan' => $id_user,
-                        'status_penulisan' => 'Sudah Ditulis',
+                        'status_penulisan' => 'Sudah Penulisan',
                         'selesai_penulisan' => date('Y-m-d H:i:s'),
                     ]);
                     break;
 
                 case 'kembalikan':
                     $penulisanModel->updatePenulisan($id_penulisan, [
-                        'id_user_penulisan' => $id_user,
-                        'status_penulisan' => 'Belum Ditulis',
+                        'id_user_penulisan' => null,
+                        'status_penulisan' => 'Belum Penulisan',
                         'mulai_penulisan' => null,
                         'selesai_penulisan' => null,
                     ]);
                     break;
 
                 case 'lanjut':
-                    // Update status_hpa menjadi 'Penulisan' pada tabel hpa
-                    $hpaModel->updateHpa($id_hpa, ['status_hpa' => 'Penulisan']);
+                    // Update status_hpa menjadi 'pemverifikasi' pada tabel hpa
+                    $hpaModel->updateHpa($id_hpa, ['status_hpa' => 'Pemverifikasi']);
 
-                    // Data untuk tabel penulisan
-                    $penulisanData = [
-                        'id_hpa'                 => $id_hpa,  // Menambahkan id_hpa yang baru
-                        'id_user_penulisan'      => $id_user,
-                        'status_penulisan'       => 'Belum Ditulis', // Status awal
+                    // Data untuk tabel pemverifikasi
+                    $pemverifikasiData = [
+                        'id_hpa'                 => $id_hpa,
+                        'status_pemverifikasi'       => 'Belum Diverifikasi',
                     ];
 
-                    // Simpan data ke tabel penulisan
-                    if (!$penulisanModel->insert($penulisanData)) {
-                        throw new Exception('Gagal menyimpan data penulisan.');
+                    // Simpan data ke tabel pemverifikasi
+                    if (!$pemverifikasiModel->insert($pemverifikasiData)) {
+                        throw new Exception('Gagal menyimpan data pemverifikasi.');
                     }
 
-                    // Ambil id_penulisan yang baru saja disimpan
-                    $id_penulisan = $penulisanModel->getInsertID();
+                    // Ambil id_pemverifikasi yang baru saja disimpan
+                    $id_pemverifikasi = $pemverifikasiModel->getInsertID();
 
-                    // Update id_penulisan pada tabel hpa
-                    $hpaModel->update($id_hpa, ['id_penulisan' => $id_penulisan]);
+                    // Update id_pemverifikasi pada tabel hpa
+                    $hpaModel->update($id_hpa, ['id_pemverifikasi' => $id_pemverifikasi]);
                     break;
             }
         } catch (\Exception $e) {

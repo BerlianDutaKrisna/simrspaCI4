@@ -3,7 +3,8 @@
 namespace App\Controllers\Proses;
 
 use App\Controllers\BaseController;
-use App\Models\ProsesModel\PemverifikasiModel; // Update nama model
+use App\Models\ProsesModel\PemverifikasiModel;
+use App\Models\ProsesModel\PencetakanModel;
 use App\Models\HpaModel;
 use App\Models\MutuModel;
 use Exception;
@@ -93,16 +94,16 @@ class Pemverifikasi extends BaseController // Update nama controller
         date_default_timezone_set('Asia/Jakarta');
 
         $hpaModel = new HpaModel();
-        $pemverifikasiModel = new PemverifikasiModel(); // Update nama model
+        $pemverifikasiModel = new PemverifikasiModel();
+        $pencetakanModel = new PencetakanModel();
 
         try {
             switch ($action) {
                     // TOMBOL MULAI PENGECEKAN
                 case 'mulai':
-                    $hpaModel->updateHpa($id_hpa, ['status_hpa' => 'Pemverifikasi']); // Update status
                     $pemverifikasiModel->updatePemverifikasi($id_pemverifikasi, [ // Update nama method dan variabel
                         'id_user_pemverifikasi' => $id_user,
-                        'status_pemverifikasi' => 'Proses Pemverifikasi',
+                        'status_pemverifikasi' => 'Proses Verifikasi',
                         'mulai_pemverifikasi' => date('Y-m-d H:i:s'),
                     ]);
                     break;
@@ -111,7 +112,7 @@ class Pemverifikasi extends BaseController // Update nama controller
                 case 'selesai':
                     $pemverifikasiModel->updatePemverifikasi($id_pemverifikasi, [ // Update nama method dan variabel
                         'id_user_pemverifikasi' => $id_user,
-                        'status_pemverifikasi' => 'Sudah Diverifikasi',
+                        'status_pemverifikasi' => 'Selesai Diverifikasi',
                         'selesai_pemverifikasi' => date('Y-m-d H:i:s'),
                     ]);
                     break;
@@ -119,7 +120,7 @@ class Pemverifikasi extends BaseController // Update nama controller
                     // TOMBOL KEMBALIKAN PENGECEKAN
                 case 'kembalikan':
                     $pemverifikasiModel->updatePemverifikasi($id_pemverifikasi, [ // Update nama method dan variabel
-                        'id_user_pemverifikasi' => $id_user,
+                        'id_user_pemverifikasi' => null,
                         'status_pemverifikasi' => 'Belum Diverifikasi',
                         'mulai_pemverifikasi' => null,
                         'selesai_pemverifikasi' => null,
@@ -127,20 +128,19 @@ class Pemverifikasi extends BaseController // Update nama controller
                     break;
 
                 case 'lanjut':
-                    $hpaModel->updateHpa($id_hpa, ['status_hpa' => 'Pemverifikasi']); // Update status
+                    $hpaModel->updateHpa($id_hpa, ['status_hpa' => 'Pencetakan']); // Update status
 
-                    $pemverifikasiData = [
+                    $pencetakanData = [
                         'id_hpa' => $id_hpa,
-                        'id_user_pemverifikasi' => $id_user,
-                        'status_pemverifikasi' => 'Belum Diverifikasi',
+                        'status_pencetakan' => 'Belum Dicetak',
                     ];
 
-                    if (!$pemverifikasiModel->insert($pemverifikasiData)) { // Update nama method dan variabel
-                        throw new Exception('Gagal menyimpan data pemverifikasi.');
+                    if (!$pencetakanModel->insert($pencetakanData)) { // Update nama method dan variabel
+                        throw new Exception('Gagal menyimpan data pencetakan.');
                     }
 
-                    $id_pemverifikasi = $pemverifikasiModel->getInsertID(); // Update nama variabel
-                    $hpaModel->update($id_hpa, ['id_pemverifikasi' => $id_pemverifikasi]); // Update nama variabel
+                    $id_pencetakan = $pencetakanModel->getInsertID(); // Update nama variabel
+                    $hpaModel->update($id_hpa, ['id_pencetakan' => $id_pencetakan]); // Update nama variabel
                     break;
             }
         } catch (\Exception $e) {

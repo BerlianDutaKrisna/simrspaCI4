@@ -98,4 +98,5 @@
             </div>
 
             <?= $this->include('templates/proses/button_proses'); ?>
+            <?= $this->include('templates/notifikasi'); ?>
             <?= $this->include('templates/dashboard/footer_dashboard'); ?>

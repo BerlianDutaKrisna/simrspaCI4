@@ -132,9 +132,12 @@ class Penanaman extends BaseController // Update nama controller
                         'mulai_penanaman' => null,
                         'selesai_penanaman' => null,
                     ]);
+                    // Konversi VARCHAR ke INTEGER
+                    $total_nilai_mutu_int = (int)$total_nilai_mutu;
+                    $keseluruhan_nilai_mutu = $total_nilai_mutu_int - 10;
                     $mutuModel->updateMutu($id_mutu, [
-                        'indikator_3' => "0",
-                        'total_nilai_mutu' => "20",
+                        'indikator_3' => '0',
+                        'total_nilai_mutu' => $keseluruhan_nilai_mutu,
                     ]);
                     break;
 

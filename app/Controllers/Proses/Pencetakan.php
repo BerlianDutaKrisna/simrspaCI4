@@ -99,7 +99,6 @@ class Pencetakan extends BaseController // Update nama controller
             switch ($action) {
                     // TOMBOL MULAI PENGECEKAN
                 case 'mulai':
-                    $hpaModel->updateHpa($id_hpa, ['status_hpa' => 'Pencetakan']); // Update status
                     $pencetakanModel->updatePencetakan($id_pencetakan, [ // Update nama method dan variabel
                         'id_user_pencetakan' => $id_user,
                         'status_pencetakan' => 'Proses Pencetakan',
@@ -111,7 +110,7 @@ class Pencetakan extends BaseController // Update nama controller
                 case 'selesai':
                     $pencetakanModel->updatePencetakan($id_pencetakan, [ // Update nama method dan variabel
                         'id_user_pencetakan' => $id_user,
-                        'status_pencetakan' => 'Sudah Dicetak',
+                        'status_pencetakan' => 'Selesai Dicetak',
                         'selesai_pencetakan' => date('Y-m-d H:i:s'),
                     ]);
                     break;
@@ -119,7 +118,7 @@ class Pencetakan extends BaseController // Update nama controller
                     // TOMBOL KEMBALIKAN PENGECEKAN
                 case 'kembalikan':
                     $pencetakanModel->updatePencetakan($id_pencetakan, [ // Update nama method dan variabel
-                        'id_user_pencetakan' => $id_user,
+                        'id_user_pencetakan' => null,
                         'status_pencetakan' => 'Belum Dicetak',
                         'mulai_pencetakan' => null,
                         'selesai_pencetakan' => null,
@@ -127,20 +126,7 @@ class Pencetakan extends BaseController // Update nama controller
                     break;
 
                 case 'lanjut':
-                    $hpaModel->updateHpa($id_hpa, ['status_hpa' => 'Pencetakan']); // Update status
-
-                    $pencetakanData = [
-                        'id_hpa' => $id_hpa,
-                        'id_user_pencetakan' => $id_user,
-                        'status_pencetakan' => 'Belum Dicetak',
-                    ];
-
-                    if (!$pencetakanModel->insert($pencetakanData)) { // Update nama method dan variabel
-                        throw new Exception('Gagal menyimpan data pencetakan.');
-                    }
-
-                    $id_pencetakan = $pencetakanModel->getInsertID(); // Update nama variabel
-                    $hpaModel->update($id_hpa, ['id_pencetakan' => $id_pencetakan]); // Update nama variabel
+                    $hpaModel->updateHpa($id_hpa, ['status_hpa' => 'Sudah Diproses']); // Update status
                     break;
             }
         } catch (\Exception $e) {

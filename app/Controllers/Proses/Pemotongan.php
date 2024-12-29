@@ -113,7 +113,7 @@ class Pemotongan extends BaseController
                     // Update data pemotongan ketika selesai
                     $pemotonganModel->updatePemotongan($id_pemotongan, [
                         'id_user_pemotongan' => $id_user,
-                        'status_pemotongan' => 'Sudah Dipotong',
+                        'status_pemotongan' => 'Sudah Pemotongan',
                         'selesai_pemotongan' => date('Y-m-d H:i:s'),
                     ]);
                     break;

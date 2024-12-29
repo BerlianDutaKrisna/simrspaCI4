@@ -27,6 +27,7 @@
                             <th>Mulai Pemverifikasi</th>
                             <th>Selesai Pemverifikasi</th>
                             <th>Deadline Hasil</th>
+                            <th>Detail</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -55,50 +56,27 @@
                                     <td>
                                         <?= empty($row['tanggal_hasil']) ? 'Belum diisi' : esc(date('d-m-Y', strtotime($row['tanggal_hasil']))); ?>
                                     </td>
+                                    <?php if (in_array($row['status_pemverifikasi'], ["Proses Verifikasi", "Selesai Diverifikasi"])): ?>
+                                        <td>
+                                            <a href="#" class="btn btn-success btn-user btn-block">
+                                                <i class="fas fa-pen"></i> Detail
+                                            </a>
+                                        </td>
+                                    <?php else: ?>
+                                        <td style="display:none;"></td>
+                                    <?php endif; ?>
                                 </tr>
                                 <?php $i++; ?>
                             <?php endforeach; ?>
                         <?php else: ?>
                             <tr>
-                                <td colspan="10" class="text-center">No data available</td>
+                                <td colspan="10" class="text-center">Belum ada sampel untuk pemverifikasi</td>
                             </tr>
                         <?php endif; ?>
                     </tbody>
                 </table>
             </div>
 
-            <!-- Tombol -->
-            <div class="row">
-                <div class="form-group col-12 col-md-6">
-                    <button type="button" class="btn btn-danger btn-user btn-block" onclick="setAction('mulai')">
-                        Mulai Pemverifikasi
-                    </button>
-                </div>
-                <div class="form-group col-12 col-md-6">
-                    <button type="button" class="btn btn-success btn-user btn-block" onclick="setAction('selesai')">
-                        <i class="fas fa-pause"></i> Selesai Pemverifikasi
-                    </button>
-                </div>
-                <div class="form-group col-12">
-                    <button type="button" class="btn btn-info btn-user btn-block" onclick="setAction('lanjut')">
-                        <i class="fas fa-step-forward"></i> Lanjutkan Pemverifikasi
-                    </button>
-                </div>
-                <div class="form-group col-12">
-                    <button type="button" class="btn btn-warning btn-user btn-block" onclick="setAction('kembalikan')">
-                        <i class="fas fa-undo-alt"></i> Kembalikan Pemverifikasi
-                    </button>
-                </div>
-            </div>
-        </form>
-    </div>
-</div>
-
-<script>
-    function setAction(action) {
-        document.getElementById('action').value = action;
-        document.getElementById('mainForm').submit(); // Kirim form setelah action diset
-    }
-</script>
-
-<?= $this->include('templates/dashboard/footer_dashboard'); ?>
+            <?= $this->include('templates/proses/button_proses'); ?>
+            <?= $this->include('templates/notifikasi'); ?>
+            <?= $this->include('templates/dashboard/footer_dashboard'); ?>
