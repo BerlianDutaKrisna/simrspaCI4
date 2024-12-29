@@ -90,7 +90,7 @@
                             <?php endforeach; ?>
                         <?php else: ?>
                             <tr>
-                                <td colspan="10" class="text-center">Belum ada sampel yang terdaftar</td>
+                                <td colspan="10" class="text-center">Belum ada sampel untuk penerimaan</td>
                             </tr>
                         <?php endif; ?>
                     </tbody>

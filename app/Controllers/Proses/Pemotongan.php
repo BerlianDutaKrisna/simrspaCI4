@@ -134,7 +134,6 @@ class Pemotongan extends BaseController
                     // Data untuk tabel pemprosesan
                     $pemprosesanData = [
                         'id_hpa'              => $id_hpa,
-                        'id_user_pemprosesan'    => $id_user,
                         'status_pemprosesan'     => 'Belum Diproses',
                     ];
 

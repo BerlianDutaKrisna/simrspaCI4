@@ -3,7 +3,8 @@
 namespace App\Controllers\Proses;
 
 use App\Controllers\BaseController;
-use App\Models\ProsesModel\PenanamanModel; // Update nama model
+use App\Models\ProsesModel\PenanamanModel;
+use App\Models\ProsesModel\PemotonganTipisModel;
 use App\Models\HpaModel;
 use App\Models\MutuModel;
 use Exception;
@@ -75,8 +76,9 @@ class Penanaman extends BaseController // Update nama controller
             if (!empty($selectedIds)) {
                 foreach ($selectedIds as $id) {
                     list($id_penanaman, $id_hpa, $id_mutu) = explode(':', $id);
-
-                    $this->processAction($action, $id_penanaman, $id_hpa, $id_user, $id_mutu); // Update method call
+                    $indikator_3 = (string) ($this->request->getPost('indikator_3') ?? '0');
+                    $total_nilai_mutu = $this->request->getPost('total_nilai_mutu');
+                    $this->processAction($action, $id_penanaman, $id_hpa, $id_user, $id_mutu, $indikator_3, $total_nilai_mutu); // Update method call
                 }
 
                 return redirect()->to('/penanaman/index_penanaman'); // Update URL
@@ -87,19 +89,19 @@ class Penanaman extends BaseController // Update nama controller
     }
 
     // Process action based on the action value
-    private function processAction($action, $id_penanaman, $id_hpa, $id_user, $id_mutu) // Update parameter
+    private function processAction($action, $id_penanaman, $id_hpa, $id_user, $id_mutu, $indikator_3, $total_nilai_mutu) // Update parameter
     {
         // Set zona waktu Indonesia/Jakarta
         date_default_timezone_set('Asia/Jakarta');
 
         $hpaModel = new HpaModel();
-        $penanamanModel = new PenanamanModel(); // Update model
+        $penanamanModel = new PenanamanModel();
+        $pemotongan_tipisModel = new PemotonganTipisModel();
+        $mutuModel = new MutuModel();
 
         try {
             switch ($action) {
                 case 'mulai':
-                    // Update status_hpa menjadi 'Penanaman' pada tabel hpa
-                    $hpaModel->updateHpa($id_hpa, ['status_hpa' => 'Penanaman']);
                     // Update data penanaman
                     $penanamanModel->updatePenanaman($id_penanaman, [
                         'id_user_penanaman' => $id_user,
@@ -115,38 +117,47 @@ class Penanaman extends BaseController // Update nama controller
                         'status_penanaman' => 'Sudah Ditanam',
                         'selesai_penanaman' => date('Y-m-d H:i:s'),
                     ]);
+                    // update data mutu
+                    $keseluruhan_nilai_mutu = $total_nilai_mutu + $indikator_3;
+                    $mutuModel->updateMutu($id_mutu, [
+                        'indikator_3' => $indikator_3,
+                        'total_nilai_mutu' => $keseluruhan_nilai_mutu,
+                    ]);
                     break;
 
                 case 'kembalikan':
                     $penanamanModel->updatePenanaman($id_penanaman, [
-                        'id_user_penanaman' => $id_user,
+                        'id_user_penanaman' => null,
                         'status_penanaman' => 'Belum Ditanam',
                         'mulai_penanaman' => null,
                         'selesai_penanaman' => null,
                     ]);
+                    $mutuModel->updateMutu($id_mutu, [
+                        'indikator_3' => "0",
+                        'total_nilai_mutu' => "20",
+                    ]);
                     break;
 
                 case 'lanjut':
-                    // Update status_hpa menjadi 'Penanaman' pada tabel hpa
-                    $hpaModel->updateHpa($id_hpa, ['status_hpa' => 'Penanaman']);
+                    // Update status_hpa menjadi 'pemotongan_tipis' pada tabel hpa
+                    $hpaModel->updateHpa($id_hpa, ['status_hpa' => 'Pemotongan Tipis']);
 
-                    // Data untuk tabel penanaman
-                    $penanamanData = [
-                        'id_hpa'              => $id_hpa,  // Menambahkan id_hpa yang baru
-                        'id_user_penanaman' => $id_user,
-                        'status_penanaman'  => 'Belum Ditanam', // Status awal
+                    // Data untuk tabel pemotongan_tipis
+                    $pemotongan_tipisData = [
+                        'id_hpa'              => $id_hpa,
+                        'status_pemotongan_tipis'  => 'Belum Dipotong Tipis',
                     ];
 
-                    // Simpan data ke tabel penanaman
-                    if (!$penanamanModel->insert($penanamanData)) {
-                        throw new Exception('Gagal menyimpan data penanaman.');
+                    // Simpan data ke tabel pemotongan_tipis
+                    if (!$pemotongan_tipisModel->insert($pemotongan_tipisData)) {
+                        throw new Exception('Gagal menyimpan data pemotongan_tipis.');
                     }
 
-                    // Ambil id_penanaman yang baru saja disimpan
-                    $id_penanaman = $penanamanModel->getInsertID();
+                    // Ambil id_pemotongan_tipis yang baru saja disimpan
+                    $id_pemotongan_tipis = $pemotongan_tipisModel->getInsertID();
 
-                    // Update id_penanaman pada tabel hpa
-                    $hpaModel->update($id_hpa, ['id_penanaman' => $id_penanaman]);
+                    // Update id_pemotongan_tipis pada tabel hpa
+                    $hpaModel->update($id_hpa, ['id_pemotongan_tipis' => $id_pemotongan_tipis]);
                     break;
             }
         } catch (\Exception $e) {

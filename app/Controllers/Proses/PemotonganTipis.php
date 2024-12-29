@@ -3,7 +3,8 @@
 namespace App\Controllers\Proses;
 
 use App\Controllers\BaseController;
-use App\Models\ProsesModel\PemotonganTipisModel; // Update nama model
+use App\Models\ProsesModel\PemotonganTipisModel;
+use App\Models\ProsesModel\PewarnaanModel;
 use App\Models\HpaModel;
 use App\Models\MutuModel;
 use Exception;
@@ -93,13 +94,12 @@ class PemotonganTipis extends BaseController // Update nama controller
         date_default_timezone_set('Asia/Jakarta');
 
         $hpaModel = new HpaModel();
-        $pemotonganTipisModel = new PemotonganTipisModel(); // Update model
+        $pemotonganTipisModel = new PemotonganTipisModel();
+        $pewarnaanModel = new PewarnaanModel();
 
         try {
             switch ($action) {
                 case 'mulai':
-                    // Update status_hpa menjadi 'Pemotongan Tipis' pada tabel hpa
-                    $hpaModel->updateHpa($id_hpa, ['status_hpa' => 'Pemotongan Tipis']);
                     // Update data pemotongan tipis
                     $pemotonganTipisModel->updatePemotonganTipis($id_pemotongan_tipis, [
                         'id_user_pemotongan_tipis' => $id_user,
@@ -119,7 +119,7 @@ class PemotonganTipis extends BaseController // Update nama controller
 
                 case 'kembalikan':
                     $pemotonganTipisModel->updatePemotonganTipis($id_pemotongan_tipis, [
-                        'id_user_pemotongan_tipis' => $id_user,
+                        'id_user_pemotongan_tipis' => null,
                         'status_pemotongan_tipis' => 'Belum Dipotong Tipis',
                         'mulai_pemotongan_tipis' => null,
                         'selesai_pemotongan_tipis' => null,
@@ -127,26 +127,25 @@ class PemotonganTipis extends BaseController // Update nama controller
                     break;
 
                 case 'lanjut':
-                    // Update status_hpa menjadi 'Pemotongan Tipis' pada tabel hpa
-                    $hpaModel->updateHpa($id_hpa, ['status_hpa' => 'Pemotongan Tipis']);
+                    // Update status_hpa menjadi 'Pewarnaan' pada tabel hpa
+                    $hpaModel->updateHpa($id_hpa, ['status_hpa' => 'Pewarnaan']);
 
-                    // Data untuk tabel pemotongan tipis
-                    $pemotonganTipisData = [
-                        'id_hpa'                   => $id_hpa,  // Menambahkan id_hpa yang baru
-                        'id_user_pemotongan_tipis' => $id_user,
-                        'status_pemotongan_tipis'  => 'Belum Dipotong Tipis', // Status awal
+                    // Data untuk tabel Pewarnaan
+                    $pewarnaanData = [
+                        'id_hpa'            => $id_hpa,
+                        'status_pewarnaan'  => 'Belum Pewarnaan', // Status awal
                     ];
 
-                    // Simpan data ke tabel pemotongan tipis
-                    if (!$pemotonganTipisModel->insert($pemotonganTipisData)) {
-                        throw new Exception('Gagal menyimpan data pemotongan tipis.');
+                    // Simpan data ke tabel Pewarnaan
+                    if (!$pewarnaanModel->insert($pewarnaanData)) {
+                        throw new Exception('Gagal menyimpan data Pewarnaan.');
                     }
 
-                    // Ambil id_pemotongan_tipis yang baru saja disimpan
-                    $id_pemotongan_tipis = $pemotonganTipisModel->getInsertID();
+                    // Ambil id_pewarnaan yang baru saja disimpan
+                    $id_pewarnaan = $pewarnaanModel->getInsertID();
 
-                    // Update id_pemotongan_tipis pada tabel hpa
-                    $hpaModel->update($id_hpa, ['id_pemotongan_tipis' => $id_pemotongan_tipis]);
+                    // Update id_pewarnaan pada tabel hpa
+                    $hpaModel->update($id_hpa, ['id_pewarnaan' => $id_pewarnaan]);
                     break;
             }
         } catch (\Exception $e) {

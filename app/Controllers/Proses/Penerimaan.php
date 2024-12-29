@@ -137,10 +137,13 @@ class Penerimaan extends BaseController
                         'mulai_penerimaan' => null,
                         'selesai_penerimaan' => null, // Menggunakan waktu lokal Asia/Jakarta
                     ]);
+                    // Konversi VARCHAR ke INTEGER
+                    $total_nilai_mutu_int = (int)$total_nilai_mutu;
+                    $keseluruhan_nilai_mutu = $total_nilai_mutu_int - 10;
                     $mutuModel->updateMutu($id_mutu, [
                         'indikator_1' => '0',
                         'indikator_2' => '0',
-                        'total_nilai_mutu' => '0',
+                        'total_nilai_mutu' => $keseluruhan_nilai_mutu,
                     ]);
                     break;
 

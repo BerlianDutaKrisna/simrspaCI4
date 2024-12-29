@@ -3,7 +3,8 @@
 namespace App\Controllers\Proses;
 
 use App\Controllers\BaseController;
-use App\Models\ProsesModel\PemprosesanModel; // Update nama model
+use App\Models\ProsesModel\PemprosesanModel;
+use App\Models\ProsesModel\PenanamanModel;
 use App\Models\HpaModel;
 use App\Models\MutuModel;
 use Exception;
@@ -94,7 +95,8 @@ class Pemprosesan extends BaseController // Update nama controller
         date_default_timezone_set('Asia/Jakarta');
 
         $hpaModel = new HpaModel();
-        $pemprosesanModel = new PemprosesanModel(); // Update model
+        $pemprosesanModel = new PemprosesanModel();
+        $penanamanModel = new PenanamanModel();
 
         try {
             switch ($action) {
@@ -118,7 +120,7 @@ class Pemprosesan extends BaseController // Update nama controller
 
                 case 'kembalikan':
                     $pemprosesanModel->updatePemprosesan($id_pemprosesan, [
-                        'id_user_pemprosesan' => $id_user,
+                        'id_user_pemprosesan' => null,
                         'status_pemprosesan' => 'Belum Diproses',
                         'mulai_pemprosesan' => null,
                         'selesai_pemprosesan' => null,
@@ -126,26 +128,25 @@ class Pemprosesan extends BaseController // Update nama controller
                     break;
 
                 case 'lanjut':
-                    // Update status_hpa menjadi 'Pemprosesan' pada tabel hpa
-                    $hpaModel->updateHpa($id_hpa, ['status_hpa' => 'Pemprosesan']);
+                    // Update status_hpa menjadi 'penanaman' pada tabel hpa
+                    $hpaModel->updateHpa($id_hpa, ['status_hpa' => 'Penanaman']);
 
-                    // Data untuk tabel pemprosesan
-                    $pemprosesanData = [
-                        'id_hpa'              => $id_hpa,  // Menambahkan id_hpa yang baru
-                        'id_user_pemprosesan' => $id_user,
-                        'status_pemprosesan'  => 'Belum Diproses', // Status awal
+                    // Data untuk tabel penanaman
+                    $penanamanData = [
+                        'id_hpa'              => $id_hpa,
+                        'status_penanaman'  => 'Belum Ditanam',
                     ];
 
-                    // Simpan data ke tabel pemprosesan
-                    if (!$pemprosesanModel->insert($pemprosesanData)) {
-                        throw new Exception('Gagal menyimpan data pemprosesan.');
+                    // Simpan data ke tabel penanaman
+                    if (!$penanamanModel->insert($penanamanData)) {
+                        throw new Exception('Gagal menyimpan data penanaman.');
                     }
 
-                    // Ambil id_pemprosesan yang baru saja disimpan
-                    $id_pemprosesan = $pemprosesanModel->getInsertID();
+                    // Ambil id_penanaman yang baru saja disimpan
+                    $id_penanaman = $penanamanModel->getInsertID();
 
-                    // Update id_pemprosesan pada tabel hpa
-                    $hpaModel->update($id_hpa, ['id_pemprosesan' => $id_pemprosesan]);
+                    // Update id_penanaman pada tabel hpa
+                    $hpaModel->update($id_hpa, ['id_penanaman' => $id_penanaman]);
                     break;
             }
         } catch (\Exception $e) {

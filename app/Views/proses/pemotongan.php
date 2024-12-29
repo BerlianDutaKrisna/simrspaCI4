@@ -56,11 +56,15 @@
                                     <td>
                                         <?= empty($row['tanggal_hasil']) ? 'Belum diisi' : esc(date('d-m-Y', strtotime($row['tanggal_hasil']))); ?>
                                     </td>
-                                    <td>
-                                        <a href="#" class="btn btn-success btn-user btn-block">
-                                            <i class="fas fa-pen"></i> Detail
-                                        </a>
-                                    </td>
+                                    <?php if ($row['status_pemotongan'] === "Proses Pemotongan"): ?>
+                                        <td>
+                                            <a href="#" class="btn btn-success btn-user btn-block">
+                                                <i class="fas fa-pen"></i> Detail
+                                            </a>
+                                        </td>
+                                    <?php else: ?>
+                                        <td style="display:none;"></td>
+                                    <?php endif; ?>
                                 </tr>
                                 <?php $i++; ?>
                             <?php endforeach; ?>
@@ -72,6 +76,5 @@
                     </tbody>
                 </table>
             </div>
-
             <<?= $this->include('templates/proses/button_proses'); ?>
-                <?= $this->include('templates/dashboard/footer_dashboard'); ?>
+            <?= $this->include('templates/dashboard/footer_dashboard'); ?>

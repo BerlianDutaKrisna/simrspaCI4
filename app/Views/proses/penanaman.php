@@ -23,6 +23,7 @@
                             <th>Nama Pasien</th>
                             <th>Status Penanaman</th>
                             <th>Aksi</th>
+                            <th>Kualitas Sediaan</th>
                             <th>Analis</th>
                             <th>Mulai Penanaman</th>
                             <th>Selesai Penanaman</th>
@@ -45,6 +46,25 @@
                                             class="form-control form-control-user"
                                             autocomplete="off">
                                     </td>
+                                    <td>
+                                        <?php if ($row['status_penanaman'] === "Proses Penanaman"): ?>
+                                            <input type="hidden" name="total_nilai_mutu" value="<?= $row['total_nilai_mutu']; ?>">
+                                            <!-- Menampilkan form checkbox ketika status penanaman adalah 'Proses Pemeriksaan' -->
+                                            <div class="form-check">
+                                                <input type="checkbox"
+                                                    name="indikator_3"
+                                                    value="10"
+                                                    id="indikator_3_<?= $row['id_mutu']; ?>"
+                                                    class="form-check-input">
+                                                <label class="form-check-label" for="indikator_3_<?= $row['id_mutu']; ?>">
+                                                    Blok parafin tidak ada fragmentasi
+                                                </label>
+                                            </div>
+                                        <?php else: ?>
+                                            <!-- Menampilkan total_nilai_mutu jika status penanaman 'Belum Diperiksa' atau 'Sudah Diperiksa' -->
+                                            <?= $row['total_nilai_mutu']; ?> %
+                                        <?php endif; ?>
+                                    </td>
                                     <td><?= $row['nama_user_penanaman']; ?></td>
                                     <td>
                                         <?= empty($row['mulai_penanaman']) ? '-' : esc(date('H:i , d-m-Y', strtotime($row['mulai_penanaman']))); ?>
@@ -60,45 +80,12 @@
                             <?php endforeach; ?>
                         <?php else: ?>
                             <tr>
-                                <td colspan="10" class="text-center">No data available</td>
+                                <td colspan="10" class="text-center">Belum ada sampel untuk penanaman</td>
                             </tr>
                         <?php endif; ?>
                     </tbody>
                 </table>
             </div>
 
-            <!-- Tombol -->
-            <div class="row">
-                <div class="form-group col-12 col-md-6">
-                    <button type="button" class="btn btn-danger btn-user btn-block" onclick="setAction('mulai')">
-                        Mulai Penanaman
-                    </button>
-                </div>
-                <div class="form-group col-12 col-md-6">
-                    <button type="button" class="btn btn-success btn-user btn-block" onclick="setAction('selesai')">
-                        <i class="fas fa-pause"></i> Selesai Penanaman
-                    </button>
-                </div>
-                <div class="form-group col-12">
-                    <button type="button" class="btn btn-info btn-user btn-block" onclick="setAction('lanjut')">
-                        <i class="fas fa-step-forward"></i> Lanjutkan Menanam
-                    </button>
-                </div>
-                <div class="form-group col-12">
-                    <button type="button" class="btn btn-warning btn-user btn-block" onclick="setAction('kembalikan')">
-                        <i class="fas fa-undo-alt"></i> Kembalikan Penanaman
-                    </button>
-                </div>
-            </div>
-        </form>
-    </div>
-</div>
-
-<script>
-    function setAction(action) {
-        document.getElementById('action').value = action;
-        document.getElementById('mainForm').submit(); // Kirim form setelah action diset
-    }
-</script>
-
-<?= $this->include('templates/dashboard/footer_dashboard'); ?>
+            <?= $this->include('templates/proses/button_proses'); ?>
+            <?= $this->include('templates/dashboard/footer_dashboard'); ?>
