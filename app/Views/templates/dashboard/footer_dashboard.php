@@ -42,25 +42,25 @@
 <!-- End of Page Wrapper -->
 
 <!-- Bootstrap core JavaScript-->
-<script src="<?= base_url('vendor/jquery/jquery.min.js') ?>"></script> <!-- Menambahkan jQuery untuk interaksi DOM -->
-<script src="<?= base_url('vendor/bootstrap/js/bootstrap.bundle.min.js') ?>"></script> <!-- Menambahkan Bootstrap JS untuk komponen interaktif -->
+<script src="<?= base_url('assets/jquery/jquery.min.js') ?>"></script> <!-- Menambahkan jQuery untuk interaksi DOM -->
+<script src="<?= base_url('assets/bootstrap/js/bootstrap.bundle.min.js') ?>"></script> <!-- Menambahkan Bootstrap JS untuk komponen interaktif -->
 
 <!-- Core plugin JavaScript-->
-<script src="<?= base_url('vendor/jquery-easing/jquery.easing.min.js') ?>"></script> <!-- Menambahkan efek easing untuk transisi -->
+<script src="<?= base_url('assets/jquery-easing/jquery.easing.min.js') ?>"></script> <!-- Menambahkan efek easing untuk transisi -->
 
 <!-- Custom scripts for all pages -->
 <script src="<?= base_url('js/sb-admin-2.min.js') ?>"></script> <!-- Skrip utama untuk pengelolaan halaman admin -->
 
 <!-- Page level plugins -->
-<script src="<?= base_url('vendor/chart.js/Chart.min.js') ?>"></script> <!-- Menambahkan plugin Chart.js untuk grafik -->
+<script src="<?= base_url('assets/chart.js/Chart.min.js') ?>"></script> <!-- Menambahkan plugin Chart.js untuk grafik -->
 
 <!-- Page level custom scripts -->
-<script src="<?= base_url('js/demo/chart-area-demo.js') ?>"></script> <!-- Skrip khusus untuk demo grafik area -->
-<script src="<?= base_url('js/demo/chart-pie-demo.js') ?>"></script> <!-- Skrip khusus untuk demo grafik pie -->
+<script src="<?= base_url('assets/analisisdata/chart-area-demo.js') ?>"></script> <!-- Skrip khusus untuk demo grafik area -->
+<script src="<?= base_url('assets/analisisdata/chart-pie-demo.js') ?>"></script> <!-- Skrip khusus untuk demo grafik pie -->
 
 <!-- Table Search plugins -->
-<script src="<?= base_url('vendor/datatables/jquery.dataTables.min.js') ?>"></script> <!-- Menambahkan plugin DataTables untuk pencarian dan paginasi tabel -->
-<script src="<?= base_url('vendor/datatables/dataTables.bootstrap4.min.js') ?>"></script> <!-- Menambahkan plugin DataTables dengan styling Bootstrap -->
+<script src="<?= base_url('assets/datatables/jquery.dataTables.min.js') ?>"></script> <!-- Menambahkan plugin DataTables untuk pencarian dan paginasi tabel -->
+<script src="<?= base_url('assets/datatables/dataTables.bootstrap4.min.js') ?>"></script> <!-- Menambahkan plugin DataTables dengan styling Bootstrap -->
 
 <!-- Table scripts -->
 <script src="<?= base_url('js/demo/datatables-demo.js') ?>"></script> <!-- Skrip khusus untuk demo DataTables -->

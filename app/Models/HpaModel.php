@@ -62,6 +62,14 @@ class HpaModel extends Model
         // Melakukan insert data
         return $this->insertHpa($data) > 0;
     }
+    public function getHpaWithPatient($id_hpa)
+    {
+        return $this->select('hpa.*, patient.nama_pasien, patient.norm_pasien')
+        ->join('patient', 'patient.id_pasien = hpa.id_pasien')
+        ->where('hpa.id_hpa', $id_hpa)
+        ->first();
+    }
+
 
     public function getHpaWithRelations()
     {

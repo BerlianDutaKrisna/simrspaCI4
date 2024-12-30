@@ -171,7 +171,7 @@ class Exam extends BaseController
     $data['nama_user'] = session()->get('nama_user');
     
     // Ambil data hpa berdasarkan ID
-    $hpa = $hpaModel->find($id_hpa);
+    $hpa = $hpaModel->getHpaWithPatient($id_hpa);
 
     // Jika hpa ditemukan, tampilkan form edit
     if ($hpa) {
