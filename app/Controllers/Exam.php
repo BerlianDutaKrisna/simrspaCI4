@@ -161,4 +161,29 @@ class Exam extends BaseController
             return redirect()->back()->withInput()->with('error', $e->getMessage());
         }
     }
+    // Menampilkan form edit pengguna
+    public function edit_exam($id_hpa)
+    {
+    $hpaModel = new HpaModel();
+    
+    // Ambil id_user dan nama_user dari session yang sedang aktif
+    $data['id_user'] = session()->get('id_user');
+    $data['nama_user'] = session()->get('nama_user');
+    
+    // Ambil data hpa berdasarkan ID
+    $hpa = $hpaModel->find($id_hpa);
+
+    // Jika hpa ditemukan, tampilkan form edit
+    if ($hpa) {
+        // Menggabungkan data hpa dengan session data
+        $data['hpa'] = $hpa;
+        // Kirimkan data ke view
+        return view('exam/edit_exam', $data);
+    } else {
+        // Jika tidak ditemukan, tampilkan pesan error
+        return redirect()->back()->withInput()->with('message', [
+            'error' => 'hpa tidak ditemukan.'
+        ]);
+    }
+    }
 }

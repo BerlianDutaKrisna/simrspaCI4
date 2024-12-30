@@ -58,12 +58,12 @@
                                     </td>
                                     <?php if (in_array($row['status_pemotongan'], ["Proses Pemotongan", "Sudah Pemotongan"])): ?>
                                         <td>
-                                            <a href="#" class="btn btn-success btn-user btn-block">
+                                            <a href="<?= base_url('exam/edit_exam/' . esc($row['id_hpa'])) ?>" class="btn btn-warning btn-sm">
                                                 <i class="fas fa-pen"></i> Detail
                                             </a>
                                         </td>
                                     <?php else: ?>
-                                        <td style="display:none;"></td>
+                                        <td></td>
                                     <?php endif; ?>
                                 </tr>
                                 <?php $i++; ?>
@@ -76,7 +76,7 @@
                     </tbody>
                 </table>
             </div>
-            
+
             <?= $this->include('templates/proses/button_proses'); ?>
             <?= $this->include('templates/notifikasi'); ?>
             <?= $this->include('templates/dashboard/footer_dashboard'); ?>
