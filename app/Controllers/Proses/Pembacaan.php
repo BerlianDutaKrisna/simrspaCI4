@@ -116,7 +116,7 @@ class Pembacaan extends BaseController // Update nama controller
                     // Update data pembacaan ketika selesai
                     $pembacaanModel->updatePembacaan($id_pembacaan, [
                         'id_user_pembacaan' => $id_user,
-                        'status_pembacaan' => 'Sudah Pembacaan',
+                        'status_pembacaan' => 'Selesai Pembacaan',
                         'selesai_pembacaan' => date('Y-m-d H:i:s'),
                     ]);
                     // update data mutu

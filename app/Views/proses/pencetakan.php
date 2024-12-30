@@ -58,8 +58,8 @@
                                     </td>
                                     <?php if (in_array($row['status_pencetakan'], ["Proses Pencetakan", "Selesai Dicetak"])): ?>
                                         <td>
-                                            <a href="#" class="btn btn-primary btn-user btn-block">
-                                                <i class="fas fa-print"></i> Cetak
+                                            <a href="<?= base_url('exam/edit_exam/' . esc($row['id_hpa'])) ?>" class="btn btn-primary btn-user btn-block">
+                                                <i class=" fas fa-print"></i> Cetak
                                             </a>
                                         </td>
                                     <?php else: ?>
