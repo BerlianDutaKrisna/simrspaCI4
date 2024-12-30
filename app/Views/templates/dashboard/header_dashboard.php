@@ -29,7 +29,7 @@
     <link href="<?= base_url('vendor/fontawesome-free/css/all.min.css') ?>" rel="stylesheet" type="text/css">
     
     <!-- Menambahkan font Google Nunito untuk styling teks -->
-    <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
+    <link href="<?= base_url('css/font-google-neo.css') ?>" rel="stylesheet">
 
     <!-- Menambahkan custom CSS untuk tema SB Admin 2 menggunakan base_url() -->
     <link href="<?= base_url('css/sb-admin-2.css') ?>" rel="stylesheet">
