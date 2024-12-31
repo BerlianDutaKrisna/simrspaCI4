@@ -70,6 +70,17 @@ class HpaModel extends Model
         ->where('hpa.id_hpa', $id_hpa)
         ->first();
     }
+    public function getHpaWithAllPatient()
+    {
+        return $this->db->table($this->table)
+            ->select(' 
+            hpa.*, 
+            patient.*
+        ')
+            ->join('patient', 'patient.id_pasien = hpa.id_pasien', 'left')
+            ->get()
+            ->getResultArray();
+    }
 
     public function countHpaProcessed()
     {
@@ -82,6 +93,15 @@ class HpaModel extends Model
         $builder->where('id_hpa', $id_hpa); // Menambahkan kondisi WHERE
         $builder->update($data);             // Melakukan update data
         return $this->db->affectedRows();    // Mengembalikan jumlah baris yang terpengaruh
+    }
+
+    // Fungsi untuk memperbarui penerima_hpa
+    public function updatePenerima($id_hpa, $data)
+    {
+        $builder = $this->db->table('hpa');  // Mengambil table 'hpa'
+        $builder->where('id_hpa', $id_hpa); // Menambahkan kondisi WHERE
+        $builder->update($data);             // Melakukan update data
+        return $this->db->affectedRows();
     }
 
     public function getHpaWithRelations()
@@ -148,9 +168,9 @@ class HpaModel extends Model
     public function getHpaWithAllRelations()
     {
         return $this->db->table($this->table)
-            ->select('
+            ->select(' 
             hpa.*, 
-            patient.*,
+            patient.*, 
             penerimaan.*, 
             pengirisan.*, 
             pemotongan.*, 
@@ -191,7 +211,8 @@ class HpaModel extends Model
             ->join('users AS user_pemotongan', 'pemotongan.id_user_pemotongan = user_pemotongan.id_user', 'left')
             ->join('users AS user_pemprosesan', 'pemprosesan.id_user_pemprosesan = user_pemprosesan.id_user', 'left')
             ->join('users AS user_penanaman', 'penanaman.id_user_penanaman = user_penanaman.id_user', 'left')
-            ->join('users AS user_pemotongan_tipis',
+            ->join(
+                'users AS user_pemotongan_tipis',
                 'pemotongan_tipis.id_user_pemotongan_tipis = user_pemotongan_tipis.id_user',
                 'left'
             )
@@ -203,4 +224,5 @@ class HpaModel extends Model
             ->get()
             ->getResultArray();
     }
+
 }

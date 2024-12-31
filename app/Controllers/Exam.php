@@ -29,45 +29,52 @@ class Exam extends BaseController
     }
 
     // Menampilkan halaman daftar exam
-    public function index_exam()
+    public function index_buku_penerima()
+    {
+        // Mengambil data dari session
+        $session = session();
+        $id_user = $session->get('id_user');
+        $nama_user = $session->get('nama_user');
+
+        // Memastikan session terisi dengan benar
+        if (!$id_user || !$nama_user) {
+            return redirect()->to('login'); // Redirect ke halaman login jika session tidak ada
+        }
+
+        // Memanggil model HpaModel untuk mengambil data
+        $hpaModel = new HpaModel();
+        $hpaData = $hpaModel->getHpaWithAllPatient();
+
+        // Pastikan $hpaData berisi array
+        if (!$hpaData) {
+            $hpaData = []; // Jika tidak ada data, set menjadi array kosong
+        }
+
+        // Kirimkan data ke view
+        return view('exam/index_buku_penerima', [
+            'hpaData' => $hpaData,
+            'id_user' => $id_user,
+            'nama_user' => $nama_user
+        ]);
+    }
+
+    public function update_buku_penerima($id_hpa)
     {
         $hpaModel = new HpaModel();
 
-        // Mengambil data HPA beserta relasinya
-        $hpaData = $hpaModel->getHpaWithAllRelations();
-
-        // Ambil id_user dan nama_user dari session yang sedang aktif
+        // Mengambil data dari form
         $data = [
-            'hpaData' => $hpaData,
-            'id_user' => session()->get('id_user'),
-            'nama_user' => session()->get('nama_user'),
+            'penerima_hpa' => $this->request->getVar('penerima_hpa'),
         ];
 
-        // Kirim data ke view untuk ditampilkan
-        return view('exam/index_exam', $data);
-    }
-
-    // Fungsi untuk menyimpan penerima
-    public function penerima()
-    {
-        
-        // Mengambil data yang dikirimkan melalui form
-        $id_hpa = $this->request->getPost('id_hpa'); // ID HPA
-        $penerima_hpa = $this->request->getPost('penerima_hpa'); // Nama penerima atau hubungan
-
-        // Validasi input (optional)
-        if (!$id_hpa || !$penerima_hpa) {
-            return redirect()->back()->with('error', 'Data penerima tidak valid');
-        }
-
-        // Memperbarui data penerima HPA
-        $this->hpaModel->update($id_hpa, [
-            'penerima_hpa' => $penerima_hpa,
-        ]);
+        // Update data penerima_hpa berdasarkan kode_hpa
+        $hpaModel->updatePenerima($id_hpa, $data);
 
         // Redirect setelah berhasil mengupdate data
-        return redirect()->to('/exam')->with('success', 'Penerima berhasil disimpan.');
+        return redirect()->to('exam/index_buku_penerima')->with('success', 'Penerima berhasil disimpan.');
     }
+
+
 
     public function register_exam()
     {

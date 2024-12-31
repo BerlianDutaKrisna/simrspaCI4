@@ -16,7 +16,7 @@
     <div class="row">
         <!-- Histopatologi RESUME -->
 <div class="col-xl-3 col-md-6 mb-4">
-<a href="<?= base_url('exam/index_exam') ?>" class="stretched-link" style="text-decoration: none;">
+<a href="<?= base_url('exam/index_buku_penerima') ?>" class="stretched-link" style="text-decoration: none;">
         <div class="card border-left-danger shadow h-100 py-2">
             <div class="card-body">
                 <div class="row no-gutters align-items-center">
