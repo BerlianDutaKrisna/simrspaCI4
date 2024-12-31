@@ -44,6 +44,7 @@ class Exam extends BaseController
             'id_user' => session()->get('id_user'),
             'nama_user' => session()->get('nama_user'),
         ];
+
         // Kirim data ke view untuk ditampilkan
         return view('exam/index_exam', $data);
     }

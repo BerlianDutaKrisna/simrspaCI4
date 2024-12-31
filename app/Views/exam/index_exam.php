@@ -23,9 +23,9 @@
                     <th>Alamat Pasien</th>
                     <th>Dokter Pengirim</th>
                     <th>Unit Asal</th>
-                    <th>Status_pasien</th>
+                    <th>Status Pasien</th>
                     <th>Diagnosa Klinik</th>
-                    <th>Tanggal hasil</th>
+                    <th>Tanggal Hasil</th>
                     <th>Status Hpa</th>
                     <th class="text-center" style="width: 150px;">Penerima</th> <!-- Kolom Aksi -->
                     <th>Nama Penerima / Hubungan</th>
@@ -51,7 +51,7 @@
                                 <!-- Tombol Hapus dengan data-target dan data-id untuk modal -->
                                 <a href="#" class="btn btn-info btn-sm" data-toggle="modal" data-target="#deleteModal"
                                     data-id="<?= esc($row['id_hpa']) ?>" data-kode="<?= esc($row['kode_hpa']) ?>">
-                                    Penerima
+                                    <i class="fas fa-people-arrows"></i> Penerima
                                 </a>
                             </td>
                             <td></td>
@@ -59,7 +59,7 @@
                     <?php endforeach; ?>
                 <?php else : ?>
                     <tr>
-                        <td colspan="8">Tidak ada data HPA.</td>  <!-- Menambahkan colspan 8 untuk mencakup kolom Aksi -->
+                        <td colspan="14" class="text-center">Tidak ada data yang tersedia</td>
                     </tr>
                 <?php endif; ?>
             </tbody>
