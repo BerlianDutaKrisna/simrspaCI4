@@ -16,18 +16,16 @@ use App\Models\ProsesModel\PenulisanModel;
 use App\Models\ProsesModel\PemverifikasiModel;
 use App\Models\ProsesModel\PencetakanModel;
 use App\Models\MutuModel;
+
 use CodeIgniter\Controller;
 use Exception;
 
 class Exam extends BaseController
 {
+    protected $hpaModel;
     public function __construct()
     {
-        // Mengecek apakah user sudah login dengan menggunakan session
-        if (!session()->has('id_user')) {
-            session()->setFlashdata('error', 'Login terlebih dahulu');
-            return redirect()->to('/login');
-        }
+        $this->hpaModel = new HpaModel();
     }
 
     // Menampilkan halaman daftar exam
@@ -47,6 +45,28 @@ class Exam extends BaseController
 
         // Kirim data ke view untuk ditampilkan
         return view('exam/index_exam', $data);
+    }
+
+    // Fungsi untuk menyimpan penerima
+    public function penerima()
+    {
+        
+        // Mengambil data yang dikirimkan melalui form
+        $id_hpa = $this->request->getPost('id_hpa'); // ID HPA
+        $penerima_hpa = $this->request->getPost('penerima_hpa'); // Nama penerima atau hubungan
+
+        // Validasi input (optional)
+        if (!$id_hpa || !$penerima_hpa) {
+            return redirect()->back()->with('error', 'Data penerima tidak valid');
+        }
+
+        // Memperbarui data penerima HPA
+        $this->hpaModel->update($id_hpa, [
+            'penerima_hpa' => $penerima_hpa,
+        ]);
+
+        // Redirect setelah berhasil mengupdate data
+        return redirect()->to('/exam')->with('success', 'Penerima berhasil disimpan.');
     }
 
     public function register_exam()

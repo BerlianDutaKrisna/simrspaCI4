@@ -48,13 +48,14 @@
                             <td><?= esc($row['tanggal_hasil']) ?></td>
                             <td><?= esc($row['status_hpa']) ?></td>
                             <td class="text-center">
-                                <!-- Tombol Hapus dengan data-target dan data-id untuk modal -->
-                                <a href="#" class="btn btn-info btn-sm" data-toggle="modal" data-target="#deleteModal"
-                                    data-id="<?= esc($row['id_hpa']) ?>" data-kode="<?= esc($row['kode_hpa']) ?>">
+                                <!-- Tombol Penerima dengan data-id untuk modal -->
+                                <a href="#" class="btn btn-info btn-sm" data-toggle="modal" data-target="#penerimaModal"
+                                    data-id_hpa="<?= esc($row['id_hpa']) ?>"
+                                    data-penerima_hpa="<?= esc($row['penerima_hpa']) ?>">
                                     <i class="fas fa-people-arrows"></i> Penerima
                                 </a>
                             </td>
-                            <td></td>
+                            <td><?= esc($row['penerima_hpa']) ?></td>
                         </tr>
                     <?php endforeach; ?>
                 <?php else : ?>
@@ -67,23 +68,30 @@
     </div>
 </div>
 
-<!-- Hapus Modal-->
-<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+<!-- Modal Penerima-->
+<div class="modal fade" id="penerimaModal" tabindex="-1" role="dialog" aria-labelledby="penerimaModalLabel"
     aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Ingin menghapus?</h5>
+                <h5 class="modal-title" id="penerimaModalLabel">Penerima Hasil Hpa</h5>
                 <button class="close" type="button" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">×</span>
                 </button>
             </div>
-            <div class="modal-body">Yakin ingin menghapus data HPA ini?</div>
-            <div class="modal-footer">
-                <button class="btn btn-secondary" type="button" data-dismiss="modal">Batal</button>
-                <!-- Link untuk konfirmasi penghapusan -->
-                <a id="confirmDelete" class="btn btn-danger" href="#">Hapus</a>
-            </div>
+            <form action="<?= base_url('exam/penerima') ?>" method="POST">
+                <div class="modal-body">
+                    <input type="hidden" id="id_hpa" name="id_hpa" value="">
+                    <div class="form-group">
+                        <label for="penerima_hpa">Nama Penerima / Hubungan dengan Pasien</label>
+                        <input type="text" class="form-control" id="penerima_hpa" name="penerima_hpa" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Batal</button>
+                    <button type="submit" class="btn btn-primary">Simpan</button>
+                </div>
+            </form>
         </div>
     </div>
 </div>
@@ -93,18 +101,15 @@
 
 <!-- JavaScript untuk menangani pengisian modal -->
 <script>
-    // Menangani event click pada tombol hapus
-    $('#deleteModal').on('show.bs.modal', function (event) {
+    // Menangani event click pada tombol Penerima
+    $('#penerimaModal').on('show.bs.modal', function (event) {
         var button = $(event.relatedTarget); // Tombol yang memicu modal
-        var hpaId = button.data('id'); // ID HPA yang dihapus
-        var kodeHpa = button.data('kode'); // Kode HPA yang dihapus
+        var id_hpa = button.data('id_hpa'); // ID HPA
+        var penerima_hpa = button.data('penerima_hpa'); // Nama Penerima (Hubungan Penerima)
 
-        // Mengubah teks modal untuk menampilkan kode HPA
+        // Mengosongkan input sebelum modal muncul
         var modal = $(this);
-        modal.find('.modal-body').text('Anda yakin ingin menghapus data HPA ' + kodeHpa + '?');
-        
-        // Mengubah href link untuk penghapusan
-        modal.find('#confirmDelete').attr('href', '<?= base_url("hpa/delete/") ?>' + hpaId);
+        modal.find('#id_hpa').val(id_hpa);  // Menetapkan ID HPA
+        modal.find('#penerima_hpa').val(''); // Mengosongkan input penerima_hpa
     });
 </script>
-
