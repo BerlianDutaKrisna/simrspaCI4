@@ -33,9 +33,12 @@ $routes->post('/patient/update/(:segment)', 'Patient::update/$1');  // Rute untu
 $routes->post('patient/modal_search', 'Patient::modal_search'); // Pencarian dengan NoRM
 
 // Route untuk Exam
+$routes->get('exam/index_exam', 'Exam::index_exam'); // Menampilkan halaman index exam
 $routes->get('exam/register_exam', 'Exam::register_exam'); // Menampilkan halaman form register exam
 $routes->post('exam/insert', 'Exam::insert'); // Menangani form POST dari register exam
 $routes->get('exam/edit_exam/(:segment)', 'Exam::edit_exam/$1');  // Rute untuk menampilkan form edit
+
+
 
 
 // Route untuk Penerimaan

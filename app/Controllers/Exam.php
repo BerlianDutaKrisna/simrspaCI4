@@ -30,6 +30,24 @@ class Exam extends BaseController
         }
     }
 
+    // Menampilkan halaman daftar exam
+    public function index_exam()
+    {
+        $hpaModel = new HpaModel();
+
+        // Mengambil data HPA beserta relasinya
+        $hpaData = $hpaModel->getHpaWithAllRelations();
+
+        // Ambil id_user dan nama_user dari session yang sedang aktif
+        $data = [
+            'hpaData' => $hpaData,
+            'id_user' => session()->get('id_user'),
+            'nama_user' => session()->get('nama_user'),
+        ];
+        // Kirim data ke view untuk ditampilkan
+        return view('exam/index_exam', $data);
+    }
+
     public function register_exam()
     {
         // Inisialisasi array $data dengan nilai default dari session
