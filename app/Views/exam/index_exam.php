@@ -15,38 +15,46 @@
         <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
             <thead>
                 <tr>
-                    <th>Kode HPA</th>
+                    <th>Norm Pasien</th>
+                    <th>Kode Hpa</th>
+                    <th>Nama Pasien</th>
+                    <th>Jenis Kelamin Pasien</th>
+                    <th>Tanggal Lahir Pasien</th>
+                    <th>Alamat Pasien</th>
                     <th>Dokter Pengirim</th>
-                    <th>Tanggal Permintaan</th>
-                    <th>Tanggal Hasil</th>
-                    <th>Status HPA</th>
-                    <th>Jumlah Slide</th>
-                    <th>Hasil HPA</th>
-                    <th class="text-center" style="width: 150px;">Aksi</th> <!-- Kolom Aksi -->
+                    <th>Unit Asal</th>
+                    <th>Status_pasien</th>
+                    <th>Diagnosa Klinik</th>
+                    <th>Tanggal hasil</th>
+                    <th>Status Hpa</th>
+                    <th class="text-center" style="width: 150px;">Penerima</th> <!-- Kolom Aksi -->
+                    <th>Nama Penerima / Hubungan</th>
                 </tr>
             </thead>
             <tbody>
                 <?php if (!empty($hpaData)) : ?>  <!-- Jika ada data HPA -->
                     <?php foreach ($hpaData as $row) : ?> <!-- Loop untuk setiap data HPA -->
                         <tr>
+                            <td><?= esc($row['norm_pasien']) ?></td>
                             <td><?= esc($row['kode_hpa']) ?></td>
+                            <td><?= esc($row['nama_pasien']) ?></td>
+                            <td><?= esc($row['jenis_kelamin_pasien']) ?></td>
+                            <td><?= esc($row['tanggal_lahir_pasien']) ?></td>
+                            <td><?= esc($row['alamat_pasien']) ?></td>
                             <td><?= esc($row['dokter_pengirim']) ?></td>
-                            <td><?= esc($row['tanggal_permintaan']) ?></td>
+                            <td><?= esc($row['unit_asal']) ?></td>
+                            <td><?= esc($row['status_pasien']) ?></td>
+                            <td><?= esc($row['diagnosa_klinik']) ?></td>
                             <td><?= esc($row['tanggal_hasil']) ?></td>
                             <td><?= esc($row['status_hpa']) ?></td>
-                            <td><?= esc($row['jumlah_slide']) ?></td>
-                            <td><?= esc($row['hasil_hpa']) ?></td>
                             <td class="text-center">
-                                <!-- Tombol Edit -->
-                                <a href="<?= base_url('hpa/edit_hpa/' . esc($row['id_hpa'])) ?>" class="btn btn-warning btn-sm">
-                                    Edit
-                                </a>
                                 <!-- Tombol Hapus dengan data-target dan data-id untuk modal -->
-                                <a href="#" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#deleteModal"
+                                <a href="#" class="btn btn-info btn-sm" data-toggle="modal" data-target="#deleteModal"
                                     data-id="<?= esc($row['id_hpa']) ?>" data-kode="<?= esc($row['kode_hpa']) ?>">
-                                    Hapus
+                                    Penerima
                                 </a>
                             </td>
+                            <td></td>
                         </tr>
                     <?php endforeach; ?>
                 <?php else : ?>

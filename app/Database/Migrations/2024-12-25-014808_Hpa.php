@@ -99,6 +99,12 @@ class Hpa extends Migration
                 'default'    => 'Belum Ada Hasil',
                 'null' => true,
             ],
+            'penerima_hpa' => [
+                'type' => 'VARCHAR',
+                'constraint' => 100,
+                'default'    => 'Belum Diambil',
+                'null' => true,
+            ],
             'id_penerimaan' => [
                 'type'       => 'INT',
                 'constraint' => 11,

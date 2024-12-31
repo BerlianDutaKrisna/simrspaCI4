@@ -30,6 +30,7 @@ class HpaModel extends Model
         'foto_mikroskopis_hpa',
         'jumlah_slide',
         'hasil_hpa',
+        'penerima_hpa',
         'id_penerimaan',
         'id_pengirisan',
         'id_pemotongan',
@@ -149,8 +150,7 @@ class HpaModel extends Model
         return $this->db->table($this->table)
             ->select('
             hpa.*, 
-            patient.nama_pasien, 
-            patient.norm_pasien, 
+            patient.*,
             penerimaan.*, 
             pengirisan.*, 
             pemotongan.*, 
