@@ -28,6 +28,33 @@ class Exam extends BaseController
         $this->hpaModel = new HpaModel();
     }
 
+    public function index_exam()
+    {
+        // Mengambil data dari session
+        $session = session();
+        $id_user = $session->get('id_user');
+        $nama_user = $session->get('nama_user');
+
+        // Memastikan session terisi dengan benar
+        if (!$id_user || !$nama_user) {
+            return redirect()->to('login'); // Redirect ke halaman login jika session tidak ada
+        }
+
+        // Memanggil model HpaModel untuk mengambil data
+        $hpaModel = new HpaModel();
+        $hpaData = $hpaModel->getHpaWithAllPatient();
+
+        // Pastikan $hpaData berisi array
+        if (!$hpaData) {
+            $hpaData = []; // Jika tidak ada data, set menjadi array kosong
+        }
+        // Kirimkan data ke view
+        return view('exam/index_exam', [
+            'hpaData' => $hpaData,
+            'id_user' => $id_user,
+            'nama_user' => $nama_user
+        ]);
+    }
     // Menampilkan halaman daftar exam
     public function index_buku_penerima()
     {
@@ -82,7 +109,25 @@ class Exam extends BaseController
         return redirect()->to('exam/index_buku_penerima')->with('success', 'Penerima berhasil disimpan.');
     }
 
+    public function update_status_hpa($id_hpa)
+    {
+        // Inisialisasi model
+        $hpaModel = new HpaModel();
 
+        // Mengambil data dari form
+        $status_hpa = $this->request->getPost('status_hpa');
+
+        // Data yang akan diupdate
+        $data = [
+            'status_hpa' => $status_hpa,
+        ];
+
+        // Update data status_hpa berdasarkan id_hpa
+        $hpaModel->updateStatusHpa($id_hpa, $data);
+
+        // Redirect setelah berhasil mengupdate data
+        return redirect()->to('exam/index_exam')->with('success', 'Status HPA berhasil disimpan.');
+    }
 
     public function register_exam()
     {
@@ -174,8 +219,7 @@ class Exam extends BaseController
 
             // Data untuk tabel penerimaan
             $penerimaanData = [
-                'id_hpa'            => $id_hpa,  // Menambahkan id_hpa yang baru
-                'id_user_penerimaan' => session()->get('id_user'),
+                'id_hpa'            => $id_hpa,
                 'status_penerimaan' => 'Belum Diperiksa',
             ];
 

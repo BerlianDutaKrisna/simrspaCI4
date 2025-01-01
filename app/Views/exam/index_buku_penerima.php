@@ -10,10 +10,10 @@
         <a href="<?= base_url('/dashboard') ?>" class="btn btn-primary mb-3">Kembali</a>
 
         <div class="table-responsive">
-            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+            <table class="table table-bordered text-center" id="dataTable" width="100%" cellspacing="0">
                 <thead>
                     <tr>
-                        <th>id_hpa</th>
+                        <th>No</th>
                         <th>Norm Pasien</th>
                         <th>Kode Hpa</th>
                         <th>Nama Pasien</th>
@@ -34,9 +34,10 @@
                 </thead>
                 <tbody>
                     <?php if (!empty($hpaData)) : ?>
+                        <?php $i = 1; ?>
                         <?php foreach ($hpaData as $row) : ?>
                             <tr>
-                                <td><?= esc($row['id_hpa'] ?? 'Belum Diisi') ?></td>
+                                <td><?= $i ?></td>
                                 <td><?= esc($row['norm_pasien'] ?? 'Belum Diisi') ?></td>
                                 <td><?= esc($row['kode_hpa'] ?? 'Belum Diisi') ?></td>
                                 <td><?= esc($row['nama_pasien'] ?? 'Belum Diisi') ?></td>
@@ -59,7 +60,7 @@
                                         class="btn btn-info btn-sm"
                                         data-toggle="modal"
                                         data-target="#penerimaModal"
-                                        data-kode_hpa="<?= esc($row['kode_hpa']) ?>"
+                                        data-id_hpa="<?= esc($row['id_hpa']) ?>"
                                         data-penerima_hpa="<?= esc($row['penerima_hpa']) ?>">
                                         <i class="fas fa-people-arrows"></i> Penerima
                                     </a>
@@ -69,6 +70,7 @@
                                     <?= empty($row['tanggal_penerima']) ? '-' : esc(date('H:i , d-m-Y', strtotime($row['tanggal_penerima']))); ?>
                                 </td>
                             </tr>
+                            <?php $i++; ?>
                         <?php endforeach; ?>
                     <?php else : ?>
                         <tr>

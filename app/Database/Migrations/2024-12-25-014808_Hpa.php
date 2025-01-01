@@ -92,6 +92,7 @@ class Hpa extends Migration
                 'type'       => 'INT',
                 'constraint' => 11,
                 'null'       => true,
+                'default'    => 0,
             ],
             'hasil_hpa' => [
                 'type' => 'VARCHAR',

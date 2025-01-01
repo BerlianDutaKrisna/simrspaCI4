@@ -39,7 +39,7 @@ $routes->post('exam/insert', 'Exam::insert'); // Menangani form POST dari regist
 $routes->get('exam/edit_exam/(:segment)', 'Exam::edit_exam/$1');  // Rute untuk menampilkan form edit
 $routes->get('exam/index_buku_penerima', 'Exam::index_buku_penerima');
 $routes->post('exam/update_buku_penerima/(:segment)', 'Exam::update_buku_penerima/$1');  // Adjusted for two segments
-
+$routes->post('exam/update_status_hpa/(:segment)', 'Exam::update_status_hpa/$1');
 
 
 
@@ -49,6 +49,10 @@ $routes->group('penerimaan', ['namespace' => 'App\Controllers\Proses'], function
     // Definisikan rute untuk form penerimaan yang menerima POST request
     $routes->post('proses_penerimaan', 'Penerimaan::proses_penerimaan');
 });
+$routes->get('penerimaan/getPenerimaanDetails', 'Proses\Penerimaan::getPenerimaanDetails');
+$routes->post('penerimaan/delete', 'Proses\Penerimaan::delete');
+
+
 
 // Route untuk Pengirisan
 $routes->get('pengirisan/index_pengirisan', 'Proses\Pengirisan::index_pengirisan'); // Menampilkan halaman pengirisan

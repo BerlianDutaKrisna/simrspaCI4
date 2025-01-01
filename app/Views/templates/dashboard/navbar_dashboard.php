@@ -51,15 +51,19 @@
                         <a class="dropdown-item" href="<?= base_url('patient/index_patient') ?>">
                             <i class="fas fa-hospital-user fa-sm fa-fw mr-2 text-gray-400"></i> Patient Settings <!-- Ikon pengaturan pasien -->
                         </a>
+                        <!-- Menu untuk pengaturan hpa -->
+                        <a class="dropdown-item" href="<?= base_url('exam/index_exam') ?>">
+                            <i class="fas fa-vial fa-sm fa-fw mr-2 text-gray-400"></i> Hpa Settings <!-- Ikon pengaturan pasien -->
+                        </a>
                     </div>
-                    
+
                     <!-- Menu untuk Activity Log -->
                     <a class="dropdown-item" href="#">
                         <i class="fas fa-list fa-sm fa-fw mr-2 text-gray-400"></i> Activity Log <!-- Ikon Activity Log -->
                     </a>
 
                     <div class="dropdown-divider"></div> <!-- Pembatas antara menu -->
-                    
+
                     <!-- Link untuk logout -->
                     <a class="dropdown-item" data-toggle="modal" data-target="#logoutModal">
                         <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i> Keluar <!-- Ikon logout -->

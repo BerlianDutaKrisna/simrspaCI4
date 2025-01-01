@@ -22,7 +22,6 @@ class Patient extends BaseController
         $data['id_user'] = session()->get('id_user');
         $data['nama_user'] = session()->get('nama_user');
         // Mengirim data ke view untuk ditampilkan
-        dd($data);
         return view('patient/index_patient', $data);
     }
 

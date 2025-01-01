@@ -6,7 +6,7 @@
         <h6 class="m-0 font-weight-bold text-primary">Table Users</h6> <!-- Judul halaman -->
     </div>
     <div class="card-body">
-        <h1>Data Users</h1>  <!-- Judul Data User -->
+        <h1>Data Users</h1> <!-- Judul Data User -->
 
         <!-- Tombol Kembali ke Dashboard -->
         <a href="<?= base_url('/dashboard') ?>" class="btn btn-primary mb-3">Kembali</a>
@@ -18,16 +18,19 @@
         <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
             <thead>
                 <tr>
+                    <th>No</th>
                     <th>Username</th>
                     <th>Nama User</th>
                     <th>Status User</th>
-                    <th class="text-center" style="width: 150px;">Aksi</th>  <!-- Kolom Aksi -->
+                    <th class="text-center" style="width: 150px;">Aksi</th> <!-- Kolom Aksi -->
                 </tr>
             </thead>
             <tbody>
-                <?php if (!empty($users)) : ?>  <!-- Jika ada data users -->
+                <?php if (!empty($users)) : ?> <!-- Jika ada data users -->
+                    <?php $i = 1; ?>
                     <?php foreach ($users as $user) : ?> <!-- Loop untuk setiap user -->
                         <tr>
+                            <td><?= $i++ ?></td>
                             <td><?= esc($user['username']) ?></td>
                             <td><?= esc($user['nama_user']) ?></td>
                             <td><?= esc($user['status_user']) ?></td>
@@ -43,10 +46,11 @@
                                 </a>
                             </td>
                         </tr>
+                        <?php $i++; ?>
                     <?php endforeach; ?>
                 <?php else : ?>
                     <tr>
-                        <td colspan="4">Tidak ada data pengguna.</td>  <!-- Menambahkan colspan 4 untuk mencakup kolom Aksi -->
+                        <td colspan="4">Tidak ada data pengguna.</td> <!-- Menambahkan colspan 4 untuk mencakup kolom Aksi -->
                     </tr>
                 <?php endif; ?>
             </tbody>
@@ -82,7 +86,7 @@
 <!-- JavaScript untuk menangani pengisian modal -->
 <script>
     // Menangani event click pada tombol hapus
-    $('#deleteModal').on('show.bs.modal', function (event) {
+    $('#deleteModal').on('show.bs.modal', function(event) {
         var button = $(event.relatedTarget); // Tombol yang memicu modal
         var userId = button.data('id'); // ID pengguna yang dihapus
         var userName = button.data('nama'); // Nama pengguna yang dihapus
@@ -90,10 +94,8 @@
         // Mengubah teks modal untuk menampilkan nama pengguna
         var modal = $(this);
         modal.find('.modal-body').text('Anda yakin ingin menghapus user ' + userName + '?');
-        
+
         // Mengubah href link untuk penghapusan
         modal.find('#confirmDelete').attr('href', '<?= base_url("users/delete/") ?>' + userId);
     });
 </script>
-
-

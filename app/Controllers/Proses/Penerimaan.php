@@ -6,18 +6,18 @@ use App\Controllers\BaseController;
 use App\Models\ProsesModel\PenerimaanModel;
 use App\Models\ProsesModel\PengirisanModel;
 use App\Models\HpaModel;
+
 use App\Models\MutuModel;
 use Exception;
 
 class Penerimaan extends BaseController
 {
+    // Memuat model di constructor
+    protected $penerimaanModel;
+
     public function __construct()
     {
-        // Mengecek apakah user sudah login dengan menggunakan session
-        if (!session()->has('id_user')) {
-            session()->setFlashdata('error', 'Login terlebih dahulu');
-            return redirect()->to('/login');
-        }
+        $this->penerimaanModel = new PenerimaanModel();
     }
     public function index_penerimaan()
     {
@@ -172,6 +172,44 @@ class Penerimaan extends BaseController
             log_message('error', 'Error in processAction: ' . $e->getMessage());
             // Anda bisa melempar exception atau memberikan pesan error yang lebih spesifik
             throw new \Exception('Terjadi kesalahan saat memproses aksi: ' . $e->getMessage());
+        }
+    }
+    public function getPenerimaanDetails()
+    {
+        // Ambil id_penerimaan dari parameter GET
+        $id_penerimaan = $this->request->getGet('id_penerimaan');
+
+        if ($id_penerimaan) {
+            // Muat model Penerimaan
+            $model = new PenerimaanModel();
+
+            // Ambil data penerimaan berdasarkan id_penerimaan dan relasi yang ada
+            $data = $model->select(
+                'penerimaan.*, 
+                hpa.*, 
+                patient.*, 
+                users.nama_user AS nama_user_penerimaan,
+                mutu.indikator_1,
+                mutu.indikator_2'
+            )
+            ->join('hpa',
+                'penerimaan.id_hpa = hpa.id_hpa',
+                'left'
+            ) // Relasi dengan tabel hpa
+            ->join('patient', 'hpa.id_pasien = patient.id_pasien', 'left') // Relasi dengan tabel patient
+            ->join('users', 'penerimaan.id_user_penerimaan = users.id_user', 'left') // Relasi dengan tabel users untuk penerimaan
+            ->join('mutu', 'hpa.id_hpa = mutu.id_hpa', 'left') // Relasi dengan tabel mutu berdasarkan id_hpa
+            ->where('penerimaan.id_penerimaan', $id_penerimaan) // Menambahkan filter berdasarkan id_penerimaan
+            ->first(); // Mengambil satu data penerimaan berdasarkan id_penerimaan
+
+            if ($data) {
+                // Kirimkan data dalam format JSON
+                return $this->response->setJSON($data);
+            } else {
+                return $this->response->setJSON(['error' => 'Data tidak ditemukan.']);
+            }
+        } else {
+            return $this->response->setJSON(['error' => 'ID Penerimaan tidak ditemukan.']);
         }
     }
 }
