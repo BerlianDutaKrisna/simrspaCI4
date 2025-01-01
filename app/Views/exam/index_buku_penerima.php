@@ -26,8 +26,10 @@
                         <th>Diagnosa Klinik</th>
                         <th>Tanggal Hasil</th>
                         <th>Status Hpa</th>
+                        <th>Hasil Hpa</th>
                         <th class="text-center" style="width: 150px;">Penerima</th>
                         <th>Nama Penerima / Hubungan</th>
+                        <th>Tanggal Penerima</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -39,14 +41,19 @@
                                 <td><?= esc($row['kode_hpa'] ?? 'Belum Diisi') ?></td>
                                 <td><?= esc($row['nama_pasien'] ?? 'Belum Diisi') ?></td>
                                 <td><?= esc($row['jenis_kelamin_pasien'] ?? 'Belum Diisi') ?></td>
-                                <td><?= esc($row['tanggal_lahir_pasien'] ?? 'Belum Diisi') ?></td>
+                                <td>
+                                    <?= empty($row['tanggal_lahir_pasien']) ? 'Belum diisi' : esc(date('d-m-Y', strtotime($row['tanggal_lahir_pasien']))); ?>
+                                </td>
                                 <td><?= esc($row['alamat_pasien'] ?? 'Belum Diisi') ?></td>
                                 <td><?= esc($row['dokter_pengirim'] ?? 'Belum Diisi') ?></td>
                                 <td><?= esc($row['unit_asal'] ?? 'Belum Diisi') ?></td>
                                 <td><?= esc($row['status_pasien'] ?? 'Belum Diisi') ?></td>
                                 <td><?= esc($row['diagnosa_klinik'] ?? 'Belum Diisi') ?></td>
-                                <td><?= esc($row['tanggal_hasil'] ?? 'Belum Diisi') ?></td>
+                                <td>
+                                    <?= empty($row['tanggal_hasil']) ? 'Belum diisi' : esc(date('d-m-Y', strtotime($row['tanggal_hasil']))); ?>
+                                </td>
                                 <td><?= esc($row['status_hpa'] ?? 'Belum Diisi') ?></td>
+                                <td><?= esc($row['hasil_hpa'] ?? 'Belum Ada Hasil') ?></td>
                                 <td class="text-center">
                                     <a href="#"
                                         class="btn btn-info btn-sm"
@@ -57,7 +64,10 @@
                                         <i class="fas fa-people-arrows"></i> Penerima
                                     </a>
                                 </td>
-                                <td><?= esc($row['penerima_hpa'] ?? 'Belum Ditentukan') ?></td>
+                                <td><?= esc($row['penerima_hpa'] ?? 'Belum Diterima') ?></td>
+                                <td>
+                                    <?= empty($row['tanggal_penerima']) ? '-' : esc(date('H:i , d-m-Y', strtotime($row['tanggal_penerima']))); ?>
+                                </td>
                             </tr>
                         <?php endforeach; ?>
                     <?php else : ?>

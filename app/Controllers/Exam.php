@@ -60,14 +60,22 @@ class Exam extends BaseController
 
     public function update_buku_penerima($id_hpa)
     {
+        // Set zona waktu Indonesia/Jakarta (opsional jika sudah diatur dalam konfigurasi)
+        date_default_timezone_set('Asia/Jakarta');
+
+        // Inisialisasi model
         $hpaModel = new HpaModel();
 
         // Mengambil data dari form
+        $penerima_hpa = $this->request->getPost('penerima_hpa');
+
+        // Data yang akan diupdate
         $data = [
-            'penerima_hpa' => $this->request->getVar('penerima_hpa'),
+            'penerima_hpa' => $penerima_hpa,
+            'tanggal_penerima' => date('Y-m-d H:i:s'),
         ];
 
-        // Update data penerima_hpa berdasarkan kode_hpa
+        // Update data penerima_hpa berdasarkan id_hpa
         $hpaModel->updatePenerima($id_hpa, $data);
 
         // Redirect setelah berhasil mengupdate data

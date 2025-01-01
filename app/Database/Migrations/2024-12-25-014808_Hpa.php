@@ -105,6 +105,10 @@ class Hpa extends Migration
                 'default'    => 'Belum Diambil',
                 'null' => true,
             ],
+            'tanggal_penerima' => [
+                'type' => 'DATETIME',
+                'null' => true,
+            ],
             'id_penerimaan' => [
                 'type'       => 'INT',
                 'constraint' => 11,

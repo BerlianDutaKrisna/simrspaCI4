@@ -31,6 +31,7 @@ class HpaModel extends Model
         'jumlah_slide',
         'hasil_hpa',
         'penerima_hpa',
+        'tanggal_penerima',
         'id_penerimaan',
         'id_pengirisan',
         'id_pemotongan',
@@ -98,11 +99,25 @@ class HpaModel extends Model
     // Fungsi untuk memperbarui penerima_hpa
     public function updatePenerima($id_hpa, $data)
     {
-        $builder = $this->db->table('hpa');  // Mengambil table 'hpa'
-        $builder->where('id_hpa', $id_hpa); // Menambahkan kondisi WHERE
-        $builder->update($data);             // Melakukan update data
-        return $this->db->affectedRows();
+        // Validasi parameter
+        if (empty($id_hpa) || empty($data) || !is_array($data)
+        ) {
+            throw new \InvalidArgumentException('Parameter ID HPA atau data tidak valid.');
+        }
+        // Mengambil table 'hpa'
+        $builder = $this->db->table('hpa');
+        // Menambahkan kondisi WHERE
+        $builder->where('id_hpa', $id_hpa);
+        // Melakukan update data
+        $updateResult = $builder->update($data);
+        // Mengecek apakah update berhasil
+        if ($updateResult) {
+            return $this->db->affectedRows(); // Mengembalikan jumlah baris yang terpengaruh
+        } else {
+            throw new \RuntimeException('Update data gagal.'); // Menangani error
+        }
     }
+
 
     public function getHpaWithRelations()
     {
