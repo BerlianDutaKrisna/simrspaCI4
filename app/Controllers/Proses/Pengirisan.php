@@ -158,4 +158,43 @@ class Pengirisan extends BaseController
             throw new \Exception('Terjadi kesalahan saat memproses aksi: ' . $e->getMessage());
         }
     }
+    public function pengirisan_details()
+    {
+        // Ambil id_pengirisan dari parameter GET
+        $id_pengirisan = $this->request->getGet('id_pengirisan');
+
+        if ($id_pengirisan) {
+            // Muat model pengirisan
+            $model = new PengirisanModel();
+
+            // Ambil data pengirisan berdasarkan id_pengirisan dan relasi yang ada
+            $data = $model->select(
+                'pengirisan.*, 
+                hpa.*, 
+                patient.*, 
+                users.nama_user AS nama_user_pengirisan,
+                mutu.indikator_1,
+                mutu.indikator_2'
+            )
+                ->join(
+                    'hpa',
+                    'pengirisan.id_hpa = hpa.id_hpa',
+                    'left'
+                ) // Relasi dengan tabel hpa
+                ->join('patient', 'hpa.id_pasien = patient.id_pasien', 'left') 
+                ->join('users', 'pengirisan.id_user_pengirisan = users.id_user', 'left') 
+                ->join('mutu', 'hpa.id_hpa = mutu.id_hpa', 'left')
+                ->where('pengirisan.id_pengirisan', $id_pengirisan)
+                ->first();
+
+            if ($data) {
+                // Kirimkan data dalam format JSON
+                return $this->response->setJSON($data);
+            } else {
+                return $this->response->setJSON(['error' => 'Data tidak ditemukan.']);
+            }
+        } else {
+            return $this->response->setJSON(['error' => 'ID pengirisan tidak ditemukan.']);
+        }
+    }
 }

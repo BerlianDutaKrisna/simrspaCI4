@@ -49,10 +49,7 @@ $routes->group('penerimaan', ['namespace' => 'App\Controllers\Proses'], function
     // Definisikan rute untuk form penerimaan yang menerima POST request
     $routes->post('proses_penerimaan', 'Penerimaan::proses_penerimaan');
 });
-$routes->get('penerimaan/getPenerimaanDetails', 'Proses\Penerimaan::getPenerimaanDetails');
-$routes->post('penerimaan/delete', 'Proses\Penerimaan::delete');
-
-
+$routes->get('penerimaan/penerimaan_details', 'Proses\Penerimaan::penerimaan_details');
 
 // Route untuk Pengirisan
 $routes->get('pengirisan/index_pengirisan', 'Proses\Pengirisan::index_pengirisan'); // Menampilkan halaman pengirisan
@@ -60,6 +57,7 @@ $routes->group('pengirisan', ['namespace' => 'App\Controllers\Proses'], function
     // Definisikan rute untuk form pengirisan yang menerima POST request
     $routes->post('proses_pengirisan', 'Pengirisan::proses_pengirisan');
 });
+$routes->get('pengirisan/pengirisan_details', 'Proses\Pengirisan::pengirisan_details');
 
 // Route untuk Pemotongan
 $routes->get('pemotongan/index_pemotongan', 'Proses\Pemotongan::index_pemotongan'); // Menampilkan halaman pemotongan

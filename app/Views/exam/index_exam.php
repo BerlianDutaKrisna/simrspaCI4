@@ -23,7 +23,9 @@
                             <th>Nama Pasien</th>
                             <th>Norm Pasien</th>
                             <th>Status Hpa</th>
+                            <th>id_penerimaan</th>
                             <th>Penerimaan</th>
+                            <th>id_pengirisan</th>
                             <th>Pengirisan</th>
                             <th>Pemotongan</th>
                             <th>Pemprosesan</th>
@@ -57,27 +59,43 @@
                                             <?= esc($row['status_hpa']) ?>
                                         </a>
                                     </td>
+                                    <td><?= esc($row['id_penerimaan']) ?></td>
                                     <td>
                                         <?php if (!empty($row['id_penerimaan'])) : ?>
                                             <div class="d-flex justify-content-around">
                                                 <!-- Tombol Lihat -->
-                                                <button class="btn btn-sm btn-warning" data-id_penerimaan="<?= $row['id_penerimaan'] ?>">
+                                                <button class="btn btn-sm btn-warning view-penerimaan"
+                                                    data-id_penerimaan="<?= htmlspecialchars($row['id_penerimaan'], ENT_QUOTES, 'UTF-8') ?>"
+                                                    aria-label="Lihat penerimaan">
                                                     <i class="far fa-eye"></i>
                                                 </button>
                                                 <!-- Tombol Hapus -->
-                                                <button class="btn btn-sm btn-danger" data-toggle="modal" data-target="#deleteModal" data-id_penerimaan="<?= $row['id_penerimaan'] ?>">
+                                                <button class="btn btn-sm btn-danger"
+                                                    data-toggle="modal"
+                                                    data-target="#deleteModal"
+                                                    data-id_penerimaan="<?= htmlspecialchars($row['id_penerimaan'], ENT_QUOTES, 'UTF-8') ?>"
+                                                    aria-label="Hapus penerimaan">
                                                     <i class="fas fa-trash-alt"></i>
                                                 </button>
                                             </div>
                                         <?php endif; ?>
                                     </td>
+                                    <td><?= esc($row['id_pengirisan']) ?></td>
                                     <td>
                                         <?php if (!empty($row['id_pengirisan'])) : ?>
                                             <div class="d-flex justify-content-around">
-                                                <button class="btn btn-sm btn-warning">
+                                                <!-- Tombol Lihat -->
+                                                <button class="btn btn-sm btn-warning view-pengirisan"
+                                                    data-id_pengirisan="<?= htmlspecialchars($row['id_pengirisan'], ENT_QUOTES, 'UTF-8') ?>"
+                                                    aria-label="Lihat pengirisan">
                                                     <i class="far fa-eye"></i>
                                                 </button>
-                                                <button class="btn btn-sm btn-danger" data-toggle="modal" data-target="#deleteModal" data-id_hpa="<?= $row['id_hpa'] ?>">
+                                                <!-- Tombol Hapus -->
+                                                <button class="btn btn-sm btn-danger"
+                                                    data-toggle="modal"
+                                                    data-target="#deleteModal"
+                                                    data-id_pengirisan="<?= htmlspecialchars($row['id_pengirisan'], ENT_QUOTES, 'UTF-8') ?>"
+                                                    aria-label="Hapus pengirisan">
                                                     <i class="fas fa-trash-alt"></i>
                                                 </button>
                                             </div>
@@ -244,16 +262,16 @@
                 </div>
                 <div class="modal-footer">
                     <button class="btn btn-secondary" type="button" data-dismiss="modal">Batal</button>
-                    <button type="submit" class="btn btn-primary">Simpan</button>
+                    <button type="submit" class="btn btn-success">Simpan</button>
                 </div>
             </form>
         </div>
     </div>
 </div>
 
-<!-- Modal untuk menampilkan detail penerimaan -->
-<div class="modal fade" id="viewModal" tabindex="-1" aria-labelledby="viewModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
+<!-- Modal untuk menampilkan detail -->
+<div class="modal fade" id="viewModal" tabindex="-1" role="dialog" aria-labelledby="viewModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="viewModalLabel">Detail Penerimaan</h5>
@@ -262,37 +280,16 @@
                 </button>
             </div>
             <div class="modal-body">
-                <div id="penerimaanDetails">
+                <div id="modalBody">
                     <!-- Data akan dimuat di sini melalui AJAX -->
                 </div>
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
+            <div class="modal-footer" id="modalFooter">
+                <!-- Tombol akan ditambahkan di sini -->
             </div>
         </div>
     </div>
 </div>
-<!-- Modal untuk konfirmasi penghapusan -->
-<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="deleteModalLabel">Konfirmasi Penghapusan</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                Apakah Anda yakin ingin menghapus Proses ini?
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
-                <button type="button" class="btn btn-danger" id="confirmDeleteButton">Hapus</button>
-            </div>
-        </div>
-    </div>
-</div>
-
 
 
 <?= $this->include('templates/notifikasi') ?>
@@ -300,111 +297,136 @@
 
 <!-- JavaScript untuk modal tetap sama -->
 <script>
-    // Menangani event click pada tombol status hpa untuk memunculkan modal
-    $('#statusHpaModal').on('show.bs.modal', function(event) {
-        var button = $(event.relatedTarget); // Tombol yang memicu modal
-        var id_hpa = button.data('id_hpa'); // Kode HPA
-        var status_hpa = button.data('status_hpa'); // Nama status hpa
-
-        var modal = $(this);
-        modal.find('#id_hpa').val(id_hpa); // Isi id_hpa ke input hidden
-        modal.find('#status_hpa').val(status_hpa); // Isi status_hpa jika ada
-    });
-
     $(document).ready(function() {
-        // Menangani klik pada tombol .btn-warning dan .btn-danger
-        $(".btn-warning, .btn-danger").on("click", function() {
+        // ==========================
+        // Fungsi Format Tanggal & Waktu
+        // ==========================
+        function formatDateTime(dateString) {
+            if (!dateString || isNaN(Date.parse(dateString))) return "-"; // Validasi input
+            var date = new Date(dateString);
 
-            // Menangani klik pada tombol .btn-danger untuk menampilkan data di modal delete
-            if ($(this).hasClass('btn-danger')) {
-                var id_hpa = $(this).data("id_hpa");
+            // Format waktu (HH:mm)
+            var hours = date.getHours().toString().padStart(2, "0");
+            var minutes = date.getMinutes().toString().padStart(2, "0");
+            var time = hours + ":" + minutes;
 
-                // Simpan data pada modal delete
-                $('#deleteModal').data('id_hpa', id_hpa);
-            }
-            // Menangani klik pada tombol konfirmasi hapus
-            $("#confirmDelete").on("click", function() {
-                var id_hpa = $('#deleteModal').data('id_hpa');
-                console.log(id_hpa);
-                // Kirim permintaan delete menggunakan AJAX
-                $.ajax({
-                    url: "<?= base_url('penerimaan/delete'); ?>",
-                    method: 'POST',
-                    data: {
-                        id_penerimaan: id_penerimaan
-                    },
-                    success: function(response) {
-                        if (response.success) {
-                            // Jika penghapusan berhasil, tutup modal dan refresh halaman
-                            $('#deleteModal').modal('hide');
-                            location.reload(); // Reload halaman untuk memperbarui tampilan
-                        } else {
-                            alert('Gagal menghapus data.');
-                        }
-                    },
-                    error: function() {
-                        alert('Terjadi kesalahan saat menghapus data.');
-                    }
-                });
-            });
+            // Format tanggal (DD-MM-YYYY)
+            var day = date.getDate().toString().padStart(2, "0");
+            var month = (date.getMonth() + 1).toString().padStart(2, "0");
+            var year = date.getFullYear();
 
+            return time + ", " + day + "-" + month + "-" + year;
+        }
+
+        // ==========================
+        // Modal Status HPA
+        // ==========================
+        $("#statusHpaModal").on("show.bs.modal", function(event) {
+            var button = $(event.relatedTarget);
+            var id_hpa = button.data("id_hpa");
+            var status_hpa = button.data("status_hpa");
+
+            var modal = $(this);
+            modal.find("#id_hpa").val(id_hpa);
+            modal.find("#status_hpa").val(status_hpa);
         });
 
-        // Menangani klik pada tombol .btn-warning untuk menampilkan detail penerimaan
-        $(".btn-warning").on("click", function() {
+        // ==========================
+        // Detail Penerimaan
+        // ==========================
+        $(document).on("click", ".view-penerimaan", function() {
             var id_penerimaan = $(this).data("id_penerimaan");
 
-            // Mengambil detail penerimaan menggunakan AJAX
+            // Lakukan aksi seperti AJAX di sini
+            console.log("ID Penerimaan:", id_penerimaan);
+
             $.ajax({
-                url: "<?= base_url('penerimaan/getPenerimaanDetails'); ?>", // URL untuk mengambil detail penerimaan
+                url: "<?= base_url('penerimaan/penerimaan_details'); ?>",
                 type: "GET",
                 data: {
-                    id_penerimaan: id_penerimaan
+                    id_penerimaan: encodeURIComponent(id_penerimaan)
                 },
                 success: function(response) {
                     if (response.error) {
-                        // Menampilkan error jika data tidak ditemukan
-                        $('#penerimaanDetails').html('<p>' + response.error + '</p>');
+                        $("#modalBody").html(`<p>${response.error}</p>`);
+                        $("#modalFooter").html(
+                            '<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>'
+                        );
                     } else {
-                        // Fungsi untuk memformat tanggal dan waktu
-                        function formatDateTime(dateString) {
-                            var date = new Date(dateString);
+                        var detailHtml = `
+                            <p><strong>Kode HPA:</strong> ${response.kode_hpa || "-"}</p>
+                            <p><strong>Dikerjakan Oleh:</strong> ${response.nama_user_penerimaan || "-"}</p>
+                            <p><strong>Status Penerimaan:</strong> ${response.status_penerimaan || "-"}</p>
+                            <p><strong>Mulai Penerimaan:</strong> ${formatDateTime(response.mulai_penerimaan)}</p>
+                            <p><strong>Selesai Penerimaan:</strong> ${formatDateTime(response.selesai_penerimaan)}</p>
+                            <p><strong>Volume Fiksasi:</strong> ${response.indikator_1 || "-"}</p>
+                            <p><strong>Terfiksasi Merata:</strong> ${response.indikator_2 || "-"}</p>
+                        `;
+                        $("#modalBody").html(detailHtml);
 
-                            // Format waktu (jam:menit)
-                            var hours = date.getHours().toString().padStart(2, '0'); // Menambahkan leading zero
-                            var minutes = date.getMinutes().toString().padStart(2, '0'); // Menambahkan leading zero
-                            var time = hours + ':' + minutes;
-
-                            // Format tanggal (tanggal-bulan-tahun)
-                            var day = date.getDate().toString().padStart(2, '0'); // Menambahkan leading zero
-                            var month = (date.getMonth() + 1).toString().padStart(2, '0'); // Menambahkan leading zero
-                            var year = date.getFullYear();
-
-                            var dateFormatted = day + '-' + month + '-' + year;
-
-                            // Gabungkan waktu dan tanggal
-                            return time + ', ' + dateFormatted;
-                        }
-
-                        // Menampilkan detail penerimaan di modal
-                        var detailHtml = '<p><strong>Kode HPA:</strong> ' + response.kode_hpa + '</p>';
-                        detailHtml += '<p><strong>Dikerjakan Oleh:</strong> ' + response.nama_user_penerimaan + '</p>';
-                        detailHtml += '<p><strong>Status Penerimaan:</strong> ' + response.status_penerimaan + '</p>';
-
-                        // Format dan tampilkan data
-                        detailHtml += '<p><strong>Mulai Penerimaan:</strong> ' + formatDateTime(response.mulai_penerimaan) + '</p>';
-                        detailHtml += '<p><strong>Selesai Penerimaan:</strong> ' + formatDateTime(response.selesai_penerimaan) + '</p>';
-                        detailHtml += '<p><strong>Volume Fiksasi:</strong> ' + response.indikator_1 + '</p>';
-                        detailHtml += '<p><strong>Terfiksasi Merata:</strong> ' + response.indikator_2 + '</p>';
-
-                        // Menampilkan data penerimaan di modal
-                        $('#penerimaanDetails').html(detailHtml);
+                        var footerHtml = `
+                            <a href="<?= base_url('penerimaan/edit'); ?>?id_penerimaan=${encodeURIComponent(
+                            id_penerimaan
+                        )}" class="btn btn-warning">Edit</a>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                        `;
+                        $("#modalFooter").html(footerHtml);
                     }
-                    $('#viewModal').modal('show'); // Tampilkan modal
+                    $("#viewModal").modal("show");
                 },
                 error: function() {
-                    alert("Terjadi kesalahan saat mengambil data.");
-                }
+                    $("#modalBody").html('<p>Terjadi kesalahan saat mengambil data. Silakan coba lagi.</p>');
+                    $("#modalFooter").html(
+                        '<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>'
+                    );
+                },
+            });
+        });
+
+        // ==========================
+        // Detail Pengirisan
+        // ==========================
+        $(document).on("click", ".view-pengirisan", function() {
+            var id_pengirisan = $(this).data("id_pengirisan");
+
+            $.ajax({
+                url: "<?= base_url('pengirisan/pengirisan_details'); ?>",
+                type: "GET",
+                data: {
+                    id_pengirisan: encodeURIComponent(id_pengirisan)
+                },
+                success: function(response) {
+                    if (response.error) {
+                        $("#modalBody").html(`<p>${response.error}</p>`);
+                        $("#modalFooter").html(
+                            '<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>'
+                        );
+                    } else {
+                        var detailHtml = `
+                            <p><strong>Kode HPA:</strong> ${response.kode_hpa || "-"}</p>
+                            <p><strong>Dikerjakan Oleh:</strong> ${response.nama_user_pengirisan || "-"}</p>
+                            <p><strong>Status Pengirisan:</strong> ${response.status_pengirisan || "-"}</p>
+                            <p><strong>Mulai Pengirisan:</strong> ${formatDateTime(response.mulai_pengirisan)}</p>
+                            <p><strong>Selesai Pengirisan:</strong> ${formatDateTime(response.selesai_pengirisan)}</p>
+                        `;
+                        $("#modalBody").html(detailHtml);
+
+                        var footerHtml = `
+                            <a href="<?= base_url('pengirisan/edit'); ?>?id_pengirisan=${encodeURIComponent(
+                            id_pengirisan
+                        )}" class="btn btn-warning">Edit</a>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                        `;
+                        $("#modalFooter").html(footerHtml);
+                    }
+                    $("#viewModal").modal("show");
+                },
+                error: function() {
+                    $("#modalBody").html('<p>Terjadi kesalahan saat mengambil data. Silakan coba lagi.</p>');
+                    $("#modalFooter").html(
+                        '<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>'
+                    );
+                },
             });
         });
     });

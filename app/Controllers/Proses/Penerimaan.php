@@ -174,7 +174,7 @@ class Penerimaan extends BaseController
             throw new \Exception('Terjadi kesalahan saat memproses aksi: ' . $e->getMessage());
         }
     }
-    public function getPenerimaanDetails()
+    public function penerimaan_details()
     {
         // Ambil id_penerimaan dari parameter GET
         $id_penerimaan = $this->request->getGet('id_penerimaan');
