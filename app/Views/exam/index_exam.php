@@ -23,9 +23,7 @@
                             <th>Nama Pasien</th>
                             <th>Norm Pasien</th>
                             <th>Status Hpa</th>
-                            <th>id_penerimaan</th>
                             <th>Penerimaan</th>
-                            <th>id_pengirisan</th>
                             <th>Pengirisan</th>
                             <th>Pemotongan</th>
                             <th>Pemprosesan</th>
@@ -59,7 +57,6 @@
                                             <?= esc($row['status_hpa']) ?>
                                         </a>
                                     </td>
-                                    <td><?= esc($row['id_penerimaan']) ?></td>
                                     <td>
                                         <?php if (!empty($row['id_penerimaan'])) : ?>
                                             <div class="d-flex justify-content-around">
@@ -80,7 +77,6 @@
                                             </div>
                                         <?php endif; ?>
                                     </td>
-                                    <td><?= esc($row['id_pengirisan']) ?></td>
                                     <td>
                                         <?php if (!empty($row['id_pengirisan'])) : ?>
                                             <div class="d-flex justify-content-around">
@@ -91,10 +87,11 @@
                                                     <i class="far fa-eye"></i>
                                                 </button>
                                                 <!-- Tombol Hapus -->
-                                                <button class="btn btn-sm btn-danger"
+                                                <button class="btn btn-sm btn-danger delete-pengirisan"
                                                     data-toggle="modal"
                                                     data-target="#deleteModal"
                                                     data-id_pengirisan="<?= htmlspecialchars($row['id_pengirisan'], ENT_QUOTES, 'UTF-8') ?>"
+                                                    data-id_hpa="<?= htmlspecialchars($row['id_hpa'], ENT_QUOTES, 'UTF-8') ?>"
                                                     aria-label="Hapus pengirisan">
                                                     <i class="fas fa-trash-alt"></i>
                                                 </button>
@@ -291,6 +288,29 @@
     </div>
 </div>
 
+<!-- Modal Konfirmasi Hapus -->
+<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Konfirmasi Hapus</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Tutup">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Apakah Anda yakin ingin menghapus Proses ini?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
+                <button type="button" class="btn btn-danger" id="confirmDelete">Hapus</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
 
 <?= $this->include('templates/notifikasi') ?>
 <?= $this->include('templates/dashboard/footer_dashboard') ?>
@@ -429,5 +449,48 @@
                 },
             });
         });
+        // Hapus Pengirisan
+        $(document).on("click", ".delete-pengirisan", function() {
+            var id_pengirisan = $(this).data("id_pengirisan");
+            var id_hpa = $(this).data("id_hpa");
+
+            console.log("ID pengirisan:", id_pengirisan);
+
+            // Menyimpan data ID yang dibutuhkan untuk operasi delete
+            $("#confirmDelete").data("id_pengirisan", id_pengirisan);
+            $("#confirmDelete").data("id_hpa", id_hpa);
+
+            // Menampilkan modal konfirmasi
+            $('#deleteModal').modal('show');
+        });
+
+        // Menangani klik konfirmasi hapus pada modal
+        $("#confirmDelete").on("click", function() {
+            var id_pengirisan = $(this).data("id_pengirisan");
+            var id_hpa = $(this).data("id_hpa");
+
+            // Mengirimkan permintaan AJAX untuk menghapus data
+            $.ajax({
+                url: "<?= base_url('pengirisan/delete'); ?>",
+                type: "POST",
+                data: {
+                    id_pengirisan: id_pengirisan,
+                    id_hpa: id_hpa
+                },
+                success: function(response) {
+                    if (response.success) {
+                        location.reload(); // Refresh halaman setelah operasi
+                    } else {
+                        alert("Gagal menghapus data.");
+                    }
+                },
+                error: function() {
+                    alert("Terjadi kesalahan pada server.");
+                }
+            });
+            // Menutup modal setelah konfirmasi hapus
+            $('#deleteModal').modal('hide');
+        });
+
     });
 </script>

@@ -139,6 +139,10 @@ class HpaModel extends Model
             throw new \RuntimeException('Update data gagal.'); // Menangani error
         }
     }
+    public function updateIdPengirisan($id_hpa)
+    {
+        return $this->update($id_hpa, ['id_pengirisan' => null]);
+    }
 
 
     public function getHpaWithRelations()

@@ -197,4 +197,49 @@ class Pengirisan extends BaseController
             return $this->response->setJSON(['error' => 'ID pengirisan tidak ditemukan.']);
         }
     }
+
+    public function delete()
+    {
+        // Mendapatkan data dari request
+        $id_pengirisan = $this->request->getPost('id_pengirisan');
+        $id_hpa = $this->request->getPost('id_hpa');
+
+        if ($id_pengirisan && $id_hpa) {
+            // Load model
+            $pengirisanModel = new PengirisanModel();
+            $hpaModel = new HpaModel();
+
+            // Ambil instance dari database service
+            $db = \Config\Database::connect();
+
+            // Mulai transaksi untuk memastikan kedua operasi berjalan atomik
+            $db->transStart();
+
+            // Hapus data dari tabel pengirisan
+            $deleteResult = $pengirisanModel->deletePengirisan($id_pengirisan);
+
+            // Cek apakah delete berhasil
+            if ($deleteResult) {
+                // Update field id_pengirisan menjadi null pada tabel hpa
+                $hpaModel->updateIdPengirisan($id_hpa);
+
+                // Selesaikan transaksi
+                $db->transComplete();
+
+                // Cek apakah transaksi berhasil
+                if ($db->transStatus() === FALSE) {
+                    return $this->response->setJSON(['success' => false, 'message' => 'Gagal menghapus atau memperbarui data.']);
+                }
+
+                return $this->response->setJSON(['success' => true]);
+            } else {
+                // Jika delete gagal, rollback transaksi
+                $db->transRollback();
+                return $this->response->setJSON(['success' => false, 'message' => 'Gagal menghapus data pengirisan.']);
+            }
+        } else {
+            return $this->response->setJSON(['success' => false, 'message' => 'ID tidak valid.']);
+        }
+    }
 }
+
