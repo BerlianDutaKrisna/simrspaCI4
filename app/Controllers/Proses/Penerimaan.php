@@ -6,19 +6,21 @@ use App\Controllers\BaseController;
 use App\Models\ProsesModel\PenerimaanModel;
 use App\Models\ProsesModel\PengirisanModel;
 use App\Models\HpaModel;
-
+use App\Models\UsersModel;
 use App\Models\MutuModel;
 use Exception;
 
 class Penerimaan extends BaseController
 {
-    // Memuat model di constructor
     protected $penerimaanModel;
+    protected $userModel;
 
     public function __construct()
     {
         $this->penerimaanModel = new PenerimaanModel();
+        $this->userModel = new UsersModel();
     }
+
     public function index_penerimaan()
     {
         // Mengambil id_user dan nama_user dari session
@@ -211,5 +213,62 @@ class Penerimaan extends BaseController
         } else {
             return $this->response->setJSON(['error' => 'ID Penerimaan tidak ditemukan.']);
         }
+    }
+
+    public function edit_penerimaan()
+    {
+        $id_penerimaan = $this->request->getGet('id_penerimaan');
+
+        if (!$id_penerimaan) {
+            throw new \CodeIgniter\Exceptions\PageNotFoundException('ID penerimaan tidak ditemukan.');
+        }
+
+        // Ambil data penerimaan berdasarkan ID
+        $penerimaanData = $this->penerimaanModel->find($id_penerimaan);
+
+        if (!$penerimaanData) {
+            throw new \CodeIgniter\Exceptions\PageNotFoundException('Data penerimaan tidak ditemukan.');
+        }
+
+        // Ambil data users dengan status_user = 'Analis'
+        // Pastikan nama model benar
+        $users = $this->userModel->where('status_user', 'Analis')->findAll();
+
+        $data = [
+            'penerimaanData' => $penerimaanData,
+            'users' => $users, // Tambahkan data users ke view
+            'id_user' => session()->get('id_user'),
+            'nama_user' => session()->get('nama_user'),
+        ];
+
+        return view('edit_proses/edit_penerimaan', $data);
+    }
+
+    public function update_penerimaan()
+    {
+        $id_penerimaan = $this->request->getPost('id_penerimaan');
+        // Get individual date and time inputs
+        $mulai_date = $this->request->getPost('mulai_penerimaan_date');
+        $mulai_time = $this->request->getPost('mulai_penerimaan_time');
+        $selesai_date = $this->request->getPost('selesai_penerimaan_date');
+        $selesai_time = $this->request->getPost('selesai_penerimaan_time');
+
+        // Combine date and time into one value
+        $mulai_penerimaan = $mulai_date . ' ' . $mulai_time;  // Format: YYYY-MM-DD HH:MM
+        $selesai_penerimaan = $selesai_date . ' ' . $selesai_time;  // Format: YYYY-MM-DD HH:MM
+
+        $data = [
+            'id_user_penerimaan' => $this->request->getPost('id_user_penerimaan'),
+            'status_penerimaan'  => $this->request->getPost('status_penerimaan'),
+            'mulai_penerimaan'   => $mulai_penerimaan,
+            'selesai_penerimaan' => $selesai_penerimaan,
+            'updated_at'         => date('Y-m-d H:i:s'),
+        ];
+
+        if (!$this->penerimaanModel->update($id_penerimaan, $data)) {
+            return redirect()->back()->with('error', 'Gagal mengupdate data.')->withInput();
+        }
+
+        return redirect()->to(base_url('exam/index_exam'))->with('success', 'Data berhasil diperbarui.');
     }
 }

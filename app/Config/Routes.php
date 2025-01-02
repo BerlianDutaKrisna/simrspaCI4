@@ -50,6 +50,8 @@ $routes->group('penerimaan', ['namespace' => 'App\Controllers\Proses'], function
     $routes->post('proses_penerimaan', 'Penerimaan::proses_penerimaan');
 });
 $routes->get('penerimaan/penerimaan_details', 'Proses\Penerimaan::penerimaan_details');
+$routes->get('penerimaan/edit_penerimaan', 'Proses\Penerimaan::edit_penerimaan');
+$routes->post('penerimaan/update_penerimaan', 'Proses\Penerimaan::update_penerimaan');
 
 // Route untuk Pengirisan
 $routes->get('pengirisan/index_pengirisan', 'Proses\Pengirisan::index_pengirisan'); // Menampilkan halaman pengirisan

@@ -61,26 +61,9 @@ class PenerimaanModel extends Model
         $builder->update($data);  // Melakukan update dengan data yang dikirimkan
         return $this->db->affectedRows();  // Mengembalikan jumlah baris yang terpengaruh
     }
-    public function getPenerimaanDetails()
+
+    public function deletePenerimaan($id_penerimaan)
     {
-        // Cek apakah ada id_penerimaan yang dikirim
-        $id_penerimaan = $this->request->getGet('id_penerimaan');
-
-        if ($id_penerimaan) {
-            // Muat model
-            $model = new PenerimaanModel();
-
-            // Ambil data penerimaan berdasarkan id_penerimaan
-            $data = $model->find($id_penerimaan);
-
-            if ($data) {
-                // Kirimkan data dalam format HTML atau JSON
-                return view('penerimaan/detail', ['data' => $data]);
-            } else {
-                return 'Data tidak ditemukan.';
-            }
-        } else {
-            return 'ID Penerimaan tidak ditemukan.';
-        }
+        return $this->delete($id_penerimaan);
     }
 }

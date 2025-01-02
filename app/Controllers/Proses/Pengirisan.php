@@ -41,63 +41,6 @@ class Pengirisan extends BaseController
         return view('proses/pengirisan', $data);
     }
 
-    public function edit_pengirisan()
-    {
-        $id_pengirisan = $this->request->getGet('id_pengirisan');
-
-        if (!$id_pengirisan) {
-            throw new \CodeIgniter\Exceptions\PageNotFoundException('ID pengirisan tidak ditemukan.');
-        }
-
-        // Ambil data pengirisan berdasarkan ID
-        $pengirisanData = $this->pengirisanModel->find($id_pengirisan);
-
-        if (!$pengirisanData) {
-            throw new \CodeIgniter\Exceptions\PageNotFoundException('Data pengirisan tidak ditemukan.');
-        }
-
-        // Ambil data users dengan status_user = 'Analis'
-        // Pastikan nama model benar
-        $users = $this->userModel->where('status_user', 'Analis')->findAll();
-
-        $data = [
-            'pengirisanData' => $pengirisanData,
-            'users' => $users, // Tambahkan data users ke view
-            'id_user' => session()->get('id_user'),
-            'nama_user' => session()->get('nama_user'),
-        ];
-
-        return view('edit_proses/edit_pengirisan', $data);
-    }
-
-    public function update_pengirisan()
-    {
-        $id_pengirisan = $this->request->getPost('id_pengirisan');
-        // Get individual date and time inputs
-        $mulai_date = $this->request->getPost('mulai_pengirisan_date');
-        $mulai_time = $this->request->getPost('mulai_pengirisan_time');
-        $selesai_date = $this->request->getPost('selesai_pengirisan_date');
-        $selesai_time = $this->request->getPost('selesai_pengirisan_time');
-
-        // Combine date and time into one value
-        $mulai_pengirisan = $mulai_date . ' ' . $mulai_time;  // Format: YYYY-MM-DD HH:MM
-        $selesai_pengirisan = $selesai_date . ' ' . $selesai_time;  // Format: YYYY-MM-DD HH:MM
-
-        $data = [
-            'id_user_pengirisan' => $this->request->getPost('id_user_pengirisan'),
-            'status_pengirisan'  => $this->request->getPost('status_pengirisan'),
-            'mulai_pengirisan'   => $mulai_pengirisan,
-            'selesai_pengirisan' => $selesai_pengirisan,
-            'updated_at'         => date('Y-m-d H:i:s'),
-        ];
-
-        if (!$this->pengirisanModel->update($id_pengirisan, $data)) {
-            return redirect()->back()->with('error', 'Gagal mengupdate data.')->withInput();
-        }
-
-        return redirect()->to(base_url('exam/index_exam'))->with('success', 'Data berhasil diperbarui.');
-    }
-
     public function proses_pengirisan()
     {
         // Get user ID from session
@@ -299,5 +242,62 @@ class Pengirisan extends BaseController
         } else {
             return $this->response->setJSON(['success' => false, 'message' => 'ID tidak valid.']);
         }
+    }
+
+    public function edit_pengirisan()
+    {
+        $id_pengirisan = $this->request->getGet('id_pengirisan');
+
+        if (!$id_pengirisan) {
+            throw new \CodeIgniter\Exceptions\PageNotFoundException('ID pengirisan tidak ditemukan.');
+        }
+
+        // Ambil data pengirisan berdasarkan ID
+        $pengirisanData = $this->pengirisanModel->find($id_pengirisan);
+
+        if (!$pengirisanData) {
+            throw new \CodeIgniter\Exceptions\PageNotFoundException('Data pengirisan tidak ditemukan.');
+        }
+
+        // Ambil data users dengan status_user = 'Analis'
+        // Pastikan nama model benar
+        $users = $this->userModel->where('status_user', 'Analis')->findAll();
+
+        $data = [
+            'pengirisanData' => $pengirisanData,
+            'users' => $users, // Tambahkan data users ke view
+            'id_user' => session()->get('id_user'),
+            'nama_user' => session()->get('nama_user'),
+        ];
+
+        return view('edit_proses/edit_pengirisan', $data);
+    }
+
+    public function update_pengirisan()
+    {
+        $id_pengirisan = $this->request->getPost('id_pengirisan');
+        // Get individual date and time inputs
+        $mulai_date = $this->request->getPost('mulai_pengirisan_date');
+        $mulai_time = $this->request->getPost('mulai_pengirisan_time');
+        $selesai_date = $this->request->getPost('selesai_pengirisan_date');
+        $selesai_time = $this->request->getPost('selesai_pengirisan_time');
+
+        // Combine date and time into one value
+        $mulai_pengirisan = $mulai_date . ' ' . $mulai_time;  // Format: YYYY-MM-DD HH:MM
+        $selesai_pengirisan = $selesai_date . ' ' . $selesai_time;  // Format: YYYY-MM-DD HH:MM
+
+        $data = [
+            'id_user_pengirisan' => $this->request->getPost('id_user_pengirisan'),
+            'status_pengirisan'  => $this->request->getPost('status_pengirisan'),
+            'mulai_pengirisan'   => $mulai_pengirisan,
+            'selesai_pengirisan' => $selesai_pengirisan,
+            'updated_at'         => date('Y-m-d H:i:s'),
+        ];
+
+        if (!$this->pengirisanModel->update($id_pengirisan, $data)) {
+            return redirect()->back()->with('error', 'Gagal mengupdate data.')->withInput();
+        }
+
+        return redirect()->to(base_url('exam/index_exam'))->with('success', 'Data berhasil diperbarui.');
     }
 }

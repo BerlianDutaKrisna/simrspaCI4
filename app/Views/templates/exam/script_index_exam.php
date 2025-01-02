@@ -68,9 +68,7 @@
                         $("#modalBody").html(detailHtml);
 
                         var footerHtml = `
-                            <a href="<?= base_url('penerimaan/edit'); ?>?id_penerimaan=${encodeURIComponent(
-                            id_penerimaan
-                        )}" class="btn btn-warning">Edit</a>
+                            <a href="<?= site_url('penerimaan/edit_penerimaan') ?>?id_penerimaan=${id_penerimaan}" class="btn btn-warning">Edit</a>
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
                         `;
                         $("#modalFooter").html(footerHtml);

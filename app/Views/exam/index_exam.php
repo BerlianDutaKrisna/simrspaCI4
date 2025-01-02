@@ -66,14 +66,6 @@
                                                     aria-label="Lihat penerimaan">
                                                     <i class="far fa-eye"></i>
                                                 </button>
-                                                <!-- Tombol Hapus -->
-                                                <button class="btn btn-sm btn-danger"
-                                                    data-toggle="modal"
-                                                    data-target="#deleteModal"
-                                                    data-id_penerimaan="<?= htmlspecialchars($row['id_penerimaan'], ENT_QUOTES, 'UTF-8') ?>"
-                                                    aria-label="Hapus penerimaan">
-                                                    <i class="fas fa-trash-alt"></i>
-                                                </button>
                                             </div>
                                         <?php endif; ?>
                                     </td>
@@ -81,13 +73,13 @@
                                         <?php if (!empty($row['id_pengirisan'])) : ?>
                                             <div class="d-flex justify-content-around">
                                                 <!-- Tombol Lihat -->
-                                                <button class="btn btn-sm btn-warning view-pengirisan"
+                                                <button class="btn btn-sm btn-warning mx-1 view-pengirisan"
                                                     data-id_pengirisan="<?= htmlspecialchars($row['id_pengirisan'], ENT_QUOTES, 'UTF-8') ?>"
                                                     aria-label="Lihat pengirisan">
                                                     <i class="far fa-eye"></i>
                                                 </button>
                                                 <!-- Tombol Hapus -->
-                                                <button class="btn btn-sm btn-danger delete-pengirisan"
+                                                <button class="btn btn-sm btn-danger mx-1 delete-pengirisan"
                                                     data-toggle="modal"
                                                     data-target="#deleteModal"
                                                     data-id_pengirisan="<?= htmlspecialchars($row['id_pengirisan'], ENT_QUOTES, 'UTF-8') ?>"
@@ -191,22 +183,28 @@
                                     <td>
                                         <?php if (!empty($row['id_mutu'])) : ?>
                                             <div class="d-flex justify-content-around">
-                                                <button class="btn btn-sm btn-warning">
+                                                <button class="btn btn-sm btn-warning mx-1">
                                                     <i class="far fa-eye"></i>
                                                 </button>
-                                                <button class="btn btn-sm btn-danger" data-toggle="modal" data-target="#deleteModal" data-id_hpa="<?= $row['id_penerimaan'] ?>" data-kode_hpa="<?= esc($row['kode_hpa']) ?>"><i class="fas fa-trash-alt"></i></button>
+                                                <button class="btn btn-sm btn-danger mx-1" data-toggle="modal" data-target="#deleteModal" data-id_hpa="<?= $row['id_penerimaan'] ?>" data-kode_hpa="<?= esc($row['kode_hpa']) ?>"><i class="fas fa-trash-alt"></i></button>
                                             </div>
                                         <?php endif; ?>
                                     </td>
                                     <td>
                                         <div class="d-flex justify-content-around">
-                                            <a href="<?= base_url('exam/edit_hpa/' . esc($row['id_hpa'])) ?>" class="btn btn-warning btn-sm">
-                                                Edit
+                                            <!-- Tombol Edit -->
+                                            <a href="#" class="btn btn-sm btn-warning mx-1">
+                                                <i class="fas fa-edit"></i> Edit
                                             </a>
-                                            <a href="#" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#deleteModalAll"
-                                                data-id="<?= esc($row['id_hpa']) ?>" data-kode_hpa="<?= esc($row['kode_hpa']) ?>">
-                                                Hapus
-                                            </a>
+                                            <!-- Tombol Hapus -->
+                                            <button class="btn btn-sm btn-danger mx-1 delete-hpa"
+                                                data-toggle="modal"
+                                                data-target="#deleteModal"
+                                                data-id_hpa="<?= htmlspecialchars($row['id_hpa'], ENT_QUOTES, 'UTF-8') ?>"
+                                                data-kode_hpa="<?= htmlspecialchars($row['kode_hpa'], ENT_QUOTES, 'UTF-8') ?>"
+                                                aria-label="Hapus hpa">
+                                                <i class="fas fa-trash-alt"></i> Hapus
+                                            </button>
                                         </div>
                                     </td>
                                 </tr>

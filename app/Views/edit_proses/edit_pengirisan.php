@@ -32,8 +32,6 @@
                         <option value="Proses Pengirisan" <?= old('status_pengirisan', esc($pengirisanData['status_pengirisan'])) == 'Proses Pengirisan' ? 'selected' : '' ?>>Proses Pengirisan</option>
                         <option value="Sudah Diiris" <?= old('status_pengirisan', esc($pengirisanData['status_pengirisan'])) == 'Sudah Diiris' ? 'selected' : '' ?>>Sudah Diiris</option>
                     </select>
-                    <!-- Hidden input field, if needed to store the selected value (optional) -->
-                    <input type="hidden" name="status_pengirisan" value="<?= $pengirisanData['status_pengirisan'] ?>">
                 </div>
             </div>
 
