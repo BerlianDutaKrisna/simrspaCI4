@@ -85,11 +85,12 @@ class Exam extends BaseController
         ]);
     }
 
-    public function update_buku_penerima($id_hpa)
+    public function update_buku_penerima()
     {
         // Set zona waktu Indonesia/Jakarta (opsional jika sudah diatur dalam konfigurasi)
         date_default_timezone_set('Asia/Jakarta');
-
+        // Mendapatkan data dari request
+        $id_hpa = $this->request->getPost('id_hpa');
         // Inisialisasi model
         $hpaModel = new HpaModel();
 
@@ -135,7 +136,7 @@ class Exam extends BaseController
             ]);
         }
     }
-    
+
     public function update($id_hpa)
     {
         // Inisialisasi model
@@ -190,8 +191,9 @@ class Exam extends BaseController
         }
     }
 
-    public function update_status_hpa($id_hpa)
+    public function update_status_hpa()
     {
+        $id_hpa = $this->request->getPost('id_hpa');
         // Inisialisasi model
         $hpaModel = new HpaModel();
 
@@ -263,14 +265,14 @@ class Exam extends BaseController
                 'id_pasien'          => $this->request->getPost('id_pasien'),
                 'unit_asal'          => $this->request->getPost('unit_asal') . ' ' . $this->request->getPost('unit_asal_detail'),
                 'dokter_pengirim' => $this->request->getPost('dokter_pengirim_custom')
-                ? $this->request->getPost('dokter_pengirim_custom')
-                : $this->request->getPost('dokter_pengirim'),
+                    ? $this->request->getPost('dokter_pengirim_custom')
+                    : $this->request->getPost('dokter_pengirim'),
                 'tanggal_permintaan' => $this->request->getPost('tanggal_permintaan') ?: null,
                 'tanggal_hasil'      => $this->request->getPost('tanggal_hasil') ?: null,
                 'lokasi_spesimen'    => $this->request->getPost('lokasi_spesimen'),
                 'tindakan_spesimen' => $this->request->getPost('tindakan_spesimen_custom')
-                ? $this->request->getPost('tindakan_spesimen_custom')
-                : $this->request->getPost('tindakan_spesimen'),
+                    ? $this->request->getPost('tindakan_spesimen_custom')
+                    : $this->request->getPost('tindakan_spesimen'),
                 'diagnosa_klinik'    => $this->request->getPost('diagnosa_klinik'),
                 'status_hpa'         => $this->request->getPost('status_hpa'),
             ];
@@ -316,22 +318,22 @@ class Exam extends BaseController
             // Update id_penerimaan pada tabel hpa
             $hpaModel->update($id_hpa, ['id_penerimaan' => $id_penerimaan]);
 
-             // Data untuk tabel mutu
-        $mutuData = [
-            'id_hpa'            => $id_hpa,  // Menambahkan id_hpa yang baru
-        ];
+            // Data untuk tabel mutu
+            $mutuData = [
+                'id_hpa'            => $id_hpa,  // Menambahkan id_hpa yang baru
+            ];
 
-        // Simpan data ke tabel mutu
-        $mutuModel = new MutuModel();
-        if (!$mutuModel->insert($mutuData)) {
-            throw new Exception('Gagal menyimpan data mutu.');
-        }
+            // Simpan data ke tabel mutu
+            $mutuModel = new MutuModel();
+            if (!$mutuModel->insert($mutuData)) {
+                throw new Exception('Gagal menyimpan data mutu.');
+            }
 
-        // Ambil id_mutu yang baru saja disimpan
-        $id_mutu = $mutuModel->getInsertID();
+            // Ambil id_mutu yang baru saja disimpan
+            $id_mutu = $mutuModel->getInsertID();
 
-        // Update id_mutu pada tabel hpa
-        $hpaModel->update($id_hpa, ['id_mutu' => $id_mutu]);
+            // Update id_mutu pada tabel hpa
+            $hpaModel->update($id_hpa, ['id_mutu' => $id_mutu]);
 
             // Jika berhasil, redirect ke halaman dashboard
             return redirect()->to('/dashboard')->with('success', 'Data berhasil disimpan!');
@@ -339,5 +341,40 @@ class Exam extends BaseController
             // Jika terjadi error, tampilkan pesan error
             return redirect()->back()->withInput()->with('error', $e->getMessage());
         }
+    }
+    public function delete()
+    {
+        // Mendapatkan data dari request
+        $id_hpa = $this->request->getPost('id_hpa');
+
+        // Cek apakah id_hpa valid
+        if ($id_hpa) {
+            // Inisialisasi model
+            $hpaModel = new HpaModel();
+
+            // Ambil instance dari database service
+            $db = \Config\Database::connect();
+
+            // Mulai transaksi untuk memastikan kedua operasi berjalan atomik
+            $db->transStart();
+
+            // Hapus data dari tabel hpa
+            $deleteHpa = $hpaModel->delete($id_hpa);
+
+            // Cek apakah delete berhasil
+            if ($deleteHpa) {
+                // Selesaikan transaksi
+                $db->transComplete();
+
+                // Cek apakah transaksi berhasil
+                if ($db->transStatus() === FALSE) {
+                    return $this->response->setJSON(['success' => false, 'message' => 'Gagal menghapus data.']);
+                }
+            } else {
+                // Jika id_hpa tidak valid, kirimkan response error
+                return $this->response->setJSON(['success' => false, 'message' => 'ID HPA tidak valid.']);
+            }
+        }
+        return $this->response->setJSON(['success' => true, 'message' => 'Data berhasil dihapus.']);
     }
 }

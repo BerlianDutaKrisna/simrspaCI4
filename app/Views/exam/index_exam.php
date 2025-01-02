@@ -78,12 +78,13 @@
                                                     aria-label="Lihat pengirisan">
                                                     <i class="far fa-eye"></i>
                                                 </button>
-                                                <!-- Tombol Hapus -->
+                                                <!-- Tombol Hapus Pengirisan -->
                                                 <button class="btn btn-sm btn-danger mx-1 delete-pengirisan"
                                                     data-toggle="modal"
                                                     data-target="#deleteModal"
                                                     data-id_pengirisan="<?= htmlspecialchars($row['id_pengirisan'], ENT_QUOTES, 'UTF-8') ?>"
                                                     data-id_hpa="<?= htmlspecialchars($row['id_hpa'], ENT_QUOTES, 'UTF-8') ?>"
+                                                    data-action="pengirisan"
                                                     aria-label="Hapus pengirisan">
                                                     <i class="fas fa-trash-alt"></i>
                                                 </button>
@@ -196,12 +197,12 @@
                                             <a href="<?= base_url('exam/edit_exam/' . esc($row['id_hpa'])) ?>" class="btn btn-sm btn-warning mx-1">
                                                 <i class="fas fa-edit"></i> Edit
                                             </a>
-                                            <!-- Tombol Hapus -->
+                                            <!-- Tombol Hapus HPA -->
                                             <button class="btn btn-sm btn-danger mx-1 delete-hpa"
                                                 data-toggle="modal"
                                                 data-target="#deleteModal"
                                                 data-id_hpa="<?= htmlspecialchars($row['id_hpa'], ENT_QUOTES, 'UTF-8') ?>"
-                                                data-kode_hpa="<?= htmlspecialchars($row['kode_hpa'], ENT_QUOTES, 'UTF-8') ?>"
+                                                data-action="hpa"
                                                 aria-label="Hapus hpa">
                                                 <i class="fas fa-trash-alt"></i> Hapus
                                             </button>
@@ -222,49 +223,7 @@
     </div>
 </div>
 
-<!-- Modal Status Hpa -->
-<div class="modal fade" id="statusHpaModal" tabindex="-1" role="dialog" aria-labelledby="statusHpaModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="statusHpaModalLabel">Edit Status Hpa</h5>
-                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">×</span>
-                </button>
-            </div>
-            <form action="<?= base_url('exam/update_status_hpa') ?>/<?= esc($row['id_hpa']) ?>" method="POST">
-                <div class="modal-body">
-                    <input type="hidden" id="id_hpa" name="id_hpa" value="">
-                    <div class="form-group">
-                        <label for="status_hpa">Status Hpa</label>
-                        <select class="form-control" id="status_hpa" name="status_hpa">
-                            <option value="Belum Diproses" <?= old('status_hpa', esc($row['status_hpa'])) == 'Belum Diproses' ? 'selected' : '' ?>>Belum Diproses</option>
-                            <option value="Terdaftar" <?= old('status_hpa', esc($row['status_hpa'])) == 'Terdaftar' ? 'selected' : '' ?>>Terdaftar</option>
-                            <option value="Penerimaan" <?= old('status_hpa', esc($row['status_hpa'])) == 'Penerimaan' ? 'selected' : '' ?>>Penerimaan</option>
-                            <option value="Pengirisan" <?= old('status_hpa', esc($row['status_hpa'])) == 'Pengirisan' ? 'selected' : '' ?>>Pengirisan</option>
-                            <option value="Pemotongan" <?= old('status_hpa', esc($row['status_hpa'])) == 'Pemotongan' ? 'selected' : '' ?>>Pemotongan</option>
-                            <option value="Pemprosesan" <?= old('status_hpa', esc($row['status_hpa'])) == 'Pemprosesan' ? 'selected' : '' ?>>Pemprosesan</option>
-                            <option value="Penanaman" <?= old('status_hpa', esc($row['status_hpa'])) == 'Penanaman' ? 'selected' : '' ?>>Penanaman</option>
-                            <option value="Pemotongan Tipis" <?= old('status_hpa', esc($row['status_hpa'])) == 'Pemotongan Tipis' ? 'selected' : '' ?>>Terdaftar</option>
-                            <option value="Pewarnaan" <?= old('status_hpa', esc($row['status_hpa'])) == 'Pewarnaan' ? 'selected' : '' ?>>Pewarnaan</option>
-                            <option value="Pembacaan" <?= old('status_hpa', esc($row['status_hpa'])) == 'Pembacaan' ? 'selected' : '' ?>>Pembacaan</option>
-                            <option value="Penulisan" <?= old('status_hpa', esc($row['status_hpa'])) == 'Penulisan' ? 'selected' : '' ?>>Penulisan</option>
-                            <option value="Pemverifikasi" <?= old('status_hpa', esc($row['status_hpa'])) == 'Pemverifikasi' ? 'selected' : '' ?>>Pemverifikasi</option>
-                            <option value="Pencetakan" <?= old('status_hpa', esc($row['status_hpa'])) == 'Pencetakan' ? 'selected' : '' ?>>Pencetakan</option>
-                            <option value="Selesai Diproses" <?= old('status_hpa', esc($row['status_hpa'])) == 'Selesai Diproses' ? 'selected' : '' ?>>Selesai Diproses</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Batal</button>
-                    <button type="submit" class="btn btn-success">Simpan</button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
-
-<?= $this->include('templates/exam/modal_index_exam') ?>
+<?= $this->include('templates/exam/modal_exam') ?>
 <?= $this->include('templates/notifikasi') ?>
 <?= $this->include('templates/dashboard/footer_dashboard') ?>
-<?= $this->include('templates/exam/script_index_exam') ?>
+<?= $this->include('templates/exam/script_exam') ?>

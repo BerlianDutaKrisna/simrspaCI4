@@ -21,17 +21,92 @@
             return time + ", " + day + "-" + month + "-" + year;
         }
 
+
+        // Menangani event click pada tombol Penerima untuk memunculkan modal
+        $('#penerimaModal').on('show.bs.modal', function(event) {
+            var button = $(event.relatedTarget); // Tombol yang memicu modal
+            var id_hpa = button.data('id_hpa'); // Kode HPA
+            var penerima_hpa = button.data('penerima_hpa'); // Nama penerima
+
+            var modal = $(this);
+            modal.find('#id_hpa').val(id_hpa); // Isi id_hpa ke input hidden
+            modal.find('#penerima_hpa').val(""); // Isi penerima_hpa dengan data dari tombol
+        });
         // ==========================
         // Modal Status HPA
         // ==========================
-        $("#statusHpaModal").on("show.bs.modal", function(event) {
-            var button = $(event.relatedTarget);
-            var id_hpa = button.data("id_hpa");
-            var status_hpa = button.data("status_hpa");
+        $('#statusHpaModal').on('show.bs.modal', function(event) {
+            var button = $(event.relatedTarget); // Button that triggered the modal
+            var idHpa = button.data('id_hpa'); // Extract id_hpa from data-* attributes
+            var statusHpa = button.data('status_hpa'); // Extract status_hpa
 
             var modal = $(this);
-            modal.find("#id_hpa").val(id_hpa);
-            modal.find("#status_hpa").val(status_hpa);
+            modal.find('.modal-body #id_hpa').val(idHpa); // Set id_hpa in the modal input
+            modal.find('.modal-body #status_hpa').val(statusHpa); // Set status_hpa in the select
+        });
+
+        // ==========================
+        // Hapus DATA
+        // ==========================
+        $(document).on("click", ".delete-hpa, .delete-pengirisan", function() {
+            var action = $(this).data("action"); // Menyimpan data action (hpa atau pengirisan)
+            var id_hpa = $(this).data("id_hpa");
+            var id_pengirisan = $(this).data("id_pengirisan");
+
+            console.log("Action:", action);
+            console.log("ID HPA:", id_hpa);
+            console.log("ID Pengirisan:", id_pengirisan);
+
+            // Menyimpan data ID yang dibutuhkan untuk operasi delete
+            $("#confirmDelete").data("action", action);
+            $("#confirmDelete").data("id_hpa", id_hpa);
+            $("#confirmDelete").data("id_pengirisan", id_pengirisan);
+
+            // Menampilkan modal konfirmasi
+            $('#deleteModal').modal('show');
+        });
+
+        // Menangani klik konfirmasi hapus pada modal
+        $("#confirmDelete").on("click", function() {
+            var action = $(this).data("action");
+            var id_hpa = $(this).data("id_hpa");
+            var id_pengirisan = $(this).data("id_pengirisan");
+
+            var url = "";
+            var data = {};
+
+            if (action === "hpa") {
+                url = "<?= base_url('exam/delete'); ?>"; // URL penghapusan HPA
+                data = {
+                    id_hpa: id_hpa
+                };
+            } else if (action === "pengirisan") {
+                url = "<?= base_url('pengirisan/delete'); ?>"; // URL penghapusan pengirisan
+                data = {
+                    id_pengirisan: id_pengirisan,
+                    id_hpa: id_hpa
+                };
+            }
+
+            // Mengirimkan permintaan AJAX untuk menghapus data
+            $.ajax({
+                url: url,
+                type: "POST",
+                data: data,
+                success: function(response) {
+                    if (response.success) {
+                        location.reload(); // Refresh halaman setelah operasi
+                    } else {
+                        alert("Gagal menghapus data.");
+                    }
+                },
+                error: function() {
+                    alert("Terjadi kesalahan pada server.");
+                }
+            });
+
+            // Menutup modal setelah konfirmasi hapus
+            $('#deleteModal').modal('hide');
         });
 
         // ==========================
@@ -127,48 +202,6 @@
                     );
                 },
             });
-        });
-        // Hapus Pengirisan
-        $(document).on("click", ".delete-pengirisan", function() {
-            var id_pengirisan = $(this).data("id_pengirisan");
-            var id_hpa = $(this).data("id_hpa");
-
-            console.log("ID pengirisan:", id_pengirisan);
-
-            // Menyimpan data ID yang dibutuhkan untuk operasi delete
-            $("#confirmDelete").data("id_pengirisan", id_pengirisan);
-            $("#confirmDelete").data("id_hpa", id_hpa);
-
-            // Menampilkan modal konfirmasi
-            $('#deleteModal').modal('show');
-        });
-
-        // Menangani klik konfirmasi hapus pada modal
-        $("#confirmDelete").on("click", function() {
-            var id_pengirisan = $(this).data("id_pengirisan");
-            var id_hpa = $(this).data("id_hpa");
-
-            // Mengirimkan permintaan AJAX untuk menghapus data
-            $.ajax({
-                url: "<?= base_url('pengirisan/delete'); ?>",
-                type: "POST",
-                data: {
-                    id_pengirisan: id_pengirisan,
-                    id_hpa: id_hpa
-                },
-                success: function(response) {
-                    if (response.success) {
-                        location.reload(); // Refresh halaman setelah operasi
-                    } else {
-                        alert("Gagal menghapus data.");
-                    }
-                },
-                error: function() {
-                    alert("Terjadi kesalahan pada server.");
-                }
-            });
-            // Menutup modal setelah konfirmasi hapus
-            $('#deleteModal').modal('hide');
         });
     });
 </script>

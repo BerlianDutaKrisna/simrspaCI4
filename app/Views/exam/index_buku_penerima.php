@@ -57,7 +57,7 @@
                                 <td><?= esc($row['hasil_hpa'] ?? 'Belum Ada Hasil') ?></td>
                                 <td class="text-center">
                                     <a href="#"
-                                        class="btn btn-info btn-sm"
+                                        class="btn btn-info btn-sm penerima-btn"
                                         data-toggle="modal"
                                         data-target="#penerimaModal"
                                         data-id_hpa="<?= esc($row['id_hpa']) ?>"
@@ -74,7 +74,7 @@
                         <?php endforeach; ?>
                     <?php else : ?>
                         <tr>
-                            <td colspan="14" class="text-center">Tidak ada data yang tersedia</td>
+                            <td colspan="17" class="text-center">Tidak ada data yang tersedia</td>
                         </tr>
                     <?php endif; ?>
                 </tbody>
@@ -83,45 +83,7 @@
     </div>
 </div>
 
-<!-- Modal Penerima -->
-<div class="modal fade" id="penerimaModal" tabindex="-1" role="dialog" aria-labelledby="penerimaModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="penerimaModalLabel">Penerima Hasil HPA</h5>
-                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">×</span>
-                </button>
-            </div>
-            <form action="<?= base_url('exam/update_buku_penerima') ?>/<?= esc($row['id_hpa']) ?>" method="POST">
-                <div class="modal-body">
-                    <input type="hidden" id="id_hpa" name="id_hpa" value="">
-                    <div class="form-group">
-                        <label for="penerima_hpa">Nama Penerima / Hubungan dengan Pasien</label>
-                        <input type="text" class="form-control" id="penerima_hpa" name="penerima_hpa" required>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Batal</button>
-                    <button type="submit" class="btn btn-primary">Simpan</button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
-
+<?= $this->include('templates/exam/modal_exam') ?>
 <?= $this->include('templates/notifikasi') ?>
-<?= $this->include('templates/dashboard/footer_dashboard'); ?>
-
-<script>
-    // Menangani event click pada tombol Penerima untuk memunculkan modal
-    $('#penerimaModal').on('show.bs.modal', function(event) {
-        var button = $(event.relatedTarget); // Tombol yang memicu modal
-        var id_hpa = button.data('id_hpa'); // Kode HPA
-        var penerima_hpa = button.data('penerima_hpa'); // Nama penerima
-
-        var modal = $(this);
-        modal.find('#id_hpa').val(id_hpa); // Isi id_hpa ke input hidden
-        modal.find('#penerima_hpa').val(""); // Isi penerima_hpa jika ada
-    });
-</script>
+<?= $this->include('templates/dashboard/footer_dashboard') ?>
+<?= $this->include('templates/exam/script_exam') ?>

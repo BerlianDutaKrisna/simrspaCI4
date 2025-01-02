@@ -39,9 +39,9 @@ $routes->post('exam/insert', 'Exam::insert'); // Menangani form POST dari regist
 $routes->get('exam/edit_exam/(:segment)', 'Exam::edit_exam/$1');  // Rute untuk menampilkan form edit
 $routes->post('/exam/update/(:segment)', 'Exam::update/$1');  // Rute untuk menangani update data
 $routes->get('exam/index_buku_penerima', 'Exam::index_buku_penerima');
-$routes->post('exam/update_buku_penerima/(:segment)', 'Exam::update_buku_penerima/$1');  // Adjusted for two segments
-$routes->post('exam/update_status_hpa/(:segment)', 'Exam::update_status_hpa/$1');
-
+$routes->post('exam/update_buku_penerima', 'Exam::update_buku_penerima');  // Adjusted for two segments
+$routes->post('exam/update_status_hpa', 'Exam::update_status_hpa');
+$routes->post('exam/delete', 'Exam::delete');
 
 
 // Route untuk Penerimaan
