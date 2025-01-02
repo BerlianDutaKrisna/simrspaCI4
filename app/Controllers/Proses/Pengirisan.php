@@ -6,19 +6,21 @@ use App\Controllers\BaseController;
 use App\Models\ProsesModel\PengirisanModel;
 use App\Models\ProsesModel\PemotonganModel;
 use App\Models\HpaModel;
+use App\Models\UsersModel;
 use App\Models\MutuModel;
 use Exception;
 
 class Pengirisan extends BaseController
 {
+    protected $pengirisanModel;
+    protected $userModel;
+
     public function __construct()
     {
-        // Mengecek apakah user sudah login dengan menggunakan session
-        if (!session()->has('id_user')) {
-            session()->setFlashdata('error', 'Login terlebih dahulu');
-            return redirect()->to('/login');
-        }
+        $this->pengirisanModel = new PengirisanModel();
+        $this->userModel = new UsersModel();
     }
+
 
     public function index_pengirisan()
     {
@@ -34,9 +36,66 @@ class Pengirisan extends BaseController
             'id_user' => session()->get('id_user'),
             'nama_user' => session()->get('nama_user'),
         ];
-        
+
         // Mengirim data ke view untuk ditampilkan
         return view('proses/pengirisan', $data);
+    }
+
+    public function edit_pengirisan()
+    {
+        $id_pengirisan = $this->request->getGet('id_pengirisan');
+
+        if (!$id_pengirisan) {
+            throw new \CodeIgniter\Exceptions\PageNotFoundException('ID pengirisan tidak ditemukan.');
+        }
+
+        // Ambil data pengirisan berdasarkan ID
+        $pengirisanData = $this->pengirisanModel->find($id_pengirisan);
+
+        if (!$pengirisanData) {
+            throw new \CodeIgniter\Exceptions\PageNotFoundException('Data pengirisan tidak ditemukan.');
+        }
+
+        // Ambil data users dengan status_user = 'Analis'
+        // Pastikan nama model benar
+        $users = $this->userModel->where('status_user', 'Analis')->findAll();
+
+        $data = [
+            'pengirisanData' => $pengirisanData,
+            'users' => $users, // Tambahkan data users ke view
+            'id_user' => session()->get('id_user'),
+            'nama_user' => session()->get('nama_user'),
+        ];
+
+        return view('edit_proses/edit_pengirisan', $data);
+    }
+
+    public function update_pengirisan()
+    {
+        $id_pengirisan = $this->request->getPost('id_pengirisan');
+        // Get individual date and time inputs
+        $mulai_date = $this->request->getPost('mulai_pengirisan_date');
+        $mulai_time = $this->request->getPost('mulai_pengirisan_time');
+        $selesai_date = $this->request->getPost('selesai_pengirisan_date');
+        $selesai_time = $this->request->getPost('selesai_pengirisan_time');
+
+        // Combine date and time into one value
+        $mulai_pengirisan = $mulai_date . ' ' . $mulai_time;  // Format: YYYY-MM-DD HH:MM
+        $selesai_pengirisan = $selesai_date . ' ' . $selesai_time;  // Format: YYYY-MM-DD HH:MM
+
+        $data = [
+            'id_user_pengirisan' => $this->request->getPost('id_user_pengirisan'),
+            'status_pengirisan'  => $this->request->getPost('status_pengirisan'),
+            'mulai_pengirisan'   => $mulai_pengirisan,
+            'selesai_pengirisan' => $selesai_pengirisan,
+            'updated_at'         => date('Y-m-d H:i:s'),
+        ];
+
+        if (!$this->pengirisanModel->update($id_pengirisan, $data)) {
+            return redirect()->back()->with('error', 'Gagal mengupdate data.')->withInput();
+        }
+
+        return redirect()->to(base_url('exam/index_exam'))->with('success', 'Data berhasil diperbarui.');
     }
 
     public function proses_pengirisan()
@@ -76,7 +135,7 @@ class Pengirisan extends BaseController
             if (!empty($selectedIds)) {
                 foreach ($selectedIds as $id) {
                     list($id_pengirisan, $id_hpa, $id_mutu) = explode(':', $id);
-                    
+
                     $this->processAction($action, $id_pengirisan, $id_hpa, $id_user, $id_mutu);
                 }
 
@@ -112,19 +171,19 @@ class Pengirisan extends BaseController
                 case 'selesai':
                     // Update data pengirisan ketika selesai
                     $pengirisanModel->updatePengirisan($id_pengirisan, [
-                        'id_user_pengirisan' => $id_user,  
-                        'status_pengirisan' => 'Sudah Diiris', 
-                        'selesai_pengirisan' => date('Y-m-d H:i:s'), 
+                        'id_user_pengirisan' => $id_user,
+                        'status_pengirisan' => 'Sudah Diiris',
+                        'selesai_pengirisan' => date('Y-m-d H:i:s'),
                     ]);
-                    
+
                     break;
                     // TOMBOL KEMBALIKAN
                 case 'kembalikan':
                     $pengirisanModel->updatePengirisan($id_pengirisan, [
-                        'id_user_pengirisan' => null,  
-                        'status_pengirisan' => 'Belum Diiris', 
+                        'id_user_pengirisan' => null,
+                        'status_pengirisan' => 'Belum Diiris',
                         'mulai_pengirisan' => null,
-                        'selesai_pengirisan' => null, 
+                        'selesai_pengirisan' => null,
                     ]);
                     break;
 
@@ -181,8 +240,8 @@ class Pengirisan extends BaseController
                     'pengirisan.id_hpa = hpa.id_hpa',
                     'left'
                 ) // Relasi dengan tabel hpa
-                ->join('patient', 'hpa.id_pasien = patient.id_pasien', 'left') 
-                ->join('users', 'pengirisan.id_user_pengirisan = users.id_user', 'left') 
+                ->join('patient', 'hpa.id_pasien = patient.id_pasien', 'left')
+                ->join('users', 'pengirisan.id_user_pengirisan = users.id_user', 'left')
                 ->join('mutu', 'hpa.id_hpa = mutu.id_hpa', 'left')
                 ->where('pengirisan.id_pengirisan', $id_pengirisan)
                 ->first();
@@ -242,4 +301,3 @@ class Pengirisan extends BaseController
         }
     }
 }
-

@@ -59,6 +59,8 @@ $routes->group('pengirisan', ['namespace' => 'App\Controllers\Proses'], function
 });
 $routes->get('pengirisan/pengirisan_details', 'Proses\Pengirisan::pengirisan_details');
 $routes->post('pengirisan/delete', 'Proses\Pengirisan::delete');
+$routes->get('pengirisan/edit_pengirisan', 'Proses\Pengirisan::edit_pengirisan');
+$routes->post('pengirisan/update_pengirisan', 'Proses\Pengirisan::update_pengirisan');
 
 // Route untuk Pemotongan
 $routes->get('pemotongan/index_pemotongan', 'Proses\Pemotongan::index_pemotongan'); // Menampilkan halaman pemotongan

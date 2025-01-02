@@ -14,9 +14,9 @@
                 <thead>
                     <tr>
                         <th>No</th>
-                        <th>Norm Pasien</th>
                         <th>Kode Hpa</th>
                         <th>Nama Pasien</th>
+                        <th>Norm Pasien</th>
                         <th>Jenis Kelamin Pasien</th>
                         <th>Tanggal Lahir Pasien</th>
                         <th>Alamat Pasien</th>
@@ -38,9 +38,9 @@
                         <?php foreach ($hpaData as $row) : ?>
                             <tr>
                                 <td><?= $i ?></td>
-                                <td><?= esc($row['norm_pasien'] ?? 'Belum Diisi') ?></td>
                                 <td><?= esc($row['kode_hpa'] ?? 'Belum Diisi') ?></td>
                                 <td><?= esc($row['nama_pasien'] ?? 'Belum Diisi') ?></td>
+                                <td><?= esc($row['norm_pasien'] ?? 'Belum Diisi') ?></td>
                                 <td><?= esc($row['jenis_kelamin_pasien'] ?? 'Belum Diisi') ?></td>
                                 <td>
                                     <?= empty($row['tanggal_lahir_pasien']) ? 'Belum diisi' : esc(date('d-m-Y', strtotime($row['tanggal_lahir_pasien']))); ?>
