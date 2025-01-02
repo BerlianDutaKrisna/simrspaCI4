@@ -11,11 +11,12 @@
 
         <!-- Form -->
         <form id="mainForm" action="<?= base_url('pemotongan/proses_pemotongan'); ?>" method="POST">
+            <?= csrf_field(); ?>
             <!-- Input Hidden -->
             <input type="hidden" name="action" id="action" value="">
 
             <div class="table-responsive">
-                <table class="table table-bordered table-sm" id="dataTable" width="100%" cellspacing="0">
+                <table class="table table-bordered table-sm text-center" id="dataTable" width="100%" cellspacing="0">
                     <thead>
                         <tr>
                             <th>No</th>
@@ -58,9 +59,17 @@
                                     </td>
                                     <?php if (in_array($row['status_pemotongan'], ["Proses Pemotongan", "Sudah Pemotongan"])): ?>
                                         <td>
-                                            <a href="<?= base_url('exam/edit_exam/' . esc($row['id_hpa'])) ?>" class="btn btn-warning btn-sm">
-                                                <i class="fas fa-pen"></i> Detail
-                                            </a>
+                                            <?php if (session()->get('update_success')): ?>
+                                                <a href="<?= base_url('exam/edit_exam/' . esc($row['id_hpa'])) ?>" class="btn btn-success btn-sm">
+                                                    <i class="fas fa-pen"></i> Detail
+                                                </a>
+                                                <?php session()->remove('update_success'); // Menghapus session setelah ditampilkan 
+                                                ?>
+                                            <?php else: ?>
+                                                <a href="<?= base_url('exam/edit_exam/' . esc($row['id_hpa'])) ?>" class="btn btn-warning btn-sm">
+                                                    <i class="fas fa-pen"></i> Detail
+                                                </a>
+                                            <?php endif; ?>
                                         </td>
                                     <?php else: ?>
                                         <td></td>

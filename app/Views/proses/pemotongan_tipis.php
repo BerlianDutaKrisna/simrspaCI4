@@ -11,11 +11,12 @@
 
         <!-- Form -->
         <form id="mainForm" action="<?= base_url('pemotongan_tipis/proses_pemotongan_tipis'); ?>" method="POST">
+            <?= csrf_field(); ?>
             <!-- Input Hidden -->
             <input type="hidden" name="action" id="action" value="">
 
             <div class="table-responsive">
-                <table class="table table-bordered table-sm" id="dataTable" width="100%" cellspacing="0">
+                <table class="table table-bordered table-sm text-center" id="dataTable" width="100%" cellspacing="0">
                     <thead>
                         <tr>
                             <th>No</th>
@@ -23,6 +24,7 @@
                             <th>Nama Pasien</th>
                             <th>Status Pemotongan Tipis</th>
                             <th>Aksi</th>
+                            <th>Jumlah Slide</th>
                             <th>Analis</th>
                             <th>Mulai Pemotongan Tipis</th>
                             <th>Selesai Pemotongan Tipis</th>
@@ -45,6 +47,7 @@
                                             class="form-control form-control-user"
                                             autocomplete="off">
                                     </td>
+                                    <td><?= $row['jumlah_slide']; ?></td>
                                     <td><?= $row['nama_user_pemotongan_tipis']; ?></td>
                                     <td>
                                         <?= empty($row['mulai_pemotongan_tipis']) ? '-' : esc(date('H:i , d-m-Y', strtotime($row['mulai_pemotongan_tipis']))); ?>

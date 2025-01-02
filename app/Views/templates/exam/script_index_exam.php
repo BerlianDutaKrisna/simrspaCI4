@@ -170,6 +170,5 @@
             // Menutup modal setelah konfirmasi hapus
             $('#deleteModal').modal('hide');
         });
-
     });
 </script>

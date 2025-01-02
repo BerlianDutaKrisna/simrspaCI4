@@ -11,11 +11,12 @@
 
         <!-- Form -->
         <form id="mainForm" action="<?= base_url('penanaman/proses_penanaman'); ?>" method="POST">
+            <?= csrf_field(); ?>
             <!-- Input Hidden -->
             <input type="hidden" name="action" id="action" value="">
 
             <div class="table-responsive">
-                <table class="table table-bordered table-sm" id="dataTable" width="100%" cellspacing="0">
+                <table class="table table-bordered table-sm text-center" id="dataTable" width="100%" cellspacing="0">
                     <thead>
                         <tr>
                             <th>No</th>
@@ -24,6 +25,7 @@
                             <th>Status Penanaman</th>
                             <th>Aksi</th>
                             <th>Kualitas Sediaan</th>
+                            <th>Jumlah Slide</th>
                             <th>Analis</th>
                             <th>Mulai Penanaman</th>
                             <th>Selesai Penanaman</th>
@@ -65,6 +67,7 @@
                                             <?= $row['total_nilai_mutu']; ?> %
                                         <?php endif; ?>
                                     </td>
+                                    <td><?= $row['jumlah_slide']; ?></td>
                                     <td><?= $row['nama_user_penanaman']; ?></td>
                                     <td>
                                         <?= empty($row['mulai_penanaman']) ? '-' : esc(date('H:i , d-m-Y', strtotime($row['mulai_penanaman']))); ?>

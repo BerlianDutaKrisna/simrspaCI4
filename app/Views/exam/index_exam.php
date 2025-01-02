@@ -193,7 +193,7 @@
                                     <td>
                                         <div class="d-flex justify-content-around">
                                             <!-- Tombol Edit -->
-                                            <a href="#" class="btn btn-sm btn-warning mx-1">
+                                            <a href="<?= base_url('exam/edit_exam/' . esc($row['id_hpa'])) ?>" class="btn btn-sm btn-warning mx-1">
                                                 <i class="fas fa-edit"></i> Edit
                                             </a>
                                             <!-- Tombol Hapus -->

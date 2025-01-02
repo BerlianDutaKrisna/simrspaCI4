@@ -109,6 +109,87 @@ class Exam extends BaseController
         return redirect()->to('exam/index_buku_penerima')->with('success', 'Penerima berhasil disimpan.');
     }
 
+    // Menampilkan form edit exam
+    public function edit_exam($id_hpa)
+    {
+        session()->set('previous_url', previous_url());
+        $hpaModel = new HpaModel();
+
+        // Ambil id_user dan nama_user dari session yang sedang aktif
+        $data['id_user'] = session()->get('id_user');
+        $data['nama_user'] = session()->get('nama_user');
+
+        // Ambil data hpa berdasarkan ID
+        $hpa = $hpaModel->getHpaWithPatient($id_hpa);
+
+        // Jika hpa ditemukan, tampilkan form edit
+        if ($hpa) {
+            // Menggabungkan data hpa dengan session data
+            $data['hpa'] = $hpa;
+            // Kirimkan data ke view
+            return view('exam/edit_exam', $data);
+        } else {
+            // Jika tidak ditemukan, tampilkan pesan error
+            return redirect()->back()->withInput()->with('message', [
+                'error' => 'hpa tidak ditemukan.'
+            ]);
+        }
+    }
+    
+    public function update($id_hpa)
+    {
+        // Inisialisasi model
+        $hpaModel = new HpaModel();
+        $id_hpa = $this->request->getPost('id_hpa');
+
+        $validation = \Config\Services::validation();
+        $validation->setRules([
+            'kode_hpa' => [
+                'rules' => 'required|is_unique[hpa.kode_hpa,id_hpa,' . $id_hpa . ']',
+                'errors' => [
+                    'required' => 'Kode Hpa harus diisi.',
+                    'is_unique' => 'Kode Hpa sudah terdaftar!',
+                ],
+            ],
+        ]);
+
+        if (!$this->validate($validation->getRules())) {
+            return redirect()->back()->withInput()->with('errors', $validation->getErrors());
+        }
+
+        // Ambil data dari request
+        $data = $this->request->getPost();
+        // Proses upload file untuk foto makroskopis
+        // if ($fileMakro = $this->request->getFile('foto_makroskopis_hpa')) {
+        //     if ($fileMakro->isValid() && !$fileMakro->hasMoved()) {
+        //         $data['foto_makroskopis_hpa'] = $fileMakro->store('uploads/hpa');
+        //     }
+        // }
+
+        // Proses upload file untuk foto mikroskopis
+        // if ($fileMikro = $this->request->getFile('foto_mikroskopis_hpa')) {
+        //     if ($fileMikro->isValid() && !$fileMikro->hasMoved()) {
+        //         $data['foto_mikroskopis_hpa'] = $fileMikro->store('uploads/hpa');
+        //     }
+        // }
+
+        // Jika jumlah slide "lainnya" dipilih
+        if ($this->request->getPost('jumlah_slide') === 'lainnya') {
+            $data['jumlah_slide'] = $this->request->getPost('jumlah_slide_custom');
+        }
+
+        // Update data
+        if ($hpaModel->update($id_hpa, $data)) {
+            // Menyimpan status pembaruan di session
+            session()->setFlashdata('update_success', true);
+
+            // Redirect kembali ke halaman sebelumnya (dari session)
+            return redirect()->to(session()->get('previous_url'))->with('success', 'Data berhasil diperbarui.');
+        } else {
+            return redirect()->back()->with('error', 'Gagal memperbarui data.');
+        }
+    }
+
     public function update_status_hpa($id_hpa)
     {
         // Inisialisasi model
@@ -258,30 +339,5 @@ class Exam extends BaseController
             // Jika terjadi error, tampilkan pesan error
             return redirect()->back()->withInput()->with('error', $e->getMessage());
         }
-    }
-    // Menampilkan form edit pengguna
-    public function edit_exam($id_hpa)
-    {
-    $hpaModel = new HpaModel();
-    
-    // Ambil id_user dan nama_user dari session yang sedang aktif
-    $data['id_user'] = session()->get('id_user');
-    $data['nama_user'] = session()->get('nama_user');
-    
-    // Ambil data hpa berdasarkan ID
-    $hpa = $hpaModel->getHpaWithPatient($id_hpa);
-
-    // Jika hpa ditemukan, tampilkan form edit
-    if ($hpa) {
-        // Menggabungkan data hpa dengan session data
-        $data['hpa'] = $hpa;
-        // Kirimkan data ke view
-        return view('exam/edit_exam', $data);
-    } else {
-        // Jika tidak ditemukan, tampilkan pesan error
-        return redirect()->back()->withInput()->with('message', [
-            'error' => 'hpa tidak ditemukan.'
-        ]);
-    }
     }
 }

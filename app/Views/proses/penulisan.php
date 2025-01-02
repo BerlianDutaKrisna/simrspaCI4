@@ -11,11 +11,12 @@
 
         <!-- Form -->
         <form id="mainForm" action="<?= base_url('penulisan/proses_penulisan'); ?>" method="POST">
+            <?= csrf_field(); ?>
             <!-- Input Hidden -->
             <input type="hidden" name="action" id="action" value="">
 
             <div class="table-responsive">
-                <table class="table table-bordered table-sm" id="dataTable" width="100%" cellspacing="0">
+                <table class="table table-bordered table-sm text-center" id="dataTable" width="100%" cellspacing="0">
                     <thead>
                         <tr>
                             <th>No</th>
