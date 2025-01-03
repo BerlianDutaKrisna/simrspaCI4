@@ -217,12 +217,12 @@ class Pengirisan extends BaseController
             $db->transStart();
 
             // Hapus data dari tabel pengirisan
-            $deleteResult = $pengirisanModel->deletePengirisan($id_pengirisan);
+            $deleteResult = $pengirisanModel->deletepengirisan($id_pengirisan);
 
             // Cek apakah delete berhasil
             if ($deleteResult) {
                 // Update field id_pengirisan menjadi null pada tabel hpa
-                $hpaModel->updateIdPengirisan($id_hpa);
+                $hpaModel->updateIdpengirisan($id_hpa);
 
                 // Selesaikan transaksi
                 $db->transComplete();

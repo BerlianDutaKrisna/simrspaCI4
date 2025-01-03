@@ -64,7 +64,7 @@ class PengirisanModel extends Model
         return $this->db->affectedRows();  // Mengembalikan jumlah baris yang terpengaruh
     }
 
-    public function deletePengirisan($id_pengirisan)
+    public function deletepengirisan($id_pengirisan)
     {
         return $this->delete($id_pengirisan);
     }

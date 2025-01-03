@@ -62,4 +62,9 @@ class PemotonganModel extends Model
         $builder->update($data);  // Melakukan update dengan data yang dikirimkan
         return $this->db->affectedRows();  // Mengembalikan jumlah baris yang terpengaruh
     }
+
+    public function deletepemotongan($id_pemotongan)
+    {
+        return $this->delete($id_pemotongan);
+    }
 }
