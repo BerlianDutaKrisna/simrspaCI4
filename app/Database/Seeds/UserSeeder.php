@@ -21,7 +21,7 @@ class UserSeeder extends Seeder
             [
                 'username'      => 'analis1',
                 'password_user' => password_hash('analis1', PASSWORD_DEFAULT),  // Enkripsi password
-                'nama_user'     => 'Analis',
+                'nama_user'     => 'Analis 1',
                 'status_user'   => 'Analis',
                 'created_at'    => date('Y-m-d H:i:s'),
                 'updated_at'    => date('Y-m-d H:i:s')
@@ -29,7 +29,7 @@ class UserSeeder extends Seeder
             [
                 'username'      => 'analis2',
                 'password_user' => password_hash('analis2', PASSWORD_DEFAULT),  // Enkripsi password
-                'nama_user'     => 'Analis',
+                'nama_user'     => 'Analis 2',
                 'status_user'   => 'Analis',
                 'created_at'    => date('Y-m-d H:i:s'),
                 'updated_at'    => date('Y-m-d H:i:s')
