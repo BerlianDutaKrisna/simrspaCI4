@@ -6,18 +6,18 @@ use App\Controllers\BaseController;
 use App\Models\ProsesModel\PemotonganModel;
 use App\Models\ProsesModel\PemprosesanModel;
 use App\Models\HpaModel;
-use App\Models\MutuModel;
+use App\Models\UsersModel;
 use Exception;
 
 class Pemotongan extends BaseController
 {
+    protected $pemotonganModel;
+    protected $userModel;
+
     public function __construct()
     {
-        // Mengecek apakah user sudah login dengan menggunakan session
-        if (!session()->has('id_user')) {
-            session()->setFlashdata('error', 'Login terlebih dahulu');
-            return redirect()->to('/login');
-        }
+        $this->pemotonganModel = new PemotonganModel();
+        $this->userModel = new UsersModel();
     }
 
     public function index_pemotongan()
@@ -155,5 +155,146 @@ class Pemotongan extends BaseController
             // Anda bisa melempar exception atau memberikan pesan error yang lebih spesifik
             throw new \Exception('Terjadi kesalahan saat memproses aksi: ' . $e->getMessage());
         }
+    }
+
+    public function pemotongan_details()
+    {
+        // Ambil id_pemotongan dari parameter GET
+        $id_pemotongan = $this->request->getGet('id_pemotongan');
+
+        if ($id_pemotongan) {
+            // Muat model pemotongan
+            $model = new PemotonganModel();
+
+            // Ambil data pemotongan berdasarkan id_pemotongan dan relasi yang ada
+            $data = $model->select(
+                'pemotongan.*, 
+                hpa.*, 
+                patient.*, 
+                users.nama_user AS nama_user_pemotongan,
+                mutu.indikator_1,
+                mutu.indikator_2'
+            )
+                ->join(
+                    'hpa',
+                    'pemotongan.id_hpa = hpa.id_hpa',
+                    'left'
+                ) // Relasi dengan tabel hpa
+                ->join('patient', 'hpa.id_pasien = patient.id_pasien', 'left')
+                ->join('users', 'pemotongan.id_user_pemotongan = users.id_user', 'left')
+                ->join('mutu', 'hpa.id_hpa = mutu.id_hpa', 'left')
+                ->where('pemotongan.id_pemotongan', $id_pemotongan)
+                ->first();
+
+            if ($data) {
+                // Kirimkan data dalam format JSON
+                return $this->response->setJSON($data);
+            } else {
+                return $this->response->setJSON(['error' => 'Data tidak ditemukan.']);
+            }
+        } else {
+            return $this->response->setJSON(['error' => 'ID pemotongan tidak ditemukan.']);
+        }
+    }
+
+    public function delete()
+    {
+        // Mendapatkan data dari request
+        $id_pemotongan = $this->request->getPost('id_pemotongan');
+        $id_hpa = $this->request->getPost('id_hpa');
+
+        if ($id_pemotongan && $id_hpa) {
+            // Load model
+            $pemotonganModel = new PemotonganModel();
+            $hpaModel = new HpaModel();
+
+            // Ambil instance dari database service
+            $db = \Config\Database::connect();
+
+            // Mulai transaksi untuk memastikan kedua operasi berjalan atomik
+            $db->transStart();
+
+            // Hapus data dari tabel pemotongan
+            $deleteResult = $pemotonganModel->deletepemotongan($id_pemotongan);
+
+            // Cek apakah delete berhasil
+            if ($deleteResult) {
+                // Update field id_pemotongan menjadi null pada tabel hpa
+                $hpaModel->updateIdpemotongan($id_hpa);
+
+                // Selesaikan transaksi
+                $db->transComplete();
+
+                // Cek apakah transaksi berhasil
+                if ($db->transStatus() === FALSE) {
+                    return $this->response->setJSON(['success' => false, 'message' => 'Gagal menghapus atau memperbarui data.']);
+                }
+
+                return $this->response->setJSON(['success' => true]);
+            } else {
+                // Jika delete gagal, rollback transaksi
+                $db->transRollback();
+                return $this->response->setJSON(['success' => false, 'message' => 'Gagal menghapus data pemotongan.']);
+            }
+        } else {
+            return $this->response->setJSON(['success' => false, 'message' => 'ID tidak valid.']);
+        }
+    }
+
+    public function edit_pemotongan()
+    {
+        $id_pemotongan = $this->request->getGet('id_pemotongan');
+
+        if (!$id_pemotongan) {
+            throw new \CodeIgniter\Exceptions\PageNotFoundException('ID pemotongan tidak ditemukan.');
+        }
+
+        // Ambil data pemotongan berdasarkan ID
+        $pemotonganData = $this->pemotonganModel->find($id_pemotongan);
+
+        if (!$pemotonganData) {
+            throw new \CodeIgniter\Exceptions\PageNotFoundException('Data pemotongan tidak ditemukan.');
+        }
+
+        // Ambil data users dengan status_user = 'Analis'
+        // Pastikan nama model benar
+        $users = $this->userModel->where('status_user', 'Analis')->findAll();
+
+        $data = [
+            'pemotonganData' => $pemotonganData,
+            'users' => $users, // Tambahkan data users ke view
+            'id_user' => session()->get('id_user'),
+            'nama_user' => session()->get('nama_user'),
+        ];
+
+        return view('edit_proses/edit_pemotongan', $data);
+    }
+
+    public function update_pemotongan()
+    {
+        $id_pemotongan = $this->request->getPost('id_pemotongan');
+        // Get individual date and time inputs
+        $mulai_date = $this->request->getPost('mulai_pemotongan_date');
+        $mulai_time = $this->request->getPost('mulai_pemotongan_time');
+        $selesai_date = $this->request->getPost('selesai_pemotongan_date');
+        $selesai_time = $this->request->getPost('selesai_pemotongan_time');
+
+        // Combine date and time into one value
+        $mulai_pemotongan = $mulai_date . ' ' . $mulai_time;  // Format: YYYY-MM-DD HH:MM
+        $selesai_pemotongan = $selesai_date . ' ' . $selesai_time;  // Format: YYYY-MM-DD HH:MM
+
+        $data = [
+            'id_user_pemotongan' => $this->request->getPost('id_user_pemotongan'),
+            'status_pemotongan'  => $this->request->getPost('status_pemotongan'),
+            'mulai_pemotongan'   => $mulai_pemotongan,
+            'selesai_pemotongan' => $selesai_pemotongan,
+            'updated_at'         => date('Y-m-d H:i:s'),
+        ];
+
+        if (!$this->pemotonganModel->update($id_pemotongan, $data)) {
+            return redirect()->back()->with('error', 'Gagal mengupdate data.')->withInput();
+        }
+
+        return redirect()->to(base_url('exam/index_exam'))->with('success', 'Data berhasil diperbarui.');
     }
 }

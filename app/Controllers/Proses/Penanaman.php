@@ -6,18 +6,19 @@ use App\Controllers\BaseController;
 use App\Models\ProsesModel\PenanamanModel;
 use App\Models\ProsesModel\PemotonganTipisModel;
 use App\Models\HpaModel;
+use App\Models\UsersModel;
 use App\Models\MutuModel;
 use Exception;
 
-class Penanaman extends BaseController // Update nama controller
+class Penanaman extends BaseController
 {
+    protected $penanamanModel;
+    protected $userModel;
+
     public function __construct()
     {
-        // Mengecek apakah user sudah login dengan menggunakan session
-        if (!session()->has('id_user')) {
-            session()->setFlashdata('error', 'Login terlebih dahulu');
-            return redirect()->to('/login');
-        }
+        $this->penanamanModel = new PenanamanModel();
+        $this->userModel = new UsersModel();
     }
 
     public function index_penanaman() // Update method
@@ -168,5 +169,146 @@ class Penanaman extends BaseController // Update nama controller
             log_message('error', 'Error in processAction: ' . $e->getMessage());
             throw new \Exception('Terjadi kesalahan saat memproses aksi: ' . $e->getMessage());
         }
+    }
+
+    public function penanaman_details()
+    {
+        // Ambil id_penanaman dari parameter GET
+        $id_penanaman = $this->request->getGet('id_penanaman');
+
+        if ($id_penanaman) {
+            // Muat model penanaman
+            $model = new PenanamanModel();
+
+            // Ambil data penanaman berdasarkan id_penanaman dan relasi yang ada
+            $data = $model->select(
+                'penanaman.*, 
+                hpa.*, 
+                patient.*, 
+                users.nama_user AS nama_user_penanaman,
+                mutu.indikator_1,
+                mutu.indikator_2'
+            )
+                ->join(
+                    'hpa',
+                    'penanaman.id_hpa = hpa.id_hpa',
+                    'left'
+                ) // Relasi dengan tabel hpa
+                ->join('patient', 'hpa.id_pasien = patient.id_pasien', 'left')
+                ->join('users', 'penanaman.id_user_penanaman = users.id_user', 'left')
+                ->join('mutu', 'hpa.id_hpa = mutu.id_hpa', 'left')
+                ->where('penanaman.id_penanaman', $id_penanaman)
+                ->first();
+
+            if ($data) {
+                // Kirimkan data dalam format JSON
+                return $this->response->setJSON($data);
+            } else {
+                return $this->response->setJSON(['error' => 'Data tidak ditemukan.']);
+            }
+        } else {
+            return $this->response->setJSON(['error' => 'ID penanaman tidak ditemukan.']);
+        }
+    }
+
+    public function delete()
+    {
+        // Mendapatkan data dari request
+        $id_penanaman = $this->request->getPost('id_penanaman');
+        $id_hpa = $this->request->getPost('id_hpa');
+
+        if ($id_penanaman && $id_hpa) {
+            // Load model
+            $penanamanModel = new PenanamanModel();
+            $hpaModel = new HpaModel();
+
+            // Ambil instance dari database service
+            $db = \Config\Database::connect();
+
+            // Mulai transaksi untuk memastikan kedua operasi berjalan atomik
+            $db->transStart();
+
+            // Hapus data dari tabel penanaman
+            $deleteResult = $penanamanModel->deletepenanaman($id_penanaman);
+
+            // Cek apakah delete berhasil
+            if ($deleteResult) {
+                // Update field id_penanaman menjadi null pada tabel hpa
+                $hpaModel->updateIdpenanaman($id_hpa);
+
+                // Selesaikan transaksi
+                $db->transComplete();
+
+                // Cek apakah transaksi berhasil
+                if ($db->transStatus() === FALSE) {
+                    return $this->response->setJSON(['success' => false, 'message' => 'Gagal menghapus atau memperbarui data.']);
+                }
+
+                return $this->response->setJSON(['success' => true]);
+            } else {
+                // Jika delete gagal, rollback transaksi
+                $db->transRollback();
+                return $this->response->setJSON(['success' => false, 'message' => 'Gagal menghapus data penanaman.']);
+            }
+        } else {
+            return $this->response->setJSON(['success' => false, 'message' => 'ID tidak valid.']);
+        }
+    }
+
+    public function edit_penanaman()
+    {
+        $id_penanaman = $this->request->getGet('id_penanaman');
+
+        if (!$id_penanaman) {
+            throw new \CodeIgniter\Exceptions\PageNotFoundException('ID penanaman tidak ditemukan.');
+        }
+
+        // Ambil data penanaman berdasarkan ID
+        $penanamanData = $this->penanamanModel->find($id_penanaman);
+
+        if (!$penanamanData) {
+            throw new \CodeIgniter\Exceptions\PageNotFoundException('Data penanaman tidak ditemukan.');
+        }
+
+        // Ambil data users dengan status_user = 'Analis'
+        // Pastikan nama model benar
+        $users = $this->userModel->where('status_user', 'Analis')->findAll();
+
+        $data = [
+            'penanamanData' => $penanamanData,
+            'users' => $users, // Tambahkan data users ke view
+            'id_user' => session()->get('id_user'),
+            'nama_user' => session()->get('nama_user'),
+        ];
+
+        return view('edit_proses/edit_penanaman', $data);
+    }
+
+    public function update_penanaman()
+    {
+        $id_penanaman = $this->request->getPost('id_penanaman');
+        // Get individual date and time inputs
+        $mulai_date = $this->request->getPost('mulai_penanaman_date');
+        $mulai_time = $this->request->getPost('mulai_penanaman_time');
+        $selesai_date = $this->request->getPost('selesai_penanaman_date');
+        $selesai_time = $this->request->getPost('selesai_penanaman_time');
+
+        // Combine date and time into one value
+        $mulai_penanaman = $mulai_date . ' ' . $mulai_time;  // Format: YYYY-MM-DD HH:MM
+        $selesai_penanaman = $selesai_date . ' ' . $selesai_time;  // Format: YYYY-MM-DD HH:MM
+
+        $data = [
+            'id_user_penanaman' => $this->request->getPost('id_user_penanaman'),
+            'status_penanaman'  => $this->request->getPost('status_penanaman'),
+            'mulai_penanaman'   => $mulai_penanaman,
+            'selesai_penanaman' => $selesai_penanaman,
+            'updated_at'         => date('Y-m-d H:i:s'),
+        ];
+
+        if (!$this->penanamanModel->update($id_penanaman, $data)) {
+            return redirect()->back()->with('error', 'Gagal mengupdate data.')->withInput();
+        }
+
+        return redirect()->to(base_url('exam/index_exam'))->with('success', 'Data berhasil diperbarui.');
     }
 }

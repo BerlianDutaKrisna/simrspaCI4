@@ -6,18 +6,18 @@ use App\Controllers\BaseController;
 use App\Models\ProsesModel\PemverifikasiModel;
 use App\Models\ProsesModel\PencetakanModel;
 use App\Models\HpaModel;
-use App\Models\MutuModel;
+use App\Models\UsersModel;
 use Exception;
 
-class Pemverifikasi extends BaseController // Update nama controller
+class Pemverifikasi extends BaseController
 {
+    protected $pemverifikasiModel;
+    protected $userModel;
+
     public function __construct()
     {
-        // Mengecek apakah user sudah login dengan menggunakan session
-        if (!session()->has('id_user')) {
-            session()->setFlashdata('error', 'Login terlebih dahulu');
-            return redirect()->to('/login');
-        }
+        $this->pemverifikasiModel = new PemverifikasiModel();
+        $this->userModel = new UsersModel();
     }
 
     public function index_pemverifikasi() // Update nama method
@@ -147,5 +147,146 @@ class Pemverifikasi extends BaseController // Update nama controller
             log_message('error', 'Error in processAction: ' . $e->getMessage());
             throw new \Exception('Terjadi kesalahan saat memproses aksi: ' . $e->getMessage());
         }
+    }
+
+    public function pemverifikasi_details()
+    {
+        // Ambil id_pemverifikasi dari parameter GET
+        $id_pemverifikasi = $this->request->getGet('id_pemverifikasi');
+
+        if ($id_pemverifikasi) {
+            // Muat model pemverifikasi
+            $model = new PemverifikasiModel();
+
+            // Ambil data pemverifikasi berdasarkan id_pemverifikasi dan relasi yang ada
+            $data = $model->select(
+                'pemverifikasi.*, 
+                hpa.*, 
+                patient.*, 
+                users.nama_user AS nama_user_pemverifikasi,
+                mutu.indikator_1,
+                mutu.indikator_2'
+            )
+                ->join(
+                    'hpa',
+                    'pemverifikasi.id_hpa = hpa.id_hpa',
+                    'left'
+                ) // Relasi dengan tabel hpa
+                ->join('patient', 'hpa.id_pasien = patient.id_pasien', 'left')
+                ->join('users', 'pemverifikasi.id_user_pemverifikasi = users.id_user', 'left')
+                ->join('mutu', 'hpa.id_hpa = mutu.id_hpa', 'left')
+                ->where('pemverifikasi.id_pemverifikasi', $id_pemverifikasi)
+                ->first();
+
+            if ($data) {
+                // Kirimkan data dalam format JSON
+                return $this->response->setJSON($data);
+            } else {
+                return $this->response->setJSON(['error' => 'Data tidak ditemukan.']);
+            }
+        } else {
+            return $this->response->setJSON(['error' => 'ID pemverifikasi tidak ditemukan.']);
+        }
+    }
+
+    public function delete()
+    {
+        // Mendapatkan data dari request
+        $id_pemverifikasi = $this->request->getPost('id_pemverifikasi');
+        $id_hpa = $this->request->getPost('id_hpa');
+
+        if ($id_pemverifikasi && $id_hpa) {
+            // Load model
+            $pemverifikasiModel = new PemverifikasiModel();
+            $hpaModel = new HpaModel();
+
+            // Ambil instance dari database service
+            $db = \Config\Database::connect();
+
+            // Mulai transaksi untuk memastikan kedua operasi berjalan atomik
+            $db->transStart();
+
+            // Hapus data dari tabel pemverifikasi
+            $deleteResult = $pemverifikasiModel->deletepemverifikasi($id_pemverifikasi);
+
+            // Cek apakah delete berhasil
+            if ($deleteResult) {
+                // Update field id_pemverifikasi menjadi null pada tabel hpa
+                $hpaModel->updateIdpemverifikasi($id_hpa);
+
+                // Selesaikan transaksi
+                $db->transComplete();
+
+                // Cek apakah transaksi berhasil
+                if ($db->transStatus() === FALSE) {
+                    return $this->response->setJSON(['success' => false, 'message' => 'Gagal menghapus atau memperbarui data.']);
+                }
+
+                return $this->response->setJSON(['success' => true]);
+            } else {
+                // Jika delete gagal, rollback transaksi
+                $db->transRollback();
+                return $this->response->setJSON(['success' => false, 'message' => 'Gagal menghapus data pemverifikasi.']);
+            }
+        } else {
+            return $this->response->setJSON(['success' => false, 'message' => 'ID tidak valid.']);
+        }
+    }
+
+    public function edit_pemverifikasi()
+    {
+        $id_pemverifikasi = $this->request->getGet('id_pemverifikasi');
+
+        if (!$id_pemverifikasi) {
+            throw new \CodeIgniter\Exceptions\PageNotFoundException('ID pemverifikasi tidak ditemukan.');
+        }
+
+        // Ambil data pemverifikasi berdasarkan ID
+        $pemverifikasiData = $this->pemverifikasiModel->find($id_pemverifikasi);
+
+        if (!$pemverifikasiData) {
+            throw new \CodeIgniter\Exceptions\PageNotFoundException('Data pemverifikasi tidak ditemukan.');
+        }
+
+        // Ambil data users dengan status_user = 'Analis'
+        // Pastikan nama model benar
+        $users = $this->userModel->where('status_user', 'Analis')->findAll();
+
+        $data = [
+            'pemverifikasiData' => $pemverifikasiData,
+            'users' => $users, // Tambahkan data users ke view
+            'id_user' => session()->get('id_user'),
+            'nama_user' => session()->get('nama_user'),
+        ];
+
+        return view('edit_proses/edit_pemverifikasi', $data);
+    }
+
+    public function update_pemverifikasi()
+    {
+        $id_pemverifikasi = $this->request->getPost('id_pemverifikasi');
+        // Get individual date and time inputs
+        $mulai_date = $this->request->getPost('mulai_pemverifikasi_date');
+        $mulai_time = $this->request->getPost('mulai_pemverifikasi_time');
+        $selesai_date = $this->request->getPost('selesai_pemverifikasi_date');
+        $selesai_time = $this->request->getPost('selesai_pemverifikasi_time');
+
+        // Combine date and time into one value
+        $mulai_pemverifikasi = $mulai_date . ' ' . $mulai_time;  // Format: YYYY-MM-DD HH:MM
+        $selesai_pemverifikasi = $selesai_date . ' ' . $selesai_time;  // Format: YYYY-MM-DD HH:MM
+
+        $data = [
+            'id_user_pemverifikasi' => $this->request->getPost('id_user_pemverifikasi'),
+            'status_pemverifikasi'  => $this->request->getPost('status_pemverifikasi'),
+            'mulai_pemverifikasi'   => $mulai_pemverifikasi,
+            'selesai_pemverifikasi' => $selesai_pemverifikasi,
+            'updated_at'         => date('Y-m-d H:i:s'),
+        ];
+
+        if (!$this->pemverifikasiModel->update($id_pemverifikasi, $data)) {
+            return redirect()->back()->with('error', 'Gagal mengupdate data.')->withInput();
+        }
+
+        return redirect()->to(base_url('exam/index_exam'))->with('success', 'Data berhasil diperbarui.');
     }
 }

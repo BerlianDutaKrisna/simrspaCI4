@@ -6,18 +6,19 @@ use App\Controllers\BaseController;
 use App\Models\ProsesModel\PembacaanModel;
 use App\Models\ProsesModel\penulisanModel;
 use App\Models\HpaModel;
+use App\Models\UsersModel;
 use App\Models\MutuModel;
 use Exception;
 
-class Pembacaan extends BaseController // Update nama controller
+class pembacaan extends BaseController
 {
+    protected $pembacaanModel;
+    protected $userModel;
+
     public function __construct()
     {
-        // Mengecek apakah user sudah login dengan menggunakan session
-        if (!session()->has('id_user')) {
-            session()->setFlashdata('error', 'Login terlebih dahulu');
-            return redirect()->to('/login');
-        }
+        $this->pembacaanModel = new PembacaanModel();
+        $this->userModel = new UsersModel();
     }
 
     public function index_pembacaan() // Update method
@@ -177,5 +178,146 @@ class Pembacaan extends BaseController // Update nama controller
             log_message('error', 'Error in processAction: ' . $e->getMessage());
             throw new \Exception('Terjadi kesalahan saat memproses aksi: ' . $e->getMessage());
         }
+    }
+
+    public function pembacaan_details()
+    {
+        // Ambil id_pembacaan dari parameter GET
+        $id_pembacaan = $this->request->getGet('id_pembacaan');
+
+        if ($id_pembacaan) {
+            // Muat model pembacaan
+            $model = new PembacaanModel();
+
+            // Ambil data pembacaan berdasarkan id_pembacaan dan relasi yang ada
+            $data = $model->select(
+                'pembacaan.*, 
+                hpa.*, 
+                patient.*, 
+                users.nama_user AS nama_user_pembacaan,
+                mutu.indikator_1,
+                mutu.indikator_2'
+            )
+                ->join(
+                    'hpa',
+                    'pembacaan.id_hpa = hpa.id_hpa',
+                    'left'
+                ) // Relasi dengan tabel hpa
+                ->join('patient', 'hpa.id_pasien = patient.id_pasien', 'left')
+                ->join('users', 'pembacaan.id_user_pembacaan = users.id_user', 'left')
+                ->join('mutu', 'hpa.id_hpa = mutu.id_hpa', 'left')
+                ->where('pembacaan.id_pembacaan', $id_pembacaan)
+                ->first();
+
+            if ($data) {
+                // Kirimkan data dalam format JSON
+                return $this->response->setJSON($data);
+            } else {
+                return $this->response->setJSON(['error' => 'Data tidak ditemukan.']);
+            }
+        } else {
+            return $this->response->setJSON(['error' => 'ID pembacaan tidak ditemukan.']);
+        }
+    }
+
+    public function delete()
+    {
+        // Mendapatkan data dari request
+        $id_pembacaan = $this->request->getPost('id_pembacaan');
+        $id_hpa = $this->request->getPost('id_hpa');
+
+        if ($id_pembacaan && $id_hpa) {
+            // Load model
+            $pembacaanModel = new PembacaanModel();
+            $hpaModel = new HpaModel();
+
+            // Ambil instance dari database service
+            $db = \Config\Database::connect();
+
+            // Mulai transaksi untuk memastikan kedua operasi berjalan atomik
+            $db->transStart();
+
+            // Hapus data dari tabel pembacaan
+            $deleteResult = $pembacaanModel->deletepembacaan($id_pembacaan);
+
+            // Cek apakah delete berhasil
+            if ($deleteResult) {
+                // Update field id_pembacaan menjadi null pada tabel hpa
+                $hpaModel->updateIdpembacaan($id_hpa);
+
+                // Selesaikan transaksi
+                $db->transComplete();
+
+                // Cek apakah transaksi berhasil
+                if ($db->transStatus() === FALSE) {
+                    return $this->response->setJSON(['success' => false, 'message' => 'Gagal menghapus atau memperbarui data.']);
+                }
+
+                return $this->response->setJSON(['success' => true]);
+            } else {
+                // Jika delete gagal, rollback transaksi
+                $db->transRollback();
+                return $this->response->setJSON(['success' => false, 'message' => 'Gagal menghapus data pembacaan.']);
+            }
+        } else {
+            return $this->response->setJSON(['success' => false, 'message' => 'ID tidak valid.']);
+        }
+    }
+
+    public function edit_pembacaan()
+    {
+        $id_pembacaan = $this->request->getGet('id_pembacaan');
+
+        if (!$id_pembacaan) {
+            throw new \CodeIgniter\Exceptions\PageNotFoundException('ID pembacaan tidak ditemukan.');
+        }
+
+        // Ambil data pembacaan berdasarkan ID
+        $pembacaanData = $this->pembacaanModel->find($id_pembacaan);
+
+        if (!$pembacaanData) {
+            throw new \CodeIgniter\Exceptions\PageNotFoundException('Data pembacaan tidak ditemukan.');
+        }
+
+        // Ambil data users dengan status_user = 'Analis'
+        // Pastikan nama model benar
+        $users = $this->userModel->where('status_user', 'Analis')->findAll();
+
+        $data = [
+            'pembacaanData' => $pembacaanData,
+            'users' => $users, // Tambahkan data users ke view
+            'id_user' => session()->get('id_user'),
+            'nama_user' => session()->get('nama_user'),
+        ];
+
+        return view('edit_proses/edit_pembacaan', $data);
+    }
+
+    public function update_pembacaan()
+    {
+        $id_pembacaan = $this->request->getPost('id_pembacaan');
+        // Get individual date and time inputs
+        $mulai_date = $this->request->getPost('mulai_pembacaan_date');
+        $mulai_time = $this->request->getPost('mulai_pembacaan_time');
+        $selesai_date = $this->request->getPost('selesai_pembacaan_date');
+        $selesai_time = $this->request->getPost('selesai_pembacaan_time');
+
+        // Combine date and time into one value
+        $mulai_pembacaan = $mulai_date . ' ' . $mulai_time;  // Format: YYYY-MM-DD HH:MM
+        $selesai_pembacaan = $selesai_date . ' ' . $selesai_time;  // Format: YYYY-MM-DD HH:MM
+
+        $data = [
+            'id_user_pembacaan' => $this->request->getPost('id_user_pembacaan'),
+            'status_pembacaan'  => $this->request->getPost('status_pembacaan'),
+            'mulai_pembacaan'   => $mulai_pembacaan,
+            'selesai_pembacaan' => $selesai_pembacaan,
+            'updated_at'         => date('Y-m-d H:i:s'),
+        ];
+
+        if (!$this->pembacaanModel->update($id_pembacaan, $data)) {
+            return redirect()->back()->with('error', 'Gagal mengupdate data.')->withInput();
+        }
+
+        return redirect()->to(base_url('exam/index_exam'))->with('success', 'Data berhasil diperbarui.');
     }
 }

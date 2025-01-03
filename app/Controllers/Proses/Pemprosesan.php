@@ -6,18 +6,18 @@ use App\Controllers\BaseController;
 use App\Models\ProsesModel\PemprosesanModel;
 use App\Models\ProsesModel\PenanamanModel;
 use App\Models\HpaModel;
-use App\Models\MutuModel;
+use App\Models\UsersModel;
 use Exception;
 
-class Pemprosesan extends BaseController // Update nama controller
+class Pemprosesan extends BaseController
 {
+    protected $pemprosesanModel;
+    protected $userModel;
+
     public function __construct()
     {
-        // Mengecek apakah user sudah login dengan menggunakan session
-        if (!session()->has('id_user')) {
-            session()->setFlashdata('error', 'Login terlebih dahulu');
-            return redirect()->to('/login');
-        }
+        $this->pemprosesanModel = new PemprosesanModel();
+        $this->userModel = new UsersModel();
     }
 
     public function index_pemprosesan() // Update method
@@ -154,5 +154,146 @@ class Pemprosesan extends BaseController // Update nama controller
             log_message('error', 'Error in processAction: ' . $e->getMessage());
             throw new \Exception('Terjadi kesalahan saat memproses aksi: ' . $e->getMessage());
         }
+    }
+
+    public function pemprosesan_details()
+    {
+        // Ambil id_pemprosesan dari parameter GET
+        $id_pemprosesan = $this->request->getGet('id_pemprosesan');
+
+        if ($id_pemprosesan) {
+            // Muat model pemprosesan
+            $model = new PemprosesanModel();
+
+            // Ambil data pemprosesan berdasarkan id_pemprosesan dan relasi yang ada
+            $data = $model->select(
+                'pemprosesan.*, 
+                hpa.*, 
+                patient.*, 
+                users.nama_user AS nama_user_pemprosesan,
+                mutu.indikator_1,
+                mutu.indikator_2'
+            )
+                ->join(
+                    'hpa',
+                    'pemprosesan.id_hpa = hpa.id_hpa',
+                    'left'
+                ) // Relasi dengan tabel hpa
+                ->join('patient', 'hpa.id_pasien = patient.id_pasien', 'left')
+                ->join('users', 'pemprosesan.id_user_pemprosesan = users.id_user', 'left')
+                ->join('mutu', 'hpa.id_hpa = mutu.id_hpa', 'left')
+                ->where('pemprosesan.id_pemprosesan', $id_pemprosesan)
+                ->first();
+
+            if ($data) {
+                // Kirimkan data dalam format JSON
+                return $this->response->setJSON($data);
+            } else {
+                return $this->response->setJSON(['error' => 'Data tidak ditemukan.']);
+            }
+        } else {
+            return $this->response->setJSON(['error' => 'ID pemprosesan tidak ditemukan.']);
+        }
+    }
+
+    public function delete()
+    {
+        // Mendapatkan data dari request
+        $id_pemprosesan = $this->request->getPost('id_pemprosesan');
+        $id_hpa = $this->request->getPost('id_hpa');
+
+        if ($id_pemprosesan && $id_hpa) {
+            // Load model
+            $pemprosesanModel = new PemprosesanModel();
+            $hpaModel = new HpaModel();
+
+            // Ambil instance dari database service
+            $db = \Config\Database::connect();
+
+            // Mulai transaksi untuk memastikan kedua operasi berjalan atomik
+            $db->transStart();
+
+            // Hapus data dari tabel pemprosesan
+            $deleteResult = $pemprosesanModel->deletepemprosesan($id_pemprosesan);
+
+            // Cek apakah delete berhasil
+            if ($deleteResult) {
+                // Update field id_pemprosesan menjadi null pada tabel hpa
+                $hpaModel->updateIdpemprosesan($id_hpa);
+
+                // Selesaikan transaksi
+                $db->transComplete();
+
+                // Cek apakah transaksi berhasil
+                if ($db->transStatus() === FALSE) {
+                    return $this->response->setJSON(['success' => false, 'message' => 'Gagal menghapus atau memperbarui data.']);
+                }
+
+                return $this->response->setJSON(['success' => true]);
+            } else {
+                // Jika delete gagal, rollback transaksi
+                $db->transRollback();
+                return $this->response->setJSON(['success' => false, 'message' => 'Gagal menghapus data pemprosesan.']);
+            }
+        } else {
+            return $this->response->setJSON(['success' => false, 'message' => 'ID tidak valid.']);
+        }
+    }
+
+    public function edit_pemprosesan()
+    {
+        $id_pemprosesan = $this->request->getGet('id_pemprosesan');
+
+        if (!$id_pemprosesan) {
+            throw new \CodeIgniter\Exceptions\PageNotFoundException('ID pemprosesan tidak ditemukan.');
+        }
+
+        // Ambil data pemprosesan berdasarkan ID
+        $pemprosesanData = $this->pemprosesanModel->find($id_pemprosesan);
+
+        if (!$pemprosesanData) {
+            throw new \CodeIgniter\Exceptions\PageNotFoundException('Data pemprosesan tidak ditemukan.');
+        }
+
+        // Ambil data users dengan status_user = 'Analis'
+        // Pastikan nama model benar
+        $users = $this->userModel->where('status_user', 'Analis')->findAll();
+
+        $data = [
+            'pemprosesanData' => $pemprosesanData,
+            'users' => $users, // Tambahkan data users ke view
+            'id_user' => session()->get('id_user'),
+            'nama_user' => session()->get('nama_user'),
+        ];
+
+        return view('edit_proses/edit_pemprosesan', $data);
+    }
+
+    public function update_pemprosesan()
+    {
+        $id_pemprosesan = $this->request->getPost('id_pemprosesan');
+        // Get individual date and time inputs
+        $mulai_date = $this->request->getPost('mulai_pemprosesan_date');
+        $mulai_time = $this->request->getPost('mulai_pemprosesan_time');
+        $selesai_date = $this->request->getPost('selesai_pemprosesan_date');
+        $selesai_time = $this->request->getPost('selesai_pemprosesan_time');
+
+        // Combine date and time into one value
+        $mulai_pemprosesan = $mulai_date . ' ' . $mulai_time;  // Format: YYYY-MM-DD HH:MM
+        $selesai_pemprosesan = $selesai_date . ' ' . $selesai_time;  // Format: YYYY-MM-DD HH:MM
+
+        $data = [
+            'id_user_pemprosesan' => $this->request->getPost('id_user_pemprosesan'),
+            'status_pemprosesan'  => $this->request->getPost('status_pemprosesan'),
+            'mulai_pemprosesan'   => $mulai_pemprosesan,
+            'selesai_pemprosesan' => $selesai_pemprosesan,
+            'updated_at'         => date('Y-m-d H:i:s'),
+        ];
+
+        if (!$this->pemprosesanModel->update($id_pemprosesan, $data)) {
+            return redirect()->back()->with('error', 'Gagal mengupdate data.')->withInput();
+        }
+
+        return redirect()->to(base_url('exam/index_exam'))->with('success', 'Data berhasil diperbarui.');
     }
 }

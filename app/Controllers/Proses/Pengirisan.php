@@ -7,7 +7,6 @@ use App\Models\ProsesModel\PengirisanModel;
 use App\Models\ProsesModel\PemotonganModel;
 use App\Models\HpaModel;
 use App\Models\UsersModel;
-use App\Models\MutuModel;
 use Exception;
 
 class Pengirisan extends BaseController
@@ -20,7 +19,6 @@ class Pengirisan extends BaseController
         $this->pengirisanModel = new PengirisanModel();
         $this->userModel = new UsersModel();
     }
-
 
     public function index_pengirisan()
     {
@@ -160,6 +158,7 @@ class Pengirisan extends BaseController
             throw new \Exception('Terjadi kesalahan saat memproses aksi: ' . $e->getMessage());
         }
     }
+    
     public function pengirisan_details()
     {
         // Ambil id_pengirisan dari parameter GET

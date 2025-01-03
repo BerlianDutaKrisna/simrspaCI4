@@ -6,18 +6,18 @@ use App\Controllers\BaseController;
 use App\Models\ProsesModel\PewarnaanModel;
 use App\Models\ProsesModel\PembacaanModel;
 use App\Models\HpaModel;
-use App\Models\MutuModel;
+use App\Models\UsersModel;
 use Exception;
 
-class Pewarnaan extends BaseController // Update nama controller
+class Pewarnaan extends BaseController
 {
+    protected $pewarnaanModel;
+    protected $userModel;
+
     public function __construct()
     {
-        // Mengecek apakah user sudah login dengan menggunakan session
-        if (!session()->has('id_user')) {
-            session()->setFlashdata('error', 'Login terlebih dahulu');
-            return redirect()->to('/login');
-        }
+        $this->pewarnaanModel = new PewarnaanModel();
+        $this->userModel = new UsersModel();
     }
 
     public function index_pewarnaan() // Update method
@@ -153,5 +153,146 @@ class Pewarnaan extends BaseController // Update nama controller
             log_message('error', 'Error in processAction: ' . $e->getMessage());
             throw new \Exception('Terjadi kesalahan saat memproses aksi: ' . $e->getMessage());
         }
+    }
+
+    public function pewarnaan_details()
+    {
+        // Ambil id_pewarnaan dari parameter GET
+        $id_pewarnaan = $this->request->getGet('id_pewarnaan');
+
+        if ($id_pewarnaan) {
+            // Muat model pewarnaan
+            $model = new PewarnaanModel();
+
+            // Ambil data pewarnaan berdasarkan id_pewarnaan dan relasi yang ada
+            $data = $model->select(
+                'pewarnaan.*, 
+                hpa.*, 
+                patient.*, 
+                users.nama_user AS nama_user_pewarnaan,
+                mutu.indikator_1,
+                mutu.indikator_2'
+            )
+                ->join(
+                    'hpa',
+                    'pewarnaan.id_hpa = hpa.id_hpa',
+                    'left'
+                ) // Relasi dengan tabel hpa
+                ->join('patient', 'hpa.id_pasien = patient.id_pasien', 'left')
+                ->join('users', 'pewarnaan.id_user_pewarnaan = users.id_user', 'left')
+                ->join('mutu', 'hpa.id_hpa = mutu.id_hpa', 'left')
+                ->where('pewarnaan.id_pewarnaan', $id_pewarnaan)
+                ->first();
+
+            if ($data) {
+                // Kirimkan data dalam format JSON
+                return $this->response->setJSON($data);
+            } else {
+                return $this->response->setJSON(['error' => 'Data tidak ditemukan.']);
+            }
+        } else {
+            return $this->response->setJSON(['error' => 'ID pewarnaan tidak ditemukan.']);
+        }
+    }
+
+    public function delete()
+    {
+        // Mendapatkan data dari request
+        $id_pewarnaan = $this->request->getPost('id_pewarnaan');
+        $id_hpa = $this->request->getPost('id_hpa');
+
+        if ($id_pewarnaan && $id_hpa) {
+            // Load model
+            $pewarnaanModel = new PewarnaanModel();
+            $hpaModel = new HpaModel();
+
+            // Ambil instance dari database service
+            $db = \Config\Database::connect();
+
+            // Mulai transaksi untuk memastikan kedua operasi berjalan atomik
+            $db->transStart();
+
+            // Hapus data dari tabel pewarnaan
+            $deleteResult = $pewarnaanModel->deletepewarnaan($id_pewarnaan);
+
+            // Cek apakah delete berhasil
+            if ($deleteResult) {
+                // Update field id_pewarnaan menjadi null pada tabel hpa
+                $hpaModel->updateIdpewarnaan($id_hpa);
+
+                // Selesaikan transaksi
+                $db->transComplete();
+
+                // Cek apakah transaksi berhasil
+                if ($db->transStatus() === FALSE) {
+                    return $this->response->setJSON(['success' => false, 'message' => 'Gagal menghapus atau memperbarui data.']);
+                }
+
+                return $this->response->setJSON(['success' => true]);
+            } else {
+                // Jika delete gagal, rollback transaksi
+                $db->transRollback();
+                return $this->response->setJSON(['success' => false, 'message' => 'Gagal menghapus data pewarnaan.']);
+            }
+        } else {
+            return $this->response->setJSON(['success' => false, 'message' => 'ID tidak valid.']);
+        }
+    }
+
+    public function edit_pewarnaan()
+    {
+        $id_pewarnaan = $this->request->getGet('id_pewarnaan');
+
+        if (!$id_pewarnaan) {
+            throw new \CodeIgniter\Exceptions\PageNotFoundException('ID pewarnaan tidak ditemukan.');
+        }
+
+        // Ambil data pewarnaan berdasarkan ID
+        $pewarnaanData = $this->pewarnaanModel->find($id_pewarnaan);
+
+        if (!$pewarnaanData) {
+            throw new \CodeIgniter\Exceptions\PageNotFoundException('Data pewarnaan tidak ditemukan.');
+        }
+
+        // Ambil data users dengan status_user = 'Analis'
+        // Pastikan nama model benar
+        $users = $this->userModel->where('status_user', 'Analis')->findAll();
+
+        $data = [
+            'pewarnaanData' => $pewarnaanData,
+            'users' => $users, // Tambahkan data users ke view
+            'id_user' => session()->get('id_user'),
+            'nama_user' => session()->get('nama_user'),
+        ];
+
+        return view('edit_proses/edit_pewarnaan', $data);
+    }
+
+    public function update_pewarnaan()
+    {
+        $id_pewarnaan = $this->request->getPost('id_pewarnaan');
+        // Get individual date and time inputs
+        $mulai_date = $this->request->getPost('mulai_pewarnaan_date');
+        $mulai_time = $this->request->getPost('mulai_pewarnaan_time');
+        $selesai_date = $this->request->getPost('selesai_pewarnaan_date');
+        $selesai_time = $this->request->getPost('selesai_pewarnaan_time');
+
+        // Combine date and time into one value
+        $mulai_pewarnaan = $mulai_date . ' ' . $mulai_time;  // Format: YYYY-MM-DD HH:MM
+        $selesai_pewarnaan = $selesai_date . ' ' . $selesai_time;  // Format: YYYY-MM-DD HH:MM
+
+        $data = [
+            'id_user_pewarnaan' => $this->request->getPost('id_user_pewarnaan'),
+            'status_pewarnaan'  => $this->request->getPost('status_pewarnaan'),
+            'mulai_pewarnaan'   => $mulai_pewarnaan,
+            'selesai_pewarnaan' => $selesai_pewarnaan,
+            'updated_at'         => date('Y-m-d H:i:s'),
+        ];
+
+        if (!$this->pewarnaanModel->update($id_pewarnaan, $data)) {
+            return redirect()->back()->with('error', 'Gagal mengupdate data.')->withInput();
+        }
+
+        return redirect()->to(base_url('exam/index_exam'))->with('success', 'Data berhasil diperbarui.');
     }
 }
