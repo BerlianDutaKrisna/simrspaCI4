@@ -11,8 +11,8 @@ class UserSeeder extends Seeder
         // Menyiapkan data pengguna untuk dimasukkan ke tabel users
         $data = [
             [
-                'username'      => 'vina',
-                'password_user' => password_hash('vina', PASSWORD_DEFAULT),  // Enkripsi password
+                'username'      => 'vinna',
+                'password_user' => password_hash('vinna', PASSWORD_DEFAULT),  // Enkripsi password
                 'nama_user'     => 'dr. Vinna Chrisdianti, Sp.PA',
                 'status_user'   => 'Dokter',
                 'created_at'    => date('Y-m-d H:i:s'),
