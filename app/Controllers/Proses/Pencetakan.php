@@ -110,7 +110,7 @@ class Pencetakan extends BaseController
                 case 'selesai':
                     $pencetakanModel->updatePencetakan($id_pencetakan, [ // Update nama method dan variabel
                         'id_user_pencetakan' => $id_user,
-                        'status_pencetakan' => 'Selesai Dicetak',
+                        'status_pencetakan' => 'Selesai Pencetakan',
                         'selesai_pencetakan' => date('Y-m-d H:i:s'),
                     ]);
                     break;
@@ -119,7 +119,7 @@ class Pencetakan extends BaseController
                 case 'kembalikan':
                     $pencetakanModel->updatePencetakan($id_pencetakan, [ // Update nama method dan variabel
                         'id_user_pencetakan' => null,
-                        'status_pencetakan' => 'Belum Dicetak',
+                        'status_pencetakan' => 'Belum Pencetakan',
                         'mulai_pencetakan' => null,
                         'selesai_pencetakan' => null,
                     ]);

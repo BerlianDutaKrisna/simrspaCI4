@@ -57,7 +57,7 @@
                                     <td>
                                         <?= empty($row['tanggal_hasil']) ? 'Belum diisi' : esc(date('d-m-Y', strtotime($row['tanggal_hasil']))); ?>
                                     </td>
-                                    <?php if (in_array($row['status_pemverifikasi'], ["Proses Verifikasi", "Selesai Diverifikasi"])): ?>
+                                    <?php if (in_array($row['status_pemverifikasi'], ["Proses Pemverifikasi"])): ?>
                                         <td>
                                             <a href="<?= base_url('exam/edit_exam/' . esc($row['id_hpa'])) ?>" class="btn btn-warning btn-sm">
                                                 <i class="fas fa-pen"></i> Detail

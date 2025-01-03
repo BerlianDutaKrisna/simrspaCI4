@@ -119,7 +119,7 @@ class Penerimaan extends BaseController
                     // Update data penerimaan ketika selesai
                     $penerimaanModel->updatePenerimaan($id_penerimaan, [
                         'id_user_penerimaan' => $id_user,  // Menggunakan id_user dari session
-                        'status_penerimaan' => 'Sudah Diperiksa', // Status menjadi 'Sudah Diperiksa'
+                        'status_penerimaan' => 'Selesai Diperiksa', // Status menjadi 'Selesai Diperiksa'
                         'selesai_penerimaan' => date('Y-m-d H:i:s'), // Menggunakan waktu lokal Asia/Jakarta
                     ]);
                     // update data mutu
@@ -154,7 +154,7 @@ class Penerimaan extends BaseController
                     // Data untuk tabel pengirisan
                     $pengirisanData = [
                         'id_hpa'              => $id_hpa,  // Menambahkan id_hpa yang baru
-                        'status_pengirisan'     => 'Belum Diiris', // Status awal
+                        'status_pengirisan'     => 'Belum Pengirisan', // Status awal
                     ];
 
                     // Simpan data ke tabel pengirisan

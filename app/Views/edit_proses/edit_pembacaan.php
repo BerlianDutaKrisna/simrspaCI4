@@ -28,9 +28,9 @@
                     <label for="status_pembacaan">Status pembacaan:</label>
                     <!-- Dropdown for status_pembacaan -->
                     <select name="status_pembacaan" id="status_pembacaan" class="form-control">
-                        <option value="Belum pembacaan" <?= old('status_pembacaan', esc($pembacaanData['status_pembacaan'])) == 'Belum pembacaan' ? 'selected' : '' ?>>Belum pembacaan</option>
-                        <option value="Proses pembacaan" <?= old('status_pembacaan', esc($pembacaanData['status_pembacaan'])) == 'Proses pembacaan' ? 'selected' : '' ?>>Proses pembacaan</option>
-                        <option value="Selesai pembacaan" <?= old('status_pembacaan', esc($pembacaanData['status_pembacaan'])) == 'Selesai pembacaan' ? 'selected' : '' ?>>Selesai pembacaan</option>
+                        <option value="Belum Pembacaan" <?= old('status_pembacaan', esc($pembacaanData['status_pembacaan'])) == 'Belum Pembacaan' ? 'selected' : '' ?>>Belum Pembacaan</option>
+                        <option value="Proses Pembacaan" <?= old('status_pembacaan', esc($pembacaanData['status_pembacaan'])) == 'Proses Pembacaan' ? 'selected' : '' ?>>Proses Pembacaan</option>
+                        <option value="Selesai Pembacaan" <?= old('status_pembacaan', esc($pembacaanData['status_pembacaan'])) == 'Selesai Pembacaan' ? 'selected' : '' ?>>Selesai Pembacaan</option>
                     </select>
                 </div>
             </div>

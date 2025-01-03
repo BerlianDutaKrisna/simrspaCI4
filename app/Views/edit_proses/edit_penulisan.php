@@ -28,9 +28,9 @@
                     <label for="status_penulisan">Status penulisan:</label>
                     <!-- Dropdown for status_penulisan -->
                     <select name="status_penulisan" id="status_penulisan" class="form-control">
-                        <option value="Belum penulisan" <?= old('status_penulisan', esc($penulisanData['status_penulisan'])) == 'Belum penulisan' ? 'selected' : '' ?>>Belum penulisan</option>
-                        <option value="Proses penulisan" <?= old('status_penulisan', esc($penulisanData['status_penulisan'])) == 'Proses penulisan' ? 'selected' : '' ?>>Proses penulisan</option>
-                        <option value="Selesai penulisan" <?= old('status_penulisan', esc($penulisanData['status_penulisan'])) == 'Selesai penulisan' ? 'selected' : '' ?>>Selesai penulisan</option>
+                        <option value="Belum Penulisan" <?= old('status_penulisan', esc($penulisanData['status_penulisan'])) == 'Belum Penulisan' ? 'selected' : '' ?>>Belum Penulisan</option>
+                        <option value="Proses Penulisan" <?= old('status_penulisan', esc($penulisanData['status_penulisan'])) == 'Proses Penulisan' ? 'selected' : '' ?>>Proses Penulisan</option>
+                        <option value="Selesai Penulisan" <?= old('status_penulisan', esc($penulisanData['status_penulisan'])) == 'Selesai Penulisan' ? 'selected' : '' ?>>Selesai Penulisan</option>
                     </select>
                 </div>
             </div>

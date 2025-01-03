@@ -112,7 +112,7 @@ class PemotonganTipis extends BaseController
                     // Update data pemotongan tipis ketika selesai
                     $pemotonganTipisModel->updatePemotonganTipis($id_pemotongan_tipis, [
                         'id_user_pemotongan_tipis' => $id_user,
-                        'status_pemotongan_tipis' => 'Sudah Dipotong Tipis',
+                        'status_pemotongan_tipis' => 'Selesai Pemotongan Tipis',
                         'selesai_pemotongan_tipis' => date('Y-m-d H:i:s'),
                     ]);
                     break;
@@ -120,7 +120,7 @@ class PemotonganTipis extends BaseController
                 case 'kembalikan':
                     $pemotonganTipisModel->updatePemotonganTipis($id_pemotongan_tipis, [
                         'id_user_pemotongan_tipis' => null,
-                        'status_pemotongan_tipis' => 'Belum Dipotong Tipis',
+                        'status_pemotongan_tipis' => 'Belum Pemotongan Tipis',
                         'mulai_pemotongan_tipis' => null,
                         'selesai_pemotongan_tipis' => null,
                     ]);

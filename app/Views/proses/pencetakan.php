@@ -57,7 +57,7 @@
                                     <td>
                                         <?= empty($row['tanggal_hasil']) ? 'Belum diisi' : esc(date('d-m-Y', strtotime($row['tanggal_hasil']))); ?>
                                     </td>
-                                    <?php if (in_array($row['status_pencetakan'], ["Proses Pencetakan", "Selesai Dicetak"])): ?>
+                                    <?php if (in_array($row['status_pencetakan'], ["Proses Pencetakan"])): ?>
                                         <td>
                                             <a href="<?= base_url('exam/edit_exam/' . esc($row['id_hpa'])) ?>" class="btn btn-primary btn-user btn-block">
                                                 <i class=" fas fa-print"></i> Cetak

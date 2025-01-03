@@ -113,7 +113,7 @@ class Pemotongan extends BaseController
                     // Update data pemotongan ketika selesai
                     $pemotonganModel->updatePemotongan($id_pemotongan, [
                         'id_user_pemotongan' => $id_user,
-                        'status_pemotongan' => 'Sudah Pemotongan',
+                        'status_pemotongan' => 'Selesai Pemotongan',
                         'selesai_pemotongan' => date('Y-m-d H:i:s'),
                     ]);
                     break;
@@ -121,7 +121,7 @@ class Pemotongan extends BaseController
                 case 'kembalikan':
                     $pemotonganModel->updatePemotongan($id_pemotongan, [
                         'id_user_pemotongan' => null,
-                        'status_pemotongan' => 'Belum Dipotong',
+                        'status_pemotongan' => 'Belum Pemotongan',
                         'mulai_pemotongan' => null,
                         'selesai_pemotongan' => null,
                     ]);
@@ -134,7 +134,7 @@ class Pemotongan extends BaseController
                     // Data untuk tabel pemprosesan
                     $pemprosesanData = [
                         'id_hpa'              => $id_hpa,
-                        'status_pemprosesan'     => 'Belum Diproses',
+                        'status_pemprosesan'     => 'Belum Pemprosesan',
                     ];
 
                     // Simpan data ke tabel pemprosesan

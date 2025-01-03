@@ -113,7 +113,7 @@ class Pemprosesan extends BaseController
                     // Update data pemprosesan ketika selesai
                     $pemprosesanModel->updatePemprosesan($id_pemprosesan, [
                         'id_user_pemprosesan' => $id_user,
-                        'status_pemprosesan' => 'Sudah Diproses',
+                        'status_pemprosesan' => 'Selesai Pemprosesan',
                         'selesai_pemprosesan' => date('Y-m-d H:i:s'),
                     ]);
                     break;
@@ -121,7 +121,7 @@ class Pemprosesan extends BaseController
                 case 'kembalikan':
                     $pemprosesanModel->updatePemprosesan($id_pemprosesan, [
                         'id_user_pemprosesan' => null,
-                        'status_pemprosesan' => 'Belum Diproses',
+                        'status_pemprosesan' => 'Belum Pemprosesan',
                         'mulai_pemprosesan' => null,
                         'selesai_pemprosesan' => null,
                     ]);
@@ -134,7 +134,7 @@ class Pemprosesan extends BaseController
                     // Data untuk tabel penanaman
                     $penanamanData = [
                         'id_hpa'              => $id_hpa,
-                        'status_penanaman'  => 'Belum Ditanam',
+                        'status_penanaman'  => 'Belum Penanaman',
                     ];
 
                     // Simpan data ke tabel penanaman

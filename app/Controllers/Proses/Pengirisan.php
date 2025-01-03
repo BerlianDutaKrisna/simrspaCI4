@@ -113,7 +113,7 @@ class Pengirisan extends BaseController
                     // Update data pengirisan ketika selesai
                     $pengirisanModel->updatePengirisan($id_pengirisan, [
                         'id_user_pengirisan' => $id_user,
-                        'status_pengirisan' => 'Sudah Diiris',
+                        'status_pengirisan' => 'Selesai Pengirisan',
                         'selesai_pengirisan' => date('Y-m-d H:i:s'),
                     ]);
 
@@ -122,7 +122,7 @@ class Pengirisan extends BaseController
                 case 'kembalikan':
                     $pengirisanModel->updatePengirisan($id_pengirisan, [
                         'id_user_pengirisan' => null,
-                        'status_pengirisan' => 'Belum Diiris',
+                        'status_pengirisan' => 'Belum Pengirisan',
                         'mulai_pengirisan' => null,
                         'selesai_pengirisan' => null,
                     ]);
@@ -136,7 +136,7 @@ class Pengirisan extends BaseController
                     // Data untuk tabel pemotongan
                     $pemotonganData = [
                         'id_hpa'              => $id_hpa,  // Menambahkan id_hpa yang baru
-                        'status_pemotongan'     => 'Belum Dipotong', // Status awal
+                        'status_pemotongan'     => 'Belum Pemotongan', // Status awal
                     ];
 
                     // Simpan data ke tabel pemotongan

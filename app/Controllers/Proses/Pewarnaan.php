@@ -112,7 +112,7 @@ class Pewarnaan extends BaseController
                     // Update data pewarnaan ketika selesai
                     $pewarnaanModel->updatePewarnaan($id_pewarnaan, [
                         'id_user_pewarnaan' => $id_user,
-                        'status_pewarnaan' => 'Sudah Pewarnaan',
+                        'status_pewarnaan' => 'Selesai Pewarnaan',
                         'selesai_pewarnaan' => date('Y-m-d H:i:s'),
                     ]);
                     break;
@@ -133,7 +133,7 @@ class Pewarnaan extends BaseController
                     // Data untuk tabel pembacaan
                     $pembacaanData = [
                         'id_hpa'                   => $id_hpa,
-                        'status_pembacaan'         => 'Belum pembacaan',
+                        'status_pembacaan'         => 'Belum Pembacaan',
                     ];
 
                     // Simpan data ke tabel pembacaan

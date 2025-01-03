@@ -28,9 +28,9 @@
                     <label for="status_pemverifikasi">Status pemverifikasi:</label>
                     <!-- Dropdown for status_pemverifikasi -->
                     <select name="status_pemverifikasi" id="status_pemverifikasi" class="form-control">
-                        <option value="Belum pemverifikasi" <?= old('status_pemverifikasi', esc($pemverifikasiData['status_pemverifikasi'])) == 'Belum pemverifikasi' ? 'selected' : '' ?>>Belum pemverifikasi</option>
-                        <option value="Proses pemverifikasi" <?= old('status_pemverifikasi', esc($pemverifikasiData['status_pemverifikasi'])) == 'Proses pemverifikasi' ? 'selected' : '' ?>>Proses pemverifikasi</option>
-                        <option value="Selesai pemverifikasi" <?= old('status_pemverifikasi', esc($pemverifikasiData['status_pemverifikasi'])) == 'Selesai pemverifikasi' ? 'selected' : '' ?>>Selesai pemverifikasi</option>
+                        <option value="Belum Pemverifikasi" <?= old('status_pemverifikasi', esc($pemverifikasiData['status_pemverifikasi'])) == 'Belum Pemverifikasi' ? 'selected' : '' ?>>Belum Pemverifikasi</option>
+                        <option value="Proses Pemverifikasi" <?= old('status_pemverifikasi', esc($pemverifikasiData['status_pemverifikasi'])) == 'Proses Pemverifikasi' ? 'selected' : '' ?>>Proses Pemverifikasi</option>
+                        <option value="Selesai Pemverifikasi" <?= old('status_pemverifikasi', esc($pemverifikasiData['status_pemverifikasi'])) == 'Selesai Pemverifikasi' ? 'selected' : '' ?>>Selesai Pemverifikasi</option>
                     </select>
                 </div>
             </div>

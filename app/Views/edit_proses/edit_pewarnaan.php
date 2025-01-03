@@ -28,9 +28,9 @@
                     <label for="status_pewarnaan">Status pewarnaan:</label>
                     <!-- Dropdown for status_pewarnaan -->
                     <select name="status_pewarnaan" id="status_pewarnaan" class="form-control">
-                        <option value="Belum pewarnaan" <?= old('status_pewarnaan', esc($pewarnaanData['status_pewarnaan'])) == 'Belum pewarnaan' ? 'selected' : '' ?>>Belum pewarnaan</option>
-                        <option value="Proses pewarnaan" <?= old('status_pewarnaan', esc($pewarnaanData['status_pewarnaan'])) == 'Proses pewarnaan' ? 'selected' : '' ?>>Proses pewarnaan</option>
-                        <option value="Selesai pewarnaan" <?= old('status_pewarnaan', esc($pewarnaanData['status_pewarnaan'])) == 'Selesai pewarnaan' ? 'selected' : '' ?>>Selesai pewarnaan</option>
+                        <option value="Belum Pewarnaan" <?= old('status_pewarnaan', esc($pewarnaanData['status_pewarnaan'])) == 'Belum Pewarnaan' ? 'selected' : '' ?>>Belum Pewarnaan</option>
+                        <option value="Proses Pewarnaan" <?= old('status_pewarnaan', esc($pewarnaanData['status_pewarnaan'])) == 'Proses Pewarnaan' ? 'selected' : '' ?>>Proses Pewarnaan</option>
+                        <option value="Selesai Pewarnaan" <?= old('status_pewarnaan', esc($pewarnaanData['status_pewarnaan'])) == 'Selesai Pewarnaan' ? 'selected' : '' ?>>Selesai Pewarnaan</option>
                     </select>
                 </div>
             </div>

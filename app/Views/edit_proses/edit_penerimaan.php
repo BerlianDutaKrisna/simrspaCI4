@@ -30,7 +30,7 @@
                     <select name="status_penerimaan" id="status_penerimaan" class="form-control">
                         <option value="Belum Diperiksa" <?= old('status_penerimaan', esc($penerimaanData['status_penerimaan'])) == 'Belum Diperiksa' ? 'selected' : '' ?>>Belum Diperiksa</option>
                         <option value="Proses Pemeriksaan" <?= old('status_penerimaan', esc($penerimaanData['status_penerimaan'])) == 'Proses Pemeriksaan' ? 'selected' : '' ?>>Proses Pemeriksaan</option>
-                        <option value="Sudah Diperiksa" <?= old('status_penerimaan', esc($penerimaanData['status_penerimaan'])) == 'Sudah Diperiksa' ? 'selected' : '' ?>>Sudah Diperiksa</option>
+                        <option value="Selesai Diperiksa" <?= old('status_penerimaan', esc($penerimaanData['status_penerimaan'])) == 'Selesai Diperiksa' ? 'selected' : '' ?>>Selesai Diperiksa</option>
                     </select>
                 </div>
             </div>

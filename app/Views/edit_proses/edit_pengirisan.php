@@ -28,9 +28,9 @@
                     <label for="status_pengirisan">Status Pengirisan:</label>
                     <!-- Dropdown for status_pengirisan -->
                     <select name="status_pengirisan" id="status_pengirisan" class="form-control">
-                        <option value="Belum Diiris" <?= old('status_pengirisan', esc($pengirisanData['status_pengirisan'])) == 'Belum Diiris' ? 'selected' : '' ?>>Belum Diiris</option>
+                        <option value="Belum Pengirisan" <?= old('status_pengirisan', esc($pengirisanData['status_pengirisan'])) == 'Belum Pengirisan' ? 'selected' : '' ?>>Belum Pengirisan</option>
                         <option value="Proses Pengirisan" <?= old('status_pengirisan', esc($pengirisanData['status_pengirisan'])) == 'Proses Pengirisan' ? 'selected' : '' ?>>Proses Pengirisan</option>
-                        <option value="Sudah Diiris" <?= old('status_pengirisan', esc($pengirisanData['status_pengirisan'])) == 'Sudah Diiris' ? 'selected' : '' ?>>Sudah Diiris</option>
+                        <option value="Selesai Pengirisan" <?= old('status_pengirisan', esc($pengirisanData['status_pengirisan'])) == 'Selesai Pengirisan' ? 'selected' : '' ?>>Selesai Pengirisan</option>
                     </select>
                 </div>
             </div>

@@ -28,9 +28,9 @@
                     <label for="status_pemprosesan">Status pemprosesan:</label>
                     <!-- Dropdown for status_pemprosesan -->
                     <select name="status_pemprosesan" id="status_pemprosesan" class="form-control">
-                        <option value="Belum pemprosesan" <?= old('status_pemprosesan', esc($pemprosesanData['status_pemprosesan'])) == 'Belum pemprosesan' ? 'selected' : '' ?>>Belum pemprosesan</option>
-                        <option value="Proses pemprosesan" <?= old('status_pemprosesan', esc($pemprosesanData['status_pemprosesan'])) == 'Proses pemprosesan' ? 'selected' : '' ?>>Proses pemprosesan</option>
-                        <option value="Sudah pemprosesan" <?= old('status_pemprosesan', esc($pemprosesanData['status_pemprosesan'])) == 'Sudah pemprosesan' ? 'selected' : '' ?>>Sudah pemprosesan</option>
+                        <option value="Belum Pemprosesan" <?= old('status_pemprosesan', esc($pemprosesanData['status_pemprosesan'])) == 'Belum Pemprosesan' ? 'selected' : '' ?>>Belum Pemprosesan</option>
+                        <option value="Proses Pemprosesan" <?= old('status_pemprosesan', esc($pemprosesanData['status_pemprosesan'])) == 'Proses Pemprosesan' ? 'selected' : '' ?>>Proses Pemprosesan</option>
+                        <option value="Selesai Pemprosesan" <?= old('status_pemprosesan', esc($pemprosesanData['status_pemprosesan'])) == 'Selesai Pemprosesan' ? 'selected' : '' ?>>Selesai Pemprosesan</option>
                     </select>
                 </div>
             </div>

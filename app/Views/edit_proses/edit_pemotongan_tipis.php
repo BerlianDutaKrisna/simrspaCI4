@@ -28,9 +28,9 @@
                     <label for="status_pemotongan_tipis">Status pemotongan_tipis:</label>
                     <!-- Dropdown for status_pemotongan_tipis -->
                     <select name="status_pemotongan_tipis" id="status_pemotongan_tipis" class="form-control">
-                        <option value="Belum pemotongan_tipis" <?= old('status_pemotongan_tipis', esc($pemotongan_tipisData['status_pemotongan_tipis'])) == 'Belum pemotongan_tipis' ? 'selected' : '' ?>>Belum pemotongan_tipis</option>
-                        <option value="Proses pemotongan_tipis" <?= old('status_pemotongan_tipis', esc($pemotongan_tipisData['status_pemotongan_tipis'])) == 'Proses pemotongan_tipis' ? 'selected' : '' ?>>Proses pemotongan_tipis</option>
-                        <option value="Selesai pemotongan_tipis" <?= old('status_pemotongan_tipis', esc($pemotongan_tipisData['status_pemotongan_tipis'])) == 'Selesai pemotongan_tipis' ? 'selected' : '' ?>>Selesai pemotongan_tipis</option>
+                        <option value="Belum Pemotongan Tipis" <?= old('status_pemotongan_tipis', esc($pemotongan_tipisData['status_pemotongan_tipis'])) == 'Belum Pemotongan Tipis' ? 'selected' : '' ?>>Belum Pemotongan Tipis</option>
+                        <option value="Proses Pemotongan Tipis" <?= old('status_pemotongan_tipis', esc($pemotongan_tipisData['status_pemotongan_tipis'])) == 'Proses Pemotongan Tipis' ? 'selected' : '' ?>>Proses Pemotongan Tipis</option>
+                        <option value="Selesai Pemotongan Tipis" <?= old('status_pemotongan_tipis', esc($pemotongan_tipisData['status_pemotongan_tipis'])) == 'Selesai Pemotongan Tipis' ? 'selected' : '' ?>>Selesai Pemotongan Tipis</option>
                     </select>
                 </div>
             </div>

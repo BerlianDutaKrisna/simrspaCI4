@@ -28,9 +28,9 @@
                     <label for="status_pemotongan">Status pemotongan:</label>
                     <!-- Dropdown for status_pemotongan -->
                     <select name="status_pemotongan" id="status_pemotongan" class="form-control">
-                        <option value="Belum Diiris" <?= old('status_pemotongan', esc($pemotonganData['status_pemotongan'])) == 'Belum Diiris' ? 'selected' : '' ?>>Belum Diiris</option>
-                        <option value="Proses pemotongan" <?= old('status_pemotongan', esc($pemotonganData['status_pemotongan'])) == 'Proses pemotongan' ? 'selected' : '' ?>>Proses pemotongan</option>
-                        <option value="Sudah Diiris" <?= old('status_pemotongan', esc($pemotonganData['status_pemotongan'])) == 'Sudah Diiris' ? 'selected' : '' ?>>Sudah Diiris</option>
+                        <option value="Belum Pemotongan" <?= old('status_pemotongan', esc($pemotonganData['status_pemotongan'])) == 'Belum Pemotongan' ? 'selected' : '' ?>>Belum Pemotongan</option>
+                        <option value="Proses Pemotongan" <?= old('status_pemotongan', esc($pemotonganData['status_pemotongan'])) == 'Proses Pemotongan' ? 'selected' : '' ?>>Proses Pemotongan</option>
+                        <option value="Selesai Pemotongan" <?= old('status_pemotongan', esc($pemotonganData['status_pemotongan'])) == 'Selesai Pemotongan' ? 'selected' : '' ?>>Selesai Pemotongan</option>
                     </select>
                 </div>
             </div>

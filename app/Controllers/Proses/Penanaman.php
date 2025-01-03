@@ -115,7 +115,7 @@ class Penanaman extends BaseController
                     // Update data penanaman ketika selesai
                     $penanamanModel->updatePenanaman($id_penanaman, [
                         'id_user_penanaman' => $id_user,
-                        'status_penanaman' => 'Sudah Ditanam',
+                        'status_penanaman' => 'Selesai Penanaman',
                         'selesai_penanaman' => date('Y-m-d H:i:s'),
                     ]);
                     // update data mutu
@@ -129,7 +129,7 @@ class Penanaman extends BaseController
                 case 'kembalikan':
                     $penanamanModel->updatePenanaman($id_penanaman, [
                         'id_user_penanaman' => null,
-                        'status_penanaman' => 'Belum Ditanam',
+                        'status_penanaman' => 'Belum Penanaman',
                         'mulai_penanaman' => null,
                         'selesai_penanaman' => null,
                     ]);
@@ -149,7 +149,7 @@ class Penanaman extends BaseController
                     // Data untuk tabel pemotongan_tipis
                     $pemotongan_tipisData = [
                         'id_hpa'              => $id_hpa,
-                        'status_pemotongan_tipis'  => 'Belum Dipotong Tipis',
+                        'status_pemotongan_tipis'  => 'Belum Pemotongan Tipis',
                     ];
 
                     // Simpan data ke tabel pemotongan_tipis

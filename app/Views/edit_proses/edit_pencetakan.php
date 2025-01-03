@@ -28,9 +28,9 @@
                     <label for="status_pencetakan">Status pencetakan:</label>
                     <!-- Dropdown for status_pencetakan -->
                     <select name="status_pencetakan" id="status_pencetakan" class="form-control">
-                        <option value="Belum pencetakan" <?= old('status_pencetakan', esc($pencetakanData['status_pencetakan'])) == 'Belum pencetakan' ? 'selected' : '' ?>>Belum pencetakan</option>
-                        <option value="Proses pencetakan" <?= old('status_pencetakan', esc($pencetakanData['status_pencetakan'])) == 'Proses pencetakan' ? 'selected' : '' ?>>Proses pencetakan</option>
-                        <option value="Selesai pencetakan" <?= old('status_pencetakan', esc($pencetakanData['status_pencetakan'])) == 'Selesai pencetakan' ? 'selected' : '' ?>>Selesai pencetakan</option>
+                        <option value="Belum Pencetakan" <?= old('status_pencetakan', esc($pencetakanData['status_pencetakan'])) == 'Belum Pencetakan' ? 'selected' : '' ?>>Belum Pencetakan</option>
+                        <option value="Proses Pencetakan" <?= old('status_pencetakan', esc($pencetakanData['status_pencetakan'])) == 'Proses Pencetakan' ? 'selected' : '' ?>>Proses Pencetakan</option>
+                        <option value="Selesai Pencetakan" <?= old('status_pencetakan', esc($pencetakanData['status_pencetakan'])) == 'Selesai Pencetakan' ? 'selected' : '' ?>>Selesai Pencetakan</option>
                     </select>
                 </div>
             </div>

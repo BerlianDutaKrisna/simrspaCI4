@@ -57,7 +57,7 @@
                                     <td>
                                         <?= empty($row['tanggal_hasil']) ? 'Belum diisi' : esc(date('d-m-Y', strtotime($row['tanggal_hasil']))); ?>
                                     </td>
-                                    <?php if (in_array($row['status_pemotongan'], ["Proses Pemotongan", "Sudah Pemotongan"])): ?>
+                                    <?php if (in_array($row['status_pemotongan'], ["Proses Pemotongan"])): ?>
                                         <td>
                                             <?php if (session()->get('update_success')): ?>
                                                 <a href="<?= base_url('exam/edit_exam/' . esc($row['id_hpa'])) ?>" class="btn btn-success btn-sm">

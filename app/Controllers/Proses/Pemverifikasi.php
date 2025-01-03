@@ -103,7 +103,7 @@ class Pemverifikasi extends BaseController
                 case 'mulai':
                     $pemverifikasiModel->updatePemverifikasi($id_pemverifikasi, [ // Update nama method dan variabel
                         'id_user_pemverifikasi' => $id_user,
-                        'status_pemverifikasi' => 'Proses Verifikasi',
+                        'status_pemverifikasi' => 'Proses Pemverifikasi',
                         'mulai_pemverifikasi' => date('Y-m-d H:i:s'),
                     ]);
                     break;
@@ -112,7 +112,7 @@ class Pemverifikasi extends BaseController
                 case 'selesai':
                     $pemverifikasiModel->updatePemverifikasi($id_pemverifikasi, [ // Update nama method dan variabel
                         'id_user_pemverifikasi' => $id_user,
-                        'status_pemverifikasi' => 'Selesai Diverifikasi',
+                        'status_pemverifikasi' => 'Selesai Pemverivikasi',
                         'selesai_pemverifikasi' => date('Y-m-d H:i:s'),
                     ]);
                     break;
@@ -121,7 +121,7 @@ class Pemverifikasi extends BaseController
                 case 'kembalikan':
                     $pemverifikasiModel->updatePemverifikasi($id_pemverifikasi, [ // Update nama method dan variabel
                         'id_user_pemverifikasi' => null,
-                        'status_pemverifikasi' => 'Belum Diverifikasi',
+                        'status_pemverifikasi' => 'Belum Pemverifikasi',
                         'mulai_pemverifikasi' => null,
                         'selesai_pemverifikasi' => null,
                     ]);
@@ -132,7 +132,7 @@ class Pemverifikasi extends BaseController
 
                     $pencetakanData = [
                         'id_hpa' => $id_hpa,
-                        'status_pencetakan' => 'Belum Dicetak',
+                        'status_pencetakan' => 'Belum Pencetakan',
                     ];
 
                     if (!$pencetakanModel->insert($pencetakanData)) { // Update nama method dan variabel

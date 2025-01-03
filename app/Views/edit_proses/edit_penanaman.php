@@ -28,9 +28,9 @@
                     <label for="status_penanaman">Status penanaman:</label>
                     <!-- Dropdown for status_penanaman -->
                     <select name="status_penanaman" id="status_penanaman" class="form-control">
-                        <option value="Belum penanaman" <?= old('status_penanaman', esc($penanamanData['status_penanaman'])) == 'Belum penanaman' ? 'selected' : '' ?>>Belum penanaman</option>
-                        <option value="Proses penanaman" <?= old('status_penanaman', esc($penanamanData['status_penanaman'])) == 'Proses penanaman' ? 'selected' : '' ?>>Proses penanaman</option>
-                        <option value="Selesai penanaman" <?= old('status_penanaman', esc($penanamanData['status_penanaman'])) == 'Selesai penanaman' ? 'selected' : '' ?>>Selesai penanaman</option>
+                        <option value="Belum Penanaman" <?= old('status_penanaman', esc($penanamanData['status_penanaman'])) == 'Belum Penanaman' ? 'selected' : '' ?>>Belum Penanaman</option>
+                        <option value="Proses Penanaman" <?= old('status_penanaman', esc($penanamanData['status_penanaman'])) == 'Proses Penanaman' ? 'selected' : '' ?>>Proses Penanaman</option>
+                        <option value="Selesai Penanaman" <?= old('status_penanaman', esc($penanamanData['status_penanaman'])) == 'Selesai Penanaman' ? 'selected' : '' ?>>Selesai Penanaman</option>
                     </select>
                 </div>
             </div>

@@ -112,7 +112,7 @@ class Penulisan extends BaseController
                     // Update data penulisan ketika selesai
                     $penulisanModel->updatePenulisan($id_penulisan, [
                         'id_user_penulisan' => $id_user,
-                        'status_penulisan' => 'Sudah Penulisan',
+                        'status_penulisan' => 'Selesai Penulisan',
                         'selesai_penulisan' => date('Y-m-d H:i:s'),
                     ]);
                     break;
@@ -133,7 +133,7 @@ class Penulisan extends BaseController
                     // Data untuk tabel pemverifikasi
                     $pemverifikasiData = [
                         'id_hpa'                 => $id_hpa,
-                        'status_pemverifikasi'       => 'Belum Diverifikasi',
+                        'status_pemverifikasi'       => 'Belum Pemverifikasi',
                     ];
 
                     // Simpan data ke tabel pemverifikasi
