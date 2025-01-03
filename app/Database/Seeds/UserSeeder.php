@@ -11,42 +11,50 @@ class UserSeeder extends Seeder
         // Menyiapkan data pengguna untuk dimasukkan ke tabel users
         $data = [
             [
-                'username'      => 'admin',
-                'password_user' => password_hash('admin', PASSWORD_DEFAULT),  // Enkripsi password
-                'nama_user'     => 'Administrator',
-                'status_user'   => 'Admin',
-                'created_at'    => date('Y-m-d H:i:s'),
-                'updated_at'    => date('Y-m-d H:i:s')
-            ],
-            [
-                'username'      => 'analis1',
-                'password_user' => password_hash('analis1', PASSWORD_DEFAULT),  // Enkripsi password
-                'nama_user'     => 'Analis 1',
-                'status_user'   => 'Analis',
-                'created_at'    => date('Y-m-d H:i:s'),
-                'updated_at'    => date('Y-m-d H:i:s')
-            ],
-            [
-                'username'      => 'analis2',
-                'password_user' => password_hash('analis2', PASSWORD_DEFAULT),  // Enkripsi password
-                'nama_user'     => 'Analis 2',
-                'status_user'   => 'Analis',
-                'created_at'    => date('Y-m-d H:i:s'),
-                'updated_at'    => date('Y-m-d H:i:s')
-            ],
-            [
-                'username'      => 'dokter1',
-                'password_user' => password_hash('dokter1', PASSWORD_DEFAULT),  // Enkripsi password
-                'nama_user'     => 'Dokter',
+                'username'      => 'vina',
+                'password_user' => password_hash('vina', PASSWORD_DEFAULT),  // Enkripsi password
+                'nama_user'     => 'dr. Vinna Chrisdianti, Sp.PA',
                 'status_user'   => 'Dokter',
                 'created_at'    => date('Y-m-d H:i:s'),
                 'updated_at'    => date('Y-m-d H:i:s')
             ],
             [
-                'username'      => 'dokter2',
-                'password_user' => password_hash('dokter2', PASSWORD_DEFAULT),  // Enkripsi password
-                'nama_user'     => 'Dokter',
+                'username'      => 'ayu',
+                'password_user' => password_hash('ayu', PASSWORD_DEFAULT),  // Enkripsi password
+                'nama_user'     => 'dr. Ayu Tyasmara Pratiwi, Sp.PA',
                 'status_user'   => 'Dokter',
+                'created_at'    => date('Y-m-d H:i:s'),
+                'updated_at'    => date('Y-m-d H:i:s')
+            ],
+            [
+                'username'      => 'endar',
+                'password_user' => password_hash('endar', PASSWORD_DEFAULT),  // Enkripsi password
+                'nama_user'     => 'Endar Pratiwi, S.Si',
+                'status_user'   => 'Analis',
+                'created_at'    => date('Y-m-d H:i:s'),
+                'updated_at'    => date('Y-m-d H:i:s')
+            ],
+            [
+                'username'      => 'arlina',
+                'password_user' => password_hash('arlina', PASSWORD_DEFAULT),  // Enkripsi password
+                'nama_user'     => 'Arlina Kartika, A.Md.AK',
+                'status_user'   => 'Analis',
+                'created_at'    => date('Y-m-d H:i:s'),
+                'updated_at'    => date('Y-m-d H:i:s')
+            ],
+            [
+                'username'      => 'ilham',
+                'password_user' => password_hash('ilham', PASSWORD_DEFAULT),  // Enkripsi password
+                'nama_user'     => 'Ilham Tyas Ismadi, A.Md.Kes',
+                'status_user'   => 'Analis',
+                'created_at'    => date('Y-m-d H:i:s'),
+                'updated_at'    => date('Y-m-d H:i:s')
+            ],
+            [
+                'username'      => 'berlian',
+                'password_user' => password_hash('berlian', PASSWORD_DEFAULT),  // Enkripsi password
+                'nama_user'     => 'Berlian Duta Krisna, S.Tr.Kes',
+                'status_user'   => 'Analis',
                 'created_at'    => date('Y-m-d H:i:s'),
                 'updated_at'    => date('Y-m-d H:i:s')
             ]

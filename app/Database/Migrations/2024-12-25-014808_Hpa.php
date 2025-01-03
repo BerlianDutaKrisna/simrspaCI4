@@ -100,6 +100,10 @@ class Hpa extends Migration
                 'default'    => 'Belum Ada Hasil',
                 'null' => true,
             ],
+            'print_hpa' => [
+                'type' => 'TEXT',
+                'null' => true,
+            ],
             'penerima_hpa' => [
                 'type' => 'VARCHAR',
                 'constraint' => 100,

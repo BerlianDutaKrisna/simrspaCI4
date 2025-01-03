@@ -30,6 +30,7 @@ class HpaModel extends Model
         'foto_mikroskopis_hpa',
         'jumlah_slide',
         'hasil_hpa',
+        'print_hpa',
         'penerima_hpa',
         'tanggal_penerima',
         'id_penerimaan',
