@@ -19,16 +19,32 @@ class UserSeeder extends Seeder
                 'updated_at'    => date('Y-m-d H:i:s')
             ],
             [
-                'username'      => 'analis',
-                'password_user' => password_hash('analist', PASSWORD_DEFAULT),  // Enkripsi password
+                'username'      => 'analis1',
+                'password_user' => password_hash('analis1', PASSWORD_DEFAULT),  // Enkripsi password
                 'nama_user'     => 'Analis',
                 'status_user'   => 'Analis',
                 'created_at'    => date('Y-m-d H:i:s'),
                 'updated_at'    => date('Y-m-d H:i:s')
             ],
             [
-                'username'      => 'dokter',
-                'password_user' => password_hash('dokter', PASSWORD_DEFAULT),  // Enkripsi password
+                'username'      => 'analis2',
+                'password_user' => password_hash('analis2', PASSWORD_DEFAULT),  // Enkripsi password
+                'nama_user'     => 'Analis',
+                'status_user'   => 'Analis',
+                'created_at'    => date('Y-m-d H:i:s'),
+                'updated_at'    => date('Y-m-d H:i:s')
+            ],
+            [
+                'username'      => 'dokter1',
+                'password_user' => password_hash('dokter1', PASSWORD_DEFAULT),  // Enkripsi password
+                'nama_user'     => 'Dokter',
+                'status_user'   => 'Dokter',
+                'created_at'    => date('Y-m-d H:i:s'),
+                'updated_at'    => date('Y-m-d H:i:s')
+            ],
+            [
+                'username'      => 'dokter2',
+                'password_user' => password_hash('dokter2', PASSWORD_DEFAULT),  // Enkripsi password
                 'nama_user'     => 'Dokter',
                 'status_user'   => 'Dokter',
                 'created_at'    => date('Y-m-d H:i:s'),
