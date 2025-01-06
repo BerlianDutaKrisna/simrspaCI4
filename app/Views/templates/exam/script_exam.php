@@ -58,14 +58,9 @@
             var id_pemotongan_tipis = $(this).data("id_pemotongan_tipis");
             var id_pewarnaan = $(this).data("id_pewarnaan");
             var id_pembacaan = $(this).data("id_pembacaan");
-            var id_penulisan = $(this).data("id_penulisan");
+            var id_penilisan = $(this).data("id_penilisan");
             var id_pemverifikasi = $(this).data("id_pemverifikasi");
             var id_pencetakan = $(this).data("id_pencetakan");
-
-            console.log("Action:", action);
-            console.log("ID penulisan:", id_penulisan);
-            console.log("ID pemverifikasi:", id_pemverifikasi);
-            console.log("ID pencetakan:", id_pencetakan);
 
             // Menyimpan data ID yang dibutuhkan untuk operasi delete
             $("#confirmDelete").data("action", action);
@@ -194,9 +189,9 @@
         // ==========================
         // Detail Proses
         // ==========================
-        $(document).on("click", ".view-penerimaan, .view-pengirisan, .view-pemotongan, .view-pemprosesan, .view-penanaman, .view-pemotongan_tipis, .view-pewarnaan, .view-pembacaan, .view-penulisan, .view-pemverifikasi, .view-pencetakan", function() {
-            var action = $(this).data("action"); // Menyimpan data action (penerimaan atau pengirisan)
-            var id_hpa = $(this).data("id_penerimaan"); // Mendapatkan ID HPA (untuk penerimaan)
+        $(document).on("click", ".view-penerimaan, .view-pengirisan, .view-pemotongan, .view-pemprosesan, .view-penanaman, .view-pemotongan_tipis, .view-pewarnaan, .view-pembacaan, .view-penulisan, .view-pemverifikasi, .view-pencetakan, .view-mutu", function() {
+            var action = $(this).data("action");
+            var id_penerimaan = $(this).data("id_penerimaan"); 
             var id_pengirisan = $(this).data("id_pengirisan");
             var id_pemotongan = $(this).data("id_pemotongan");
             var id_pemprosesan = $(this).data("id_pemprosesan");
@@ -207,10 +202,7 @@
             var id_penulisan = $(this).data("id_penulisan");
             var id_pemverifikasi = $(this).data("id_pemverifikasi");
             var id_pencetakan = $(this).data("id_pencetakan");
-
-            console.log("Action:", action);
-            console.log("ID penanaman:", id_penanaman);
-            console.log("ID pemotongan_tipis:", id_pemotongan_tipis);
+            var id_mutu = $(this).data("id_mutu");
 
             var url = "";
             var data = {};
@@ -221,10 +213,10 @@
             if (action === "penerimaan") {
                 url = "<?= base_url('penerimaan/penerimaan_details'); ?>"; 
                 data = {
-                    id_penerimaan: encodeURIComponent(id_hpa)
+                    id_penerimaan: encodeURIComponent(id_penerimaan)
                 };
                 type = "penerimaan"; 
-                id = id_hpa; 
+                id = id_penerimaan; 
             } else if (action === "pengirisan") {
                 url = "<?= base_url('pengirisan/pengirisan_details'); ?>"; 
                 data = {
@@ -295,6 +287,13 @@
                 };
                 type = "pencetakan";
                 id = id_pencetakan; 
+            } else if (action === "mutu") {
+                url = "<?= base_url('mutu/mutu_details'); ?>"; 
+                data = {
+                    id_mutu: encodeURIComponent(id_mutu)
+                };
+                type = "mutu";
+                id = id_mutu; 
             }
 
             // Mengambil data detail melalui AJAX
@@ -408,6 +407,21 @@
                         <p><strong>Status pencetakan:</strong> ${response.status_pencetakan || "-"}</p>
                         <p><strong>Mulai pencetakan:</strong> ${formatDateTime(response.mulai_pencetakan)}</p>
                         <p><strong>Selesai pencetakan:</strong> ${formatDateTime(response.selesai_pencetakan)}</p>
+                    `;
+                        } else if (action === "mutu") {
+                            // Menampilkan detail mutu
+                            detailHtml = `
+                        <p><strong>Kode HPA:</strong> ${response.kode_hpa || "-"}</p>
+                        <p><strong>Indikator 1:</strong> ${response.indikator_1 || "-"}</p>
+                        <p><strong>Indikator 2:</strong> ${response.indikator_2 || "-"}</p>
+                        <p><strong>Indikator 3:</strong> ${response.indikator_3 || "-"}</p>
+                        <p><strong>Indikator 4:</strong> ${response.indikator_4 || "-"}</p>
+                        <p><strong>Indikator 5:</strong> ${response.indikator_5 || "-"}</p>
+                        <p><strong>Indikator 6:</strong> ${response.indikator_6 || "-"}</p>
+                        <p><strong>Indikator 7:</strong> ${response.indikator_7 || "-"}</p>
+                        <p><strong>Indikator 8:</strong> ${response.indikator_8 || "-"}</p>
+                        <p><strong>Indikator 9:</strong> ${response.indikator_9 || "-"}</p>
+                        <p><strong>Indikator 10:</strong> ${response.indikator_10 || "-"}</p>
                     `;
                         }
 

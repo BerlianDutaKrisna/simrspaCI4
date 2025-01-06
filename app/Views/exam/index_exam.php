@@ -310,16 +310,6 @@
                                                     aria-label="Lihat mutu">
                                                     <i class="far fa-eye"></i>
                                                 </button>
-                                                <!-- Tombol Hapus mutu -->
-                                                <button class="btn btn-sm btn-danger mx-1 delete-mutu"
-                                                    data-toggle="modal"
-                                                    data-target="#deleteModal"
-                                                    data-id_mutu="<?= htmlspecialchars($row['id_mutu'], ENT_QUOTES, 'UTF-8') ?>"
-                                                    data-id_hpa="<?= htmlspecialchars($row['id_hpa'], ENT_QUOTES, 'UTF-8') ?>"
-                                                    data-action="mutu"
-                                                    aria-label="Hapus mutu">
-                                                    <i class="fas fa-trash-alt"></i>
-                                                </button>
                                             </div>
                                         <?php endif; ?>
                                     </td>

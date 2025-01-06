@@ -163,3 +163,7 @@ $routes->get('pencetakan/pencetakan_details', 'Proses\Pencetakan::pencetakan_det
 $routes->post('pencetakan/delete', 'Proses\Pencetakan::delete');
 $routes->get('pencetakan/edit_pencetakan', 'Proses\Pencetakan::edit_pencetakan');
 $routes->post('pencetakan/update_pencetakan', 'Proses\Pencetakan::update_pencetakan');
+
+// Router untuk Mutu
+$routes->get('mutu/edit_mutu', 'Mutu::edit_mutu');
+$routes->post('mutu/update_mutu', 'Mutu::update_mutu');
