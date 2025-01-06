@@ -112,7 +112,7 @@ class Pemverifikasi extends BaseController
                 case 'selesai':
                     $pemverifikasiModel->updatePemverifikasi($id_pemverifikasi, [ // Update nama method dan variabel
                         'id_user_pemverifikasi' => $id_user,
-                        'status_pemverifikasi' => 'Selesai Pemverivikasi',
+                        'status_pemverifikasi' => 'Selesai Pemverifikasi',
                         'selesai_pemverifikasi' => date('Y-m-d H:i:s'),
                     ]);
                     break;

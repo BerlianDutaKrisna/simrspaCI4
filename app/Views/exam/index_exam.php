@@ -60,10 +60,11 @@
                                     <td>
                                         <?php if (!empty($row['id_penerimaan'])) : ?>
                                             <div class="d-flex justify-content-around">
-                                                <!-- Tombol Lihat -->
+                                                <!-- Tombol untuk Melihat Detail Penerimaan -->
                                                 <button class="btn btn-sm btn-warning view-penerimaan"
+                                                    data-action="penerimaan"
                                                     data-id_penerimaan="<?= htmlspecialchars($row['id_penerimaan'], ENT_QUOTES, 'UTF-8') ?>"
-                                                    aria-label="Lihat penerimaan">
+                                                    aria-label="Lihat Penerimaan">
                                                     <i class="far fa-eye"></i>
                                                 </button>
                                             </div>
@@ -72,10 +73,11 @@
                                     <td>
                                         <?php if (!empty($row['id_pengirisan'])) : ?>
                                             <div class="d-flex justify-content-around">
-                                                <!-- Tombol Lihat -->
+                                                <!-- Tombol untuk Melihat Detail Pengirisan -->
                                                 <button class="btn btn-sm btn-warning mx-1 view-pengirisan"
+                                                    data-action="pengirisan"
                                                     data-id_pengirisan="<?= htmlspecialchars($row['id_pengirisan'], ENT_QUOTES, 'UTF-8') ?>"
-                                                    aria-label="Lihat pengirisan">
+                                                    aria-label="Lihat Pengirisan">
                                                     <i class="far fa-eye"></i>
                                                 </button>
                                                 <!-- Tombol Hapus Pengirisan -->

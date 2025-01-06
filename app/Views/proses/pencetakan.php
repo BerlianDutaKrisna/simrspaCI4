@@ -59,12 +59,26 @@
                                     </td>
                                     <?php if (in_array($row['status_pencetakan'], ["Proses Pencetakan"])): ?>
                                         <td>
-                                            <a href="<?= base_url('exam/edit_exam/' . esc($row['id_hpa'])) ?>" class="btn btn-primary btn-user btn-block">
-                                                <i class=" fas fa-print"></i> Cetak
+                                            <?php if (session()->get('update_success')): ?>
+                                                <a href="<?= base_url('exam/edit_exam/' . esc($row['id_hpa'])) ?>" class="btn btn-success btn-sm">
+                                                    <i class="fas fa-pen"></i> Detail
+                                                </a>
+                                                <?php session()->remove('update_success'); // Menghapus session setelah ditampilkan 
+                                                ?>
+                                            <?php else: ?>
+                                                <a href="<?= base_url('exam/edit_exam/' . esc($row['id_hpa'])) ?>" class="btn btn-warning btn-sm">
+                                                    <i class="fas fa-pen"></i> Detail
+                                                </a>
+                                            <?php endif; ?>
+                                        </td>
+                                    <?php elseif (in_array($row['status_pencetakan'], ["Selesai Pencetakan"])): ?>
+                                        <td>
+                                            <a href="<?= base_url('exam/print_exam/' . esc($row['id_hpa'])) ?>" class="btn btn-info btn-sm">
+                                                <i class="fas fa-print"></i> Print
                                             </a>
                                         </td>
                                     <?php else: ?>
-                                        <td style="display:none;"></td>
+                                        <td></td>
                                     <?php endif; ?>
                                 </tr>
                                 <?php $i++; ?>
