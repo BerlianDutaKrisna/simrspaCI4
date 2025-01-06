@@ -58,7 +58,7 @@
             var id_pemotongan_tipis = $(this).data("id_pemotongan_tipis");
             var id_pewarnaan = $(this).data("id_pewarnaan");
             var id_pembacaan = $(this).data("id_pembacaan");
-            var id_penilisan = $(this).data("id_penilisan");
+            var id_penulisan = $(this).data("id_penulisan");
             var id_pemverifikasi = $(this).data("id_pemverifikasi");
             var id_pencetakan = $(this).data("id_pencetakan");
 
@@ -191,7 +191,7 @@
         // ==========================
         $(document).on("click", ".view-penerimaan, .view-pengirisan, .view-pemotongan, .view-pemprosesan, .view-penanaman, .view-pemotongan_tipis, .view-pewarnaan, .view-pembacaan, .view-penulisan, .view-pemverifikasi, .view-pencetakan, .view-mutu", function() {
             var action = $(this).data("action");
-            var id_penerimaan = $(this).data("id_penerimaan"); 
+            var id_penerimaan = $(this).data("id_penerimaan");
             var id_pengirisan = $(this).data("id_pengirisan");
             var id_pemotongan = $(this).data("id_pemotongan");
             var id_pemprosesan = $(this).data("id_pemprosesan");
@@ -211,89 +211,89 @@
 
             // Tentukan URL dan data yang diperlukan berdasarkan action
             if (action === "penerimaan") {
-                url = "<?= base_url('penerimaan/penerimaan_details'); ?>"; 
+                url = "<?= base_url('penerimaan/penerimaan_details'); ?>";
                 data = {
                     id_penerimaan: encodeURIComponent(id_penerimaan)
                 };
-                type = "penerimaan"; 
-                id = id_penerimaan; 
+                type = "penerimaan";
+                id = id_penerimaan;
             } else if (action === "pengirisan") {
-                url = "<?= base_url('pengirisan/pengirisan_details'); ?>"; 
+                url = "<?= base_url('pengirisan/pengirisan_details'); ?>";
                 data = {
                     id_pengirisan: encodeURIComponent(id_pengirisan)
                 };
-                type = "pengirisan"; 
-                id = id_pengirisan; 
+                type = "pengirisan";
+                id = id_pengirisan;
             } else if (action === "pemotongan") {
-                url = "<?= base_url('pemotongan/pemotongan_details'); ?>"; 
+                url = "<?= base_url('pemotongan/pemotongan_details'); ?>";
                 data = {
                     id_pemotongan: encodeURIComponent(id_pemotongan)
                 };
-                type = "pemotongan"; 
-                id = id_pemotongan; 
+                type = "pemotongan";
+                id = id_pemotongan;
             } else if (action === "pemprosesan") {
-                url = "<?= base_url('pemprosesan/pemprosesan_details'); ?>"; 
+                url = "<?= base_url('pemprosesan/pemprosesan_details'); ?>";
                 data = {
                     id_pemprosesan: encodeURIComponent(id_pemprosesan)
                 };
                 type = "pemprosesan";
-                id = id_pemprosesan; 
+                id = id_pemprosesan;
             } else if (action === "penanaman") {
-                url = "<?= base_url('penanaman/penanaman_details'); ?>"; 
+                url = "<?= base_url('penanaman/penanaman_details'); ?>";
                 data = {
                     id_penanaman: encodeURIComponent(id_penanaman)
                 };
                 type = "penanaman";
-                id = id_penanaman; 
-            }  else if (action === "pemotongan_tipis") {
-                url = "<?= base_url('pemotongan_tipis/pemotongan_tipis_details'); ?>"; 
+                id = id_penanaman;
+            } else if (action === "pemotongan_tipis") {
+                url = "<?= base_url('pemotongan_tipis/pemotongan_tipis_details'); ?>";
                 data = {
                     id_pemotongan_tipis: encodeURIComponent(id_pemotongan_tipis)
                 };
                 type = "pemotongan_tipis";
-                id = id_pemotongan_tipis; 
+                id = id_pemotongan_tipis;
             } else if (action === "pewarnaan") {
-                url = "<?= base_url('pewarnaan/pewarnaan_details'); ?>"; 
+                url = "<?= base_url('pewarnaan/pewarnaan_details'); ?>";
                 data = {
                     id_pewarnaan: encodeURIComponent(id_pewarnaan)
                 };
                 type = "pewarnaan";
-                id = id_pewarnaan; 
+                id = id_pewarnaan;
             } else if (action === "pembacaan") {
-                url = "<?= base_url('pembacaan/pembacaan_details'); ?>"; 
+                url = "<?= base_url('pembacaan/pembacaan_details'); ?>";
                 data = {
                     id_pembacaan: encodeURIComponent(id_pembacaan)
                 };
                 type = "pembacaan";
-                id = id_pembacaan; 
+                id = id_pembacaan;
             } else if (action === "penulisan") {
-                url = "<?= base_url('penulisan/penulisan_details'); ?>"; 
+                url = "<?= base_url('penulisan/penulisan_details'); ?>";
                 data = {
                     id_penulisan: encodeURIComponent(id_penulisan)
                 };
                 type = "penulisan";
-                id = id_penulisan; 
+                id = id_penulisan;
             } else if (action === "pemverifikasi") {
-                url = "<?= base_url('pemverifikasi/pemverifikasi_details'); ?>"; 
+                url = "<?= base_url('pemverifikasi/pemverifikasi_details'); ?>";
                 data = {
                     id_pemverifikasi: encodeURIComponent(id_pemverifikasi)
                 };
                 type = "pemverifikasi";
-                id = id_pemverifikasi; 
+                id = id_pemverifikasi;
             } else if (action === "pencetakan") {
-                url = "<?= base_url('pencetakan/pencetakan_details'); ?>"; 
+                url = "<?= base_url('pencetakan/pencetakan_details'); ?>";
                 data = {
                     id_pencetakan: encodeURIComponent(id_pencetakan)
                 };
                 type = "pencetakan";
-                id = id_pencetakan; 
+                id = id_pencetakan;
             } else if (action === "mutu") {
-                url = "<?= base_url('mutu/mutu_details'); ?>"; 
+                url = "<?= base_url('mutu/mutu_details'); ?>";
                 data = {
                     id_mutu: encodeURIComponent(id_mutu)
                 };
                 type = "mutu";
-                id = id_mutu; 
+                id = id_mutu;
             }
 
             // Mengambil data detail melalui AJAX
@@ -332,96 +332,97 @@
                             detailHtml = `
                         <p><strong>Kode HPA:</strong> ${response.kode_hpa || "-"}</p>
                         <p><strong>Dikerjakan Oleh:</strong> ${response.nama_user_pemotongan || "-"}</p>
-                        <p><strong>Status pemotongan:</strong> ${response.status_pemotongan || "-"}</p>
-                        <p><strong>Mulai pemotongan:</strong> ${formatDateTime(response.mulai_pemotongan)}</p>
-                        <p><strong>Selesai pemotongan:</strong> ${formatDateTime(response.selesai_pemotongan)}</p>
+                        <p><strong>Status Pemotongan:</strong> ${response.status_pemotongan || "-"}</p>
+                        <p><strong>Mulai Pemotongan:</strong> ${formatDateTime(response.mulai_pemotongan)}</p>
+                        <p><strong>Selesai Pemotongan:</strong> ${formatDateTime(response.selesai_pemotongan)}</p>
                     `;
                         } else if (action === "pemprosesan") {
                             // Menampilkan detail pemprosesan
                             detailHtml = `
                         <p><strong>Kode HPA:</strong> ${response.kode_hpa || "-"}</p>
                         <p><strong>Dikerjakan Oleh:</strong> ${response.nama_user_pemprosesan || "-"}</p>
-                        <p><strong>Status pemprosesan:</strong> ${response.status_pemprosesan || "-"}</p>
-                        <p><strong>Mulai pemprosesan:</strong> ${formatDateTime(response.mulai_pemprosesan)}</p>
-                        <p><strong>Selesai pemprosesan:</strong> ${formatDateTime(response.selesai_pemprosesan)}</p>
+                        <p><strong>Status Pemprosesan:</strong> ${response.status_pemprosesan || "-"}</p>
+                        <p><strong>Mulai Pemprosesan:</strong> ${formatDateTime(response.mulai_pemprosesan)}</p>
+                        <p><strong>Selesai Pemprosesan:</strong> ${formatDateTime(response.selesai_pemprosesan)}</p>
                     `;
                         } else if (action === "penanaman") {
                             // Menampilkan detail penanaman
                             detailHtml = `
                         <p><strong>Kode HPA:</strong> ${response.kode_hpa || "-"}</p>
                         <p><strong>Dikerjakan Oleh:</strong> ${response.nama_user_penanaman || "-"}</p>
-                        <p><strong>Status penanaman:</strong> ${response.status_penanaman || "-"}</p>
-                        <p><strong>Mulai penanaman:</strong> ${formatDateTime(response.mulai_penanaman)}</p>
-                        <p><strong>Selesai penanaman:</strong> ${formatDateTime(response.selesai_penanaman)}</p>
+                        <p><strong>Status Penanaman:</strong> ${response.status_penanaman || "-"}</p>
+                        <p><strong>Mulai Penanaman:</strong> ${formatDateTime(response.mulai_penanaman)}</p>
+                        <p><strong>Selesai Penanaman:</strong> ${formatDateTime(response.selesai_penanaman)}</p>
                     `;
                         } else if (action === "pemotongan_tipis") {
                             // Menampilkan detail pemotongan_tipis
                             detailHtml = `
                         <p><strong>Kode HPA:</strong> ${response.kode_hpa || "-"}</p>
                         <p><strong>Dikerjakan Oleh:</strong> ${response.nama_user_pemotongan_tipis || "-"}</p>
-                        <p><strong>Status pemotongan_tipis:</strong> ${response.status_pemotongan_tipis || "-"}</p>
-                        <p><strong>Mulai pemotongan_tipis:</strong> ${formatDateTime(response.mulai_pemotongan_tipis)}</p>
-                        <p><strong>Selesai pemotongan_tipis:</strong> ${formatDateTime(response.selesai_pemotongan_tipis)}</p>
+                        <p><strong>Status Pemotongan Tipis:</strong> ${response.status_pemotongan_tipis || "-"}</p>
+                        <p><strong>Mulai Pemotongan Tipis:</strong> ${formatDateTime(response.mulai_pemotongan_tipis)}</p>
+                        <p><strong>Selesai Pemotongan Tipis:</strong> ${formatDateTime(response.selesai_pemotongan_tipis)}</p>
                     `;
                         } else if (action === "pewarnaan") {
                             // Menampilkan detail pewarnaan
                             detailHtml = `
                         <p><strong>Kode HPA:</strong> ${response.kode_hpa || "-"}</p>
                         <p><strong>Dikerjakan Oleh:</strong> ${response.nama_user_pewarnaan || "-"}</p>
-                        <p><strong>Status pewarnaan:</strong> ${response.status_pewarnaan || "-"}</p>
-                        <p><strong>Mulai pewarnaan:</strong> ${formatDateTime(response.mulai_pewarnaan)}</p>
-                        <p><strong>Selesai pewarnaan:</strong> ${formatDateTime(response.selesai_pewarnaan)}</p>
+                        <p><strong>Status Pewarnaan:</strong> ${response.status_pewarnaan || "-"}</p>
+                        <p><strong>Mulai Pewarnaan:</strong> ${formatDateTime(response.mulai_pewarnaan)}</p>
+                        <p><strong>Selesai Pewarnaan:</strong> ${formatDateTime(response.selesai_pewarnaan)}</p>
                     `;
                         } else if (action === "pembacaan") {
                             // Menampilkan detail pembacaan
                             detailHtml = `
                         <p><strong>Kode HPA:</strong> ${response.kode_hpa || "-"}</p>
                         <p><strong>Dikerjakan Oleh:</strong> ${response.nama_user_pembacaan || "-"}</p>
-                        <p><strong>Status pembacaan:</strong> ${response.status_pembacaan || "-"}</p>
-                        <p><strong>Mulai pembacaan:</strong> ${formatDateTime(response.mulai_pembacaan)}</p>
-                        <p><strong>Selesai pembacaan:</strong> ${formatDateTime(response.selesai_pembacaan)}</p>
+                        <p><strong>Status Pembacaan:</strong> ${response.status_pembacaan || "-"}</p>
+                        <p><strong>Mulai Pembacaan:</strong> ${formatDateTime(response.mulai_pembacaan)}</p>
+                        <p><strong>Selesai Pembacaan:</strong> ${formatDateTime(response.selesai_pembacaan)}</p>
                     `;
                         } else if (action === "penulisan") {
                             // Menampilkan detail penulisan
                             detailHtml = `
                         <p><strong>Kode HPA:</strong> ${response.kode_hpa || "-"}</p>
                         <p><strong>Dikerjakan Oleh:</strong> ${response.nama_user_penulisan || "-"}</p>
-                        <p><strong>Status penulisan:</strong> ${response.status_penulisan || "-"}</p>
-                        <p><strong>Mulai penulisan:</strong> ${formatDateTime(response.mulai_penulisan)}</p>
-                        <p><strong>Selesai penulisan:</strong> ${formatDateTime(response.selesai_penulisan)}</p>
+                        <p><strong>Status Penulisan:</strong> ${response.status_penulisan || "-"}</p>
+                        <p><strong>Mulai Penulisan:</strong> ${formatDateTime(response.mulai_penulisan)}</p>
+                        <p><strong>Selesai Penulisan:</strong> ${formatDateTime(response.selesai_penulisan)}</p>
                     `;
                         } else if (action === "pemverifikasi") {
                             // Menampilkan detail pemverifikasi
                             detailHtml = `
                         <p><strong>Kode HPA:</strong> ${response.kode_hpa || "-"}</p>
                         <p><strong>Dikerjakan Oleh:</strong> ${response.nama_user_pemverifikasi || "-"}</p>
-                        <p><strong>Status pemverifikasi:</strong> ${response.status_pemverifikasi || "-"}</p>
-                        <p><strong>Mulai pemverifikasi:</strong> ${formatDateTime(response.mulai_pemverifikasi)}</p>
-                        <p><strong>Selesai pemverifikasi:</strong> ${formatDateTime(response.selesai_pemverifikasi)}</p>
+                        <p><strong>Status Pemverifikasi:</strong> ${response.status_pemverifikasi || "-"}</p>
+                        <p><strong>Mulai Pemverifikasi:</strong> ${formatDateTime(response.mulai_pemverifikasi)}</p>
+                        <p><strong>Selesai Pemverifikasi:</strong> ${formatDateTime(response.selesai_pemverifikasi)}</p>
                     `;
                         } else if (action === "pencetakan") {
                             // Menampilkan detail pencetakan
                             detailHtml = `
                         <p><strong>Kode HPA:</strong> ${response.kode_hpa || "-"}</p>
                         <p><strong>Dikerjakan Oleh:</strong> ${response.nama_user_pencetakan || "-"}</p>
-                        <p><strong>Status pencetakan:</strong> ${response.status_pencetakan || "-"}</p>
-                        <p><strong>Mulai pencetakan:</strong> ${formatDateTime(response.mulai_pencetakan)}</p>
-                        <p><strong>Selesai pencetakan:</strong> ${formatDateTime(response.selesai_pencetakan)}</p>
+                        <p><strong>Status Pencetakan:</strong> ${response.status_pencetakan || "-"}</p>
+                        <p><strong>Mulai Pencetakan:</strong> ${formatDateTime(response.mulai_pencetakan)}</p>
+                        <p><strong>Selesai Pencetakan:</strong> ${formatDateTime(response.selesai_pencetakan)}</p>
                     `;
                         } else if (action === "mutu") {
                             // Menampilkan detail mutu
                             detailHtml = `
                         <p><strong>Kode HPA:</strong> ${response.kode_hpa || "-"}</p>
-                        <p><strong>Indikator 1:</strong> ${response.indikator_1 || "-"}</p>
-                        <p><strong>Indikator 2:</strong> ${response.indikator_2 || "-"}</p>
-                        <p><strong>Indikator 3:</strong> ${response.indikator_3 || "-"}</p>
-                        <p><strong>Indikator 4:</strong> ${response.indikator_4 || "-"}</p>
-                        <p><strong>Indikator 5:</strong> ${response.indikator_5 || "-"}</p>
-                        <p><strong>Indikator 6:</strong> ${response.indikator_6 || "-"}</p>
-                        <p><strong>Indikator 7:</strong> ${response.indikator_7 || "-"}</p>
-                        <p><strong>Indikator 8:</strong> ${response.indikator_8 || "-"}</p>
+                        <p><strong>Volume cairan sesuai:</strong> ${response.indikator_1 || "-"}</p>
+                        <p><strong>Jaringan terfiksasi merata:</strong> ${response.indikator_2 || "-"}</p>
+                        <p><strong>Blok parafin tidak ada fragmentasi:</strong> ${response.indikator_3 || "-"}</p>
+                        <p><strong>Sediaan tanpa lipatan:</strong> ${response.indikator_4 || "-"}</p>
+                        <p><strong>Sediaan tanpa goresan mata pisau:</strong> ${response.indikator_5 || "-"}</p>
+                        <p><strong>Kontras warna sediaan cukup jelas:</strong> ${response.indikator_6 || "-"}</p>
+                        <p><strong>Sediaan tanpa gelembung udara:</strong> ${response.indikator_7 || "-"}</p>
+                        <p><strong>Sediaan tanpa bercak / sidik jari:</strong> ${response.indikator_8 || "-"}</p>
                         <p><strong>Indikator 9:</strong> ${response.indikator_9 || "-"}</p>
                         <p><strong>Indikator 10:</strong> ${response.indikator_10 || "-"}</p>
+                        <p><strong>Total nilai mutu:</strong> ${response.total_nilai_mutu || "-"}</p>
                     `;
                         }
 

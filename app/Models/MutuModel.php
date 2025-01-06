@@ -15,6 +15,14 @@ class MutuModel extends Model
         'indikator_1',
         'indikator_2',
         'indikator_3',
+        'indikator_4',
+        'indikator_5',
+        'indikator_6',
+        'indikator_7',
+        'indikator_8',
+        'indikator_9',
+        'indikator_10',
+        'total_nilai_mutu',
         'created_at',
         'updated_at'
     ];
@@ -32,6 +40,18 @@ class MutuModel extends Model
         $this->insertMutu($data);
         return $this->db->affectedRows() > 0;
     }
+
+    public function getmutuWithRelations()
+{
+    return $this->select(
+            'mutu.*, 
+            hpa.*, 
+            patient.*'
+        )
+        ->join('hpa', 'mutu.id_hpa = hpa.id_hpa', 'left') // Relasi dengan tabel hpa
+        ->join('patient', 'hpa.id_pasien = patient.id_pasien', 'left') // Relasi dengan tabel patient
+        ->findAll();
+}
 
     // Fungsi untuk mengupdate data mutu
 public function updateMutu($id_mutu, $data)
