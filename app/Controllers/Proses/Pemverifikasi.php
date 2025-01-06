@@ -163,9 +163,7 @@ class Pemverifikasi extends BaseController
                 'pemverifikasi.*, 
                 hpa.*, 
                 patient.*, 
-                users.nama_user AS nama_user_pemverifikasi,
-                mutu.indikator_1,
-                mutu.indikator_2'
+                users.nama_user AS nama_user_pemverifikasi'
             )
                 ->join(
                     'hpa',
@@ -174,7 +172,6 @@ class Pemverifikasi extends BaseController
                 ) // Relasi dengan tabel hpa
                 ->join('patient', 'hpa.id_pasien = patient.id_pasien', 'left')
                 ->join('users', 'pemverifikasi.id_user_pemverifikasi = users.id_user', 'left')
-                ->join('mutu', 'hpa.id_hpa = mutu.id_hpa', 'left')
                 ->where('pemverifikasi.id_pemverifikasi', $id_pemverifikasi)
                 ->first();
 

@@ -171,9 +171,7 @@ class Pemotongan extends BaseController
                 'pemotongan.*, 
                 hpa.*, 
                 patient.*, 
-                users.nama_user AS nama_user_pemotongan,
-                mutu.indikator_1,
-                mutu.indikator_2'
+                users.nama_user AS nama_user_pemotongan'
             )
                 ->join(
                     'hpa',
@@ -182,7 +180,6 @@ class Pemotongan extends BaseController
                 ) // Relasi dengan tabel hpa
                 ->join('patient', 'hpa.id_pasien = patient.id_pasien', 'left')
                 ->join('users', 'pemotongan.id_user_pemotongan = users.id_user', 'left')
-                ->join('mutu', 'hpa.id_hpa = mutu.id_hpa', 'left')
                 ->where('pemotongan.id_pemotongan', $id_pemotongan)
                 ->first();
 

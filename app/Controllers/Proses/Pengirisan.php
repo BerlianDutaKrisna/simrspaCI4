@@ -173,9 +173,7 @@ class Pengirisan extends BaseController
                 'pengirisan.*, 
                 hpa.*, 
                 patient.*, 
-                users.nama_user AS nama_user_pengirisan,
-                mutu.indikator_1,
-                mutu.indikator_2'
+                users.nama_user AS nama_user_pengirisan'
             )
                 ->join(
                     'hpa',
@@ -184,7 +182,6 @@ class Pengirisan extends BaseController
                 ) // Relasi dengan tabel hpa
                 ->join('patient', 'hpa.id_pasien = patient.id_pasien', 'left')
                 ->join('users', 'pengirisan.id_user_pengirisan = users.id_user', 'left')
-                ->join('mutu', 'hpa.id_hpa = mutu.id_hpa', 'left')
                 ->where('pengirisan.id_pengirisan', $id_pengirisan)
                 ->first();
 

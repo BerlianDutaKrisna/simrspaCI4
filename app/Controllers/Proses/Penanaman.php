@@ -185,9 +185,7 @@ class Penanaman extends BaseController
                 'penanaman.*, 
                 hpa.*, 
                 patient.*, 
-                users.nama_user AS nama_user_penanaman,
-                mutu.indikator_1,
-                mutu.indikator_2'
+                users.nama_user AS nama_user_penanaman'
             )
                 ->join(
                     'hpa',
@@ -196,7 +194,6 @@ class Penanaman extends BaseController
                 ) // Relasi dengan tabel hpa
                 ->join('patient', 'hpa.id_pasien = patient.id_pasien', 'left')
                 ->join('users', 'penanaman.id_user_penanaman = users.id_user', 'left')
-                ->join('mutu', 'hpa.id_hpa = mutu.id_hpa', 'left')
                 ->where('penanaman.id_penanaman', $id_penanaman)
                 ->first();
 

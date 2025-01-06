@@ -194,9 +194,7 @@ class pembacaan extends BaseController
                 'pembacaan.*, 
                 hpa.*, 
                 patient.*, 
-                users.nama_user AS nama_user_pembacaan,
-                mutu.indikator_1,
-                mutu.indikator_2'
+                users.nama_user AS nama_user_pembacaan'
             )
                 ->join(
                     'hpa',
@@ -205,7 +203,6 @@ class pembacaan extends BaseController
                 ) // Relasi dengan tabel hpa
                 ->join('patient', 'hpa.id_pasien = patient.id_pasien', 'left')
                 ->join('users', 'pembacaan.id_user_pembacaan = users.id_user', 'left')
-                ->join('mutu', 'hpa.id_hpa = mutu.id_hpa', 'left')
                 ->where('pembacaan.id_pembacaan', $id_pembacaan)
                 ->first();
 

@@ -169,9 +169,7 @@ class Pewarnaan extends BaseController
                 'pewarnaan.*, 
                 hpa.*, 
                 patient.*, 
-                users.nama_user AS nama_user_pewarnaan,
-                mutu.indikator_1,
-                mutu.indikator_2'
+                users.nama_user AS nama_user_pewarnaan'
             )
                 ->join(
                     'hpa',
@@ -180,7 +178,6 @@ class Pewarnaan extends BaseController
                 ) // Relasi dengan tabel hpa
                 ->join('patient', 'hpa.id_pasien = patient.id_pasien', 'left')
                 ->join('users', 'pewarnaan.id_user_pewarnaan = users.id_user', 'left')
-                ->join('mutu', 'hpa.id_hpa = mutu.id_hpa', 'left')
                 ->where('pewarnaan.id_pewarnaan', $id_pewarnaan)
                 ->first();
 
