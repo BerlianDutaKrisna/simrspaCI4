@@ -301,12 +301,25 @@
                                         <?php endif; ?>
                                     </td>                                  
                                     <td>
-                                        <?php if (!empty($row['id_mutu'])) : ?>
+                                    <?php if (!empty($row['id_mutu'])) : ?>
                                             <div class="d-flex justify-content-around">
-                                                <button class="btn btn-sm btn-warning mx-1">
+                                                <!-- Tombol untuk Melihat Detail mutu -->
+                                                <button class="btn btn-sm btn-warning mx-1 view-mutu"
+                                                    data-action="mutu"
+                                                    data-id_mutu="<?= htmlspecialchars($row['id_mutu'], ENT_QUOTES, 'UTF-8') ?>"
+                                                    aria-label="Lihat mutu">
                                                     <i class="far fa-eye"></i>
                                                 </button>
-                                                <button class="btn btn-sm btn-danger mx-1" data-toggle="modal" data-target="#deleteModal" data-id_hpa="<?= $row['id_penerimaan'] ?>" data-kode_hpa="<?= esc($row['kode_hpa']) ?>"><i class="fas fa-trash-alt"></i></button>
+                                                <!-- Tombol Hapus mutu -->
+                                                <button class="btn btn-sm btn-danger mx-1 delete-mutu"
+                                                    data-toggle="modal"
+                                                    data-target="#deleteModal"
+                                                    data-id_mutu="<?= htmlspecialchars($row['id_mutu'], ENT_QUOTES, 'UTF-8') ?>"
+                                                    data-id_hpa="<?= htmlspecialchars($row['id_hpa'], ENT_QUOTES, 'UTF-8') ?>"
+                                                    data-action="mutu"
+                                                    aria-label="Hapus mutu">
+                                                    <i class="fas fa-trash-alt"></i>
+                                                </button>
                                             </div>
                                         <?php endif; ?>
                                     </td>

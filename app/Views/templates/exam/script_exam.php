@@ -48,7 +48,7 @@
         // ==========================
         // Hapus DATA
         // ==========================
-        $(document).on("click", ".delete-hpa, .delete-pengirisan", function() {
+        $(document).on("click", ".delete-hpa, .delete-pengirisan, .delete-pemotongan, .delete-pemprosesan, .delete-penanaman, .delete-pemotongan_tipis, .delete-pewarnaan, .delete-pembacaan, .delete-penulisan, .delete-pemverifikasi, .delete-pencetakan", function() {
             var action = $(this).data("action"); // Menyimpan data action (hpa atau pengirisan)
             var id_hpa = $(this).data("id_hpa");
             var id_pengirisan = $(this).data("id_pengirisan");
@@ -58,13 +58,14 @@
             var id_pemotongan_tipis = $(this).data("id_pemotongan_tipis");
             var id_pewarnaan = $(this).data("id_pewarnaan");
             var id_pembacaan = $(this).data("id_pembacaan");
-            var id_penilisan = $(this).data("id_penilisan");
+            var id_penulisan = $(this).data("id_penulisan");
             var id_pemverifikasi = $(this).data("id_pemverifikasi");
             var id_pencetakan = $(this).data("id_pencetakan");
 
             console.log("Action:", action);
-            console.log("ID HPA:", id_hpa);
-            console.log("ID Pengirisan:", id_pengirisan);
+            console.log("ID penulisan:", id_penulisan);
+            console.log("ID pemverifikasi:", id_pemverifikasi);
+            console.log("ID pencetakan:", id_pencetakan);
 
             // Menyimpan data ID yang dibutuhkan untuk operasi delete
             $("#confirmDelete").data("action", action);
