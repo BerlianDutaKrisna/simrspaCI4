@@ -14,6 +14,7 @@ class PemotonganModel extends Model
     protected $allowedFields = [
         'id_hpa',
         'id_user_pemotongan',
+        'id_user_dokter_pemotongan',
         'status_pemotongan',
         'mulai_pemotongan',
         'selesai_pemotongan',

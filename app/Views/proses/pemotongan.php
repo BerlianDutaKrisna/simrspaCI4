@@ -60,13 +60,13 @@
                                     <?php if (in_array($row['status_pemotongan'], ["Proses Pemotongan"])): ?>
                                         <td>
                                             <?php if (session()->get('update_success')): ?>
-                                                <a href="<?= base_url('exam/edit_exam/' . esc($row['id_hpa'])) ?>" class="btn btn-success btn-sm">
-                                                    <i class="fas fa-pen"></i> Detail
+                                                <a href="<?= base_url('exam/edit_makroskopis/' . esc($row['id_hpa'])) ?>" class="btn btn-success btn-sm">
+                                                    <i class="fas fa-pen"></i> Detailed
                                                 </a>
                                                 <?php session()->remove('update_success'); // Menghapus session setelah ditampilkan 
                                                 ?>
                                             <?php else: ?>
-                                                <a href="<?= base_url('exam/edit_exam/' . esc($row['id_hpa'])) ?>" class="btn btn-warning btn-sm">
+                                                <a href="<?= base_url('exam/edit_makroskopis/' . esc($row['id_hpa'])) ?>" class="btn btn-warning btn-sm">
                                                     <i class="fas fa-pen"></i> Detail
                                                 </a>
                                             <?php endif; ?>

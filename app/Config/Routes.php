@@ -37,6 +37,7 @@ $routes->get('exam/index_exam', 'Exam::index_exam'); // Menampilkan halaman inde
 $routes->get('exam/register_exam', 'Exam::register_exam'); // Menampilkan halaman form register exam
 $routes->post('exam/insert', 'Exam::insert'); // Menangani form POST dari register exam
 $routes->get('exam/edit_exam/(:segment)', 'Exam::edit_exam/$1');  // Rute untuk menampilkan form edit
+$routes->get('exam/edit_makroskopis/(:segment)', 'Exam::edit_makroskopis/$1');  // Rute untuk menampilkan form edit
 $routes->post('/exam/update/(:segment)', 'Exam::update/$1');  // Rute untuk menangani update data
 $routes->get('exam/index_buku_penerima', 'Exam::index_buku_penerima');
 $routes->post('exam/update_buku_penerima', 'Exam::update_buku_penerima');  // Adjusted for two segments
