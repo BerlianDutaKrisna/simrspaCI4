@@ -13,7 +13,7 @@
                 </div>
                 <!-- Kolom Tombol Cetak -->
                 <div class="col-12 col-sm-1 text-center text-sm-right">
-                    <a href="#" target="_blank" class="btn btn-primary btn-user btn-block">
+                    <a href="<?=base_url('cetak/cetak_makroskopis') ?>" target="_blank" class="btn btn-primary btn-user btn-block">
                         <i class="fas fa-print"></i> Cetak
                     </a>
                 </div>
