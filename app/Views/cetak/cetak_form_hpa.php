@@ -5,77 +5,96 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Table F4 Size</title>
     <style>
-    @page {
-        size: 215mm 330mm; /* Ukuran F4 atau ukuran kertas lebih panjang */
-        margin: 0; /* Menghilangkan margin default */
-    }
-
-    body {
-        font-family: 'Times New Roman', Times, serif;
-        font-size: 9pt;
-        margin: 20px;
-        padding: 0px;
-    }
-
-    table {
-        width: 100%;
-        border-collapse: collapse;
-        table-layout: fixed;
-        margin: 0px;
-    }
-
-    td {
-        border: 1px solid #000;
-        text-align: left;
-        margin: 0px;
-        padding: 1px;
-        box-sizing: border-box; /* Pastikan padding dan border masuk ke dalam total lebar dan tinggi elemen */
-        overflow: hidden; /* Menyembunyikan konten yang berlebihan */
-        white-space: nowrap; /* Menghindari teks terpotong dan membuatnya dalam satu baris */
-        text-overflow: ellipsis; /* Menambahkan elipsis jika teks terlalu panjang */
-        height: 10px; /* Menjaga tinggi baris konsisten */
-    }
-
-    .judul {
-        font-weight: bold;
-        margin: 0px;
-    }
-
-    .text {
-        display: inline-block;
-        width: 205mm; /* Lebar konten */
-        min-height: 300px; /* Sesuaikan tinggi konten sesuai kebutuhan */
-        margin: 0;
-    }
-
-    .gambar {
-        height: 90px; /* Tinggi gambar */
-    }
-
-    /* Pengaturan khusus untuk cetak */
-    @media print {
-        header, footer, title {
-            display: none; /* Menyembunyikan header dan footer saat print */
-        }
-
-        body::after {
-            content: "";
-        }
-
+        /* Mengatur ukuran default untuk kertas A4 */
         @page {
-            margin: 10px;
+            size: A4; /* Ukuran default A4 */
+            margin: 10mm;
+        }
+
+        /* Mengatur ukuran kertas Letter */
+        @media print and (max-width: 600px) {
+            @page {
+                size: Letter;
+                margin: 10mm;
+            }
+        }
+
+        /* Mengatur ukuran kertas Legal */
+        @media print and (max-width: 800px) {
+            @page {
+                size: Legal;
+                margin: 10mm;
+            }
+        }
+
+        /* Mengatur margin dan padding untuk halaman */
+        body {
+            font-family: 'Times New Roman', Times, serif;
+            font-size: 9pt;
+            margin: 20px;
+            padding: 0px;
         }
 
         table {
-            page-break-before: auto; /* Memastikan tabel dipisahkan dengan baik jika terlalu panjang */
+            width: 100%;
+            border-collapse: collapse;
+            table-layout: fixed;
+            margin: 0px;
         }
 
-        /* Menyembunyikan elemen yang tidak diperlukan */
-        .api-code {
-            display: none;
+        td {
+            border: 1px solid #000;
+            text-align: left;
+            margin: 0px;
+            padding: 1px;
+            box-sizing: border-box;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            height: 10px;
         }
-    }
-</style>
+
+        .judul {
+            font-weight: bold;
+            margin: 0px;
+        }
+
+        .makroskopis{
+            display: inline-block;
+            width: 205mm;
+            min-height: 330px;
+            margin: 0;
+        }
+        .mikroskopis{
+            display: inline-block;
+            width: 205mm;
+            min-height: 400px;
+            margin: 0;
+        }
+
+        .gambar {
+            height: 110px;
+        }
+
+        /* Pengaturan cetak */
+        @media print {
+            header, footer, title {
+                display: none; /* Menyembunyikan header dan footer saat print */
+            }
+
+            body::after {
+                content: "";
+            }
+
+            table {
+                page-break-before: auto;
+            }
+
+            .api-code {
+                display: none;
+            }
+        }
+    </style>
 </head>
 <body>
     <table>
@@ -95,14 +114,14 @@
                 <td colspan="2">Analis PA :</td>
             </tr>
             <tr>
-                <td colspan="4" class="text"></td>
+                <td colspan="4" class="makroskopis"></td>
             </tr>
             <tr class="judul">
                 <td colspan="2">Mikroskopis</td>
                 <td colspan="2">Dokter PA :</td>
             </tr>
             <tr>
-                <td colspan="4" class="text"></td>
+                <td colspan="4" class="mikroskopis"></td>
             </tr>
             <tr class="judul">
                 <td colspan="2">Traking Spesimen</td>
