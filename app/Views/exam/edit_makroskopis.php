@@ -6,20 +6,6 @@
         <div class="card-header py-3">
             <h6 class="m-0 font-weight-bold text-primary">Edit Hpa</h6>
         </div>
-        <div class="card-header py-2">
-            <div class="row align-items-center">
-                <!-- Kolom Judul -->
-                <div class="col-12 col-sm-11">
-                </div>
-                <!-- Kolom Tombol Cetak -->
-                <div class="col-12 col-sm-1 text-center text-sm-right">
-                    <a href="<?=base_url('cetak/cetak_makroskopis') ?>" target="_blank" class="btn btn-primary btn-user btn-block">
-                        <i class="fas fa-print"></i> Cetak
-                    </a>
-                </div>
-            </div>
-        </div>
-
         <div class="card-body">
             <h1>Edit Data Hpa</h1>
             <a href="javascript:history.back()" class="btn btn-primary mb-3">Kembali</a>

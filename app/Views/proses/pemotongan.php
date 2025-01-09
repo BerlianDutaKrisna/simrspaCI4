@@ -73,7 +73,7 @@
                                         </td>
                                     <?php elseif (in_array($row['status_pemotongan'], ["Selesai Pemotongan"])): ?>
                                         <td>
-                                            <a href="<?= base_url('exam/print_exam/' . esc($row['id_hpa'])) ?>" class="btn btn-info btn-sm">
+                                            <a href="<?= base_url('cetak/cetak_makroskopis/' . esc($row['id_hpa'])) ?>" class="btn btn-info btn-sm">
                                                 <i class="fas fa-print"></i> Print
                                             </a>
                                         </td>

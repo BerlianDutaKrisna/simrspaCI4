@@ -144,7 +144,6 @@ class Exam extends BaseController
     // Menampilkan form edit exam
     public function edit_makroskopis($id_hpa)
     {
-        session()->set('previous_url', previous_url());
         // Inisialisasi model
         $hpaModel = new HpaModel();
         $userModel = new UsersModel();
@@ -181,7 +180,6 @@ class Exam extends BaseController
             'id_user' => session()->get('id_user'),
             'nama_user' => session()->get('nama_user'),
         ];
-
         // Kirimkan data ke view
         return view('exam/edit_makroskopis', $data);
     }
