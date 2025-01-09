@@ -35,7 +35,6 @@ class pembacaan extends BaseController
             'id_user' => session()->get('id_user'),
             'nama_user' => session()->get('nama_user'),
         ];
-
         // Mengirim data ke view untuk ditampilkan
         return view('proses/pembacaan', $data); // Update view
     }
@@ -77,12 +76,13 @@ class pembacaan extends BaseController
             if (!empty($selectedIds)) {
                 foreach ($selectedIds as $id) {
                     list($id_pembacaan, $id_hpa, $id_mutu) = explode(':', $id);
+                    $indikator_4 = (string) ($this->request->getPost('indikator_4') ?? '0');
                     $indikator_5 = (string) ($this->request->getPost('indikator_5') ?? '0');
                     $indikator_6 = (string) ($this->request->getPost('indikator_6') ?? '0');
                     $indikator_7 = (string) ($this->request->getPost('indikator_7') ?? '0');
                     $indikator_8 = (string) ($this->request->getPost('indikator_8') ?? '0');
                     $total_nilai_mutu = $this->request->getPost('total_nilai_mutu');
-                    $this->processAction($action, $id_pembacaan, $id_hpa, $id_user, $id_mutu, $indikator_5, $indikator_6, $indikator_7, $indikator_8, $total_nilai_mutu); // Update method call
+                    $this->processAction($action, $id_pembacaan, $id_hpa, $id_user, $id_mutu, $indikator_4, $indikator_5, $indikator_6, $indikator_7, $indikator_8, $total_nilai_mutu); // Update method call
                 }
 
                 return redirect()->to('/pembacaan/index_pembacaan');
@@ -93,7 +93,7 @@ class pembacaan extends BaseController
     }
 
     // Process action based on the action value
-    private function processAction($action, $id_pembacaan, $id_hpa, $id_user, $id_mutu, $indikator_5, $indikator_6, $indikator_7, $indikator_8, $total_nilai_mutu) // Update parameter
+    private function processAction($action, $id_pembacaan, $id_hpa, $id_user, $id_mutu, $indikator_4, $indikator_5, $indikator_6, $indikator_7, $indikator_8, $total_nilai_mutu) // Update parameter
     {
         // Set zona waktu Indonesia/Jakarta
         date_default_timezone_set('Asia/Jakarta');
@@ -123,10 +123,11 @@ class pembacaan extends BaseController
                     // update data mutu
                     $keseluruhan_nilai_mutu = $total_nilai_mutu + $indikator_5 + $indikator_6 + $indikator_7 + $indikator_8;
                     $mutuModel->updateMutu($id_mutu, [
+                        'indikator_4' => $indikator_4,
                         'indikator_5' => $indikator_5,  
                         'indikator_6' => $indikator_6,
-                        'indikator_5' => $indikator_7,
-                        'indikator_6' => $indikator_8,                        
+                        'indikator_7' => $indikator_7,
+                        'indikator_8' => $indikator_8,                        
                         'total_nilai_mutu' => $keseluruhan_nilai_mutu,
                     ]);
                     break;
@@ -139,15 +140,13 @@ class pembacaan extends BaseController
                         'selesai_pembacaan' => null,
                     ]);
                     // Konversi VARCHAR ke INTEGER
-                    $total_nilai_mutu_int = (int)$total_nilai_mutu;
-                    $keseluruhan_nilai_mutu = $total_nilai_mutu_int - 40;
                     $mutuModel->updateMutu($id_mutu, [
                         'indikator_4' => '0',
                         'indikator_5' => '0',
                         'indikator_6' => '0',
                         'indikator_7' => '0',
                         'indikator_8' => '0',
-                        'total_nilai_mutu' => $keseluruhan_nilai_mutu,
+                        'total_nilai_mutu' => '30',
                     ]);
                     break;
 

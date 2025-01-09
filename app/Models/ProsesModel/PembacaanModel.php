@@ -36,23 +36,24 @@ class PembacaanModel extends Model // Update nama model
     }
 
     // Mengambil data Pembacaan dengan relasi
-    public function getPembacaanWithRelations() // Update nama fungsi
+    public function getPembacaanWithRelations()
     {
         return $this->select(
-            '
-        pembacaan.*, 
+            'pembacaan.*, 
         hpa.*, 
         patient.*, 
-        users.nama_user AS nama_user_pembacaan,
+        users.nama_user AS nama_user_dokter_pemotongan,
         mutu.total_nilai_mutu'
         )
             ->join('hpa', 'pembacaan.id_hpa = hpa.id_hpa', 'left') // Relasi dengan tabel hpa
             ->join('patient', 'hpa.id_pasien = patient.id_pasien', 'left') // Relasi dengan tabel patient
-            ->join('users', 'pembacaan.id_user_pembacaan = users.id_user', 'left') // Relasi dengan tabel users untuk pembacaan
+            ->join('pemotongan', 'hpa.id_pemotongan = pemotongan.id_pemotongan', 'left') // Relasi dengan tabel pemotongan
+            ->join('users', 'pemotongan.id_user_dokter_pemotongan = users.id_user', 'left') // Relasi dengan tabel users untuk dokter pemotongan
             ->join('mutu', 'hpa.id_hpa = mutu.id_hpa', 'left') // Relasi dengan tabel mutu berdasarkan id_hpa
             ->where('hpa.status_hpa', 'Pembacaan') // Filter berdasarkan status_hpa 'Pembacaan'
             ->findAll();
     }
+
 
     // Fungsi untuk mengupdate data pembacaan
     public function updatePembacaan($id_pembacaan, $data) // Update nama fungsi dan parameter

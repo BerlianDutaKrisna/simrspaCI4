@@ -25,6 +25,7 @@
                             <th>Status Pembacaan</th>
                             <th>Aksi</th>
                             <th>Kualitas Sediaan</th>
+                            <th>jumlah slide</th>
                             <th>Dokter</th>
                             <th>Mulai Pembacaan</th>
                             <th>Selesai Pembacaan</th>
@@ -107,7 +108,8 @@
                                             <?= $row['total_nilai_mutu']; ?> %
                                         <?php endif; ?>
                                     </td>
-                                    <td><?= $row['nama_user_pembacaan']; ?></td>
+                                    <td><?= $row['jumlah_slide']; ?></td>
+                                    <td><?= $row['nama_user_dokter_pemotongan']; ?></td>
                                     <td>
                                         <?= empty($row['mulai_pembacaan']) ? '-' : esc(date('H:i , d-m-Y', strtotime($row['mulai_pembacaan']))); ?>
                                     </td>
@@ -133,7 +135,7 @@
                                         </td>
                                     <?php elseif (in_array($row['status_pembacaan'], ["Selesai Pembacaan"])): ?>
                                         <td>
-                                            <a href="<?= base_url('exam/print_exam/' . esc($row['id_hpa'])) ?>" class="btn btn-info btn-sm">
+                                            <a href="<?= base_url('cetak/cetak_proses/' . esc($row['id_hpa'])) ?>" class="btn btn-info btn-sm">
                                                 <i class="fas fa-print"></i> Print
                                             </a>
                                         </td>

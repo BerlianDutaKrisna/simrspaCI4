@@ -33,30 +33,16 @@
 <script src="<?= base_url('assets/summernote/summernote.js') ?>"></script>
 <!-- Inisialisasi Summernote -->
 <script>
-    function handleJumlahSlideChange(selectElement) {
-        const customInput = document.getElementById('jumlah_slide_custom');
-        if (selectElement.value === 'lainnya') {
-            customInput.classList.remove('d-none');
-        } else {
-            customInput.classList.add('d-none');
-            customInput.value = '';
-        }
-    }
-
     $(document).ready(function() {
-        $('.summernote').summernote({
-            placeholder: '',
-            tabsize: 2,
-            height: 120,
-            enterTag: 'p',
-            toolbar: [
-                ['style', ['style', 'bold', 'italic', 'underline']], // tombol gaya teks
-                ['font', ['fontsize', 'fontname']], // font dan ukuran font
-                ['para', ['ul', 'ol', 'paragraph']], // format paragraf
-                ['color', ['color']], // pilihan warna
-                ['view', ['codeview', 'help']] // menampilkan kode HTML dan bantuan
-            ]
-        });
+        // Gabungkan data makroskopis dan mikroskopis
+        var makroskopis = "<?= addslashes($hpa['makroskopis_hpa'] ?? '') ?>";
+        var mikroskopis = "<?= addslashes($hpa['mikroskopis_hpa'] ?? '') ?>";
+
+        // Gabungkan keduanya dan masukkan ke dalam summernote
+        var combinedData = makroskopis + "<br><br>" + mikroskopis;
+
+        // Set data gabungan ke dalam summernote
+        $('.summernote').summernote('code', combinedData);
     });
 </script>
 </body>

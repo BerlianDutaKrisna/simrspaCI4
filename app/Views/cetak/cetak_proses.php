@@ -66,13 +66,28 @@
             width: 205mm;
             min-height: 330px;
             margin: 0;
+            font-size: 12pt;
+            line-height: 1.4;
+            letter-spacing: 0.5px;
+            font-family: 'Times New Roman', Times, serif;
+            text-align: justify;
+            padding-left: 10px;
+            word-wrap: break-word;
         }
+
 
         .mikroskopis {
             display: inline-block;
             width: 205mm;
             min-height: 400px;
             margin: 0;
+            font-size: 12pt;
+            line-height: 1.4;
+            letter-spacing: 0.5px;
+            font-family: 'Times New Roman', Times, serif;
+            text-align: justify;
+            padding-left: 10px;
+            word-wrap: break-word;
         }
 
         .gambar {
@@ -127,14 +142,18 @@
                 <td colspan="2">Analis PA : <?= esc($data['nama_user_pemotongan'] ?? '') ?></td>
             </tr>
             <tr>
-                <td colspan="4" class="makroskopis"></td>
+                <td colspan="4" class="makroskopis">
+                    <?= nl2br(html_entity_decode(esc($data['makroskopis_hpa'] ?? ''))); ?>
+                </td>
             </tr>
             <tr class="judul">
                 <td colspan="2">Mikroskopis</td>
-                <td colspan="2">Dokter PA : <?= esc($data['nama_user_pembacaan'] ?? '') ?></td>
+                <td colspan="2">Dokter PA : <?= esc($data['nama_user_dokter_pemotongan'] ?? '') ?></td>
             </tr>
             <tr>
-                <td colspan="4" class="mikroskopis"></td>
+                <td colspan="4" class="mikroskopis">
+                    <?= nl2br(html_entity_decode(esc($data['mikroskopis_hpa'] ?? ''))); ?>
+                </td>
             </tr>
             <tr class="judul">
                 <td colspan="2">Traking Spesimen</td>
@@ -142,35 +161,35 @@
             </tr>
             <tr>
                 <td colspan="2" style="width: 50%;">1. Bahan Diterima : <?= isset($data['mulai_penerimaan']) ? date('H:i, d-m-Y', strtotime($data['mulai_penerimaan'])) : ''; ?></td>
-                <td colspan="2" style="width: 50%;">1. Volume cairan fiksasi sesuai? <?= esc($data['indikator_1'] ?? '') ?></td>
+                <td colspan="2" style="width: 50%;">1. Volume cairan fiksasi sesuai? <?= esc($data['indikator_1'] ?? '0') == '0' ? '' : esc($data['indikator_1']) ?></td>
             </tr>
             <tr>
-                <td colspan="2">2. Makroskopis : <?= isset($data['mulai_penerimaan']) ? date('H:i, d-m-Y', strtotime($data['mulai_pemotongan'])) : ''; ?></td>
-                <td colspan="2">2. Jaringan terfiksasi merata? <?= esc($data['indikator_2'] ?? '') ?></td>
+                <td colspan="2">2. Makroskopis : <?= isset($data['mulai_pemotongan']) ? date('H:i, d-m-Y', strtotime($data['mulai_pemotongan'])) : ''; ?></td>
+                <td colspan="2">2. Jaringan terfiksasi merata? <?= esc($data['indikator_2'] ?? '0') == '0' ? '' : esc($data['indikator_2']) ?></td>
             </tr>
             <tr>
-                <td colspan="2">3. Prosessing :</td>
-                <td colspan="2">3. Blok parafin tidak ada fragmentasi? <?= esc($data['indikator_3'] ?? '') ?></td>
+                <td colspan="2">3. Prosessing : <?= isset($data['mulai_pemprosesan']) ? date('H:i, d-m-Y', strtotime($data['mulai_pemprosesan'])) : ''; ?></td>
+                <td colspan="2">3. Blok parafin tidak ada fragmentasi? <?= esc($data['indikator_3'] ?? '0') == '0' ? '' : esc($data['indikator_3']) ?></td>
             </tr>
             <tr>
-                <td colspan="2">4. Embeding (HPA) :</td>
-                <td colspan="2">4. Sediaan tanpa lipatan? <?= esc($data['indikator_4'] ?? '') ?></td>
+                <td colspan="2">4. Embeding (HPA) : <?= isset($data['mulai_penanaman']) ? date('H:i, d-m-Y', strtotime($data['mulai_penanaman'])) : ''; ?></td>
+                <td colspan="2">4. Sediaan tanpa lipatan? <?= esc($data['indikator_4'] ?? '0') == '0' ? '' : esc($data['indikator_4']) ?></td>
             </tr>
             <tr>
-                <td colspan="2">5. Mikrotomi (HPA) :</td>
-                <td colspan="2">5. Sediaan tanpa goresan mata pisau? <?= esc($data['indikator_5'] ?? '') ?></td>
+                <td colspan="2">5. Mikrotomi (HPA) : <?= isset($data['mulai_pemotongan_tipis']) ? date('H:i, d-m-Y', strtotime($data['mulai_pemotongan_tipis'])) : ''; ?></td>
+                <td colspan="2">5. Sediaan tanpa goresan mata pisau? <?= esc($data['indikator_5'] ?? '0') == '0' ? '' : esc($data['indikator_5']) ?></td>
             </tr>
             <tr>
-                <td colspan="2">6. Pewarnaan :</td>
-                <td colspan="2">6. Kontras warna sediaan cukup jelas? <?= esc($data['indikator_6'] ?? '') ?></td>
+                <td colspan="2">6. Pewarnaan : <?= isset($data['mulai_pewarnaan']) ? date('H:i, d-m-Y', strtotime($data['mulai_pewarnaan'])) : ''; ?></td>
+                <td colspan="2">6. Kontras warna sediaan cukup jelas? <?= esc($data['indikator_6'] ?? '0') == '0' ? '' : esc($data['indikator_6']) ?></td>
             </tr>
             <tr>
-                <td colspan="2">7. Entelan :</td>
-                <td colspan="2">7. Sediaan tanpa gelembung? <?= esc($data['indikator_7'] ?? '') ?></td>
+                <td colspan="2">7. Pembacaan : <?= isset($data['mulai_pembacaan']) ? date('H:i, d-m-Y', strtotime($data['mulai_pembacaan'])) : ''; ?></td>
+                <td colspan="2">7. Sediaan tanpa gelembung? <?= esc($data['indikator_7'] ?? '0') == '0' ? '' : esc($data['indikator_7']) ?></td>
             </tr>
             <tr>
-                <td colspan="2">8. Selesai :</td>
-                <td colspan="2">8. Sediaan tanpa bercak/sidik jari? <?= esc($data['indikator_8'] ?? '') ?></td>
+                <td colspan="2">8. Pencetakan : <?= isset($data['mulai_pencetakan']) ? date('H:i, d-m-Y', strtotime($data['mulai_pencetakan'])) : ''; ?></td>
+                <td colspan="2">8. Sediaan tanpa bercak/sidik jari? <?= esc($data['indikator_8'] ?? '0') == '0' ? '' : esc($data['indikator_8']) ?></td>
             </tr>
         </tbody>
     </table>

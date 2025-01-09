@@ -10,7 +10,7 @@ class Cetak extends BaseController
         return view('cetak/cetak_form_hpa');
     }
 
-    public function cetak_makroskopis($id_hpa)
+    public function cetak_proses($id_hpa)
     {
         $model = new HpaModel();
 
@@ -20,7 +20,31 @@ class Cetak extends BaseController
         if (!$data) {
             return redirect()->to('/')->with('error', 'Data tidak ditemukan.');
         }
-        return view('cetak/cetak_makroskopis', ['data' => $data[0]]);
+        return view('cetak/cetak_proses', ['data' => $data[0]]);
+    }
+
+    public function cetak_hpa($id_hpa)
+    {
+        $model = new HpaModel();
+
+        // Ambil id_user dan nama_user dari session yang sedang aktif
+        $data['id_user'] = session()->get('id_user');
+        $data['nama_user'] = session()->get('nama_user');
+        // Ambil data berdasarkan id_hpa termasuk relasi
+        $hpa= $model->getHpaWithAllRelations($id_hpa);
+
+        // Jika hpa ditemukan, tampilkan form edit
+        if ($hpa) {
+            // Menggabungkan data hpa dengan session data
+            $data['hpa'] = $hpa;
+            // Kirimkan data ke view
+            return view('cetak/cetak_hpa', $data);
+        } else {
+            // Jika tidak ditemukan, tampilkan pesan error
+            return redirect()->back()->withInput()->with('message', [
+                'error' => 'hpa tidak ditemukan.'
+            ]);
+        }
     }
 }
 

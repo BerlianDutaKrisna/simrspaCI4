@@ -242,39 +242,43 @@ class HpaModel extends Model
             ->getResultArray();
     }
 
-    public function getHpaWithAllRelations()
+    public function getHpaWithAllRelations($id_hpa)
     {
         return $this->db->table($this->table)
             ->select(' 
-            hpa.*, 
-            patient.*, 
-            penerimaan.*, 
-            pengirisan.*, 
-            pemotongan.*, 
-            pemprosesan.*, 
-            penanaman.*, 
-            pemotongan_tipis.*, 
-            pewarnaan.*, 
-            pembacaan.*, 
-            penulisan.*, 
-            pemverifikasi.*, 
-            pencetakan.*, 
-            user_penerimaan.nama_user AS nama_user_penerimaan, 
-            user_pengirisan.nama_user AS nama_user_pengirisan, 
-            user_pemotongan.nama_user AS nama_user_pemotongan, 
-            user_pemprosesan.nama_user AS nama_user_pemprosesan, 
-            user_penanaman.nama_user AS nama_user_penanaman, 
-            user_pemotongan_tipis.nama_user AS nama_user_pemotongan_tipis, 
-            user_pewarnaan.nama_user AS nama_user_pewarnaan, 
-            user_pembacaan.nama_user AS nama_user_pembacaan, 
-            user_penulisan.nama_user AS nama_user_penulisan, 
-            user_pemverifikasi.nama_user AS nama_user_pemverifikasi, 
-            user_pencetakan.nama_user AS nama_user_pencetakan
-        ')
+        hpa.*, 
+        patient.*, 
+        penerimaan.*, 
+        pengirisan.*, 
+        pemotongan.*, 
+        pemprosesan.*, 
+        penanaman.*, 
+        pemotongan_tipis.*, 
+        pewarnaan.*, 
+        pembacaan.*, 
+        penulisan.*, 
+        pemverifikasi.*, 
+        pencetakan.*, 
+        mutu.*,
+        user_penerimaan.nama_user AS nama_user_penerimaan, 
+        user_pengirisan.nama_user AS nama_user_pengirisan, 
+        user_pemotongan.nama_user AS nama_user_pemotongan, 
+        user_dokter_pemotongan.nama_user AS nama_user_dokter_pemotongan, 
+        user_pemprosesan.nama_user AS nama_user_pemprosesan, 
+        user_penanaman.nama_user AS nama_user_penanaman, 
+        user_pemotongan_tipis.nama_user AS nama_user_pemotongan_tipis, 
+        user_pewarnaan.nama_user AS nama_user_pewarnaan, 
+        user_pembacaan.nama_user AS nama_user_pembacaan, 
+        user_penulisan.nama_user AS nama_user_penulisan, 
+        user_pemverifikasi.nama_user AS nama_user_pemverifikasi, 
+        user_pencetakan.nama_user AS nama_user_pencetakan
+    ')
             ->join('patient', 'patient.id_pasien = hpa.id_pasien', 'left')
             ->join('penerimaan', 'hpa.id_penerimaan = penerimaan.id_penerimaan', 'left')
             ->join('pengirisan', 'hpa.id_pengirisan = pengirisan.id_pengirisan', 'left')
             ->join('pemotongan', 'hpa.id_pemotongan = pemotongan.id_pemotongan', 'left')
+            ->join('users AS user_pemotongan', 'pemotongan.id_user_pemotongan = user_pemotongan.id_user', 'left')
+            ->join('users AS user_dokter_pemotongan', 'pemotongan.id_user_dokter_pemotongan = user_dokter_pemotongan.id_user', 'left')
             ->join('pemprosesan', 'hpa.id_pemprosesan = pemprosesan.id_pemprosesan', 'left')
             ->join('penanaman', 'hpa.id_penanaman = penanaman.id_penanaman', 'left')
             ->join('pemotongan_tipis', 'hpa.id_pemotongan_tipis = pemotongan_tipis.id_pemotongan_tipis', 'left')
@@ -283,9 +287,9 @@ class HpaModel extends Model
             ->join('penulisan', 'hpa.id_penulisan = penulisan.id_penulisan', 'left')
             ->join('pemverifikasi', 'hpa.id_pemverifikasi = pemverifikasi.id_pemverifikasi', 'left')
             ->join('pencetakan', 'hpa.id_pencetakan = pencetakan.id_pencetakan', 'left')
+            ->join('mutu', 'hpa.id_mutu = mutu.id_mutu', 'left')
             ->join('users AS user_penerimaan', 'penerimaan.id_user_penerimaan = user_penerimaan.id_user', 'left')
             ->join('users AS user_pengirisan', 'pengirisan.id_user_pengirisan = user_pengirisan.id_user', 'left')
-            ->join('users AS user_pemotongan', 'pemotongan.id_user_pemotongan = user_pemotongan.id_user', 'left')
             ->join('users AS user_pemprosesan', 'pemprosesan.id_user_pemprosesan = user_pemprosesan.id_user', 'left')
             ->join('users AS user_penanaman', 'penanaman.id_user_penanaman = user_penanaman.id_user', 'left')
             ->join(
@@ -298,6 +302,7 @@ class HpaModel extends Model
             ->join('users AS user_penulisan', 'penulisan.id_user_penulisan = user_penulisan.id_user', 'left')
             ->join('users AS user_pemverifikasi', 'pemverifikasi.id_user_pemverifikasi = user_pemverifikasi.id_user', 'left')
             ->join('users AS user_pencetakan', 'pencetakan.id_user_pencetakan = user_pencetakan.id_user', 'left')
+            ->where('hpa.id_hpa', $id_hpa)
             ->get()
             ->getResultArray();
     }

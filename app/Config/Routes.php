@@ -45,6 +45,7 @@ $routes->post('exam/update_status_hpa', 'Exam::update_status_hpa');
 $routes->post('exam/delete', 'Exam::delete');
 
 
+
 // Route untuk Penerimaan
 $routes->get('penerimaan/index_penerimaan', 'Proses\Penerimaan::index_penerimaan'); // Menampilkan halaman penerimaan
 $routes->group('penerimaan', ['namespace' => 'App\Controllers\Proses'], function ($routes) {
@@ -172,5 +173,6 @@ $routes->post('mutu/update_mutu', 'Mutu::update_mutu');
 
 // Router untuk Cetak
 $routes->get('cetak/form_hpa', 'Cetak::cetak_form_hpa');
-$routes->get('cetak/cetak_makroskopis/(:num)', 'Cetak::cetak_makroskopis/$1');
+$routes->get('cetak/cetak_proses/(:num)', 'Cetak::cetak_proses/$1');
+$routes->get('cetak/cetak_hpa/(:num)', 'Cetak::cetak_hpa/$1');
 
