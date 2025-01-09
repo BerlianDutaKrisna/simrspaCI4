@@ -5,86 +5,90 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Table F4 Size</title>
     <style>
-        @page {
-            size: 215mm 330mm; /* F4 size */
-            margin: 0; /* Remove default margin */
+    @page {
+        size: 215mm 330mm; /* Ukuran F4 atau ukuran kertas lebih panjang */
+        margin: 0; /* Menghilangkan margin default */
+    }
+
+    body {
+        font-family: 'Times New Roman', Times, serif;
+        font-size: 9pt;
+        margin: 20px;
+        padding: 0px;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        table-layout: fixed;
+        margin: 0px;
+    }
+
+    td {
+        border: 1px solid #000;
+        text-align: left;
+        margin: 0px;
+        padding: 1px;
+        box-sizing: border-box; /* Pastikan padding dan border masuk ke dalam total lebar dan tinggi elemen */
+        overflow: hidden; /* Menyembunyikan konten yang berlebihan */
+        white-space: nowrap; /* Menghindari teks terpotong dan membuatnya dalam satu baris */
+        text-overflow: ellipsis; /* Menambahkan elipsis jika teks terlalu panjang */
+        height: 10px; /* Menjaga tinggi baris konsisten */
+    }
+
+    .judul {
+        font-weight: bold;
+        margin: 0px;
+    }
+
+    .text {
+        display: inline-block;
+        width: 205mm; /* Lebar konten */
+        min-height: 300px; /* Sesuaikan tinggi konten sesuai kebutuhan */
+        margin: 0;
+    }
+
+    .gambar {
+        height: 90px; /* Tinggi gambar */
+    }
+
+    /* Pengaturan khusus untuk cetak */
+    @media print {
+        header, footer, title {
+            display: none; /* Menyembunyikan header dan footer saat print */
         }
 
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
+        body::after {
+            content: "";
+        }
+
+        @page {
+            margin: 10px;
         }
 
         table {
-            width: 100%;
-            border-collapse: collapse;
-            table-layout: fixed;
+            page-break-before: auto; /* Memastikan tabel dipisahkan dengan baik jika terlalu panjang */
         }
 
-        td {
-            border: 1px solid #000;
-            text-align: left;
-            padding: 5px;
-            box-sizing: border-box; /* Include padding and border in element’s total width and height */
-            overflow: hidden; /* Hide overflowing content */
-            white-space: nowrap; /* Prevent text from wrapping */
-            text-overflow: ellipsis; /* Show ellipsis for overflowing text */
-            height: 30px; /* Ensure consistent row height */
+        /* Menyembunyikan elemen yang tidak diperlukan */
+        .api-code {
+            display: none;
         }
-
-        .judul {
-            font-weight: bold;
-        }
-
-        .text {
-            display: inline-block;
-            width: 215mm;
-            min-height: 275px;
-        }
-
-        .gambar {
-            height: 100px; /* Consistent height for image rows */
-        }
-
-        /* Remove header and footer during printing */
-        @media print {
-            header, footer, title {
-                display: none;
-            }
-
-            body::after {
-                content: "";
-            }
-
-            @page {
-                margin-top: 20px;
-                margin-bottom: 0;
-            }
-
-            table {
-                page-break-before: auto;
-            }
-
-            /* Hide unnecessary elements */
-            .api-code {
-                display: none;
-            }
-        }
-    </style>
+    }
+</style>
 </head>
 <body>
     <table>
         <tbody>
             <tr>
                 <td rowspan="2" style="width: 25%;">Kode HPA :</td>
+                <td style="width: 25%;">Nama Pasien :</td>
                 <td style="width: 25%;">Tanggal Mengerjakan :</td>
-                <td style="width: 25%;">Tanggal Janji Hasil :</td>
                 <td rowspan="2" style="width: 25%;">APD :</td>
             </tr>
             <tr>
-                <td></td>
-                <td></td>
+            <td style="width: 25%;">Norm Pasien :</td>
+            <td style="width: 25%;">Tanggal Hasil :</td>
             </tr>
             <tr class="judul">
                 <td colspan="2">Makroskopis</td>
