@@ -171,4 +171,5 @@ $routes->get('mutu/edit_mutu', 'Mutu::edit_mutu');
 $routes->post('mutu/update_mutu', 'Mutu::update_mutu');
 
 // Router untuk Cetak
+$routes->get('cetak/form_hpa', 'Cetak::cetak_form_hpa');
 $routes->get('cetak/cetak_makroskopis', 'Cetak::cetak_makroskopis');
