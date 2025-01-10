@@ -6,32 +6,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Table F4 Size</title>
     <style>
-        /* Mengatur ukuran default untuk kertas A4 */
-        @page {
-            size: A4;
-            /* Ukuran default A4 */
-            margin: 10mm;
-        }
 
-        /* Mengatur ukuran kertas Letter */
-        @media print and (max-width: 600px) {
+        @media print{
             @page {
-                size: Letter;
-                margin: 10mm;
-            }
-        }
-
-        /* Mengatur ukuran kertas Legal */
-        @media print and (max-width: 800px) {
-            @page {
-                size: Legal;
+                width: 250mm;
                 margin: 10mm;
             }
         }
 
         /* Mengatur margin dan padding untuk halaman */
         body {
-            font-family: 'Times New Roman', Times, serif;
             font-size: 9pt;
             margin: 20px;
             padding: 0px;
@@ -63,31 +47,17 @@
 
         .makroskopis {
             display: inline-block;
-            width: 205mm;
+            width: 250mm;
             min-height: 330px;
             margin: 0;
-            font-size: 12pt;
-            line-height: 1.4;
-            letter-spacing: 0.5px;
-            font-family: 'Times New Roman', Times, serif;
-            text-align: justify;
-            padding-left: 10px;
-            word-wrap: break-word;
         }
 
 
         .mikroskopis {
             display: inline-block;
-            width: 205mm;
+            width: 250mm;
             min-height: 400px;
             margin: 0;
-            font-size: 12pt;
-            line-height: 1.4;
-            letter-spacing: 0.5px;
-            font-family: 'Times New Roman', Times, serif;
-            text-align: justify;
-            padding-left: 10px;
-            word-wrap: break-word;
         }
 
         .gambar {

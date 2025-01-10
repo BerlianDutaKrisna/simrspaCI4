@@ -56,10 +56,12 @@
                             </table>
                             <font size="5" face="verdana"><b>LAPORAN PEMERIKSAAN:<br></b></font>
                             <p><b style="font-family: verdana; font-size: x-large;">MAKROSKOPIK :</b></p>
-                            <?= $hpa['makroskopis_hpa'] ?? '' ?>
+                            <font size="5" face="verdana"><?= $hpa['makroskopis_hpa'] ?? '' ?></font>
                             <div>
                                 <font size="5" face="verdana"><b>MIKROSKOPIK :</b><br></font>
-                                <?= $hpa['mikroskopis_hpa'] ?? '' ?>
+                            </div>
+                            <div>
+                                <font size="5" face="verdana"><?= $hpa['mikroskopis_hpa'] ?? '' ?></font>
                             </div>
                             <br>
                             <b>KESIMPULAN :</b> <?= $hpa['lokasi_spesimen'] ?? '' ?>, <?= $hpa['diagnosa_klinik'] ?? '' ?>:

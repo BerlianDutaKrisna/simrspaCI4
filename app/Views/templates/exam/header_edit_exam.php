@@ -57,6 +57,7 @@
             font-family: 'Verdana', Arial, sans-serif;
             color: black;
             line-height: 1.4 !important;
+            font-size: 24px;
         }
     </style>
 

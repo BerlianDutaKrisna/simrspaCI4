@@ -28,17 +28,12 @@
     <style>
         .note-editor {
             width: 250mm;
-            /* Untuk memusatkan editor */
             padding: 10px;
-            /* Menambahkan padding jika diperlukan */
         }
 
         .summernote p {
             margin: 0;
             padding: 5px 0;
-            /* Sesuaikan padding agar jarak antar paragraf lebih baik */
-            line-height: 1.5;
-            /* Mengatur jarak baris agar lebih teratur */
         }
 
         .note-editor .dropdown-toggle::after {
@@ -56,7 +51,7 @@
         .note-editable {
             font-family: 'Verdana', Arial, sans-serif;
             color: black;
-            line-height: 1.4 !important;
+            font-size: 24px;
         }
     </style>
 
