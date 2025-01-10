@@ -144,6 +144,7 @@ class Exam extends BaseController
     // Menampilkan form edit exam
     public function edit_makroskopis($id_hpa)
     {
+        session()->set('previous_url', previous_url());
         // Inisialisasi model
         $hpaModel = new HpaModel();
         $userModel = new UsersModel();
@@ -247,10 +248,14 @@ class Exam extends BaseController
                     ]);
                 }
             }
-            // Redirect kembali ke halaman sebelumnya (dari session)
-            return redirect()->to(session()->get('previous_url'))->with('success', 'Data berhasil diperbarui.');
-        } else {
-            return redirect()->back()->with('error', 'Gagal memperbarui data.');
+            $previousUrl = session()->get('previous_url');
+
+            if ($previousUrl) {
+                return redirect()->to($previousUrl)->with('success', 'Data berhasil diperbarui.');
+            } else {
+                // If there is no previous URL, redirect to a default page (e.g., the home page)
+                return redirect()->to('/')->with('success', 'Data berhasil diperbarui.');
+            }
         }
     }
 

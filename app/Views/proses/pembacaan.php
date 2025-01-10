@@ -135,6 +135,9 @@
                                         </td>
                                     <?php elseif (in_array($row['status_pembacaan'], ["Selesai Pembacaan"])): ?>
                                         <td>
+                                            <a href="<?= base_url('exam/edit_exam/' . esc($row['id_hpa'])) ?>" class="btn btn-warning btn-sm">
+                                                <i class="fas fa-pen"></i> Detail
+                                            </a>
                                             <a href="<?= base_url('cetak/cetak_proses/' . esc($row['id_hpa'])) ?>" class="btn btn-info btn-sm">
                                                 <i class="fas fa-print"></i> Print
                                             </a>

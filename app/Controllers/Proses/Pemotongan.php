@@ -22,6 +22,7 @@ class Pemotongan extends BaseController
 
     public function index_pemotongan()
     {
+        session()->set('previous_url', previous_url());
         // Mengambil id_user dan nama_user dari session
         $pemotonganModel = new PemotonganModel();
 

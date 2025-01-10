@@ -26,25 +26,3 @@
         </div>
     </div>
 </footer>
-
-<!-- CDN Bootstrap 5 JS (bundle, menyertakan Popper.js) -->
-<script src="<?= base_url('assets/bootstrap/js/bootstrap.bundle.min.js') ?>"></script>
-<!-- CDN Summernote JS (Versi terbaru) -->
-<script src="<?= base_url('assets/summernote/summernote.js') ?>"></script>
-<!-- Inisialisasi Summernote -->
-<script>
-    $(document).ready(function() {
-        // Gabungkan data makroskopis dan mikroskopis
-        var makroskopis = "<?= addslashes($hpa['makroskopis_hpa'] ?? '') ?>";
-        var mikroskopis = "<?= addslashes($hpa['mikroskopis_hpa'] ?? '') ?>";
-
-        // Gabungkan keduanya dan masukkan ke dalam summernote
-        var combinedData = makroskopis + "<br><br>" + mikroskopis;
-
-        // Set data gabungan ke dalam summernote
-        $('.summernote').summernote('code', combinedData);
-    });
-</script>
-</body>
-
-</html>
