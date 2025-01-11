@@ -122,20 +122,20 @@
                                     <?php if (in_array($row['status_pembacaan'], ["Proses Pembacaan"])): ?>
                                         <td>
                                             <?php if (session()->get('update_success')): ?>
-                                                <a href="<?= base_url('exam/edit_exam/' . esc($row['id_hpa'])) ?>" class="btn btn-success btn-sm">
+                                                <a href="<?= base_url('exam/edit_mikroskopis/' . esc($row['id_hpa'])) ?>" class="btn btn-success btn-sm">
                                                     <i class="fas fa-pen"></i> Detail
                                                 </a>
                                                 <?php session()->remove('update_success'); // Menghapus session setelah ditampilkan 
                                                 ?>
                                             <?php else: ?>
-                                                <a href="<?= base_url('exam/edit_exam/' . esc($row['id_hpa'])) ?>" class="btn btn-warning btn-sm mx-1">
+                                                <a href="<?= base_url('exam/edit_mikroskopis/' . esc($row['id_hpa'])) ?>" class="btn btn-warning btn-sm mx-1">
                                                     <i class="fas fa-pen"></i> Detail
                                                 </a>
                                             <?php endif; ?>
                                         </td>
                                     <?php elseif (in_array($row['status_pembacaan'], ["Selesai Pembacaan"])): ?>
                                         <td>
-                                            <a href="<?= base_url('exam/edit_exam/' . esc($row['id_hpa'])) ?>" class="btn btn-warning btn-sm mx-1">
+                                            <a href="<?= base_url('exam/edit_mikroskopis/' . esc($row['id_hpa'])) ?>" class="btn btn-warning btn-sm mx-1">
                                                 <i class="fas fa-pen"></i> Detail
                                             </a>
                                             <a href="<?= base_url('cetak/cetak_proses/' . esc($row['id_hpa'])) ?>" class="btn btn-info btn-sm mx-1">

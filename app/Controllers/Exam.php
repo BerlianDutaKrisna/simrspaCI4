@@ -25,11 +25,13 @@ class Exam extends BaseController
 {
     protected $hpaModel;
     protected $usersModel;
+    protected $pembacaanModel;
 
     public function __construct()
     {
         $this->hpaModel = new HpaModel();
         $this->usersModel = new UsersModel();
+        $this->pembacaanModel = new PembacaanModel();
     }
 
     public function index_exam()
@@ -185,13 +187,61 @@ class Exam extends BaseController
         return view('exam/edit_makroskopis', $data);
     }
 
+    // Menampilkan form edit exam
+    public function edit_mikroskopis($id_hpa)
+    {
+        session()->set('previous_url', previous_url());
+        // Inisialisasi model
+        $hpaModel = new HpaModel();
+        $userModel = new UsersModel();
+        $pemotonganModel = new PemotonganModel(); // Model Pemotongan
+
+        // Ambil data hpa berdasarkan ID
+        $hpa = $hpaModel->getHpaWithPatient($id_hpa);
+        if (!$hpa) {
+            return redirect()->back()->with('message', ['error' => 'HPA tidak ditemukan.']);
+        }
+
+        // Ambil id_pemotongan dari data hpa
+        $id_pemotongan = $hpa['id_pemotongan'];
+
+        // Ambil data pemotongan berdasarkan id_pemotongan
+        $pemotongan = $pemotonganModel->find($id_pemotongan);
+
+        // Ambil data pengguna dengan status "Dokter" dari tabel users
+        $users = $userModel->where('status_user', 'Dokter')->findAll();
+
+        // Ambil nama dokter dari pemotongan berdasarkan id_user_dokter_pemotongan
+        if ($pemotongan && !empty($pemotongan['id_user_dokter_pemotongan'])) {
+            $dokter = $userModel->find($pemotongan['id_user_dokter_pemotongan']);
+            $pemotongan['dokter_nama'] = $dokter ? $dokter['nama_user'] : null;
+        } else {
+            $pemotongan['dokter_nama'] = null;
+        }
+
+        // Persiapkan data yang akan dikirim ke view
+        $data = [
+            'hpa' => $hpa,               // Data HPA
+            'pemotongan' => $pemotongan, // Data Pemotongan
+            'users' => $users,           // Data Pengguna (Dokter)
+            'id_user' => session()->get('id_user'),
+            'nama_user' => session()->get('nama_user'),
+        ];
+        // Kirimkan data ke view
+        return view('exam/edit_mikroskopis', $data);
+    }
+
     public function update($id_hpa)
     {
         // Inisialisasi model
         $hpaModel = new HpaModel();
         $pemotonganModel = new PemotonganModel();
+        $pembacaanModel = new PembacaanModel();
+
+        // Mendapatkan id_hpa dari POST
         $id_hpa = $this->request->getPost('id_hpa');
 
+        // Validasi form input
         $validation = \Config\Services::validation();
         $validation->setRules([
             'kode_hpa' => [
@@ -207,23 +257,10 @@ class Exam extends BaseController
             return redirect()->back()->withInput()->with('errors', $validation->getErrors());
         }
 
-        // Ambil data dari request
+        // Mengambil data dari form
         $data = $this->request->getPost();
-        // Proses upload file untuk foto makroskopis
-        // if ($fileMakro = $this->request->getFile('foto_makroskopis_hpa')) {
-        //     if ($fileMakro->isValid() && !$fileMakro->hasMoved()) {
-        //         $data['foto_makroskopis_hpa'] = $fileMakro->store('uploads/hpa');
-        //     }
-        // }
 
-        // Proses upload file untuk foto mikroskopis
-        // if ($fileMikro = $this->request->getFile('foto_mikroskopis_hpa')) {
-        //     if ($fileMikro->isValid() && !$fileMikro->hasMoved()) {
-        //         $data['foto_mikroskopis_hpa'] = $fileMikro->store('uploads/hpa');
-        //     }
-        // }
-
-        // Jika jumlah slide "lainnya" dipilih
+        // Mengubah 'jumlah_slide' jika memilih 'lainnya'
         if ($this->request->getPost('jumlah_slide') === 'lainnya') {
             $data['jumlah_slide'] = $this->request->getPost('jumlah_slide_custom');
         }
@@ -248,14 +285,145 @@ class Exam extends BaseController
                     ]);
                 }
             }
-            $previousUrl = session()->get('previous_url');
 
+            // Mengambil URL sebelumnya dari session
+            $previousUrl = session()->get('previous_url');
             if ($previousUrl) {
+                // Jika ada previous URL, redirect ke URL tersebut
                 return redirect()->to($previousUrl)->with('success', 'Data berhasil diperbarui.');
             } else {
-                // If there is no previous URL, redirect to a default page (e.g., the home page)
+                // Jika tidak ada previous URL, arahkan ke halaman default
                 return redirect()->to('/')->with('success', 'Data berhasil diperbarui.');
             }
+        }
+    }
+
+
+    public function uploadFotoMakroskopis($id_hpa)
+    {
+        session()->set('previous_url', previous_url());
+        date_default_timezone_set('Asia/Jakarta');
+        $hpaModel = new HpaModel();
+
+        // Ambil data HPA untuk mendapatkan nama file lama
+        $hpa = $hpaModel->find($id_hpa);
+
+        // Validasi input file
+        $validation = \Config\Services::validation();
+        $validation->setRules([
+            'foto_makroskopis_hpa' => [
+                'rules' => 'uploaded[foto_makroskopis_hpa]|ext_in[foto_makroskopis_hpa,jpg,jpeg,png]|max_size[foto_makroskopis_hpa,5000]', // 5MB max size
+                'errors' => [
+                    'uploaded' => 'Harap unggah file foto makroskopis.',
+                    'ext_in' => 'File harus berformat JPG, JPEG, atau PNG.',
+                ],
+            ],
+        ]);
+
+        if (!$this->validate($validation->getRules())) {
+            return redirect()->back()->withInput()->with('errors', $validation->getErrors());
+        }
+
+        // Proses upload file
+        $file = $this->request->getFile('foto_makroskopis_hpa');
+
+        if ($file->isValid() && !$file->hasMoved()) {
+            // Generate nama file baru berdasarkan waktu
+            $newFileName = date('HisdmY') . '.' . $file->getExtension();
+
+            // Tentukan folder tujuan upload
+            $uploadPath = ROOTPATH . 'public/uploads/hpa/makroskopis/';
+            // Pastikan folder tujuan ada
+            if (!is_dir($uploadPath)) {
+                mkdir($uploadPath, 0777, true); // Membuat folder jika belum ada
+            }
+
+            // Hapus file lama jika ada
+            if (!empty($hpa['foto_makroskopis_hpa'])) {
+                $oldFilePath = $uploadPath . $hpa['foto_makroskopis_hpa'];
+                if (file_exists($oldFilePath)) {
+                    unlink($oldFilePath); // Hapus file lama
+                }
+            }
+
+            // Pindahkan file baru ke folder tujuan dengan nama baru
+            if ($file->move($uploadPath, $newFileName)) {
+                // Update nama file baru di database
+                $hpaModel->update($id_hpa, ['foto_makroskopis_hpa' => $newFileName]);
+
+                // Berhasil, redirect dengan pesan sukses
+                return redirect()->back()->with('success', 'Foto makroskopis berhasil diunggah dan diperbarui.');
+            } else {
+                // Gagal memindahkan file
+                return redirect()->back()->with('error', 'Gagal mengunggah foto makroskopis.');
+            }
+        } else {
+            // Jika file tidak valid
+            return redirect()->back()->with('error', 'File tidak valid atau tidak diunggah.');
+        }
+    }
+
+    public function uploadFotoMikroskopis($id_hpa)
+    {
+        session()->set('previous_url', previous_url());
+        date_default_timezone_set('Asia/Jakarta');
+        $hpaModel = new HpaModel();
+
+        // Ambil data HPA untuk mendapatkan nama file lama
+        $hpa = $hpaModel->find($id_hpa);
+
+        // Validasi input file
+        $validation = \Config\Services::validation();
+        $validation->setRules([
+            'foto_mikroskopis_hpa' => [
+                'rules' => 'uploaded[foto_mikroskopis_hpa]|ext_in[foto_mikroskopis_hpa,jpg,jpeg,png]|max_size[foto_mikroskopis_hpa,5000]', // 5MB max size
+                'errors' => [
+                    'uploaded' => 'Harap unggah file foto mikroskopis.',
+                    'ext_in' => 'File harus berformat JPG, JPEG, atau PNG.',
+                ],
+            ],
+        ]);
+
+        if (!$this->validate($validation->getRules())) {
+            return redirect()->back()->withInput()->with('errors', $validation->getErrors());
+        }
+
+        // Proses upload file
+        $file = $this->request->getFile('foto_mikroskopis_hpa');
+
+        if ($file->isValid() && !$file->hasMoved()) {
+            // Generate nama file baru berdasarkan waktu
+            $newFileName = date('HisdmY') . '.' . $file->getExtension();
+
+            // Tentukan folder tujuan upload
+            $uploadPath = ROOTPATH . 'public/uploads/hpa/mikroskopis/';
+            // Pastikan folder tujuan ada
+            if (!is_dir($uploadPath)) {
+                mkdir($uploadPath, 0777, true); // Membuat folder jika belum ada
+            }
+
+            // Hapus file lama jika ada
+            if (!empty($hpa['foto_mikroskopis_hpa'])) {
+                $oldFilePath = $uploadPath . $hpa['foto_mikroskopis_hpa'];
+                if (file_exists($oldFilePath)) {
+                    unlink($oldFilePath); // Hapus file lama
+                }
+            }
+
+            // Pindahkan file baru ke folder tujuan dengan nama baru
+            if ($file->move($uploadPath, $newFileName)) {
+                // Update nama file baru di database
+                $hpaModel->update($id_hpa, ['foto_mikroskopis_hpa' => $newFileName]);
+
+                // Berhasil, redirect dengan pesan sukses
+                return redirect()->back()->with('success', 'Foto mikroskopis berhasil diunggah dan diperbarui.');
+            } else {
+                // Gagal memindahkan file
+                return redirect()->back()->with('error', 'Gagal mengunggah foto mikroskopis.');
+            }
+        } else {
+            // Jika file tidak valid
+            return redirect()->back()->with('error', 'File tidak valid atau tidak diunggah.');
         }
     }
 

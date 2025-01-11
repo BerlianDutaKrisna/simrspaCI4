@@ -22,9 +22,10 @@
 
         <div class="card-body">
             <h1>Edit Data Hpa</h1>
-            <a href="javascript:history.back()" class="btn btn-primary mb-3">Kembali</a>
+            <a href="<?= base_url('exam/index_exam') ?>" class="btn btn-primary mb-3">Kembali</a>
 
-            <form action="/exam/update/<?= $hpa['id_hpa'] ?>" method="POST" enctype="multipart/form-data">
+            <!-- Form -->
+            <form id="form-hpa" method="POST" enctype="multipart/form-data">
                 <?= csrf_field(); ?>
                 <input type="hidden" name="id_hpa" value="<?= $hpa['id_hpa'] ?>">
 
@@ -97,8 +98,11 @@
                 <div class="form-group row">
                     <label class="col-sm-2 col-form-label">Foto Makroskopis</label>
                     <div class="col-sm-6">
-                        <img src="" width="200" alt="Foto Makroskopis">
-                        <input type="file" name="foto_makroskopis_hpa" id="foto_makroskopis_hpa" class="form-control form-control-user mt-2" disabled>
+                        <img src="<?= base_url('uploads/hpa/makroskopis/' . $hpa['foto_makroskopis_hpa']); ?>" width="200" alt="Foto Makroskopis" class="img-thumbnail" id="fotoMakroskopis" data-toggle="modal" data-target="#fotoModal">
+                        <input type="file" name="foto_makroskopis_hpa" id="foto_makroskopis_hpa" class="form-control form-control-user mt-2">
+                        <button type="submit" class="btn btn-primary mt-2" formaction="/exam/uploadFotoMakroskopis/<?= $hpa['id_hpa'] ?>">
+                            <i class="fas fa-cloud-upload-alt"></i> Upload
+                        </button>
                     </div>
                 </div>
 
@@ -114,8 +118,11 @@
                 <div class="form-group row">
                     <label class="col-sm-2 col-form-label">Foto Mikroskopis</label>
                     <div class="col-sm-6">
-                        <img src="" width="200" alt="Foto Mikroskopis">
-                        <input type="file" name="foto_mikroskopis_hpa" id="foto_mikroskopis_hpa" class="form-control form-control-user mt-2" disabled>
+                        <img src="<?= base_url('uploads/hpa/mikroskopis/' . $hpa['foto_mikroskopis_hpa']); ?>" width="200" alt="Foto Mikroskopis" class="img-thumbnail" id="fotoMikroskopis" data-toggle="modal" data-target="#fotoModalMikroskopis">
+                        <input type="file" name="foto_mikroskopis_hpa" id="foto_mikroskopis_hpa" class="form-control form-control-user mt-2">
+                        <button type="submit" class="btn btn-primary mt-2" formaction="/exam/uploadFotoMikroskopis/<?= $hpa['id_hpa'] ?>">
+                            <i class="fas fa-cloud-upload-alt"></i> Upload
+                        </button>
                     </div>
                 </div>
 
@@ -156,11 +163,49 @@
                 <!-- Tombol Simpan -->
                 <div class="form-group row">
                     <div class="col-sm-12 text-center">
-                        <button type="submit" class="btn btn-success btn-user w-100">Simpan</button>
+                        <button type="submit"
+                            class="btn btn-success btn-user w-100"
+                            formaction="/exam/update/<?= $hpa['id_hpa'] ?>">
+                            Simpan
+                        </button>
                     </div>
                 </div>
-
             </form>
+        </div>
+    </div>
+</div>
+
+<!-- Modal untuk Menampilkan Gambar yang Diperbesar -->
+<div class="modal fade" id="fotoModal" tabindex="-1" aria-labelledby="fotoModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="fotoModalLabel">Foto Makroskopis</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <!-- Gambar yang akan ditampilkan lebih besar di modal -->
+                <img src="<?= base_url('uploads/hpa/makroskopis/' . $hpa['foto_makroskopis_hpa']); ?>" class="img-fluid" alt="Foto Makroskopis" id="fotoZoom">
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Modal untuk Menampilkan Gambar yang Diperbesar -->
+<div class="modal fade" id="fotoModalMikroskopis" tabindex="-1" aria-labelledby="fotoModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="fotoModalLabel">Foto Mikroskopis</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <!-- Gambar yang akan ditampilkan lebih besar di modal -->
+                <img src="<?= base_url('uploads/hpa/mikroskopis/' . $hpa['foto_mikroskopis_hpa']); ?>" class="img-fluid" alt="Foto Mikroskopis" id="fotoZoom">
+            </div>
         </div>
     </div>
 </div>

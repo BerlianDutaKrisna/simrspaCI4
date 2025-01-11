@@ -4,11 +4,11 @@
 <div class="container-fluid">
     <div class="card shadow mb-4">
         <div class="card-header py-3">
-            <h6 class="m-0 font-weight-bold text-primary">Edit Makroskopis</h6>
+            <h6 class="m-0 font-weight-bold text-primary">Edit Mikroskopis</h6>
         </div>
         <div class="card-body">
-            <h1>Edit Data Makroskopis</h1>
-            <a href="<?= base_url('pemotongan/index_pemotongan') ?>" class="btn btn-primary mb-3">Kembali</a>
+            <h1>Edit Data Mikroskopis</h1>
+            <a href="<?= base_url('pembacaan/index_pembacaan') ?>" class="btn btn-primary mb-3">Kembali</a>
 
             <!-- Form -->
             <form id="form-hpa" method="POST" enctype="multipart/form-data">
@@ -96,25 +96,35 @@
                 <div class="form-group row">
                     <label class="col-sm-2 col-form-label">Makroskopis</label>
                     <div class="col-sm-10">
-                        <textarea class="form-control summernote" name="makroskopis_hpa"><?= $hpa['makroskopis_hpa'] ?? '' ?></textarea>
+                        <textarea class="form-control summernote" name="makroskopis_hpa" id="makroskopis_hpa"><?= $hpa['makroskopis_hpa'] ?? '' ?></textarea>
                     </div>
                 </div>
 
-                <!-- Kolom Dokter dan Jumlah Slide -->
+                <!-- Kolom Foto Mikroskopis -->
                 <div class="form-group row">
-                    <label class="col-sm-2 col-form-label">Dokter Makroskopis</label>
+                    <label class="col-sm-2 col-form-label">Foto Mikroskopis</label>
+                    <div class="col-sm-6">
+                        <img src="<?= base_url('uploads/hpa/mikroskopis/' . $hpa['foto_mikroskopis_hpa']); ?>" width="200" alt="Foto Mikroskopis" class="img-thumbnail" id="fotoMikroskopis" data-toggle="modal" data-target="#fotoModalMikroskopis">
+                        <input type="file" name="foto_mikroskopis_hpa" id="foto_mikroskopis_hpa" class="form-control form-control-user mt-2">
+                        <button type="submit" class="btn btn-primary mt-2" formaction="/exam/uploadFotoMikroskopis/<?= $hpa['id_hpa'] ?>">
+                            <i class="fas fa-cloud-upload-alt"></i> Upload
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Kolom Mikroskopis -->
+                <div class="form-group row">
+                    <label class="col-sm-2 col-form-label">Mikroskopis</label>
+                    <div class="col-sm-10">
+                        <textarea class="form-control summernote" name="mikroskopis_hpa" id="mikroskopis_hpa"><?= $hpa['mikroskopis_hpa'] ?? '' ?></textarea>
+                    </div>
+                </div>
+
+                <!-- Kolom Hasil HPA dan Jumlah Slide -->
+                <div class="form-group row">
+                    <label class="col-sm-2 col-form-label">Hasil HPA</label>
                     <div class="col-sm-4">
-                        <select class="form-control" id="id_user_dokter_pemotongan" name="id_user_dokter_pemotongan">
-                            <option value="" <?= empty($hpa['id_user_dokter_pemotongan']) ? 'selected' : '' ?>>-- Pilih Dokter --</option>
-                            <?php foreach ($users as $user): ?>
-                                <?php if ($user['status_user'] === 'Dokter'): ?>
-                                    <option value="<?= $user['id_user'] ?>"
-                                        <?= isset($pemotongan['id_user_dokter_pemotongan']) && $user['id_user'] == $pemotongan['id_user_dokter_pemotongan'] ? 'selected' : '' ?>>
-                                        <?= $user['nama_user'] ?>
-                                    </option>
-                                <?php endif; ?>
-                            <?php endforeach; ?>
-                        </select>
+                        <input type="text" name="hasil_hpa" value="<?= $hpa['hasil_hpa'] ?? '' ?>" class="form-control form-control-user">
                     </div>
 
                     <label class="col-sm-2 col-form-label" for="jumlah_slide">Jumlah Slide</label>
@@ -135,8 +145,6 @@
                             value="<?= (!in_array($hpa['jumlah_slide'], ['0', '1', '2', '3'])) ? $hpa['jumlah_slide'] : '' ?>">
                     </div>
                 </div>
-
-                <!-- Tombol Simpan -->
                 <div class="form-group row">
                     <div class="col-sm-12 text-center">
                         <button type="submit"
@@ -164,6 +172,23 @@
             <div class="modal-body">
                 <!-- Gambar yang akan ditampilkan lebih besar di modal -->
                 <img src="<?= base_url('uploads/hpa/makroskopis/' . $hpa['foto_makroskopis_hpa']); ?>" class="img-fluid" alt="Foto Makroskopis" id="fotoZoom">
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Modal untuk Menampilkan Gambar yang Diperbesar -->
+<div class="modal fade" id="fotoModalMikroskopis" tabindex="-1" aria-labelledby="fotoModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="fotoModalLabel">Foto Mikroskopis</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <!-- Gambar yang akan ditampilkan lebih besar di modal -->
+                <img src="<?= base_url('uploads/hpa/mikroskopis/' . $hpa['foto_mikroskopis_hpa']); ?>" class="img-fluid" alt="Foto Mikroskopis" id="fotoZoom">
             </div>
         </div>
     </div>

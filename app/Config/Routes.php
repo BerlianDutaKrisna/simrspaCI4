@@ -20,16 +20,16 @@ $routes->get('users/index_users', 'Users::index_users'); // Menampilkan halaman 
 $routes->get('users/register_users', 'Users::register_users'); // Menampilkan halaman form register users
 $routes->post('users/insert', 'Users::insert'); // Menangani form POST dari register user
 $routes->get('users/delete/(:segment)', 'Users::delete/$1');  // Menghapus user
-$routes->get('/users/edit_user/(:segment)', 'Users::edit_users/$1');  // Rute untuk menampilkan form edit
-$routes->post('/users/update/(:segment)', 'Users::update/$1');  // Rute untuk menangani update data
+$routes->get('users/edit_user/(:segment)', 'Users::edit_users/$1');  // Rute untuk menampilkan form edit
+$routes->post('users/update/(:segment)', 'Users::update/$1');  // Rute untuk menangani update data
 
 // Route untuk Patient
 $routes->get('patient/index_patient', 'Patient::index_patient'); // Menampilkan halaman index patient
 $routes->get('patient/register_patient', 'Patient::register_patient'); // Menampilkan halaman form register patient
 $routes->post('patient/insert', 'Patient::insert'); // Menangani form POST dari register patient
 $routes->get('patient/delete/(:segment)', 'Patient::delete/$1');  // Menghapus patient
-$routes->get('/patient/edit_patient/(:segment)', 'Patient::edit_patient/$1');  // Rute untuk menampilkan form edit
-$routes->post('/patient/update/(:segment)', 'Patient::update/$1');  // Rute untuk menangani update data
+$routes->get('patient/edit_patient/(:segment)', 'Patient::edit_patient/$1');  // Rute untuk menampilkan form edit
+$routes->post('patient/update/(:segment)', 'Patient::update/$1');  // Rute untuk menangani update data
 $routes->post('patient/modal_search', 'Patient::modal_search'); // Pencarian dengan NoRM
 
 // Route untuk Exam
@@ -37,12 +37,16 @@ $routes->get('exam/index_exam', 'Exam::index_exam'); // Menampilkan halaman inde
 $routes->get('exam/register_exam', 'Exam::register_exam'); // Menampilkan halaman form register exam
 $routes->post('exam/insert', 'Exam::insert'); // Menangani form POST dari register exam
 $routes->get('exam/edit_exam/(:segment)', 'Exam::edit_exam/$1');  // Rute untuk menampilkan form edit
-$routes->get('exam/edit_makroskopis/(:segment)', 'Exam::edit_makroskopis/$1');  // Rute untuk menampilkan form edit
-$routes->post('/exam/update/(:segment)', 'Exam::update/$1');  // Rute untuk menangani update data
+$routes->get('exam/edit_makroskopis/(:segment)', 'Exam::edit_makroskopis/$1');
+$routes->get('exam/edit_mikroskopis/(:segment)', 'Exam::edit_mikroskopis/$1');
+$routes->post('exam/update/(:segment)', 'Exam::update/$1');  // Rute untuk menangani update data
 $routes->get('exam/index_buku_penerima', 'Exam::index_buku_penerima');
 $routes->post('exam/update_buku_penerima', 'Exam::update_buku_penerima');  // Adjusted for two segments
 $routes->post('exam/update_status_hpa', 'Exam::update_status_hpa');
 $routes->post('exam/delete', 'Exam::delete');
+$routes->post('exam/uploadFotoMakroskopis/(:num)', 'Exam::uploadFotoMakroskopis/$1');
+$routes->post('exam/uploadFotoMikroskopis/(:num)', 'Exam::uploadFotoMikroskopis/$1');
+
 
 
 
