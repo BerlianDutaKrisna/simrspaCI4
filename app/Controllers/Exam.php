@@ -231,16 +231,70 @@ class Exam extends BaseController
         return view('exam/edit_mikroskopis', $data);
     }
 
+    public function edit_penulisan($id_hpa)
+    {
+        session()->set('previous_url', previous_url());
+        $hpaModel = new HpaModel();
+
+        // Ambil id_user dan nama_user dari session yang sedang aktif
+        $data['id_user'] = session()->get('id_user');
+        $data['nama_user'] = session()->get('nama_user');
+
+        // Ambil data hpa berdasarkan ID
+        $hpa = $hpaModel->getHpaWithAllRelations($id_hpa);
+
+        // Jika hpa ditemukan, tampilkan form edit
+        if ($hpa) {
+            // Menggabungkan data hpa dengan session data
+            $data['hpa'] = $hpa;
+            // Kirimkan data ke view
+
+            return view('exam/edit_penulisan', $data);
+        } else {
+            // Jika tidak ditemukan, tampilkan pesan error
+            return redirect()->back()->withInput()->with('message', [
+                'error' => 'hpa tidak ditemukan.'
+            ]);
+        }
+    }
+
+    public function edit_print_hpa($id_hpa)
+    {
+        session()->set('previous_url', previous_url());
+        $hpaModel = new HpaModel();
+
+        // Ambil id_user dan nama_user dari session yang sedang aktif
+        $data['id_user'] = session()->get('id_user');
+        $data['nama_user'] = session()->get('nama_user');
+
+        // Ambil data hpa berdasarkan ID
+        $hpa = $hpaModel->getHpaWithAllRelations($id_hpa);
+
+        // Jika hpa ditemukan, tampilkan form edit
+        if ($hpa) {
+            // Menggabungkan data hpa dengan session data
+            $data['hpa'] = $hpa;
+            // Kirimkan data ke view
+
+            return view('exam/edit_print_hpa', $data);
+        } else {
+            // Jika tidak ditemukan, tampilkan pesan error
+            return redirect()->back()->withInput()->with('message', [
+                'error' => 'hpa tidak ditemukan.'
+            ]);
+        }
+    }
+
     public function update($id_hpa)
     {
+
         // Inisialisasi model
         $hpaModel = new HpaModel();
         $pemotonganModel = new PemotonganModel();
-        $pembacaanModel = new PembacaanModel();
 
         // Mendapatkan id_hpa dari POST
         $id_hpa = $this->request->getPost('id_hpa');
-
+        
         // Validasi form input
         $validation = \Config\Services::validation();
         $validation->setRules([
@@ -254,6 +308,7 @@ class Exam extends BaseController
         ]);
 
         if (!$this->validate($validation->getRules())) {
+            dd($validation->getErrors());
             return redirect()->back()->withInput()->with('errors', $validation->getErrors());
         }
 
@@ -297,7 +352,6 @@ class Exam extends BaseController
             }
         }
     }
-
 
     public function uploadFotoMakroskopis($id_hpa)
     {

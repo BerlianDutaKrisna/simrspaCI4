@@ -46,6 +46,8 @@ $routes->post('exam/update_status_hpa', 'Exam::update_status_hpa');
 $routes->post('exam/delete', 'Exam::delete');
 $routes->post('exam/uploadFotoMakroskopis/(:num)', 'Exam::uploadFotoMakroskopis/$1');
 $routes->post('exam/uploadFotoMikroskopis/(:num)', 'Exam::uploadFotoMikroskopis/$1');
+$routes->get('exam/edit_penulisan/(:num)', 'Exam::edit_penulisan/$1');
+$routes->get('exam/edit_print_hpa/(:num)', 'Exam::edit_print_hpa/$1');
 
 
 

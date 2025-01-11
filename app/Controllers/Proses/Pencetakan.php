@@ -126,7 +126,7 @@ class Pencetakan extends BaseController
                     break;
 
                 case 'lanjut':
-                    $hpaModel->updateHpa($id_hpa, ['status_hpa' => 'Sudah Diproses']); // Update status
+                    $hpaModel->updateHpa($id_hpa, ['status_hpa' => 'Selesai']); // Update status
                     break;
             }
         } catch (\Exception $e) {

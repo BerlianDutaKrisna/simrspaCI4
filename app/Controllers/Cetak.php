@@ -34,13 +34,14 @@ class Cetak extends BaseController
         $data['nama_user'] = session()->get('nama_user');
 
         // Ambil data hpa berdasarkan ID
-        $hpa = $hpaModel->getHpaWithPatient($id_hpa);
+        $hpa = $hpaModel->getHpaWithAllRelations($id_hpa);
 
         // Jika hpa ditemukan, tampilkan form edit
         if ($hpa) {
             // Menggabungkan data hpa dengan session data
             $data['hpa'] = $hpa;
             // Kirimkan data ke view
+
             return view('cetak/cetak_hpa', $data);
         } else {
             // Jika tidak ditemukan, tampilkan pesan error

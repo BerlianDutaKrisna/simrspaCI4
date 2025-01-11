@@ -60,21 +60,21 @@
                                     <?php if (in_array($row['status_penulisan'], ["Proses Penulisan"])): ?>
                                         <td>
                                             <?php if (session()->get('update_success')): ?>
-                                                <a href="<?= base_url('exam/edit_exam/' . esc($row['id_hpa'])) ?>" class="btn btn-success btn-sm">
-                                                    <i class="fas fa-pen"></i> Detail
+                                                <a href="<?= base_url('exam/edit_print_hpa/' . esc($row['id_hpa'])) ?>" class="btn btn-success btn-sm">
+                                                    <i class="fas fa-pen"></i> Selesai Penulisan
                                                 </a>
-                                                <?php session()->remove('update_success'); // Menghapus session setelah ditampilkan 
+                                                <?php session()->remove('update_success');
                                                 ?>
                                             <?php else: ?>
-                                                <a href="<?= base_url('exam/edit_exam/' . esc($row['id_hpa'])) ?>" class="btn btn-warning btn-sm">
-                                                    <i class="fas fa-pen"></i> Detail
+                                                <a href="<?= base_url('exam/edit_penulisan/' . esc($row['id_hpa'])) ?>" class="btn btn-warning btn-sm">
+                                                    <i class="fas fa-pen"></i> Penulisan
                                                 </a>
                                             <?php endif; ?>
                                         </td>
-                                    <?php elseif (in_array($row['status_penulisan'], ["Selesai Penulisan"])): ?>
+                                        <?php elseif (in_array($row['status_penulisan'], ["Selesai Penulisan"])): ?>
                                         <td>
-                                            <a href="<?= base_url('cetak/cetak_hpa/' . esc($row['id_hpa'])) ?>" class="btn btn-info btn-sm">
-                                                <i class="fas fa-print"></i> Print
+                                            <a href="<?= base_url('exam/edit_print_hpa/' . esc($row['id_hpa'])) ?>" class="btn btn-info btn-sm mx-1">
+                                                <i class="fas fa-pen"></i> Cek Penulisan
                                             </a>
                                         </td>
                                     <?php else: ?>

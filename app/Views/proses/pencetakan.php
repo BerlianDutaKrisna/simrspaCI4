@@ -60,21 +60,21 @@
                                     <?php if (in_array($row['status_pencetakan'], ["Proses Pencetakan"])): ?>
                                         <td>
                                             <?php if (session()->get('update_success')): ?>
-                                                <a href="<?= base_url('exam/edit_exam/' . esc($row['id_hpa'])) ?>" class="btn btn-success btn-sm">
-                                                    <i class="fas fa-pen"></i> Detail
+                                                <a href="<?= base_url('cetak/cetak_hpa/' . esc($row['id_hpa'])) ?>" class="btn btn-success btn-sm">
+                                                    <i class="fas fa-print"></i> Selesai Print
                                                 </a>
                                                 <?php session()->remove('update_success'); // Menghapus session setelah ditampilkan 
                                                 ?>
                                             <?php else: ?>
-                                                <a href="<?= base_url('exam/edit_exam/' . esc($row['id_hpa'])) ?>" class="btn btn-warning btn-sm">
-                                                    <i class="fas fa-pen"></i> Detail
+                                                <a href="<?= base_url('cetak/cetak_hpa/' . esc($row['id_hpa'])) ?>" class="btn btn-warning btn-sm">
+                                                    <i class="fas fa-print"></i> Print
                                                 </a>
                                             <?php endif; ?>
                                         </td>
                                     <?php elseif (in_array($row['status_pencetakan'], ["Selesai Pencetakan"])): ?>
                                         <td>
-                                            <a href="<?= base_url('exam/print_exam/' . esc($row['id_hpa'])) ?>" class="btn btn-info btn-sm">
-                                                <i class="fas fa-print"></i> Print
+                                            <a href="<?= base_url('cetak/cetak_hpa/' . esc($row['id_hpa'])) ?>" class="btn btn-info btn-sm">
+                                                <i class="fas fa-print"></i> Print Lagi
                                             </a>
                                         </td>
                                     <?php else: ?>
