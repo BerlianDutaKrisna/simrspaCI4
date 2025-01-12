@@ -27,13 +27,8 @@
 
     <style>
         .note-editor {
-            width: 250mm;
+            width: 225mm;
             padding: 10px;
-        }
-
-        .summernote p {
-            margin: 0;
-            padding: 5px 0;
         }
 
         .note-editor .dropdown-toggle::after {
@@ -50,7 +45,6 @@
 
         .note-editable {
             font-family: 'Verdana', Arial, sans-serif;
-            color: black;
             font-size: 24px;
         }
     </style>

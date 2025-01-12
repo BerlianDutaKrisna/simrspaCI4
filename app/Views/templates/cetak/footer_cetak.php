@@ -26,3 +26,23 @@
         </div>
     </div>
 </footer>
+<script src="<?= base_url('assets/bootstrap/js/bootstrap.bundle.min.js') ?>"></script>
+<script src="<?= base_url('assets/summernote/summernote.js') ?>"></script>
+<script>
+    $(document).ready(function() {
+        var height = $(window).height() - 200; // Sesuaikan dengan ukuran yang diinginkan
+
+        $('.summernote_hpa').summernote({
+            placeholder: '',
+            tabsize: 2,
+            height: height,
+            toolbar: [
+                ['style', ['style', 'bold', 'italic', 'underline', 'clear']],
+                ['font', ['fontsize', 'fontname']],
+                ['para', ['ul', 'ol', 'paragraph']],
+                ['color', ['color']],
+                ['view', ['codeview', 'help']]
+            ],
+        });
+    });
+</script>

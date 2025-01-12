@@ -47,7 +47,7 @@
         $('.summernote').summernote({
             placeholder: '',
             tabsize: 2,
-            height: 120,
+            height: 200,
             toolbar: [
                 ['style', ['style', 'bold', 'italic', 'underline', 'clear']], // tombol gaya teks
                 ['font', ['fontsize', 'fontname']], // font dan ukuran font

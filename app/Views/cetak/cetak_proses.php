@@ -4,17 +4,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Table F4 Size</title>
+    <title>Cetak Halaman Proses</title>
     <style>
-
-        @media print{
+        @media print {
             @page {
-                width: 250mm;
+                width: 215mm;
                 margin: 10mm;
             }
         }
 
-        /* Mengatur margin dan padding untuk halaman */
         body {
             font-size: 9pt;
             margin: 20px;
@@ -47,15 +45,16 @@
 
         .makroskopis {
             display: inline-block;
-            width: 250mm;
+            width: 205mm;
+            padding-left: 10px;
             min-height: 330px;
             margin: 0;
         }
 
-
         .mikroskopis {
             display: inline-block;
-            width: 250mm;
+            width: 205mm;
+            padding-left: 10px;
             min-height: 400px;
             margin: 0;
         }
@@ -64,14 +63,12 @@
             height: 110px;
         }
 
-        /* Pengaturan cetak */
         @media print {
 
             header,
             footer,
             title {
                 display: none;
-                /* Menyembunyikan header dan footer saat print */
             }
 
             body::after {
@@ -112,7 +109,7 @@
                 <td colspan="2">Analis PA : <?= esc($data['nama_user_pemotongan'] ?? '') ?></td>
             </tr>
             <tr>
-                <td colspan="4" class="makroskopis">
+                <td colspan="1" class="makroskopis">
                     <?= nl2br(html_entity_decode(esc($data['makroskopis_hpa'] ?? ''))); ?>
                 </td>
             </tr>
@@ -121,7 +118,7 @@
                 <td colspan="2">Dokter PA : <?= esc($data['nama_user_dokter_pemotongan'] ?? '') ?></td>
             </tr>
             <tr>
-                <td colspan="4" class="mikroskopis">
+                <td colspan="1" class="mikroskopis">
                     <?= nl2br(html_entity_decode(esc($data['mikroskopis_hpa'] ?? ''))); ?>
                 </td>
             </tr>
