@@ -366,7 +366,7 @@ class Exam extends BaseController
         $validation = \Config\Services::validation();
         $validation->setRules([
             'foto_makroskopis_hpa' => [
-                'rules' => 'uploaded[foto_makroskopis_hpa]|ext_in[foto_makroskopis_hpa,jpg,jpeg,png]|max_size[foto_makroskopis_hpa,5000]', // 5MB max size
+                'rules' => 'uploaded[foto_makroskopis_hpa]|ext_in[foto_makroskopis_hpa,jpg,jpeg,png]',
                 'errors' => [
                     'uploaded' => 'Harap unggah file foto makroskopis.',
                     'ext_in' => 'File harus berformat JPG, JPEG, atau PNG.',
