@@ -13,10 +13,30 @@
             }
         }
 
+        header,
+        footer,
+        title {
+            display: none;
+            /* Hilangkan elemen yang tidak perlu dicetak */
+        }
+
+        body::after {
+            content: "";
+        }
+
+        table {
+            page-break-before: auto;
+        }
+
+        .api-code {
+            display: none;
+        }
+
         body {
-            font-size: 9pt;
             margin: 20px;
             padding: 0px;
+            font-family: Arial, sans-serif;
+            /* Font umum untuk cetak */
         }
 
         table {
@@ -30,7 +50,7 @@
             border: 1px solid #000;
             text-align: left;
             margin: 0px;
-            padding: 1px;
+            padding: 5px;
             box-sizing: border-box;
             overflow: hidden;
             white-space: nowrap;
@@ -43,45 +63,43 @@
             margin: 0px;
         }
 
-        .makroskopis {
+        .makroskopis,
+        .mikroskopis {
             display: inline-block;
             width: 205mm;
             padding-left: 10px;
             min-height: 330px;
             margin: 0;
-        }
-
-        .mikroskopis {
-            display: inline-block;
-            width: 205mm;
-            padding-left: 10px;
-            min-height: 400px;
-            margin: 0;
+            font-size: 14px;
         }
 
         .gambar {
             height: 110px;
         }
 
-        @media print {
+        /* Gaya dari Summernote */
+        .note-editable {
+            font-family: inherit;
+            /* Menggunakan font default Summernote */
+            font-size: inherit;
+            /* Sesuaikan ukuran font */
+            line-height: inherit;
+            /* Tinggi baris */
+            color: inherit;
+            /* Warna teks */
+            overflow: visible !important;
+            /* Pastikan konten terlihat */
+        }
 
-            header,
-            footer,
-            title {
-                display: none;
-            }
-
-            body::after {
-                content: "";
-            }
-
-            table {
-                page-break-before: auto;
-            }
-
-            .api-code {
-                display: none;
-            }
+        /* Tambahkan gaya untuk tag HTML yang umum digunakan */
+        p,
+        span,
+        div {
+            font-size: 14px;
+            /* Sesuaikan ukuran font */
+            margin: 0;
+            padding: 0;
+            line-height: 1.5;
         }
     </style>
 </head>

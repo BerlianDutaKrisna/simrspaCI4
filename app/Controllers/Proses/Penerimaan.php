@@ -119,7 +119,7 @@ class Penerimaan extends BaseController
                     // Update data penerimaan ketika selesai
                     $penerimaanModel->updatePenerimaan($id_penerimaan, [
                         'id_user_penerimaan' => $id_user,  // Menggunakan id_user dari session
-                        'status_penerimaan' => 'Selesai Diperiksa', // Status menjadi 'Selesai Diperiksa'
+                        'status_penerimaan' => 'Selesai Pemeriksaan', // Status menjadi 'Selesai Diperiksa'
                         'selesai_penerimaan' => date('Y-m-d H:i:s'), // Menggunakan waktu lokal Asia/Jakarta
                     ]);
                     // update data mutu
@@ -135,7 +135,7 @@ class Penerimaan extends BaseController
                 case 'kembalikan':
                     $penerimaanModel->updatePenerimaan($id_penerimaan, [
                         'id_user_penerimaan' => null,  // Menggunakan id_user dari session
-                        'status_penerimaan' => 'Belum Diperiksa', // Status menjadi 'Belum'
+                        'status_penerimaan' => 'Belum Pemeriksaan', // Status menjadi 'Belum'
                         'mulai_penerimaan' => null,
                         'selesai_penerimaan' => null, // Menggunakan waktu lokal Asia/Jakarta
                     ]);
