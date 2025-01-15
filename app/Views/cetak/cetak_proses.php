@@ -111,16 +111,16 @@
                 <td rowspan="2" style="width: 25%; font-size: 15px; font-weight: bold; text-align: center;">
                     Kode HPA : <?= esc($data['kode_hpa'] ?? '') ?>
                 </td>
-                <td style="width: 25%;">Nama Pasien : <?= esc($data['nama_pasien'] ?? '') ?> (<?= esc($data['norm_pasien'] ?? '') ?>)</td>
-                <td style="width: 25%;">Dokter pengirim : <?= esc($data['dokter_pengirim'] ?? '') ?></td>
-                <td style="width: 25%;">Diagnosa : <?= esc($data['diagnosa_klinik'] ?? '') ?></td>
+                <td style="width: 25%;"><?= esc($data['nama_pasien'] ?? '') ?> <br> (<?= esc($data['norm_pasien'] ?? '') ?>)</td>
+                <td style="width: 25%;"><?= esc($data['dokter_pengirim'] ?? '') ?></td>
+                <td style="width: 25%;"><?= esc($data['diagnosa_klinik'] ?? '') ?></td>
             </tr>
             <tr>
-                <td style="width: 25%;">Tanggal Hasil :
+                <td style="width: 25%;">
                     <?= isset($data['tanggal_hasil']) ? date('d-m-Y', strtotime($data['tanggal_hasil'])) : 'Tidak tersedia'; ?>
                 </td>
-                <td style="width: 25%;">Unit Asal : <?= esc($data['unit_asal'] ?? '') ?></td>
-                <td style="width: 25%;">Lokasi Spesimen : <?= esc($data['lokasi_spesimen'] ?? '') ?></td>
+                <td style="width: 25%;"><?= esc($data['unit_asal'] ?? '') ?></td>
+                <td style="width: 25%;"><?= esc($data['lokasi_spesimen'] ?? '') ?></td>
             </tr>
             <tr class="judul">
                 <td colspan="2">Makroskopis</td>
@@ -202,6 +202,9 @@
             </tr>
         </tbody>
     </table>
+    <script>
+        window.print();
+    </script>
 </body>
 
 </html>

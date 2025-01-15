@@ -83,18 +83,18 @@
                     <label for="dokter_pengirim">Dokter Pengirim</label>
                     <select class="form-control" id="dokter_pengirim" name="dokter_pengirim" onchange="handleDokterPengirimChange(this)">
                         <option value="Belum Dipilih" selected>Belum Dipilih</option>
-                        <option value="dr. Ihyan">dr. Ihyan Amri, Sp.B</option>
-                        <option value="dr. Andy">dr. Andy Achmad Suanda, Sp.B</option>
-                        <option value="dr. Agus">dr. Agus Maulana,Sp.B,FinaCs,M.Ked.Klin</option>
-                        <option value="dr. Ihyan">dr. Fransiscus Arifin, Sp.B</option>
-                        <option value="dr. Andy">dr. I Putu Agus Suarta, Sp.OG K.Onk</option>
-                        <option value="dr. Agus">dr. Dharma Putra Perjuangan Banjarnahor, Sp.OG K. FM</option>
-                        <option value="dr. Ihyan">dr. Unggul Karyo Nugroho, Sp.Og</option>
-                        <option value="dr. Andy">dr. Nurlaella Iswan Nusi, Sp.OG.</option>
-                        <option value="dr. Agus">dr. Okky Prasetyo, Sp.BM</option>
-                        <option value="dr. Ihyan">dr. Taufik Indrawan, Sp.U</option>
-                        <option value="dr. Andy">dr. Danang Irsayanto, Sp. U.,M.Ked.Klin</option>
-                        <option value="dr. Agus">dr. Haykal Hermatyar Fatahajjad, Sp. U</option>
+                        <option value="dr. Ihyan Amri, Sp.B">dr. Ihyan Amri, Sp.B</option>
+                        <option value="dr. Andy Achmad Suanda, Sp.B">dr. Andy Achmad Suanda, Sp.B</option>
+                        <option value="dr. Agus Maulana,Sp.B,FinaCs,M.Ked.Klin">dr. Agus Maulana,Sp.B,FinaCs,M.Ked.Klin</option>
+                        <option value="ddr. Fransiscus Arifin, Sp.">dr. Fransiscus Arifin, Sp.B</option>
+                        <option value="dr. I Putu Agus Suarta, Sp.OG K.Onk">dr. I Putu Agus Suarta, Sp.OG K.Onk</option>
+                        <option value="dr. Dharma Putra Perjuangan Banjarnahor, Sp.OG K. FM">dr. Dharma Putra Perjuangan Banjarnahor, Sp.OG K. FM</option>
+                        <option value="dr. Unggul Karyo Nugroho, Sp.Og">dr. Unggul Karyo Nugroho, Sp.Og</option>
+                        <option value="dr. Nurlaella Iswan Nusi, Sp.OG">dr. Nurlaella Iswan Nusi, Sp.OG.</option>
+                        <option value="dr. Okky Prasetyo, Sp.BM">dr. Okky Prasetyo, Sp.BM</option>
+                        <option value="dr. Taufik Indrawan, Sp.U">dr. Taufik Indrawan, Sp.U</option>
+                        <option value="dr. Danang Irsayanto, Sp. U.,M.Ked.Klin">dr. Danang Irsayanto, Sp. U.,M.Ked.Klin</option>
+                        <option value="dr. Haykal Hermatyar Fatahajjad, Sp. U">dr. Haykal Hermatyar Fatahajjad, Sp. U</option>
                         <option value="lainnya">Lainnya</option>
                     </select>
                     <input type="text" class="form-control mt-2 d-none" id="dokter_pengirim_custom" name="dokter_pengirim_custom" placeholder="Masukkan Dokter Pengirim Lainnya">
@@ -123,8 +123,18 @@
                     <select class="form-control" id="tindakan_spesimen" name="tindakan_spesimen" onchange="handleTindakanSpesimenChange(this)">
                         <option value="Belum Dipilih" selected>Belum Dipilih</option>
                         <option value="Biopsi">Biopsi</option>
-                        <option value="Extirpasi Tumor">Extirpasi Tumor</option>
+                        <option value="Biopsi Beberapa Tempat">Biopsi Beberapa Tempat</option>
                         <option value="Kerokan">Kerokan</option>
+                        <option value="Extirpasi Tumor">Extirpasi Tumor</option>
+                        <option value="Koleksistektomi">Koleksistektomi</option>
+                        <option value="Tiroidektomi">Tiroidektomi</option>
+                        <option value="Mastektomi">Mastektomi</option>
+                        <option value="Appendiktomi">Appendiktomi</option>
+                        <option value="Miomektomi">Miomektomi</option>
+                        <option value="Kistektomi">Kistektomi</option>
+                        <option value="Omentektomi">Omentektomi</option>
+                        <option value="TAH-BSO">TAH-BSO</option>
+                        <option value="Reseksi sus">Reseksi sus</option>
                         <option value="lainnya">Lainnya</option>
                     </select>
                     <input type="text" class="form-control mt-2 d-none" id="tindakan_spesimen_custom" name="tindakan_spesimen_custom" placeholder="Masukkan Tindakan Spesimen Lainnya">

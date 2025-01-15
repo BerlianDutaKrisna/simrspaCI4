@@ -100,7 +100,8 @@
                     <div class="col-sm-6">
                         <img src="<?= base_url('uploads/hpa/makroskopis/' . $hpa['foto_makroskopis_hpa']); ?>" width="200" alt="Foto Makroskopis" class="img-thumbnail" id="fotoMakroskopis" data-toggle="modal" data-target="#fotoModal">
                         <input type="file" name="foto_makroskopis_hpa" id="foto_makroskopis_hpa" class="form-control form-control-user mt-2">
-                        <button type="submit" class="btn btn-primary mt-2" formaction="/exam/uploadFotoMakroskopis/<?= $hpa['id_hpa'] ?>">
+                        <button type="submit" class="btn btn-primary mt-2" 
+                        formaction="<?= base_url('exam/uploadFotoMakroskopis/' . $hpa['id_hpa']); ?>">
                             <i class="fas fa-cloud-upload-alt"></i> Upload
                         </button>
                     </div>
@@ -120,7 +121,8 @@
                     <div class="col-sm-6">
                         <img src="<?= base_url('uploads/hpa/mikroskopis/' . $hpa['foto_mikroskopis_hpa']); ?>" width="200" alt="Foto Mikroskopis" class="img-thumbnail" id="fotoMikroskopis" data-toggle="modal" data-target="#fotoModalMikroskopis">
                         <input type="file" name="foto_mikroskopis_hpa" id="foto_mikroskopis_hpa" class="form-control form-control-user mt-2">
-                        <button type="submit" class="btn btn-primary mt-2" formaction="/exam/uploadFotoMikroskopis/<?= $hpa['id_hpa'] ?>">
+                        <button type="submit" class="btn btn-primary mt-2" 
+                        formaction="<?= base_url('exam/uploadFotoMikroskopis/' . $hpa['id_hpa']); ?>">
                             <i class="fas fa-cloud-upload-alt"></i> Upload
                         </button>
                     </div>
@@ -165,7 +167,7 @@
                     <div class="col-sm-12 text-center">
                         <button type="submit"
                             class="btn btn-success btn-user w-100"
-                            formaction="/exam/update/<?= $hpa['id_hpa'] ?>">
+                            formaction="<?= base_url('exam/update/' . $hpa['id_hpa']); ?>">
                             Simpan
                         </button>
                     </div>
