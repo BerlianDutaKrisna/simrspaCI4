@@ -1,6 +1,6 @@
 <div class="card shadow mb-4">
     <div class="card-header py-4">
-        <h6 class="m-0 font-weight-bold text-primary">Jenis Pemeriksaan</h6>
+        <h6 class="m-0 font-weight-bold text-primary">Jenis Tindakan</h6>
     </div>
     <div class="card-body">
         <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-3">

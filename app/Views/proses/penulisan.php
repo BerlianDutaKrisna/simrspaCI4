@@ -1,5 +1,6 @@
 <?= $this->include('templates/dashboard/header_dashboard'); ?>
 <?= $this->include('templates/dashboard/navbar_dashboard'); ?>
+<?= $this->include('dashboard/jenis_tindakan'); ?>
 
 <div class="card shadow mb-4">
     <div class="card-header py-3">
@@ -71,7 +72,7 @@
                                                 </a>
                                             <?php endif; ?>
                                         </td>
-                                        <?php elseif (in_array($row['status_penulisan'], ["Selesai Penulisan"])): ?>
+                                    <?php elseif (in_array($row['status_penulisan'], ["Selesai Penulisan"])): ?>
                                         <td>
                                             <a href="<?= base_url('exam/edit_print_hpa/' . esc($row['id_hpa'])) ?>" class="btn btn-info btn-sm mx-1">
                                                 <i class="fas fa-pen"></i> Cek Penulisan

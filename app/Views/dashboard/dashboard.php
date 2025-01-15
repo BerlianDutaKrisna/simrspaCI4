@@ -3,7 +3,7 @@
 <?= $this->include('dashboard/jumlah_sampel_belum_selesai'); ?> <!-- Menyertakan jumlah sampel yang belum selesai -->
 <?= $this->include('dashboard/pencarian_pemeriksaan'); ?> <!-- Menyertakan bagian pencarian pemeriksaan -->
 <?= $this->include('dashboard/tambah_pasien'); ?> <!-- Menyertakan tombol untuk menambah pasien -->
-<?= $this->include('dashboard/jenis_pemeriksaan'); ?> <!-- Menyertakan jenis pemeriksaan -->
+<?= $this->include('dashboard/jenis_tindakan'); ?>
 
 <div class="card shadow mb-4"> <!-- Card untuk menampilkan informasi -->
     <div class="card-header py-3">
