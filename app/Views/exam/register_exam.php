@@ -69,7 +69,8 @@
                     <label for="unit_asal">Unit Asal</label>
                     <select class="form-control" id="unit_asal" name="unit_asal" onchange="handleUnitAsalChange(this)">
                         <option value="Belum Dipilih" selected>Belum Dipilih</option>
-                        <option value="OK">OK</option>
+                        <option value="OK">OK ELEKTIF</option>
+                        <option value="OK">OK EMERGENCY</option>
                         <option value="Poli">Poli</option>
                         <option value="Ruangan">Ruangan</option>
                         <option value="lainnya">Lainnya</option>
@@ -82,9 +83,18 @@
                     <label for="dokter_pengirim">Dokter Pengirim</label>
                     <select class="form-control" id="dokter_pengirim" name="dokter_pengirim" onchange="handleDokterPengirimChange(this)">
                         <option value="Belum Dipilih" selected>Belum Dipilih</option>
-                        <option value="dr. Ihyan">dr. Ihyan</option>
-                        <option value="dr. Andy">dr. Andy</option>
-                        <option value="dr. Agus">dr. Agus</option>
+                        <option value="dr. Ihyan">dr. Ihyan Amri, Sp.B</option>
+                        <option value="dr. Andy">dr. Andy Achmad Suanda, Sp.B</option>
+                        <option value="dr. Agus">dr. Agus Maulana,Sp.B,FinaCs,M.Ked.Klin</option>
+                        <option value="dr. Ihyan">dr. Fransiscus Arifin, Sp.B</option>
+                        <option value="dr. Andy">dr. I Putu Agus Suarta, Sp.OG K.Onk</option>
+                        <option value="dr. Agus">dr. Dharma Putra Perjuangan Banjarnahor, Sp.OG K. FM</option>
+                        <option value="dr. Ihyan">dr. Unggul Karyo Nugroho, Sp.Og</option>
+                        <option value="dr. Andy">dr. Nurlaella Iswan Nusi, Sp.OG.</option>
+                        <option value="dr. Agus">dr. Okky Prasetyo, Sp.BM</option>
+                        <option value="dr. Ihyan">dr. Taufik Indrawan, Sp.U</option>
+                        <option value="dr. Andy">dr. Danang Irsayanto, Sp. U.,M.Ked.Klin</option>
+                        <option value="dr. Agus">dr. Haykal Hermatyar Fatahajjad, Sp. U</option>
                         <option value="lainnya">Lainnya</option>
                     </select>
                     <input type="text" class="form-control mt-2 d-none" id="dokter_pengirim_custom" name="dokter_pengirim_custom" placeholder="Masukkan Dokter Pengirim Lainnya">
