@@ -109,6 +109,16 @@
                 <a href="<?= base_url('pencetakan/index_pencetakan') ?>" class="btn btn-info btn-icon-split btn-sm d-flex justify-content-between m-2">
                     <span class="text">Autorized</span>
                     <span class="icon text-white-50">
+                        <i class="fas fa-vote-yea"></i>
+                    </span>
+                </a>
+            </div>
+
+            <!-- Tombol 11: pencetakan -->
+            <div class="col">
+                <a href="<?= base_url('pencetakan/index_pencetakan') ?>" class="btn btn-primary btn-icon-split btn-sm d-flex justify-content-between m-2">
+                    <span class="text">pencetakan</span>
+                    <span class="icon text-white-50">
                         <i class="fas fa-print"></i>
                     </span>
                 </a>
