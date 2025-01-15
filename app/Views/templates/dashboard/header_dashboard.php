@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <!-- Menentukan karakter encoding untuk halaman -->
     <meta charset="utf-8">
@@ -33,4 +34,3 @@
 
             <!-- Main Content -->
             <div id="content">
-

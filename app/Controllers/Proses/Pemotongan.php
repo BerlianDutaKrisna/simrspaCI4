@@ -18,6 +18,7 @@ class Pemotongan extends BaseController
     {
         $this->pemotonganModel = new PemotonganModel();
         $this->userModel = new UsersModel();
+        session()->set('previous_url', previous_url());
     }
 
     public function index_pemotongan()

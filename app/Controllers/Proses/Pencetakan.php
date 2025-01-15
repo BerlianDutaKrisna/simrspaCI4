@@ -17,14 +17,13 @@ class Pencetakan extends BaseController
     {
         $this->pencetakanModel = new PencetakanModel();
         $this->userModel = new UsersModel();
+        session()->set('previous_url', previous_url());
     }
 
     public function index_pencetakan() // Update nama method
     {
-        // Mengambil id_user dan nama_user dari session
+        session()->set('previous_url', previous_url());
         $pencetakanModel = new PencetakanModel(); // Update nama model
-
-        // Mengambil data HPA beserta relasinya
         $pencetakanData['pencetakanData'] = $pencetakanModel->getPencetakanWithRelations(); // Update nama variabel
 
         // Menggabungkan data dari model dan session

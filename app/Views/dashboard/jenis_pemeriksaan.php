@@ -76,7 +76,7 @@
 
             <!-- Tombol 8: Pembacaan -->
             <div class="col">
-                <a href="<?= base_url('pembacaan/index_pembacaan') ?>" class="btn btn-primary btn-icon-split btn-sm d-flex justify-content-between m-2">
+                <a href="<?= base_url('pembacaan/index_pembacaan') ?>" class="btn btn-info btn-icon-split btn-sm d-flex justify-content-between m-2">
                     <span class="text">Pembacaan</span>
                     <span class="icon text-white-50">
                         <i class="fas fa-microscope"></i> <!-- Ikon untuk Pembacaan -->
@@ -96,7 +96,7 @@
 
             <!-- Tombol 10: Pemverifikasi -->
             <div class="col">
-                <a href="<?= base_url('pemverifikasi/index_pemverifikasi') ?>" class="btn btn-primary btn-icon-split btn-sm d-flex justify-content-between m-2">
+                <a href="<?= base_url('pemverifikasi/index_pemverifikasi') ?>" class="btn btn-success btn-icon-split btn-sm d-flex justify-content-between m-2">
                     <span class="text">Pemverifikasi</span>
                     <span class="icon text-white-50">
                         <i class="fas fa-check-square"></i> <!-- Ikon untuk Pemverifikasi -->
@@ -104,12 +104,12 @@
                 </a>
             </div>
 
-            <!-- Tombol 11: Pencetakan -->
+            <!-- Tombol 11: Autorized -->
             <div class="col">
-                <a href="<?= base_url('pencetakan/index_pencetakan') ?>" class="btn btn-primary btn-icon-split btn-sm d-flex justify-content-between m-2">
-                    <span class="text">Pencetakan</span>
+                <a href="<?= base_url('pencetakan/index_pencetakan') ?>" class="btn btn-info btn-icon-split btn-sm d-flex justify-content-between m-2">
+                    <span class="text">Autorized</span>
                     <span class="icon text-white-50">
-                        <i class="fas fa-print"></i> <!-- Ikon untuk Pencetakan -->
+                        <i class="fas fa-print"></i>
                     </span>
                 </a>
             </div>

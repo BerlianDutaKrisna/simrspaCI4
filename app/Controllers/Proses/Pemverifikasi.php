@@ -18,14 +18,13 @@ class Pemverifikasi extends BaseController
     {
         $this->pemverifikasiModel = new PemverifikasiModel();
         $this->userModel = new UsersModel();
+        session()->set('previous_url', previous_url());
     }
 
     public function index_pemverifikasi() // Update nama method
     {
-        // Mengambil id_user dan nama_user dari session
-        $pemverifikasiModel = new PemverifikasiModel(); // Update nama model
-
-        // Mengambil data HPA beserta relasinya
+        session()->set('previous_url', previous_url());
+        $pemverifikasiModel = new PemverifikasiModel();
         $pemverifikasiData['pemverifikasiData'] = $pemverifikasiModel->getPemverifikasiWithRelations(); // Update nama variabel
 
         // Menggabungkan data dari model dan session

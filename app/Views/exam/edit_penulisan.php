@@ -8,23 +8,23 @@
         </div>
         <div class="card-body">
             <h1 class="h3 mb-4">Form Penulisan</h1>
-            <a href="javascript:history.back()" class="btn btn-primary mb-3">Kembali</a>
+            <a href="<?= base_url('penulisan/index_penulisan') ?>" class="btn btn-primary mb-3">Kembali</a>
 
             <!-- Form -->
-            <form action="<?= base_url('exam/update/' . $hpa[0]['id_hpa']) ?>" method="POST">
+            <form action="<?= base_url('exam/update_penulisan/' . $hpa['id_hpa']) ?>" method="POST">
                 <?= csrf_field(); ?>
-                <input type="hidden" name="id_hpa" value="<?= $hpa[0]['id_hpa'] ?>">
-                <input type="hidden" name="kode_hpa" value="<?= $hpa[0]['kode_hpa'] ?>">
+                <input type="hidden" name="id_hpa" value="<?= $hpa['id_hpa'] ?>">
+                <input type="hidden" name="kode_hpa" value="<?= $hpa['kode_hpa'] ?>">
                 <!-- Kolom Kode HPA dan Diagnosa -->
                 <div class="form-group row">
                     <label class="col-sm-2 col-form-label">Kode HPA</label>
                     <div class="col-sm-4">
-                        <input type="text" name="kode_hpa" value="<?= $hpa[0]['kode_hpa'] ?? '' ?>" class="form-control">
+                        <input type="text" name="kode_hpa" value="<?= $hpa['kode_hpa'] ?? '' ?>" class="form-control">
                     </div>
 
                     <label class="col-sm-2 col-form-label">Diagnosa</label>
                     <div class="col-sm-4">
-                        <input type="text" name="diagnosa_klinik" value="<?= $hpa[0]['diagnosa_klinik'] ?? '' ?>" class="form-control form-control-user">
+                        <input type="text" name="diagnosa_klinik" value="<?= $hpa['diagnosa_klinik'] ?? '' ?>" class="form-control form-control-user">
                     </div>
                 </div>
 
@@ -32,12 +32,12 @@
                 <div class="form-group row">
                     <label class="col-sm-2 col-form-label">Nama Pasien</label>
                     <div class="col-sm-4">
-                        <p>&nbsp<?= $hpa[0]['nama_pasien'] ?? '' ?></p>
+                        <p>&nbsp<?= $hpa['nama_pasien'] ?? '' ?></p>
                     </div>
 
                     <label class="col-sm-2 col-form-label">Dokter Pengirim</label>
                     <div class="col-sm-4">
-                        <input type="text" name="dokter_pengirim" value="<?= $hpa[0]['dokter_pengirim'] ?? '' ?>" class="form-control form-control-user">
+                        <input type="text" name="dokter_pengirim" value="<?= $hpa['dokter_pengirim'] ?? '' ?>" class="form-control form-control-user">
                     </div>
                 </div>
 
@@ -45,12 +45,12 @@
                 <div class="form-group row">
                     <label class="col-sm-2 col-form-label">Norm Pasien</label>
                     <div class="col-sm-4">
-                        <p>&nbsp<?= $hpa[0]['norm_pasien'] ?? '' ?></p>
+                        <p>&nbsp<?= $hpa['norm_pasien'] ?? '' ?></p>
                     </div>
 
                     <label class="col-sm-2 col-form-label">Unit Asal</label>
                     <div class="col-sm-4">
-                        <input type="text" name="unit_asal" value="<?= $hpa[0]['unit_asal'] ?? '' ?>" class="form-control form-control-user">
+                        <input type="text" name="unit_asal" value="<?= $hpa['unit_asal'] ?? '' ?>" class="form-control form-control-user">
                     </div>
                 </div>
 
@@ -58,12 +58,12 @@
                 <div class="form-group row">
                     <label class="col-sm-2 col-form-label">Tindakan Spesimen</label>
                     <div class="col-sm-4">
-                        <input type="text" name="tindakan_spesimen" value="<?= $hpa[0]['tindakan_spesimen'] ?? '' ?>" class="form-control form-control-user">
+                        <input type="text" name="tindakan_spesimen" value="<?= $hpa['tindakan_spesimen'] ?? '' ?>" class="form-control form-control-user">
                     </div>
 
                     <label class="col-sm-2 col-form-label">Tanggal Permintaan</label>
                     <div class="col-sm-4">
-                        <input type="date" name="tanggal_permintaan" value="<?= $hpa[0]['tanggal_permintaan'] ?? '' ?>" class="form-control form-control-user">
+                        <input type="date" name="tanggal_permintaan" value="<?= $hpa['tanggal_permintaan'] ?? '' ?>" class="form-control form-control-user">
                     </div>
                 </div>
 
@@ -71,12 +71,12 @@
                 <div class="form-group row">
                     <label class="col-sm-2 col-form-label">Lokasi Spesimen</label>
                     <div class="col-sm-4">
-                        <input type="text" name="lokasi_spesimen" value="<?= $hpa[0]['lokasi_spesimen'] ?? '' ?>" class="form-control form-control-user">
+                        <input type="text" name="lokasi_spesimen" value="<?= $hpa['lokasi_spesimen'] ?? '' ?>" class="form-control form-control-user">
                     </div>
 
                     <label class="col-sm-2 col-form-label">Tanggal Hasil</label>
                     <div class="col-sm-4">
-                        <input type="date" name="tanggal_hasil" value="<?= $hpa[0]['tanggal_hasil'] ?? '' ?>" class="form-control form-control-user">
+                        <input type="date" name="tanggal_hasil" value="<?= $hpa['tanggal_hasil'] ?? '' ?>" class="form-control form-control-user">
                     </div>
                 </div>
 
@@ -95,7 +95,7 @@
                                             <font size="5" face="verdana"><b>:</b><br></font>
                                         </td>
                                         <td style="border: none;" width="590pt">
-                                            <font size="5" face="verdana"><b><?= $hpa[0]['lokasi_spesimen'] ?? '' ?><br></b></font>
+                                            <font size="5" face="verdana"><b><?= $hpa['lokasi_spesimen'] ?? '' ?><br></b></font>
                                         </td>
                                     </tr>
                                     <tr>
@@ -106,7 +106,7 @@
                                             <font size="5" face="verdana"><b>:</b><br></font>
                                         </td>
                                         <td style="border: none;" width="590pt">
-                                            <font size="5" face="verdana"><b><?= $hpa[0]['diagnosa_klinik'] ?? '' ?><br></b></font>
+                                            <font size="5" face="verdana"><b><?= $hpa['diagnosa_klinik'] ?? '' ?><br></b></font>
                                         </td>
                                     </tr>
                                     <tr>
@@ -124,20 +124,41 @@
                             </table>
                             <font size="5" face="verdana"><b>LAPORAN PEMERIKSAAN:<br></b></font>
                             <p><b style="font-family: verdana; font-size: x-large;">MAKROSKOPIK :</b></p>
-                            <font size="5" face="verdana"><?= $hpa[0]['makroskopis_hpa'] ?? '' ?></font>
+                            <font size="5" face="verdana"><?= $hpa['makroskopis_hpa'] ?? '' ?></font>
                             <div>
                                 <font size="5" face="verdana"><b>MIKROSKOPIK :</b><br></font>
                             </div>
                             <div>
-                                <font size="5" face="verdana"><?= $hpa[0]['mikroskopis_hpa'] ?? '' ?></font>
+                                <font size="5" face="verdana"><?= $hpa['mikroskopis_hpa'] ?? '' ?></font>
                             </div>
                             <br>
-                            <b>KESIMPULAN :</b> <?= $hpa[0]['lokasi_spesimen'] ?? '' ?>, <?= $hpa[0]['tindakan_spesimen'] ?? '' ?>:
-                            <br><font size="5" face="verdana"><b><?= $hpa[0]['hasil_hpa'] ?? '' ?></b></font>
+                            <b>KESIMPULAN :</b> <?= $hpa['lokasi_spesimen'] ?? '' ?>, <?= $hpa['tindakan_spesimen'] ?? '' ?>:
+                            <br><font size="5" face="verdana"><b><?= $hpa['hasil_hpa'] ?? '' ?></b></font>
                         </textarea>
                     </div>
                 </div>
+                <!-- Kolom Hasil HPA dan Dokter -->
+                <div class="form-group row">
+                    <label class="col-sm-2 col-form-label">Hasil HPA</label>
+                    <div class="col-sm-4">
+                        <input type="text" name="hasil_hpa" value="<?= $hpa['hasil_hpa'] ?? '' ?>" class="form-control form-control-user">
+                    </div>
 
+                    <label class="col-sm-2 col-form-label" for="jumlah_slide">Dokter yang membaca</label>
+                    <div class="col-sm-4">
+                        <select class="form-control" id="id_user_dokter_pemotongan" name="id_user_dokter_pemotongan">
+                            <option value="" <?= empty($hpa['id_user_dokter_pemotongan']) ? 'selected' : '' ?>>-- Pilih Dokter --</option>
+                            <?php foreach ($users as $user): ?>
+                                <?php if ($user['status_user'] === 'Dokter'): ?>
+                                    <option value="<?= $user['id_user'] ?>"
+                                        <?= isset($pemotongan['id_user_dokter_pemotongan']) && $user['id_user'] == $pemotongan['id_user_dokter_pemotongan'] ? 'selected' : '' ?>>
+                                        <?= $user['nama_user'] ?>
+                                    </option>
+                                <?php endif; ?>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+                </div>
                 <div class="form-group row">
                     <div class="col-12 text-center">
                         <!-- Tombol Simpan -->

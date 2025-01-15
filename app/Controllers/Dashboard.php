@@ -6,11 +6,7 @@ class Dashboard extends BaseController
 {
     public function __construct()
     {
-        // Mengecek apakah user sudah login dengan menggunakan session
-        if (!session()->has('id_user')) {
-            session()->setFlashdata('error', 'Login terlebih dahulu');
-            return redirect()->to('/login');
-        }
+        session()->set('previous_url', previous_url());
     }
     public function index()
     {

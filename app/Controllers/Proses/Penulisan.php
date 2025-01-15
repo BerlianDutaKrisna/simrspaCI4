@@ -23,10 +23,8 @@ class Penulisan extends BaseController
 
     public function index_penulisan() // Update nama method
     {
-        // Mengambil id_user dan nama_user dari session
-        $penulisanModel = new PenulisanModel(); // Update nama model
-
-        // Mengambil data HPA beserta relasinya
+        session()->set('previous_url', previous_url());
+        $penulisanModel = new PenulisanModel();
         $penulisanData['penulisanData'] = $penulisanModel->getPenulisanWithRelations(); // Update nama variabel
 
         // Menggabungkan data dari model dan session

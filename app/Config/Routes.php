@@ -47,10 +47,8 @@ $routes->post('exam/delete', 'Exam::delete');
 $routes->post('exam/uploadFotoMakroskopis/(:num)', 'Exam::uploadFotoMakroskopis/$1');
 $routes->post('exam/uploadFotoMikroskopis/(:num)', 'Exam::uploadFotoMikroskopis/$1');
 $routes->get('exam/edit_penulisan/(:num)', 'Exam::edit_penulisan/$1');
+$routes->post('exam/update_penulisan/(:segment)', 'Exam::update_penulisan/$1');
 $routes->get('exam/edit_print_hpa/(:num)', 'Exam::edit_print_hpa/$1');
-
-
-
 
 // Route untuk Penerimaan
 $routes->get('penerimaan/index_penerimaan', 'Proses\Penerimaan::index_penerimaan'); // Menampilkan halaman penerimaan
@@ -180,5 +178,6 @@ $routes->post('mutu/update_mutu', 'Mutu::update_mutu');
 // Router untuk Cetak
 $routes->get('cetak/form_hpa', 'Cetak::cetak_form_hpa');
 $routes->get('cetak/cetak_proses/(:num)', 'Cetak::cetak_proses/$1');
+$routes->get('cetak/autorized/(:num)', 'Cetak::autorized/$1');
 $routes->get('cetak/cetak_hpa/(:num)', 'Cetak::cetak_hpa/$1');
 

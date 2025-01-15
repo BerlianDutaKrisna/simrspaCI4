@@ -19,19 +19,18 @@ class pembacaan extends BaseController
     {
         $this->pembacaanModel = new PembacaanModel();
         $this->userModel = new UsersModel();
+        session()->set('previous_url', previous_url());
     }
 
-    public function index_pembacaan() // Update method
+    public function index_pembacaan()
     {
-        // Mengambil id_user dan nama_user dari session
-        $pembacaanModel = new PembacaanModel(); // Update model
-
-        // Mengambil data HPA beserta relasinya
-        $pembacaanData['pembacaanData'] = $pembacaanModel->getPembacaanWithRelations(); // Update data
+        session()->set('previous_url', previous_url());
+        $pembacaanModel = new PembacaanModel();
+        $pembacaanData['pembacaanData'] = $pembacaanModel->getPembacaanWithRelations();
 
         // Menggabungkan data dari model dan session
         $data = [
-            'pembacaanData' => $pembacaanData['pembacaanData'], // Update data
+            'pembacaanData' => $pembacaanData['pembacaanData'],
             'id_user' => session()->get('id_user'),
             'nama_user' => session()->get('nama_user'),
         ];

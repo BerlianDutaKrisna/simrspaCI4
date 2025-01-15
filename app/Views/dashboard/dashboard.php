@@ -57,16 +57,16 @@
                                     // Tentukan status proses berdasarkan status hpa
                                     switch ($row['status_hpa']) {
                                         case 'Penerimaan':
-                                            echo esc($row['status_penerimaan']); 
+                                            echo esc($row['status_penerimaan']);
                                             break;
                                         case 'Pengirisan':
-                                            echo esc($row['status_pengirisan']); 
+                                            echo esc($row['status_pengirisan']);
                                             break;
                                         case 'Pemotongan':
-                                            echo esc($row['status_pemotongan']); 
+                                            echo esc($row['status_pemotongan']);
                                             break;
                                         case 'Pemprosesan':
-                                            echo esc($row['status_pemprosesan']); 
+                                            echo esc($row['status_pemprosesan']);
                                             break;
                                         case 'Penanaman':
                                             echo esc($row['status_penanaman']);
@@ -160,6 +160,9 @@
                                         case 'Pewarnaan':
                                             $startTimeField = 'mulai_pewarnaan';
                                             break;
+                                        case 'Pemprosesan':
+                                            $startTimeField = 'mulai_pemprosesan';
+                                            break;
                                         case 'Pembacaan':
                                             $startTimeField = 'mulai_pembacaan';
                                             break;
@@ -195,25 +198,28 @@
                                             $endTimeField = 'selesai_pemotongan';
                                             break;
                                         case 'Penanaman':
-                                            $endTimeField = 'mulai_penanaman';
+                                            $endTimeField = 'selesai_penanaman';
                                             break;
                                         case 'Pemotongan Tipis':
-                                            $endTimeField = 'mulai_pemotongan_tipis';
+                                            $endTimeField = 'selesai_pemotongan_tipis';
                                             break;
                                         case 'Pewarnaan':
-                                            $endTimeField = 'mulai_pewarnaan';
+                                            $endTimeField = 'selesai_pewarnaan';
+                                            break;
+                                        case 'Pemprosesan':
+                                            $endTimeField = 'selesai_pemprosesan';
                                             break;
                                         case 'Pembacaan':
-                                            $endTimeField = 'mulai_pembacaan';
+                                            $endTimeField = 'selesai_pembacaan';
                                             break;
                                         case 'Penulisan':
-                                            $endTimeField = 'mulai_penulisan';
+                                            $endTimeField = 'selesai_penulisan';
                                             break;
                                         case 'Pemverifikasi':
-                                            $endTimeField = 'mulai_pemverifikasi';
+                                            $endTimeField = 'selesai_pemverifikasi';
                                             break;
                                         case 'Pencetakan':
-                                            $endTimeField = 'mulai_pencetakan';
+                                            $endTimeField = 'selesai_pencetakan';
                                             break;
                                         default:
                                             $endTimeField = 'selesai_pengerjaan';
@@ -244,7 +250,11 @@
         </div>
     </div>
 </div>
-
+<script>
+    setTimeout(function() {
+        location.reload();
+    }, 10000); // Halaman akan refresh setelah 5 detik
+</script>
 <?= $this->include('dashboard/grafik_pemeriksaan'); ?> <!-- Menyertakan grafik pemeriksaan -->
 <?= $this->include('templates/notifikasi'); ?> <!-- Menyertakan notifikasi -->
 <?= $this->include('templates/dashboard/footer_dashboard'); ?> <!-- Menyertakan footer dashboard -->
