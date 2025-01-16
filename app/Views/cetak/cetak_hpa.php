@@ -70,38 +70,69 @@
     });
 
     function cetakHpa() {
-        var printContent = document.getElementById('print_hpa').value; // Ambil nilai dari textarea
+    // Ambil nilai dari textarea
+    var printContent = document.getElementById('print_hpa').value;
 
-        // Membuka jendela baru untuk menampilkan hasil cetak
-        var printWindow = window.open('', '', 'height=500,width=800');
+    // Membuka jendela baru untuk menampilkan hasil cetak
+    var printWindow = window.open('', '', 'height=500,width=800');
 
-        // Mulai menulis konten HTML
-        printWindow.document.write('<html><head><title>Cetak Hpa</title><style>');
-        printWindow.document.write('body { font-family: Arial, sans-serif; font-size: 12pt; }');
-        printWindow.document.write('table { width: 100%; }');
-        printWindow.document.write('h2 { margin-top: 40px; text-align: center; }');
-        printWindow.document.write('hr { margin-top: 30px; margin-bottom: 30px; }');
-        printWindow.document.write('</style></head><body>');
+    // Mulai menulis konten HTML
+    printWindow.document.write(`
+        <html>
+        <head>
+            <title>Cetak Hpa</title>
+            <style>
+                body {
+                    font-family: Arial, sans-serif;
+                    font-size: 12pt;
+                }
+                table {
+                    width: 100%;
+                }
+                h2 {
+                    margin-top: 40px;
+                    text-align: center;
+                }
+                hr {
+                    margin-top: 30px;
+                    margin-bottom: 30px;
+                }
+                .footer {
+                    text-align: center;
+                    padding-top: 20px;
+                    margin-top: 50px;
+                }
+                .note {
+                    font-size: 12pt;
+                    font-style: italic;
+                    font-family: Verdana, sans-serif;
+                }
+            </style>
+        </head>
+        <body>
+            <div>
+                <!-- Konten yang akan dicetak -->
+                <div>${printContent}</div>
 
-        printWindow.document.write('<div>');
-        printWindow.document.write('<div>' + printContent + '</div>');
+                <!-- Elemen footer -->
+                <div class="footer">
+                    <p>Terimakasih,</p>
+                    <br><br>
+                    <p>(<?= $hpa[0]["nama_user_dokter_pemotongan"] ?? "" ?>)</p>
+                    <br><br>
+                    <div class="note">
+                        Ket :<br>
+                        Jaringan telah dilakukan fiksasi dengan formalin sehingga terjadi perubahan ukuran makroskopis
+                    </div>
+                </div>
+            </div>
+        </body>
+        </html>
+    `);
 
-        // Memastikan elemen Terimakasih berada di bawah konten
-        printWindow.document.write('<div style="text-align: center; padding-top: 20px; margin-top: 50px;">');
-        printWindow.document.write('<p>Terimakasih,</p>');
-        printWindow.document.write('<br><br>');
-        printWindow.document.write('<p>(' + '<?= $hpa[0]["nama_user_dokter_pemotongan"] ?? "" ?>' + ')</p>');
-        printWindow.document.write('</div>');
+    printWindow.document.close();
 
-        printWindow.document.write('</div>');
+    printWindow.print();
+}
 
-
-        // Menutup tag body dan html
-        printWindow.document.write('</body></html>');
-        printWindow.document.close(); // Selesai menulis konten
-
-        // Fungsi untuk mencetak
-        printWindow.print();
-
-    }
 </script>

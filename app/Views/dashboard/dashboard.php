@@ -250,11 +250,7 @@
         </div>
     </div>
 </div>
-<script>
-    setTimeout(function() {
-        location.reload();
-    }, 10000); // Halaman akan refresh setelah 5 detik
-</script>
+
 <?= $this->include('dashboard/grafik_pemeriksaan'); ?> <!-- Menyertakan grafik pemeriksaan -->
 <?= $this->include('templates/notifikasi'); ?> <!-- Menyertakan notifikasi -->
 <?= $this->include('templates/dashboard/footer_dashboard'); ?> <!-- Menyertakan footer dashboard -->
