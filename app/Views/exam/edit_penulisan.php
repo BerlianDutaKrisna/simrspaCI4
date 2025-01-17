@@ -15,6 +15,7 @@
                 <?= csrf_field(); ?>
                 <input type="hidden" name="id_hpa" value="<?= $hpa['id_hpa'] ?>">
                 <input type="hidden" name="kode_hpa" value="<?= $hpa['kode_hpa'] ?>">
+
                 <!-- Kolom Kode HPA dan Diagnosa -->
                 <div class="form-group row">
                     <label class="col-sm-2 col-form-label">Kode HPA</label>
@@ -32,7 +33,7 @@
                 <div class="form-group row">
                     <label class="col-sm-2 col-form-label">Nama Pasien</label>
                     <div class="col-sm-4">
-                        <p>&nbsp<?= $hpa['nama_pasien'] ?? '' ?></p>
+                        <p>&nbsp;<?= $hpa['nama_pasien'] ?? '' ?></p>
                     </div>
 
                     <label class="col-sm-2 col-form-label">Dokter Pengirim</label>
@@ -45,7 +46,7 @@
                 <div class="form-group row">
                     <label class="col-sm-2 col-form-label">Norm Pasien</label>
                     <div class="col-sm-4">
-                        <p>&nbsp<?= $hpa['norm_pasien'] ?? '' ?></p>
+                        <p>&nbsp;<?= $hpa['norm_pasien'] ?? '' ?></p>
                     </div>
 
                     <label class="col-sm-2 col-form-label">Unit Asal</label>
@@ -134,9 +135,13 @@
                             <br>
                             <b>KESIMPULAN :</b> <?= $hpa['lokasi_spesimen'] ?? '' ?>, <?= $hpa['tindakan_spesimen'] ?? '' ?>:
                             <br><font size="5" face="verdana"><b><?= $hpa['hasil_hpa'] ?? '' ?></b></font>
+                            <br><div><font size="5" face="verdana"><b><br></b></font></div>
+                            <div><font size="3"><i><font face="verdana">Ket : <br></font></i></font></div>
+                            <div><font size="5" face="verdana"><font size="3"><i>Jaringan telah dilakukan fiksasi dengan formalin sehingga terjadi perubahan ukuran makroskopis</i></font></font></div>
                         </textarea>
                     </div>
                 </div>
+
                 <!-- Kolom Hasil HPA dan Dokter -->
                 <div class="form-group row">
                     <label class="col-sm-2 col-form-label">Hasil HPA</label>
@@ -159,6 +164,7 @@
                         </select>
                     </div>
                 </div>
+
                 <div class="form-group row">
                     <div class="col-12 text-center">
                         <!-- Tombol Simpan -->

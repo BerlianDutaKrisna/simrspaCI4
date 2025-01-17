@@ -98,7 +98,8 @@
                 </table>
             </div>
 
-            <?= $this->include('dashboard/jenis_tindakan'); ?>
+            
             <?= $this->include('templates/proses/button_proses'); ?>
+            <?= $this->include('dashboard/jenis_tindakan'); ?>
             <?= $this->include('templates/notifikasi'); ?>
             <?= $this->include('templates/dashboard/footer_dashboard'); ?>
