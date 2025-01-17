@@ -1,6 +1,5 @@
 <?= $this->include('templates/dashboard/header_dashboard'); ?>
 <?= $this->include('templates/dashboard/navbar_dashboard'); ?>
-<?= $this->include('dashboard/jenis_tindakan'); ?>
 
 <div class="card shadow mb-4">
     <div class="card-header py-3">
@@ -96,6 +95,7 @@
                 </table>
             </div>
 
+            <?= $this->include('dashboard/jenis_tindakan'); ?>
             <?= $this->include('templates/proses/button_proses'); ?>
             <?= $this->include('templates/notifikasi'); ?>
             <?= $this->include('templates/dashboard/footer_dashboard'); ?>
