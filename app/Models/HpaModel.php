@@ -43,6 +43,7 @@ class HpaModel extends Model
         'id_pembacaan',
         'id_penulisan',
         'id_pemverifikasi',
+        'id_autorized',
         'id_pencetakan',
         'id_mutu',
         'created_at',
@@ -54,6 +55,10 @@ class HpaModel extends Model
     protected $createdField  = 'created_at';
     protected $updatedField  = 'updated_at';
 
+    public function getLastKodeHPA()
+    {
+        return $this->orderBy('id_hpa', 'DESC')->first(); // Ambil data terakhir berdasarkan ID
+    }
     // Fungsi untuk insert data HPA dengan pengecekan kode_hpa
     public function insertHpa(array $data): bool
     {
@@ -257,7 +262,8 @@ class HpaModel extends Model
         pewarnaan.*, 
         pembacaan.*, 
         penulisan.*, 
-        pemverifikasi.*, 
+        pemverifikasi.*,
+        autorizeed.*, 
         pencetakan.*, 
         mutu.*,
         user_penerimaan.nama_user AS nama_user_penerimaan, 
@@ -270,7 +276,8 @@ class HpaModel extends Model
         user_pewarnaan.nama_user AS nama_user_pewarnaan, 
         user_pembacaan.nama_user AS nama_user_pembacaan, 
         user_penulisan.nama_user AS nama_user_penulisan, 
-        user_pemverifikasi.nama_user AS nama_user_pemverifikasi, 
+        user_pemverifikasi.nama_user AS nama_user_pemverifikasi,
+        user_autorized.nama_user AS nama_user_autorized,
         user_pencetakan.nama_user AS nama_user_pencetakan
     ')
             ->join('patient', 'patient.id_pasien = hpa.id_pasien', 'left')
@@ -301,6 +308,7 @@ class HpaModel extends Model
             ->join('users AS user_pembacaan', 'pembacaan.id_user_pembacaan = user_pembacaan.id_user', 'left')
             ->join('users AS user_penulisan', 'penulisan.id_user_penulisan = user_penulisan.id_user', 'left')
             ->join('users AS user_pemverifikasi', 'pemverifikasi.id_user_pemverifikasi = user_pemverifikasi.id_user', 'left')
+            ->join('users AS user_autorized', 'autorized.id_user_autorized = user_autorized.id_user', 'left')
             ->join('users AS user_pencetakan', 'pencetakan.id_user_pencetakan = user_pencetakan.id_user', 'left')
             ->where('hpa.id_hpa', $id_hpa)
             ->get()

@@ -568,31 +568,51 @@ class Exam extends BaseController
 
     public function register_exam()
     {
-        // Inisialisasi array $data dengan nilai default dari session
+        // Ambil data kode HPA terakhir dari model HpaModel
+        $lastHPA = $this->hpaModel->getLastKodeHPA();
+
+        // Ambil tahun saat ini
+        $currentYear = date('y');
+        $nextNumber = 53;
+
+        // Jika ada data kode HPA terakhir
+        if ($lastHPA) {
+            // Ambil kode HPA terakhir dan pisahkan berdasarkan format 'H.XX/YY'
+            $lastKode = $lastHPA['kode_hpa']; 
+            $lastParts = explode('/', $lastKode);
+            $lastYear = $lastParts[1]; 
+
+            // Jika tahun kode HPA terakhir sama dengan tahun sekarang
+            if ($lastYear == $currentYear) {
+                $lastNumber = (int) explode('.', $lastParts[0])[1];
+                $nextNumber = $lastNumber + 1;
+            }
+        }
+
+        // Format kode HPA baru
+        $kodeHPA = 'H.' . str_pad($nextNumber, 2, '0', STR_PAD_LEFT) . '/' . $currentYear;
+
+        // Siapkan data untuk dikirim ke view
         $data = [
             'id_user' => session()->get('id_user'),
             'nama_user' => session()->get('nama_user'),
-            'patient' => null, // Default jika tidak ada data pasien ditemukan
+            'kode_hpa' => $kodeHPA,
+            'patient' => null,
         ];
 
         // Mendapatkan nilai norm_pasien dari query string
         $norm_pasien = $this->request->getGet('norm_pasien');
 
-        // Jika nilai norm_pasien ada, cari data pasien berdasarkan norm_pasien
+        // Jika norm_pasien ada, cari data pasien berdasarkan norm_pasien
         if ($norm_pasien) {
-            // Inisialisasi model
             $patientModel = new PatientModel();
-
-            // Mencari data pasien berdasarkan norm_pasien
             $patient = $patientModel->where('norm_pasien', $norm_pasien)->first();
-
-            // Menambahkan data pasien ke $data jika ditemukan
             $data['patient'] = $patient ?: null;
         }
-
-        // Mengirim data ke view untuk ditampilkan
+        // Kirim data ke view
         return view('exam/register_exam', $data);
     }
+
     public function insert()
     {
         try {

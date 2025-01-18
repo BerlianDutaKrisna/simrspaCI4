@@ -61,7 +61,8 @@
                 <!-- Form group untuk Kode HPA -->
                 <div class="form-group col-md-3">
                     <label for="kode_hpa">Kode HPA</label>
-                    <input type="text" class="form-control" id="kode_hpa" name="kode_hpa" placeholder="Masukkan Kode HPA" value="<?= old('kode_hpa'); ?>">
+                    <input type="text" class="form-control" id="kode_hpa" name="kode_hpa"
+                        value="<?= esc($kode_hpa); ?>">
                 </div>
 
                 <!-- Form group untuk Unit Asal -->
@@ -103,7 +104,7 @@
                 <!-- Form group untuk Tanggal Permintaan -->
                 <div class="form-group col-md-3">
                     <label for="tanggal_permintaan">Tanggal Permintaan</label>
-                    <input type="date" class="form-control" id="tanggal_permintaan" name="tanggal_permintaan" value="<?= old('tanggal_permintaan'); ?>">
+                    <input type="date" class="form-control" id="tanggal_permintaan" name="tanggal_permintaan" value="<?= old('tanggal_permintaan') ?: date('Y-m-d'); ?>">
                 </div>
             </div>
 
@@ -154,6 +155,31 @@
 </div>
 
 <script>
+    // Function to set Tanggal Hasil based on Tanggal Permintaan
+    function setTanggalHasil() {
+        const tanggalPermintaan = document.getElementById('tanggal_permintaan');
+        const tanggalHasil = document.getElementById('tanggal_hasil');
+
+        const tanggalPermintaanValue = new Date(tanggalPermintaan.value);
+
+        // Check if Tanggal Permintaan is a valid date
+        if (!isNaN(tanggalPermintaanValue)) {
+            tanggalPermintaanValue.setDate(tanggalPermintaanValue.getDate() + 7); // Add 7 days
+            tanggalHasil.value = tanggalPermintaanValue.toISOString().split('T')[0]; // Set Tanggal Hasil
+        }
+    }
+
+    // Set Tanggal Hasil on page load if Tanggal Permintaan is filled
+    window.addEventListener('load', function() {
+        // If Tanggal Permintaan has a value, set Tanggal Hasil
+        if (document.getElementById('tanggal_permintaan').value) {
+            setTanggalHasil();
+        }
+    });
+
+    // Update Tanggal Hasil whenever Tanggal Permintaan is changed
+    document.getElementById('tanggal_permintaan').addEventListener('change', setTanggalHasil);
+
     function handleUnitAsalChange(selectElement) {
         const customInput = document.getElementById('unit_asal_detail');
         if (selectElement.value === 'Ruangan' || selectElement.value === 'Poli' || selectElement.value === 'lainnya') {
