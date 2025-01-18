@@ -8,7 +8,7 @@ class DatabaseSeeder extends Seeder
 {
     public function run()
     {
-        // $this->call('App\Database\Seeds\UserSeeder');
+        $this->call('App\Database\Seeds\UserSeeder');
 
         $sql_file = FCPATH . 'assets/sql/patient.sql';
 
