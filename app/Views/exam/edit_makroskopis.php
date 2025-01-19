@@ -187,10 +187,6 @@
         <head>
             <title>Cetak Hpa</title>
             <style>
-                @page {
-                    size: 216mm 279mm; /* Ukuran kertas Letter */
-                    margin: 10mm; /* Mengurangi margin agar ruang lebih besar */
-                }
                 body {
                     font-family: Verdana, Arial, sans-serif;
                     margin: 0;
@@ -200,74 +196,66 @@
                     flex-direction: column;
                 }
                 .header, .footer, .content {
-                    padding: 2mm; /* Padding lebih kecil agar ruang lebih besar */
+                    padding: 10px;
                 }
                 .header {
                     border-bottom: 2px solid #000;
-                    margin-bottom: 5mm; /* Mengurangi jarak antara header dan content */
-                    font-size: 9pt; /* Menyesuaikan ukuran font header */
+                    margin-bottom: 20px;
+                }
+                h5 {
+                    margin: 5px 0;
                 }
                 .footer {
                     text-align: center;
-                    margin-top: 10mm; /* Mengurangi jarak antara content dan footer */
+                    margin-top: 50px;
                     margin-bottom: 0;
-                    font-size: 9pt; /* Menyesuaikan ukuran font footer */
                 }
                 table {
                     width: 100%;
                     border-collapse: collapse;
-                    margin-top: 5mm;
+                    margin-top: 20px;
                 }
                 td {
-                    padding: 3mm;
+                    padding: 10px;
                     text-align: left;
                     vertical-align: middle;
                     border: 1px solid black;
                 }
                 hr {
                     border: 1px solid #000;
-                    margin: 10mm 0;
+                    margin: 20px 0;
                 }
                 .content {
                     margin-bottom: 0;
-                    flex-grow: 1; /* Membuat content mengisi ruang yang tersisa */
+                    flex-grow: 1; /* Memastikan content memenuhi ruang */
                 }
                 .header-table {
                     width: 100%;
                     border: none;
                 }
                 .header-table td {
-                    padding: 2mm;
+                    padding: 5px;
                     vertical-align: top;
-                }
-                .header-table td:first-child {
-                    width: 15%; /* Lebar kolom pertama di header lebih kecil */
-                }
-                .header-table td:nth-child(2),
-                .header-table td:nth-child(3),
-                .header-table td:nth-child(4),
-                .header-table td:nth-child(5) {
-                    width: 17%; /* Lebar kolom header menjadi lebih kecil dan lebih rata */
                 }
                 .makroskopis-content-table td,
                 .mikroskopis-content-table td {
-                    font-size: 9pt; /* Menyesuaikan ukuran font makroskopis dan mikroskopis */
-                    padding: 5mm;
+                    font-size: 12px;
+                    padding: 5px;
                 }
                 .makroskopis-content-table td:first-child,
                 .mikroskopis-content-table td:first-child {
-                    width: 30%; /* Lebar kolom pertama lebih kecil */
+                    width: 30%;
                 }
                 .makroskopis-content-table td:last-child,
                 .mikroskopis-content-table td:last-child {
-                    width: 70%; /* Lebar kolom kedua lebih besar */
+                    width: 70%;
                 }
                 .makroskopis-content-table td[colspan="2"],
                 .mikroskopis-content-table td[colspan="2"] {
-                    height: 50mm; /* Memberikan lebih banyak ruang untuk Makroskopis dan Mikroskopis */
-                    font-size: 9pt; /* Menyesuaikan ukuran font untuk konten makroskopis dan mikroskopis */
+                    height: 330px;
+                    font-size: 16pt;
                     border: 1px solid black;
-                    padding: 10mm;
+                    padding: 10px;
                     text-align: left;
                     vertical-align: top;
                     border: 1px dashed black; /* Garis putus-putus untuk konten */
@@ -276,29 +264,28 @@
                 .gambar-table {
                     width: 100%;
                     border-collapse: collapse;
-                    margin-top: 5mm;
+                    margin-top: 30px;
                 }
                 .gambar-table td {
-                    height: 30mm;
+                    height: 110px;
                     width: 12.5%;
                     border: 1px dashed black; /* Garis putus-putus pada kolom gambar */
                     text-align: center;
                     vertical-align: middle;
                     position: relative; /* Untuk memposisikan nomor romawi di pojok kiri atas */
-                    font-size: 9pt; /* Menyesuaikan ukuran font pada kolom gambar */
                 }
                 .gambar-table th {
                     text-align: center;
-                    font-size: 9pt; /* Menyesuaikan ukuran font header gambar */
-                    padding: 5mm;
+                    font-size: 14px;
+                    padding: 10px;
                     border: 1px solid black; /* Garis solid pada judul "Gambar" */
                     font-weight: bold;
                 }
                 .gambar-table td .romawi {
                     position: absolute;
-                    top: 3mm;
-                    left: 3mm;
-                    font-size: 8pt;
+                    top: 5px;
+                    left: 5px;
+                    font-size: 10pt;
                     font-weight: normal;
                     color: rgba(0, 0, 0, 0.3); /* Warna abu-abu pudar dengan transparansi */
                 }
@@ -308,19 +295,19 @@
             <div class="header">
                 <table class="header-table">
                     <tr>
-                        <td rowspan="2" style="width: 15%; font-size: 9pt; font-weight: bold; text-align: center;">
+                        <td rowspan="2" style="width: 20%; font-size: 15px; font-weight: bold; text-align: center;">
                             Kode HPA: <?= esc($hpa['kode_hpa'] ?? '') ?>
                         </td>
-                        <td style="width: 17%; font-size: 9pt;">Nama Pasien: <?= esc($hpa['nama_pasien'] ?? '') ?></td>
-                        <td style="width: 17%; font-size: 9pt;">Dokter Pengirim: <?= esc($hpa['dokter_pengirim'] ?? '') ?></td>
-                        <td style="width: 17%; font-size: 9pt;">Diagnosa Klinik: <?= esc($hpa['diagnosa_klinik'] ?? '') ?></td>
-                        <td style="width: 17%; font-size: 9pt;">Tanggal Permintaan: <?= isset($hpa['tanggal_permintaan']) ? date('d-m-Y', strtotime($hpa['tanggal_permintaan'])) : ''; ?></td>
+                        <td style="width: 20%;">Nama Pasien: <?= esc($hpa['nama_pasien'] ?? '') ?></td>
+                        <td style="width: 20%;">Dokter Pengirim: <?= esc($hpa['dokter_pengirim'] ?? '') ?></td>
+                        <td style="width: 20%;">Diagnosa Klinik: <?= esc($hpa['diagnosa_klinik'] ?? '') ?></td>
+                        <td style="width: 20%;">Tanggal Permintaan: <?= isset($hpa['tanggal_permintaan']) ? date('d-m-Y', strtotime($hpa['tanggal_permintaan'])) : ''; ?></td>
                     </tr>
                     <tr>
-                        <td style="font-size: 9pt;">Norm: <?= esc($hpa['norm_pasien'] ?? '') ?></td>
-                        <td style="font-size: 9pt;">Unit Asal: <?= esc($hpa['unit_asal'] ?? '') ?></td>
-                        <td style="font-size: 9pt;">Lokasi Spesimen: <?= esc($hpa['lokasi_spesimen'] ?? '') ?></td>
-                        <td style="font-size: 9pt;">Tanggal Hasil: <?= isset($hpa['tanggal_hasil']) ? date('d-m-Y', strtotime($hpa['tanggal_hasil'])) : ''; ?></td>
+                        <td>Norm: <?= esc($hpa['norm_pasien'] ?? '') ?></td>
+                        <td>Unit Asal: <?= esc($hpa['unit_asal'] ?? '') ?></td>
+                        <td>Lokasi Spesimen: <?= esc($hpa['lokasi_spesimen'] ?? '') ?></td>
+                        <td>Tanggal Hasil: <?= isset($hpa['tanggal_hasil']) ? date('d-m-Y', strtotime($hpa['tanggal_hasil'])) : ''; ?></td>
                     </tr>
                 </table>
             </div>
