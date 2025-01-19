@@ -26,8 +26,14 @@
             </div>
 
             <script>
+                window.onload = function() {
+                    // Scroll otomatis ke tabel dengan ID 'dataTable'
+                    document.getElementById('dataTable').scrollIntoView({
+                    });
+                };
+
                 function setAction(action) {
                     document.getElementById('action').value = action;
-                    document.getElementById('mainForm').submit(); // Kirim form setelah action diset
+                    document.getElementById('mainForm').submit();
                 }
             </script>

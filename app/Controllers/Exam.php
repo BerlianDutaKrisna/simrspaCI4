@@ -573,20 +573,26 @@ class Exam extends BaseController
 
         // Ambil tahun saat ini
         $currentYear = date('y');
-        $nextNumber = 53;
+        $nextNumber = 1;
 
         // Jika ada data kode HPA terakhir
         if ($lastHPA) {
             // Ambil kode HPA terakhir dan pisahkan berdasarkan format 'H.XX/YY'
-            $lastKode = $lastHPA['kode_hpa']; 
+            $lastKode = $lastHPA['kode_hpa'];
             $lastParts = explode('/', $lastKode);
-            $lastYear = $lastParts[1]; 
+            $lastYear = $lastParts[1];
 
             // Jika tahun kode HPA terakhir sama dengan tahun sekarang
             if ($lastYear == $currentYear) {
                 $lastNumber = (int) explode('.', $lastParts[0])[1];
                 $nextNumber = $lastNumber + 1;
+            } else {
+                // Jika tahun berbeda, nomor dimulai kembali dari 1
+                $nextNumber = 1;
             }
+        } else {
+            // Jika tidak ada kode HPA sebelumnya, mulai dari 1
+            $nextNumber = 1;
         }
 
         // Format kode HPA baru

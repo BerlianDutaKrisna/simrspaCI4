@@ -76,7 +76,7 @@
                         <option value="Ruangan">Ruangan</option>
                         <option value="lainnya">Lainnya</option>
                     </select>
-                    <input type="text" class="form-control mt-2 d-none" id="unit_asal_detail" name="unit_asal_detail" placeholder="Masukkan Detail (contoh: Tulip)">
+                    <input type="text" class="form-control mt-2 d-none" id="unit_asal_detail" name="unit_asal_detail" placeholder="Masukkan Unit Asal Lainnya">
                 </div>
 
                 <!-- Form group untuk Dokter Pengirim -->
@@ -184,7 +184,6 @@
         const customInput = document.getElementById('unit_asal_detail');
         if (selectElement.value === 'Ruangan' || selectElement.value === 'Poli' || selectElement.value === 'lainnya') {
             customInput.classList.remove('d-none');
-            customInput.placeholder = `Masukkan detail untuk ${selectElement.value}`;
         } else {
             customInput.classList.add('d-none');
             customInput.value = '';

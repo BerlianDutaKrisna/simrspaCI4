@@ -86,8 +86,8 @@
                     <div class="col-sm-6">
                         <img src="<?= base_url('uploads/hpa/makroskopis/' . $hpa['foto_makroskopis_hpa']); ?>" width="200" alt="Foto Makroskopis" class="img-thumbnail" id="fotoMakroskopis" data-toggle="modal" data-target="#fotoModal">
                         <input type="file" name="foto_makroskopis_hpa" id="foto_makroskopis_hpa" class="form-control form-control-user mt-2">
-                        <button type="submit" class="btn btn-primary mt-2" 
-                        formaction="<?= base_url('exam/uploadFotoMakroskopis/' . $hpa['id_hpa']); ?>">
+                        <button type="submit" class="btn btn-primary mt-2"
+                            formaction="<?= base_url('exam/uploadFotoMakroskopis/' . $hpa['id_hpa']); ?>">
                             <i class="fas fa-cloud-upload-alt"></i> Upload
                         </button>
                     </div>
@@ -97,7 +97,7 @@
                 <div class="form-group row">
                     <label class="col-sm-2 col-form-label">Makroskopis</label>
                     <div class="col-sm-10">
-                        <textarea class="form-control summernote" name="makroskopis_hpa"><?= $hpa['makroskopis_hpa'] ?? '' ?></textarea>
+                        <textarea class="form-control summernote" name="makroskopis_hpa" id="makroskopis_hpa"><?= $hpa['makroskopis_hpa'] ?? '' ?></textarea>
                     </div>
                 </div>
 
@@ -139,11 +139,17 @@
 
                 <!-- Tombol Simpan -->
                 <div class="form-group row">
-                    <div class="col-sm-12 text-center">
+                    <div class="col-sm-6 text-center">
                         <button type="submit"
                             class="btn btn-success btn-user w-100"
                             formaction="<?= base_url('exam/update/' . $hpa['id_hpa']); ?>">
                             Simpan
+                        </button>
+                    </div>
+                    <div class="col-6 text-center">
+                        <!-- Tombol Cetak -->
+                        <button type="button" class="btn btn-info btn-user w-100 w-md-auto" onclick="cetakMakroskopis()">
+                            <i class="fas fa-print"></i> Cetak
                         </button>
                     </div>
                 </div>
@@ -171,3 +177,211 @@
 </div>
 <?= $this->include('templates/notifikasi') ?>
 <?= $this->include('templates/exam/footer_edit_exam'); ?>
+
+<script>
+    function cetakMakroskopis() {
+        var printContent = document.getElementById('makroskopis_hpa').value;
+        var printWindow = window.open('', '', 'height=500,width=800');
+        printWindow.document.write(`
+        <html>
+        <head>
+            <title>Cetak Hpa</title>
+            <style>
+                @page {
+                    size: 216mm 279mm; /* Ukuran kertas Letter */
+                    margin: 10mm; /* Mengurangi margin agar ruang lebih besar */
+                }
+                body {
+                    font-family: Verdana, Arial, sans-serif;
+                    margin: 0;
+                    padding: 0;
+                    height: 100%;
+                    display: flex;
+                    flex-direction: column;
+                }
+                .header, .footer, .content {
+                    padding: 2mm; /* Padding lebih kecil agar ruang lebih besar */
+                }
+                .header {
+                    border-bottom: 2px solid #000;
+                    margin-bottom: 5mm; /* Mengurangi jarak antara header dan content */
+                    font-size: 9pt; /* Menyesuaikan ukuran font header */
+                }
+                .footer {
+                    text-align: center;
+                    margin-top: 10mm; /* Mengurangi jarak antara content dan footer */
+                    margin-bottom: 0;
+                    font-size: 9pt; /* Menyesuaikan ukuran font footer */
+                }
+                table {
+                    width: 100%;
+                    border-collapse: collapse;
+                    margin-top: 5mm;
+                }
+                td {
+                    padding: 3mm;
+                    text-align: left;
+                    vertical-align: middle;
+                    border: 1px solid black;
+                }
+                hr {
+                    border: 1px solid #000;
+                    margin: 10mm 0;
+                }
+                .content {
+                    margin-bottom: 0;
+                    flex-grow: 1; /* Membuat content mengisi ruang yang tersisa */
+                }
+                .header-table {
+                    width: 100%;
+                    border: none;
+                }
+                .header-table td {
+                    padding: 2mm;
+                    vertical-align: top;
+                }
+                .header-table td:first-child {
+                    width: 15%; /* Lebar kolom pertama di header lebih kecil */
+                }
+                .header-table td:nth-child(2),
+                .header-table td:nth-child(3),
+                .header-table td:nth-child(4),
+                .header-table td:nth-child(5) {
+                    width: 17%; /* Lebar kolom header menjadi lebih kecil dan lebih rata */
+                }
+                .makroskopis-content-table td,
+                .mikroskopis-content-table td {
+                    font-size: 9pt; /* Menyesuaikan ukuran font makroskopis dan mikroskopis */
+                    padding: 5mm;
+                }
+                .makroskopis-content-table td:first-child,
+                .mikroskopis-content-table td:first-child {
+                    width: 30%; /* Lebar kolom pertama lebih kecil */
+                }
+                .makroskopis-content-table td:last-child,
+                .mikroskopis-content-table td:last-child {
+                    width: 70%; /* Lebar kolom kedua lebih besar */
+                }
+                .makroskopis-content-table td[colspan="2"],
+                .mikroskopis-content-table td[colspan="2"] {
+                    height: 50mm; /* Memberikan lebih banyak ruang untuk Makroskopis dan Mikroskopis */
+                    font-size: 9pt; /* Menyesuaikan ukuran font untuk konten makroskopis dan mikroskopis */
+                    border: 1px solid black;
+                    padding: 10mm;
+                    text-align: left;
+                    vertical-align: top;
+                    border: 1px dashed black; /* Garis putus-putus untuk konten */
+                }
+                /* Styling untuk tabel gambar */
+                .gambar-table {
+                    width: 100%;
+                    border-collapse: collapse;
+                    margin-top: 5mm;
+                }
+                .gambar-table td {
+                    height: 30mm;
+                    width: 12.5%;
+                    border: 1px dashed black; /* Garis putus-putus pada kolom gambar */
+                    text-align: center;
+                    vertical-align: middle;
+                    position: relative; /* Untuk memposisikan nomor romawi di pojok kiri atas */
+                    font-size: 9pt; /* Menyesuaikan ukuran font pada kolom gambar */
+                }
+                .gambar-table th {
+                    text-align: center;
+                    font-size: 9pt; /* Menyesuaikan ukuran font header gambar */
+                    padding: 5mm;
+                    border: 1px solid black; /* Garis solid pada judul "Gambar" */
+                    font-weight: bold;
+                }
+                .gambar-table td .romawi {
+                    position: absolute;
+                    top: 3mm;
+                    left: 3mm;
+                    font-size: 8pt;
+                    font-weight: normal;
+                    color: rgba(0, 0, 0, 0.3); /* Warna abu-abu pudar dengan transparansi */
+                }
+            </style>
+        </head>
+        <body>
+            <div class="header">
+                <table class="header-table">
+                    <tr>
+                        <td rowspan="2" style="width: 15%; font-size: 9pt; font-weight: bold; text-align: center;">
+                            Kode HPA: <?= esc($hpa['kode_hpa'] ?? '') ?>
+                        </td>
+                        <td style="width: 17%; font-size: 9pt;">Nama Pasien: <?= esc($hpa['nama_pasien'] ?? '') ?></td>
+                        <td style="width: 17%; font-size: 9pt;">Dokter Pengirim: <?= esc($hpa['dokter_pengirim'] ?? '') ?></td>
+                        <td style="width: 17%; font-size: 9pt;">Diagnosa Klinik: <?= esc($hpa['diagnosa_klinik'] ?? '') ?></td>
+                        <td style="width: 17%; font-size: 9pt;">Tanggal Permintaan: <?= isset($hpa['tanggal_permintaan']) ? date('d-m-Y', strtotime($hpa['tanggal_permintaan'])) : ''; ?></td>
+                    </tr>
+                    <tr>
+                        <td style="font-size: 9pt;">Norm: <?= esc($hpa['norm_pasien'] ?? '') ?></td>
+                        <td style="font-size: 9pt;">Unit Asal: <?= esc($hpa['unit_asal'] ?? '') ?></td>
+                        <td style="font-size: 9pt;">Lokasi Spesimen: <?= esc($hpa['lokasi_spesimen'] ?? '') ?></td>
+                        <td style="font-size: 9pt;">Tanggal Hasil: <?= isset($hpa['tanggal_hasil']) ? date('d-m-Y', strtotime($hpa['tanggal_hasil'])) : ''; ?></td>
+                    </tr>
+                </table>
+            </div>
+            <div class="content">
+                <!-- Tabel Makroskopis -->
+                <table class="makroskopis-content-table">
+                    <tr>
+                        <td>Makroskopis</td>
+                        <td>Analis PA: <?= esc($data['nama_user_pemotongan'] ?? 'Analis') ?></td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">${printContent}</td>
+                    </tr>
+                </table>
+
+                <!-- Tabel Mikroskopis -->
+                <table class="mikroskopis-content-table">
+                    <tr>
+                        <td>Mikroskopis</td>
+                        <td>Dokter PA: <?= $hpa['nama_user_dokter_pemotongan'] ?? 'dokter' ?></td>
+                    </tr>
+                    <tr>
+                        <td colspan="2"></td>
+                    </tr>
+                </table>
+            </div>
+            <!-- Tabel Gambar (Footer sebagai Tabel Gambar) -->
+            <div class="footer">
+                <table class="gambar-table">
+                    <!-- Judul Gambar -->
+                    <tr>
+                        <th colspan="8">Gambar</th>
+                    </tr>
+                    <!-- Kolom gambar (kosong dengan nomor romawi) -->
+                    <tr>
+                        <td><span class="romawi">I</span></td>
+                        <td><span class="romawi">II</span></td>
+                        <td><span class="romawi">III</span></td>
+                        <td><span class="romawi">IV</span></td>
+                        <td><span class="romawi">V</span></td>
+                        <td><span class="romawi">VI</span></td>
+                        <td><span class="romawi">VII</span></td>
+                        <td><span class="romawi">VIII</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="romawi">IX</span></td>
+                        <td><span class="romawi">X</span></td>
+                        <td><span class="romawi">XI</span></td>
+                        <td><span class="romawi">XII</span></td>
+                        <td><span class="romawi">XIII</span></td>
+                        <td><span class="romawi">XIV</span></td>
+                        <td><span class="romawi">XV</span></td>
+                        <td><span class="romawi">XVI</span></td>
+                    </tr>
+                </table>
+            </div>
+        </body>
+        </html>
+    `);
+
+        printWindow.document.close();
+        printWindow.print();
+    }
+</script>
