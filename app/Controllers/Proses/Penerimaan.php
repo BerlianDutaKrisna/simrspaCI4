@@ -131,8 +131,8 @@ class Penerimaan extends BaseController
                     ]);
                     break;
                     
-                    // TOMBOL KEMBALIKAN
-                case 'kembalikan':
+                    // TOMBOL RESET
+                case 'reset':
                     $penerimaanModel->updatePenerimaan($id_penerimaan, [
                         'id_user_penerimaan' => null,  // Menggunakan id_user dari session
                         'status_penerimaan' => 'Belum Pemeriksaan', // Status menjadi 'Belum'

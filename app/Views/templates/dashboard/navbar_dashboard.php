@@ -14,33 +14,10 @@
     <!-- Topbar Navbar -->
     <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav ml-auto d-flex align-items-center">
-            <!-- Printing Log Dropdown (Dengan ID yang berbeda) -->
-            <li class="nav-item dropdown no-arrow ml-3">
-                <a class="nav-link dropdown-toggle" href="#" id="printingDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <i class="fas fa-print fa-sm fa-fw mr-2 text-gray-600"></i> Printing Log
-                </a>
-                <!-- Dropdown Menu untuk Printing Log -->
-                <div class="dropdown-menu dropdown-menu-right shadow-sm animated--grow-in" aria-labelledby="printingDropdown">
-                    <a class="dropdown-item" href="<?= base_url('cetak/form_hpa') ?>">
-                        <i class="fas fa-drumstick-bite fa-sm fa-fw mr-2 text-gray-600"></i> Form Histopatologi
-                    </a>
-                    <a class="dropdown-item" href="#">
-                        <i class="fas fa-syringe fa-sm fa-fw mr-2 text-gray-600"></i> Form FNAB
-                    </a>
-                    <a class="dropdown-item" href="#">
-                        <i class="fas fa-prescription-bottle fa-sm fa-fw mr-2 text-gray-600"></i> Form Sitologi
-                    </a>
-                    <a class="dropdown-item" href="#">
-                        <i class="fas fa-vials fa-sm fa-fw mr-2 text-gray-600"></i> Form IHC
-                    </a>
-                </div>
-            </li>
-
             <!-- Display Nama User Always (Desktop and Mobile) -->
             <li class="nav-item d-flex align-items-center mr-3">
                 <span class="mr-2 text-gray-600 small font-weight-bold"><?= esc($nama_user); ?></span>
             </li>
-
             <!-- User Information Dropdown -->
             <li class="nav-item dropdown no-arrow">
                 <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
