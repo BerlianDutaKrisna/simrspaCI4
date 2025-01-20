@@ -187,9 +187,13 @@
         <head>
             <title>Cetak Hpa</title>
             <style>
+            @page {
+            size: 215mm 325mm; /* Ukuran kertas */
+            margin: 10mm; /* Sesuaikan margin jika diperlukan */
+            }
                 body {
                     font-family: Verdana, Arial, sans-serif;
-                    margin: 0;
+                    margin: 10px;
                     padding: 0;
                     height: 100%;
                     display: flex;
@@ -258,7 +262,7 @@
                     padding: 10px;
                     text-align: left;
                     vertical-align: top;
-                    border: 1px dashed black; /* Garis putus-putus untuk konten */
+                    border: 0px dashed black; /* Garis putus-putus untuk konten */
                 }
                 /* Styling untuk tabel gambar */
                 .gambar-table {
@@ -316,7 +320,7 @@
                 <table class="makroskopis-content-table">
                     <tr>
                         <td>Makroskopis</td>
-                        <td>Analis PA: <?= esc($data['nama_user_pemotongan'] ?? 'Analis') ?></td>
+                        <td>Analis PA: <?= esc($nama_user) ?? '' ?></td>
                     </tr>
                     <tr>
                         <td colspan="2">${printContent}</td>
@@ -327,7 +331,7 @@
                 <table class="mikroskopis-content-table">
                     <tr>
                         <td>Mikroskopis</td>
-                        <td>Dokter PA: <?= $hpa['nama_user_dokter_pemotongan'] ?? 'dokter' ?></td>
+                        <td>Dokter PA: <?= $pemotongan['dokter_nama'] ?? '' ?></td>
                     </tr>
                     <tr>
                         <td colspan="2"></td>
@@ -342,26 +346,36 @@
                         <th colspan="8">Gambar</th>
                     </tr>
                     <!-- Kolom gambar (kosong dengan nomor romawi) -->
-                    <tr>
-                        <td><span class="romawi">I</span></td>
-                        <td><span class="romawi">II</span></td>
-                        <td><span class="romawi">III</span></td>
-                        <td><span class="romawi">IV</span></td>
-                        <td><span class="romawi">V</span></td>
-                        <td><span class="romawi">VI</span></td>
-                        <td><span class="romawi">VII</span></td>
-                        <td><span class="romawi">VIII</span></td>
-                    </tr>
-                    <tr>
-                        <td><span class="romawi">IX</span></td>
-                        <td><span class="romawi">X</span></td>
-                        <td><span class="romawi">XI</span></td>
-                        <td><span class="romawi">XII</span></td>
-                        <td><span class="romawi">XIII</span></td>
-                        <td><span class="romawi">XIV</span></td>
-                        <td><span class="romawi">XV</span></td>
-                        <td><span class="romawi">XVI</span></td>
-                    </tr>
+                    <?php
+                    // Jumlah slide dari data
+                    $jumlah_slide = $hpa['jumlah_slide'];
+
+                    // Maksimal kolom per baris
+                    $kolom_per_baris = 8;
+
+                    // Maksimal total kolom
+                    $max_kolom = 16;
+
+                    // Array angka Romawi
+                    $angka_romawi = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI", "XII", "XIII", "XIV", "XV", "XVI"];
+
+                    // Mulai iterasi baris
+                    for ($baris = 0; $baris < ceil($max_kolom / $kolom_per_baris); $baris++) {
+                        echo '<tr>';
+                        for ($kolom = 0; $kolom < $kolom_per_baris; $kolom++) {
+                            // Hitung indeks angka Romawi
+                            $indeks = ($baris * $kolom_per_baris) + $kolom;
+
+                            // Cek apakah kolom ini harus diisi angka Romawi atau dibiarkan kosong
+                            if ($indeks < $jumlah_slide && $indeks < $max_kolom) {
+                                echo '<td><span class="romawi">' . $angka_romawi[$indeks] . '</span></td>';
+                            } else {
+                                echo '<td><span class="romawi"></span></td>';
+                            }
+                        }
+                        echo '</tr>';
+                    }
+                    ?>
                 </table>
             </div>
         </body>

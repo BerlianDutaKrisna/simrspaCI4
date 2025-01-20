@@ -57,6 +57,7 @@
                         return false;
                     });
                     btnMulai.disabled = !validForMulai;
+                    btnKembalikan.disabled = !validForMulai;
 
                     // Periksa khusus untuk tombol "Selesai"
                     const validForSelesai = Array.from(checkboxes).some(checkbox => {

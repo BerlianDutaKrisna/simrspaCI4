@@ -118,8 +118,8 @@ class Pemotongan extends BaseController
                         'selesai_pemotongan' => date('Y-m-d H:i:s'),
                     ]);
                     break;
-                    // TOMBOL KEMBALIKAN PENGECEKAN
-                case 'kembalikan':
+                    // TOMBOL RESET PENGECEKAN
+                case 'reset':
                     $pemotonganModel->updatePemotongan($id_pemotongan, [
                         'id_user_pemotongan' => null,
                         'status_pemotongan' => 'Belum Pemotongan',
@@ -127,6 +127,15 @@ class Pemotongan extends BaseController
                         'selesai_pemotongan' => null,
                     ]);
                     break;
+
+                    // TOMBOL KEMBALI
+                case 'kembalikan':
+                    // Menghapus data pemotongan berdasarkan id_pemotongan
+                    $pemotonganModel->deletePemotongan($id_pemotongan);
+                    
+                    // Mengupdate status_hpa menjadi 'Pemotongan' berdasarkan id_hpa
+                    $hpaModel->updateHpa($id_hpa, ['status_hpa' => 'Pengirisan']);
+                break;     
 
                 case 'lanjut':
                     // Update status_hpa menjadi 'Pemprosesan' pada tabel hpa

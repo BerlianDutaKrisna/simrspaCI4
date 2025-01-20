@@ -45,9 +45,7 @@
                                             value="<?= $row['id_pengirisan']; ?>:<?= $row['id_hpa']; ?>:<?= $row['id_mutu']; ?>"
                                             class="form-control form-control-user checkbox-item"
                                             data-status='<?= json_encode([
-                                                                'status_penerimaan' => $row['status_penerimaan'] ?? "",
                                                                 'status_pengirisan' => $row['status_pengirisan'] ?? "",
-                                                                'status_pemotongan' => $row['status_pemotongan'] ?? ""
                                                             ]) ?>'
                                             autocomplete="off">
                                     </td>

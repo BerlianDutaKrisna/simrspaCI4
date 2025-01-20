@@ -181,6 +181,7 @@ class Exam extends BaseController
             'id_user' => session()->get('id_user'),
             'nama_user' => session()->get('nama_user'),
         ];
+
         // Kirimkan data ke view
         return view('exam/edit_makroskopis', $data);
     }

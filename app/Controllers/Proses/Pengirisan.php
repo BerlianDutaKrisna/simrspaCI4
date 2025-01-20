@@ -118,8 +118,8 @@ class Pengirisan extends BaseController
                     ]);
 
                     break;
-                    // TOMBOL KEMBALIKAN
-                case 'kembalikan':
+                    // TOMBOL RESET
+                case 'reset':
                     $pengirisanModel->updatePengirisan($id_pengirisan, [
                         'id_user_pengirisan' => null,
                         'status_pengirisan' => 'Belum Pengirisan',
@@ -127,6 +127,15 @@ class Pengirisan extends BaseController
                         'selesai_pengirisan' => null,
                     ]);
                     break;
+
+                    // TOMBOL KEMBALI
+                case 'kembalikan':
+                        // Menghapus data pengirisan berdasarkan id_pengirisan
+                        $pengirisanModel->deletePengirisan($id_pengirisan);
+                        
+                        // Mengupdate status_hpa menjadi 'Pemotongan' berdasarkan id_hpa
+                        $hpaModel->updateHpa($id_hpa, ['status_hpa' => 'Penerimaan']);
+                    break;                    
 
                     // TOMBOL LANJUT
                 case 'lanjut':
