@@ -102,6 +102,45 @@
 
                 function setAction(action) {
                     document.getElementById('action').value = action;
+
+                    // Buat overlay loading
+                    const loadingOverlay = document.createElement('div');
+                    loadingOverlay.style.position = 'fixed';
+                    loadingOverlay.style.top = '0';
+                    loadingOverlay.style.left = '0';
+                    loadingOverlay.style.width = '100%';
+                    loadingOverlay.style.height = '100%';
+                    loadingOverlay.style.background = 'rgba(0, 0, 0, 0.5)';
+                    loadingOverlay.style.zIndex = '9999';
+
+                    // Buat spinner
+                    const spinner = document.createElement('div');
+                    spinner.style.position = 'absolute';
+                    spinner.style.top = '50%';
+                    spinner.style.left = '50%';
+                    spinner.style.transform = 'translate(-50%, -50%)';
+                    spinner.style.border = '8px solid #f3f3f3'; // Warna latar belakang
+                    spinner.style.borderTop = '8px solid #3498db'; // Warna spinner
+                    spinner.style.borderRadius = '50%';
+                    spinner.style.width = '60px';
+                    spinner.style.height = '60px';
+                    spinner.style.animation = 'spin 1s linear infinite'; // Animasi berputar
+
+                    // Tambahkan spinner ke overlay
+                    loadingOverlay.appendChild(spinner);
+                    document.body.appendChild(loadingOverlay);
+
+                    // Submit form
                     document.getElementById('mainForm').submit();
                 }
+
+                // Tambahkan keyframes untuk animasi spin
+                const style = document.createElement('style');
+                style.innerHTML = `
+                @keyframes spin {
+                0% { transform: rotate(0deg); }
+                100% { transform: rotate(360deg); }
+                }
+                `;
+                document.head.appendChild(style);
             </script>
