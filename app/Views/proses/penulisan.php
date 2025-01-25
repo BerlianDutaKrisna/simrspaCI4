@@ -44,7 +44,10 @@
                                         <input type="checkbox"
                                             name="id_proses[]"
                                             value="<?= $row['id_penulisan']; ?>:<?= $row['id_hpa']; ?>:<?= $row['id_mutu']; ?>"
-                                            class="form-control form-control-user"
+                                            class="form-control form-control-user checkbox-item"
+                                            data-status='<?= json_encode([
+                                                                'status_penulisan' => $row['status_penulisan'] ?? ""
+                                                            ]) ?>'
                                             autocomplete="off">
                                     </td>
                                     <td><?= $row['nama_user_penulisan']; ?></td>
@@ -92,7 +95,7 @@
                 </table>
             </div>
 
-            
+
             <?= $this->include('templates/proses/button_proses'); ?>
             <?= $this->include('dashboard/jenis_tindakan'); ?>
             <?= $this->include('templates/notifikasi'); ?>

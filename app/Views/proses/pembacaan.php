@@ -47,7 +47,10 @@
                                         <input type="checkbox"
                                             name="id_proses[]"
                                             value="<?= $row['id_pembacaan']; ?>:<?= $row['id_hpa']; ?>:<?= $row['id_mutu']; ?>"
-                                            class="form-control form-control-user"
+                                            class="form-control form-control-user checkbox-item"
+                                            data-status='<?= json_encode([
+                                                                'status_pembacaan' => $row['status_pembacaan'] ?? ""
+                                                            ]) ?>'
                                             autocomplete="off">
                                     </td>
                                     <td>
@@ -122,25 +125,14 @@
                                     </td>
                                     <?php if (in_array($row['status_pembacaan'], ["Proses Pembacaan"])): ?>
                                         <td>
-                                            <?php if (session()->get('update_success')): ?>
-                                                <a href="<?= base_url('exam/edit_mikroskopis/' . esc($row['id_hpa'])) ?>" class="btn btn-success btn-sm">
+                                                <a href="<?= base_url('exam/edit_mikroskopis/' . esc($row['id_hpa'])) ?>" class="btn btn-warning btn-sm">
                                                     <i class="fas fa-pen"></i> Detail
                                                 </a>
-                                                <?php session()->remove('update_success'); // Menghapus session setelah ditampilkan 
-                                                ?>
-                                            <?php else: ?>
-                                                <a href="<?= base_url('exam/edit_mikroskopis/' . esc($row['id_hpa'])) ?>" class="btn btn-warning btn-sm mx-1">
-                                                    <i class="fas fa-pen"></i> Detail
-                                                </a>
-                                            <?php endif; ?>
                                         </td>
                                     <?php elseif (in_array($row['status_pembacaan'], ["Selesai Pembacaan"])): ?>
                                         <td>
-                                            <a href="<?= base_url('exam/edit_mikroskopis/' . esc($row['id_hpa'])) ?>" class="btn btn-warning btn-sm mx-1">
+                                            <a href="<?= base_url('exam/edit_mikroskopis/' . esc($row['id_hpa'])) ?>" class="btn btn-success btn-sm mx-1">
                                                 <i class="fas fa-pen"></i> Detail
-                                            </a>
-                                            <a href="<?= base_url('cetak/cetak_proses/' . esc($row['id_hpa'])) ?>" class="btn btn-info btn-sm mx-1">
-                                                <i class="fas fa-print"></i> Print
                                             </a>
                                         </td>
                                     <?php else: ?>
@@ -157,8 +149,8 @@
                     </tbody>
                 </table>
             </div>
-            
-            
+
+
             <?= $this->include('templates/proses/button_proses'); ?>
             <?= $this->include('dashboard/jenis_tindakan'); ?>
             <?= $this->include('templates/notifikasi'); ?>

@@ -144,12 +144,19 @@
                         </select>
                     </div>
                 </div>
+                <!-- Tombol Simpan -->
                 <div class="form-group row">
-                    <div class="col-sm-12 text-center">
+                    <div class="col-sm-6 text-center">
                         <button type="submit"
                             class="btn btn-success btn-user w-100"
                             formaction="<?= base_url('exam/update/' . $hpa['id_hpa']); ?>">
                             Simpan
+                        </button>
+                    </div>
+                    <div class="col-6 text-center">
+                        <!-- Tombol Cetak -->
+                        <button type="button" class="btn btn-info btn-user w-100 w-md-auto" onclick="cetakProses()">
+                            <i class="fas fa-print"></i> Cetak
                         </button>
                     </div>
                 </div>
@@ -194,3 +201,4 @@
 </div>
 <?= $this->include('templates/notifikasi') ?>
 <?= $this->include('templates/exam/footer_edit_exam'); ?>
+<?= $this->include('templates/proses/cetak_proses'); ?>
