@@ -115,7 +115,7 @@ class Penulisan extends BaseController
                     ]);
                     break;
 
-                case 'kembalikan':
+                case 'reset':
                     $penulisanModel->updatePenulisan($id_penulisan, [
                         'id_user_penulisan' => null,
                         'status_penulisan' => 'Belum Penulisan',
@@ -123,6 +123,15 @@ class Penulisan extends BaseController
                         'selesai_penulisan' => null,
                     ]);
                     break;
+
+                    // TOMBOL KEMBALI
+                case 'kembalikan':
+                    $penulisanModel->deletePenulisan($id_penulisan);
+                    $hpaModel->updateHpa($id_hpa, [
+                        'status_hpa' => 'Pembacaan',
+                        'id_penulisan' => null,
+                    ]);
+                    break; 
 
                 case 'lanjut':
                     // Update status_hpa menjadi 'pemverifikasi' pada tabel hpa
@@ -208,12 +217,14 @@ class Penulisan extends BaseController
             $db->transStart();
 
             // Hapus data dari tabel penulisan
-            $deleteResult = $penulisanModel->deletepenulisan($id_penulisan);
+            $deleteResult = $penulisanModel->deletePenulisan($id_penulisan);
 
             // Cek apakah delete berhasil
             if ($deleteResult) {
-                // Update field id_penulisan menjadi null pada tabel hpa
-                $hpaModel->updateIdpenulisan($id_hpa);
+                $hpaModel->updateHpa($id_hpa, [
+                    'status_hpa' => 'Pembacaan',
+                    'id_penulisan' => null,
+                ]);
 
                 // Selesaikan transaksi
                 $db->transComplete();

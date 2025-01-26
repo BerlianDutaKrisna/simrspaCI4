@@ -117,7 +117,7 @@ class Pewarnaan extends BaseController
                     ]);
                     break;
 
-                case 'kembalikan':
+                case 'reset':
                     $pewarnaanModel->updatePewarnaan($id_pewarnaan, [
                         'id_user_pewarnaan' => null,
                         'status_pewarnaan' => 'Belum Pewarnaan',
@@ -125,6 +125,15 @@ class Pewarnaan extends BaseController
                         'selesai_pewarnaan' => null,
                     ]);
                     break;
+
+                    // TOMBOL KEMBALI
+                case 'kembalikan':
+                    $pewarnaanModel->deletePewarnaan($id_pewarnaan);
+                    $hpaModel->updateHpa($id_hpa, [
+                        'status_hpa' => 'Pemotongan Tipis',
+                        'id_pewarnaan' => null,
+                    ]);
+                    break; 
 
                 case 'lanjut':
                     // Update status_hpa menjadi 'pembacaan' pada tabel hpa
@@ -210,12 +219,14 @@ class Pewarnaan extends BaseController
             $db->transStart();
 
             // Hapus data dari tabel pewarnaan
-            $deleteResult = $pewarnaanModel->deletepewarnaan($id_pewarnaan);
+            $deleteResult = $pewarnaanModel->deletePewarnaan($id_pewarnaan);
 
             // Cek apakah delete berhasil
             if ($deleteResult) {
-                // Update field id_pewarnaan menjadi null pada tabel hpa
-                $hpaModel->updateIdpewarnaan($id_hpa);
+                $hpaModel->updateHpa($id_hpa, [
+                    'status_hpa' => 'Pemotongan Tipis',
+                    'id_pewarnaan' => null,
+                ]);
 
                 // Selesaikan transaksi
                 $db->transComplete();

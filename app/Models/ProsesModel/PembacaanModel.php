@@ -64,7 +64,7 @@ class PembacaanModel extends Model // Update nama model
         return $this->db->affectedRows();  // Mengembalikan jumlah baris yang terpengaruh
     }
 
-    public function deletepembacaan($id_pembacaan)
+    public function deletePembacaan($id_pembacaan)
     {
         return $this->delete($id_pembacaan);
     }

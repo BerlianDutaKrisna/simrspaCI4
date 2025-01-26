@@ -145,47 +145,7 @@ class HpaModel extends Model
             throw new \RuntimeException('Update data gagal.'); // Menangani error
         }
     }
-    public function updateIdpengirisan($id_hpa)
-    {
-        return $this->update($id_hpa, ['id_pengirisan' => null]);
-    }
-    public function updateIdpemotongan($id_hpa)
-    {
-        return $this->update($id_hpa, ['id_pemotongan' => null]);
-    }
-    public function updateIdpemprosesan($id_hpa)
-    {
-        return $this->update($id_hpa, ['id_pemprosesan' => null]);
-    }
-    public function updateIdpenanaman($id_hpa)
-    {
-        return $this->update($id_hpa, ['id_penanaman' => null]);
-    }
-    public function updateIdpemotongan_tipis($id_hpa)
-    {
-        return $this->update($id_hpa, ['id_pemotongan_tipis' => null]);
-    }
-    public function updateIdpewarnaan($id_hpa)
-    {
-        return $this->update($id_hpa, ['id_pewarnaan' => null]);
-    }
-    public function updateIdpembacaan($id_hpa)
-    {
-        return $this->update($id_hpa, ['id_pembacaan' => null]);
-    }
-    public function updateIdpenulisan($id_hpa)
-    {
-        return $this->update($id_hpa, ['id_penulisan' => null]);
-    }
-    public function updateIdpemverifikasi($id_hpa)
-    {
-        return $this->update($id_hpa, ['id_pemverifikasi' => null]);
-    }
-    public function updateIdpencetakan($id_hpa)
-    {
-        return $this->update($id_hpa, ['id_pencetakan' => null]);
-    }
-
+    
     public function getHpaWithRelations()
     {
         return $this->db->table($this->table)

@@ -64,7 +64,7 @@ class PemotonganModel extends Model
         return $this->db->affectedRows();  // Mengembalikan jumlah baris yang terpengaruh
     }
 
-    public function deletepemotongan($id_pemotongan)
+    public function deletePemotongan($id_pemotongan)
     {
         return $this->delete($id_pemotongan);
     }

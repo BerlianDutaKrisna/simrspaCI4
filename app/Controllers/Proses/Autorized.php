@@ -3,42 +3,42 @@
 namespace App\Controllers\Proses;
 
 use App\Controllers\BaseController;
-use App\Models\ProsesModel\PemverifikasiModel;
+use App\Models\ProsesModel\AutorizedModel;
 use App\Models\ProsesModel\PencetakanModel;
 use App\Models\HpaModel;
 use App\Models\UsersModel;
 use Exception;
 
-class Pemverifikasi extends BaseController
+class Autorized extends BaseController
 {
-    protected $pemverifikasiModel;
+    protected $autorizedModel;
     protected $userModel;
 
     public function __construct()
     {
-        $this->pemverifikasiModel = new PemverifikasiModel();
+        $this->autorizedModel = new AutorizedModel();
         $this->userModel = new UsersModel();
         session()->set('previous_url', previous_url());
     }
 
-    public function index_pemverifikasi() // Update nama method
+    public function index_autorized() // Update nama method
     {
         session()->set('previous_url', previous_url());
-        $pemverifikasiModel = new PemverifikasiModel();
-        $pemverifikasiData['pemverifikasiData'] = $pemverifikasiModel->getPemverifikasiWithRelations(); // Update nama variabel
+        $autorizedModel = new autorizedModel();
+        $autorizedData['autorizedData'] = $autorizedModel->getautorizedWithRelations(); // Update nama variabel
 
         // Menggabungkan data dari model dan session
         $data = [
-            'pemverifikasiData' => $pemverifikasiData['pemverifikasiData'], // Update nama variabel
+            'autorizedData' => $autorizedData['autorizedData'], // Update nama variabel
             'id_user' => session()->get('id_user'),
             'nama_user' => session()->get('nama_user'),
         ];
 
         // Mengirim data ke view untuk ditampilkan
-        return view('proses/pemverifikasi', $data); // Update nama view
+        return view('proses/autorized', $data); // Update nama view
     }
 
-    public function proses_pemverifikasi() // Update nama method
+    public function proses_autorized() // Update nama method
     {
         // Get user ID from session
         $id_user = session()->get('id_user');
@@ -74,12 +74,12 @@ class Pemverifikasi extends BaseController
             // Process the action for each selected item
             if (!empty($selectedIds)) {
                 foreach ($selectedIds as $id) {
-                    list($id_pemverifikasi, $id_hpa, $id_mutu) = explode(':', $id);
+                    list($id_autorized, $id_hpa, $id_mutu) = explode(':', $id);
 
-                    $this->processAction($action, $id_pemverifikasi, $id_hpa, $id_user, $id_mutu); // Update nama variabel
+                    $this->processAction($action, $id_autorized, $id_hpa, $id_user, $id_mutu); // Update nama variabel
                 }
 
-                return redirect()->to('/pemverifikasi/index_pemverifikasi'); // Update nama route
+                return redirect()->to('/autorized/index_autorized'); // Update nama route
             }
         } catch (\Exception $e) {
             return redirect()->back()->with('error', $e->getMessage());
@@ -87,51 +87,51 @@ class Pemverifikasi extends BaseController
     }
 
     // Process action based on the action value
-    private function processAction($action, $id_pemverifikasi, $id_hpa, $id_user, $id_mutu) // Update nama variabel
+    private function processAction($action, $id_autorized, $id_hpa, $id_user, $id_mutu) // Update nama variabel
     {
         // Set zona waktu Indonesia/Jakarta
         date_default_timezone_set('Asia/Jakarta');
 
         $hpaModel = new HpaModel();
-        $pemverifikasiModel = new PemverifikasiModel();
+        $autorizedModel = new autorizedModel();
         $pencetakanModel = new PencetakanModel();
 
         try {
             switch ($action) {
                     // TOMBOL MULAI PENGECEKAN
                 case 'mulai':
-                    $pemverifikasiModel->updatePemverifikasi($id_pemverifikasi, [ // Update nama method dan variabel
-                        'id_user_pemverifikasi' => $id_user,
-                        'status_pemverifikasi' => 'Proses Pemverifikasi',
-                        'mulai_pemverifikasi' => date('Y-m-d H:i:s'),
+                    $autorizedModel->updateautorized($id_autorized, [ // Update nama method dan variabel
+                        'id_user_autorized' => $id_user,
+                        'status_autorized' => 'Proses autorized',
+                        'mulai_autorized' => date('Y-m-d H:i:s'),
                     ]);
                     break;
 
                     // TOMBOL SELESAI PENGECEKAN
                 case 'selesai':
-                    $pemverifikasiModel->updatePemverifikasi($id_pemverifikasi, [ // Update nama method dan variabel
-                        'id_user_pemverifikasi' => $id_user,
-                        'status_pemverifikasi' => 'Selesai Pemverifikasi',
-                        'selesai_pemverifikasi' => date('Y-m-d H:i:s'),
+                    $autorizedModel->updateautorized($id_autorized, [ // Update nama method dan variabel
+                        'id_user_autorized' => $id_user,
+                        'status_autorized' => 'Selesai autorized',
+                        'selesai_autorized' => date('Y-m-d H:i:s'),
                     ]);
                     break;
 
                 case 'reset':
-                    $pemverifikasiModel->updatePemverifikasi($id_pemverifikasi, [
-                        'id_user_pemverifikasi' => null,
-                        'status_pemverifikasi' => 'Belum Pemverifikasi',
-                        'mulai_pemverifikasi' => null,
-                        'selesai_pemverifikasi' => null,
+                    $autorizedModel->updateAutorized($id_autorized, [
+                        'id_user_autorized' => null,
+                        'status_autorized' => 'Belum autorized',
+                        'mulai_autorized' => null,
+                        'selesai_autorized' => null,
                     ]);
                     break;
 
                 case 'kembalikan':
-                    $pemverifikasiModel->deletePemverifikasi($id_pemverifikasi);
+                    $autorizedModel->deleteAutorized($id_autorized);
                     $hpaModel->updateHpa($id_hpa, [
-                        'status_hpa' => 'Penulisan',
-                        'id_pemverifikasi' => null,
+                        'status_hpa' => 'Pemverifikasi',
+                        'id_autorized' => null,
                     ]);
-                    break; 
+                    break;
 
                 case 'lanjut':
                     $hpaModel->updateHpa($id_hpa, ['status_hpa' => 'Pencetakan']);
@@ -154,30 +154,30 @@ class Pemverifikasi extends BaseController
         }
     }
 
-    public function pemverifikasi_details()
+    public function autorized_details()
     {
-        // Ambil id_pemverifikasi dari parameter GET
-        $id_pemverifikasi = $this->request->getGet('id_pemverifikasi');
+        // Ambil id_autorized dari parameter GET
+        $id_autorized = $this->request->getGet('id_autorized');
 
-        if ($id_pemverifikasi) {
-            // Muat model pemverifikasi
-            $model = new PemverifikasiModel();
+        if ($id_autorized) {
+            // Muat model autorized
+            $model = new autorizedModel();
 
-            // Ambil data pemverifikasi berdasarkan id_pemverifikasi dan relasi yang ada
+            // Ambil data autorized berdasarkan id_autorized dan relasi yang ada
             $data = $model->select(
-                'pemverifikasi.*, 
+                'autorized.*, 
                 hpa.*, 
                 patient.*, 
-                users.nama_user AS nama_user_pemverifikasi'
+                users.nama_user AS nama_user_autorized'
             )
                 ->join(
                     'hpa',
-                    'pemverifikasi.id_hpa = hpa.id_hpa',
+                    'autorized.id_hpa = hpa.id_hpa',
                     'left'
                 ) // Relasi dengan tabel hpa
                 ->join('patient', 'hpa.id_pasien = patient.id_pasien', 'left')
-                ->join('users', 'pemverifikasi.id_user_pemverifikasi = users.id_user', 'left')
-                ->where('pemverifikasi.id_pemverifikasi', $id_pemverifikasi)
+                ->join('users', 'autorized.id_user_autorized = users.id_user', 'left')
+                ->where('autorized.id_autorized', $id_autorized)
                 ->first();
 
             if ($data) {
@@ -187,19 +187,19 @@ class Pemverifikasi extends BaseController
                 return $this->response->setJSON(['error' => 'Data tidak ditemukan.']);
             }
         } else {
-            return $this->response->setJSON(['error' => 'ID pemverifikasi tidak ditemukan.']);
+            return $this->response->setJSON(['error' => 'ID autorized tidak ditemukan.']);
         }
     }
 
     public function delete()
     {
         // Mendapatkan data dari request
-        $id_pemverifikasi = $this->request->getPost('id_pemverifikasi');
+        $id_autorized = $this->request->getPost('id_autorized');
         $id_hpa = $this->request->getPost('id_hpa');
 
-        if ($id_pemverifikasi && $id_hpa) {
+        if ($id_autorized && $id_hpa) {
             // Load model
-            $pemverifikasiModel = new PemverifikasiModel();
+            $autorizedModel = new autorizedModel();
             $hpaModel = new HpaModel();
 
             // Ambil instance dari database service
@@ -208,14 +208,14 @@ class Pemverifikasi extends BaseController
             // Mulai transaksi untuk memastikan kedua operasi berjalan atomik
             $db->transStart();
 
-            // Hapus data dari tabel pemverifikasi
-            $deleteResult = $pemverifikasiModel->deletePemverifikasi($id_pemverifikasi);
+            // Hapus data dari tabel autorized
+            $deleteResult = $autorizedModel->deleteAutorized($id_autorized);
 
             // Cek apakah delete berhasil
             if ($deleteResult) {
                 $hpaModel->updateHpa($id_hpa, [
-                    'status_hpa' => 'Penulisan',
-                    'id_pemverifikasi' => null,
+                    'status_hpa' => 'Pemverifikasi',
+                    'id_autorized' => null,
                 ]);
 
                 // Selesaikan transaksi
@@ -230,26 +230,26 @@ class Pemverifikasi extends BaseController
             } else {
                 // Jika delete gagal, rollback transaksi
                 $db->transRollback();
-                return $this->response->setJSON(['success' => false, 'message' => 'Gagal menghapus data pemverifikasi.']);
+                return $this->response->setJSON(['success' => false, 'message' => 'Gagal menghapus data autorized.']);
             }
         } else {
             return $this->response->setJSON(['success' => false, 'message' => 'ID tidak valid.']);
         }
     }
 
-    public function edit_pemverifikasi()
+    public function edit_autorized()
     {
-        $id_pemverifikasi = $this->request->getGet('id_pemverifikasi');
+        $id_autorized = $this->request->getGet('id_autorized');
 
-        if (!$id_pemverifikasi) {
-            throw new \CodeIgniter\Exceptions\PageNotFoundException('ID pemverifikasi tidak ditemukan.');
+        if (!$id_autorized) {
+            throw new \CodeIgniter\Exceptions\PageNotFoundException('ID autorized tidak ditemukan.');
         }
 
-        // Ambil data pemverifikasi berdasarkan ID
-        $pemverifikasiData = $this->pemverifikasiModel->find($id_pemverifikasi);
+        // Ambil data autorized berdasarkan ID
+        $autorizedData = $this->autorizedModel->find($id_autorized);
 
-        if (!$pemverifikasiData) {
-            throw new \CodeIgniter\Exceptions\PageNotFoundException('Data pemverifikasi tidak ditemukan.');
+        if (!$autorizedData) {
+            throw new \CodeIgniter\Exceptions\PageNotFoundException('Data autorized tidak ditemukan.');
         }
 
         // Ambil data users dengan status_user = 'Analis'
@@ -257,37 +257,37 @@ class Pemverifikasi extends BaseController
         $users = $this->userModel->where('status_user', 'Analis')->findAll();
 
         $data = [
-            'pemverifikasiData' => $pemverifikasiData,
+            'autorizedData' => $autorizedData,
             'users' => $users, // Tambahkan data users ke view
             'id_user' => session()->get('id_user'),
             'nama_user' => session()->get('nama_user'),
         ];
 
-        return view('edit_proses/edit_pemverifikasi', $data);
+        return view('edit_proses/edit_autorized', $data);
     }
 
-    public function update_pemverifikasi()
+    public function update_autorized()
     {
-        $id_pemverifikasi = $this->request->getPost('id_pemverifikasi');
+        $id_autorized = $this->request->getPost('id_autorized');
         // Get individual date and time inputs
-        $mulai_date = $this->request->getPost('mulai_pemverifikasi_date');
-        $mulai_time = $this->request->getPost('mulai_pemverifikasi_time');
-        $selesai_date = $this->request->getPost('selesai_pemverifikasi_date');
-        $selesai_time = $this->request->getPost('selesai_pemverifikasi_time');
+        $mulai_date = $this->request->getPost('mulai_autorized_date');
+        $mulai_time = $this->request->getPost('mulai_autorized_time');
+        $selesai_date = $this->request->getPost('selesai_autorized_date');
+        $selesai_time = $this->request->getPost('selesai_autorized_time');
 
         // Combine date and time into one value
-        $mulai_pemverifikasi = $mulai_date . ' ' . $mulai_time;  // Format: YYYY-MM-DD HH:MM
-        $selesai_pemverifikasi = $selesai_date . ' ' . $selesai_time;  // Format: YYYY-MM-DD HH:MM
+        $mulai_autorized = $mulai_date . ' ' . $mulai_time;  // Format: YYYY-MM-DD HH:MM
+        $selesai_autorized = $selesai_date . ' ' . $selesai_time;  // Format: YYYY-MM-DD HH:MM
 
         $data = [
-            'id_user_pemverifikasi' => $this->request->getPost('id_user_pemverifikasi'),
-            'status_pemverifikasi'  => $this->request->getPost('status_pemverifikasi'),
-            'mulai_pemverifikasi'   => $mulai_pemverifikasi,
-            'selesai_pemverifikasi' => $selesai_pemverifikasi,
+            'id_user_autorized' => $this->request->getPost('id_user_autorized'),
+            'status_autorized'  => $this->request->getPost('status_autorized'),
+            'mulai_autorized'   => $mulai_autorized,
+            'selesai_autorized' => $selesai_autorized,
             'updated_at'         => date('Y-m-d H:i:s'),
         ];
 
-        if (!$this->pemverifikasiModel->update($id_pemverifikasi, $data)) {
+        if (!$this->autorizedModel->update($id_autorized, $data)) {
             return redirect()->back()->with('error', 'Gagal mengupdate data.')->withInput();
         }
 

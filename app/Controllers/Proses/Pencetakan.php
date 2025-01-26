@@ -115,12 +115,20 @@ class Pencetakan extends BaseController
                     break;
 
                     // TOMBOL KEMBALIKAN PENGECEKAN
-                case 'kembalikan':
+                case 'reset':
                     $pencetakanModel->updatePencetakan($id_pencetakan, [ // Update nama method dan variabel
                         'id_user_pencetakan' => null,
                         'status_pencetakan' => 'Belum Pencetakan',
                         'mulai_pencetakan' => null,
                         'selesai_pencetakan' => null,
+                    ]);
+                    break;
+
+                case 'kembalikan':
+                    $pencetakanModel->deletePencetakan($id_pencetakan);
+                    $hpaModel->updateHpa($id_hpa, [
+                        'status_hpa' => 'Autorized',
+                        'id_pencetakan' => null,
                     ]);
                     break;
 
@@ -189,12 +197,14 @@ class Pencetakan extends BaseController
             $db->transStart();
 
             // Hapus data dari tabel pencetakan
-            $deleteResult = $pencetakanModel->deletepencetakan($id_pencetakan);
+            $deleteResult = $pencetakanModel->deletePencetakan($id_pencetakan);
 
             // Cek apakah delete berhasil
             if ($deleteResult) {
-                // Update field id_pencetakan menjadi null pada tabel hpa
-                $hpaModel->updateIdpencetakan($id_hpa);
+                $hpaModel->updateHpa($id_hpa, [
+                    'status_hpa' => 'Pemverifikasi',
+                    'id_autorized' => null,
+                ]);
 
                 // Selesaikan transaksi
                 $db->transComplete();

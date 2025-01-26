@@ -63,7 +63,7 @@ class PemverifikasiModel extends Model // Update nama model
         return $this->db->affectedRows();  // Mengembalikan jumlah baris yang terpengaruh
     }
 
-    public function deletepemverifikasi($id_pemverifikasi)
+    public function deletePemverifikasi($id_pemverifikasi)
     {
         return $this->delete($id_pemverifikasi);
     }

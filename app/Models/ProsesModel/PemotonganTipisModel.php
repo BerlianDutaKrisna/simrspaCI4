@@ -63,7 +63,7 @@ class PemotonganTipisModel extends Model // Update nama model
         return $this->db->affectedRows();  // Mengembalikan jumlah baris yang terpengaruh
     }
 
-    public function deletepemotongan_tipis($id_pemotongan_tipis)
+    public function deletePemotonganTipis($id_pemotongan_tipis)
     {
         return $this->delete($id_pemotongan_tipis);
     }

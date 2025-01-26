@@ -126,7 +126,7 @@ class Penanaman extends BaseController
                     ]);
                     break;
 
-                case 'kembalikan':
+                case 'reset':
                     $penanamanModel->updatePenanaman($id_penanaman, [
                         'id_user_penanaman' => null,
                         'status_penanaman' => 'Belum Penanaman',
@@ -139,6 +139,15 @@ class Penanaman extends BaseController
                         'total_nilai_mutu' => '20'
                     ]);
                     break;
+
+                    // TOMBOL KEMBALI
+                case 'kembalikan':
+                    $penanamanModel->deletePenanaman($id_penanaman);
+                    $hpaModel->updateHpa($id_hpa, [
+                        'status_hpa' => 'Pemprosesan',
+                        'id_penanaman' => null,
+                    ]);
+                    break; 
 
                 case 'lanjut':
                     // Update status_hpa menjadi 'pemotongan_tipis' pada tabel hpa
@@ -224,12 +233,15 @@ class Penanaman extends BaseController
             $db->transStart();
 
             // Hapus data dari tabel penanaman
-            $deleteResult = $penanamanModel->deletepenanaman($id_penanaman);
+            $deleteResult = $penanamanModel->deletePenanaman($id_penanaman);
 
             // Cek apakah delete berhasil
             if ($deleteResult) {
                 // Update field id_penanaman menjadi null pada tabel hpa
-                $hpaModel->updateIdpenanaman($id_hpa);
+                $hpaModel->updateHpa($id_hpa, [
+                    'status_hpa' => 'Pemprosesan',
+                    'id_penanaman' => null,
+                ]);
 
                 // Selesaikan transaksi
                 $db->transComplete();

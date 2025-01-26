@@ -131,7 +131,7 @@ class pembacaan extends BaseController
                     ]);
                     break;
 
-                case 'kembalikan':
+                case 'reset':
                     $pembacaanModel->updatePembacaan($id_pembacaan, [
                         'id_user_pembacaan' => null,
                         'status_pembacaan' => 'Belum Pembacaan',
@@ -148,6 +148,15 @@ class pembacaan extends BaseController
                         'total_nilai_mutu' => '30',
                     ]);
                     break;
+
+                    // TOMBOL KEMBALI
+                case 'kembalikan':
+                    $pembacaanModel->deletePembacaan($id_pembacaan);
+                    $hpaModel->updateHpa($id_hpa, [
+                        'status_hpa' => 'Pewarnaan',
+                        'id_pembacaan' => null,
+                    ]);
+                    break; 
 
                 case 'lanjut':
                     // Update status_hpa menjadi 'penulisan' pada tabel hpa
@@ -233,12 +242,14 @@ class pembacaan extends BaseController
             $db->transStart();
 
             // Hapus data dari tabel pembacaan
-            $deleteResult = $pembacaanModel->deletepembacaan($id_pembacaan);
+            $deleteResult = $pembacaanModel->deletePembacaan($id_pembacaan);
 
             // Cek apakah delete berhasil
             if ($deleteResult) {
-                // Update field id_pembacaan menjadi null pada tabel hpa
-                $hpaModel->updateIdpembacaan($id_hpa);
+                $hpaModel->updateHpa($id_hpa, [
+                    'status_hpa' => 'Pewarnaan',
+                    'id_pembacaan' => null,
+                ]);
 
                 // Selesaikan transaksi
                 $db->transComplete();

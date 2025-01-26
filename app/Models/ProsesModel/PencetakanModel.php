@@ -63,7 +63,7 @@ class PencetakanModel extends Model // Update nama model
         return $this->db->affectedRows();  // Mengembalikan jumlah baris yang terpengaruh
     }
 
-    public function deletepencetakan($id_pencetakan)
+    public function deletePencetakan($id_pencetakan)
     {
         return $this->delete($id_pencetakan);
     }

@@ -132,9 +132,10 @@ class Pengirisan extends BaseController
                 case 'kembalikan':
                         // Menghapus data pengirisan berdasarkan id_pengirisan
                         $pengirisanModel->deletePengirisan($id_pengirisan);
-                        
-                        // Mengupdate status_hpa menjadi 'Pemotongan' berdasarkan id_hpa
-                        $hpaModel->updateHpa($id_hpa, ['status_hpa' => 'Penerimaan']);
+                        $hpaModel->updateHpa($id_hpa, [
+                            'status_hpa' => 'Penerimaan',
+                            'id_pengirisan' => null,
+                        ]);
                     break;                    
 
                     // TOMBOL LANJUT
@@ -223,12 +224,15 @@ class Pengirisan extends BaseController
             $db->transStart();
 
             // Hapus data dari tabel pengirisan
-            $deleteResult = $pengirisanModel->deletepengirisan($id_pengirisan);
+            $deleteResult = $pengirisanModel->deletePengirisan($id_pengirisan);
 
             // Cek apakah delete berhasil
             if ($deleteResult) {
                 // Update field id_pengirisan menjadi null pada tabel hpa
-                $hpaModel->updateIdpengirisan($id_hpa);
+                $hpaModel->updateHpa($id_hpa, [
+                    'status_hpa' => 'Penerimaan',
+                    'id_pengirisan' => null,
+                ]);
 
                 // Selesaikan transaksi
                 $db->transComplete();

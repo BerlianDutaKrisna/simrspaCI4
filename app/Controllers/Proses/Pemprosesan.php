@@ -118,7 +118,8 @@ class Pemprosesan extends BaseController
                     ]);
                     break;
 
-                case 'kembalikan':
+                    // TOMBOL RESET PENGECEKAN
+                case 'reset':
                     $pemprosesanModel->updatePemprosesan($id_pemprosesan, [
                         'id_user_pemprosesan' => null,
                         'status_pemprosesan' => 'Belum Pemprosesan',
@@ -126,6 +127,15 @@ class Pemprosesan extends BaseController
                         'selesai_pemprosesan' => null,
                     ]);
                     break;
+
+                    // TOMBOL KEMBALI
+                case 'kembalikan':
+                    $pemprosesanModel->deletePemprosesan($id_pemprosesan);
+                    $hpaModel->updateHpa($id_hpa, [
+                        'status_hpa' => 'Pemotongan',
+                        'id_pemprosesan' => null,
+                    ]);
+                    break;   
 
                 case 'lanjut':
                     // Update status_hpa menjadi 'penanaman' pada tabel hpa
@@ -211,12 +221,15 @@ class Pemprosesan extends BaseController
             $db->transStart();
 
             // Hapus data dari tabel pemprosesan
-            $deleteResult = $pemprosesanModel->deletepemprosesan($id_pemprosesan);
+            $deleteResult = $pemprosesanModel->deletePemprosesan($id_pemprosesan);
 
             // Cek apakah delete berhasil
             if ($deleteResult) {
                 // Update field id_pemprosesan menjadi null pada tabel hpa
-                $hpaModel->updateIdpemprosesan($id_hpa);
+                $hpaModel->updateHpa($id_hpa, [
+                    'status_hpa' => 'Penerimaan',
+                    'id_pengirisan' => null,
+                ]);
 
                 // Selesaikan transaksi
                 $db->transComplete();

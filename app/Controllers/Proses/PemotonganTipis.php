@@ -117,7 +117,7 @@ class PemotonganTipis extends BaseController
                     ]);
                     break;
 
-                case 'kembalikan':
+                case 'reset':
                     $pemotonganTipisModel->updatePemotonganTipis($id_pemotongan_tipis, [
                         'id_user_pemotongan_tipis' => null,
                         'status_pemotongan_tipis' => 'Belum Pemotongan Tipis',
@@ -125,6 +125,15 @@ class PemotonganTipis extends BaseController
                         'selesai_pemotongan_tipis' => null,
                     ]);
                     break;
+
+                    // TOMBOL KEMBALI
+                case 'kembalikan':
+                    $pemotonganTipisModel->deletePemotonganTipis($id_pemotongan_tipis);
+                    $hpaModel->updateHpa($id_hpa, [
+                        'status_hpa' => 'Penanaman',
+                        'id_pemotongan_tipis' => null,
+                    ]);
+                    break; 
 
                 case 'lanjut':
                     // Update status_hpa menjadi 'Pewarnaan' pada tabel hpa
@@ -210,12 +219,14 @@ class PemotonganTipis extends BaseController
             $db->transStart();
 
             // Hapus data dari tabel pemotongan_tipis
-            $deleteResult = $pemotongan_tipisModel->deletepemotongan_tipis($id_pemotongan_tipis);
+            $deleteResult = $pemotongan_tipisModel->deletePemotonganTipis($id_pemotongan_tipis);
 
             // Cek apakah delete berhasil
             if ($deleteResult) {
-                // Update field id_pemotongan_tipis menjadi null pada tabel hpa
-                $hpaModel->updateIdpemotongan_tipis($id_hpa);
+                $hpaModel->updateHpa($id_hpa, [
+                    'status_hpa' => 'Penanaman',
+                    'id_pemotongan_tipis' => null,
+                ]);
 
                 // Selesaikan transaksi
                 $db->transComplete();

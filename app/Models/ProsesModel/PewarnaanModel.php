@@ -63,7 +63,7 @@ class PewarnaanModel extends Model // Update nama model
         return $this->db->affectedRows();  // Mengembalikan jumlah baris yang terpengaruh
     }
 
-    public function deletepewarnaan($id_pewarnaan)
+    public function deletePewarnaan($id_pewarnaan)
     {
         return $this->delete($id_pewarnaan);
     }

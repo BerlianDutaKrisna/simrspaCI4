@@ -63,7 +63,7 @@ class PemprosesanModel extends Model // Update nama model
         return $this->db->affectedRows();  // Mengembalikan jumlah baris yang terpengaruh
     }
 
-    public function deletepemprosesan($id_pemprosesan)
+    public function deletePemprosesan($id_pemprosesan)
     {
         return $this->delete($id_pemprosesan);
     }

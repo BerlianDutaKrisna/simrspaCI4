@@ -132,9 +132,10 @@ class Pemotongan extends BaseController
                 case 'kembalikan':
                     // Menghapus data pemotongan berdasarkan id_pemotongan
                     $pemotonganModel->deletePemotongan($id_pemotongan);
-                    
-                    // Mengupdate status_hpa menjadi 'Pemotongan' berdasarkan id_hpa
-                    $hpaModel->updateHpa($id_hpa, ['status_hpa' => 'Pengirisan']);
+                    $hpaModel->updateHpa($id_hpa, [
+                        'status_hpa' => 'Penerimaan',
+                        'id_pengirisan' => null,
+                    ]);
                 break;     
 
                 case 'lanjut':
@@ -222,12 +223,15 @@ class Pemotongan extends BaseController
             $db->transStart();
 
             // Hapus data dari tabel pemotongan
-            $deleteResult = $pemotonganModel->deletepemotongan($id_pemotongan);
+            $deleteResult = $pemotonganModel->deletePemotongan($id_pemotongan);
 
             // Cek apakah delete berhasil
             if ($deleteResult) {
                 // Update field id_pemotongan menjadi null pada tabel hpa
-                $hpaModel->updateIdpemotongan($id_hpa);
+                $hpaModel->updateHpa($id_hpa, [
+                    'status_hpa' => 'Pengirisan',
+                    'id_pemotongan' => null,
+                ]);;
 
                 // Selesaikan transaksi
                 $db->transComplete();

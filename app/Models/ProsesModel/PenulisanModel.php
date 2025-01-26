@@ -63,7 +63,7 @@ class PenulisanModel extends Model // Update nama model
         return $this->db->affectedRows();  // Mengembalikan jumlah baris yang terpengaruh
     }
 
-    public function deletepenulisan($id_penulisan)
+    public function deletePenulisan($id_penulisan)
     {
         return $this->delete($id_penulisan);
     }

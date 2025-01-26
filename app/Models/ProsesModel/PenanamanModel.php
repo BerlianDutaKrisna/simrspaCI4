@@ -63,7 +63,7 @@ class PenanamanModel extends Model // Update nama model
         return $this->db->affectedRows();  // Mengembalikan jumlah baris yang terpengaruh
     }
 
-    public function deletepenanaman($id_penanaman)
+    public function deletePenanaman($id_penanaman)
     {
         return $this->delete($id_penanaman);
     }
