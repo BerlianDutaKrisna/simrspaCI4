@@ -133,9 +133,9 @@ class Pemotongan extends BaseController
                     // Menghapus data pemotongan berdasarkan id_pemotongan
                     $pemotonganModel->deletePemotongan($id_pemotongan);
                     $hpaModel->updateHpa($id_hpa, [
-                        'status_hpa' => 'Penerimaan',
-                        'id_pengirisan' => null,
-                    ]);
+                        'status_hpa' => 'Pengirisan',
+                        'id_pemotongan' => null,
+                    ]);;
                 break;     
 
                 case 'lanjut':

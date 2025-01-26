@@ -4,7 +4,7 @@ namespace App\Controllers\Proses;
 
 use App\Controllers\BaseController;
 use App\Models\ProsesModel\PemverifikasiModel;
-use App\Models\ProsesModel\PencetakanModel;
+use App\Models\ProsesModel\AutorizedModel;
 use App\Models\HpaModel;
 use App\Models\UsersModel;
 use Exception;
@@ -94,7 +94,7 @@ class Pemverifikasi extends BaseController
 
         $hpaModel = new HpaModel();
         $pemverifikasiModel = new PemverifikasiModel();
-        $pencetakanModel = new PencetakanModel();
+        $autorizedModel = new AutorizedModel();
 
         try {
             switch ($action) {
@@ -134,18 +134,18 @@ class Pemverifikasi extends BaseController
                     break; 
 
                 case 'lanjut':
-                    $hpaModel->updateHpa($id_hpa, ['status_hpa' => 'Pencetakan']);
-                    $pencetakanData = [
+                    $hpaModel->updateHpa($id_hpa, ['status_hpa' => 'Autorized']);
+                    $autorizedData = [
                         'id_hpa' => $id_hpa,
-                        'status_pencetakan' => 'Belum Pencetakan',
+                        'status_autorized' => 'Belum Autorized',
                     ];
 
-                    if (!$pencetakanModel->insert($pencetakanData)) { // Update nama method dan variabel
-                        throw new Exception('Gagal menyimpan data pencetakan.');
+                    if (!$autorizedModel->insert($autorizedData)) { // Update nama method dan variabel
+                        throw new Exception('Gagal menyimpan data autorized.');
                     }
 
-                    $id_pencetakan = $pencetakanModel->getInsertID(); // Update nama variabel
-                    $hpaModel->update($id_hpa, ['id_pencetakan' => $id_pencetakan]); // Update nama variabel
+                    $id_autorized = $autorizedModel->getInsertID(); // Update nama variabel
+                    $hpaModel->update($id_hpa, ['id_autorized' => $id_autorized]); // Update nama variabel
                     break;
             }
         } catch (\Exception $e) {

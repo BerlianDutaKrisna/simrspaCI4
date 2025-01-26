@@ -163,9 +163,11 @@ class Exam extends BaseController
         $users = $userModel->where('status_user', 'Dokter')->findAll();
 
         // Ambil nama dokter dari pemotongan berdasarkan id_user_dokter_pemotongan
-        if ($pemotongan && !empty($pemotongan['id_user_dokter_pemotongan'])) {
+        if ($pemotongan && !empty($pemotongan['id_user_dokter_pemotongan'] || $pemotongan['id_user_pemotongan'] )) {
             $dokter = $userModel->find($pemotongan['id_user_dokter_pemotongan']);
+            $analis = $userModel->find($pemotongan['id_user_pemotongan']);
             $pemotongan['dokter_nama'] = $dokter ? $dokter['nama_user'] : null;
+            $pemotongan['analis_nama'] = $analis ? $analis['nama_user'] : null;
         } else {
             $pemotongan['dokter_nama'] = null;
         }
@@ -178,8 +180,7 @@ class Exam extends BaseController
             'id_user' => session()->get('id_user'),
             'nama_user' => session()->get('nama_user'),
         ];
-
-        // Kirimkan data ke view
+        
         return view('exam/edit_makroskopis', $data);
     }
 

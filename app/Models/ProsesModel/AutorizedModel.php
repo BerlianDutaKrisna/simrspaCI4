@@ -29,7 +29,7 @@ class AutorizedModel extends Model // Update nama model
     protected $updatedField  = 'updated_at';
 
     // Fungsi untuk insert data autorized
-    public function insertautorized(array $data): bool // Update nama fungsi
+    public function insertAutorized(array $data): bool // Update nama fungsi
     {
         $this->insert($data);
         return $this->db->affectedRows() > 0;

@@ -3,10 +3,10 @@
 
 <div class="card shadow mb-4">
     <div class="card-header py-3">
-        <h6 class="m-0 font-weight-bold text-primary">Table Autorized</h6>
+        <h6 class="m-0 font-weight-bold text-primary">Table Pencetakan</h6>
     </div>
     <div class="card-body">
-        <h1>Daftar Autorized</h1>
+        <h1>Daftar Pencetakan</h1>
         <a href="<?= base_url('/dashboard') ?>" class="btn btn-primary mb-3">Kembali</a>
 
         <!-- Form -->
@@ -22,11 +22,11 @@
                             <th>No</th>
                             <th>Kode HPA</th>
                             <th>Nama Pasien</th>
-                            <th>Status Autorized</th>
+                            <th>Status Pencetakan</th>
                             <th>Aksi</th>
-                            <th>Dokter</th>
-                            <th>Mulai Autorized</th>
-                            <th>Selesai Autorized</th>
+                            <th>Admin</th>
+                            <th>Mulai Pencetakan</th>
+                            <th>Selesai Pencetakan</th>
                             <th>Deadline Hasil</th>
                             <th>Print</th>
                         </tr>
@@ -44,7 +44,10 @@
                                         <input type="checkbox"
                                             name="id_proses[]"
                                             value="<?= $row['id_pencetakan']; ?>:<?= $row['id_hpa']; ?>:<?= $row['id_mutu']; ?>"
-                                            class="form-control form-control-user"
+                                            class="form-control form-control-user checkbox-item"
+                                            data-status='<?= json_encode([
+                                                                'status_pencetakan' => $row['status_pencetakan'] ?? ""
+                                                            ]) ?>'
                                             autocomplete="off">
                                     </td>
                                     <td><?= $row['nama_user_pencetakan']; ?></td>
@@ -60,14 +63,14 @@
                                     <?php if (in_array($row['status_pencetakan'], ["Proses Pencetakan"])): ?>
                                         <td>
                                             <?php if (session()->get('update_success')): ?>
-                                                <a href="<?= base_url('cetak/autorized/' . esc($row['id_hpa'])) ?>" class="btn btn-success btn-sm">
-                                                    <i class="fas fa-print"></i> Selesai Autorized
+                                                <a href="<?= base_url('cetak/pencetakan/' . esc($row['id_hpa'])) ?>" class="btn btn-success btn-sm">
+                                                    <i class="fas fa-print"></i> Selesai Pencetakan
                                                 </a>
                                                 <?php session()->remove('update_success'); // Menghapus session setelah ditampilkan 
                                                 ?>
                                             <?php else: ?>
-                                                <a href="<?= base_url('cetak/autorized/' . esc($row['id_hpa'])) ?>" class="btn btn-warning btn-sm">
-                                                    <i class="fas fa-print"></i> Autorized
+                                                <a href="<?= base_url('cetak/pencetakan/' . esc($row['id_hpa'])) ?>" class="btn btn-warning btn-sm">
+                                                    <i class="fas fa-print"></i> Pencetakan
                                                 </a>
                                             <?php endif; ?>
                                         </td>
@@ -92,7 +95,7 @@
                 </table>
             </div>
 
-            
+
             <?= $this->include('templates/proses/button_proses'); ?>
             <?= $this->include('dashboard/jenis_tindakan'); ?>
             <?= $this->include('templates/notifikasi'); ?>

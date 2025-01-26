@@ -24,7 +24,7 @@
                             <th>Nama Pasien</th>
                             <th>Status autorized</th>
                             <th>Aksi</th>
-                            <th>Analis</th>
+                            <th>Dokter</th>
                             <th>Mulai autorized</th>
                             <th>Selesai autorized</th>
                             <th>Deadline Hasil</th>
@@ -60,7 +60,7 @@
                                     <td>
                                         <?= empty($row['tanggal_hasil']) ? 'Belum diisi' : esc(date('d-m-Y', strtotime($row['tanggal_hasil']))); ?>
                                     </td>
-                                    <?php if (in_array($row['status_autorized'], ["Proses autorized"])): ?>
+                                    <?php if (in_array($row['status_autorized'], ["Proses Autorized"])): ?>
                                         <td>
                                             <?php if (session()->get('update_success')): ?>
                                                 <a href="<?= base_url('exam/edit_print_hpa/' . esc($row['id_hpa'])) ?>" class="btn btn-success btn-sm">
@@ -74,7 +74,7 @@
                                                 </a>
                                             <?php endif; ?>
                                         </td>
-                                    <?php elseif (in_array($row['status_autorized'], ["Selesai autorized"])): ?>
+                                    <?php elseif (in_array($row['status_autorized'], ["Selesai Autorized"])): ?>
                                         <td>
                                             <a href="<?= base_url('exam/edit_print_hpa/' . esc($row['id_hpa'])) ?>" class="btn btn-info btn-sm">
                                                 <i class="fas fa-eye"></i> Cek Lagi Penulisan

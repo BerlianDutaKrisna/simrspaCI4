@@ -100,18 +100,18 @@ class Autorized extends BaseController
             switch ($action) {
                     // TOMBOL MULAI PENGECEKAN
                 case 'mulai':
-                    $autorizedModel->updateautorized($id_autorized, [ // Update nama method dan variabel
+                    $autorizedModel->updateAutorized($id_autorized, [ // Update nama method dan variabel
                         'id_user_autorized' => $id_user,
-                        'status_autorized' => 'Proses autorized',
+                        'status_autorized' => 'Proses Autorized',
                         'mulai_autorized' => date('Y-m-d H:i:s'),
                     ]);
                     break;
 
                     // TOMBOL SELESAI PENGECEKAN
                 case 'selesai':
-                    $autorizedModel->updateautorized($id_autorized, [ // Update nama method dan variabel
+                    $autorizedModel->updateAutorized($id_autorized, [ // Update nama method dan variabel
                         'id_user_autorized' => $id_user,
-                        'status_autorized' => 'Selesai autorized',
+                        'status_autorized' => 'Selesai Autorized',
                         'selesai_autorized' => date('Y-m-d H:i:s'),
                     ]);
                     break;
@@ -119,7 +119,7 @@ class Autorized extends BaseController
                 case 'reset':
                     $autorizedModel->updateAutorized($id_autorized, [
                         'id_user_autorized' => null,
-                        'status_autorized' => 'Belum autorized',
+                        'status_autorized' => 'Belum Autorized',
                         'mulai_autorized' => null,
                         'selesai_autorized' => null,
                     ]);
@@ -199,7 +199,7 @@ class Autorized extends BaseController
 
         if ($id_autorized && $id_hpa) {
             // Load model
-            $autorizedModel = new autorizedModel();
+            $autorizedModel = new AutorizedModel();
             $hpaModel = new HpaModel();
 
             // Ambil instance dari database service

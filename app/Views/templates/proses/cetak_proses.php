@@ -1,6 +1,6 @@
 <script>
     function cetakProses() {
-        var detailMakroskopis = document.getElementById('makroskopis_hpa') ? document.getElementById('makroskopis_hpa').value : ''; 
+        var detailMakroskopis = document.getElementById('makroskopis_hpa') ? document.getElementById('makroskopis_hpa').value : '';
         var detailMikroskopis = document.getElementById('mikroskopis_hpa') ? document.getElementById('mikroskopis_hpa').value : '';
         var printWindow = window.open('', '', 'height=500,width=800');
         printWindow.document.write(`
@@ -60,9 +60,16 @@
             .mikroskopis-content-table td:last-child {
                 width: 70%;
             }
-            .makroskopis-content-table td[colspan="2"],
-            .mikroskopis-content-table td[colspan="2"] {
+            .makroskopis-content-table td[colspan="2"] {
                 height: 350px;
+                font-size: 16pt;
+                border: 1px solid black;
+                padding: 10px;
+                text-align: left;
+                vertical-align: top;
+            }
+            .mikroskopis-content-table td[colspan="2"] {
+                height: 450px;
                 font-size: 16pt;
                 border: 1px solid black;
                 padding: 10px;
@@ -121,7 +128,7 @@
         <table class="makroskopis-content-table">
             <tr>
                 <td>Makroskopis</td>
-                <td>Analis PA: <?= esc($nama_user) ?? '' ?></td>
+                <td>Analis PA: <?= $pemotongan['analis_nama'] ?? '' ?></td>
             </tr>
             <tr>
                 <td colspan="2">${detailMakroskopis}</td>

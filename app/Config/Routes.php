@@ -159,6 +159,18 @@ $routes->post('pemverifikasi/delete', 'Proses\Pemverifikasi::delete');
 $routes->get('pemverifikasi/edit_pemverifikasi', 'Proses\Pemverifikasi::edit_pemverifikasi');
 $routes->post('pemverifikasi/update_pemverifikasi', 'Proses\Pemverifikasi::update_pemverifikasi');
 
+// Route untuk Autorized
+$routes->get('autorized/index_autorized', 'Proses\Autorized::index_autorized'); // Menampilkan halaman autorized
+$routes->group('autorized', ['namespace' => 'App\Controllers\Proses'], function ($routes) {
+    // Definisikan rute untuk form autorized yang menerima POST request
+    $routes->post('proses_autorized', 'Autorized::proses_autorized');
+});
+$routes->get('autorized/autorized_details', 'Proses\Autorized::autorized_details');
+$routes->post('autorized/delete', 'Proses\Autorized::delete');
+$routes->get('autorized/edit_autorized', 'Proses\Autorized::edit_autorized');
+$routes->post('autorized/update_autorized', 'Proses\Autorized::update_autorized');
+
+
 // Route untuk Pencetakan
 $routes->get('pencetakan/index_pencetakan', 'Proses\Pencetakan::index_pencetakan'); // Menampilkan halaman pencetakan
 $routes->group('pencetakan', ['namespace' => 'App\Controllers\Proses'], function ($routes) {
