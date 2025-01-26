@@ -32,7 +32,6 @@ class Exam extends BaseController
         $this->hpaModel = new HpaModel();
         $this->usersModel = new UsersModel();
         $this->pembacaanModel = new PembacaanModel();
-        session()->set('previous_url', previous_url());
     }
 
     public function index_exam()
@@ -120,7 +119,6 @@ class Exam extends BaseController
     // Menampilkan form edit exam
     public function edit_exam($id_hpa)
     {
-        session()->set('previous_url', previous_url());
         $hpaModel = new HpaModel();
 
         // Ambil id_user dan nama_user dari session yang sedang aktif
@@ -147,7 +145,6 @@ class Exam extends BaseController
     // Menampilkan form edit exam
     public function edit_makroskopis($id_hpa)
     {
-        session()->set('previous_url', previous_url());
         $hpaModel = new HpaModel();
         $userModel = new UsersModel();
         $pemotonganModel = new PemotonganModel(); // Model Pemotongan
@@ -189,7 +186,6 @@ class Exam extends BaseController
     // Menampilkan form edit exam
     public function edit_mikroskopis($id_hpa)
     {
-        session()->set('previous_url', previous_url());
         $hpaModel = new HpaModel();
         $userModel = new UsersModel();
         $pemotonganModel = new PemotonganModel();
@@ -272,7 +268,6 @@ class Exam extends BaseController
 
     public function edit_print_hpa($id_hpa)
     {
-        session()->set('previous_url', previous_url());
         $hpaModel = new HpaModel();
         $data['id_user'] = session()->get('id_user');
         $data['nama_user'] = session()->get('nama_user');
@@ -317,7 +312,6 @@ class Exam extends BaseController
         ]);
 
         if (!$this->validate($validation->getRules())) {
-            dd($validation->getErrors());
             return redirect()->back()->withInput()->with('errors', $validation->getErrors());
         }
 
@@ -350,14 +344,7 @@ class Exam extends BaseController
                 }
             }
 
-            $previousUrl = session()->get('previous_url');
-            if ($previousUrl) {
-                // Jika ada previous URL, redirect ke URL tersebut
-                return redirect()->back()->withInput()->with('success', 'Data berhasil diperbarui.');
-            } else {
-                // Jika tidak ada previous URL, arahkan ke halaman default
-                return redirect()->to('/')->with('success', 'Data berhasil diperbarui.');
-            }
+            return redirect()->back()->with('success', 'Data berhasil diperbarui.');
         }
     }
     public function update_penulisan($id_hpa)
@@ -382,7 +369,6 @@ class Exam extends BaseController
         ]);
 
         if (!$this->validate($validation->getRules())) {
-            dd($validation->getErrors());
             return redirect()->back()->withInput()->with('errors', $validation->getErrors());
         }
 
@@ -420,7 +406,6 @@ class Exam extends BaseController
 
     public function uploadFotoMakroskopis($id_hpa)
     {
-        session()->set('previous_url', previous_url());
         date_default_timezone_set('Asia/Jakarta');
         $hpaModel = new HpaModel();
 
@@ -484,7 +469,6 @@ class Exam extends BaseController
 
     public function uploadFotoMikroskopis($id_hpa)
     {
-        session()->set('previous_url', previous_url());
         date_default_timezone_set('Asia/Jakarta');
         $hpaModel = new HpaModel();
 

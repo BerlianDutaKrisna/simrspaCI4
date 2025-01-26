@@ -1,7 +1,7 @@
 <script>
     function cetakProses() {
-        var detailMakroskopis = document.getElementById('makroskopis_hpa').value;
-        var detailMikroskopis = document.getElementById('mikroskopis_hpa').value;
+        var detailMakroskopis = document.getElementById('makroskopis_hpa') ? document.getElementById('makroskopis_hpa').value : ''; 
+        var detailMikroskopis = document.getElementById('mikroskopis_hpa') ? document.getElementById('mikroskopis_hpa').value : '';
         var printWindow = window.open('', '', 'height=500,width=800');
         printWindow.document.write(`
     <html>
