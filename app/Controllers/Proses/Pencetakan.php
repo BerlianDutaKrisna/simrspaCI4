@@ -202,8 +202,8 @@ class Pencetakan extends BaseController
             // Cek apakah delete berhasil
             if ($deleteResult) {
                 $hpaModel->updateHpa($id_hpa, [
-                    'status_hpa' => 'Pemverifikasi',
-                    'id_autorized' => null,
+                    'status_hpa' => 'Autorized',
+                    'id_pencetakan' => null,
                 ]);
 
                 // Selesaikan transaksi

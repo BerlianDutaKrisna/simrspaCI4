@@ -14,6 +14,8 @@
             <form id="form-hpa" method="POST" enctype="multipart/form-data">
                 <?= csrf_field(); ?>
                 <input type="hidden" name="id_hpa" value="<?= $hpa['id_hpa'] ?>">
+                <input type="hidden" name="id_pemotongan" value="<?= $pemotongan['id_pemotongan'] ?>">
+                <input type="hidden" name="page_source" value="edit_makroskopis">
 
                 <!-- Kolom Kode HPA dan Diagnosa -->
                 <div class="form-group row">
