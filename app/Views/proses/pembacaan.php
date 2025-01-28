@@ -58,11 +58,18 @@
                                             <input type="hidden" name="total_nilai_mutu" value="<?= $row['total_nilai_mutu']; ?>">
                                             <!-- Menampilkan form checkbox ketika status pembacaan adalah 'Proses pembacaan' -->
                                             <div class="form-check">
+                                                <input type="checkbox" id="checkAll_<?= $row['id_mutu']; ?>" class="form-check-input">
+                                                <label class="form-check-label" for="checkAll_<?= $row['id_mutu']; ?>">
+                                                    Pilih Semua
+                                                </label>
+                                            </div>
+
+                                            <div class="form-check">
                                                 <input type="checkbox"
                                                     name="indikator_4"
                                                     value="10"
                                                     id="indikator_4_<?= $row['id_mutu']; ?>"
-                                                    class="form-check-input">
+                                                    class="form-check-input child-checkbox">
                                                 <label class="form-check-label" for="indikator_4_<?= $row['id_mutu']; ?>">
                                                     Sediaan tanpa lipatan
                                                 </label>
@@ -72,7 +79,7 @@
                                                     name="indikator_5"
                                                     value="10"
                                                     id="indikator_5_<?= $row['id_mutu']; ?>"
-                                                    class="form-check-input">
+                                                    class="form-check-input child-checkbox">
                                                 <label class="form-check-label" for="indikator_5_<?= $row['id_mutu']; ?>">
                                                     Sediaan tanpa goresan mata pisau
                                                 </label>
@@ -82,7 +89,7 @@
                                                     name="indikator_6"
                                                     value="10"
                                                     id="indikator_6_<?= $row['id_mutu']; ?>"
-                                                    class="form-check-input">
+                                                    class="form-check-input child-checkbox">
                                                 <label class="form-check-label" for="indikator_6_<?= $row['id_mutu']; ?>">
                                                     Kontras warna sediaan cukup jelas
                                                 </label>
@@ -92,7 +99,7 @@
                                                     name="indikator_7"
                                                     value="10"
                                                     id="indikator_7_<?= $row['id_mutu']; ?>"
-                                                    class="form-check-input">
+                                                    class="form-check-input child-checkbox">
                                                 <label class="form-check-label" for="indikator_7_<?= $row['id_mutu']; ?>">
                                                     Sediaan tanpa gelembung udara
                                                 </label>
@@ -102,11 +109,32 @@
                                                     name="indikator_8"
                                                     value="10"
                                                     id="indikator_8_<?= $row['id_mutu']; ?>"
-                                                    class="form-check-input">
+                                                    class="form-check-input child-checkbox">
                                                 <label class="form-check-label" for="indikator_8_<?= $row['id_mutu']; ?>">
                                                     Sediaan tanpa bercak / sidik jari
                                                 </label>
                                             </div>
+
+                                            <script>
+                                                document.addEventListener('DOMContentLoaded', function() {
+                                                    const checkAll = document.getElementById('checkAll_<?= $row['id_mutu']; ?>');
+                                                    const checkboxes = document.querySelectorAll('.child-checkbox');
+
+                                                    // Ketika "Pilih Semua" dicentang/ditandai
+                                                    checkAll.addEventListener('change', function() {
+                                                        checkboxes.forEach(checkbox => {
+                                                            checkbox.checked = checkAll.checked; // Semua checkbox mengikuti status "Pilih Semua"
+                                                        });
+                                                    });
+
+                                                    // Update status "Pilih Semua" berdasarkan checkbox lainnya
+                                                    checkboxes.forEach(checkbox => {
+                                                        checkbox.addEventListener('change', function() {
+                                                            checkAll.checked = Array.from(checkboxes).every(checkbox => checkbox.checked);
+                                                        });
+                                                    });
+                                                });
+                                            </script>
                                         <?php else: ?>
                                             <!-- Menampilkan total_nilai_mutu jika status pembacaan 'Belum Diperiksa' atau 'Sudah Diperiksa' -->
                                             <?= $row['total_nilai_mutu']; ?> %
@@ -125,9 +153,9 @@
                                     </td>
                                     <?php if (in_array($row['status_pembacaan'], ["Proses Pembacaan"])): ?>
                                         <td>
-                                                <a href="<?= base_url('exam/edit_mikroskopis/' . esc($row['id_hpa'])) ?>" class="btn btn-warning btn-sm">
-                                                    <i class="fas fa-pen"></i> Detail
-                                                </a>
+                                            <a href="<?= base_url('exam/edit_mikroskopis/' . esc($row['id_hpa'])) ?>" class="btn btn-warning btn-sm">
+                                                <i class="fas fa-pen"></i> Detail
+                                            </a>
                                         </td>
                                     <?php elseif (in_array($row['status_pembacaan'], ["Selesai Pembacaan"])): ?>
                                         <td>

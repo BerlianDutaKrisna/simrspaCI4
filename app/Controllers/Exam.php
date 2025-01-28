@@ -196,6 +196,7 @@ class Exam extends BaseController
             'id_user' => $session->get('id_user'),
             'nama_user' => $session->get('nama_user'),
         ];
+
         return view('exam/edit_makroskopis', $data);
     }
 
@@ -204,7 +205,8 @@ class Exam extends BaseController
     {
         $hpaModel = new HpaModel();
         $userModel = new UsersModel();
-        $pemotonganModel = new PemotonganModel(); // Model Pemotongan
+        $pemotonganModel = new PemotonganModel();
+        $pembacaanModel = new PembacaanModel();
 
         // Ambil data hpa berdasarkan ID
         $hpa = $hpaModel->getHpaWithPatient($id_hpa);
@@ -214,9 +216,11 @@ class Exam extends BaseController
 
         // Ambil id_pemotongan dari data hpa
         $id_pemotongan = $hpa['id_pemotongan'];
+        $id_pembacaan = $hpa['id_pembacaan'];
 
         // Ambil data pemotongan berdasarkan id_pemotongan
         $pemotongan = $pemotonganModel->find($id_pemotongan);
+        $pembacaan = $pembacaanModel->find($id_pembacaan);
 
         // Inisialisasi dokter dan analis
         $dokter_nama = null;
@@ -249,6 +253,7 @@ class Exam extends BaseController
         $data = [
             'hpa' => $hpa,               // Data HPA
             'pemotongan' => $pemotongan, // Data Pemotongan
+            'pembacaan' => $pembacaan,   // Data Pembacaan
             'users' => $users,           // Data Pengguna (Dokter)
             'id_user' => $session->get('id_user'),
             'nama_user' => $session->get('nama_user'),

@@ -87,7 +87,15 @@
                 <div class="form-group row">
                     <label class="col-sm-2 col-form-label">Foto Makroskopis</label>
                     <div class="col-sm-6">
-                        <img src="<?= base_url('uploads/hpa/makroskopis/' . $hpa['foto_makroskopis_hpa']); ?>" width="200" alt="Foto Makroskopis" class="img-thumbnail" id="fotoMakroskopis" data-toggle="modal" data-target="#fotoModal">
+                        <img src="<?= $hpa['foto_makroskopis_hpa'] !== null
+                                        ? base_url('uploads/hpa/makroskopis/' . $hpa['foto_makroskopis_hpa'])
+                                        : base_url('img/no_photo.jpg') ?>"
+                            width="200"
+                            alt="Foto Makroskopis"
+                            class="img-thumbnail"
+                            id="fotoMakroskopis"
+                            data-toggle="modal"
+                            data-target="#fotoModal">
                         <input type="file" name="foto_makroskopis_hpa" id="foto_makroskopis_hpa" class="form-control form-control-user mt-2">
                         <button type="submit" class="btn btn-primary mt-2"
                             formaction="<?= base_url('exam/uploadFotoMakroskopis/' . $hpa['id_hpa']); ?>">
@@ -108,7 +116,15 @@
                 <div class="form-group row">
                     <label class="col-sm-2 col-form-label">Foto Mikroskopis</label>
                     <div class="col-sm-6">
-                        <img src="<?= base_url('uploads/hpa/mikroskopis/' . $hpa['foto_mikroskopis_hpa']); ?>" width="200" alt="Foto Mikroskopis" class="img-thumbnail" id="fotoMikroskopis" data-toggle="modal" data-target="#fotoModalMikroskopis">
+                        <img src="<?= $hpa['foto_mikroskopis_hpa'] !== null
+                                        ? base_url('uploads/hpa/mikroskopis/' . $hpa['foto_mikroskopis_hpa'])
+                                        : base_url('img/no_photo.jpg') ?>"
+                            width="200"
+                            alt="Foto Mikroskopis"
+                            class="img-thumbnail"
+                            id="fotoMikroskopis"
+                            data-toggle="modal"
+                            data-target="#fotoModal">
                         <input type="file" name="foto_mikroskopis_hpa" id="foto_mikroskopis_hpa" class="form-control form-control-user mt-2">
                         <button type="submit" class="btn btn-primary mt-2"
                             formaction="<?= base_url('exam/uploadFotoMikroskopis/' . $hpa['id_hpa']); ?>">
@@ -147,6 +163,60 @@
                         </select>
                     </div>
                 </div>
+
+                <div class="form-group">
+                    <label class="col-sm-2 col-form-label">Mutu</label>
+                    <div class="col-sm-4">
+                        <div class="form-check">
+                            <input type="checkbox" id="checkAll_<?= $hpa['id_mutu']; ?>" class="form-check-input">
+                            <label class="form-check-label" for="checkAll_<?= $hpa['id_mutu']; ?>">Pilih Semua</label>
+                        </div>
+
+                        <?php
+                        $indikators = [
+                            ['name' => 'indikator_4', 'value' => '10', 'label' => 'Sediaan tanpa lipatan'],
+                            ['name' => 'indikator_5', 'value' => '10', 'label' => 'Sediaan tanpa goresan mata pisau'],
+                            ['name' => 'indikator_6', 'value' => '10', 'label' => 'Kontras warna sediaan cukup jelas'],
+                            ['name' => 'indikator_7', 'value' => '10', 'label' => 'Sediaan tanpa gelembung udara'],
+                            ['name' => 'indikator_8', 'value' => '10', 'label' => 'Sediaan tanpa bercak / sidik jari']
+                        ];
+
+                        foreach ($indikators as $indikator): ?>
+                            <div class="form-check">
+                                <input type="checkbox"
+                                    name="<?= $indikator['name'] ?>"
+                                    value="<?= $indikator['value'] ?>"
+                                    id="<?= $indikator['name'] . '_' . $hpa['id_mutu']; ?>"
+                                    class="form-check-input child-checkbox">
+                                <label class="form-check-label" for="<?= $indikator['name'] . '_' . $hpa['id_mutu']; ?>">
+                                    <?= $indikator['label'] ?>
+                                </label>
+                            </div>
+                        <?php endforeach; ?>
+                    </div>
+                </div>
+
+                <script>
+                    document.addEventListener('DOMContentLoaded', function() {
+                        const checkAll = document.getElementById('checkAll_<?= $hpa['id_mutu']; ?>');
+                        const checkboxes = document.querySelectorAll('.child-checkbox');
+
+                        // Ketika "Pilih Semua" dicentang/ditandai
+                        checkAll.addEventListener('change', function() {
+                            checkboxes.forEach(checkbox => {
+                                checkbox.checked = checkAll.checked; // Semua checkbox mengikuti status "Pilih Semua"
+                            });
+                        });
+
+                        // Update status "Pilih Semua" berdasarkan checkbox lainnya
+                        checkboxes.forEach(checkbox => {
+                            checkbox.addEventListener('change', function() {
+                                checkAll.checked = Array.from(checkboxes).every(checkbox => checkbox.checked);
+                            });
+                        });
+                    });
+                </script>
+
                 <!-- Tombol Simpan -->
                 <div class="form-group row">
                     <div class="col-sm-6 text-center">
@@ -156,9 +226,9 @@
                             Simpan
                         </button>
                     </div>
-                    <div class="col-6 text-center">
+                    <div class="col-sm-6 text-center">
                         <!-- Tombol Cetak -->
-                        <button type="button" class="btn btn-info btn-user w-100 w-md-auto" onclick="cetakProses()">
+                        <button type="button" class="btn btn-info btn-user w-100" onclick="cetakProses()">
                             <i class="fas fa-print"></i> Cetak
                         </button>
                     </div>
