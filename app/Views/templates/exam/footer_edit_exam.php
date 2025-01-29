@@ -57,6 +57,22 @@
             ],
         });
     });
+
+    $(document).ready(function() {
+        $('.summernote_print').summernote({
+            placeholder: '',
+            tabsize: 2,
+            height: 200,
+            airMode: true
+        });
+
+        // Cek status penulisan
+        var statusPenulisan = "<?= $penulisan['status_penulisan'] ?? '' ?>";
+
+        if (statusPenulisan !== "Selesai Penulisan") {
+            $('.summernote_print').summernote('disable');
+        }
+    });
 </script>
 </body>
 

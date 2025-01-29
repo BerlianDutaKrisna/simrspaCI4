@@ -40,6 +40,7 @@ $routes->get('exam/edit_exam/(:segment)', 'Exam::edit_exam/$1');  // Rute untuk 
 $routes->get('exam/edit_makroskopis/(:segment)', 'Exam::edit_makroskopis/$1');
 $routes->get('exam/edit_mikroskopis/(:segment)', 'Exam::edit_mikroskopis/$1');
 $routes->post('exam/update/(:segment)', 'Exam::update/$1');  // Rute untuk menangani update data
+$routes->post('exam/update_print_hpa/(:segment)', 'Exam::update_print_hpa/$1');
 $routes->get('exam/index_buku_penerima', 'Exam::index_buku_penerima');
 $routes->post('exam/update_buku_penerima', 'Exam::update_buku_penerima');  // Adjusted for two segments
 $routes->post('exam/update_status_hpa', 'Exam::update_status_hpa');

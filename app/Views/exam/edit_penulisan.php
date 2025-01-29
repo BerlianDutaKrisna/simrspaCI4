@@ -1,4 +1,4 @@
-<?= $this->include('templates/cetak/header_cetak'); ?>
+<?= $this->include('templates/exam/header_edit_exam'); ?>
 <?= $this->include('templates/dashboard/navbar_dashboard'); ?>
 
 <div class="container-fluid">
@@ -95,6 +95,26 @@
                                 </textarea>
                         </div>
                         <div class="form-group">
+                            <label class="col-sm-2 col-form-label" for="jumlah_slide">Jumlah Slide</label>
+                        </div>
+                        <div class="col-sm-5">
+                            <select class="form-control" id="jumlah_slide" name="jumlah_slide" onchange="handleJumlahSlideChange(this)">
+                                <option value="0" <?= ($hpa['jumlah_slide'] == '0') ? 'selected' : '' ?>>0</option>
+                                <option value="1" <?= ($hpa['jumlah_slide'] == '1') ? 'selected' : '' ?>>1</option>
+                                <option value="2" <?= ($hpa['jumlah_slide'] == '2') ? 'selected' : '' ?>>2</option>
+                                <option value="3" <?= ($hpa['jumlah_slide'] == '3') ? 'selected' : '' ?>>3</option>
+                                <option value="lainnya" <?= (!in_array($hpa['jumlah_slide'], ['0', '1', '2', '3']) ? 'selected' : '') ?>>Lainnya</option>
+                            </select>
+                            <input
+                                type="text"
+                                class="form-control mt-2 <?= (!in_array($hpa['jumlah_slide'], ['0', '1', '2', '3'])) ? '' : 'd-none' ?>"
+                                id="jumlah_slide_custom"
+                                name="jumlah_slide_custom"
+                                placeholder="Masukkan Jumlah Slide Lainnya"
+                                value="<?= (!in_array($hpa['jumlah_slide'], ['0', '1', '2', '3'])) ? $hpa['jumlah_slide'] : '' ?>">
+                        </div>
+
+                        <div class="form-group">
                             <label class="col-sm-2 col-form-label">Mikroskopis</label>
                         </div>
                         <div class="col-sm-10">
@@ -108,7 +128,7 @@
                         <div class="form-group">
                             <label class="col-sm-2 col-form-label">Tampilan:</label>
                         </div>
-                        <textarea class="form-control summernote_hpa" name="print_hpa" id="print_hpa" rows="5">
+                        <textarea class="form-control summernote_print" name="print_hpa" id="print_hpa" rows="5">
                         <table width="800pt" height="80">
                             <tbody>
                                 <tr>
@@ -223,5 +243,6 @@
     </div>
 </div>
 
+
 <?= $this->include('templates/notifikasi') ?>
-<?= $this->include('templates/cetak/footer_cetak'); ?>
+<?= $this->include('templates/exam/footer_edit_exam'); ?>

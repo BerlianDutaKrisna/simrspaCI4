@@ -27,7 +27,7 @@
 
     <style>
         .note-editor {
-            width: 190mm;
+            width: 100%;
             padding: 0px;
         }
 
@@ -46,6 +46,15 @@
         .note-editable {
             font-family: 'Verdana', Arial, sans-serif;
             font-size: 24px;
+            min-height: 100px;
+            /* Tinggi minimum */
+            overflow-y: auto;
+            /* Tambahkan scroll jika konten melebihi tinggi maksimum */
+        }
+
+        .note-editor.note-frame {
+            border: 1px solid #ddd;
+            /* Tambahkan border untuk estetika */
         }
     </style>
 

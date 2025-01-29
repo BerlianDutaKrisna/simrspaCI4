@@ -99,7 +99,7 @@
                 <a href="<?= base_url('pemverifikasi/index_pemverifikasi') ?>" class="btn btn-success btn-icon-split btn-sm d-flex justify-content-between m-2">
                     <span class="text">Pemverifikasi</span>
                     <span class="icon text-white-50">
-                        <i class="fas fa-check-square"></i> <!-- Ikon untuk Pemverifikasi -->
+                        <i class="fas fa-check-square"></i>
                     </span>
                 </a>
             </div>
@@ -107,7 +107,7 @@
             <!-- Tombol 11: Autorized -->
             <div class="col">
                 <a href="<?= base_url('autorized/index_autorized') ?>" class="btn btn-info btn-icon-split btn-sm d-flex justify-content-between m-2">
-                    <span class="text">Autorized</span>
+                    <span class="text">Authorized</span>
                     <span class="icon text-white-50">
                         <i class="fas fa-vote-yea"></i>
                     </span>

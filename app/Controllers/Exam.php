@@ -15,7 +15,7 @@ use App\Models\ProsesModel\PewarnaanModel;
 use App\Models\ProsesModel\PembacaanModel;
 use App\Models\ProsesModel\PenulisanModel;
 use App\Models\ProsesModel\PemverifikasiModel;
-use App\Models\ProsesModel\AutorizedModelModel;
+use App\Models\ProsesModel\AutorizedModel;
 use App\Models\ProsesModel\PencetakanModel;
 use App\Models\MutuModel;
 
@@ -326,15 +326,32 @@ class Exam extends BaseController
     public function edit_print_hpa($id_hpa)
     {
         $hpaModel = new HpaModel();
+        $pemverifikasiModel = new PemverifikasiModel();
+        $autorizedModel = new AutorizedModel();
+        $pencetakanModel = new PencetakanModel();
+
         // Ambil data hpa berdasarkan ID
         $hpa = $hpaModel->getHpaWithPatient($id_hpa);
+
+        // Ambil id_pemotongan dari data hpa
+        $id_pemverivifikasi = $hpa['id_pemverifikasi'];
+        $id_autorized = $hpa['id_autorized'];
+        $id_pencetakan = $hpa['id_pencetakan'];
+
+        $pemverifikasi = $pemverifikasiModel->find($id_pemverivifikasi);
+        $autorized = $autorizedModel->find($id_autorized);
+        $pencetakan = $pencetakanModel->find($id_pencetakan);
 
         // Persiapkan data yang akan dikirim ke view
         $data = [
             'hpa' => $hpa,
+            'pemverifikasi' => $pemverifikasi,
+            'autorized' => $autorized,
+            'pencetakan' => $pencetakan,
             'id_user' => session()->get('id_user'),
             'nama_user' => session()->get('nama_user'),
         ];
+
             return view('exam/edit_print_hpa', $data);
     }
 
@@ -444,6 +461,33 @@ class Exam extends BaseController
 
         // Jika update gagal
         return redirect()->back()->with('error', 'Gagal memperbarui data.');
+    }
+
+    public function update_print_hpa($id_hpa){
+        $hpaModel = new HpaModel();
+        $pemverifikasiModel = new PemverifikasiModel();
+        $autorizedModel = new AutorizedModel();
+        $pencetakanModel = new PencetakanModel();
+
+        $id_user = session()->get('id_user');
+
+        // Mendapatkan id_hpa dari POST
+        $id_hpa = $this->request->getPost('id_hpa');
+
+        $data = $this->request->getPost();
+        $hpaModel->update($id_hpa, $data);
+        $page_source = $this->request->getPost('page_source');
+        
+        if ($page_source === 'edit_print_hpa') {
+            $id_pemverifikasi = $this->request->getPost('id_pemverifikasi');
+            $pemverifikasiModel->updatePemverifikasi($id_pemverifikasi, [
+                'id_user_pemverifikasi' => $id_user,
+                'status_pemverifikasi' => 'Selesai Pemverifikasi',
+                'selesai_pemverifikasi' => date('Y-m-d H:i:s'),
+            ]);
+            return redirect()->to('pemverifikasi/index_pemverifikasi')->with('success', 'Data berhasil diverifikasi.');
+        }
+
     }
 
     public function uploadFotoMakroskopis($id_hpa)

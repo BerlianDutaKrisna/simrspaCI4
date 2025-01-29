@@ -27,8 +27,8 @@
 
     <style>
         .note-editor {
-            width: 260mm;
-            padding: 10px;
+            width: 190mm;
+            padding: 0px;
         }
 
         .note-editor .dropdown-toggle::after {
