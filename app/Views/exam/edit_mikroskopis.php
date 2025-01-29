@@ -15,7 +15,9 @@
                 <?= csrf_field(); ?>
                 <input type="hidden" name="id_hpa" value="<?= $hpa['id_hpa'] ?>">
                 <input type="hidden" name="id_pembacaan" value="<?= $pembacaan['id_pembacaan'] ?>">
+                <input type="hidden" name="id_mutu" value="<?= $hpa['id_mutu'] ?>">
                 <input type="hidden" name="page_source" value="edit_mikroskopis">
+                <input type="hidden" name="total_nilai_mutu" value="<?= $pembacaan['total_nilai_mutu']; ?>">
 
 
                 <!-- Kolom Kode HPA dan Diagnosa -->
@@ -164,58 +166,101 @@
                     </div>
                 </div>
 
-                <div class="form-group">
+                <div class="form-group row">
                     <label class="col-sm-2 col-form-label">Mutu</label>
                     <div class="col-sm-4">
                         <div class="form-check">
                             <input type="checkbox" id="checkAll_<?= $hpa['id_mutu']; ?>" class="form-check-input">
-                            <label class="form-check-label" for="checkAll_<?= $hpa['id_mutu']; ?>">Pilih Semua</label>
+                            <label class="form-check-label" for="checkAll_<?= $hpa['id_mutu']; ?>">
+                                Pilih Semua
+                            </label>
                         </div>
 
-                        <?php
-                        $indikators = [
-                            ['name' => 'indikator_4', 'value' => '10', 'label' => 'Sediaan tanpa lipatan'],
-                            ['name' => 'indikator_5', 'value' => '10', 'label' => 'Sediaan tanpa goresan mata pisau'],
-                            ['name' => 'indikator_6', 'value' => '10', 'label' => 'Kontras warna sediaan cukup jelas'],
-                            ['name' => 'indikator_7', 'value' => '10', 'label' => 'Sediaan tanpa gelembung udara'],
-                            ['name' => 'indikator_8', 'value' => '10', 'label' => 'Sediaan tanpa bercak / sidik jari']
-                        ];
+                        <div class="form-check">
+                            <input type="checkbox"
+                                name="indikator_4"
+                                value="10"
+                                id="indikator_4_<?= $hpa['id_mutu']; ?>"
+                                class="form-check-input child-checkbox"
+                                <?= ($pembacaan['indikator_4'] !== "0") ? 'checked' : ''; ?>>
+                            <label class="form-check-label" for="indikator_4_<?= $hpa['id_mutu']; ?>">
+                                Sediaan tanpa lipatan
+                            </label>
+                        </div>
 
-                        foreach ($indikators as $indikator): ?>
-                            <div class="form-check">
-                                <input type="checkbox"
-                                    name="<?= $indikator['name'] ?>"
-                                    value="<?= $indikator['value'] ?>"
-                                    id="<?= $indikator['name'] . '_' . $hpa['id_mutu']; ?>"
-                                    class="form-check-input child-checkbox">
-                                <label class="form-check-label" for="<?= $indikator['name'] . '_' . $hpa['id_mutu']; ?>">
-                                    <?= $indikator['label'] ?>
-                                </label>
-                            </div>
-                        <?php endforeach; ?>
-                    </div>
-                </div>
+                        <div class="form-check">
+                            <input type="checkbox"
+                                name="indikator_5"
+                                value="10"
+                                id="indikator_5_<?= $hpa['id_mutu']; ?>"
+                                class="form-check-input child-checkbox"
+                                <?= ($pembacaan['indikator_5'] !== "0") ? 'checked' : ''; ?>>
+                            <label class="form-check-label" for="indikator_5_<?= $hpa['id_mutu']; ?>">
+                                Sediaan tanpa goresan mata pisau
+                            </label>
+                        </div>
 
-                <script>
-                    document.addEventListener('DOMContentLoaded', function() {
-                        const checkAll = document.getElementById('checkAll_<?= $hpa['id_mutu']; ?>');
-                        const checkboxes = document.querySelectorAll('.child-checkbox');
+                        <div class="form-check">
+                            <input type="checkbox"
+                                name="indikator_6"
+                                value="10"
+                                id="indikator_6_<?= $hpa['id_mutu']; ?>"
+                                class="form-check-input child-checkbox"
+                                <?= ($pembacaan['indikator_6'] !== "0") ? 'checked' : ''; ?>>
+                            <label class="form-check-label" for="indikator_6_<?= $hpa['id_mutu']; ?>">
+                                Kontras warna sediaan cukup jelas
+                            </label>
+                        </div>
 
-                        // Ketika "Pilih Semua" dicentang/ditandai
-                        checkAll.addEventListener('change', function() {
-                            checkboxes.forEach(checkbox => {
-                                checkbox.checked = checkAll.checked; // Semua checkbox mengikuti status "Pilih Semua"
-                            });
-                        });
+                        <div class="form-check">
+                            <input type="checkbox"
+                                name="indikator_7"
+                                value="10"
+                                id="indikator_7_<?= $hpa['id_mutu']; ?>"
+                                class="form-check-input child-checkbox"
+                                <?= ($pembacaan['indikator_7'] !== "0") ? 'checked' : ''; ?>>
+                            <label class="form-check-label" for="indikator_7_<?= $hpa['id_mutu']; ?>">
+                                Sediaan tanpa gelembung udara
+                            </label>
+                        </div>
 
-                        // Update status "Pilih Semua" berdasarkan checkbox lainnya
-                        checkboxes.forEach(checkbox => {
-                            checkbox.addEventListener('change', function() {
+                        <div class="form-check">
+                            <input type="checkbox"
+                                name="indikator_8"
+                                value="10"
+                                id="indikator_8_<?= $hpa['id_mutu']; ?>"
+                                class="form-check-input child-checkbox"
+                                <?= ($pembacaan['indikator_8'] !== "0") ? 'checked' : ''; ?>>
+                            <label class="form-check-label" for="indikator_8_<?= $hpa['id_mutu']; ?>">
+                                Sediaan tanpa bercak / sidik jari
+                            </label>
+                        </div>
+
+                        <script>
+                            document.addEventListener('DOMContentLoaded', function() {
+                                const checkAll = document.getElementById('checkAll_<?= $hpa['id_mutu']; ?>');
+                                const checkboxes = document.querySelectorAll('.child-checkbox');
+
+                                // Ketika "Pilih Semua" dicentang/ditandai
+                                checkAll.addEventListener('change', function() {
+                                    checkboxes.forEach(checkbox => {
+                                        checkbox.checked = checkAll.checked; // Semua checkbox mengikuti status "Pilih Semua"
+                                    });
+                                });
+
+                                // Update status "Pilih Semua" berdasarkan checkbox lainnya
+                                checkboxes.forEach(checkbox => {
+                                    checkbox.addEventListener('change', function() {
+                                        checkAll.checked = Array.from(checkboxes).every(checkbox => checkbox.checked);
+                                    });
+                                });
+
+                                // Cek apakah semua checkbox sudah dicentang, lalu centang "Pilih Semua" jika iya
                                 checkAll.checked = Array.from(checkboxes).every(checkbox => checkbox.checked);
                             });
-                        });
-                    });
-                </script>
+                        </script>
+                    </div>
+                </div>
 
                 <!-- Tombol Simpan -->
                 <div class="form-group row">
