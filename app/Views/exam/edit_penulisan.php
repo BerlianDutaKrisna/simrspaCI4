@@ -11,10 +11,12 @@
             <a href="<?= base_url('penulisan/index_penulisan') ?>" class="btn btn-primary mb-3">Kembali</a>
 
             <!-- Form -->
-            <form action="<?= base_url('exam/update_penulisan/' . $hpa['id_hpa']) ?>" method="POST">
+            <form id="form-hpa" method="POST">
                 <?= csrf_field(); ?>
                 <input type="hidden" name="id_hpa" value="<?= $hpa['id_hpa'] ?>">
                 <input type="hidden" name="kode_hpa" value="<?= $hpa['kode_hpa'] ?>">
+                <input type="hidden" name="id_penulisan" value="<?= $penulisan['id_penulisan'] ?>">
+                <input type="hidden" name="page_source" value="edit_penulisan">
 
                 <!-- Kolom Kode HPA dan Diagnosa -->
                 <div class="form-group row">
@@ -81,47 +83,72 @@
                     </div>
                 </div>
 
-                <!-- Kolom print -->
                 <div class="form-group row">
-                    <label class="col-sm-2 col-form-label" for="print_hpa">Penulisan</label>
-                    <div class="col-sm-10">
+                    <!-- Kolom Kiri -->
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label class="col-sm-2 col-form-label">Makroskopis</label>
+                        </div>
+                        <div class="col-sm-10">
+                            <textarea class="form-control summernote" name="makroskopis_hpa" id="makroskopis_hpa">
+                                <?= $hpa['makroskopis_hpa'] ?? '' ?>
+                                </textarea>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 col-form-label">Mikroskopis</label>
+                        </div>
+                        <div class="col-sm-10">
+                            <textarea class="form-control summernote" name="mikroskopis_hpa" id="mikroskopis_hpa">
+                                <?= $hpa['mikroskopis_hpa'] ?? '' ?>
+                                </textarea>
+                        </div>
+                    </div>
+                    <!-- Kolom Kanan -->
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label class="col-sm-2 col-form-label">Tampilan:</label>
+                        </div>
                         <textarea class="form-control summernote_hpa" name="print_hpa" id="print_hpa" rows="5">
-                            <table width="800pt" height="80">
-                                <tbody>
-                                    <tr>
-                                        <td style="border: none;" width="200pt">
-                                            <font size="5" face="verdana"><b>LOKASI</b></font>
-                                        </td>
-                                        <td style="border: none;" width="10pt">
-                                            <font size="5" face="verdana"><b>:</b><br></font>
-                                        </td>
-                                        <td style="border: none;" width="590pt">
-                                            <font size="5" face="verdana"><b><?= $hpa['lokasi_spesimen'] ?? '' ?><br></b></font>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td style="border: none;" width="200pt">
-                                            <font size="5" face="verdana"><b>DIAGNOSA KLINIK</b></font>
-                                        </td>
-                                        <td style="border: none;" width="10pt">
-                                            <font size="5" face="verdana"><b>:</b><br></font>
-                                        </td>
-                                        <td style="border: none;" width="590pt">
-                                            <font size="5" face="verdana"><b><?= $hpa['diagnosa_klinik'] ?? '' ?><br></b></font>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td style="border: none;" width="200pt">
-                                            <font size="5" face="verdana"><b>ICD</b></font>
-                                        </td>
-                                        <td style="border: none;" width="10pt">
-                                            <font size="5" face="verdana"><b>:</b></font>
-                                        </td>
-                                        <td style="border: none;" width="590pt">
-                                            <font size="5" face="verdana"><br></font>
-                                        </td>
-                                    </tr>
-                                </tbody>
+                        <table width="800pt" height="80">
+                            <tbody>
+                                <tr>
+                                    <td style="border: none;" width="200pt">
+                                        <font size="5" face="verdana"><b>LOKASI</b></font>
+                                    </td>
+                                    <td style="border: none;" width="10pt">
+                                        <font size="5" face="verdana"><b>:</b><br></font>
+                                    </td>
+                                    <td style="border: none;" width="590pt">
+                                        <font size="5" face="verdana">
+                                            <b><?= $hpa['lokasi_spesimen'] ?? '' ?><br></b>
+                                        </font>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="border: none;" width="200pt">
+                                        <font size="5" face="verdana"><b>DIAGNOSA KLINIK</b></font>
+                                    </td>
+                                    <td style="border: none;" width="10pt">
+                                        <font size="5" face="verdana"><b>:</b><br></font>
+                                    </td>
+                                    <td style="border: none;" width="590pt">
+                                        <font size="5" face="verdana">
+                                            <b><?= $hpa['diagnosa_klinik'] ?? '' ?><br></b>
+                                        </font>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="border: none;" width="200pt">
+                                        <font size="5" face="verdana"><b>ICD</b></font>
+                                    </td>
+                                    <td style="border: none;" width="10pt">
+                                        <font size="5" face="verdana"><b>:</b></font>
+                                    </td>
+                                    <td style="border: none;" width="590pt">
+                                        <font size="5" face="verdana"><br></font>
+                                    </td>
+                                </tr>
+                            </tbody>
                             </table>
                             <font size="5" face="verdana"><b>LAPORAN PEMERIKSAAN:<br></b></font>
                             <p><b style="font-family: verdana; font-size: x-large;">MAKROSKOPIK :</b></p>
@@ -134,21 +161,32 @@
                             </div>
                             <br>
                             <b>KESIMPULAN :</b> <?= $hpa['lokasi_spesimen'] ?? '' ?>, <?= $hpa['tindakan_spesimen'] ?? '' ?>:
-                            <br><font size="5" face="verdana"><b><?= $hpa['hasil_hpa'] ?? '' ?></b></font>
-                            <br><div><font size="5" face="verdana"><b><br></b></font></div>
-                            <div><font size="3"><i><font face="verdana">Ket : <br></font></i></font></div>
-                            <div><font size="5" face="verdana"><font size="3"><i>Jaringan telah dilakukan fiksasi dengan formalin sehingga terjadi perubahan ukuran makroskopis</i></font></font></div>
+                            <br>
+                            <font size="5" face="verdana">
+                                <b><?= $hpa['hasil_hpa'] ?? '' ?></b>
+                            </font>
+                            <br>
+                            <div>
+                                <font size="5" face="verdana"><b><br></b></font>
+                            </div>
+                            <div>
+                                <font size="3"><i>
+                                    <font face="verdana">Ket : <br></font>
+                                </i></font>
+                            </div>
+                            <div>
+                                <font size="5" face="verdana">
+                                    <font size="3">
+                                        <i>Jaringan telah dilakukan fiksasi dengan formalin sehingga terjadi perubahan ukuran makroskopis</i>
+                                    </font>
+                                </font>
+                            </div>
                         </textarea>
                     </div>
                 </div>
 
                 <!-- Kolom Hasil HPA dan Dokter -->
                 <div class="form-group row">
-                    <label class="col-sm-2 col-form-label">Hasil HPA</label>
-                    <div class="col-sm-4">
-                        <input type="text" name="hasil_hpa" value="<?= $hpa['hasil_hpa'] ?? '' ?>" class="form-control form-control-user">
-                    </div>
-
                     <label class="col-sm-2 col-form-label" for="jumlah_slide">Dokter yang membaca</label>
                     <div class="col-sm-4">
                         <select class="form-control" id="id_user_dokter_pemotongan" name="id_user_dokter_pemotongan">
@@ -163,13 +201,20 @@
                             <?php endforeach; ?>
                         </select>
                     </div>
+
+                    <label class="col-sm-2 col-form-label">Hasil HPA</label>
+                    <div class="col-sm-4">
+                        <input type="text" name="hasil_hpa" value="<?= $hpa['hasil_hpa'] ?? '' ?>" class="form-control form-control-user">
+                    </div>
                 </div>
 
                 <div class="form-group row">
                     <div class="col-12 text-center">
                         <!-- Tombol Simpan -->
-                        <button type="submit" class="btn btn-success btn-user w-100">
-                            <i class="fas fa-save"></i> Simpan
+                        <button type="submit"
+                            class="btn btn-success btn-user w-100"
+                            formaction="<?= base_url('exam/update/' . $hpa['id_hpa']); ?>">
+                            Simpan
                         </button>
                     </div>
                 </div>

@@ -68,8 +68,8 @@
                                         </td>
                                     <?php elseif (in_array($row['status_penulisan'], ["Selesai Penulisan"])): ?>
                                         <td>
-                                            <a href="<?= base_url('exam/edit_print_hpa/' . esc($row['id_hpa'])) ?>" class="btn btn-success btn-sm mx-1">
-                                                <i class="fas fa-pen"></i> Cek Penulisan
+                                            <a href="<?= base_url('exam/edit_penulisan/' . esc($row['id_hpa'])) ?>" class="btn btn-success btn-sm mx-1">
+                                                <i class="fas fa-pen"></i> Penulisan
                                             </a>
                                         </td>
                                     <?php else: ?>

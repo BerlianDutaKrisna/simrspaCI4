@@ -15,6 +15,7 @@ use App\Models\ProsesModel\PewarnaanModel;
 use App\Models\ProsesModel\PembacaanModel;
 use App\Models\ProsesModel\PenulisanModel;
 use App\Models\ProsesModel\PemverifikasiModel;
+use App\Models\ProsesModel\AutorizedModelModel;
 use App\Models\ProsesModel\PencetakanModel;
 use App\Models\MutuModel;
 
@@ -284,6 +285,7 @@ class Exam extends BaseController
         $hpaModel = new HpaModel();
         $userModel = new UsersModel();
         $pemotonganModel = new PemotonganModel();
+        $penulisanModel = new PenulisanModel();
 
         $data['id_user'] = session()->get('id_user');
         $data['nama_user'] = session()->get('nama_user');
@@ -293,9 +295,11 @@ class Exam extends BaseController
 
         // Ambil id_pemotongan dari data hpa
         $id_pemotongan = $hpa['id_pemotongan'];
-        // Ambil data pemotongan berdasarkan id_pemotongan
+        $id_penulisan = $hpa['id_penulisan'];
+
         $pemotongan = $pemotonganModel->find($id_pemotongan);
-        // Ambil data pengguna dengan status "Dokter" dari tabel users
+        $penulisan = $penulisanModel->find($id_penulisan);
+
         $users = $userModel->where('status_user', 'Dokter')->findAll();
 
         // Ambil nama dokter dari pemotongan berdasarkan id_user_dokter_pemotongan
@@ -308,9 +312,10 @@ class Exam extends BaseController
 
         // Persiapkan data yang akan dikirim ke view
         $data = [
-            'hpa' => $hpa,               // Data HPA
-            'pemotongan' => $pemotongan, // Data Pemotongan
-            'users' => $users,           // Data Pengguna (Dokter)
+            'hpa' => $hpa,               
+            'pemotongan' => $pemotongan,
+            'penulisan' => $penulisan,
+            'users' => $users,           
             'id_user' => session()->get('id_user'),
             'nama_user' => session()->get('nama_user'),
         ];
@@ -321,25 +326,16 @@ class Exam extends BaseController
     public function edit_print_hpa($id_hpa)
     {
         $hpaModel = new HpaModel();
-        $data['id_user'] = session()->get('id_user');
-        $data['nama_user'] = session()->get('nama_user');
-
         // Ambil data hpa berdasarkan ID
-        $hpa = $hpaModel->getHpaWithAllRelations($id_hpa);
+        $hpa = $hpaModel->getHpaWithPatient($id_hpa);
 
-        // Jika hpa ditemukan, tampilkan form edit
-        if ($hpa) {
-            // Menggabungkan data hpa dengan session data
-            $data['hpa'] = $hpa;
-            // Kirimkan data ke view
-
+        // Persiapkan data yang akan dikirim ke view
+        $data = [
+            'hpa' => $hpa,
+            'id_user' => session()->get('id_user'),
+            'nama_user' => session()->get('nama_user'),
+        ];
             return view('exam/edit_print_hpa', $data);
-        } else {
-            // Jika tidak ditemukan, tampilkan pesan error
-            return redirect()->back()->withInput()->with('message', [
-                'error' => 'hpa tidak ditemukan.'
-            ]);
-        }
     }
 
     public function update($id_hpa)
@@ -348,6 +344,7 @@ class Exam extends BaseController
         $hpaModel = new HpaModel();
         $pemotonganModel = new PemotonganModel();
         $pembacaanModel = new PembacaanModel();
+        $penulisanModel = new PenulisanModel();
         $mutuModel = new MutuModel();
         // Mendapatkan ID user dari session
         $id_user = session()->get('id_user');
@@ -431,69 +428,22 @@ class Exam extends BaseController
                 return redirect()->to('exam/edit_mikroskopis/' . $id_hpa)->with('success', 'Data mikroskopis berhasil diperbarui.');
             }
 
+            if ($page_source === 'edit_penulisan') {
+                $id_penulisan = $this->request->getPost('id_penulisan');
+                $penulisanModel->updatePenulisan($id_penulisan, [
+                    'id_user_penulisan' => $id_user,
+                    'status_penulisan' => 'Selesai Penulisan',
+                    'selesai_penulisan' => date('Y-m-d H:i:s'),
+                ]);
+                return redirect()->to('exam/edit_penulisan/' . $id_hpa)->with('success', 'Data penulisan berhasil diperbarui.');
+            }
+
             // Default jika tidak ada halaman asal yang spesifik
             return redirect()->back()->with('success', 'Data berhasil diperbarui.');
         }
 
         // Jika update gagal
         return redirect()->back()->with('error', 'Gagal memperbarui data.');
-    }
-
-    public function update_penulisan($id_hpa)
-    {
-        // Inisialisasi model
-        $hpaModel = new HpaModel();
-        $pemotonganModel = new PemotonganModel();
-
-        // Mendapatkan id_hpa dari POST
-        $id_hpa = $this->request->getPost('id_hpa');
-
-        // Validasi form input
-        $validation = \Config\Services::validation();
-        $validation->setRules([
-            'kode_hpa' => [
-                'rules' => 'required|is_unique[hpa.kode_hpa,id_hpa,' . $id_hpa . ']',
-                'errors' => [
-                    'required' => 'Kode Hpa harus diisi.',
-                    'is_unique' => 'Kode Hpa sudah terdaftar!',
-                ],
-            ],
-        ]);
-
-        if (!$this->validate($validation->getRules())) {
-            return redirect()->back()->withInput()->with('errors', $validation->getErrors());
-        }
-
-        // Mengambil data dari form
-        $data = $this->request->getPost();
-
-        // Mengubah 'jumlah_slide' jika memilih 'lainnya'
-        if ($this->request->getPost('jumlah_slide') === 'lainnya') {
-            $data['jumlah_slide'] = $this->request->getPost('jumlah_slide_custom');
-        }
-
-        // Update data pada tabel HPA
-        if ($hpaModel->update($id_hpa, $data)) {
-            // Menyimpan status pembaruan di session
-            session()->setFlashdata('update_success', true);
-
-            // Ambil id_user_dokter_pemotongan dan update tabel pemotongan jika ada
-            $id_user_dokter_pemotongan = $this->request->getPost('id_user_dokter_pemotongan');
-
-            // Jika ada id_user_dokter_pemotongan yang diterima dari form, lakukan pembaruan di tabel pemotongan
-            if (!empty($id_user_dokter_pemotongan)) {
-                // Ambil id_pemotongan berdasarkan id_hpa
-                $pemotongan = $pemotonganModel->where('id_hpa', $id_hpa)->first();
-
-                if ($pemotongan) {
-                    // Lakukan update data di tabel pemotongan
-                    $pemotonganModel->update($pemotongan['id_pemotongan'], [
-                        'id_user_dokter_pemotongan' => $id_user_dokter_pemotongan
-                    ]);
-                }
-            }
-            return redirect()->to('penulisan/index_penulisan')->with('success', 'Data berhasil diperbarui.');
-        }
     }
 
     public function uploadFotoMakroskopis($id_hpa)

@@ -29,20 +29,44 @@
 <script src="<?= base_url('assets/bootstrap/js/bootstrap.bundle.min.js') ?>"></script>
 <script src="<?= base_url('assets/summernote/summernote.js') ?>"></script>
 <script>
-    $(document).ready(function() {
-        var height = $(window).height() - 200; // Sesuaikan dengan ukuran yang diinginkan
+    function handleJumlahSlideChange(selectElement) {
+        const customInput = document.getElementById('jumlah_slide_custom');
+        if (selectElement.value === 'lainnya') {
+            customInput.classList.remove('d-none');
+        } else {
+            customInput.classList.add('d-none');
+            customInput.value = '';
+        }
+    }
 
+    $(document).ready(function() {
+        $('.summernote').summernote({
+            placeholder: '',
+            tabsize: 2,
+            height: 200,
+            toolbar: [
+                ['style', ['style', 'bold', 'italic', 'underline', 'clear']], // tombol gaya teks
+                ['font', ['fontsize', 'fontname']], // font dan ukuran font
+                ['para', ['ul', 'ol', 'paragraph']], // format paragraf
+                ['color', ['color']], // pilihan warna
+                ['view', ['codeview', 'help']] // menampilkan kode HTML dan bantuan
+            ],
+        });
+    });
+
+    $(document).ready(function() {
         $('.summernote_hpa').summernote({
             placeholder: '',
             tabsize: 2,
-            height: height,
-            toolbar: [
-                ['style', ['style', 'bold', 'italic', 'underline', 'clear']],
-                ['font', ['fontsize', 'fontname']],
-                ['para', ['ul', 'ol', 'paragraph']],
-                ['color', ['color']],
-                ['view', ['codeview', 'help']]
-            ],
+            height: 200,
+            airMode: true
         });
+
+        // Cek status penulisan
+        var statusPenulisan = "<?= $penulisan['status_penulisan'] ?? '' ?>";
+
+        if (statusPenulisan !== "Selesai Penulisan") {
+            $('.summernote_hpa').summernote('disable');
+        }
     });
 </script>

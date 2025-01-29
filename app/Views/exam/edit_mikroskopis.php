@@ -15,7 +15,7 @@
                 <?= csrf_field(); ?>
                 <input type="hidden" name="id_hpa" value="<?= $hpa['id_hpa'] ?>">
                 <input type="hidden" name="id_pembacaan" value="<?= $pembacaan['id_pembacaan'] ?>">
-                <input type="hidden" name="id_mutu" value="<?= $hpa['id_mutu'] ?>">
+                <input type="hidden" name="id_mutu" value="<?= $pembacaan['id_mutu'] ?>">
                 <input type="hidden" name="page_source" value="edit_mikroskopis">
                 <input type="hidden" name="total_nilai_mutu" value="<?= $pembacaan['total_nilai_mutu']; ?>">
 

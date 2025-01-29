@@ -62,21 +62,13 @@
                                     </td>
                                     <?php if (in_array($row['status_pemverifikasi'], ["Proses Pemverifikasi"])): ?>
                                         <td>
-                                            <?php if (session()->get('update_success')): ?>
-                                                <a href="<?= base_url('exam/edit_print_hpa/' . esc($row['id_hpa'])) ?>" class="btn btn-success btn-sm">
-                                                    <i class="fas fa-eye"></i> Selesai Cek Penulisan
-                                                </a>
-                                                <?php session()->remove('update_success'); // Menghapus session setelah ditampilkan 
-                                                ?>
-                                            <?php else: ?>
-                                                <a href="<?= base_url('exam/edit_print_hpa/' . esc($row['id_hpa'])) ?>" class="btn btn-warning btn-sm">
-                                                    <i class="fas fa-eye"></i> Cek Penulisan
-                                                </a>
-                                            <?php endif; ?>
+                                            <a href="<?= base_url('exam/edit_print_hpa/' . esc($row['id_hpa'])) ?>" class="btn btn-warning btn-sm">
+                                                <i class="fas fa-eye"></i> Cek Penulisan
+                                            </a>
                                         </td>
                                     <?php elseif (in_array($row['status_pemverifikasi'], ["Selesai Pemverifikasi"])): ?>
                                         <td>
-                                            <a href="<?= base_url('exam/edit_print_hpa/' . esc($row['id_hpa'])) ?>" class="btn btn-info btn-sm">
+                                            <a href="<?= base_url('exam/edit_print_hpa/' . esc($row['id_hpa'])) ?>" class="btn btn-success btn-sm">
                                                 <i class="fas fa-eye"></i> Cek Lagi Penulisan
                                             </a>
                                         </td>
