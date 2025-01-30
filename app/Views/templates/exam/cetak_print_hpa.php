@@ -42,14 +42,14 @@
         <tr>
             <td>
                 <table width="500">
-                    <tr><td width="100" nowrap>No RM</td><td>:</td><td nowrap>&nbsp;&nbsp;789479</td></tr>
-                    <tr><td nowrap>No Register</td><td>:</td><td nowrap>&nbsp;&nbsp;FRS.67/25</td></tr>
-                    <tr><td nowrap>Nama</td><td>:</td><td>&nbsp; TIARA CHIKA AGUSTI</td></tr>
-                    <tr><td>Alamat</td><td>:</td><td>&nbsp; ASEM JAYA 10/15&nbsp;</td></tr>
-                    <tr><td nowrap>Jenis & Tgl Lahir</td><td>:</td><td nowrap>&nbsp; P / 2001-04-17</td></tr>
-                    <tr><td nowrap>Permintaan</td><td>:</td><td nowrap>&nbsp; FNAB*</td></tr>
-                    <tr><td nowrap>Unit Asal</td><td>:</td><td nowrap>&nbsp; KLINIK BEDAH</td></tr>
-                    <tr><td nowrap>Dokter Pengirim</td><td>:</td><td nowrap>&nbsp; dr. Ihyan Amri, Sp.B.</td></tr>
+                    <tr><td width="100" nowrap>No RM</td><td>:</td><td nowrap>&nbsp;&nbsp;<?= esc($hpa['norm_pasien'] ?? '') ?></td></tr>
+                    <tr><td nowrap>No Register</td><td>:</td><td nowrap>&nbsp;&nbsp;<?= esc($hpa['kode_hpa'] ?? '') ?></td></tr>
+                    <tr><td nowrap>Nama</td><td>:</td><td>&nbsp; <?= esc($hpa['nama_pasien'] ?? '') ?></td></tr>
+                    <tr><td>Alamat</td><td>:</td><td>&nbsp; <?= esc($hpa['alamat_pasien'] ?? '') ?>&nbsp;</td></tr>
+                    <tr><td nowrap>Jenis & Tgl Lahir</td><td>:</td><td nowrap>&nbsp; <?= esc($hpa['jenis_kelamin_pasien'] ?? '') ?> / <?= esc($hpa['tanggal_lahir_pasien'] ?? '') ?></td></tr>
+                    <tr><td nowrap>Permintaan</td><td>:</td><td nowrap>&nbsp; <?= esc($hpa['tindakan_spesimen'] ?? '') ?></td></tr>
+                    <tr><td nowrap>Unit Asal</td><td>:</td><td nowrap>&nbsp; <?= esc($hpa['unit_asal'] ?? '') ?></td></tr>
+                    <tr><td nowrap>Dokter Pengirim</td><td>:</td><td nowrap>&nbsp; <?= esc($hpa['dokter_pengirim'] ?? '') ?></td></tr>
                 </table>
             </td>
             <td>
@@ -58,8 +58,8 @@
                         <td align="center" width="500" nowrap colspan="3"><h3>UNIT PATOLOGI ANATOMI</h3></td>
                     </tr>
                     <tr><td align="center" width="500" colspan="3">&nbsp;</td></tr>
-                    <tr><td nowrap>Tanggal Terima</td><td>:</td><td>&nbsp; 30-01-2025 09:00:00</td></tr>
-                    <tr><td nowrap>Tanggal Hasil</td><td>:</td><td>&nbsp; 30-01-2025 15:00:00</td></tr>
+                    <tr><td nowrap>Tanggal Terima</td><td>:</td><td>&nbsp; <?= esc($penerimaan['mulai_penerimaan'] ?? '') ?></td></tr>
+                    <tr><td nowrap>Tanggal Hasil</td><td>:</td><td>&nbsp; <?= esc($pembacaan['selesai+pembacaan'] ?? '') ?></td></tr>
                 </table>
             </td>
         </tr>

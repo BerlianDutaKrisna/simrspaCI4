@@ -72,7 +72,7 @@ class HpaModel extends Model
     }
     public function getHpaWithPatient($id_hpa)
     {
-        return $this->select('hpa.*, patient.nama_pasien, patient.norm_pasien')
+        return $this->select('hpa.*, patient.*')
         ->join('patient', 'patient.id_pasien = hpa.id_pasien')
         ->where('hpa.id_hpa', $id_hpa)
         ->first();
