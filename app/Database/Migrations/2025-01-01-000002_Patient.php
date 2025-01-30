@@ -38,7 +38,7 @@ class Patient extends Migration
             ],
             'jenis_kelamin_pasien' => [
                 'type'       => 'ENUM',
-                'constraint' => ['Laki-laki', 'Perempuan', 'Belum Dipilih'],
+                'constraint' => ['L', 'P', 'Belum Dipilih'],
                 'default'    => 'Belum Dipilih',
                 'null'       => true,
             ],

@@ -54,8 +54,8 @@
                     <label for="jenis_kelamin_pasien">Jenis Kelamin</label>
                     <select class="form-control" id="jenis_kelamin_pasien" name="jenis_kelamin_pasien">
                         <option value="Belum Dipilih" selected>Pilih jenis kelamin</option>
-                        <option value="laki-laki" <?= old('jenis_kelamin_pasien') == 'laki-laki' ? 'selected' : ''; ?>>Laki-laki</option>
-                        <option value="Perempuan" <?= old('jenis_kelamin_pasien') == 'Perempuan' ? 'selected' : ''; ?>>Perempuan</option>
+                        <option value="L" <?= old('jenis_kelamin_pasien') == 'L' ? 'selected' : ''; ?>>Laki-laki</option>
+                        <option value="P" <?= old('jenis_kelamin_pasien') == 'P' ? 'selected' : ''; ?>>Perempuan</option>
                     </select>
                 </div>
 

@@ -52,8 +52,8 @@
                     <select class="form-control <?= session('errors.jenis_kelamin_pasien') ? 'is-invalid' : '' ?>" 
                         id="jenis_kelamin_pasien" name="jenis_kelamin_pasien">
                         <option value="Belum Dipilih" <?= old('jenis_kelamin_pasien', $pasien['jenis_kelamin_pasien']) == 'Belum Dipilih' ? 'selected' : '' ?>>Belum Dipilih</option>
-                        <option value="Laki-laki" <?= old('jenis_kelamin_pasien', $pasien['jenis_kelamin_pasien']) == 'Laki-laki' ? 'selected' : '' ?>>Laki-laki</option>
-                        <option value="Perempuan" <?= old('jenis_kelamin_pasien', $pasien['jenis_kelamin_pasien']) == 'Perempuan' ? 'selected' : '' ?>>Perempuan</option>
+                        <option value="L" <?= old('jenis_kelamin_pasien', $pasien['jenis_kelamin_pasien']) == 'L' ? 'selected' : '' ?>>Laki-laki</option>
+                        <option value="P" <?= old('jenis_kelamin_pasien', $pasien['jenis_kelamin_pasien']) == 'P' ? 'selected' : '' ?>>Perempuan</option>
                     </select>
                 </div>
 
