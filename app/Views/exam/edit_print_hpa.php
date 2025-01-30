@@ -44,7 +44,7 @@
                     </div>
                     <div class="col-sm-4 text-center">
                         <!-- Tombol Simpan -->
-                        <button type="button" class="btn btn-primary btn-user w-100 w-md-auto" onclick="cetakProses()" disabled>
+                        <button type="button" class="btn btn-primary btn-user w-100 w-md-auto" onclick="cetakPrintHpa()">
                             <i class="fas fa-print"></i> Cetak
                         </button>
                     </div>
@@ -56,3 +56,4 @@
 
 <?= $this->include('templates/notifikasi') ?>
 <?= $this->include('templates/cetak/footer_cetak'); ?>
+<?= $this->include('templates/exam/cetak_print_hpa'); ?>
