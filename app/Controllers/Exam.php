@@ -429,8 +429,10 @@ class Exam extends BaseController
             // Jika berasal dari halaman edit_mikroskopis, update tabel pembacaan
             if ($page_source === 'edit_mikroskopis') {
                 $id_pembacaan = $this->request->getPost('id_pembacaan');
+                $id_user_dokter_pembacaan = $this->request->getPost('id_user_dokter_pemotongan');
                 $pembacaanModel->updatePembacaan($id_pembacaan, [
                     'id_user_pembacaan' => $id_user,
+                    'id_user_dokter_pembacaan' => $id_user_dokter_pembacaan,
                     'status_pembacaan' => 'Selesai Pembacaan',
                     'selesai_pembacaan' => date('Y-m-d H:i:s'),
                 ]);

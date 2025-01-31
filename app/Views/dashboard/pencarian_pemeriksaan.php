@@ -98,8 +98,7 @@
                     <p><strong>Norm:</strong> ${patient.norm_pasien}</p>
                     <p><strong>Nama:</strong> ${patient.nama_pasien}</p>
                     <p><strong>Alamat:</strong> ${patient.alamat_pasien ? patient.alamat_pasien : 'Belum diisi'}</p>
-                    <p><strong>Tanggal Lahir:</strong> ${patient.tanggal_lahir_pasien ? formatDate(patient.tanggal_lahir_pasien) : 'Belum diisi'}</p>
-                    <p><strong>Jenis Kelamin:</strong> ${patient.jenis_kelamin_pasien}</p>
+                    <p><strong>Jenis Kelamin/Tanggal Lahir:</strong> ${patient.jenis_kelamin_pasien} / ${patient.tanggal_lahir_pasien ? formatDate(patient.tanggal_lahir_pasien) : 'Belum diisi'}</p>
                     <p><strong>Status:</strong> ${patient.status_pasien}</p>
                 `;
 
