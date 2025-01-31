@@ -66,7 +66,7 @@
                             <?php endforeach; ?>
                         <?php else: ?>
                             <tr>
-                                <td colspan="10" class="text-center">No data available</td>
+                                <td colspan="10" class="text-center">Belum ada sampel untuk pemotongan tipis</td>
                             </tr>
                         <?php endif; ?>
                     </tbody>

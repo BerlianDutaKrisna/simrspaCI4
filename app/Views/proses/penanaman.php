@@ -86,7 +86,7 @@
                             <?php endforeach; ?>
                         <?php else: ?>
                             <tr>
-                                <td colspan="10" class="text-center">Belum ada sampel untuk penanaman</td>
+                                <td colspan="11" class="text-center">Belum ada sampel untuk penanaman</td>
                             </tr>
                         <?php endif; ?>
                     </tbody>

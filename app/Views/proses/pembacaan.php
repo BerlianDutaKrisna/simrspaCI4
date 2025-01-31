@@ -171,7 +171,7 @@
                             <?php endforeach; ?>
                         <?php else: ?>
                             <tr>
-                                <td colspan="10" class="text-center">Belum ada sampel untuk pembacaan</td>
+                                <td colspan="12" class="text-center">Belum ada sampel untuk pembacaan</td>
                             </tr>
                         <?php endif; ?>
                     </tbody>

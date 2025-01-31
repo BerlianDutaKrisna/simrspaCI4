@@ -75,7 +75,7 @@
                     <?php else : ?>
                         <!-- Pesan jika data pasien kosong -->
                         <tr>
-                            <td colspan="7">Tidak ada data pasien.</td>
+                            <td colspan="8" class="text-center">Tidak ada data yang tersedia</td>
                         </tr>
                     <?php endif; ?>
                 </tbody>

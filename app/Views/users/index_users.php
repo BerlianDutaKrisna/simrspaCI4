@@ -50,7 +50,7 @@
                     <?php endforeach; ?>
                 <?php else : ?>
                     <tr>
-                        <td colspan="4">Tidak ada data pengguna.</td> <!-- Menambahkan colspan 4 untuk mencakup kolom Aksi -->
+                        <td colspan="5" class="text-center">Tidak ada data yang tersedia</td>
                     </tr>
                 <?php endif; ?>
             </tbody>
