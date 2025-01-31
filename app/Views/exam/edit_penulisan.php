@@ -171,8 +171,13 @@
                             </tbody>
                             </table>
                             <font size="5" face="verdana"><b>LAPORAN PEMERIKSAAN:<br></b></font>
-                            <p><b style="font-family: verdana; font-size: x-large;">MAKROSKOPIK :</b></p>
-                            <font size="5" face="verdana"><?= $hpa['makroskopis_hpa'] ?? '' ?></font>
+                            <div>
+                                <font size="5" face="verdana"><b> MAKROSKOPIK :</b></font>
+                            </div>
+                            <div>
+                                <font size="5" face="verdana"><?= $hpa['makroskopis_hpa'] ?? '' ?></font>
+                            </div>
+                            <br>
                             <div>
                                 <font size="5" face="verdana"><b>MIKROSKOPIK :</b><br></font>
                             </div>
@@ -180,14 +185,17 @@
                                 <font size="5" face="verdana"><?= $hpa['mikroskopis_hpa'] ?? '' ?></font>
                             </div>
                             <br>
-                            <b>KESIMPULAN :</b> <?= $hpa['lokasi_spesimen'] ?? '' ?>, <?= $hpa['tindakan_spesimen'] ?? '' ?>:
-                            <br>
+                            <div>
+                                <font size="5" face="verdana"><b>KESIMPULAN :</b> <?= $hpa['lokasi_spesimen'] ?? '' ?>, <?= $hpa['tindakan_spesimen'] ?? '' ?>:</b></font>
+                            </div>
+                            <div>
                             <font size="5" face="verdana">
                                 <b><?= $hpa['hasil_hpa'] ?? '' ?></b>
                             </font>
+                            </div>
                             <br>
                             <div>
-                                <font size="5" face="verdana"><b><br></b></font>
+                                <font size="5" face="verdana"><b><br><br></b></font>
                             </div>
                             <div>
                                 <font size="3"><i>
