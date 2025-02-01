@@ -62,13 +62,13 @@
                                     </td>
                                     <?php if (in_array($row['status_pemverifikasi'], ["Proses Pemverifikasi"])): ?>
                                         <td>
-                                            <a href="<?= base_url('exam/edit_print_hpa/' . esc($row['id_hpa'])) ?>" class="btn btn-warning btn-sm">
+                                            <a href="<?= base_url('exam/edit_print_hpa/' . esc($row['id_hpa']) . '?redirect=index_pemverifikasi') ?>" class="btn btn-warning btn-sm">
                                                 <i class="fas fa-eye"></i> Cek Penulisan
                                             </a>
                                         </td>
                                     <?php elseif (in_array($row['status_pemverifikasi'], ["Selesai Pemverifikasi"])): ?>
                                         <td>
-                                            <a href="<?= base_url('exam/edit_print_hpa/' . esc($row['id_hpa'])) ?>" class="btn btn-success btn-sm">
+                                            <a href="<?= base_url('exam/edit_print_hpa/' . esc($row['id_hpa']) . '?redirect=index_pemverifikasi') ?>" class="btn btn-success btn-sm">
                                                 <i class="fas fa-eye"></i> Cek Lagi Penulisan
                                             </a>
                                         </td>

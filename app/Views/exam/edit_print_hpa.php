@@ -17,7 +17,7 @@
                 <input type="hidden" name="id_pemverifikasi" value="<?= $hpa['id_pemverifikasi'] ?>">
                 <input type="hidden" name="id_autorized" value="<?= $hpa['id_autorized'] ?>">
                 <input type="hidden" name="id_pencetakan" value="<?= $hpa['id_pencetakan'] ?>">
-                <input type="hidden" name="page_source" value="edit_print_hpa">
+                <input type="hidden" name="redirect" value="<?= $_GET['redirect'] ?? '' ?>">
 
                 <!-- Kolom print -->
                 <div class="form-group row">
@@ -38,7 +38,7 @@
                     <div class="col-sm-4 text-center">
                         <button type="submit"
                             class="btn btn-info btn-user w-100"
-                            formaction="<?= base_url('exam/update_print_hpa/' . $hpa['id_hpa']); ?>" disabled>
+                            formaction="<?= base_url('exam/update_print_hpa/' . $hpa['id_hpa']); ?>">
                             <i class="fas fa-vote-yea"></i> Authorized
                         </button>
                     </div>

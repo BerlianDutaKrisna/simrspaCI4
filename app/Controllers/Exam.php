@@ -375,7 +375,9 @@ class Exam extends BaseController
         $id_user = session()->get('id_user');
 
         // Mendapatkan id_hpa dari POST
-        $id_hpa = $this->request->getPost('id_hpa');
+        if (!$id_hpa) {
+            $id_hpa = $this->request->getPost('id_hpa');
+        }
 
         // Validasi form input
         $validation = \Config\Services::validation();
@@ -390,7 +392,8 @@ class Exam extends BaseController
         ]);
 
         if (!$this->validate($validation->getRules())) {
-            return redirect()->back()->withInput()->with('errors', $validation->getErrors());
+            session()->setFlashdata('errors', $validation->getErrors()); // Simpan error ke session
+            return redirect()->back()->withInput(); // Redirect kembali ke halaman form
         }
 
         // Mengambil data dari form
@@ -399,7 +402,9 @@ class Exam extends BaseController
 
         // Mengubah 'jumlah_slide' jika memilih 'lainnya'
         if ($this->request->getPost('jumlah_slide') === 'lainnya') {
-            $data['jumlah_slide'] = $this->request->getPost('jumlah_slide_custom');
+            $data['jumlah_slide'] = $this->request->getPost('jumlah_slide') === 'lainnya'
+            ? $this->request->getPost('jumlah_slide_custom')
+                : $this->request->getPost('jumlah_slide');
         }
 
         // Proses update tabel HPA
@@ -415,35 +420,33 @@ class Exam extends BaseController
                 }
             }
 
-            // Jika berasal dari halaman edit_makroskopis, update tabel pemotongan
-            if ($page_source === 'edit_makroskopis') {
-                $id_pemotongan = $this->request->getPost('id_pemotongan');
-                $pemotonganModel->updatePemotongan($id_pemotongan, [
-                    'id_user_pemotongan' => $id_user,
-                    'status_pemotongan' => 'Selesai Pemotongan',
-                    'selesai_pemotongan' => date('Y-m-d H:i:s'),
-                ]);
-                return redirect()->to('exam/edit_makroskopis/' . $id_hpa)->with('success', 'Data makroskopis berhasil diperbarui.');
-            }
+            switch ($page_source) {
+                case 'edit_makroskopis':
+                    $id_pemotongan = $this->request->getPost('id_pemotongan');
+                    $pemotonganModel->updatePemotongan($id_pemotongan, [
+                        'id_user_pemotongan' => $id_user,
+                        'status_pemotongan' => 'Selesai Pemotongan',
+                        'selesai_pemotongan' => date('Y-m-d H:i:s'),
+                    ]);
+                    return redirect()->to('exam/edit_makroskopis/' . $id_hpa)->with('success', 'Data makroskopis berhasil diperbarui.');
 
-            // Jika berasal dari halaman edit_mikroskopis, update tabel pembacaan
-            if ($page_source === 'edit_mikroskopis') {
-                $id_pembacaan = $this->request->getPost('id_pembacaan');
-                $id_user_dokter_pembacaan = $this->request->getPost('id_user_dokter_pemotongan');
-                $pembacaanModel->updatePembacaan($id_pembacaan, [
-                    'id_user_pembacaan' => $id_user,
-                    'id_user_dokter_pembacaan' => $id_user_dokter_pembacaan,
-                    'status_pembacaan' => 'Selesai Pembacaan',
-                    'selesai_pembacaan' => date('Y-m-d H:i:s'),
-                ]);
+                case 'edit_mikroskopis':
+                    $id_pembacaan = $this->request->getPost('id_pembacaan');
+                    $id_user_dokter_pembacaan = $this->request->getPost('id_user_dokter_pemotongan');
+                    $pembacaanModel->updatePembacaan($id_pembacaan, [
+                        'id_user_pembacaan' => $id_user,
+                        'id_user_dokter_pembacaan' => $id_user_dokter_pembacaan,
+                        'status_pembacaan' => 'Selesai Pembacaan',
+                        'selesai_pembacaan' => date('Y-m-d H:i:s'),
+                    ]);
                 $id_mutu = $this->request->getPost('id_mutu');
                 $indikator_4 = (string) ($this->request->getPost('indikator_4') ?? '0');
                 $indikator_5 = (string) ($this->request->getPost('indikator_5') ?? '0');
                 $indikator_6 = (string) ($this->request->getPost('indikator_6') ?? '0');
                 $indikator_7 = (string) ($this->request->getPost('indikator_7') ?? '0');
                 $indikator_8 = (string) ($this->request->getPost('indikator_8') ?? '0');
-                $total_nilai_mutu = $this->request->getPost('total_nilai_mutu');
-                $keseluruhan_nilai_mutu = $total_nilai_mutu + $indikator_5 + $indikator_6 + $indikator_7 + $indikator_8;
+                $total_nilai_mutu = (int) $this->request->getPost('total_nilai_mutu', 0);
+                $keseluruhan_nilai_mutu = $total_nilai_mutu + (int)$indikator_5 + (int)$indikator_6 + (int)$indikator_7 + (int)$indikator_8;
                 $mutuModel->updateMutu($id_mutu, [
                     'indikator_4' => $indikator_4,
                     'indikator_5' => $indikator_5,
@@ -452,24 +455,21 @@ class Exam extends BaseController
                     'indikator_8' => $indikator_8,
                     'total_nilai_mutu' => $keseluruhan_nilai_mutu,
                 ]);
-                return redirect()->to('exam/edit_mikroskopis/' . $id_hpa)->with('success', 'Data mikroskopis berhasil diperbarui.');
-            }
+                    return redirect()->to('exam/edit_mikroskopis/' . $id_hpa)->with('success', 'Data mikroskopis berhasil diperbarui.');
 
-            if ($page_source === 'edit_penulisan') {
-                $id_penulisan = $this->request->getPost('id_penulisan');
-                $penulisanModel->updatePenulisan($id_penulisan, [
-                    'id_user_penulisan' => $id_user,
-                    'status_penulisan' => 'Selesai Penulisan',
-                    'selesai_penulisan' => date('Y-m-d H:i:s'),
-                ]);
-                return redirect()->to('exam/edit_penulisan/' . $id_hpa)->with('success', 'Data penulisan berhasil diperbarui.');
-            }
+                case 'edit_penulisan':
+                    $id_penulisan = $this->request->getPost('id_penulisan');
+                    $penulisanModel->updatePenulisan($id_penulisan, [
+                        'id_user_penulisan' => $id_user,
+                        'status_penulisan' => 'Selesai Penulisan',
+                        'selesai_penulisan' => date('Y-m-d H:i:s'),
+                    ]);
+                    return redirect()->to('exam/edit_penulisan/' . $id_hpa)->with('success', 'Data penulisan berhasil diperbarui.');
 
-            // Default jika tidak ada halaman asal yang spesifik
-            return redirect()->back()->with('success', 'Data berhasil diperbarui.');
+                default:
+                    return redirect()->back()->with('success', 'Data berhasil diperbarui.');
+            }
         }
-
-        // Jika update gagal
         return redirect()->back()->with('error', 'Gagal memperbarui data.');
     }
 
@@ -482,13 +482,22 @@ class Exam extends BaseController
         $id_user = session()->get('id_user');
 
         // Mendapatkan id_hpa dari POST
-        $id_hpa = $this->request->getPost('id_hpa');
+        if (!$id_hpa) {
+            return redirect()->back()->with('error', 'Terjadi kesalahan: ID HPA tidak ditemukan.');
+        }
 
+        // Mengambil data dari POST dan melakukan update
         $data = $this->request->getPost();
         $hpaModel->update($id_hpa, $data);
-        $page_source = $this->request->getPost('page_source');
-        
-        if ($page_source === 'edit_print_hpa') {
+
+        $redirect = $this->request->getPost('redirect');
+
+        if (!$redirect) {
+            return redirect()->back()->with('error', 'Terjadi kesalahan: Halaman asal tidak ditemukan.');
+        }
+
+        // Cek ke halaman mana harus diarahkan setelah update
+        if ($redirect === 'index_pemverifikasi' && isset($_POST['id_pemverifikasi'])) {
             $id_pemverifikasi = $this->request->getPost('id_pemverifikasi');
             $pemverifikasiModel->updatePemverifikasi($id_pemverifikasi, [
                 'id_user_pemverifikasi' => $id_user,
@@ -498,7 +507,30 @@ class Exam extends BaseController
             return redirect()->to('pemverifikasi/index_pemverifikasi')->with('success', 'Data berhasil diverifikasi.');
         }
 
+        if ($redirect === 'index_autorized' && isset($_POST['id_autorized'])) {
+            $id_autorized = $this->request->getPost('id_autorized');
+            $autorizedModel->updateAutorized($id_autorized, [
+                'id_user_autorized' => $id_user,
+                'status_autorized' => 'Selesai Autorized',
+                'selesai_autorized' => date('Y-m-d H:i:s'),
+            ]);
+            return redirect()->to('autorized/index_autorized')->with('success', 'Data berhasil diauthorized.');
+        }
+
+        if ($redirect === 'index_pencetakan' && isset($_POST['id_pencetakan'])) {
+            $id_pencetakan = $this->request->getPost('id_pencetakan');
+            $pencetakanModel->updatePencetakan($id_pencetakan, [
+                'id_user_pencetakan' => $id_user,
+                'status_pencetakan' => 'Selesai Pencetakan',
+                'selesai_pencetakan' => date('Y-m-d H:i:s'),
+            ]);
+            return redirect()->to('pencetakan/index_pencetakan')->with('success', 'Data berhasil dicetak.');
+        }
+
+        // Jika redirect tidak sesuai dengan yang diharapkan
+        return redirect()->back()->with('error', 'Terjadi kesalahan: Halaman tujuan tidak valid.');
     }
+
 
     public function uploadFotoMakroskopis($id_hpa)
     {
