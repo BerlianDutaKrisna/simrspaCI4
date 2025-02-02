@@ -53,6 +53,7 @@
                             <option value="Pembacaan" <?= old('status_hpa') == 'Pembacaan' ? 'selected' : '' ?>>Pembacaan</option>
                             <option value="Penulisan" <?= old('status_hpa') == 'Penulisan' ? 'selected' : '' ?>>Penulisan</option>
                             <option value="Pemverifikasi" <?= old('status_hpa') == 'Pemverifikasi' ? 'selected' : '' ?>>Pemverifikasi</option>
+                            <option value="Authorized" <?= old('status_hpa') == 'Authorized' ? 'selected' : '' ?>>Authorized</option>
                             <option value="Pencetakan" <?= old('status_hpa') == 'Pencetakan' ? 'selected' : '' ?>>Pencetakan</option>
                             <option value="Selesai Diproses" <?= old('status_hpa') == 'Selesai Diproses' ? 'selected' : '' ?>>Selesai Diproses</option>
                         </select>

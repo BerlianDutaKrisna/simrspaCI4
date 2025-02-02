@@ -55,7 +55,6 @@ class Exam extends BaseController
         if (!$hpaData) {
             $hpaData = []; // Jika tidak ada data, set menjadi array kosong
         }
-        // Kirimkan data ke view
         return view('exam/index_exam', [
             'hpaData' => $hpaData,
             'id_user' => $id_user,

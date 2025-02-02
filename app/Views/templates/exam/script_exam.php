@@ -157,6 +157,12 @@
                     id_pemverifikasi: id_pemverifikasi,
                     id_hpa: id_hpa
                 };
+            } else if (action === "autorized") {
+                url = "<?= base_url('autorized/delete'); ?>"; // URL penghapusan autorized
+                data = {
+                    id_autorized: id_autorized,
+                    id_hpa: id_hpa
+                };
             } else if (action === "pencetakan") {
                 url = "<?= base_url('pencetakan/delete'); ?>"; // URL penghapusan pencetakan
                 data = {
@@ -201,6 +207,7 @@
             var id_pembacaan = $(this).data("id_pembacaan");
             var id_penulisan = $(this).data("id_penulisan");
             var id_pemverifikasi = $(this).data("id_pemverifikasi");
+            var id_autorized = $(this).data("id_autorized");
             var id_pencetakan = $(this).data("id_pencetakan");
             var id_mutu = $(this).data("id_mutu");
 
@@ -280,6 +287,13 @@
                 };
                 type = "pemverifikasi";
                 id = id_pemverifikasi;
+            } else if (action === "autorized") {
+                url = "<?= base_url('autorized/autorized_details'); ?>";
+                data = {
+                    id_autorized: encodeURIComponent(id_autorized)
+                };
+                type = "autorized";
+                id = id_autorized;
             } else if (action === "pencetakan") {
                 url = "<?= base_url('pencetakan/pencetakan_details'); ?>";
                 data = {
@@ -398,6 +412,15 @@
                         <p><strong>Status Pemverifikasi:</strong> ${response.status_pemverifikasi || "-"}</p>
                         <p><strong>Mulai Pemverifikasi:</strong> ${formatDateTime(response.mulai_pemverifikasi)}</p>
                         <p><strong>Selesai Pemverifikasi:</strong> ${formatDateTime(response.selesai_pemverifikasi)}</p>
+                    `;
+                        } else if (action === "autorized") {
+                            // Menampilkan detail autorized
+                            detailHtml = `
+                        <p><strong>Kode HPA:</strong> ${response.kode_hpa || "-"}</p>
+                        <p><strong>Dikerjakan Oleh:</strong> ${response.nama_user_autorized || "-"}</p>
+                        <p><strong>Status autorized:</strong> ${response.status_autorized || "-"}</p>
+                        <p><strong>Mulai autorized:</strong> ${formatDateTime(response.mulai_autorized)}</p>
+                        <p><strong>Selesai autorized:</strong> ${formatDateTime(response.selesai_autorized)}</p>
                     `;
                         } else if (action === "pencetakan") {
                             // Menampilkan detail pencetakan

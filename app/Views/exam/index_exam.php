@@ -33,6 +33,7 @@
                             <th>Pembacaan</th>
                             <th>Penulisan</th>
                             <th>Pemverifikasi</th>
+                            <th>Authorized</th>
                             <th>Pencetakan</th>
                             <th>Mutu</th>
                             <th>Aksi</th>
@@ -278,6 +279,29 @@
                                         <?php endif; ?>
                                     </td>
                                     <td>
+                                        <?php if (!empty($row['id_autorized'])) : ?>
+                                            <div class="d-flex justify-content-around">
+                                                <!-- Tombol untuk Melihat Detail autorized -->
+                                                <button class="btn btn-sm btn-warning mx-1 view-autorized"
+                                                    data-action="autorized"
+                                                    data-id_autorized="<?= htmlspecialchars($row['id_autorized'], ENT_QUOTES, 'UTF-8') ?>"
+                                                    aria-label="Lihat autorized">
+                                                    <i class="far fa-eye"></i>
+                                                </button>
+                                                <!-- Tombol Hapus autorized -->
+                                                <button class="btn btn-sm btn-danger mx-1 delete-autorized"
+                                                    data-toggle="modal"
+                                                    data-target="#deleteModal"
+                                                    data-id_autorized="<?= htmlspecialchars($row['id_autorized'], ENT_QUOTES, 'UTF-8') ?>"
+                                                    data-id_hpa="<?= htmlspecialchars($row['id_hpa'], ENT_QUOTES, 'UTF-8') ?>"
+                                                    data-action="autorized"
+                                                    aria-label="Hapus autorized">
+                                                    <i class="fas fa-trash-alt"></i>
+                                                </button>
+                                            </div>
+                                        <?php endif; ?>
+                                    </td>
+                                    <td>
                                         <?php if (!empty($row['id_pencetakan'])) : ?>
                                             <div class="d-flex justify-content-around">
                                                 <!-- Tombol untuk Melihat Detail pencetakan -->
@@ -299,9 +323,9 @@
                                                 </button>
                                             </div>
                                         <?php endif; ?>
-                                    </td>                                  
+                                    </td>
                                     <td>
-                                    <?php if (!empty($row['id_mutu'])) : ?>
+                                        <?php if (!empty($row['id_mutu'])) : ?>
                                             <div class="d-flex justify-content-around">
                                                 <!-- Tombol untuk Melihat Detail mutu -->
                                                 <button class="btn btn-sm btn-warning mx-1 view-mutu"
