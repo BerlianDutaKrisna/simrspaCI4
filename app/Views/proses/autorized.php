@@ -60,13 +60,13 @@
                                     <td>
                                         <?= empty($row['tanggal_hasil']) ? 'Belum diisi' : esc(date('d-m-Y', strtotime($row['tanggal_hasil']))); ?>
                                     </td>
-                                    <?php if (in_array($row['status_autorized'], ["Proses Autorized"])): ?>
+                                    <?php if (in_array($row['status_autorized'], ["Proses Authorized"])): ?>
                                         <td>
                                             <a href="<?= base_url('exam/edit_print_hpa/' . esc($row['id_hpa']) . '?redirect=index_autorized') ?>" class="btn btn-warning btn-sm">
                                                 <i class="fas fa-eye"></i> Cek Penulisan
                                             </a>
                                         </td>
-                                    <?php elseif (in_array($row['status_autorized'], ["Selesai Autorized"])): ?>
+                                    <?php elseif (in_array($row['status_autorized'], ["Selesai Authorized"])): ?>
                                         <td>
                                             <a href="<?= base_url('exam/edit_print_hpa/' . esc($row['id_hpa']) . '?redirect=index_autorized') ?>" class="btn btn-success btn-sm">
                                                 <i class="fas fa-eye"></i> Cek Lagi Penulisan

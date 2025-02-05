@@ -48,7 +48,7 @@
         // ==========================
         // Hapus DATA
         // ==========================
-        $(document).on("click", ".delete-hpa, .delete-pengirisan, .delete-pemotongan, .delete-pemprosesan, .delete-penanaman, .delete-pemotongan_tipis, .delete-pewarnaan, .delete-pembacaan, .delete-penulisan, .delete-pemverifikasi, .delete-pencetakan", function() {
+        $(document).on("click", ".delete-hpa, .delete-pengirisan, .delete-pemotongan, .delete-pemprosesan, .delete-penanaman, .delete-pemotongan_tipis, .delete-pewarnaan, .delete-pembacaan, .delete-penulisan, .delete-pemverifikasi, .delete-autorized, .delete-pencetakan", function() {
             var action = $(this).data("action"); // Menyimpan data action (hpa atau pengirisan)
             var id_hpa = $(this).data("id_hpa");
             var id_pengirisan = $(this).data("id_pengirisan");
@@ -60,6 +60,7 @@
             var id_pembacaan = $(this).data("id_pembacaan");
             var id_penulisan = $(this).data("id_penulisan");
             var id_pemverifikasi = $(this).data("id_pemverifikasi");
+            var id_autorized = $(this).data("id_autorized");
             var id_pencetakan = $(this).data("id_pencetakan");
 
             // Menyimpan data ID yang dibutuhkan untuk operasi delete
@@ -74,6 +75,7 @@
             $("#confirmDelete").data("id_pembacaan", id_pembacaan);
             $("#confirmDelete").data("id_penulisan", id_penulisan);
             $("#confirmDelete").data("id_pemverifikasi", id_pemverifikasi);
+            $("#confirmDelete").data("id_autorized", id_autorized);
             $("#confirmDelete").data("id_pencetakan", id_pencetakan);
 
             // Menampilkan modal konfirmasi
@@ -93,6 +95,7 @@
             var id_pembacaan = $(this).data("id_pembacaan");
             var id_penulisan = $(this).data("id_penulisan");
             var id_pemverifikasi = $(this).data("id_pemverifikasi");
+            var id_autorized = $(this).data("id_autorized");
             var id_pencetakan = $(this).data("id_pencetakan");
 
             var url = "";
@@ -195,7 +198,7 @@
         // ==========================
         // Detail Proses
         // ==========================
-        $(document).on("click", ".view-penerimaan, .view-pengirisan, .view-pemotongan, .view-pemprosesan, .view-penanaman, .view-pemotongan_tipis, .view-pewarnaan, .view-pembacaan, .view-penulisan, .view-pemverifikasi, .view-pencetakan, .view-mutu", function() {
+        $(document).on("click", ".view-penerimaan, .view-pengirisan, .view-pemotongan, .view-pemprosesan, .view-penanaman, .view-pemotongan_tipis, .view-pewarnaan, .view-pembacaan, .view-penulisan, .view-pemverifikasi, .view-autorized, .view-pencetakan, .view-mutu", function() {
             var action = $(this).data("action");
             var id_penerimaan = $(this).data("id_penerimaan");
             var id_pengirisan = $(this).data("id_pengirisan");

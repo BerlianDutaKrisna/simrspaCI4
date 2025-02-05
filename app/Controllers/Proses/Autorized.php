@@ -102,7 +102,7 @@ class Autorized extends BaseController
                 case 'mulai':
                     $autorizedModel->updateAutorized($id_autorized, [ // Update nama method dan variabel
                         'id_user_autorized' => $id_user,
-                        'status_autorized' => 'Proses Autorized',
+                        'status_autorized' => 'Proses Authorized',
                         'mulai_autorized' => date('Y-m-d H:i:s'),
                     ]);
                     break;
@@ -111,7 +111,7 @@ class Autorized extends BaseController
                 case 'selesai':
                     $autorizedModel->updateAutorized($id_autorized, [ // Update nama method dan variabel
                         'id_user_autorized' => $id_user,
-                        'status_autorized' => 'Selesai Autorized',
+                        'status_autorized' => 'Selesai Authorized',
                         'selesai_autorized' => date('Y-m-d H:i:s'),
                     ]);
                     break;
@@ -119,7 +119,7 @@ class Autorized extends BaseController
                 case 'reset':
                     $autorizedModel->updateAutorized($id_autorized, [
                         'id_user_autorized' => null,
-                        'status_autorized' => 'Belum Autorized',
+                        'status_autorized' => 'Belum Authorized',
                         'mulai_autorized' => null,
                         'selesai_autorized' => null,
                     ]);

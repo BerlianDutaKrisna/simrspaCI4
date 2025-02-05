@@ -137,7 +137,7 @@ class Pemverifikasi extends BaseController
                     $hpaModel->updateHpa($id_hpa, ['status_hpa' => 'Autorized']);
                     $autorizedData = [
                         'id_hpa' => $id_hpa,
-                        'status_autorized' => 'Belum Autorized',
+                        'status_autorized' => 'Belum Authorized',
                     ];
 
                     if (!$autorizedModel->insert($autorizedData)) { // Update nama method dan variabel
