@@ -140,7 +140,7 @@
         <table class="makroskopis-content-table">
             <tr>
                 <td>Makroskopis</td>
-                <td>Analis PA: <?= $pemotongan['analis_nama'] ?? '' ?></td>
+                <td>Analis PA: <?= $pemotongan['analis_nama'] ?? '' ?> | Waktu Pemotongan: <?= isset($pemotongan['mulai_pemotongan']) ? date('H:i d-m-Y', strtotime($pemotongan['mulai_pemotongan'])) : ''; ?></td>
             </tr>
             <tr>
                 <td colspan="2">${detailMakroskopis}</td>
