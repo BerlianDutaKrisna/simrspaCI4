@@ -10,7 +10,7 @@
         <style>
         @page {
             size: 215mm 350mm;
-            margin: 5mm;
+            margin: 20mm;
         }
             body {
                 font-family: Verdana, Arial, sans-serif;
@@ -61,15 +61,27 @@
                 width: 70%;
             }
             .makroskopis-content-table td[colspan="2"] {
-                height: 350px;
+                height: 250px;
                 font-size: 16pt;
                 border: 1px solid black;
+                border-bottom: none;
                 padding: 10px;
                 text-align: left;
                 vertical-align: top;
             }
+            .no-border{
+                border-right: none;
+                border-top: none;
+            }
+            .foto-makroskopis{
+                border-left: none;
+                border-top: none;
+                width: 100%;
+                text-align: right;
+                vertical-align: top;
+            }
             .mikroskopis-content-table td[colspan="2"] {
-                height: 450px;
+                height: 400px;
                 font-size: 16pt;
                 border: 1px solid black;
                 padding: 10px;
@@ -132,6 +144,20 @@
             </tr>
             <tr>
                 <td colspan="2">${detailMakroskopis}</td>
+            </tr>
+            <tr>
+            <td class="no-border"></td>
+                <td class="foto-makroskopis">
+                    <img src="<?= $hpa['foto_makroskopis_hpa'] !== null
+                                        ? base_url('uploads/hpa/makroskopis/' . $hpa['foto_makroskopis_hpa'])
+                                        : base_url('img/no_photo.jpg') ?>"
+                        width="200"
+                        alt="Foto Makroskopis"
+                        class="img-thumbnail"
+                        id="fotoMakroskopis"
+                        data-toggle="modal"
+                        data-target="#fotoModal">
+                </td>
             </tr>
         </table>
 
