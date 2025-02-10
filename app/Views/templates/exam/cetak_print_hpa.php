@@ -72,13 +72,53 @@
             </td>
         </tr>
         <tr>
-            <td width="700">&nbsp;</td>
-            <td align="center">
-                Terimakasih,
-                <p><br/><br/></p>
-                dr. Ayu Tyasmara Pratiwi, Sp.PA
-            </td>
-        </tr>
+    <td width="650">&nbsp;</td>
+    <td>
+        <table>
+            <tr>
+                <td style="padding-bottom: 10px;"></td>
+                <td style="padding-bottom: 10px;">
+                <?php
+                $bulan = [
+                    'Januari',
+                    'Februari',
+                    'Maret',
+                    'April',
+                    'Mei',
+                    'Juni',
+                    'Juli',
+                    'Agustus',
+                    'September',
+                    'Oktober',
+                    'November',
+                    'Desember'
+                ];
+                $tanggal = date('d');
+                $bulanIndo = $bulan[date('n') - 1];
+                $tahun = date('Y');
+                ?>
+                Surabaya, <?= $tanggal . ' ' . $bulanIndo . ' ' . $tahun ?>
+                </td>
+            </tr>
+            <tr>
+                <!-- Kolom gambar -->
+                <td width="170" align="center" style="padding-right: 10px;">
+                    <img src="<?= base_url('img/ttd_dr_ayu.png') ?>" alt="Tanda Tangan" style="width: 200px;">
+                </td>
+                <!-- Kolom teks -->
+                <td style="vertical-align: middle;">
+                    <p style="margin: 0; font-size: 14px;">Hasil lab ini telah ditandatangani secara elektronik oleh:</p>
+                    <p style="margin: 0; font-size: 20px;">Dokter Spesialis Patologi Anatomi,</p>
+                    <br>
+                    <br>
+                    <p style="margin: 0; font-size: 20px; font-weight: bold;">dr. AYU TYASMARA PRATIWI, Sp.PA</p>
+                    <p style="margin: 5px 0 0;">Penata</p>
+                    <p style="margin: 0;">NIP. 198407022009022014</p>
+                </td>
+            </tr>
+        </table>
+    </td>
+</tr>
     </table>
 </body>
 </html>

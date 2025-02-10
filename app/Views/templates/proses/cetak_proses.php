@@ -61,7 +61,7 @@
                 width: 70%;
             }
             .makroskopis-content-table td[colspan="2"] {
-                height: 250px;
+                height: 200px;
                 font-size: 16pt;
                 border: 1px solid black;
                 border-bottom: none;
@@ -133,7 +133,7 @@
                 <td>Norm: <?= esc($hpa['norm_pasien'] ?? '') ?></td>
                 <td>Unit Asal: <?= esc($hpa['unit_asal'] ?? '') ?></td>
                 <td>Lokasi Spesimen: <?= esc($hpa['lokasi_spesimen'] ?? '') ?></td>
-                <td>Tanggal Hasil: <?= isset($hpa['tanggal_hasil']) ? date('d-m-Y', strtotime($hpa['tanggal_hasil'])) : ''; ?></td>
+                <td>Estimasi Hasil: <?= isset($hpa['tanggal_hasil']) ? date('d-m-Y', strtotime($hpa['tanggal_hasil'])) : ''; ?></td>
             </tr>
         </table>
 

@@ -41,7 +41,20 @@
                                 <td><?= esc($row['kode_hpa'] ?? 'Belum Diisi') ?></td>
                                 <td><?= esc($row['nama_pasien'] ?? 'Belum Diisi') ?></td>
                                 <td><?= esc($row['norm_pasien'] ?? 'Belum Diisi') ?></td>
-                                <td><?= esc($row['jenis_kelamin_pasien'] ?? 'Belum Diisi') ?></td>
+                                <td>
+                                    <?php
+                                    $jenis_kelamin = $row['jenis_kelamin_pasien'] ?? 'Belum Diisi';
+                                    $usia = '';
+
+                                    if (!empty($row['tanggal_lahir_pasien'])) {
+                                        $tanggal_lahir = new DateTime($row['tanggal_lahir_pasien']);
+                                        $hari_ini = new DateTime();
+                                        $usia = $hari_ini->diff($tanggal_lahir)->y;
+                                    }
+
+                                    echo esc($jenis_kelamin) . ($usia !== '' ? " / {$usia}" : '');
+                                    ?>
+                                </td>
                                 <td>
                                     <?= empty($row['tanggal_lahir_pasien']) ? 'Belum diisi' : esc(date('d-m-Y', strtotime($row['tanggal_lahir_pasien']))); ?>
                                 </td>
@@ -51,8 +64,25 @@
                                 <td><?= esc($row['status_pasien'] ?? 'Belum Diisi') ?></td>
                                 <td><?= esc($row['diagnosa_klinik'] ?? 'Belum Diisi') ?></td>
                                 <td>
-                                    <?= empty($row['tanggal_hasil']) ? 'Belum diisi' : esc(date('d-m-Y', strtotime($row['tanggal_hasil']))); ?>
+                                    <?php
+                                    if (empty($row['tanggal_hasil'])) {
+                                        echo 'Belum diisi';
+                                    } else {
+                                        setlocale(LC_TIME, 'id_ID.utf8');
+                                        $tanggal = new DateTime($row['tanggal_hasil']);
+                                        $formatter = new IntlDateFormatter(
+                                            'id_ID',
+                                            IntlDateFormatter::FULL,
+                                            IntlDateFormatter::NONE,
+                                            'Asia/Jakarta',
+                                            IntlDateFormatter::GREGORIAN,
+                                            'EEEE, dd-MM-yyyy'
+                                        );
+                                        echo esc($formatter->format($tanggal));
+                                    }
+                                    ?>
                                 </td>
+
                                 <td><?= esc($row['status_hpa'] ?? 'Belum Diisi') ?></td>
                                 <td><?= esc($row['hasil_hpa'] ?? 'Belum Ada Hasil') ?></td>
                                 <td class="text-center">

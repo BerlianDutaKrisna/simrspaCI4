@@ -364,6 +364,7 @@ class Exam extends BaseController
 
     public function update($id_hpa)
     {
+        date_default_timezone_set('Asia/Jakarta');
         // Inisialisasi model
         $hpaModel = new HpaModel();
         $pemotonganModel = new PemotonganModel();
@@ -438,13 +439,14 @@ class Exam extends BaseController
                         'status_pembacaan' => 'Selesai Pembacaan',
                         'selesai_pembacaan' => date('Y-m-d H:i:s'),
                     ]);
+                    
                 $id_mutu = $this->request->getPost('id_mutu');
                 $indikator_4 = (string) ($this->request->getPost('indikator_4') ?? '0');
                 $indikator_5 = (string) ($this->request->getPost('indikator_5') ?? '0');
                 $indikator_6 = (string) ($this->request->getPost('indikator_6') ?? '0');
                 $indikator_7 = (string) ($this->request->getPost('indikator_7') ?? '0');
                 $indikator_8 = (string) ($this->request->getPost('indikator_8') ?? '0');
-                $total_nilai_mutu = (int) $this->request->getPost('total_nilai_mutu', 0);
+                $total_nilai_mutu = (string) ($this->request->getPost('total_nilai_mutu') ?? '0');
                 $keseluruhan_nilai_mutu = $total_nilai_mutu + (int)$indikator_5 + (int)$indikator_6 + (int)$indikator_7 + (int)$indikator_8;
                 $mutuModel->updateMutu($id_mutu, [
                     'indikator_4' => $indikator_4,
@@ -510,7 +512,7 @@ class Exam extends BaseController
             $id_autorized = $this->request->getPost('id_autorized');
             $autorizedModel->updateAutorized($id_autorized, [
                 'id_user_autorized' => $id_user,
-                'status_autorized' => 'Selesai Autorized',
+                'status_autorized' => 'Selesai Authorized',
                 'selesai_autorized' => date('Y-m-d H:i:s'),
             ]);
             return redirect()->to('autorized/index_autorized')->with('success', 'Data berhasil diauthorized.');

@@ -22,6 +22,7 @@
                             <th>Kode HPA</th>
                             <th>Nama Pasien</th>
                             <th>Norm Pasien</th>
+                            <th>Aksi</th>
                             <th>Status Hpa</th>
                             <th>Penerimaan</th>
                             <th>Pengirisan</th>
@@ -36,7 +37,6 @@
                             <th>Authorized</th>
                             <th>Pencetakan</th>
                             <th>Mutu</th>
-                            <th>Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -48,6 +48,23 @@
                                     <td><?= esc($row['kode_hpa']) ?></td>
                                     <td><?= esc($row['nama_pasien']) ?></td>
                                     <td><?= esc($row['norm_pasien']) ?></td>
+                                    <td>
+                                        <div class="d-flex justify-content-around">
+                                            <!-- Tombol Edit -->
+                                            <a href="<?= base_url('exam/edit_exam/' . esc($row['id_hpa'])) ?>" class="btn btn-sm btn-warning mx-1">
+                                                <i class="fas fa-edit"></i> Edit
+                                            </a>
+                                            <!-- Tombol Hapus HPA -->
+                                            <button class="btn btn-sm btn-danger mx-1 delete-hpa"
+                                                data-toggle="modal"
+                                                data-target="#deleteModal"
+                                                data-id_hpa="<?= htmlspecialchars($row['id_hpa'], ENT_QUOTES, 'UTF-8') ?>"
+                                                data-action="hpa"
+                                                aria-label="Hapus hpa">
+                                                <i class="fas fa-trash-alt"></i> Hapus
+                                            </button>
+                                        </div>
+                                    </td>
                                     <td>
                                         <a href="#"
                                             class="btn btn-info btn-sm"
@@ -336,23 +353,6 @@
                                                 </button>
                                             </div>
                                         <?php endif; ?>
-                                    </td>
-                                    <td>
-                                        <div class="d-flex justify-content-around">
-                                            <!-- Tombol Edit -->
-                                            <a href="<?= base_url('exam/edit_exam/' . esc($row['id_hpa'])) ?>" class="btn btn-sm btn-warning mx-1">
-                                                <i class="fas fa-edit"></i> Edit
-                                            </a>
-                                            <!-- Tombol Hapus HPA -->
-                                            <button class="btn btn-sm btn-danger mx-1 delete-hpa"
-                                                data-toggle="modal"
-                                                data-target="#deleteModal"
-                                                data-id_hpa="<?= htmlspecialchars($row['id_hpa'], ENT_QUOTES, 'UTF-8') ?>"
-                                                data-action="hpa"
-                                                aria-label="Hapus hpa">
-                                                <i class="fas fa-trash-alt"></i> Hapus
-                                            </button>
-                                        </div>
                                     </td>
                                 </tr>
                                 <?php $i++; ?>

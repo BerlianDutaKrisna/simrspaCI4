@@ -60,7 +60,7 @@
                                 statuses.status_pembacaan === "Belum Pembacaan" ||
                                 statuses.status_penulisan === "Belum Penulisan" ||
                                 statuses.status_pemverifikasi === "Belum Pemverifikasi" ||
-                                statuses.status_autorized === "Belum Autorized" ||
+                                statuses.status_autorized === "Belum Authorized" ||
                                 statuses.status_pencetakan === "Belum Pencetakan";
                         }
                         return false;
@@ -82,7 +82,7 @@
                                 statuses.status_pembacaan === "Proses Pembacaan" ||
                                 statuses.status_penulisan === "Proses Penulisan" ||
                                 statuses.status_pemverifikasi === "Proses Pemverifikasi" ||
-                                statuses.status_autorized === "Proses Autorized" ||
+                                statuses.status_autorized === "Proses Authorized" ||
                                 statuses.status_pencetakan === "Proses Pencetakan";
                         }
                         return false;
@@ -104,7 +104,7 @@
                                 statuses.status_pembacaan === "Selesai Pembacaan" ||
                                 statuses.status_penulisan === "Selesai Penulisan" ||
                                 statuses.status_pemverifikasi === "Selesai Pemverifikasi" ||
-                                statuses.status_autorized === "Selesai Autorized" ||
+                                statuses.status_autorized === "Selesai Authorized" ||
                                 statuses.status_pencetakan === "Selesai Pencetakan";
                         }
                         return false;

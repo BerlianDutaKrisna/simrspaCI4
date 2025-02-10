@@ -234,7 +234,17 @@
                                     if (empty($row['tanggal_hasil'])) {
                                         echo 'Belum diisi';
                                     } else {
-                                        echo esc(date('d-m-Y', strtotime($row['tanggal_hasil'])));
+                                        setlocale(LC_TIME, 'id_ID.utf8'); // Pastikan server mendukung lokal Indonesia
+                                        $tanggal = new DateTime($row['tanggal_hasil']);
+                                        $formatter = new IntlDateFormatter(
+                                            'id_ID',
+                                            IntlDateFormatter::FULL,
+                                            IntlDateFormatter::NONE,
+                                            'Asia/Jakarta',
+                                            IntlDateFormatter::GREGORIAN,
+                                            'EEEE, dd-MM-yyyy' // Format dengan nama hari
+                                        );
+                                        echo esc($formatter->format($tanggal));
                                     }
                                     ?>
                                 </td>

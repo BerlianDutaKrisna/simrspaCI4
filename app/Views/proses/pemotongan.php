@@ -58,12 +58,28 @@
                                         <?= empty($row['selesai_pemotongan']) ? '-' : esc(date('H:i , d-m-Y', strtotime($row['selesai_pemotongan']))); ?>
                                     </td>
                                     <td>
-                                        <?= empty($row['tanggal_hasil']) ? 'Belum diisi' : esc(date('d-m-Y', strtotime($row['tanggal_hasil']))); ?>
+                                        <?php
+                                        if (empty($row['tanggal_hasil'])) {
+                                            echo 'Belum diisi';
+                                        } else {
+                                            setlocale(LC_TIME, 'id_ID.utf8'); // Pastikan server mendukung lokal Indonesia
+                                            $tanggal = new DateTime($row['tanggal_hasil']);
+                                            $formatter = new IntlDateFormatter(
+                                                'id_ID',
+                                                IntlDateFormatter::FULL,
+                                                IntlDateFormatter::NONE,
+                                                'Asia/Jakarta',
+                                                IntlDateFormatter::GREGORIAN,
+                                                'EEEE, dd-MM-yyyy' // Format dengan nama hari
+                                            );
+                                            echo esc($formatter->format($tanggal));
+                                        }
+                                        ?>
                                     </td>
                                     <?php if (in_array($row['status_pemotongan'], ["Proses Pemotongan"])): ?>
                                         <td>
                                             <a href="<?= base_url('exam/edit_makroskopis/' . esc($row['id_hpa'])) ?>" class="btn btn-warning btn-sm">
-                                                    <i class="fas fa-pen"></i> Detail
+                                                <i class="fas fa-pen"></i> Detail
                                             </a>
                                         </td>
                                     <?php elseif (in_array($row['status_pemotongan'], ["Selesai Pemotongan"])): ?>

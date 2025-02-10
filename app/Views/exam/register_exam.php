@@ -135,7 +135,7 @@
                         <option value="Kistektomi">Kistektomi</option>
                         <option value="Omentektomi">Omentektomi</option>
                         <option value="TAH-BSO">TAH-BSO</option>
-                        <option value="Reseksi sus">Reseksi sus</option>
+                        <option value="Reseksi sus">Reseksi Usus</option>
                         <option value="lainnya">Lainnya</option>
                     </select>
                     <input type="text" class="form-control mt-2 d-none" id="tindakan_spesimen_custom" name="tindakan_spesimen_custom" placeholder="Masukkan Tindakan Spesimen Lainnya">
