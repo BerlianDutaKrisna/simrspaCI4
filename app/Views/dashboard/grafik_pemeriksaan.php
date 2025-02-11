@@ -30,6 +30,65 @@
         </div>
     </div>
 
+    <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        var chartData = <?= $chartData; ?>;  // Data dari PHP (sudah dalam JSON)
+
+        console.log("Chart Data:", chartData); // Cek data di Console Browser
+
+        if (!Array.isArray(chartData)) {
+            console.error("Data chart tidak valid:", chartData);
+            return;
+        }
+
+        // Mapping data ke dalam labels dan values
+        var labels = chartData.map(data => {
+            return data.bulan + " " + data.tahun; // Contoh: "Feb 2025"
+        });
+
+        var values = chartData.map(data => parseInt(data.total));
+
+        // Inisialisasi Chart.js
+        var ctx = document.getElementById("myAreaChart").getContext("2d");
+        var myChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: "Jumlah Sample HPA",
+                    data: values,
+                    backgroundColor: "rgba(78, 115, 223, 0.05)",
+                    borderColor: "rgba(78, 115, 223, 1)",
+                    pointRadius: 3,
+                    pointBackgroundColor: "rgba(78, 115, 223, 1)",
+                    pointBorderColor: "rgba(78, 115, 223, 1)",
+                    pointHoverRadius: 3,
+                    pointHoverBackgroundColor: "rgba(78, 115, 223, 1)",
+                    pointHoverBorderColor: "rgba(78, 115, 223, 1)",
+                    pointHitRadius: 10,
+                    pointBorderWidth: 2
+                }]
+            },
+            options: {
+                maintainAspectRatio: false,
+                scales: {
+                    x: {
+                        grid: { display: false }
+                    },
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            stepSize: 10, // Jarak nilai sumbu Y
+                            suggestedMin: 0,
+                            suggestedMax: 100
+                        }
+                    }
+                }
+            }
+        });
+    });
+    </script>
+
     <!-- Pie Chart -->
     <div class="col-xl-4 col-lg-5">
         <div class="card shadow mb-4">

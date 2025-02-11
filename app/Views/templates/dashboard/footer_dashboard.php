@@ -55,7 +55,6 @@
 <script src="<?= base_url('assets/chart.js/Chart.min.js') ?>"></script> <!-- Menambahkan plugin Chart.js untuk grafik -->
 
 <!-- Page level custom scripts -->
-<script src="<?= base_url('assets/analisisdata/chart-area-demo.js') ?>"></script> <!-- Skrip khusus untuk demo grafik area -->
 <script src="<?= base_url('assets/analisisdata/chart-pie-demo.js') ?>"></script> <!-- Skrip khusus untuk demo grafik pie -->
 
 <!-- Table Search plugins -->

@@ -73,9 +73,9 @@ class HpaModel extends Model
     public function getHpaWithPatient($id_hpa)
     {
         return $this->select('hpa.*, patient.*')
-        ->join('patient', 'patient.id_pasien = hpa.id_pasien')
-        ->where('hpa.id_hpa', $id_hpa)
-        ->first();
+            ->join('patient', 'patient.id_pasien = hpa.id_pasien')
+            ->where('hpa.id_hpa', $id_hpa)
+            ->first();
     }
     public function getHpaWithAllPatient()
     {
@@ -106,7 +106,8 @@ class HpaModel extends Model
     public function updatePenerima($id_hpa, $data)
     {
         // Validasi parameter
-        if (empty($id_hpa) || empty($data) || !is_array($data)
+        if (
+            empty($id_hpa) || empty($data) || !is_array($data)
         ) {
             throw new \InvalidArgumentException('Parameter ID HPA atau data tidak valid.');
         }
@@ -145,7 +146,7 @@ class HpaModel extends Model
             throw new \RuntimeException('Update data gagal.'); // Menangani error
         }
     }
-    
+
     public function getHpaWithRelations()
     {
         return $this->db->table($this->table)
@@ -193,7 +194,8 @@ class HpaModel extends Model
             ->join('users AS user_pemotongan', 'pemotongan.id_user_pemotongan = user_pemotongan.id_user', 'left')
             ->join('users AS user_pemprosesan', 'pemprosesan.id_user_pemprosesan = user_pemprosesan.id_user', 'left')
             ->join('users AS user_penanaman', 'penanaman.id_user_penanaman = user_penanaman.id_user', 'left')
-            ->join('users AS user_pemotongan_tipis',
+            ->join(
+                'users AS user_pemotongan_tipis',
                 'pemotongan_tipis.id_user_pemotongan_tipis = user_pemotongan_tipis.id_user',
                 'left'
             )
@@ -205,5 +207,14 @@ class HpaModel extends Model
             ->where('hpa.status_hpa !=', 'Sudah Diproses')
             ->get()
             ->getResultArray();
+    }
+
+    public function getHpaChartData()
+    {
+        return $this->select("DATE_FORMAT(tanggal_permintaan, '%Y') AS tahun, DATE_FORMAT(tanggal_permintaan, '%M') AS bulan, COUNT(*) AS total")
+            ->where('tanggal_permintaan IS NOT NULL')
+            ->groupBy("tahun, bulan")
+            ->orderBy("MIN(tanggal_permintaan)", "ASC")
+            ->findAll();
     }
 }
