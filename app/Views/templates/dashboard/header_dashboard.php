@@ -22,7 +22,10 @@
     <!-- Menambahkan custom CSS untuk tema SB Admin 2 menggunakan base_url() -->
     <link href="<?= base_url('css/sb-admin-2.css') ?>" rel="stylesheet">
     <!-- Menambahkan CSS untuk styling tabel, khusus untuk penggunaan DataTables menggunakan base_url() -->
-    <link href="<?= base_url('assets/datatables/dataTables.bootstrap4.min.css') ?>" rel="stylesheet">
+    <link href="<?= base_url('assets/datatables/css/buttons.dataTables.min.css') ?>" rel="stylesheet">
+    <link href="<?= base_url('assets/datatables/css/dataTables.bootstrap4.min.css') ?>" rel="stylesheet">
+    
+    <script src="<?= base_url('assets/chart.js/Chart.min.js') ?>"></script> <!-- Menambahkan plugin Chart.js untuk grafik -->
 </head>
 
 <body id="page-top">

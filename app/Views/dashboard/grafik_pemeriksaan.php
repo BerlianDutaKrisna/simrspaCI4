@@ -31,62 +31,64 @@
     </div>
 
     <script>
-    document.addEventListener("DOMContentLoaded", function() {
-        var chartData = <?= $chartData; ?>;  // Data dari PHP (sudah dalam JSON)
+        document.addEventListener("DOMContentLoaded", function() {
+            var chartData = <?= $chartData; ?>; // Data dari PHP (sudah dalam JSON)
 
-        console.log("Chart Data:", chartData); // Cek data di Console Browser
+            console.log("Chart Data:", chartData); // Cek data di Console Browser
 
-        if (!Array.isArray(chartData)) {
-            console.error("Data chart tidak valid:", chartData);
-            return;
-        }
+            if (!Array.isArray(chartData)) {
+                console.error("Data chart tidak valid:", chartData);
+                return;
+            }
 
-        // Mapping data ke dalam labels dan values
-        var labels = chartData.map(data => {
-            return data.bulan + " " + data.tahun; // Contoh: "Feb 2025"
-        });
+            // Mapping data ke dalam labels dan values
+            var labels = chartData.map(data => {
+                return data.bulan + " " + data.tahun; // Contoh: "Feb 2025"
+            });
 
-        var values = chartData.map(data => parseInt(data.total));
+            var values = chartData.map(data => parseInt(data.total));
 
-        // Inisialisasi Chart.js
-        var ctx = document.getElementById("myAreaChart").getContext("2d");
-        var myChart = new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: labels,
-                datasets: [{
-                    label: "Jumlah Sample HPA",
-                    data: values,
-                    backgroundColor: "rgba(78, 115, 223, 0.05)",
-                    borderColor: "rgba(78, 115, 223, 1)",
-                    pointRadius: 3,
-                    pointBackgroundColor: "rgba(78, 115, 223, 1)",
-                    pointBorderColor: "rgba(78, 115, 223, 1)",
-                    pointHoverRadius: 3,
-                    pointHoverBackgroundColor: "rgba(78, 115, 223, 1)",
-                    pointHoverBorderColor: "rgba(78, 115, 223, 1)",
-                    pointHitRadius: 10,
-                    pointBorderWidth: 2
-                }]
-            },
-            options: {
-                maintainAspectRatio: false,
-                scales: {
-                    x: {
-                        grid: { display: false }
-                    },
-                    y: {
-                        beginAtZero: true,
-                        ticks: {
-                            stepSize: 10, // Jarak nilai sumbu Y
-                            suggestedMin: 0,
-                            suggestedMax: 100
+            // Inisialisasi Chart.js
+            var ctx = document.getElementById("myAreaChart").getContext("2d");
+            var myChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: "Jumlah Sample HPA",
+                        data: values,
+                        backgroundColor: "rgba(78, 115, 223, 0.05)",
+                        borderColor: "rgba(78, 115, 223, 1)",
+                        pointRadius: 3,
+                        pointBackgroundColor: "rgba(78, 115, 223, 1)",
+                        pointBorderColor: "rgba(78, 115, 223, 1)",
+                        pointHoverRadius: 3,
+                        pointHoverBackgroundColor: "rgba(78, 115, 223, 1)",
+                        pointHoverBorderColor: "rgba(78, 115, 223, 1)",
+                        pointHitRadius: 10,
+                        pointBorderWidth: 2
+                    }]
+                },
+                options: {
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: {
+                            grid: {
+                                display: false
+                            }
+                        },
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                stepSize: 10, // Jarak nilai sumbu Y
+                                suggestedMin: 0,
+                                suggestedMax: 100
+                            }
                         }
                     }
                 }
-            }
+            });
         });
-    });
     </script>
 
     <!-- Pie Chart -->
@@ -130,3 +132,52 @@
         </div>
     </div>
 </div>
+<div>
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">Stok Barang Habis Pakai</h6>
+        </div>
+        <div class="card-body">
+            <div class="chart-bar">
+                <canvas id="myBarChart"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    var ctx = document.getElementById('myBarChart').getContext('2d');
+    var myBarChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: ['NBF 10%', 'Alkohol 96%', 'Xylol', 'Parafin', 'Aqua Bidest'],
+            datasets: [{
+                label: 'Jumlah Stok',
+                data: [50, 120, 75, 10, 100], // Data dummy
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.2)',
+                    'rgba(54, 162, 235, 0.2)',
+                    'rgba(255, 206, 86, 0.2)',
+                    'rgba(75, 192, 192, 0.2)',
+                    'rgba(153, 102, 255, 0.2)'
+                ],
+                borderColor: [
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(153, 102, 255, 1)'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            maintainAspectRatio: false,
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+</script>

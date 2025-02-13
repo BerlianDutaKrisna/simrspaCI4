@@ -10,7 +10,7 @@
         <a href="<?= base_url('/dashboard') ?>" class="btn btn-primary mb-3">Kembali</a>
 
         <div class="table-responsive">
-            <table class="table table-bordered text-center" id="dataTable" width="100%" cellspacing="0">
+            <table class="table table-bordered text-center" id="dataTableXL" width="100%" cellspacing="0">
                 <thead>
                     <tr>
                         <th>No</th>

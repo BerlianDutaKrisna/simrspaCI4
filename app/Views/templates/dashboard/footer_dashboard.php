@@ -52,17 +52,18 @@
 <script src="<?= base_url('js/sb-admin-2.min.js') ?>"></script> <!-- Skrip utama untuk pengelolaan halaman admin -->
 
 <!-- Page level plugins -->
-<script src="<?= base_url('assets/chart.js/Chart.min.js') ?>"></script> <!-- Menambahkan plugin Chart.js untuk grafik -->
+
 
 <!-- Page level custom scripts -->
-<script src="<?= base_url('assets/analisisdata/chart-pie-demo.js') ?>"></script> <!-- Skrip khusus untuk demo grafik pie -->
-
+<script src="<?= base_url('assets/analisisdata/chart-pie-demo.js') ?>"></script>
 <!-- Table Search plugins -->
-<script src="<?= base_url('assets/datatables/jquery.dataTables.min.js') ?>"></script> <!-- Menambahkan plugin DataTables untuk pencarian dan paginasi tabel -->
-<script src="<?= base_url('assets/datatables/dataTables.bootstrap4.min.js') ?>"></script> <!-- Menambahkan plugin DataTables dengan styling Bootstrap -->
-
-<!-- Table scripts -->
-<script src="<?= base_url('js/demo/datatables-demo.js') ?>"></script> <!-- Skrip khusus untuk demo DataTables -->
-</body>
+<script src="<?= base_url('assets/datatables/js/jquery.dataTables.min.js') ?>"></script>
+<script src="<?= base_url('assets/datatables/js/dataTables.bootstrap4.min.js') ?>"></script>
+<script src="<?= base_url('assets/datatables/js/dataTables.buttons.min.js') ?>"></script>
+<script src="<?= base_url('assets/datatables/js/jszip.min.js') ?>"></script>
+<script src="<?= base_url('assets/datatables/js/buttons.html5.min.js') ?>"></script>
+<script src="<?= base_url('assets/datatables/js/buttons.print.min.js') ?>"></script>
+<script src="<?= base_url('assets/datatables/js/datatables-demo.js') ?>"></script>
+<script src="<?= base_url('assets/datatables/js/datatables-demoButtons.js') ?>"></script>
 
 </html>
