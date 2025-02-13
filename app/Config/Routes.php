@@ -194,3 +194,7 @@ $routes->get('cetak/cetak_proses/(:num)', 'Cetak::cetak_proses/$1');
 $routes->get('cetak/autorized/(:num)', 'Cetak::autorized/$1');
 $routes->get('cetak/cetak_hpa/(:num)', 'Cetak::cetak_hpa/$1');
 
+// Router untuk Chart
+$routes->get('chart-data', 'ChartController::getChartData');
+
+
