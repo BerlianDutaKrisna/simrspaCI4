@@ -51,6 +51,7 @@ class PemverifikasiModel extends Model // Update nama model
             ->join('users', 'pemverifikasi.id_user_pemverifikasi = users.id_user', 'left') // Relasi dengan tabel users untuk pemverifikasi
             ->join('mutu', 'hpa.id_hpa = mutu.id_hpa', 'left') // Relasi dengan tabel mutu berdasarkan id_hpa
             ->where('hpa.status_hpa', 'Pemverifikasi') // Filter berdasarkan status_hpa 'Pemverifikasi'
+            ->orderBy('hpa.kode_hpa', 'ASC')
             ->findAll();
     }
 

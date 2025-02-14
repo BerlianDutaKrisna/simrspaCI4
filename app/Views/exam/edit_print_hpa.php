@@ -56,10 +56,16 @@
                     </div>
 
                     <div class="col-sm-4 text-center">
+                        <button type="submit"
+                            class="btn btn-success btn-user w-100 mb-3"
+                            formaction="<?= base_url('exam/update_print_hpa/' . $hpa['id_hpa']); ?>"
+                            <?= (($_GET['redirect'] ?? '') === 'index_index_pemverfifikasi' || ($_GET['redirect'] ?? '') === 'index_autorized') ? 'disabled' : '' ?>>
+                            <i class="fas fa-save"></i> Simpan
+                        </button>
                         <button type="button"
                             class="btn btn-primary btn-user w-100 w-md-auto"
                             onclick="cetakPrintHpa()"
-                            <?= (($_GET['redirect'] ?? '') === 'index_pemverifikasi' || ($_GET['redirect'] ?? '') === 'index_autorized') ? 'disabled' : '' ?>>
+                            <?= (($_GET['redirect'] ?? '') === 'index_index_pemverfifikasi' || ($_GET['redirect'] ?? '') === 'index_autorized') ? 'disabled' : '' ?>>
                             <i class="fas fa-print"></i> Cetak
                         </button>
                     </div>

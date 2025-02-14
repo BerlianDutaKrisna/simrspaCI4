@@ -264,7 +264,7 @@
 
                 <!-- Tombol Simpan -->
                 <div class="form-group row">
-                    <div class="col-sm-6 text-center">
+                    <div class="col-sm-6 text-center mb-3">
                         <button type="submit"
                             class="btn btn-success btn-user w-100"
                             formaction="<?= base_url('exam/update/' . $hpa['id_hpa']); ?>">

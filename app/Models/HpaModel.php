@@ -204,7 +204,11 @@ class HpaModel extends Model
             ->join('users AS user_penulisan', 'penulisan.id_user_penulisan = user_penulisan.id_user', 'left')
             ->join('users AS user_pemverifikasi', 'pemverifikasi.id_user_pemverifikasi = user_pemverifikasi.id_user', 'left')
             ->join('users AS user_pencetakan', 'pencetakan.id_user_pencetakan = user_pencetakan.id_user', 'left')
-            ->where('hpa.status_hpa !=', 'Sudah Diproses')
+            ->where('hpa.status_hpa !=', 'Pemverifikasi')
+            ->where('hpa.status_hpa !=', 'Autorized')
+            ->where('hpa.status_hpa !=', 'Pencetakan')
+            ->where('hpa.status_hpa !=', 'Selesai')
+            ->orderBy('hpa.kode_hpa', 'ASC')
             ->get()
             ->getResultArray();
     }

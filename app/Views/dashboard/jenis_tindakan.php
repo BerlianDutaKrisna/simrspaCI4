@@ -7,7 +7,7 @@
             <!-- Tombol 1: Penerimaan -->
             <div class="col">
                 <a href="<?= base_url('penerimaan/index_penerimaan') ?>" class="btn btn-primary btn-icon-split btn-sm d-flex justify-content-between m-2">
-                    <span class="text">Penerimaan</span>
+                    <span class="text"><b style="color: white">1</b> Penerimaan</span>
                     <span class="icon text-white-50">
                         <i class="fas fa-clipboard"></i> <!-- Ikon untuk Penerimaan -->
                     </span>
@@ -17,7 +17,7 @@
             <!-- Tombol 2: Pengirisan -->
             <div class="col">
                 <a href="<?= base_url('pengirisan/index_pengirisan') ?>" class="btn btn-primary btn-icon-split btn-sm d-flex justify-content-between m-2">
-                    <span class="text">Pengirisan</span>
+                    <span class="text"><b style="color: white">2</b> Pengirisan</span>
                     <span class="icon text-white-50">
                         <i class="fas fa-puzzle-piece"></i> <!-- Ikon untuk Pengirisan -->
                     </span>
@@ -27,7 +27,7 @@
             <!-- Tombol 3: Pemotongan -->
             <div class="col">
                 <a href="<?= base_url('pemotongan/index_pemotongan') ?>" class="btn btn-primary btn-icon-split btn-sm d-flex justify-content-between m-2">
-                    <span class="text">Pemotongan</span>
+                    <span class="text"><b style="color: white">3</b> Pemotongan</span>
                     <span class="icon text-white-50">
                         <i class="fas fa-cut"></i> <!-- Ikon untuk Pemotongan -->
                     </span>
@@ -37,7 +37,7 @@
             <!-- Tombol 4: Pemprosesan -->
             <div class="col">
                 <a href="<?= base_url('pemprosesan/index_pemprosesan') ?>" class="btn btn-primary btn-icon-split btn-sm d-flex justify-content-between m-2">
-                    <span class="text">Pemprosesan</span>
+                    <span class="text"><b style="color: white">4</b> Pemprosesan</span>
                     <span class="icon text-white-50">
                         <i class="fas fa-sync"></i> <!-- Ikon untuk Pemprosesan -->
                     </span>
@@ -47,7 +47,7 @@
             <!-- Tombol 5: Penanaman -->
             <div class="col">
                 <a href="<?= base_url('penanaman/index_penanaman') ?>" class="btn btn-primary btn-icon-split btn-sm d-flex justify-content-between m-2">
-                    <span class="text">Penanaman</span>
+                    <span class="text"><b style="color: white">5</b> Penanaman</span>
                     <span class="icon text-white-50">
                         <i class="fas fa-download"></i> <!-- Ikon untuk Penanaman -->
                     </span>
@@ -57,7 +57,7 @@
             <!-- Tombol 6: Pemotongan Tipis -->
             <div class="col">
                 <a href="<?= base_url('pemotongan_tipis/index_pemotongan_tipis') ?>" class="btn btn-primary btn-icon-split btn-sm d-flex justify-content-between m-2">
-                    <span class="text">Pemotongan Tipis</span>
+                    <span class="text"><b style="color: white">6</b> Pemotongan Tipis</span>
                     <span class="icon text-white-50">
                         <i class="fas fa-grip-horizontal"></i> <!-- Ikon untuk Pemotongan Tipis -->
                     </span>
@@ -67,7 +67,7 @@
             <!-- Tombol 7: Pewarnaan -->
             <div class="col">
                 <a href="<?= base_url('pewarnaan/index_pewarnaan') ?>" class="btn btn-primary btn-icon-split btn-sm d-flex justify-content-between m-2">
-                    <span class="text">Pewarnaan</span>
+                    <span class="text"><b style="color: white">7</b> Pewarnaan</span>
                     <span class="icon text-white-50">
                         <i class="fas fa-fill-drip"></i> <!-- Ikon untuk Pewarnaan -->
                     </span>
@@ -77,7 +77,7 @@
             <!-- Tombol 8: Pembacaan -->
             <div class="col">
                 <a href="<?= base_url('pembacaan/index_pembacaan') ?>" class="btn btn-info btn-icon-split btn-sm d-flex justify-content-between m-2">
-                    <span class="text">Pembacaan</span>
+                    <span class="text"><b style="color: white">8</b> Pembacaan</span>
                     <span class="icon text-white-50">
                         <i class="fas fa-microscope"></i> <!-- Ikon untuk Pembacaan -->
                     </span>
@@ -87,7 +87,7 @@
             <!-- Tombol 9: Penulisan -->
             <div class="col">
                 <a href="<?= base_url('penulisan/index_penulisan') ?>" class="btn btn-primary btn-icon-split btn-sm d-flex justify-content-between m-2">
-                    <span class="text">Penulisan</span>
+                    <span class="text"><b style="color: white">9</b> Penulisan</span>
                     <span class="icon text-white-50">
                         <i class="fas fa-keyboard"></i> <!-- Ikon untuk Penulisan -->
                     </span>
@@ -97,7 +97,7 @@
             <!-- Tombol 10: Pemverifikasi -->
             <div class="col">
                 <a href="<?= base_url('pemverifikasi/index_pemverifikasi') ?>" class="btn btn-success btn-icon-split btn-sm d-flex justify-content-between m-2">
-                    <span class="text">Pemverifikasi</span>
+                    <span class="text"><b style="color: white">10</b> Pemverifikasi</span>
                     <span class="icon text-white-50">
                         <i class="fas fa-check-square"></i>
                     </span>
@@ -107,7 +107,7 @@
             <!-- Tombol 11: Autorized -->
             <div class="col">
                 <a href="<?= base_url('autorized/index_autorized') ?>" class="btn btn-info btn-icon-split btn-sm d-flex justify-content-between m-2">
-                    <span class="text">Authorized</span>
+                    <span class="text"><b style="color: white">11</b> Authorized</span>
                     <span class="icon text-white-50">
                         <i class="fas fa-vote-yea"></i>
                     </span>
@@ -117,7 +117,7 @@
             <!-- Tombol 11: pencetakan -->
             <div class="col">
                 <a href="<?= base_url('pencetakan/index_pencetakan') ?>" class="btn btn-primary btn-icon-split btn-sm d-flex justify-content-between m-2">
-                    <span class="text">pencetakan</span>
+                    <span class="text"><b style="color: white">12</b> pencetakan</span>
                     <span class="icon text-white-50">
                         <i class="fas fa-print"></i>
                     </span>

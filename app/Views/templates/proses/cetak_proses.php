@@ -61,7 +61,7 @@
                 width: 70%;
             }
             .makroskopis-content-table td[colspan="2"] {
-                height: 200px;
+                height: 150px;
                 font-size: 16pt;
                 border: 1px solid black;
                 border-bottom: none;

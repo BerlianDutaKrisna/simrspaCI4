@@ -51,6 +51,7 @@ class PenulisanModel extends Model // Update nama model
             ->join('users', 'penulisan.id_user_penulisan = users.id_user', 'left') // Relasi dengan tabel users untuk penulisan
             ->join('mutu', 'hpa.id_hpa = mutu.id_hpa', 'left') // Relasi dengan tabel mutu berdasarkan id_hpa
             ->where('hpa.status_hpa', 'Penulisan') // Filter berdasarkan status_hpa 'Penulisan'
+            ->orderBy('hpa.kode_hpa', 'ASC')
             ->findAll();
     }
 

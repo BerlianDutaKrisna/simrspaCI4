@@ -51,6 +51,7 @@ class PembacaanModel extends Model // Update nama model
             ->join('users', 'pemotongan.id_user_dokter_pemotongan = users.id_user', 'left') // Relasi dengan tabel users untuk dokter pemotongan
             ->join('mutu', 'hpa.id_hpa = mutu.id_hpa', 'left') // Relasi dengan tabel mutu berdasarkan id_hpa
             ->where('hpa.status_hpa', 'Pembacaan') // Filter berdasarkan status_hpa 'Pembacaan'
+            ->orderBy('hpa.kode_hpa', 'ASC')
             ->findAll();
     }
 

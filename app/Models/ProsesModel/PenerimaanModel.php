@@ -50,6 +50,7 @@ class PenerimaanModel extends Model
             ->join('users', 'penerimaan.id_user_penerimaan = users.id_user', 'left') // Relasi dengan tabel users untuk penerimaan
             ->join('mutu', 'hpa.id_hpa = mutu.id_hpa', 'left') // Relasi dengan tabel mutu berdasarkan id_hpa
             ->whereIn('hpa.status_hpa', ['Penerimaan', 'Terdaftar']) // Menambahkan filter whereIn untuk status_hpa
+            ->orderBy('hpa.kode_hpa', 'ASC')
             ->findAll();
     }
 

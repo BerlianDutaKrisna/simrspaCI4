@@ -51,6 +51,7 @@ class PemprosesanModel extends Model // Update nama model
             ->join('users', 'pemprosesan.id_user_pemprosesan = users.id_user', 'left') // Relasi dengan tabel users untuk pemprosesan
             ->join('mutu', 'hpa.id_hpa = mutu.id_hpa', 'left') // Relasi dengan tabel mutu berdasarkan id_hpa
             ->where('hpa.status_hpa', 'Pemprosesan') // Filter berdasarkan status_hpa 'Pemprosesan'
+            ->orderBy('hpa.kode_hpa', 'ASC')
             ->findAll();
     }
 

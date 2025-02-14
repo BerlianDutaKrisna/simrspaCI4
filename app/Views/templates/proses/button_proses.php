@@ -95,16 +95,22 @@
                         if (checkbox.checked) {
                             const statuses = JSON.parse(checkbox.dataset.status); // Parse JSON
                             return statuses.status_penerimaan === "Selesai Pemeriksaan" ||
+                                statuses.status_pengirisan === "Belum Pengirisan" ||
+                                statuses.status_pengirisan === "Proses Pengirisan" ||
                                 statuses.status_pengirisan === "Selesai Pengirisan" ||
                                 statuses.status_pemotongan === "Selesai Pemotongan" ||
                                 statuses.status_pemprosesan === "Selesai Pemprosesan" ||
                                 statuses.status_penanaman === "Selesai Penanaman" ||
                                 statuses.status_pemotongan_tipis === "Selesai Pemotongan Tipis" ||
                                 statuses.status_pewarnaan === "Selesai Pewarnaan" ||
+                                statuses.status_pembacaan === "Belum Pembacaan" ||
+                                statuses.status_pembacaan === "Proses Pembacaan" ||
                                 statuses.status_pembacaan === "Selesai Pembacaan" ||
                                 statuses.status_penulisan === "Selesai Penulisan" ||
                                 statuses.status_pemverifikasi === "Selesai Pemverifikasi" ||
                                 statuses.status_autorized === "Selesai Authorized" ||
+                                statuses.status_pencetakan === "Belum Pencetakan" ||
+                                statuses.status_pencetakan === "Proses Pencetakan" ||
                                 statuses.status_pencetakan === "Selesai Pencetakan";
                         }
                         return false;

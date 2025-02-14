@@ -38,22 +38,24 @@ class PemotonganModel extends Model
 
     // Mengambil data Pemotongan dengan relasi
     public function getPemotonganWithRelations()
-    {
-        return $this->select(
-            '
+{
+    return $this->select(
+        '
         pemotongan.*, 
         hpa.*, 
         patient.*, 
         users.nama_user AS nama_user_pemotongan,
         mutu.total_nilai_mutu'
-        )
-            ->join('hpa', 'pemotongan.id_hpa = hpa.id_hpa', 'left') // Relasi dengan tabel hpa
-            ->join('patient', 'hpa.id_pasien = patient.id_pasien', 'left') // Relasi dengan tabel patient
-            ->join('users', 'pemotongan.id_user_pemotongan = users.id_user', 'left') // Relasi dengan tabel users untuk pemotongan
-            ->join('mutu', 'hpa.id_hpa = mutu.id_hpa', 'left') // Relasi dengan tabel mutu berdasarkan id_hpa
-            ->where('hpa.status_hpa', 'Pemotongan') // Filter berdasarkan status_hpa 'Pemotongan'
-            ->findAll();
-    }
+    )
+        ->join('hpa', 'pemotongan.id_hpa = hpa.id_hpa', 'left')
+        ->join('patient', 'hpa.id_pasien = patient.id_pasien', 'left') 
+        ->join('users', 'pemotongan.id_user_pemotongan = users.id_user', 'left') 
+        ->join('mutu', 'hpa.id_hpa = mutu.id_hpa', 'left')
+        ->where('hpa.status_hpa', 'Pemotongan')
+        ->orderBy('hpa.kode_hpa', 'ASC') 
+        ->findAll();
+}
+
 
     // Fungsi untuk mengupdate data pemotongan
     public function updatePemotongan($id_pemotongan, $data)

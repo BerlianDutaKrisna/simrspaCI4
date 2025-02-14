@@ -22,7 +22,7 @@
                 <div class="row no-gutters align-items-center">
                     <div class="col mr-2">
                         <div class="text-s font-weight-bold text-danger text-uppercase mb-1">
-                            HISTOPATOLOGI ( HPA )
+                            HISTOPATOLOGI (HPA)
                         </div>
                         <!-- Menampilkan jumlah sampel Histopatologi -->
                         <div class="h2 mb-0 font-weight-bold text-gray-800"><?= esc($countHpa); ?></div>
@@ -44,7 +44,7 @@
                     <div class="row no-gutters align-items-center">
                         <div class="col mr-2">
                             <div class="text-s font-weight-bold text-success text-uppercase mb-1">
-                                SITOLOGI ( SRS )
+                                SITOLOGI (SRS)
                             </div>
                             <!-- Menampilkan jumlah sampel Sitologi -->
                             <div class="h2 mb-0 font-weight-bold text-gray-800">0</div>
@@ -64,7 +64,7 @@
                     <div class="row no-gutters align-items-center">
                         <div class="col mr-2">
                             <div class="text-s font-weight-bold text-info text-uppercase mb-1">
-                                Fine Needle Aspiration Biopsy ( FNAB )
+                                Fine Needle Aspiration Biopsy (FNAB)
                             </div>
                             <!-- Menampilkan jumlah sampel FNAB -->
                             <div class="h2 mb-0 font-weight-bold text-gray-800">0</div>
@@ -84,7 +84,7 @@
                     <div class="row no-gutters align-items-center">
                         <div class="col mr-2">
                             <div class="text-s font-weight-bold text-warning text-uppercase mb-1">
-                                Imunohistokimia
+                                Imunohistokimia (IHC)
                             </div>
                             <!-- Menampilkan jumlah sampel Imunohistokimia -->
                             <div class="h2 mb-0 font-weight-bold text-gray-800">0</div>

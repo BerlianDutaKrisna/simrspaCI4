@@ -51,6 +51,7 @@ class PengirisanModel extends Model
             ->join('users', 'pengirisan.id_user_pengirisan = users.id_user', 'left') // Relasi dengan tabel users untuk pengirisan
             ->join('mutu', 'hpa.id_hpa = mutu.id_hpa', 'left') // Relasi dengan tabel mutu berdasarkan id_hpa
             ->where('hpa.status_hpa', 'Pengirisan') // Filter berdasarkan status_hpa 'Pengirisan'
+            ->orderBy('hpa.kode_hpa', 'ASC')
             ->findAll();
     }
 

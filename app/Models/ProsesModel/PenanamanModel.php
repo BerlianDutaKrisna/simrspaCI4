@@ -51,6 +51,7 @@ class PenanamanModel extends Model // Update nama model
             ->join('users', 'penanaman.id_user_penanaman = users.id_user', 'left') // Relasi dengan tabel users untuk penanaman
             ->join('mutu', 'hpa.id_hpa = mutu.id_hpa', 'left') // Relasi dengan tabel mutu berdasarkan id_hpa
             ->where('hpa.status_hpa', 'Penanaman') // Filter berdasarkan status_hpa 'Penanaman'
+            ->orderBy('hpa.kode_hpa', 'ASC')
             ->findAll();
     }
 

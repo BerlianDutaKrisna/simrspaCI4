@@ -51,6 +51,7 @@ class PencetakanModel extends Model // Update nama model
             ->join('users', 'pencetakan.id_user_pencetakan = users.id_user', 'left') // Relasi dengan tabel users untuk pencetakan
             ->join('mutu', 'hpa.id_hpa = mutu.id_hpa', 'left') // Relasi dengan tabel mutu berdasarkan id_hpa
             ->where('hpa.status_hpa', 'Pencetakan') // Filter berdasarkan status_hpa 'Pencetakan'
+            ->orderBy('hpa.kode_hpa', 'ASC')
             ->findAll();
     }
 

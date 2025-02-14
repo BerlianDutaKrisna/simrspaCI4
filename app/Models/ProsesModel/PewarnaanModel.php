@@ -51,6 +51,7 @@ class PewarnaanModel extends Model // Update nama model
             ->join('users', 'pewarnaan.id_user_pewarnaan = users.id_user', 'left') // Relasi dengan tabel users untuk pewarnaan
             ->join('mutu', 'hpa.id_hpa = mutu.id_hpa', 'left') // Relasi dengan tabel mutu berdasarkan id_hpa
             ->where('hpa.status_hpa', 'Pewarnaan') // Filter berdasarkan status_hpa 'Pewarnaan'
+            ->orderBy('hpa.kode_hpa', 'ASC')
             ->findAll();
     }
 

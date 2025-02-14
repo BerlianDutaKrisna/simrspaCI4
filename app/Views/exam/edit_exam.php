@@ -115,6 +115,26 @@
                     </div>
                 </div>
 
+                <div class="form-group row">
+                <label class="col-sm-2 col-form-label" for="jumlah_slide">Jumlah Slide</label>
+                    <div class="col-sm-4">
+                        <select class="form-control" id="jumlah_slide" name="jumlah_slide" onchange="handleJumlahSlideChange(this)">
+                            <option value="0" <?= ($hpa['jumlah_slide'] == '0') ? 'selected' : '' ?>>0</option>
+                            <option value="1" <?= ($hpa['jumlah_slide'] == '1') ? 'selected' : '' ?>>1</option>
+                            <option value="2" <?= ($hpa['jumlah_slide'] == '2') ? 'selected' : '' ?>>2</option>
+                            <option value="3" <?= ($hpa['jumlah_slide'] == '3') ? 'selected' : '' ?>>3</option>
+                            <option value="lainnya" <?= (!in_array($hpa['jumlah_slide'], ['0', '1', '2', '3']) ? 'selected' : '') ?>>Lainnya</option>
+                        </select>
+                        <input
+                            type="text"
+                            class="form-control mt-2 <?= (!in_array($hpa['jumlah_slide'], ['0', '1', '2', '3'])) ? '' : 'd-none' ?>"
+                            id="jumlah_slide_custom"
+                            name="jumlah_slide_custom"
+                            placeholder="Masukkan Jumlah Slide Lainnya"
+                            value="<?= (!in_array($hpa['jumlah_slide'], ['0', '1', '2', '3'])) ? $hpa['jumlah_slide'] : '' ?>">
+                    </div>
+                </div>
+
                 <!-- Kolom Foto Mikroskopis -->
                 <div class="form-group row">
                     <label class="col-sm-2 col-form-label">Foto Mikroskopis</label>
@@ -138,27 +158,26 @@
 
                 <!-- Kolom Hasil HPA dan Jumlah Slide -->
                 <div class="form-group row">
-                    <label class="col-sm-2 col-form-label">Hasil HPA</label>
-                    <div class="col-sm-4">
-                        <input type="text" name="hasil_hpa" value="<?= $hpa['hasil_hpa'] ?? '' ?>" class="form-control form-control-user">
+                    <label class="col-sm-2 col-form-label">Hasil Hpa</label>
+                    <div class="col-sm-10">
+                        <textarea class="form-control summernote" name="hasil_hpa" id="hasil_hpa"><?= $hpa['hasil_hpa'] ?? '' ?></textarea>
                     </div>
+                </div>
 
-                    <label class="col-sm-2 col-form-label" for="jumlah_slide">Jumlah Slide</label>
+                <div class="form-group row">
+                    <label class="col-sm-2 col-form-label">Dokter Makroskopis</label>
                     <div class="col-sm-4">
-                        <select class="form-control" id="jumlah_slide" name="jumlah_slide" onchange="handleJumlahSlideChange(this)">
-                            <option value="0" <?= ($hpa['jumlah_slide'] == '0') ? 'selected' : '' ?>>0</option>
-                            <option value="1" <?= ($hpa['jumlah_slide'] == '1') ? 'selected' : '' ?>>1</option>
-                            <option value="2" <?= ($hpa['jumlah_slide'] == '2') ? 'selected' : '' ?>>2</option>
-                            <option value="3" <?= ($hpa['jumlah_slide'] == '3') ? 'selected' : '' ?>>3</option>
-                            <option value="lainnya" <?= (!in_array($hpa['jumlah_slide'], ['0', '1', '2', '3']) ? 'selected' : '') ?>>Lainnya</option>
+                        <select class="form-control" id="id_user_dokter_pemotongan" name="id_user_dokter_pemotongan">
+                            <option value="" <?= empty($hpa['id_user_dokter_pemotongan']) ? 'selected' : '' ?>>-- Pilih Dokter --</option>
+                            <?php foreach ($users as $user): ?>
+                                <?php if ($user['status_user'] === 'Dokter'): ?>
+                                    <option value="<?= $user['id_user'] ?>"
+                                        <?= isset($pemotongan['id_user_dokter_pemotongan']) && $user['id_user'] == $pemotongan['id_user_dokter_pemotongan'] ? 'selected' : '' ?>>
+                                        <?= $user['nama_user'] ?>
+                                    </option>
+                                <?php endif; ?>
+                            <?php endforeach; ?>
                         </select>
-                        <input
-                            type="text"
-                            class="form-control mt-2 <?= (!in_array($hpa['jumlah_slide'], ['0', '1', '2', '3'])) ? '' : 'd-none' ?>"
-                            id="jumlah_slide_custom"
-                            name="jumlah_slide_custom"
-                            placeholder="Masukkan Jumlah Slide Lainnya"
-                            value="<?= (!in_array($hpa['jumlah_slide'], ['0', '1', '2', '3'])) ? $hpa['jumlah_slide'] : '' ?>">
                     </div>
                 </div>
 

@@ -13,11 +13,11 @@
                     </a>
                     <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
                         aria-labelledby="dropdownMenuLink">
-                        <div class="dropdown-header">Dropdown Header:</div> <!-- Header dropdown -->
-                        <a class="dropdown-item" href="#">Action</a>
-                        <a class="dropdown-item" href="#">Another action</a>
+                        <div class="dropdown-header">Cetak Laporan HPA:</div> <!-- Header dropdown -->
+                        <a class="dropdown-item" href="<?= base_url('laporan_jumlah_pasien') ?>">Jumlah Pasien</a>
+                        <a class="dropdown-item" href="#">Evaluasi Pelayanan</a>
                         <div class="dropdown-divider"></div> <!-- Pemisah dalam dropdown -->
-                        <a class="dropdown-item" href="#">Something else here</a>
+                        <a class="dropdown-item" href="#">Lainya</a>
                     </div>
                 </div>
             </div>
@@ -104,9 +104,9 @@
                     </a>
                     <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
                         aria-labelledby="dropdownMenuLink">
-                        <div class="dropdown-header">Dropdown Header:</div> <!-- Header dropdown -->
-                        <a class="dropdown-item" href="#">Action</a>
-                        <a class="dropdown-item" href="#">Another action</a>
+                        <div class="dropdown-header">Cetak Laporan Pemeriksaan:</div> <!-- Header dropdown -->
+                        <a class="dropdown-item" href="#">Laporan pemeriksaan HPA</a>
+                        <a class="dropdown-item" href="#">Buku Penerimaan</a>
                         <div class="dropdown-divider"></div> <!-- Pemisah dalam dropdown -->
                         <a class="dropdown-item" href="#">Something else here</a>
                     </div>
@@ -150,23 +150,33 @@
     var myBarChart = new Chart(ctx, {
         type: 'bar',
         data: {
-            labels: ['NBF 10%', 'Alkohol 96%', 'Xylol', 'Parafin', 'Aqua Bidest'],
+            labels: ['NBF 10%', 'Alkohol 96%', 'Alkohol 100%', 'Xylol', 'Hematoxilin', 'Eosin', 'Orange G', 'EA 50', 'Parafin', 'Aqua Bidest'],
             datasets: [{
                 label: 'Jumlah Stok',
-                data: [50, 120, 75, 10, 100], // Data dummy
+                data: [50, 120, 75, 10, 100, 90, 60, 45, 30, 20], // Sesuaikan jumlah data dengan labels
                 backgroundColor: [
                     'rgba(255, 99, 132, 0.2)',
                     'rgba(54, 162, 235, 0.2)',
                     'rgba(255, 206, 86, 0.2)',
                     'rgba(75, 192, 192, 0.2)',
-                    'rgba(153, 102, 255, 0.2)'
+                    'rgba(153, 102, 255, 0.2)',
+                    'rgba(255, 159, 64, 0.2)',
+                    'rgba(201, 203, 207, 0.2)',
+                    'rgba(140, 220, 130, 0.2)',
+                    'rgba(220, 140, 130, 0.2)',
+                    'rgba(130, 140, 220, 0.2)'
                 ],
                 borderColor: [
                     'rgba(255, 99, 132, 1)',
                     'rgba(54, 162, 235, 1)',
                     'rgba(255, 206, 86, 1)',
                     'rgba(75, 192, 192, 1)',
-                    'rgba(153, 102, 255, 1)'
+                    'rgba(153, 102, 255, 1)',
+                    'rgba(255, 159, 64, 1)',
+                    'rgba(201, 203, 207, 1)',
+                    'rgba(140, 220, 130, 1)',
+                    'rgba(220, 140, 130, 1)',
+                    'rgba(130, 140, 220, 1)'
                 ],
                 borderWidth: 1
             }]

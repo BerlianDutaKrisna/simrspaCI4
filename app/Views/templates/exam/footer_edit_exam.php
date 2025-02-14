@@ -49,7 +49,7 @@
             tabsize: 2,
             height: 200,
             toolbar: [
-                ['style', ['style', 'bold', 'italic', 'underline', 'clear']], // tombol gaya teks
+                ['style', ['bold', 'italic', 'underline', 'clear']], // tombol gaya teks
                 ['font', ['fontsize', 'fontname']], // font dan ukuran font
                 ['para', ['ul', 'ol', 'paragraph']], // format paragraf
                 ['color', ['color']], // pilihan warna

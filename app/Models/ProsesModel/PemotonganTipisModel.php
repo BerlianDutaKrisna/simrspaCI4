@@ -51,6 +51,7 @@ class PemotonganTipisModel extends Model // Update nama model
             ->join('users', 'pemotongan_tipis.id_user_pemotongan_tipis = users.id_user', 'left') // Relasi dengan tabel users untuk pemotongan tipis
             ->join('mutu', 'hpa.id_hpa = mutu.id_hpa', 'left') // Relasi dengan tabel mutu berdasarkan id_hpa
             ->where('hpa.status_hpa', 'Pemotongan Tipis') // Filter berdasarkan status_hpa 'Pemotongan Tipis'
+            ->orderBy('hpa.kode_hpa', 'ASC')
             ->findAll();
     }
 

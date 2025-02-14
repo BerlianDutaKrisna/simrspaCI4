@@ -122,6 +122,14 @@
                                 <?= $hpa['mikroskopis_hpa'] ?? '' ?>
                                 </textarea>
                         </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 col-form-label">Hasil Hpa</label>
+                        </div>
+                        <div class="col-sm-10">
+                            <textarea class="form-control summernote" name="hasil_hpa" id="hasil_hpa">
+                                <?= $hpa['hasil_hpa'] ?? '' ?>
+                                </textarea>
+                        </div>
                     </div>
                     <!-- Kolom Kanan -->
                     <div class="col-sm-6">
@@ -215,7 +223,12 @@
 
                 <!-- Kolom Hasil HPA dan Dokter -->
                 <div class="form-group row">
-                    <label class="col-sm-2 col-form-label" for="jumlah_slide">Dokter yang membaca</label>
+                    <label class="col-sm-2 col-form-label"></label>
+                    <div class="col-sm-4">
+                        
+                    </div>
+
+                    <label class="col-sm-2 col-form-label">Dokter yang membaca</label>
                     <div class="col-sm-4">
                         <select class="form-control" id="id_user_dokter_pemotongan" name="id_user_dokter_pemotongan">
                             <option value="" <?= empty($hpa['id_user_dokter_pemotongan']) ? 'selected' : '' ?>>-- Pilih Dokter --</option>
@@ -229,11 +242,6 @@
                             <?php endforeach; ?>
                         </select>
                     </div>
-
-                    <label class="col-sm-2 col-form-label">Hasil HPA</label>
-                    <div class="col-sm-4">
-                        <input type="text" name="hasil_hpa" value="<?= $hpa['hasil_hpa'] ?? '' ?>" class="form-control form-control-user">
-                    </div>
                 </div>
 
                 <div class="form-group row">
@@ -242,7 +250,7 @@
                         <button type="submit"
                             class="btn btn-success btn-user w-100"
                             formaction="<?= base_url('exam/update/' . $hpa['id_hpa']); ?>">
-                            Simpan
+                            <i class="fas fa-save"></i> Simpan
                         </button>
                     </div>
                 </div>
