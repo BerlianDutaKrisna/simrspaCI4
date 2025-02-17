@@ -7,7 +7,7 @@
             <!-- Tombol 1: Penerimaan -->
             <div class="col">
                 <a href="<?= base_url('penerimaan/index_penerimaan') ?>" class="btn btn-primary btn-icon-split btn-sm d-flex justify-content-between m-2">
-                    <span class="text"><b style="color: white">1</b> Penerimaan</span>
+                    <span class="text"><b style="color: white"><?= esc($countPenerimaan ?? ""); ?></b> Penerimaan</span>
                     <span class="icon text-white-50">
                         <i class="fas fa-clipboard"></i> <!-- Ikon untuk Penerimaan -->
                     </span>

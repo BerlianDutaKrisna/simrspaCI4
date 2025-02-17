@@ -67,4 +67,9 @@ class PenerimaanModel extends Model
     {
         return $this->delete($id_penerimaan);
     }
+
+    public function countPenerimaan()
+    {
+        return $this->where('status_penerimaan !=', 'Selesai Pemeriksaan')->countAllResults();
+    }
 }

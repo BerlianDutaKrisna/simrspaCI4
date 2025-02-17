@@ -3,41 +3,30 @@
 namespace App\Controllers;
 
 use App\Models\HpaModel;
+use App\Models\ProsesModel\PenerimaanModel;
+
 
 class Dashboard extends BaseController
 {
-    public function __construct()
-    {
-        session()->set('previous_url', previous_url());
-    }
-
     public function index()
     {
-        // Membuat instance dari HpaModel
+
         $hpaModel = new HpaModel();
-
-        // Mengambil data HPA beserta relasinya
+        $penerimaanModel = new PenerimaanModel();
         $hpaData = $hpaModel->getHpaWithRelations();
-
-        // Mengambil jumlah HPA yang statusnya bukan "Sudah Diproses"
         $countHpaProcessed = $hpaModel->countHpaProcessed();
-
-        // Ambil data untuk chart berdasarkan tanggal_permintaan
+        $countPenerimaan = $penerimaanModel->countPenerimaan();
         $chartData = $hpaModel->getHpaChartData();
-
-        // Konversi data chart ke JSON agar bisa digunakan di JavaScript
         $chartDataJson = json_encode($chartData, JSON_NUMERIC_CHECK);
 
-        // Menggabungkan data dari model dan session
         $data = [
             'hpaData' => $hpaData,
             'countHpa' => $countHpaProcessed,
+            'countPenerimaan' => $countPenerimaan,
             'id_user' => session()->get('id_user'),
             'nama_user' => session()->get('nama_user'),
             'chartData' => $chartDataJson // Data dalam format JSON
         ];
-
-        // Mengirim data ke view untuk ditampilkan
         return view('dashboard/dashboard', $data);
     }
 }

@@ -504,8 +504,21 @@ class Exam extends BaseController
                         'status_penulisan' => 'Selesai Penulisan',
                         'selesai_penulisan' => date('Y-m-d H:i:s'),
                     ]);
+                    $lokasi_spesimen = $this->request->getPost('lokasi_spesimen');
+                    $diagnosa_klinik = $this->request->getPost('diagnosa_klinik');
+                    $makroskopis_hpa = $this->request->getPost('makroskopis_hpa');
+                    $mikroskopis_hpa = $this->request->getPost('mikroskopis_hpa');
+                    $hasil_hpa = $this->request->getPost('hasil_hpa');
+                    $print_hpa = $this->request->getPost('print_hpa');
+                    $hpaModel->update($id_hpa, [
+                        'lokasi_spesimen' => $lokasi_spesimen,
+                        'diagnosa_klinik' => $diagnosa_klinik,
+                        'makroskopis_hpa' => $makroskopis_hpa,
+                        'mikroskopis_hpa' => $mikroskopis_hpa,
+                        'hasil_hpa' => $hasil_hpa,
+                        'print_hpa' => $print_hpa,
+                    ]);
                     return redirect()->to('exam/edit_penulisan/' . $id_hpa)->with('success', 'Data penulisan berhasil diperbarui.');
-
                 default:
                     return redirect()->back()->with('success', 'Data berhasil diperbarui.');
             }
