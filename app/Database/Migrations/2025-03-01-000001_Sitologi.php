@@ -4,18 +4,18 @@ namespace App\Database\Migrations;
 
 use CodeIgniter\Database\Migration;
 
-class Hpa extends Migration
+class Sitologi extends Migration
 {
     public function up()
     {
         $this->forge->addField([
-            'id_hpa' => [
+            'id_sitologi' => [
                 'type'           => 'INT',
                 'constraint'     => 11,
                 'unsigned'       => true,
                 'auto_increment' => true,
             ],
-            'kode_hpa' => [
+            'kode_sitologi' => [
                 'type'       => 'VARCHAR',
                 'constraint' => 50,
                 'null'       => false,
@@ -64,28 +64,18 @@ class Hpa extends Migration
                 'default'    => 'Belum Diisi',
                 'null'       => true,
             ],
-            'status_hpa' => [
+            'status_sitologi' => [
                 'type'       => 'VARCHAR',
                 'constraint' => 100,
                 'default'    => 'Belum Diproses',
                 'null'       => true,
             ],
-            'makroskopis_hpa' => [
+            'makroskopis_sitologi' => [
                 'type' => 'TEXT',
                 'null' => true,
             ],
-            'foto_makroskopis_hpa' => [
-                'type' => 'VARCHAR',
-                'constraint' => 255,
-                'null' => true,
-            ],
-            'mikroskopis_hpa' => [
+            'mikroskopis_sitologi' => [
                 'type' => 'TEXT',
-                'null' => true,
-            ],
-            'foto_mikroskopis_hpa' => [
-                'type' => 'VARCHAR',
-                'constraint' => 255,
                 'null' => true,
             ],
             'jumlah_slide' => [
@@ -94,15 +84,15 @@ class Hpa extends Migration
                 'null'       => true,
                 'default'    => 0,
             ],
-            'hasil_hpa' => [
+            'hasil_sitologi' => [
                 'type' => 'TEXT',
                 'null' => true,
             ],
-            'print_hpa' => [
+            'print_sitologi' => [
                 'type' => 'TEXT',
                 'null' => true,
             ],
-            'penerima_hpa' => [
+            'penerima_sitologi' => [
                 'type' => 'VARCHAR',
                 'constraint' => 100,
                 'default'    => 'Belum Diambil',
@@ -111,84 +101,6 @@ class Hpa extends Migration
             'tanggal_penerima' => [
                 'type' => 'DATETIME',
                 'null' => true,
-            ],
-            'id_penerimaan' => [
-                'type'       => 'INT',
-                'constraint' => 11,
-                'unsigned'   => true,
-                'null'       => true,
-            ],
-            'id_pengirisan' => [
-                'type'       => 'INT',
-                'constraint' => 11,
-                'unsigned'   => true,
-                'null'       => true,
-            ],
-            'id_pemotongan' => [
-                'type'       => 'INT',
-                'constraint' => 11,
-                'unsigned'   => true,
-                'null'       => true,
-            ],
-            'id_pemprosesan' => [
-                'type'       => 'INT',
-                'constraint' => 11,
-                'unsigned'   => true,
-                'null'       => true,
-            ],
-            'id_penanaman' => [
-                'type'       => 'INT',
-                'constraint' => 11,
-                'unsigned'   => true,
-                'null'       => true,
-            ],
-            'id_pemotongan_tipis' => [
-                'type'       => 'INT',
-                'constraint' => 11,
-                'unsigned'   => true,
-                'null'       => true,
-            ],
-            'id_pewarnaan' => [
-                'type'       => 'INT',
-                'constraint' => 11,
-                'unsigned'   => true,
-                'null'       => true,
-            ],
-            'id_pembacaan' => [
-                'type'       => 'INT',
-                'constraint' => 11,
-                'unsigned'   => true,
-                'null'       => true,
-            ],
-            'id_penulisan' => [
-                'type'       => 'INT',
-                'constraint' => 11,
-                'unsigned'   => true,
-                'null'       => true,
-            ],
-            'id_pemverifikasi' => [
-                'type'       => 'INT',
-                'constraint' => 11,
-                'unsigned'   => true,
-                'null'       => true,
-            ],
-            'id_autorized' => [
-                'type'       => 'INT',
-                'constraint' => 11,
-                'unsigned'   => true,
-                'null'       => true,
-            ],
-            'id_pencetakan' => [
-                'type'       => 'INT',
-                'constraint' => 11,
-                'unsigned'   => true,
-                'null'       => true,
-            ],
-            'id_mutu' => [
-                'type'       => 'INT',
-                'constraint' => 11,
-                'unsigned'   => true,
-                'null'       => true,
             ],
             'created_at' => [
                 'type' => 'DATETIME',
@@ -201,16 +113,16 @@ class Hpa extends Migration
         ]);
 
         // Primary Key
-        $this->forge->addKey('id_hpa', true);
+        $this->forge->addKey('id_sitologi', true);
 
         // Foreign Keys
         $this->forge->addForeignKey('id_pasien', 'patient', 'id_pasien', 'CASCADE', 'CASCADE');
         // Create Table
-        $this->forge->createTable('hpa');
+        $this->forge->createTable('sitologi');
     }
 
     public function down()
     {
-        $this->forge->dropTable('hpa');
+        $this->forge->dropTable('sitologi');
     }
 }
