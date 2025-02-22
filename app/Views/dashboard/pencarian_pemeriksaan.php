@@ -105,9 +105,9 @@
                                 // Tambahkan tombol 'Tambah Pemeriksaan'
                                 document.getElementById('modalFooter').innerHTML = `
                     <a href="<?= site_url('exam/register_exam') ?>?norm_pasien=${norm}" class="btn btn-danger"><i class="fas fa-plus-square"></i> HPA</a>
-                    <a href="<?= site_url('exam/register_exam') ?>?norm_pasien=${norm}" class="btn btn-primary"><i class="fas fa-plus-square"></i> FNAB</a>
-                    <a href="<?= site_url('exam/register_exam') ?>?norm_pasien=${norm}" class="btn btn-success"><i class="fas fa-plus-square"></i> SRS</a>
-                    <a href="<?= site_url('exam/register_exam') ?>?norm_pasien=${norm}" class="btn btn-warning"><i class="fas fa-plus-square"></i> IHC</a>
+                    <a href="<?= site_url('fnab/register_fnab') ?>?norm_pasien=${norm}" class="btn btn-primary"><i class="fas fa-plus-square"></i> FNAB</a>
+                    <a href="<?= site_url('exam/register_srs') ?>?norm_pasien=${norm}" class="btn btn-success"><i class="fas fa-plus-square"></i> SRS</a>
+                    <a href="<?= site_url('exam/register_ihc') ?>?norm_pasien=${norm}" class="btn btn-warning"><i class="fas fa-plus-square"></i> IHC</a>
                     <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fas fa-window-close"></i> Tutup</button>
                 `;
                             } else {

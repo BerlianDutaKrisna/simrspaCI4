@@ -61,6 +61,13 @@ $routes->group('exam', function ($routes) {
     $routes->get('edit_print_hpa/(:num)', 'Exam::edit_print_hpa/$1');
 });
 
+// Route untuk Fnab
+$routes->group('fnab', ['namespace' => 'App\Controllers\Fnab'],function ($routes) {
+    $routes->get('register_fnab', 'Fnab::register_fnab');
+    $routes->post('insert', 'Fnab::insert');
+    $routes->get('index_fnab', 'Fnab::index_fnab');
+});
+
 // Route untuk Penerimaan
 $routes->group('penerimaan', ['namespace' => 'App\Controllers\Proses'], function ($routes) {
     $routes->get('index_penerimaan', 'Penerimaan::index_penerimaan'); // Menampilkan halaman penerimaan
