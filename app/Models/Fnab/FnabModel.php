@@ -40,4 +40,12 @@ class FnabModel extends Model
     {
         return $this->orderBy('id_fnab', 'DESC')->first();
     }
+    public function countfnabProcessed()
+    {
+        return $this->where('status_fnab !=', 'Selesai')->countAllResults();
+    }
+    public function countPenerimaanfnab()
+    {
+        return $this->where('status_fnab =', 'Terdaftar')->countAllResults();
+    }
 }

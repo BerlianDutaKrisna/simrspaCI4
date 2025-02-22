@@ -10,13 +10,13 @@
         <a href="<?= base_url('/dashboard') ?>" class="btn btn-primary mb-3">Kembali</a>
         <div class="row">
             <a href="<?= base_url('penerimaan/index_penerimaan') ?>" class="btn btn-danger btn-icon-split m-3">
-                <span class="text"><b style="color: white"><?= esc($countPenerimaan ?? ""); ?></b> HPA</span>
+                <span class="text"><b style="color: white"><?= esc($countPenerimaan ?? ""); ?></b> FNAB</span>
                 <span class="icon text-white-50">
                     <i class="fas fa-drumstick-bite"></i>
                 </span>
             </a>
             <a href="<?= base_url('penerimaan_fnab/index_penerimaan') ?>" class="btn btn-primary btn-icon-split m-3">
-                <span class="text"><b style="color: white"><?= esc($countPenerimaan ?? ""); ?></b> FNAB</span>
+                <span class="text"><b style="color: white"><?= esc($counts['countPenerimaanfnab'] ?? ""); ?></b> FNAB</span>
                 <span class="icon text-white-50">
                     <i class="fas fa-syringe"></i>
                 </span>
@@ -45,7 +45,7 @@
                     <thead>
                         <tr>
                             <th>No</th>
-                            <th>Kode HPA</th>
+                            <th>Kode fnab</th>
                             <th>Nama Pasien</th>
                             <th>Status Penerimaan</th>
                             <th>Aksi</th>
@@ -62,13 +62,13 @@
                             <?php foreach ($penerimaanData as $row): ?>
                                 <tr>
                                     <td><?= $i ?></td>
-                                    <td><?= $row['kode_hpa']; ?></td>
+                                    <td><?= $row['kode_fnab']; ?></td>
                                     <td><?= $row['nama_pasien']; ?></td>
                                     <td><?= $row['status_penerimaan']; ?></td>
                                     <td>
                                         <input type="checkbox"
                                             name="id_proses[]"
-                                            value="<?= $row['id_penerimaan']; ?>:<?= $row['id_hpa']; ?>:<?= $row['id_mutu']; ?>"
+                                            value="<?= $row['id_penerimaan']; ?>:<?= $row['id_fnab']; ?>:<?= $row['id_mutu']; ?>"
                                             class="form-control form-control-user checkbox-item"
                                             data-status='<?= json_encode([
                                                                 'status_penerimaan' => $row['status_penerimaan'] ?? ""

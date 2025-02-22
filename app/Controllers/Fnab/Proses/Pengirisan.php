@@ -1,19 +1,18 @@
 <?php
 
-namespace App\Controllers\Fnab\Proses;
+namespace App\Controllers\Proses;
 
 use App\Controllers\BaseController;
-use App\Models\Fnab\ProsesModel\PemotonganModel;
-use App\Models\Fnab\ProsesModel\PemprosesanModel;
+use App\Models\ProsesModel\PengirisanModel;
+use App\Models\ProsesModel\PemotonganModel;
 use App\Models\HpaModel;
 use App\Models\UsersModel;
 use App\Models\MutuModel;
 use Exception;
 
-class Pemotongan extends BaseController
+class Pengirisan extends BaseController
 {
-    protected $pemotonganModel;
-    protected $pemprosesanModel;
+    protected $pengirisanModel;
     protected $userModel;
     protected $hpaModel;
     protected $mutuModel;
@@ -21,20 +20,19 @@ class Pemotongan extends BaseController
 
     public function __construct()
     {
-        $this->pemotonganModel = new PemotonganModel();
-        $this->pemprosesanModel = new PemprosesanModel();
+        $this->pengirisanModel = new PengirisanModel();
         $this->userModel = new UsersModel();
         $this->hpaModel = new HpaModel();
         $this->mutuModel = new MutuModel();
         $this->session = session();
     }
 
-    public function index_pemotongan()
+    public function index_pengirisan()
     {
-        $pemotonganData = $this->pemotonganModel->getPemotonganWithRelations();
+        $pengirisanData = $this->pengirisanModel->getPengirisanWithRelations();
 
         $data = [
-            'pemotonganData' => $pemotonganData,
+            'pengirisanData' => $pengirisanData,
             'countPenerimaan' => $this->hpaModel->countPenerimaan(),
             'countPengirisan' => $this->hpaModel->countPengirisan(),
             'countPemotongan' => $this->hpaModel->countPemotongan(),
@@ -51,10 +49,10 @@ class Pemotongan extends BaseController
             'nama_user' => $this->session->get('nama_user'),
         ];
 
-        return view('proses/pemotongan', $data); // Update view
+        return view('proses/pengirisan', $data); // Update view
     }
 
-    public function proses_pemotongan()
+    public function proses_pengirisan()
     {
         // Get user ID from session
         $id_user = session()->get('id_user');
@@ -90,12 +88,12 @@ class Pemotongan extends BaseController
             // Process the action for each selected item
             if (!empty($selectedIds)) {
                 foreach ($selectedIds as $id) {
-                    list($id_pemotongan, $id_hpa, $id_mutu) = explode(':', $id);
+                    list($id_pengirisan, $id_hpa, $id_mutu) = explode(':', $id);
 
-                    $this->processAction($action, $id_pemotongan, $id_hpa, $id_user, $id_mutu);
+                    $this->processAction($action, $id_pengirisan, $id_hpa, $id_user, $id_mutu);
                 }
 
-                return redirect()->to('/pemotongan/index_pemotongan');
+                return redirect()->to('/pengirisan/index_pengirisan');
             }
         } catch (\Exception $e) {
             return redirect()->back()->with('error', $e->getMessage());
@@ -103,75 +101,77 @@ class Pemotongan extends BaseController
     }
 
     // Process action based on the action value
-    private function processAction($action, $id_pemotongan, $id_hpa, $id_user, $id_mutu)
+    private function processAction($action, $id_pengirisan, $id_hpa, $id_user, $id_mutu)
     {
         // Set zona waktu Indonesia/Jakarta
         date_default_timezone_set('Asia/Jakarta');
 
         $hpaModel = new HpaModel();
+        $pengirisanModel = new PengirisanModel();
         $pemotonganModel = new PemotonganModel();
-        $pemprosesanModel = new PemprosesanModel();
 
         try {
             switch ($action) {
-                    // TOMBOL MULAI PENGECEKAN
+                    // TOMBOL MULAI
                 case 'mulai':
-                    // Update data pemotongan
-                    $pemotonganModel->updatePemotongan($id_pemotongan, [
-                        'id_user_pemotongan' => $id_user,
-                        'status_pemotongan' => 'Proses Pemotongan',
-                        'mulai_pemotongan' => date('Y-m-d H:i:s'),
+                    // Update data pengirisan
+                    $pengirisanModel->updatePengirisan($id_pengirisan, [
+                        'id_user_pengirisan' => $id_user,
+                        'status_pengirisan' => 'Proses Pengirisan',
+                        'mulai_pengirisan' => date('Y-m-d H:i:s'),
                     ]);
                     break;
                     // TOMBOL SELESAI PENGECEKAN
                 case 'selesai':
-                    // Update data pemotongan ketika selesai
-                    $pemotonganModel->updatePemotongan($id_pemotongan, [
-                        'id_user_pemotongan' => $id_user,
-                        'status_pemotongan' => 'Selesai Pemotongan',
-                        'selesai_pemotongan' => date('Y-m-d H:i:s'),
+                    // Update data pengirisan ketika selesai
+                    $pengirisanModel->updatePengirisan($id_pengirisan, [
+                        'id_user_pengirisan' => $id_user,
+                        'status_pengirisan' => 'Selesai Pengirisan',
+                        'selesai_pengirisan' => date('Y-m-d H:i:s'),
                     ]);
+
                     break;
-                    // TOMBOL RESET PENGECEKAN
+                    // TOMBOL RESET
                 case 'reset':
-                    $pemotonganModel->updatePemotongan($id_pemotongan, [
-                        'id_user_pemotongan' => null,
-                        'status_pemotongan' => 'Belum Pemotongan',
-                        'mulai_pemotongan' => null,
-                        'selesai_pemotongan' => null,
+                    $pengirisanModel->updatePengirisan($id_pengirisan, [
+                        'id_user_pengirisan' => null,
+                        'status_pengirisan' => 'Belum Pengirisan',
+                        'mulai_pengirisan' => null,
+                        'selesai_pengirisan' => null,
                     ]);
                     break;
 
                     // TOMBOL KEMBALI
                 case 'kembalikan':
-                    // Menghapus data pemotongan berdasarkan id_pemotongan
-                    $pemotonganModel->deletePemotongan($id_pemotongan);
-                    $hpaModel->updateHpa($id_hpa, [
-                        'status_hpa' => 'Pengirisan',
-                        'id_pemotongan' => null,
-                    ]);;
-                break;     
+                        // Menghapus data pengirisan berdasarkan id_pengirisan
+                        $pengirisanModel->deletePengirisan($id_pengirisan);
+                        $hpaModel->updateHpa($id_hpa, [
+                            'status_hpa' => 'Penerimaan',
+                            'id_pengirisan' => null,
+                        ]);
+                    break;                    
 
+                    // TOMBOL LANJUT
                 case 'lanjut':
-                    // Update status_hpa menjadi 'Pemprosesan' pada tabel hpa
-                    $hpaModel->updateHpa($id_hpa, ['status_hpa' => 'Pemprosesan']);
+                    // Update status_hpa menjadi 'pemotongan' pada tabel hpa
+                    $hpaModel->updateHpa($id_hpa, ['status_hpa' => 'Pemotongan']);
 
-                    // Data untuk tabel pemprosesan
-                    $pemprosesanData = [
-                        'id_hpa'              => $id_hpa,
-                        'status_pemprosesan'     => 'Belum Pemprosesan',
+                    // Data untuk tabel pemotongan
+                    $pemotonganData = [
+                        'id_hpa'              => $id_hpa,  // Menambahkan id_hpa yang baru
+                        'status_pemotongan'     => 'Belum Pemotongan', // Status awal
                     ];
 
-                    // Simpan data ke tabel pemprosesan
-                    if (!$pemprosesanModel->insert($pemprosesanData)) {
-                        throw new Exception('Gagal menyimpan data pemprosesan.');
+                    // Simpan data ke tabel pemotongan
+                    if (!$pemotonganModel->insert($pemotonganData)) {
+                        throw new Exception('Gagal menyimpan data pemotongan.');
                     }
 
-                    // Ambil id_pemprosesan yang baru saja disimpan
-                    $id_pemprosesan = $pemprosesanModel->getInsertID();
+                    // Ambil id_pemotongan yang baru saja disimpan
+                    $id_pemotongan = $pemotonganModel->getInsertID();
 
-                    // Update id_pemprosesan pada tabel hpa
-                    $hpaModel->update($id_hpa, ['id_pemprosesan' => $id_pemprosesan]);
+                    // Update id_pemotongan pada tabel hpa
+                    $hpaModel->update($id_hpa, ['id_pemotongan' => $id_pemotongan]);
                     break;
             }
         } catch (\Exception $e) {
@@ -181,31 +181,31 @@ class Pemotongan extends BaseController
             throw new \Exception('Terjadi kesalahan saat memproses aksi: ' . $e->getMessage());
         }
     }
-
-    public function pemotongan_details()
+    
+    public function pengirisan_details()
     {
-        // Ambil id_pemotongan dari parameter GET
-        $id_pemotongan = $this->request->getGet('id_pemotongan');
+        // Ambil id_pengirisan dari parameter GET
+        $id_pengirisan = $this->request->getGet('id_pengirisan');
 
-        if ($id_pemotongan) {
-            // Muat model pemotongan
-            $model = new PemotonganModel();
+        if ($id_pengirisan) {
+            // Muat model pengirisan
+            $model = new PengirisanModel();
 
-            // Ambil data pemotongan berdasarkan id_pemotongan dan relasi yang ada
+            // Ambil data pengirisan berdasarkan id_pengirisan dan relasi yang ada
             $data = $model->select(
-                'pemotongan.*, 
+                'pengirisan.*, 
                 hpa.*, 
                 patient.*, 
-                users.nama_user AS nama_user_pemotongan'
+                users.nama_user AS nama_user_pengirisan'
             )
                 ->join(
                     'hpa',
-                    'pemotongan.id_hpa = hpa.id_hpa',
+                    'pengirisan.id_hpa = hpa.id_hpa',
                     'left'
                 ) // Relasi dengan tabel hpa
                 ->join('patient', 'hpa.id_pasien = patient.id_pasien', 'left')
-                ->join('users', 'pemotongan.id_user_pemotongan = users.id_user', 'left')
-                ->where('pemotongan.id_pemotongan', $id_pemotongan)
+                ->join('users', 'pengirisan.id_user_pengirisan = users.id_user', 'left')
+                ->where('pengirisan.id_pengirisan', $id_pengirisan)
                 ->first();
 
             if ($data) {
@@ -215,19 +215,19 @@ class Pemotongan extends BaseController
                 return $this->response->setJSON(['error' => 'Data tidak ditemukan.']);
             }
         } else {
-            return $this->response->setJSON(['error' => 'ID pemotongan tidak ditemukan.']);
+            return $this->response->setJSON(['error' => 'ID pengirisan tidak ditemukan.']);
         }
     }
 
     public function delete()
     {
         // Mendapatkan data dari request
-        $id_pemotongan = $this->request->getPost('id_pemotongan');
+        $id_pengirisan = $this->request->getPost('id_pengirisan');
         $id_hpa = $this->request->getPost('id_hpa');
 
-        if ($id_pemotongan && $id_hpa) {
+        if ($id_pengirisan && $id_hpa) {
             // Load model
-            $pemotonganModel = new PemotonganModel();
+            $pengirisanModel = new PengirisanModel();
             $hpaModel = new HpaModel();
 
             // Ambil instance dari database service
@@ -236,16 +236,16 @@ class Pemotongan extends BaseController
             // Mulai transaksi untuk memastikan kedua operasi berjalan atomik
             $db->transStart();
 
-            // Hapus data dari tabel pemotongan
-            $deleteResult = $pemotonganModel->deletePemotongan($id_pemotongan);
+            // Hapus data dari tabel pengirisan
+            $deleteResult = $pengirisanModel->deletePengirisan($id_pengirisan);
 
             // Cek apakah delete berhasil
             if ($deleteResult) {
-                // Update field id_pemotongan menjadi null pada tabel hpa
+                // Update field id_pengirisan menjadi null pada tabel hpa
                 $hpaModel->updateHpa($id_hpa, [
-                    'status_hpa' => 'Pengirisan',
-                    'id_pemotongan' => null,
-                ]);;
+                    'status_hpa' => 'Penerimaan',
+                    'id_pengirisan' => null,
+                ]);
 
                 // Selesaikan transaksi
                 $db->transComplete();
@@ -259,26 +259,26 @@ class Pemotongan extends BaseController
             } else {
                 // Jika delete gagal, rollback transaksi
                 $db->transRollback();
-                return $this->response->setJSON(['success' => false, 'message' => 'Gagal menghapus data pemotongan.']);
+                return $this->response->setJSON(['success' => false, 'message' => 'Gagal menghapus data pengirisan.']);
             }
         } else {
             return $this->response->setJSON(['success' => false, 'message' => 'ID tidak valid.']);
         }
     }
 
-    public function edit_pemotongan()
+    public function edit_pengirisan()
     {
-        $id_pemotongan = $this->request->getGet('id_pemotongan');
+        $id_pengirisan = $this->request->getGet('id_pengirisan');
 
-        if (!$id_pemotongan) {
-            throw new \CodeIgniter\Exceptions\PageNotFoundException('ID pemotongan tidak ditemukan.');
+        if (!$id_pengirisan) {
+            throw new \CodeIgniter\Exceptions\PageNotFoundException('ID pengirisan tidak ditemukan.');
         }
 
-        // Ambil data pemotongan berdasarkan ID
-        $pemotonganData = $this->pemotonganModel->find($id_pemotongan);
+        // Ambil data pengirisan berdasarkan ID
+        $pengirisanData = $this->pengirisanModel->find($id_pengirisan);
 
-        if (!$pemotonganData) {
-            throw new \CodeIgniter\Exceptions\PageNotFoundException('Data pemotongan tidak ditemukan.');
+        if (!$pengirisanData) {
+            throw new \CodeIgniter\Exceptions\PageNotFoundException('Data pengirisan tidak ditemukan.');
         }
 
         // Ambil data users dengan status_user = 'Analis'
@@ -286,37 +286,37 @@ class Pemotongan extends BaseController
         $users = $this->userModel->where('status_user', 'Analis')->findAll();
 
         $data = [
-            'pemotonganData' => $pemotonganData,
+            'pengirisanData' => $pengirisanData,
             'users' => $users, // Tambahkan data users ke view
             'id_user' => session()->get('id_user'),
             'nama_user' => session()->get('nama_user'),
         ];
 
-        return view('edit_proses/edit_pemotongan', $data);
+        return view('edit_proses/edit_pengirisan', $data);
     }
 
-    public function update_pemotongan()
+    public function update_pengirisan()
     {
-        $id_pemotongan = $this->request->getPost('id_pemotongan');
+        $id_pengirisan = $this->request->getPost('id_pengirisan');
         // Get individual date and time inputs
-        $mulai_date = $this->request->getPost('mulai_pemotongan_date');
-        $mulai_time = $this->request->getPost('mulai_pemotongan_time');
-        $selesai_date = $this->request->getPost('selesai_pemotongan_date');
-        $selesai_time = $this->request->getPost('selesai_pemotongan_time');
+        $mulai_date = $this->request->getPost('mulai_pengirisan_date');
+        $mulai_time = $this->request->getPost('mulai_pengirisan_time');
+        $selesai_date = $this->request->getPost('selesai_pengirisan_date');
+        $selesai_time = $this->request->getPost('selesai_pengirisan_time');
 
         // Combine date and time into one value
-        $mulai_pemotongan = $mulai_date . ' ' . $mulai_time;  // Format: YYYY-MM-DD HH:MM
-        $selesai_pemotongan = $selesai_date . ' ' . $selesai_time;  // Format: YYYY-MM-DD HH:MM
+        $mulai_pengirisan = $mulai_date . ' ' . $mulai_time;  // Format: YYYY-MM-DD HH:MM
+        $selesai_pengirisan = $selesai_date . ' ' . $selesai_time;  // Format: YYYY-MM-DD HH:MM
 
         $data = [
-            'id_user_pemotongan' => $this->request->getPost('id_user_pemotongan'),
-            'status_pemotongan'  => $this->request->getPost('status_pemotongan'),
-            'mulai_pemotongan'   => $mulai_pemotongan,
-            'selesai_pemotongan' => $selesai_pemotongan,
+            'id_user_pengirisan' => $this->request->getPost('id_user_pengirisan'),
+            'status_pengirisan'  => $this->request->getPost('status_pengirisan'),
+            'mulai_pengirisan'   => $mulai_pengirisan,
+            'selesai_pengirisan' => $selesai_pengirisan,
             'updated_at'         => date('Y-m-d H:i:s'),
         ];
 
-        if (!$this->pemotonganModel->update($id_pemotongan, $data)) {
+        if (!$this->pengirisanModel->update($id_pengirisan, $data)) {
             return redirect()->back()->with('error', 'Gagal mengupdate data.')->withInput();
         }
 

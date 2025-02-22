@@ -38,16 +38,17 @@ class PenerimaanModel extends Model
     {
         return $this->select(
             '
-        penerimaan.*, 
+        penerimaan_fnab.*, 
         fnab.*, 
-        patient.*, 
+        patient.*,
+        mutu_fnab.*,
         users.nama_user AS nama_user_penerimaan,
-        mutu.total_nilai_mutu'
+        mutu_fnab.total_nilai_mutu'
         )
-            ->join('fnab', 'penerimaan.id_fnab = fnab.id_fnab', 'left') // Relasi dengan tabel fnab
+            ->join('fnab', 'penerimaan_fnab.id_fnab = fnab.id_fnab', 'left') // Relasi dengan tabel fnab
             ->join('patient', 'fnab.id_pasien = patient.id_pasien', 'left') // Relasi dengan tabel patient
-            ->join('users', 'penerimaan.id_user_penerimaan = users.id_user', 'left') // Relasi dengan tabel users untuk penerimaan
-            ->join('mutu', 'fnab.id_fnab = mutu.id_fnab', 'left') // Relasi dengan tabel mutu berdasarkan id_fnab
+            ->join('users', 'penerimaan_fnab.id_user_penerimaan = users.id_user', 'left') // Relasi dengan tabel users untuk penerimaan
+            ->join('mutu_fnab', 'fnab.id_fnab = mutu_fnab.id_fnab', 'left') // Relasi dengan tabel mutu berdasarkan id_fnab
             ->whereIn('fnab.status_fnab', ['Penerimaan', 'Terdaftar']) // Menambahkan filter whereIn untuk status_fnab
             ->orderBy('fnab.kode_fnab', 'ASC')
             ->findAll();

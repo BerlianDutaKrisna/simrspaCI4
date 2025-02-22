@@ -1,19 +1,19 @@
 <?php
 
-namespace App\Controllers\Fnab\Proses;
+namespace App\Controllers\Proses;
 
 use App\Controllers\BaseController;
-use App\Models\Fnab\ProsesModel\PemotonganModel;
-use App\Models\Fnab\ProsesModel\PemprosesanModel;
+use App\Models\ProsesModel\PemverifikasiModel;
+use App\Models\ProsesModel\AutorizedModel;
 use App\Models\HpaModel;
 use App\Models\UsersModel;
 use App\Models\MutuModel;
 use Exception;
 
-class Pemotongan extends BaseController
+class Pemverifikasi extends BaseController
 {
-    protected $pemotonganModel;
-    protected $pemprosesanModel;
+    protected $pemverifikasiModel;
+    protected $autorizedModel;
     protected $userModel;
     protected $hpaModel;
     protected $mutuModel;
@@ -21,20 +21,20 @@ class Pemotongan extends BaseController
 
     public function __construct()
     {
-        $this->pemotonganModel = new PemotonganModel();
-        $this->pemprosesanModel = new PemprosesanModel();
+        $this->pemverifikasiModel = new PemverifikasiModel();
+        $this->autorizedModel = new AutorizedModel();
         $this->userModel = new UsersModel();
         $this->hpaModel = new HpaModel();
         $this->mutuModel = new MutuModel();
         $this->session = session();
     }
 
-    public function index_pemotongan()
+    public function index_pemverifikasi()
     {
-        $pemotonganData = $this->pemotonganModel->getPemotonganWithRelations();
+        $pemverifikasiData = $this->pemverifikasiModel->getPemverifikasiWithRelations();
 
         $data = [
-            'pemotonganData' => $pemotonganData,
+            'pemverifikasiData' => $pemverifikasiData,
             'countPenerimaan' => $this->hpaModel->countPenerimaan(),
             'countPengirisan' => $this->hpaModel->countPengirisan(),
             'countPemotongan' => $this->hpaModel->countPemotongan(),
@@ -51,10 +51,10 @@ class Pemotongan extends BaseController
             'nama_user' => $this->session->get('nama_user'),
         ];
 
-        return view('proses/pemotongan', $data); // Update view
+        return view('proses/pemverifikasi', $data); // Update view
     }
 
-    public function proses_pemotongan()
+    public function proses_pemverifikasi() // Update nama method
     {
         // Get user ID from session
         $id_user = session()->get('id_user');
@@ -90,12 +90,12 @@ class Pemotongan extends BaseController
             // Process the action for each selected item
             if (!empty($selectedIds)) {
                 foreach ($selectedIds as $id) {
-                    list($id_pemotongan, $id_hpa, $id_mutu) = explode(':', $id);
+                    list($id_pemverifikasi, $id_hpa, $id_mutu) = explode(':', $id);
 
-                    $this->processAction($action, $id_pemotongan, $id_hpa, $id_user, $id_mutu);
+                    $this->processAction($action, $id_pemverifikasi, $id_hpa, $id_user, $id_mutu); // Update nama variabel
                 }
 
-                return redirect()->to('/pemotongan/index_pemotongan');
+                return redirect()->to('/pemverifikasi/index_pemverifikasi'); // Update nama route
             }
         } catch (\Exception $e) {
             return redirect()->back()->with('error', $e->getMessage());
@@ -103,109 +103,97 @@ class Pemotongan extends BaseController
     }
 
     // Process action based on the action value
-    private function processAction($action, $id_pemotongan, $id_hpa, $id_user, $id_mutu)
+    private function processAction($action, $id_pemverifikasi, $id_hpa, $id_user, $id_mutu) // Update nama variabel
     {
         // Set zona waktu Indonesia/Jakarta
         date_default_timezone_set('Asia/Jakarta');
 
         $hpaModel = new HpaModel();
-        $pemotonganModel = new PemotonganModel();
-        $pemprosesanModel = new PemprosesanModel();
+        $pemverifikasiModel = new PemverifikasiModel();
+        $autorizedModel = new AutorizedModel();
 
         try {
             switch ($action) {
                     // TOMBOL MULAI PENGECEKAN
                 case 'mulai':
-                    // Update data pemotongan
-                    $pemotonganModel->updatePemotongan($id_pemotongan, [
-                        'id_user_pemotongan' => $id_user,
-                        'status_pemotongan' => 'Proses Pemotongan',
-                        'mulai_pemotongan' => date('Y-m-d H:i:s'),
+                    $pemverifikasiModel->updatePemverifikasi($id_pemverifikasi, [ // Update nama method dan variabel
+                        'id_user_pemverifikasi' => $id_user,
+                        'status_pemverifikasi' => 'Proses Pemverifikasi',
+                        'mulai_pemverifikasi' => date('Y-m-d H:i:s'),
                     ]);
                     break;
+
                     // TOMBOL SELESAI PENGECEKAN
                 case 'selesai':
-                    // Update data pemotongan ketika selesai
-                    $pemotonganModel->updatePemotongan($id_pemotongan, [
-                        'id_user_pemotongan' => $id_user,
-                        'status_pemotongan' => 'Selesai Pemotongan',
-                        'selesai_pemotongan' => date('Y-m-d H:i:s'),
-                    ]);
-                    break;
-                    // TOMBOL RESET PENGECEKAN
-                case 'reset':
-                    $pemotonganModel->updatePemotongan($id_pemotongan, [
-                        'id_user_pemotongan' => null,
-                        'status_pemotongan' => 'Belum Pemotongan',
-                        'mulai_pemotongan' => null,
-                        'selesai_pemotongan' => null,
+                    $pemverifikasiModel->updatePemverifikasi($id_pemverifikasi, [ // Update nama method dan variabel
+                        'id_user_pemverifikasi' => $id_user,
+                        'status_pemverifikasi' => 'Selesai Pemverifikasi',
+                        'selesai_pemverifikasi' => date('Y-m-d H:i:s'),
                     ]);
                     break;
 
-                    // TOMBOL KEMBALI
+                case 'reset':
+                    $pemverifikasiModel->updatePemverifikasi($id_pemverifikasi, [
+                        'id_user_pemverifikasi' => null,
+                        'status_pemverifikasi' => 'Belum Pemverifikasi',
+                        'mulai_pemverifikasi' => null,
+                        'selesai_pemverifikasi' => null,
+                    ]);
+                    break;
+
                 case 'kembalikan':
-                    // Menghapus data pemotongan berdasarkan id_pemotongan
-                    $pemotonganModel->deletePemotongan($id_pemotongan);
+                    $pemverifikasiModel->deletePemverifikasi($id_pemverifikasi);
                     $hpaModel->updateHpa($id_hpa, [
-                        'status_hpa' => 'Pengirisan',
-                        'id_pemotongan' => null,
-                    ]);;
-                break;     
+                        'status_hpa' => 'Penulisan',
+                        'id_pemverifikasi' => null,
+                    ]);
+                    break; 
 
                 case 'lanjut':
-                    // Update status_hpa menjadi 'Pemprosesan' pada tabel hpa
-                    $hpaModel->updateHpa($id_hpa, ['status_hpa' => 'Pemprosesan']);
-
-                    // Data untuk tabel pemprosesan
-                    $pemprosesanData = [
-                        'id_hpa'              => $id_hpa,
-                        'status_pemprosesan'     => 'Belum Pemprosesan',
+                    $hpaModel->updateHpa($id_hpa, ['status_hpa' => 'Autorized']);
+                    $autorizedData = [
+                        'id_hpa' => $id_hpa,
+                        'status_autorized' => 'Belum Authorized',
                     ];
 
-                    // Simpan data ke tabel pemprosesan
-                    if (!$pemprosesanModel->insert($pemprosesanData)) {
-                        throw new Exception('Gagal menyimpan data pemprosesan.');
+                    if (!$autorizedModel->insert($autorizedData)) { // Update nama method dan variabel
+                        throw new Exception('Gagal menyimpan data autorized.');
                     }
 
-                    // Ambil id_pemprosesan yang baru saja disimpan
-                    $id_pemprosesan = $pemprosesanModel->getInsertID();
-
-                    // Update id_pemprosesan pada tabel hpa
-                    $hpaModel->update($id_hpa, ['id_pemprosesan' => $id_pemprosesan]);
+                    $id_autorized = $autorizedModel->getInsertID(); // Update nama variabel
+                    $hpaModel->update($id_hpa, ['id_autorized' => $id_autorized]); // Update nama variabel
                     break;
             }
         } catch (\Exception $e) {
-            // Tangani error yang terjadi selama proses action
             log_message('error', 'Error in processAction: ' . $e->getMessage());
-            // Anda bisa melempar exception atau memberikan pesan error yang lebih spesifik
             throw new \Exception('Terjadi kesalahan saat memproses aksi: ' . $e->getMessage());
         }
     }
 
-    public function pemotongan_details()
+    public function pemverifikasi_details()
     {
-        // Ambil id_pemotongan dari parameter GET
-        $id_pemotongan = $this->request->getGet('id_pemotongan');
+        // Ambil id_pemverifikasi dari parameter GET
+        $id_pemverifikasi = $this->request->getGet('id_pemverifikasi');
 
-        if ($id_pemotongan) {
-            // Muat model pemotongan
-            $model = new PemotonganModel();
+        if ($id_pemverifikasi) {
+            // Muat model pemverifikasi
+            $model = new PemverifikasiModel();
 
-            // Ambil data pemotongan berdasarkan id_pemotongan dan relasi yang ada
+            // Ambil data pemverifikasi berdasarkan id_pemverifikasi dan relasi yang ada
             $data = $model->select(
-                'pemotongan.*, 
+                'pemverifikasi.*, 
                 hpa.*, 
                 patient.*, 
-                users.nama_user AS nama_user_pemotongan'
+                users.nama_user AS nama_user_pemverifikasi'
             )
                 ->join(
                     'hpa',
-                    'pemotongan.id_hpa = hpa.id_hpa',
+                    'pemverifikasi.id_hpa = hpa.id_hpa',
                     'left'
                 ) // Relasi dengan tabel hpa
                 ->join('patient', 'hpa.id_pasien = patient.id_pasien', 'left')
-                ->join('users', 'pemotongan.id_user_pemotongan = users.id_user', 'left')
-                ->where('pemotongan.id_pemotongan', $id_pemotongan)
+                ->join('users', 'pemverifikasi.id_user_pemverifikasi = users.id_user', 'left')
+                ->where('pemverifikasi.id_pemverifikasi', $id_pemverifikasi)
                 ->first();
 
             if ($data) {
@@ -215,19 +203,19 @@ class Pemotongan extends BaseController
                 return $this->response->setJSON(['error' => 'Data tidak ditemukan.']);
             }
         } else {
-            return $this->response->setJSON(['error' => 'ID pemotongan tidak ditemukan.']);
+            return $this->response->setJSON(['error' => 'ID pemverifikasi tidak ditemukan.']);
         }
     }
 
     public function delete()
     {
         // Mendapatkan data dari request
-        $id_pemotongan = $this->request->getPost('id_pemotongan');
+        $id_pemverifikasi = $this->request->getPost('id_pemverifikasi');
         $id_hpa = $this->request->getPost('id_hpa');
 
-        if ($id_pemotongan && $id_hpa) {
+        if ($id_pemverifikasi && $id_hpa) {
             // Load model
-            $pemotonganModel = new PemotonganModel();
+            $pemverifikasiModel = new PemverifikasiModel();
             $hpaModel = new HpaModel();
 
             // Ambil instance dari database service
@@ -236,16 +224,15 @@ class Pemotongan extends BaseController
             // Mulai transaksi untuk memastikan kedua operasi berjalan atomik
             $db->transStart();
 
-            // Hapus data dari tabel pemotongan
-            $deleteResult = $pemotonganModel->deletePemotongan($id_pemotongan);
+            // Hapus data dari tabel pemverifikasi
+            $deleteResult = $pemverifikasiModel->deletePemverifikasi($id_pemverifikasi);
 
             // Cek apakah delete berhasil
             if ($deleteResult) {
-                // Update field id_pemotongan menjadi null pada tabel hpa
                 $hpaModel->updateHpa($id_hpa, [
-                    'status_hpa' => 'Pengirisan',
-                    'id_pemotongan' => null,
-                ]);;
+                    'status_hpa' => 'Penulisan',
+                    'id_pemverifikasi' => null,
+                ]);
 
                 // Selesaikan transaksi
                 $db->transComplete();
@@ -259,26 +246,26 @@ class Pemotongan extends BaseController
             } else {
                 // Jika delete gagal, rollback transaksi
                 $db->transRollback();
-                return $this->response->setJSON(['success' => false, 'message' => 'Gagal menghapus data pemotongan.']);
+                return $this->response->setJSON(['success' => false, 'message' => 'Gagal menghapus data pemverifikasi.']);
             }
         } else {
             return $this->response->setJSON(['success' => false, 'message' => 'ID tidak valid.']);
         }
     }
 
-    public function edit_pemotongan()
+    public function edit_pemverifikasi()
     {
-        $id_pemotongan = $this->request->getGet('id_pemotongan');
+        $id_pemverifikasi = $this->request->getGet('id_pemverifikasi');
 
-        if (!$id_pemotongan) {
-            throw new \CodeIgniter\Exceptions\PageNotFoundException('ID pemotongan tidak ditemukan.');
+        if (!$id_pemverifikasi) {
+            throw new \CodeIgniter\Exceptions\PageNotFoundException('ID pemverifikasi tidak ditemukan.');
         }
 
-        // Ambil data pemotongan berdasarkan ID
-        $pemotonganData = $this->pemotonganModel->find($id_pemotongan);
+        // Ambil data pemverifikasi berdasarkan ID
+        $pemverifikasiData = $this->pemverifikasiModel->find($id_pemverifikasi);
 
-        if (!$pemotonganData) {
-            throw new \CodeIgniter\Exceptions\PageNotFoundException('Data pemotongan tidak ditemukan.');
+        if (!$pemverifikasiData) {
+            throw new \CodeIgniter\Exceptions\PageNotFoundException('Data pemverifikasi tidak ditemukan.');
         }
 
         // Ambil data users dengan status_user = 'Analis'
@@ -286,37 +273,37 @@ class Pemotongan extends BaseController
         $users = $this->userModel->where('status_user', 'Analis')->findAll();
 
         $data = [
-            'pemotonganData' => $pemotonganData,
+            'pemverifikasiData' => $pemverifikasiData,
             'users' => $users, // Tambahkan data users ke view
             'id_user' => session()->get('id_user'),
             'nama_user' => session()->get('nama_user'),
         ];
 
-        return view('edit_proses/edit_pemotongan', $data);
+        return view('edit_proses/edit_pemverifikasi', $data);
     }
 
-    public function update_pemotongan()
+    public function update_pemverifikasi()
     {
-        $id_pemotongan = $this->request->getPost('id_pemotongan');
+        $id_pemverifikasi = $this->request->getPost('id_pemverifikasi');
         // Get individual date and time inputs
-        $mulai_date = $this->request->getPost('mulai_pemotongan_date');
-        $mulai_time = $this->request->getPost('mulai_pemotongan_time');
-        $selesai_date = $this->request->getPost('selesai_pemotongan_date');
-        $selesai_time = $this->request->getPost('selesai_pemotongan_time');
+        $mulai_date = $this->request->getPost('mulai_pemverifikasi_date');
+        $mulai_time = $this->request->getPost('mulai_pemverifikasi_time');
+        $selesai_date = $this->request->getPost('selesai_pemverifikasi_date');
+        $selesai_time = $this->request->getPost('selesai_pemverifikasi_time');
 
         // Combine date and time into one value
-        $mulai_pemotongan = $mulai_date . ' ' . $mulai_time;  // Format: YYYY-MM-DD HH:MM
-        $selesai_pemotongan = $selesai_date . ' ' . $selesai_time;  // Format: YYYY-MM-DD HH:MM
+        $mulai_pemverifikasi = $mulai_date . ' ' . $mulai_time;  // Format: YYYY-MM-DD HH:MM
+        $selesai_pemverifikasi = $selesai_date . ' ' . $selesai_time;  // Format: YYYY-MM-DD HH:MM
 
         $data = [
-            'id_user_pemotongan' => $this->request->getPost('id_user_pemotongan'),
-            'status_pemotongan'  => $this->request->getPost('status_pemotongan'),
-            'mulai_pemotongan'   => $mulai_pemotongan,
-            'selesai_pemotongan' => $selesai_pemotongan,
+            'id_user_pemverifikasi' => $this->request->getPost('id_user_pemverifikasi'),
+            'status_pemverifikasi'  => $this->request->getPost('status_pemverifikasi'),
+            'mulai_pemverifikasi'   => $mulai_pemverifikasi,
+            'selesai_pemverifikasi' => $selesai_pemverifikasi,
             'updated_at'         => date('Y-m-d H:i:s'),
         ];
 
-        if (!$this->pemotonganModel->update($id_pemotongan, $data)) {
+        if (!$this->pemverifikasiModel->update($id_pemverifikasi, $data)) {
             return redirect()->back()->with('error', 'Gagal mengupdate data.')->withInput();
         }
 

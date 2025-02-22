@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Controllers\Fnab\Proses;
+namespace App\Controllers\Proses;
 
 use App\Controllers\BaseController;
-use App\Models\Fnab\ProsesModel\PemotonganModel;
-use App\Models\Fnab\ProsesModel\PemprosesanModel;
+use App\Models\ProsesModel\PemotonganModel;
+use App\Models\ProsesModel\PemprosesanModel;
 use App\Models\HpaModel;
 use App\Models\UsersModel;
 use App\Models\MutuModel;

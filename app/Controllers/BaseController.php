@@ -9,66 +9,75 @@ use CodeIgniter\HTTP\RequestInterface;
 use CodeIgniter\HTTP\ResponseInterface;
 use Psr\Log\LoggerInterface;
 
-/**
- * Class BaseController
- *
- * BaseController provides a convenient place for loading components
- * and performing functions that are needed by all your controllers.
- * Extend this class in any new controllers:
- *     class Home extends BaseController
- *
- * For security be sure to declare any new methods as protected or private.
- */
 abstract class BaseController extends Controller
 {
-    /**
-     * Instance of the main Request object.
-     *
-     * @var CLIRequest|IncomingRequest
-     */
     protected $request;
-
-    /**
-     * An array of helpers to be loaded automatically upon
-     * class instantiation. These helpers will be available
-     * to all other controllers that extend BaseController.
-     *
-     * @var list<string>
-     */
     protected $helpers = [];
-
-    /**
-     * Be sure to declare properties for any property fetch you initialized.
-     * The creation of dynamic property is deprecated in PHP 8.2.
-     */
-    // protected $session;
-
-    /**
-     * @return void
-     */
     protected $session;
     protected $id_user;
     protected $nama_user;
+    protected $hpaModel;
+    protected $fnabModel;
 
     public function initController(RequestInterface $request, ResponseInterface $response, LoggerInterface $logger)
     {
-        // Do Not Edit This Line
         parent::initController($request, $response, $logger);
-
-        // Preload any models, libraries, etc, here.
-
-        // E.g.: $this->session = \Config\Services::session();
 
         // Inisialisasi session
         $this->session = \Config\Services::session();
-
-        // Ambil data session
         $this->id_user = $this->session->get('id_user');
         $this->nama_user = $this->session->get('nama_user');
-        // Redirect jika session tidak ditemukan (opsional)
-        // if (!$this->id_user && service('uri')->getPath() !== 'login') {
-        //     header('Location: /');
-        //     exit;
-        // }
+
+        // Inisialisasi model
+        $this->hpaModel = new \App\Models\HpaModel();
+        $this->fnabModel = new \App\Models\Fnab\FnabModel();
+    }
+
+    protected function getCounts()
+    {
+        return [
+            'countPenerimaan' => $this->hpaModel->countPenerimaan(),
+            'countPengirisan' => $this->hpaModel->countPengirisan(),
+            'countPemotongan' => $this->hpaModel->countPemotongan(),
+            'countPemprosesan' => $this->hpaModel->countPemprosesan(),
+            'countPenanaman' => $this->hpaModel->countPenanaman(),
+            'countPemotonganTipis' => $this->hpaModel->countPemotonganTipis(),
+            'countPewarnaan' => $this->hpaModel->countPewarnaan(),
+            'countPembacaan' => $this->hpaModel->countPembacaan(),
+            'countPenulisan' => $this->hpaModel->countPenulisan(),
+            'countPemverifikasi' => $this->hpaModel->countPemverifikasi(),
+            'countAutorized' => $this->hpaModel->countAutorized(),
+            'countPencetakan' => $this->hpaModel->countPencetakan(),
+            'countPenerimaanfnab' => $this->fnabModel->countPenerimaanfnab(),
+        ];
+    }
+
+    protected function getUserData()
+    {
+        return [
+            'id_user' => $this->id_user,
+            'nama_user' => $this->nama_user,
+        ];
+    }
+}
+
+class SomeController extends BaseController
+{
+    public function someMethod()
+    {
+        $penerimaanData = $this->getPenerimaanData(); // Misalnya, fungsi untuk mengambil penerimaan data
+        $counts = $this->getCounts();
+        $userData = $this->getUserData();
+
+        $data = array_merge(['penerimaanData' => $penerimaanData], $counts, $userData);
+
+        // Gunakan $data untuk view atau proses selanjutnya
+        return view('some_view', $data);
+    }
+
+    private function getPenerimaanData()
+    {
+        // Logika untuk mengambil penerimaan data
+        return [];
     }
 }
