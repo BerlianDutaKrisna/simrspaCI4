@@ -62,9 +62,7 @@ class Auth extends BaseController
     // Fungsi logout
     public function logout()
     {
-        // Menghapus session yang terkait dengan user
-        session()->destroy(); // Menghapus semua session
-        // Redirect ke halaman login setelah logout
-        return redirect()->to('login')->with('success', ['Anda telah logout.']);
+        session()->destroy();
+        return redirect()->to('/auth/login')->with('success', 'Anda telah logout.');
     }
 }
