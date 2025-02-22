@@ -50,7 +50,7 @@
                                                             ]) ?>'
                                             autocomplete="off">
                                     </td>
-                                    <td><?= $row['nama_user_autorized']; ?></td>
+                                    <td><?= $row['nama_user_dokter_pemotongan']; ?></td>
                                     <td>
                                         <?= empty($row['mulai_autorized']) ? '-' : esc(date('H:i , d-m-Y', strtotime($row['mulai_autorized']))); ?>
                                     </td>

@@ -68,4 +68,9 @@ class PemverifikasiModel extends Model // Update nama model
     {
         return $this->delete($id_pemverifikasi);
     }
+
+    public function countPemverifikasi()
+    {
+        return $this->where('status_pemverifikasi !=', 'Selesai Pemverifikasi')->countAllResults();
+    }
 }

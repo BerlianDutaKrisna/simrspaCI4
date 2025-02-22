@@ -69,4 +69,9 @@ class PembacaanModel extends Model // Update nama model
     {
         return $this->delete($id_pembacaan);
     }
+
+    public function countPembacaan()
+    {
+        return $this->where('status_pembacaan !=', 'Selesai Pembacaan')->countAllResults();
+    }
 }

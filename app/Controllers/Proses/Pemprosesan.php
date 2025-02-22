@@ -12,31 +12,42 @@ use Exception;
 class Pemprosesan extends BaseController
 {
     protected $pemprosesanModel;
+    protected $penanamanModel;
     protected $userModel;
+    protected $hpaModel;
+    protected $session;
 
     public function __construct()
     {
         $this->pemprosesanModel = new PemprosesanModel();
+        $this->penanamanModel = new PenanamanModel();
         $this->userModel = new UsersModel();
+        $this->hpaModel = new HpaModel();
+        $this->session = session();
     }
 
-    public function index_pemprosesan() // Update method
+    public function index_pemprosesan() 
     {
-        // Mengambil id_user dan nama_user dari session
-        $pemprosesanModel = new PemprosesanModel(); // Update model
+        $pemprosesanData = $this->pemprosesanModel->getPemprosesanWithRelations();
 
-        // Mengambil data HPA beserta relasinya
-        $pemprosesanData['pemprosesanData'] = $pemprosesanModel->getPemprosesanWithRelations(); // Update data
-
-        // Menggabungkan data dari model dan session
         $data = [
-            'pemprosesanData' => $pemprosesanData['pemprosesanData'], // Update data
-            'id_user' => session()->get('id_user'),
-            'nama_user' => session()->get('nama_user'),
+            'pemprosesanData' => $pemprosesanData,
+            'countPenerimaan' => $this->hpaModel->countPenerimaan(),
+            'countPengirisan' => $this->hpaModel->countPengirisan(),
+            'countPemotongan' => $this->hpaModel->countPemotongan(),
+            'countPemprosesan' => $this->hpaModel->countPemprosesan(),
+            'countPenanaman' => $this->hpaModel->countPenanaman(),
+            'countPemotonganTipis' => $this->hpaModel->countPemotonganTipis(),
+            'countPewarnaan' => $this->hpaModel->countPewarnaan(),
+            'countPembacaan' => $this->hpaModel->countPembacaan(),
+            'countPenulisan' => $this->hpaModel->countPenulisan(),
+            'countPemverifikasi' => $this->hpaModel->countPemverifikasi(),
+            'countAutorized' => $this->hpaModel->countAutorized(),
+            'countPencetakan' => $this->hpaModel->countPencetakan(),
+            'id_user' => $this->session->get('id_user'),
+            'nama_user' => $this->session->get('nama_user'),
         ];
-        
 
-        // Mengirim data ke view untuk ditampilkan
         return view('proses/pemprosesan', $data); // Update view
     }
 

@@ -68,4 +68,9 @@ class PemprosesanModel extends Model // Update nama model
     {
         return $this->delete($id_pemprosesan);
     }
+
+    public function countPemprosesan()
+    {
+        return $this->where('status_pemprosesan !=', 'Selesai Pemprosesan')->countAllResults();
+    }
 }

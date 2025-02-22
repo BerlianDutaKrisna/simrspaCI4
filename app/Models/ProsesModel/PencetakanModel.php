@@ -68,4 +68,9 @@ class PencetakanModel extends Model // Update nama model
     {
         return $this->delete($id_pencetakan);
     }
+
+    public function countPencetakan()
+    {
+        return $this->where('status_pencetakan !=', 'Selesai Pencetakan')->countAllResults();
+    }
 }

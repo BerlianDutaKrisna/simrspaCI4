@@ -84,7 +84,7 @@
                                 </td>
 
                                 <td><?= esc($row['status_hpa'] ?? 'Belum Diisi') ?></td>
-                                <td><?= esc($row['hasil_hpa'] ?? 'Belum Ada Hasil') ?></td>
+                                <td><?= esc(strip_tags($row['hasil_hpa'] ?? 'Belum Ada Hasil')) ?></td>
                                 <td class="text-center">
                                     <a href="#"
                                         class="btn btn-info btn-sm penerima-btn"

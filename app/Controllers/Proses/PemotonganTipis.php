@@ -13,30 +13,38 @@ class PemotonganTipis extends BaseController
 {
     protected $pemotonganTipisModel;
     protected $userModel;
+    protected $hpaModel;
 
     public function __construct()
     {
         $this->pemotonganTipisModel = new PemotonganTipisModel();
         $this->userModel = new UsersModel();
+        $this->hpaModel = new HpaModel();
     }
 
     public function index_pemotongan_tipis() // Update method
     {
-        // Mengambil id_user dan nama_user dari session
-        $pemotonganTipisModel = new PemotonganTipisModel(); // Update model
+        $pemotonganTipisData = $this->pemotonganTipisModel->getPemotonganTipisWithRelations();
 
-        // Mengambil data HPA beserta relasinya
-        $pemotonganTipisData['pemotonganTipisData'] = $pemotonganTipisModel->getPemotonganTipisWithRelations(); // Update data
-
-        // Menggabungkan data dari model dan session
         $data = [
-            'pemotonganTipisData' => $pemotonganTipisData['pemotonganTipisData'], // Update data
+            'pemotonganTipisData' => $pemotonganTipisData,
+            'countPenerimaan' => $this->hpaModel->countPenerimaan(),
+            'countPengirisan' => $this->hpaModel->countPengirisan(),
+            'countPemotongan' => $this->hpaModel->countPemotongan(),
+            'countPemprosesan' => $this->hpaModel->countPemprosesan(),
+            'countPenanaman' => $this->hpaModel->countPenanaman(),
+            'countPemotonganTipis' => $this->hpaModel->countPemotonganTipis(),
+            'countPewarnaan' => $this->hpaModel->countPewarnaan(),
+            'countPembacaan' => $this->hpaModel->countPembacaan(),
+            'countPenulisan' => $this->hpaModel->countPenulisan(),
+            'countPemverifikasi' => $this->hpaModel->countPemverifikasi(),
+            'countAutorized' => $this->hpaModel->countAutorized(),
+            'countPencetakan' => $this->hpaModel->countPencetakan(),
             'id_user' => session()->get('id_user'),
             'nama_user' => session()->get('nama_user'),
         ];
 
-        // Mengirim data ke view untuk ditampilkan
-        return view('proses/pemotongan_tipis', $data); // Update view
+        return view('proses/pemotongan_tipis', $data);
     }
 
     public function proses_pemotongan_tipis() // Update method

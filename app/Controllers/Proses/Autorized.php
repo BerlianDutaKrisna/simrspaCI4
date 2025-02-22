@@ -7,35 +7,49 @@ use App\Models\ProsesModel\AutorizedModel;
 use App\Models\ProsesModel\PencetakanModel;
 use App\Models\HpaModel;
 use App\Models\UsersModel;
+use App\Models\MutuModel;
 use Exception;
 
 class Autorized extends BaseController
 {
     protected $autorizedModel;
     protected $userModel;
+    protected $hpaModel;
+    protected $mutuModel;
+    protected $session;
 
     public function __construct()
     {
         $this->autorizedModel = new AutorizedModel();
         $this->userModel = new UsersModel();
-        session()->set('previous_url', previous_url());
+        $this->hpaModel = new HpaModel();
+        $this->mutuModel = new MutuModel();
+        $this->session = session();
     }
 
-    public function index_autorized() // Update nama method
+    public function index_autorized()
     {
-        session()->set('previous_url', previous_url());
-        $autorizedModel = new autorizedModel();
-        $autorizedData['autorizedData'] = $autorizedModel->getautorizedWithRelations(); // Update nama variabel
+        $autorizedData = $this->autorizedModel->getAutorizedWithRelations();
 
-        // Menggabungkan data dari model dan session
         $data = [
-            'autorizedData' => $autorizedData['autorizedData'], // Update nama variabel
-            'id_user' => session()->get('id_user'),
-            'nama_user' => session()->get('nama_user'),
+            'autorizedData' => $autorizedData,
+            'countPenerimaan' => $this->hpaModel->countPenerimaan(),
+            'countPengirisan' => $this->hpaModel->countPengirisan(),
+            'countPemotongan' => $this->hpaModel->countPemotongan(),
+            'countPemprosesan' => $this->hpaModel->countPemprosesan(),
+            'countPenanaman' => $this->hpaModel->countPenanaman(),
+            'countPemotonganTipis' => $this->hpaModel->countPemotonganTipis(),
+            'countPewarnaan' => $this->hpaModel->countPewarnaan(),
+            'countPembacaan' => $this->hpaModel->countPembacaan(),
+            'countPenulisan' => $this->hpaModel->countPenulisan(),
+            'countPemverifikasi' => $this->hpaModel->countPemverifikasi(),
+            'countAutorized' => $this->hpaModel->countAutorized(),
+            'countPencetakan' => $this->hpaModel->countPencetakan(),
+            'id_user' => $this->session->get('id_user'),
+            'nama_user' => $this->session->get('nama_user'),
         ];
 
-        // Mengirim data ke view untuk ditampilkan
-        return view('proses/autorized', $data); // Update nama view
+        return view('proses/autorized', $data); // Update view
     }
 
     public function proses_autorized() // Update nama method

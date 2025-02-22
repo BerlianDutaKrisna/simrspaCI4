@@ -32,7 +32,7 @@
                 <div class="form-group row">
                     <div class="col-sm-12">
                         <textarea class="form-control summernote_print" name="print_hpa" id="print_hpa" rows="5">
-                            <?= $hpa['print_hpa'] ?? '' ?>
+                            <font size="5" face="verdana"><?= $hpa['print_hpa'] ?? '' ?></font>
                         </textarea>
                     </div>
                 </div>
@@ -41,7 +41,7 @@
                         <button type="submit"
                             class="btn btn-success btn-user w-100"
                             formaction="<?= base_url('exam/update_print_hpa/' . $hpa['id_hpa']); ?>"
-                            <?= (($_GET['redirect'] ?? '') === 'index_autorized' || ($_GET['redirect'] ?? '') === 'index_pencetakan') ? 'disabled' : '' ?>>
+                            <?= (($_GET['redirect'] ?? '') === 'index_pemverifikasi') ? '' : 'disabled' ?>>
                             <i class="fas fa-check-square"></i> Verifikasi
                         </button>
                     </div>
@@ -50,7 +50,7 @@
                         <button type="submit"
                             class="btn btn-info btn-user w-100"
                             formaction="<?= base_url('exam/update_print_hpa/' . $hpa['id_hpa']); ?>"
-                            <?= (($_GET['redirect'] ?? '') === 'index_pemverifikasi' || ($_GET['redirect'] ?? '') === 'index_pencetakan') ? 'disabled' : '' ?>>
+                            <?= (($_GET['redirect'] ?? '') === 'index_autorized') ? '' : 'disabled' ?>>
                             <i class="fas fa-vote-yea"></i> Authorized
                         </button>
                     </div>
@@ -59,13 +59,13 @@
                         <button type="submit"
                             class="btn btn-success btn-user w-100 mb-3"
                             formaction="<?= base_url('exam/update_print_hpa/' . $hpa['id_hpa']); ?>"
-                            <?= (($_GET['redirect'] ?? '') === 'index_index_pemverfifikasi' || ($_GET['redirect'] ?? '') === 'index_autorized') ? 'disabled' : '' ?>>
+                            <?= (($_GET['redirect'] ?? '') === 'index_pencetkan') ? '' : 'disabled' ?>>
                             <i class="fas fa-save"></i> Simpan
                         </button>
                         <button type="button"
                             class="btn btn-primary btn-user w-100 w-md-auto"
                             onclick="cetakPrintHpa()"
-                            <?= (($_GET['redirect'] ?? '') === 'index_index_pemverfifikasi' || ($_GET['redirect'] ?? '') === 'index_autorized') ? 'disabled' : '' ?>>
+                            <?= (($_GET['redirect'] ?? '') === 'index_pencetkan') ? '' : 'disabled' ?>>
                             <i class="fas fa-print"></i> Cetak
                         </button>
                     </div>

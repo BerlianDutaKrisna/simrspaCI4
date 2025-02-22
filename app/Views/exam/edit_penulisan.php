@@ -92,7 +92,7 @@
                         <div class="col-sm-10">
                             <textarea class="form-control summernote" name="makroskopis_hpa" id="makroskopis_hpa">
                                 <?= $hpa['makroskopis_hpa'] ?? '' ?>
-                                </textarea>
+                            </textarea>
                         </div>
                         <div class="form-group">
                             <label class="col-sm-2 col-form-label" for="jumlah_slide">Jumlah Slide</label>
@@ -120,7 +120,7 @@
                         <div class="col-sm-10">
                             <textarea class="form-control summernote" name="mikroskopis_hpa" id="mikroskopis_hpa">
                                 <?= $hpa['mikroskopis_hpa'] ?? '' ?>
-                                </textarea>
+                            </textarea>
                         </div>
                         <div class="form-group">
                             <label class="col-sm-2 col-form-label">Hasil Hpa</label>
@@ -128,7 +128,7 @@
                         <div class="col-sm-10">
                             <textarea class="form-control summernote" name="hasil_hpa" id="hasil_hpa">
                                 <?= $hpa['hasil_hpa'] ?? '' ?>
-                                </textarea>
+                            </textarea>
                         </div>
                     </div>
                     <!-- Kolom Kanan -->
@@ -160,9 +160,7 @@
                                         <font size="5" face="verdana"><b>:</b><br></font>
                                     </td>
                                     <td style="border: none;" width="590pt">
-                                        <font size="5" face="verdana">
-                                            <b><?= $hpa['diagnosa_klinik'] ?? '' ?><br></b>
-                                        </font>
+                                        <font size="5" face="verdana"><b><?= $hpa['diagnosa_klinik'] ?? '' ?><br></b></font>
                                     </td>
                                 </tr>
                                 <tr>
@@ -178,7 +176,7 @@
                                 </tr>
                             </tbody>
                             </table>
-                            <font size="5" face="verdana"><b>LAPORAN PEMERIKSAAN:<br></b></font>
+                                <font size="5" face="verdana"><b>LAPORAN PEMERIKSAAN:<br></b></font>
                             <div>
                                 <font size="5" face="verdana"><b> MAKROSKOPIK :</b></font>
                             </div>
@@ -197,9 +195,7 @@
                                 <font size="5" face="verdana"><b>KESIMPULAN :</b> <?= $hpa['lokasi_spesimen'] ?? '' ?>, <?= $hpa['tindakan_spesimen'] ?? '' ?>:</b></font>
                             </div>
                             <div>
-                            <font size="5" face="verdana">
-                                <b><?= $hpa['hasil_hpa'] ?? '' ?></b>
-                            </font>
+                                <font size="5" face="verdana"><b><?= strtoupper($hpa['hasil_hpa'] ?? '') ?></b></font>
                             </div>
                             <br>
                             <div>

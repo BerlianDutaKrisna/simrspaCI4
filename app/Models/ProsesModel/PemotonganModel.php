@@ -70,4 +70,9 @@ class PemotonganModel extends Model
     {
         return $this->delete($id_pemotongan);
     }
+
+    public function countPemotongan()
+    {
+        return $this->where('status_pemotongan !=', 'Selesai Pemotongan')->countAllResults();
+    }
 }

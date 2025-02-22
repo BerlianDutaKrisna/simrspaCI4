@@ -13,30 +13,38 @@ class Pewarnaan extends BaseController
 {
     protected $pewarnaanModel;
     protected $userModel;
+    protected $hpaModel;
 
     public function __construct()
     {
         $this->pewarnaanModel = new PewarnaanModel();
         $this->userModel = new UsersModel();
+        $this->hpaModel = new HpaModel();
     }
 
-    public function index_pewarnaan() // Update method
+    public function index_pewarnaan()
     {
-        // Mengambil id_user dan nama_user dari session
-        $pewarnaanModel = new PewarnaanModel(); // Update model
+        $pewarnaanData = $this->pewarnaanModel->getPewarnaanWithRelations();
 
-        // Mengambil data HPA beserta relasinya
-        $pewarnaanData['pewarnaanData'] = $pewarnaanModel->getPewarnaanWithRelations(); // Update data
-
-        // Menggabungkan data dari model dan session
         $data = [
-            'pewarnaanData' => $pewarnaanData['pewarnaanData'], // Update data
+            'pewarnaanData' => $pewarnaanData,
+            'countPenerimaan' => $this->hpaModel->countPenerimaan(),
+            'countPengirisan' => $this->hpaModel->countPengirisan(),
+            'countPemotongan' => $this->hpaModel->countPemotongan(),
+            'countPemprosesan' => $this->hpaModel->countPemprosesan(),
+            'countPenanaman' => $this->hpaModel->countPenanaman(),
+            'countPemotonganTipis' => $this->hpaModel->countPemotonganTipis(),
+            'countPewarnaan' => $this->hpaModel->countPewarnaan(),
+            'countPembacaan' => $this->hpaModel->countPembacaan(),
+            'countPenulisan' => $this->hpaModel->countPenulisan(),
+            'countPemverifikasi' => $this->hpaModel->countPemverifikasi(),
+            'countAutorized' => $this->hpaModel->countAutorized(),
+            'countPencetakan' => $this->hpaModel->countPencetakan(),
             'id_user' => session()->get('id_user'),
             'nama_user' => session()->get('nama_user'),
         ];
 
-        // Mengirim data ke view untuk ditampilkan
-        return view('proses/pewarnaan', $data); // Update view
+        return view('proses/pewarnaan', $data);
     }
 
     public function proses_pewarnaan() // Update method

@@ -68,4 +68,9 @@ class PenulisanModel extends Model // Update nama model
     {
         return $this->delete($id_penulisan);
     }
+
+    public function countPenulisan()
+    {
+        return $this->where('status_penulisan !=', 'Selesai Penulisan')->countAllResults();
+    }
 }

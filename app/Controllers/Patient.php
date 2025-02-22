@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Controllers;
 
 use App\Models\PatientModel;
@@ -29,14 +30,14 @@ class Patient extends BaseController
     public function register_patient()
     {
         // Mendapatkan nilai norm_pasien dari query string
-    $norm_pasien = $this->request->getGet('norm_pasien');
+        $norm_pasien = $this->request->getGet('norm_pasien');
 
-    // Jika nilai norm_pasien ada, gunakan untuk prapengisian
-    if ($norm_pasien) {
-        // Lakukan logika yang sesuai, misalnya prapengisian form
-        $data['norm_pasien'] = $norm_pasien;
-    }
-    
+        // Jika nilai norm_pasien ada, gunakan untuk prapengisian
+        if ($norm_pasien) {
+            // Lakukan logika yang sesuai, misalnya prapengisian form
+            $data['norm_pasien'] = $norm_pasien;
+        }
+
         // Mengambil id_user dan nama_user dari session untuk ditampilkan di form
         $data['id_user'] = session()->get('id_user');
         $data['nama_user'] = session()->get('nama_user');
@@ -47,58 +48,46 @@ class Patient extends BaseController
     // Menangani penyimpanan data pasien baru
     public function insert()
     {
-        helper(['form', 'url']);  // Memanggil helper form dan url untuk mempermudah validasi dan URL
-        $validation = \Config\Services::validation();  // Menyiapkan layanan validasi bawaan CodeIgniter
-        
-        // Menetapkan aturan validasi
-        $validation->setRules([
+        helper(['form', 'url']);
+
+        // Validasi input
+        if (!$this->validate([
             'norm_pasien' => [
-                'rules' => 'required|min_length[6]|max_length[6]|numeric|is_unique[patient.norm_pasien]',
+                'rules'  => 'required|min_length[6]|max_length[6]|numeric|is_unique[patient.norm_pasien]',
                 'errors' => [
-                    'required' => 'Norm Pasien harus diisi.',
+                    'required'   => 'Norm Pasien harus diisi.',
                     'min_length' => 'Norm Pasien minimal harus 6 karakter.',
-                    'max_length' => 'Norm Pasien maksimal 6 karakter.',
-                    'numeric' => 'Norm Pasien harus berupa angka.',
-                    'is_unique' => 'Norm Pasien sudah terdaftar!'
+                    'max_length' => 'Norm Pasien maksimal harus 6 karakter.',
+                    'numeric'    => 'Norm Pasien harus berupa angka.',
+                    'is_unique'  => 'Norm Pasien sudah terdaftar!'
                 ]
             ],
             'nama_pasien' => [
-                'rules' => 'required',
-                'errors' => [
-                    'required' => 'Nama Pasien harus diisi.'
-                ]
+                'rules'  => 'required',
+                'errors' => ['required' => 'Nama Pasien harus diisi.']
             ]
-        ]);
-
-        // Mengecek apakah validasi gagal
-        if (!$validation->withRequest($this->request)->run()) {
-            return redirect()->back()->withInput()->with('error', $validation->getErrors());  // Jika gagal, kembalikan dengan pesan error
+        ])) {
+            return redirect()->back()->withInput()->with('error', $this->validator->getErrors());
         }
 
-        // Menyiapkan data pasien yang akan disimpan
+        // Data yang akan disimpan
         $data = [
-            'norm_pasien' => $this->request->getPost('norm_pasien'),
-            'nama_pasien' => $this->request->getPost('nama_pasien'),
-            'alamat_pasien' => $this->request->getPost('alamat_pasien'),
+            'norm_pasien'         => $this->request->getPost('norm_pasien'),
+            'nama_pasien'         => strtoupper($this->request->getPost('nama_pasien')),
+            'alamat_pasien'       => strtoupper($this->request->getPost('alamat_pasien')),
             'tanggal_lahir_pasien' => $this->request->getPost('tanggal_lahir_pasien') ?: null,
             'jenis_kelamin_pasien' => $this->request->getPost('jenis_kelamin_pasien'),
-            'status_pasien' => $this->request->getPost('status_pasien'),
+            'status_pasien'       => $this->request->getPost('status_pasien'),
         ];
-        try {
-            // Menyimpan data pasien ke database
-            $this->PatientModel->insertPatient($data);
-            
-            // Mengecek apakah data berhasil disimpan
-            if ($this->PatientModel->db->affectedRows() > 0) {
-                return redirect()->to('/dashboard')->with('success', 'Registrasi berhasil!');  // Jika berhasil, redirect ke halaman dashboard dengan pesan sukses
-            } else {
-                return redirect()->back()->with('error', 'Terjadi kesalahan saat mendaftar.');  // Jika gagal, tampilkan pesan error
-            }
-        } catch (\Exception $e) {
-            // Menangani kesalahan jika terjadi error saat proses insert
-            return redirect()->back()->with('error', 'Terjadi kesalahan internal: ' . $e->getMessage());  // Pesan error jika ada exception
+
+        // Simpan data ke database
+        if ($this->PatientModel->save($data)) {
+            return redirect()->to('/dashboard')->with('success', 'Registrasi berhasil!');
         }
+
+        return redirect()->back()->with('error', 'Terjadi kesalahan saat mendaftar.');
     }
+
 
     // Menampilkan halaman detail pasien
     public function delete($id_patient)
@@ -125,40 +114,40 @@ class Patient extends BaseController
     // Menampilkan form edit pengguna
     public function edit_patient($id_pasien)
     {
-    $PatienModel = new PatientModel();
-    
-    // Ambil id_user dan nama_user dari session yang sedang aktif
-    $data['id_user'] = session()->get('id_user');
-    $data['nama_user'] = session()->get('nama_user');
-    
-    // Ambil data pasien berdasarkan ID
-    $pasien = $PatienModel->find($id_pasien);
+        $PatienModel = new PatientModel();
 
-    // Jika pasien ditemukan, tampilkan form edit
-    if ($pasien) {
-        // Menggabungkan data pasien dengan session data
-        $data['pasien'] = $pasien;
-        
-        // Kirimkan data ke view
-        return view('patient/edit_patient', $data);
-    } else {
-        // Jika tidak ditemukan, tampilkan pesan error
-        return redirect()->to('/patient/index_patient')->with('message', [
-            'error' => 'pasien tidak ditemukan.'
-        ]);
-    }
+        // Ambil id_user dan nama_user dari session yang sedang aktif
+        $data['id_user'] = session()->get('id_user');
+        $data['nama_user'] = session()->get('nama_user');
+
+        // Ambil data pasien berdasarkan ID
+        $pasien = $PatienModel->find($id_pasien);
+
+        // Jika pasien ditemukan, tampilkan form edit
+        if ($pasien) {
+            // Menggabungkan data pasien dengan session data
+            $data['pasien'] = $pasien;
+
+            // Kirimkan data ke view
+            return view('patient/edit_patient', $data);
+        } else {
+            // Jika tidak ditemukan, tampilkan pesan error
+            return redirect()->to('/patient/index_patient')->with('message', [
+                'error' => 'pasien tidak ditemukan.'
+            ]);
+        }
     }
 
     // Menangani update data pengguna
     public function update($id_pasien)
     {
         $PatientModel = new PatientModel();
-        
+
         // Validasi input
         $validation = \Config\Services::validation();
         $validation->setRules([
             'norm_pasien'  => 'required',
-            'nama_pasien' => 'required' 
+            'nama_pasien' => 'required'
         ], [
             'norm_pasien' => [
                 'required' => 'Norm harus diisi!'
@@ -235,5 +224,4 @@ class Patient extends BaseController
             ]);
         }
     }
-
 }

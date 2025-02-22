@@ -68,4 +68,9 @@ class PewarnaanModel extends Model // Update nama model
     {
         return $this->delete($id_pewarnaan);
     }
+
+    public function countPewarnaan()
+    {
+        return $this->where('status_pewarnaan !=', 'Selesai Pewarnaan')->countAllResults();
+    }
 }

@@ -36,21 +36,24 @@ class AutorizedModel extends Model // Update nama model
     }
 
     // Mengambil data autorized dengan relasi
-    public function getAutorizedWithRelations() // Update nama fungsi
+    public function getAutorizedWithRelations()
     {
         return $this->select(
             '
         autorized.*, 
         hpa.*, 
         patient.*, 
-        users.nama_user AS nama_user_autorized,
+        dokter_pemotongan.nama_user AS nama_user_dokter_pemotongan, 
+        users.nama_user AS nama_user_autorized, 
         mutu.total_nilai_mutu'
         )
-            ->join('hpa', 'autorized.id_hpa = hpa.id_hpa', 'left') // Relasi dengan tabel hpa
-            ->join('patient', 'hpa.id_pasien = patient.id_pasien', 'left') // Relasi dengan tabel patient
-            ->join('users', 'autorized.id_user_autorized = users.id_user', 'left') // Relasi dengan tabel users untuk autorized
-            ->join('mutu', 'hpa.id_hpa = mutu.id_hpa', 'left') // Relasi dengan tabel mutu berdasarkan id_hpa
-            ->where('hpa.status_hpa', 'autorized') // Filter berdasarkan status_hpa 'autorized'
+            ->join('hpa', 'autorized.id_hpa = hpa.id_hpa', 'left')
+            ->join('patient', 'hpa.id_pasien = patient.id_pasien', 'left')
+            ->join('pemotongan', 'hpa.id_pemotongan = pemotongan.id_pemotongan', 'left')
+            ->join('users AS dokter_pemotongan', 'pemotongan.id_user_dokter_pemotongan = dokter_pemotongan.id_user', 'left') // Benar-benar mengambil nama dokter pemotongan
+            ->join('users', 'autorized.id_user_autorized = users.id_user', 'left') // Mengambil nama user untuk autorized
+            ->join('mutu', 'hpa.id_hpa = mutu.id_hpa', 'left')
+            ->where('hpa.status_hpa', 'Autorized')
             ->orderBy('hpa.kode_hpa', 'ASC')
             ->findAll();
     }
@@ -67,5 +70,10 @@ class AutorizedModel extends Model // Update nama model
     public function deleteAutorized($id_autorized)
     {
         return $this->delete($id_autorized);
+    }
+
+    public function countAutorized()
+    {
+        return $this->where('status_autorized !=', 'Selesai Authorized')->countAllResults();
     }
 }

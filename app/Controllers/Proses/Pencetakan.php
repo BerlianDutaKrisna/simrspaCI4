@@ -3,39 +3,54 @@
 namespace App\Controllers\Proses;
 
 use App\Controllers\BaseController;
-use App\Models\ProsesModel\PencetakanModel; // Update nama model
+use App\Models\ProsesModel\PencetakanModel;
 use App\Models\HpaModel;
 use App\Models\UsersModel;
+use App\Models\MutuModel;
 use Exception;
 
 class Pencetakan extends BaseController
 {
     protected $pencetakanModel;
     protected $userModel;
+    protected $hpaModel;
+    protected $mutuModel;
+    protected $session;
 
     public function __construct()
     {
         $this->pencetakanModel = new PencetakanModel();
         $this->userModel = new UsersModel();
-        session()->set('previous_url', previous_url());
+        $this->hpaModel = new HpaModel();
+        $this->mutuModel = new MutuModel();
+        $this->session = session();
     }
 
-    public function index_pencetakan() // Update nama method
+    public function index_pencetakan()
     {
-        session()->set('previous_url', previous_url());
-        $pencetakanModel = new PencetakanModel(); // Update nama model
-        $pencetakanData['pencetakanData'] = $pencetakanModel->getPencetakanWithRelations(); // Update nama variabel
+        $pencetakanData = $this->pencetakanModel->getPencetakanWithRelations();
 
-        // Menggabungkan data dari model dan session
         $data = [
-            'pencetakanData' => $pencetakanData['pencetakanData'], // Update nama variabel
-            'id_user' => session()->get('id_user'),
-            'nama_user' => session()->get('nama_user'),
+            'pencetakanData' => $pencetakanData,
+            'countPenerimaan' => $this->hpaModel->countPenerimaan(),
+            'countPengirisan' => $this->hpaModel->countPengirisan(),
+            'countPemotongan' => $this->hpaModel->countPemotongan(),
+            'countPemprosesan' => $this->hpaModel->countPemprosesan(),
+            'countPenanaman' => $this->hpaModel->countPenanaman(),
+            'countPemotonganTipis' => $this->hpaModel->countPemotonganTipis(),
+            'countPewarnaan' => $this->hpaModel->countPewarnaan(),
+            'countPembacaan' => $this->hpaModel->countPembacaan(),
+            'countPenulisan' => $this->hpaModel->countPenulisan(),
+            'countPemverifikasi' => $this->hpaModel->countPemverifikasi(),
+            'countAutorized' => $this->hpaModel->countAutorized(),
+            'countPencetakan' => $this->hpaModel->countPencetakan(),
+            'id_user' => $this->session->get('id_user'),
+            'nama_user' => $this->session->get('nama_user'),
         ];
 
-        // Mengirim data ke view untuk ditampilkan
-        return view('proses/pencetakan', $data); // Update nama view
+        return view('proses/pencetakan', $data); // Update view
     }
+
 
     public function proses_pencetakan() // Update nama method
     {

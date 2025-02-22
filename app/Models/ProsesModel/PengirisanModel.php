@@ -69,4 +69,9 @@ class PengirisanModel extends Model
     {
         return $this->delete($id_pengirisan);
     }
+
+    public function countPengirisan()
+    {
+        return $this->where('status_pengirisan !=', 'Selesai Pengirisan')->countAllResults();
+    }
 }

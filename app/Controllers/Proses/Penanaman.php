@@ -13,30 +13,44 @@ use Exception;
 class Penanaman extends BaseController
 {
     protected $penanamanModel;
+    protected $pemotonganTipisModel;
+    protected $mutuModel;
     protected $userModel;
+    protected $hpaModel;
+    protected $session;
 
     public function __construct()
     {
         $this->penanamanModel = new PenanamanModel();
+        $this->pemotonganTipisModel = new PemotonganTipisModel();
+        $this->mutuModel = new MutuModel();
         $this->userModel = new UsersModel();
+        $this->hpaModel = new HpaModel();
+        $this->session = session();
     }
 
-    public function index_penanaman() // Update method
+    public function index_penanaman() 
     {
-        // Mengambil id_user dan nama_user dari session
-        $penanamanModel = new PenanamanModel(); // Update model
+        $penanamanData = $this->penanamanModel->getPenanamanWithRelations();
 
-        // Mengambil data HPA beserta relasinya
-        $penanamanData['penanamanData'] = $penanamanModel->getPenanamanWithRelations(); // Update data
-
-        // Menggabungkan data dari model dan session
         $data = [
-            'penanamanData' => $penanamanData['penanamanData'], // Update data
-            'id_user' => session()->get('id_user'),
-            'nama_user' => session()->get('nama_user'),
+            'penanamanData' => $penanamanData,
+            'countPenerimaan' => $this->hpaModel->countPenerimaan(),
+            'countPengirisan' => $this->hpaModel->countPengirisan(),
+            'countPemotongan' => $this->hpaModel->countPemotongan(),
+            'countPemprosesan' => $this->hpaModel->countPemprosesan(),
+            'countPenanaman' => $this->hpaModel->countPenanaman(),
+            'countPemotonganTipis' => $this->hpaModel->countPemotonganTipis(),
+            'countPewarnaan' => $this->hpaModel->countPewarnaan(),
+            'countPembacaan' => $this->hpaModel->countPembacaan(),
+            'countPenulisan' => $this->hpaModel->countPenulisan(),
+            'countPemverifikasi' => $this->hpaModel->countPemverifikasi(),
+            'countAutorized' => $this->hpaModel->countAutorized(),
+            'countPencetakan' => $this->hpaModel->countPencetakan(),
+            'id_user' => $this->session->get('id_user'),
+            'nama_user' => $this->session->get('nama_user'),
         ];
 
-        // Mengirim data ke view untuk ditampilkan
         return view('proses/penanaman', $data); // Update view
     }
 

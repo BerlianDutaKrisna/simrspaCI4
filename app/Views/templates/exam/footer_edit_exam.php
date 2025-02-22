@@ -59,6 +59,21 @@
     });
 
     $(document).ready(function() {
+        $('.summernote_hasil').summernote({
+            placeholder: '',
+            tabsize: 2,
+            height: 750,
+            toolbar: [
+                ['style', ['bold', 'italic', 'underline', 'clear']], // tombol gaya teks
+                ['font', ['fontsize', 'fontname']], // font dan ukuran font
+                ['para', ['ul', 'ol', 'paragraph']], // format paragraf
+                ['color', ['color']], // pilihan warna
+                ['view', ['codeview', 'help']] // menampilkan kode HTML dan bantuan
+            ],
+        });
+    });
+
+    $(document).ready(function() {
         $('.summernote_print').summernote({
             placeholder: '',
             tabsize: 2,

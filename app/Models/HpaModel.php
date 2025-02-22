@@ -85,13 +85,62 @@ class HpaModel extends Model
             patient.*
         ')
             ->join('patient', 'patient.id_pasien = hpa.id_pasien', 'left')
+            ->orderBy('hpa.kode_hpa', 'ASC')
             ->get()
             ->getResultArray();
     }
 
     public function countHpaProcessed()
     {
-        return $this->where('status_hpa !=', 'Sudah Diproses')->countAllResults();
+        return $this->where('status_hpa !=', 'Selesai')->countAllResults();
+    }
+    public function countPenerimaan()
+    {
+        return $this->where('status_hpa =', 'Terdaftar')->countAllResults();
+    }
+    public function countPengirisan()
+    {
+        return $this->where('status_hpa =', 'Pengirisan')->countAllResults();
+    }
+    public function countPemotongan()
+    {
+        return $this->where('status_hpa =', 'Pemotongan')->countAllResults();
+    }
+    public function countPemprosesan()
+    {
+        return $this->where('status_hpa =', 'Pemprosesan')->countAllResults();
+    }
+    public function countPenanaman()
+    {
+        return $this->where('status_hpa =', 'Penanaman')->countAllResults();
+    }
+    public function countPemotonganTipis()
+    {
+        return $this->where('status_hpa =', 'Pemotongan Tipis')->countAllResults();
+    }
+    public function countPewarnaan()
+    {
+        return $this->where('status_hpa =', 'Pewarnaan')->countAllResults();
+    }
+    public function countPembacaan()
+    {
+        return $this->where('status_hpa =', 'Pembacaan')->countAllResults();
+    }
+    public function countPenulisan()
+    {
+        return $this->where('status_hpa =', 'Penulisan')->countAllResults();
+    }
+    public function countPemverifikasi()
+    {
+        return $this->where('status_hpa =', 'Pemverifikasi')->countAllResults();
+    }
+    public function countAutorized()
+    {
+        return $this->where('status_hpa =', 'Autorized')->countAllResults();
+    }
+    public function countPencetakan()
+    {
+        return $this->where('status_hpa =', 'Pencetakan')->countAllResults();
     }
 
     public function updateHpa($id_hpa, $data)

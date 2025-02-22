@@ -4,37 +4,52 @@ namespace App\Controllers\Proses;
 
 use App\Controllers\BaseController;
 use App\Models\ProsesModel\PembacaanModel;
-use App\Models\ProsesModel\penulisanModel;
+use App\Models\ProsesModel\PenulisanModel;
 use App\Models\HpaModel;
 use App\Models\UsersModel;
 use App\Models\MutuModel;
 use Exception;
 
-class pembacaan extends BaseController
+class Pembacaan extends BaseController
 {
     protected $pembacaanModel;
+    protected $penulisanModel;
     protected $userModel;
+    protected $hpaModel;
+    protected $mutuModel;
+    protected $session;
 
     public function __construct()
     {
         $this->pembacaanModel = new PembacaanModel();
+        $this->penulisanModel = new PenulisanModel();
         $this->userModel = new UsersModel();
-        session()->set('previous_url', previous_url());
+        $this->hpaModel = new HpaModel();
+        $this->mutuModel = new MutuModel();
+        $this->session = session();
     }
 
     public function index_pembacaan()
     {
-        session()->set('previous_url', previous_url());
-        $pembacaanModel = new PembacaanModel();
-        $pembacaanData['pembacaanData'] = $pembacaanModel->getPembacaanWithRelations();
+        $pembacaanData = $this->pembacaanModel->getPembacaanWithRelations();
 
-        // Menggabungkan data dari model dan session
         $data = [
-            'pembacaanData' => $pembacaanData['pembacaanData'],
-            'id_user' => session()->get('id_user'),
-            'nama_user' => session()->get('nama_user'),
+            'pembacaanData' => $pembacaanData,
+            'countPenerimaan' => $this->hpaModel->countPenerimaan(),
+            'countPengirisan' => $this->hpaModel->countPengirisan(),
+            'countPemotongan' => $this->hpaModel->countPemotongan(),
+            'countPemprosesan' => $this->hpaModel->countPemprosesan(),
+            'countPenanaman' => $this->hpaModel->countPenanaman(),
+            'countPemotonganTipis' => $this->hpaModel->countPemotonganTipis(),
+            'countPewarnaan' => $this->hpaModel->countPewarnaan(),
+            'countPembacaan' => $this->hpaModel->countPembacaan(),
+            'countPenulisan' => $this->hpaModel->countPenulisan(),
+            'countPemverifikasi' => $this->hpaModel->countPemverifikasi(),
+            'countAutorized' => $this->hpaModel->countAutorized(),
+            'countPencetakan' => $this->hpaModel->countPencetakan(),
+            'id_user' => $this->session->get('id_user'),
+            'nama_user' => $this->session->get('nama_user'),
         ];
-        // Mengirim data ke view untuk ditampilkan
 
         return view('proses/pembacaan', $data); // Update view
     }

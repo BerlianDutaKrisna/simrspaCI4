@@ -3,41 +3,57 @@
 namespace App\Controllers\Proses;
 
 use App\Controllers\BaseController;
+use App\Models\HpaModel;
 use App\Models\ProsesModel\PenerimaanModel;
 use App\Models\ProsesModel\PengirisanModel;
-use App\Models\HpaModel;
 use App\Models\UsersModel;
 use App\Models\MutuModel;
 use Exception;
 
 class Penerimaan extends BaseController
 {
+    protected $hpaModel;
     protected $penerimaanModel;
+    protected $pengirisanModel;
     protected $userModel;
+    protected $mutuModel;
+    protected $session;
 
     public function __construct()
     {
+        $this->hpaModel = new HpaModel();
         $this->penerimaanModel = new PenerimaanModel();
+        $this->pengirisanModel = new PengirisanModel();
         $this->userModel = new UsersModel();
+        $this->mutuModel = new MutuModel();
+        $this->session = session();
     }
 
     public function index_penerimaan()
     {
-        // Mengambil id_user dan nama_user dari session
-        $penerimaanModel = new PenerimaanModel();
+        $penerimaanData = $this->penerimaanModel->getPenerimaanWithRelations();
 
-        // Mengambil data HPA beserta relasinya
-        $penerimaanData['penerimaanData'] = $penerimaanModel->getPenerimaanWithRelations();
-
-        // Menggabungkan data dari model dan session
         $data = [
-            'penerimaanData' => $penerimaanData['penerimaanData'],
-            'id_user' => session()->get('id_user'),
-            'nama_user' => session()->get('nama_user'),
+            'penerimaanData' => $penerimaanData,
+            'countPenerimaan' => $this->hpaModel->countPenerimaan(),
+            'countPengirisan' => $this->hpaModel->countPengirisan(),
+            'countPemotongan' => $this->hpaModel->countPemotongan(),
+            'countPemprosesan' => $this->hpaModel->countPemprosesan(),
+            'countPenanaman' => $this->hpaModel->countPenanaman(),
+            'countPemotonganTipis' => $this->hpaModel->countPemotonganTipis(),
+            'countPewarnaan' => $this->hpaModel->countPewarnaan(),
+            'countPembacaan' => $this->hpaModel->countPembacaan(),
+            'countPenulisan' => $this->hpaModel->countPenulisan(),
+            'countPemverifikasi' => $this->hpaModel->countPemverifikasi(),
+            'countAutorized' => $this->hpaModel->countAutorized(),
+            'countPencetakan' => $this->hpaModel->countPencetakan(),
+            'id_user' => $this->session->get('id_user'),
+            'nama_user' => $this->session->get('nama_user'),
         ];
-        // Mengirim data ke view untuk ditampilkan
+
         return view('proses/penerimaan', $data);
     }
+
     public function proses_penerimaan()
     {
         // Get user ID from session
@@ -176,6 +192,7 @@ class Penerimaan extends BaseController
             throw new \Exception('Terjadi kesalahan saat memproses aksi: ' . $e->getMessage());
         }
     }
+    
     public function penerimaan_details()
     {
         // Ambil id_penerimaan dari parameter GET

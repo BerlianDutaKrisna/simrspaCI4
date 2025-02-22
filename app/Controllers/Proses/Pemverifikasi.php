@@ -7,35 +7,51 @@ use App\Models\ProsesModel\PemverifikasiModel;
 use App\Models\ProsesModel\AutorizedModel;
 use App\Models\HpaModel;
 use App\Models\UsersModel;
+use App\Models\MutuModel;
 use Exception;
 
 class Pemverifikasi extends BaseController
 {
     protected $pemverifikasiModel;
+    protected $autorizedModel;
     protected $userModel;
+    protected $hpaModel;
+    protected $mutuModel;
+    protected $session;
 
     public function __construct()
     {
         $this->pemverifikasiModel = new PemverifikasiModel();
+        $this->autorizedModel = new AutorizedModel();
         $this->userModel = new UsersModel();
-        session()->set('previous_url', previous_url());
+        $this->hpaModel = new HpaModel();
+        $this->mutuModel = new MutuModel();
+        $this->session = session();
     }
 
-    public function index_pemverifikasi() // Update nama method
+    public function index_pemverifikasi()
     {
-        session()->set('previous_url', previous_url());
-        $pemverifikasiModel = new PemverifikasiModel();
-        $pemverifikasiData['pemverifikasiData'] = $pemverifikasiModel->getPemverifikasiWithRelations(); // Update nama variabel
+        $pemverifikasiData = $this->pemverifikasiModel->getPemverifikasiWithRelations();
 
-        // Menggabungkan data dari model dan session
         $data = [
-            'pemverifikasiData' => $pemverifikasiData['pemverifikasiData'], // Update nama variabel
-            'id_user' => session()->get('id_user'),
-            'nama_user' => session()->get('nama_user'),
+            'pemverifikasiData' => $pemverifikasiData,
+            'countPenerimaan' => $this->hpaModel->countPenerimaan(),
+            'countPengirisan' => $this->hpaModel->countPengirisan(),
+            'countPemotongan' => $this->hpaModel->countPemotongan(),
+            'countPemprosesan' => $this->hpaModel->countPemprosesan(),
+            'countPenanaman' => $this->hpaModel->countPenanaman(),
+            'countPemotonganTipis' => $this->hpaModel->countPemotonganTipis(),
+            'countPewarnaan' => $this->hpaModel->countPewarnaan(),
+            'countPembacaan' => $this->hpaModel->countPembacaan(),
+            'countPenulisan' => $this->hpaModel->countPenulisan(),
+            'countPemverifikasi' => $this->hpaModel->countPemverifikasi(),
+            'countAutorized' => $this->hpaModel->countAutorized(),
+            'countPencetakan' => $this->hpaModel->countPencetakan(),
+            'id_user' => $this->session->get('id_user'),
+            'nama_user' => $this->session->get('nama_user'),
         ];
 
-        // Mengirim data ke view untuk ditampilkan
-        return view('proses/pemverifikasi', $data); // Update nama view
+        return view('proses/pemverifikasi', $data); // Update view
     }
 
     public function proses_pemverifikasi() // Update nama method

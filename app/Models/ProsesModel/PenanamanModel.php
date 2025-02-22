@@ -68,4 +68,9 @@ class PenanamanModel extends Model // Update nama model
     {
         return $this->delete($id_penanaman);
     }
+
+    public function countPenanaman()
+    {
+        return $this->where('status_penanaman !=', 'Selesai Penanaman')->countAllResults();
+    }
 }

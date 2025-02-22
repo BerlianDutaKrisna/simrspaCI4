@@ -68,4 +68,9 @@ class PemotonganTipisModel extends Model // Update nama model
     {
         return $this->delete($id_pemotongan_tipis);
     }
+
+    public function countPemotonganTipis()
+    {
+        return $this->where('status_pemotongan_tipis !=', 'Selesai Pemotongan Tipis')->countAllResults();
+    }
 }

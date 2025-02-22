@@ -147,9 +147,13 @@
                 <div class="form-group row">
                     <label class="col-sm-2 col-form-label">Hasil HPA</label>
                     <div class="col-sm-4">
-                        <input type="text" name="hasil_hpa" value="<?= $hpa['hasil_hpa'] ?? '' ?>" class="form-control form-control-user">
+                        <textarea class="form-control summernote" name="hasil_hpa" id="hasil_hpa">
+                            <?= $hpa['hasil_hpa'] ?? '' ?>
+                        </textarea>
                     </div>
-
+                </div>
+                
+                <div class="form-group row">
                     <label class="col-sm-2 col-form-label" for="jumlah_slide">Dokter yang membaca</label>
                     <div class="col-sm-4">
                         <select class="form-control" id="id_user_dokter_pemotongan" name="id_user_dokter_pemotongan">
