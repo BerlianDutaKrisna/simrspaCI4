@@ -4,12 +4,12 @@ namespace App\Database\Migrations;
 
 use CodeIgniter\Database\Migration;
 
-class Pewarnaan extends Migration
+class Pewarnaan_hpa extends Migration
 {
     public function up()
     {
         $this->forge->addField([
-            'id_pewarnaan' => [
+            'id_pewarnaan_hpa' => [
                 'type'           => 'INT',
                 'constraint'     => 11,
                 'unsigned'       => true,
@@ -21,22 +21,22 @@ class Pewarnaan extends Migration
                 'unsigned'   => true,
                 'unique' => true,
             ],
-            'id_user_pewarnaan' => [
+            'id_user_pewarnaan_hpa' => [
                 'type'       => 'INT',
                 'constraint' => 11,
                 'unsigned'   => true,
                 'null'       => true,
             ],
-            'status_pewarnaan' => [
+            'status_pewarnaan_hpa' => [
                 'type' => 'VARCHAR',
                 'constraint' => 100,
                 'null' => true,
             ],
-            'mulai_pewarnaan' => [
+            'mulai_pewarnaan_hpa' => [
                 'type' => 'DATETIME',
                 'null' => true,
             ],
-            'selesai_pewarnaan' => [
+            'selesai_pewarnaan_hpa' => [
                 'type' => 'DATETIME',
                 'null' => true,
             ],
@@ -50,16 +50,14 @@ class Pewarnaan extends Migration
             ],
         ]);
 
-        $this->forge->addKey('id_pewarnaan', true); // Primary Key
+        $this->forge->addKey('id_pewarnaan_hpa', true); // Primary Key
         $this->forge->addForeignKey('id_hpa', 'hpa', 'id_hpa', 'CASCADE', 'CASCADE'); // Foreign Key ke tabel hpa
-        $this->forge->addForeignKey('id_user_pewarnaan', 'users', 'id_user', 'CASCADE', 'CASCADE'); // Foreign Key ke tabel users
-        $this->forge->createTable('pewarnaan');
+        $this->forge->addForeignKey('id_user_pewarnaan_hpa', 'users', 'id_user', 'CASCADE', 'CASCADE'); // Foreign Key ke tabel users
+        $this->forge->createTable('pewarnaan_hpa');
     }
 
     public function down()
     {
-        $this->forge->dropForeignKey('pewarnaan', 'id_hpa');
-        $this->forge->dropForeignKey('pewarnaan', 'id_user_pewarnaan');
-        $this->forge->dropTable('pewarnaan');
+        $this->forge->dropTable('pewarnaan_hpa');
     }
 }

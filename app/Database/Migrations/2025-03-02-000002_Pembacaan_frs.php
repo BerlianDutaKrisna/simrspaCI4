@@ -65,9 +65,6 @@ class Pembacaan_frs extends Migration
 
     public function down()
     {
-        $this->forge->dropForeignKey('pembacaan_frs', 'id_frs');
-        $this->forge->dropForeignKey('pembacaan_frs', 'id_user_pembacaan_frs');
-        $this->forge->dropForeignKey('pembacaan_frs', 'id_user_dokter_pembacaan_frs');
         $this->forge->dropTable('pembacaan_frs');
     }
 }

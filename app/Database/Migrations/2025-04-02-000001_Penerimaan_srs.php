@@ -58,8 +58,6 @@ class Penerimaan_srs extends Migration
 
     public function down()
     {
-        $this->forge->dropForeignKey('penerimaan_srs', 'id_srs');
-        $this->forge->dropForeignKey('penerimaan_srs', 'id_user_penerimaan_srs');
         $this->forge->dropTable('penerimaan_srs');
     }
 }

@@ -112,12 +112,8 @@ class Ihc extends Migration
             ],
         ]);
 
-        // Primary Key
         $this->forge->addKey('id_ihc', true);
-
-        // Foreign Keys
         $this->forge->addForeignKey('id_pasien', 'patient', 'id_pasien', 'CASCADE', 'CASCADE');
-        // Create Table
         $this->forge->createTable('ihc');
     }
 

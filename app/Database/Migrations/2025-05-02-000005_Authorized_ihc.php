@@ -65,9 +65,6 @@ class Authorized_ihc extends Migration
 
     public function down()
     {
-        $this->forge->dropForeignKey('authorized_ihc', 'id_ihc');
-        $this->forge->dropForeignKey('authorized_ihc', 'id_user_authorized_ihc');
-        $this->forge->dropForeignKey('authorized_ihc', 'id_user_dokter_authorized_ihc');
         $this->forge->dropTable('authorized_ihc');
     }
 }

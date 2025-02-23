@@ -58,8 +58,6 @@ class Penerimaan_hpa extends Migration
 
     public function down()
     {
-        $this->forge->dropForeignKey('penerimaan_hpa', 'id_hpa');
-        $this->forge->dropForeignKey('penerimaan_hpa', 'id_user_penerimaan_hpa');
         $this->forge->dropTable('penerimaan_hpa');
     }
 }

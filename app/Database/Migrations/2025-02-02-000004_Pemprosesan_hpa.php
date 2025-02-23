@@ -58,8 +58,6 @@ class Pemprosesan_hpa extends Migration
 
     public function down()
     {
-        $this->forge->dropForeignKey('pemprosesan_hpa', 'id_hpa');
-        $this->forge->dropForeignKey('pemprosesan_hpa', 'id_user_pemprosesan_hpa');
         $this->forge->dropTable('pemprosesan_hpa');
     }
 }

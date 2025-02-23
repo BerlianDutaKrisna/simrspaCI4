@@ -58,8 +58,6 @@ class Penanaman_hpa extends Migration
 
     public function down()
     {
-        $this->forge->dropForeignKey('penanaman_hpa', 'id_hpa');
-        $this->forge->dropForeignKey('penanaman_hpa', 'id_user_penanaman_hpa');
         $this->forge->dropTable('penanaman_hpa');
     }
 }

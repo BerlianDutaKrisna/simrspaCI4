@@ -65,9 +65,6 @@ class Pembacaan_ihc extends Migration
 
     public function down()
     {
-        $this->forge->dropForeignKey('pembacaan_ihc', 'id_ihc');
-        $this->forge->dropForeignKey('pembacaan_ihc', 'id_user_pembacaan_ihc');
-        $this->forge->dropForeignKey('pembacaan_ihc', 'id_user_dokter_pembacaan_ihc');
         $this->forge->dropTable('pembacaan_ihc');
     }
 }

@@ -112,7 +112,6 @@ class Frs extends Migration
             ],
         ]);
 
-        // Primary Key
         $this->forge->addKey('id_frs', true);
         $this->forge->addForeignKey('id_pasien', 'patient', 'id_pasien', 'CASCADE', 'CASCADE');
         $this->forge->createTable('frs');

@@ -59,8 +59,6 @@ class Pemverifikasi_ihc extends Migration
 
     public function down()
     {
-        $this->forge->dropForeignKey('pemverifikasi_ihc', 'id_ihc');
-        $this->forge->dropForeignKey('pemverifikasi_ihc', 'id_user_pemverifikasi_ihc');
         $this->forge->dropTable('pemverifikasi_ihc');
     }
 }

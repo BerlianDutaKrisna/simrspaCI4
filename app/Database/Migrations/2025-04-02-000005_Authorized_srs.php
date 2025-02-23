@@ -66,9 +66,6 @@ class Authorized_srs extends Migration
 
     public function down()
     {
-        $this->forge->dropForeignKey('authorized_srs', 'id_srs');
-        $this->forge->dropForeignKey('authorized_srs', 'id_user_authorized_srs');
-        $this->forge->dropForeignKey('authorized_srs', 'id_user_dokter_authorized_srs');
         $this->forge->dropTable('authorized_srs');
     }
 }

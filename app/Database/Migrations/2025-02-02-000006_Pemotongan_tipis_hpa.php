@@ -58,8 +58,6 @@ class Pemotongan_tipis_hpa extends Migration
 
     public function down()
     {
-        $this->forge->dropForeignKey('pemotongan_tipis_hpa', 'id_hpa');
-        $this->forge->dropForeignKey('pemotongan_tipis_hpa', 'id_user_pemotongan_tipis_hpa');
         $this->forge->dropTable('pemotongan_tipis_hpa');
     }
 }

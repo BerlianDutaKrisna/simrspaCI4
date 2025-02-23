@@ -66,9 +66,6 @@ class Authorized_hpa extends Migration
 
     public function down()
     {
-        $this->forge->dropForeignKey('authorized_hpa', 'id_hpa');
-        $this->forge->dropForeignKey('authorized_hpa', 'id_user_authorized_hpa');
-        $this->forge->dropForeignKey('authorized_hpa', 'id_user_dokter_authorized_hpa');
         $this->forge->dropTable('authorized_hpa');
     }
 }

@@ -58,8 +58,6 @@ class Penulisan_frs extends Migration
 
     public function down()
     {
-        $this->forge->dropForeignKey('penulisan_frs', 'id_frs');
-        $this->forge->dropForeignKey('penulisan_frs', 'id_user_penulisan_frs');
         $this->forge->dropTable('penulisan_frs');
     }
 }

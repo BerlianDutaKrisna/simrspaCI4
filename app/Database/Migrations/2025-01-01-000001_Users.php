@@ -47,15 +47,12 @@ class Users extends Migration
             ],
         ]);
         
-        // Menambahkan primary key pada 'id_user'
         $this->forge->addKey('id_user', true);
-        // Membuat tabel users
         $this->forge->createTable('users');
     }
 
     public function down()
     {
-        // Menghapus tabel jika rollback
         $this->forge->dropTable('users');
     }
 }

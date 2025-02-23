@@ -58,8 +58,6 @@ class Pencetakan_srs extends Migration
 
     public function down()
     {
-        $this->forge->dropForeignKey('pencetakan_srs', 'id_srs');
-        $this->forge->dropForeignKey('pencetakan_srs', 'id_user_pencetakan_srs');
         $this->forge->dropTable('pencetakan_srs');
     }
 }

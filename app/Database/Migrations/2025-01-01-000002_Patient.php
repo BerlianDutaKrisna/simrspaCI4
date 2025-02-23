@@ -57,13 +57,12 @@ class Patient extends Migration
             ],
         ]);
 
-        $this->forge->addKey('id_pasien', true); // Primary key
-        $this->forge->createTable('patient');  // Membuat tabel pasien
+        $this->forge->addKey('id_pasien', true);
+        $this->forge->createTable('patient');
     }
 
     public function down()
     {
-        // Menghapus tabel jika rollback
         $this->forge->dropTable('patient');
     }
 }

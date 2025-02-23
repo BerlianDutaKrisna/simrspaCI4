@@ -58,8 +58,6 @@ class Penulisan_ihc extends Migration
 
     public function down()
     {
-        $this->forge->dropForeignKey('penulisan_ihc', 'id_ihc');
-        $this->forge->dropForeignKey('penulisan_ihc', 'id_user_penulisan_ihc');
         $this->forge->dropTable('penulisan_ihc');
     }
 }

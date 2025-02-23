@@ -59,8 +59,6 @@ class Pemverifikasi_srs extends Migration
 
     public function down()
     {
-        $this->forge->dropForeignKey('pemverifikasi_srs', 'id_srs');
-        $this->forge->dropForeignKey('pemverifikasi_srs', 'id_user_pemverifikasi_srs');
         $this->forge->dropTable('pemverifikasi_srs');
     }
 }

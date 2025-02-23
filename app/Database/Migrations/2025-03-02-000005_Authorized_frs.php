@@ -65,9 +65,6 @@ class Authorized_frs extends Migration
 
     public function down()
     {
-        $this->forge->dropForeignKey('authorized_frs', 'id_frs');
-        $this->forge->dropForeignKey('authorized_frs', 'id_user_authorized_frs');
-        $this->forge->dropForeignKey('authorized_frs', 'id_user_dokter_authorized_frs');
         $this->forge->dropTable('authorized_frs');
     }
 }

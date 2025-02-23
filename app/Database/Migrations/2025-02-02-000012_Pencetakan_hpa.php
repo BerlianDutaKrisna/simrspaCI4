@@ -58,8 +58,6 @@ class Pencetakan_hpa extends Migration
 
     public function down()
     {
-        $this->forge->dropForeignKey('pencetakan_hpa', 'id_hpa');
-        $this->forge->dropForeignKey('pencetakan_hpa', 'id_user_pencetakan_hpa');
         $this->forge->dropTable('pencetakan_hpa');
     }
 }

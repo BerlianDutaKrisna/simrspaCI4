@@ -50,17 +50,14 @@ class Pemverifikasi_hpa extends Migration
             ],
         ]);
 
-        $this->forge->addKey('id_pemverifikasi_hpa', true); // Primary Key
-        $this->forge->addForeignKey('id_hpa', 'hpa', 'id_hpa', 'CASCADE', 'CASCADE'); // Foreign Key ke tabel hpa
-        $this->forge->addForeignKey('id_user_pemverifikasi_hpa', 'users', 'id_user', 'CASCADE', 'CASCADE'); // Foreign Key ke tabel users
-
+        $this->forge->addKey('id_pemverifikasi_hpa', true);
+        $this->forge->addForeignKey('id_hpa', 'hpa', 'id_hpa', 'CASCADE', 'CASCADE');
+        $this->forge->addForeignKey('id_user_pemverifikasi_hpa', 'users', 'id_user', 'CASCADE', 'CASCADE'); 
         $this->forge->createTable('pemverifikasi_hpa');
     }
 
     public function down()
     {
-        $this->forge->dropForeignKey('pemverifikasi_hpa', 'id_hpa');
-        $this->forge->dropForeignKey('pemverifikasi_hpa', 'id_user_pemverifikasi_hpa');
         $this->forge->dropTable('pemverifikasi_hpa');
     }
 }

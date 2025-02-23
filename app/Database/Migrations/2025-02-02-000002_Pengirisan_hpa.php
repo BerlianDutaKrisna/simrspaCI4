@@ -58,9 +58,6 @@ class Pengirisan_hpa extends Migration
 
     public function down()
     {
-
-        $this->forge->dropForeignKey('pengirisan_hpa', 'id_hpa');
-        $this->forge->dropForeignKey('pengirisan_hpa', 'id_user_pengirisan_hpa');
         $this->forge->dropTable('pengirisan_hpa');
     }
 }

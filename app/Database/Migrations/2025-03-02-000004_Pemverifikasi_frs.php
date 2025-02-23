@@ -59,8 +59,6 @@ class Pemverifikasi_frs extends Migration
 
     public function down()
     {
-        $this->forge->dropForeignKey('pemverifikasi_frs', 'id_frs');
-        $this->forge->dropForeignKey('pemverifikasi_frs', 'id_user_pemverifikasi_frs');
         $this->forge->dropTable('pemverifikasi_frs');
     }
 }
