@@ -68,7 +68,7 @@ $routes->group('fnab', ['namespace' => 'App\Controllers\Fnab'],function ($routes
     $routes->get('index_fnab', 'Fnab::index_fnab');
 });
 
-// Route untuk Penerimaan
+// Route untuk Penerimaan hpa
 $routes->group('penerimaan', ['namespace' => 'App\Controllers\Proses'], function ($routes) {
     $routes->get('index_penerimaan', 'Penerimaan::index_penerimaan'); // Menampilkan halaman penerimaan
     $routes->post('proses_penerimaan', 'Penerimaan::proses_penerimaan'); // Proses penerimaan
@@ -77,7 +77,7 @@ $routes->group('penerimaan', ['namespace' => 'App\Controllers\Proses'], function
     $routes->post('update_penerimaan', 'Penerimaan::update_penerimaan');
 });
 
-// Route untuk Penerimaan
+// Route untuk Penerimaan fnab
 $routes->group('penerimaan_fnab', ['namespace' => 'App\Controllers\Fnab\Proses'], function ($routes) {
     $routes->get('index_penerimaan', 'Penerimaan::index_penerimaan'); // Menampilkan halaman penerimaan
     $routes->post('proses_penerimaan', 'Penerimaan::proses_penerimaan'); // Proses penerimaan
