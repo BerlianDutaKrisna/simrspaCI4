@@ -65,7 +65,7 @@
                         <button type="button"
                             class="btn btn-primary btn-user w-100 w-md-auto"
                             onclick="cetakPrintHpa()"
-                            <?= (($_GET['redirect'] ?? '') === 'index_pencetkan') ? '' : 'disabled' ?>>
+                            <?= (($_GET['redirect'] ?? '') === 'index_pencetakan') ? '' : 'disabled' ?>>
                             <i class="fas fa-print"></i> Cetak
                         </button>
                     </div>
