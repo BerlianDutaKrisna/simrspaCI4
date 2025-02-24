@@ -59,7 +59,7 @@
                         <button type="submit"
                             class="btn btn-success btn-user w-100 mb-3"
                             formaction="<?= base_url('exam/update_print_hpa/' . $hpa['id_hpa']); ?>"
-                            <?= (($_GET['redirect'] ?? '') === 'index_pencetkan') ? '' : 'disabled' ?>>
+                            <?= (($_GET['redirect'] ?? '') === 'index_pencetakan') ? '' : 'disabled' ?>>
                             <i class="fas fa-save"></i> Simpan
                         </button>
                         <button type="button"
