@@ -397,7 +397,6 @@ class Exam extends BaseController
             'id_user' => session()->get('id_user'),
             'nama_user' => session()->get('nama_user'),
         ];
-
         return view('exam/edit_print_hpa', $data);
     }
 

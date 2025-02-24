@@ -59,7 +59,7 @@
                     </tr>
                     <tr><td align="center" width="500" colspan="3">&nbsp;</td></tr>
                     <tr><td nowrap>Tanggal Terima</td><td>:</td><td>&nbsp; <?= isset($penerimaan['mulai_penerimaan']) ? date('d-m-Y H:i:s', strtotime($penerimaan['mulai_penerimaan'])) : '' ?></td></tr>
-                    <tr><td nowrap>Tanggal Hasil</td><td>:</td><td>&nbsp; <?= isset($pembacaan['selesai_pembacaan']) ? date('d-m-Y H:i:s', strtotime($pembacaan['selesai_pembacaan'])) : '' ?></td></tr>
+                    <tr><td nowrap>Tanggal Hasil</td><td>:</td><td>&nbsp; <?= isset($hpa['tanggal_hasil']) ? date('d-m-Y H:i:s', strtotime($hpa['tanggal_hasil'])) : '' ?></td></tr>
                 </table>
             </td>
         </tr>
