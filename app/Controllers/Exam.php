@@ -568,21 +568,21 @@ class Exam extends BaseController
                         <font size="5" face="verdana"><b> MAKROSKOPIK :</b></font>
                     </div>
                     <div>
-                        <font size="5" face="verdana">' . nl2br(htmlspecialchars($makroskopis_hpa)) . '</font>
+                        <font size="5" face="verdana">' . nl2br(htmlspecialchars(str_replace(['<p>', '</p>'], '', $makroskopis_hpa))) . '</font>
                     </div>
                     <br>
                     <div>
                         <font size="5" face="verdana"><b>MIKROSKOPIK :</b><br></font>
                     </div>
                     <div>
-                        <font size="5" face="verdana">' . nl2br(htmlspecialchars($mikroskopis_hpa)) . '</font>
+                        <font size="5" face="verdana">' . nl2br(htmlspecialchars(str_replace(['<p>', '</p>'], '', $mikroskopis_hpa))) . '</font>
                     </div>
                     <br>
                     <div>
                         <font size="5" face="verdana"><b>KESIMPULAN :</b> ' . htmlspecialchars($lokasi_spesimen) . ', ' . htmlspecialchars($tindakan_spesimen) . ':</b></font>
                     </div>
                     <div>
-                        <font size="5" face="verdana"><b>' . strtoupper(htmlspecialchars($hasil_hpa)) . '</b></font>
+                        <font size="5" face="verdana"><b>' . strtoupper(htmlspecialchars(str_replace(['<p>', '</p>'], '', $hasil_hpa))) . '</b></font>
                     </div>
                     <br>
                     <div>
