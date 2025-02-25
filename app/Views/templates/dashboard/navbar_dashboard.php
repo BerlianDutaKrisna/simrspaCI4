@@ -16,7 +16,7 @@
         <ul class="navbar-nav ml-auto d-flex align-items-center">
             <!-- Display Nama User Always (Desktop and Mobile) -->
             <li class="nav-item d-flex align-items-center mr-3">
-                <span class="mr-2 text-gray-600 small font-weight-bold"><?= esc($nama_user); ?></span>
+                <span class="mr-2 text-gray-600 small font-weight-bold"><?= esc($nama_user) ?? ""; ?></span>
             </li>
             <!-- User Information Dropdown -->
             <li class="nav-item dropdown no-arrow">

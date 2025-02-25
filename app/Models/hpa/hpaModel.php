@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\HpaModel;
 
 use CodeIgniter\Model;
 
-class HpaModel extends Model
+class hpaModel extends Model
 {
     // Nama tabel yang digunakan oleh model
     protected $table = 'hpa';
@@ -33,19 +33,6 @@ class HpaModel extends Model
         'print_hpa',
         'penerima_hpa',
         'tanggal_penerima',
-        'id_penerimaan',
-        'id_pengirisan',
-        'id_pemotongan',
-        'id_pemprosesan',
-        'id_penanaman',
-        'id_pemotongan_tipis',
-        'id_pewarnaan',
-        'id_pembacaan',
-        'id_penulisan',
-        'id_pemverifikasi',
-        'id_autorized',
-        'id_pencetakan',
-        'id_mutu',
         'created_at',
         'updated_at',
     ];

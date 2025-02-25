@@ -2,7 +2,7 @@
 
 namespace App\Controllers;
 
-use App\Models\HpaModel;
+use App\Models\HpaModel\hpaModel;
 use App\Models\UsersModel;
 use App\Models\PatientModel;
 use App\Models\ProsesModel\PenerimaanModel;
@@ -686,7 +686,7 @@ class Exam extends BaseController
         if (!$hpa) {
             return redirect()->back()->with('error', 'Data HPA tidak ditemukan.');
         }
-    
+
         // Ambil kode_hpa dan ekstrak nomor dari format "H.nomor/25"
         $kode_hpa = $hpa['kode_hpa'];
         preg_match('/H\.(\d+)\/\d+/', $kode_hpa, $matches);

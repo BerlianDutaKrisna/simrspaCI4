@@ -3,11 +3,11 @@
 namespace App\Controllers;
 
 use CodeIgniter\Controller;
-use CodeIgniter\HTTP\CLIRequest;
-use CodeIgniter\HTTP\IncomingRequest;
 use CodeIgniter\HTTP\RequestInterface;
 use CodeIgniter\HTTP\ResponseInterface;
 use Psr\Log\LoggerInterface;
+use App\Models\hpa\hpaModel;
+use App\Models\frs\frsModel;
 
 abstract class BaseController extends Controller
 {
@@ -17,20 +17,29 @@ abstract class BaseController extends Controller
     protected $id_user;
     protected $nama_user;
     protected $hpaModel;
-    protected $fnabModel;
+    protected $frsModel;
 
     public function initController(RequestInterface $request, ResponseInterface $response, LoggerInterface $logger)
     {
         parent::initController($request, $response, $logger);
 
-        // Inisialisasi session
+        // Inisialisasi sesi
         $this->session = \Config\Services::session();
+
+        // Mengambil data sesi dan menangani potensi kesalahan
         $this->id_user = $this->session->get('id_user');
         $this->nama_user = $this->session->get('nama_user');
 
-        // Inisialisasi model
-        $this->hpaModel = new \App\Models\HpaModel();
-        $this->fnabModel = new \App\Models\Fnab\FnabModel();
+        // Memeriksa apakah pengguna sudah login
+        if (!$this->session->get('logged_in')) {
+            return redirect()->to('/');
+        }
+
+        if (is_null($this->id_user) || is_null($this->nama_user)) {
+            $logger->error('Data sesi hilang: id_user atau nama_user');
+            return redirect()->to('/');
+        }
+
     }
 
     protected function getCounts()
@@ -48,7 +57,7 @@ abstract class BaseController extends Controller
             'countPemverifikasi' => $this->hpaModel->countPemverifikasi(),
             'countAutorized' => $this->hpaModel->countAutorized(),
             'countPencetakan' => $this->hpaModel->countPencetakan(),
-            'countPenerimaanfnab' => $this->fnabModel->countPenerimaanfnab(),
+            'countPenerimaanfnab' => $this->frsModel->countPenerimaanfnab(),
         ];
     }
 

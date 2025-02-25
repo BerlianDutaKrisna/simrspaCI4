@@ -16,8 +16,8 @@ $routes->group('auth', function ($routes) {
     $routes->get('logout', 'Auth::logout'); // Menangani logout dan menghapus session
 });
 
-// Route untuk Dashboard
-$routes->get('dashboard', 'Dashboard::index'); // Menampilkan halaman dashboard
+$routes->get('dashboard', 'Dashboard::index'); // Rute untuk dashboard
+
 
 // Route untuk Users
 $routes->group('users', function ($routes) {

@@ -25,7 +25,7 @@
                                     HISTOPATOLOGI (HPA)
                                 </div>
                                 <!-- Menampilkan jumlah sampel Histopatologi -->
-                                <div class="h2 mb-0 font-weight-bold text-gray-800"><?= esc($countHpa); ?></div>
+                                <div class="h2 mb-0 font-weight-bold text-gray-800"><?= esc($countHpa) ?? ""; ?></div>
                             </div>
                             <div class="col-auto">
                                 <i class="fas fa-drumstick-bite fa-2x text-gray-500"></i> <!-- Ikon Histopatologi -->
