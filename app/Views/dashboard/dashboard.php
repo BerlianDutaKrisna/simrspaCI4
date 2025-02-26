@@ -1,9 +1,11 @@
-<?= $this->include('templates/dashboard/header_dashboard'); ?>
-<?= $this->include('templates/dashboard/navbar_dashboard'); ?>
-<?= $this->include('dashboard/pencarian_pemeriksaan'); ?> 
+<?= $this->include('templates/dashboard/header_dashboard'); ?> <!-- Menyertakan header dashboard -->
+<?= $this->include('templates/dashboard/navbar_dashboard'); ?> <!-- Menyertakan navbar dashboard -->
+<?= $this->include('dashboard/jumlah_sampel_belum_selesai'); ?> <!-- Menyertakan jumlah sampel yang belum selesai -->
+<?= $this->include('dashboard/pencarian_pemeriksaan'); ?> <!-- Menyertakan bagian pencarian pemeriksaan -->
+<?= $this->include('dashboard/tambah_pasien'); ?> <!-- Menyertakan tombol untuk menambah pasien -->
 <?= $this->include('dashboard/jenis_tindakan'); ?>
 
-<div class="card shadow mb-4">
+<div class="card shadow mb-4"> <!-- Card untuk menampilkan informasi -->
     <div class="card-header py-3">
         <h6 class="m-0 font-weight-bold text-primary">Table live proses</h6> <!-- Judul tabel -->
     </div>
@@ -41,12 +43,13 @@
                     </tr>
                 </tfoot>
                 <tbody>
+                    
                 </tbody>
             </table>
         </div>
     </div>
 </div>
 
-
-<?= $this->include('templates/notifikasi'); ?>
-<?= $this->include('templates/dashboard/footer_dashboard'); ?>
+<?= $this->include('dashboard/grafik_pemeriksaan'); ?> <!-- Menyertakan grafik pemeriksaan -->
+<?= $this->include('templates/notifikasi'); ?> <!-- Menyertakan notifikasi -->
+<?= $this->include('templates/dashboard/footer_dashboard'); ?> <!-- Menyertakan footer dashboard -->

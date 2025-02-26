@@ -1,18 +1,13 @@
 <?php
 
-namespace App\Models\HpaModel;
+namespace App\Models\Hpa;
 
 use CodeIgniter\Model;
 
-class hpaModel extends Model
+class HpaModel extends Model
 {
-    // Nama tabel yang digunakan oleh model
     protected $table = 'hpa';
-
-    // Primary key dari tabel
     protected $primaryKey = 'id_hpa';
-
-    // Kolom yang dapat diisi (mass assignable)
     protected $allowedFields = [
         'kode_hpa',
         'id_pasien',
@@ -36,8 +31,6 @@ class hpaModel extends Model
         'created_at',
         'updated_at',
     ];
-
-    // Menentukan tipe data untuk kolom 'created_at' dan 'updated_at'
     protected $useTimestamps = true;
     protected $createdField  = 'created_at';
     protected $updatedField  = 'updated_at';
@@ -46,99 +39,94 @@ class hpaModel extends Model
     {
         return $this->orderBy('id_hpa', 'DESC')->first(); // Ambil data terakhir berdasarkan ID
     }
-    // Fungsi untuk insert data HPA dengan pengecekan kode_hpa
+
+    public function countProseshpa()
+    {
+        return $this->where('status_hpa !=', 'Selesai')->countAllResults() ?? 0;
+    }
+    public function countPenerimaanhpa()
+    {
+        return $this->where('status_hpa', 'Terdaftar')->countAllResults() ?? 0;
+    }
+    public function countPengirisanhpa()
+    {
+        return $this->where('status_hpa =', 'Pengirisan')->countAllResults() ?? 0;
+    }
+    public function countPemotonganhpa()
+    {
+        return $this->where('status_hpa =', 'Pemotongan')->countAllResults() ?? 0;
+    }
+    public function countPemprosesanhpa()
+    {
+        return $this->where('status_hpa =', 'Pemprosesan')->countAllResults() ?? 0;
+    }
+    public function countPenanamanhpa()
+    {
+        return $this->where('status_hpa =', 'Penanaman')->countAllResults() ?? 0;
+    }
+    public function countPemotonganTipishpa()
+    {
+        return $this->where('status_hpa =', 'Pemotongan Tipis')->countAllResults() ?? 0;
+    }
+    public function countPewarnaanhpa()
+    {
+        return $this->where('status_hpa =', 'Pewarnaan')->countAllResults() ?? 0;
+    }
+    public function countPembacaanhpa()
+    {
+        return $this->where('status_hpa =', 'Pembacaan')->countAllResults() ?? 0;
+    }
+    public function countPenulisanhpa()
+    {
+        return $this->where('status_hpa =', 'Penulisan')->countAllResults() ?? 0;
+    }
+    public function countPemverifikasihpa()
+    {
+        return $this->where('status_hpa =', 'Pemverifikasi')->countAllResults() ?? 0;
+    }
+    public function countAuthorizedhpa()
+    {
+        return $this->where('status_hpa =', 'Autorized')->countAllResults() ?? 0;
+    }
+    public function countPencetakanhpa()
+    {
+        return $this->where('status_hpa =', 'Pencetakan')->countAllResults() ?? 0;
+    }
+
+    public function getHpaChartData()
+    {
+        return $this->select("DATE_FORMAT(tanggal_permintaan, '%Y') AS tahun, DATE_FORMAT(tanggal_permintaan, '%M') AS bulan, COUNT(*) AS total")
+        ->where('tanggal_permintaan IS NOT NULL')
+        ->groupBy("tahun, bulan")
+        ->orderBy("MIN(tanggal_permintaan)", "ASC")
+            ->findAll();
+    }
+
     public function insertHpa(array $data): bool
     {
-        // Cek jika kode_hpa sudah ada
         if ($this->where('kode_hpa', $data['kode_hpa'])->first()) {
-            return false;  // Jika sudah ada, tidak melakukan insert
+            return false;
         }
 
-        // Melakukan insert data
         return $this->insertHpa($data) > 0;
     }
+
     public function getHpaWithPatient($id_hpa)
     {
         return $this->select('hpa.*, patient.*')
-            ->join('patient', 'patient.id_pasien = hpa.id_pasien')
-            ->where('hpa.id_hpa', $id_hpa)
+        ->join('patient', 'patient.id_pasien = hpa.id_pasien')
+        ->where('hpa.id_hpa', $id_hpa)
             ->first();
-    }
-    public function getHpaWithAllPatient()
-    {
-        return $this->db->table($this->table)
-            ->select(' 
-            hpa.*, 
-            patient.*
-        ')
-            ->join('patient', 'patient.id_pasien = hpa.id_pasien', 'left')
-            ->orderBy('hpa.kode_hpa', 'ASC')
-            ->get()
-            ->getResultArray();
-    }
-
-    public function countHpaProcessed()
-    {
-        return $this->where('status_hpa !=', 'Selesai')->countAllResults();
-    }
-    public function countPenerimaan()
-    {
-        return $this->where('status_hpa =', 'Terdaftar')->countAllResults();
-    }
-    public function countPengirisan()
-    {
-        return $this->where('status_hpa =', 'Pengirisan')->countAllResults();
-    }
-    public function countPemotongan()
-    {
-        return $this->where('status_hpa =', 'Pemotongan')->countAllResults();
-    }
-    public function countPemprosesan()
-    {
-        return $this->where('status_hpa =', 'Pemprosesan')->countAllResults();
-    }
-    public function countPenanaman()
-    {
-        return $this->where('status_hpa =', 'Penanaman')->countAllResults();
-    }
-    public function countPemotonganTipis()
-    {
-        return $this->where('status_hpa =', 'Pemotongan Tipis')->countAllResults();
-    }
-    public function countPewarnaan()
-    {
-        return $this->where('status_hpa =', 'Pewarnaan')->countAllResults();
-    }
-    public function countPembacaan()
-    {
-        return $this->where('status_hpa =', 'Pembacaan')->countAllResults();
-    }
-    public function countPenulisan()
-    {
-        return $this->where('status_hpa =', 'Penulisan')->countAllResults();
-    }
-    public function countPemverifikasi()
-    {
-        return $this->where('status_hpa =', 'Pemverifikasi')->countAllResults();
-    }
-    public function countAutorized()
-    {
-        return $this->where('status_hpa =', 'Autorized')->countAllResults();
-    }
-    public function countPencetakan()
-    {
-        return $this->where('status_hpa =', 'Pencetakan')->countAllResults();
     }
 
     public function updateHpa($id_hpa, $data)
     {
-        $builder = $this->db->table('hpa');  // Mengambil table 'hpa'
-        $builder->where('id_hpa', $id_hpa); // Menambahkan kondisi WHERE
-        $builder->update($data);             // Melakukan update data
-        return $this->db->affectedRows();    // Mengembalikan jumlah baris yang terpengaruh
+        $builder = $this->db->table('hpa');  
+        $builder->where('id_hpa', $id_hpa); 
+        $builder->update($data);           
+        return $this->db->affectedRows(); 
     }
 
-    // Fungsi untuk memperbarui penerima_hpa
     public function updatePenerima($id_hpa, $data)
     {
         // Validasi parameter
@@ -155,9 +143,9 @@ class hpaModel extends Model
         $updateResult = $builder->update($data);
         // Mengecek apakah update berhasil
         if ($updateResult) {
-            return $this->db->affectedRows(); // Mengembalikan jumlah baris yang terpengaruh
+            return $this->db->affectedRows();
         } else {
-            throw new \RuntimeException('Update data gagal.'); // Menangani error
+            throw new \RuntimeException('Update data gagal.');
         }
     }
 
@@ -183,78 +171,4 @@ class hpaModel extends Model
         }
     }
 
-    public function getHpaWithRelations()
-    {
-        return $this->db->table($this->table)
-            ->select('
-            hpa.*, 
-            patient.nama_pasien, 
-            patient.norm_pasien, 
-            penerimaan.*, 
-            pengirisan.*, 
-            pemotongan.*, 
-            pemprosesan.*, 
-            penanaman.*, 
-            pemotongan_tipis.*, 
-            pewarnaan.*, 
-            pembacaan.*, 
-            penulisan.*, 
-            pemverifikasi.*, 
-            pencetakan.*, 
-            user_penerimaan.nama_user AS nama_user_penerimaan, 
-            user_pengirisan.nama_user AS nama_user_pengirisan, 
-            user_pemotongan.nama_user AS nama_user_pemotongan, 
-            user_pemprosesan.nama_user AS nama_user_pemprosesan, 
-            user_penanaman.nama_user AS nama_user_penanaman, 
-            user_pemotongan_tipis.nama_user AS nama_user_pemotongan_tipis, 
-            user_pewarnaan.nama_user AS nama_user_pewarnaan, 
-            user_pembacaan.nama_user AS nama_user_pembacaan, 
-            user_penulisan.nama_user AS nama_user_penulisan, 
-            user_pemverifikasi.nama_user AS nama_user_pemverifikasi, 
-            user_pencetakan.nama_user AS nama_user_pencetakan
-        ')
-            ->join('patient', 'patient.id_pasien = hpa.id_pasien', 'left')
-            ->join('penerimaan', 'hpa.id_penerimaan = penerimaan.id_penerimaan', 'left')
-            ->join('pengirisan', 'hpa.id_pengirisan = pengirisan.id_pengirisan', 'left')
-            ->join('pemotongan', 'hpa.id_pemotongan = pemotongan.id_pemotongan', 'left')
-            ->join('pemprosesan', 'hpa.id_pemprosesan = pemprosesan.id_pemprosesan', 'left')
-            ->join('penanaman', 'hpa.id_penanaman = penanaman.id_penanaman', 'left')
-            ->join('pemotongan_tipis', 'hpa.id_pemotongan_tipis = pemotongan_tipis.id_pemotongan_tipis', 'left')
-            ->join('pewarnaan', 'hpa.id_pewarnaan = pewarnaan.id_pewarnaan', 'left')
-            ->join('pembacaan', 'hpa.id_pembacaan = pembacaan.id_pembacaan', 'left')
-            ->join('penulisan', 'hpa.id_penulisan = penulisan.id_penulisan', 'left')
-            ->join('pemverifikasi', 'hpa.id_pemverifikasi = pemverifikasi.id_pemverifikasi', 'left')
-            ->join('pencetakan', 'hpa.id_pencetakan = pencetakan.id_pencetakan', 'left')
-            ->join('users AS user_penerimaan', 'penerimaan.id_user_penerimaan = user_penerimaan.id_user', 'left')
-            ->join('users AS user_pengirisan', 'pengirisan.id_user_pengirisan = user_pengirisan.id_user', 'left')
-            ->join('users AS user_pemotongan', 'pemotongan.id_user_pemotongan = user_pemotongan.id_user', 'left')
-            ->join('users AS user_pemprosesan', 'pemprosesan.id_user_pemprosesan = user_pemprosesan.id_user', 'left')
-            ->join('users AS user_penanaman', 'penanaman.id_user_penanaman = user_penanaman.id_user', 'left')
-            ->join(
-                'users AS user_pemotongan_tipis',
-                'pemotongan_tipis.id_user_pemotongan_tipis = user_pemotongan_tipis.id_user',
-                'left'
-            )
-            ->join('users AS user_pewarnaan', 'pewarnaan.id_user_pewarnaan = user_pewarnaan.id_user', 'left')
-            ->join('users AS user_pembacaan', 'pembacaan.id_user_pembacaan = user_pembacaan.id_user', 'left')
-            ->join('users AS user_penulisan', 'penulisan.id_user_penulisan = user_penulisan.id_user', 'left')
-            ->join('users AS user_pemverifikasi', 'pemverifikasi.id_user_pemverifikasi = user_pemverifikasi.id_user', 'left')
-            ->join('users AS user_pencetakan', 'pencetakan.id_user_pencetakan = user_pencetakan.id_user', 'left')
-            ->where('hpa.status_hpa !=', 'Pemverifikasi')
-            ->where('hpa.status_hpa !=', 'Autorized')
-            ->where('hpa.status_hpa !=', 'Pencetakan')
-            ->where('hpa.status_hpa !=', 'Selesai')
-            ->orderBy('hpa.kode_hpa', 'ASC')
-            ->get()
-            ->getResultArray();
-    }
-
-    public function getHpaChartData()
-    {
-        return $this->select("DATE_FORMAT(tanggal_permintaan, '%Y') AS tahun, DATE_FORMAT(tanggal_permintaan, '%M') AS bulan, COUNT(*) AS total")
-            ->where('tanggal_permintaan IS NOT NULL')
-            ->groupBy("tahun, bulan")
-            ->orderBy("MIN(tanggal_permintaan)", "ASC")
-            ->findAll();
-    }
 }

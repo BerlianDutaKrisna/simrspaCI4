@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Models; // Sesuaikan dengan folder 'Model'
+namespace App\Models\Hpa;
 
 use CodeIgniter\Model;
 
-class MutuModel extends Model
+class Mutu_hpa extends Model
 {
-    protected $table      = 'mutu'; // Nama tabel
-    protected $primaryKey = 'id_mutu'; // Nama primary key
+    protected $table      = 'mutu_hpa'; // Nama tabel
+    protected $primaryKey = 'id_mutu_hpa'; // Nama primary key
     protected $returnType = 'array';
     // Kolom-kolom yang dapat diisi melalui mass-assignment
     protected $allowedFields = [
@@ -22,7 +22,7 @@ class MutuModel extends Model
         'indikator_8',
         'indikator_9',
         'indikator_10',
-        'total_nilai_mutu',
+        'total_nilai_mutu_hpa',
         'created_at',
         'updated_at'
     ];
@@ -34,31 +34,31 @@ class MutuModel extends Model
     protected $createdField  = 'created_at';
     protected $updatedField  = 'updated_at';
 
-    // Fungsi untuk insert data Mutu
-    public function insertMutu(array $data): bool
+    // Fungsi untuk insert data mutu_hpa
+    public function insertmutu_hpa(array $data): bool
     {
-        $this->insertMutu($data);
+        $this->insertmutu_hpa($data);
         return $this->db->affectedRows() > 0;
     }
 
-    public function getmutuWithRelations()
+    public function getmutu_hpaWithRelations()
 {
     return $this->select(
-            'mutu.*, 
+            'mutu_hpa.*, 
             hpa.*, 
             patient.*'
         )
-        ->join('hpa', 'mutu.id_hpa = hpa.id_hpa', 'left') // Relasi dengan tabel hpa
+        ->join('hpa', 'mutu_hpa.id_hpa = hpa.id_hpa', 'left') // Relasi dengan tabel hpa
         ->join('patient', 'hpa.id_pasien = patient.id_pasien', 'left') // Relasi dengan tabel patient
         ->findAll();
 }
 
-    // Fungsi untuk mengupdate data mutu
-public function updateMutu($id_mutu, $data)
+    // Fungsi untuk mengupdate data mutu_hpa
+public function updatemutu_hpa($id_mutu_hpa, $data)
 {
-    // Mengambil table mutu
+    // Mengambil table mutu_hpa
     $builder = $this->db->table($this->table);  
-    $builder->where('id_mutu', $id_mutu);  
+    $builder->where('id_mutu_hpa', $id_mutu_hpa);  
     $builder->update($data);  
     return $this->db->affectedRows();  
 }

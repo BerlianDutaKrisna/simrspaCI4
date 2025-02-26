@@ -25,7 +25,7 @@
                                     HISTOPATOLOGI (HPA)
                                 </div>
                                 <!-- Menampilkan jumlah sampel Histopatologi -->
-                                <div class="h2 mb-0 font-weight-bold text-gray-800"><?= esc($countHpa) ?? ""; ?></div>
+                                <div class="h2 mb-0 font-weight-bold text-gray-800"><?= esc($counts['countProseshpa'] ?? 0); ?></div>
                             </div>
                             <div class="col-auto">
                                 <i class="fas fa-drumstick-bite fa-2x text-gray-500"></i> <!-- Ikon Histopatologi -->
@@ -46,7 +46,7 @@
                                 Fine Needle Aspiration Biopsy (FNAB)
                             </div>
                             <!-- Menampilkan jumlah sampel FNAB -->
-                            <div class="h2 mb-0 font-weight-bold text-gray-800">0</div>
+                            <div class="h2 mb-0 font-weight-bold text-gray-800"><?= esc($counts['countProsesfrs'] ?? 0); ?></div>
                         </div>
                         <div class="col-auto">
                             <i class="fas fa-syringe fa-2x text-gray-500"></i> <!-- Ikon FNAB -->
@@ -66,7 +66,7 @@
                                 SITOLOGI (SRS)
                             </div>
                             <!-- Menampilkan jumlah sampel Sitologi -->
-                            <div class="h2 mb-0 font-weight-bold text-gray-800">0</div>
+                            <div class="h2 mb-0 font-weight-bold text-gray-800"><?= esc($counts['countProsessrs'] ?? 0); ?></div>
                         </div>
                         <div class="col-auto">
                             <i class="fas fa-prescription-bottle fa-2x text-gray-500"></i> <!-- Ikon Sitologi -->
@@ -86,7 +86,7 @@
                                 Imunohistokimia (IHC)
                             </div>
                             <!-- Menampilkan jumlah sampel Imunohistokimia -->
-                            <div class="h2 mb-0 font-weight-bold text-gray-800">0</div>
+                            <div class="h2 mb-0 font-weight-bold text-gray-800"><?= esc($counts['countProsesihc'] ?? 0); ?></div>
                         </div>
                         <div class="col-auto">
                             <i class="fas fa-vials fa-2x text-gray-500"></i> <!-- Ikon Imunohistokimia -->

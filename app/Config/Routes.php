@@ -40,32 +40,32 @@ $routes->group('patient', function ($routes) {
     $routes->post('modal_search', 'Patient::modal_search'); // Pencarian dengan NoRM
 });
 
-// Route untuk Exam
-$routes->group('exam', function ($routes) {
-    $routes->get('index_exam', 'Exam::index_exam'); // Menampilkan halaman index exam
-    $routes->get('register_exam', 'Exam::register_exam'); // Menampilkan halaman form register exam
-    $routes->post('insert', 'Exam::insert'); // Menangani form POST dari register exam
-    $routes->get('edit_exam/(:segment)', 'Exam::edit_exam/$1'); // Rute untuk menampilkan form edit
-    $routes->get('edit_makroskopis/(:segment)', 'Exam::edit_makroskopis/$1');
-    $routes->get('edit_mikroskopis/(:segment)', 'Exam::edit_mikroskopis/$1');
-    $routes->post('update/(:segment)', 'Exam::update/$1'); // Rute untuk menangani update data
-    $routes->post('update_print_hpa/(:segment)', 'Exam::update_print_hpa/$1');
-    $routes->get('index_buku_penerima', 'Exam::index_buku_penerima');
-    $routes->post('update_buku_penerima', 'Exam::update_buku_penerima'); // Adjusted for two segments
-    $routes->post('update_status_hpa', 'Exam::update_status_hpa');
-    $routes->post('delete', 'Exam::delete');
-    $routes->post('uploadFotoMakroskopis/(:num)', 'Exam::uploadFotoMakroskopis/$1');
-    $routes->post('uploadFotoMikroskopis/(:num)', 'Exam::uploadFotoMikroskopis/$1');
-    $routes->get('edit_penulisan/(:num)', 'Exam::edit_penulisan/$1');
-    $routes->post('update_penulisan/(:segment)', 'Exam::update_penulisan/$1');
-    $routes->get('edit_print_hpa/(:num)', 'Exam::edit_print_hpa/$1');
+// Route untuk hpa
+$routes->group('hpa', function ($routes) {
+    $routes->get('index_hpa', 'Hpa::index_hpa'); // Menampilkan halaman index hpa
+    $routes->get('register_hpa', 'Hpa::register_hpa'); // Menampilkan halaman form register hpa
+    $routes->post('insert', 'hpa::insert'); // Menangani form POST dari register hpa
+    $routes->get('edit_hpa/(:segment)', 'Hpa::edit_hpa/$1'); // Rute untuk menampilkan form edit
+    $routes->get('edit_makroskopis/(:segment)', 'Hpa::edit_makroskopis/$1');
+    $routes->get('edit_mikroskopis/(:segment)', 'Hpa::edit_mikroskopis/$1');
+    $routes->post('update/(:segment)', 'Hpa::update/$1'); // Rute untuk menangani update data
+    $routes->post('update_print_hpa/(:segment)', 'Hpa::update_print_hpa/$1');
+    $routes->get('index_buku_penerima', 'Hpa::index_buku_penerima');
+    $routes->post('update_buku_penerima', 'Hpa::update_buku_penerima'); // Adjusted for two segments
+    $routes->post('update_status_hpa', 'Hpa::update_status_hpa');
+    $routes->post('delete', 'hpa::delete');
+    $routes->post('uploadFotoMakroskopis/(:num)', 'Hpa::uploadFotoMakroskopis/$1');
+    $routes->post('uploadFotoMikroskopis/(:num)', 'Hpa::uploadFotoMikroskopis/$1');
+    $routes->get('edit_penulisan/(:num)', 'Hpa::edit_penulisan/$1');
+    $routes->post('update_penulisan/(:segment)', 'Hpa::update_penulisan/$1');
+    $routes->get('edit_print_hpa/(:num)', 'Hpa::edit_print_hpa/$1');
 });
 
-// Route untuk Fnab
-$routes->group('fnab', ['namespace' => 'App\Controllers\Fnab'],function ($routes) {
-    $routes->get('register_fnab', 'Fnab::register_fnab');
-    $routes->post('insert', 'Fnab::insert');
-    $routes->get('index_fnab', 'Fnab::index_fnab');
+// Route untuk frs
+$routes->group('frs', ['namespace' => 'App\Controllers\frs'],function ($routes) {
+    $routes->get('register_frs', 'frs::register_frs');
+    $routes->post('insert', 'frs::insert');
+    $routes->get('index_frs', 'frs::index_frs');
 });
 
 // Route untuk Penerimaan hpa
@@ -77,8 +77,8 @@ $routes->group('penerimaan', ['namespace' => 'App\Controllers\Proses'], function
     $routes->post('update_penerimaan', 'Penerimaan::update_penerimaan');
 });
 
-// Route untuk Penerimaan fnab
-$routes->group('penerimaan_fnab', ['namespace' => 'App\Controllers\Fnab\Proses'], function ($routes) {
+// Route untuk Penerimaan frs
+$routes->group('penerimaan_frs', ['namespace' => 'App\Controllers\frs\Proses'], function ($routes) {
     $routes->get('index_penerimaan', 'Penerimaan::index_penerimaan'); // Menampilkan halaman penerimaan
     $routes->post('proses_penerimaan', 'Penerimaan::proses_penerimaan'); // Proses penerimaan
     $routes->get('penerimaan_details', 'Penerimaan::penerimaan_details');

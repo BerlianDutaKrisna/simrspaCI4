@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Models\FrsModel;
+namespace App\Models\Frs;
 
 use CodeIgniter\Model;
 
-class frsModel extends Model
+class FrsModel extends Model
 {
     protected $table = 'frs';
     protected $primaryKey = 'id_frs';
@@ -28,7 +28,6 @@ class frsModel extends Model
         'print_frs',
         'penerima_frs',
         'tanggal_penerima',
-        'id_mutu',
         'created_at',
         'updated_at',
     ];
@@ -38,14 +37,137 @@ class frsModel extends Model
 
     public function getLastKodefrs()
     {
-        return $this->orderBy('id_frs', 'DESC')->first();
+        return $this->orderBy('id_frs', 'DESC')->first(); // Ambil data terakhir berdasarkan ID
     }
-    public function countfrsProcessed()
+
+    public function countProsesfrs()
     {
-        return $this->where('status_frs !=', 'Selesai')->countAllResults();
+        return $this->where('status_frs !=', 'Selesai')->countAllResults() ?? 0;
     }
     public function countPenerimaanfrs()
     {
-        return $this->where('status_frs =', 'Terdaftar')->countAllResults();
+        return $this->where('status_frs', 'Terdaftar')->countAllResults() ?? 0;
+    }
+    public function countPengirisanfrs()
+    {
+        return $this->where('status_frs =', 'Pengirisan')->countAllResults() ?? 0;
+    }
+    public function countPemotonganfrs()
+    {
+        return $this->where('status_frs =', 'Pemotongan')->countAllResults() ?? 0;
+    }
+    public function countPemprosesanfrs()
+    {
+        return $this->where('status_frs =', 'Pemprosesan')->countAllResults() ?? 0;
+    }
+    public function countPenanamanfrs()
+    {
+        return $this->where('status_frs =', 'Penanaman')->countAllResults() ?? 0;
+    }
+    public function countPemotonganTipisfrs()
+    {
+        return $this->where('status_frs =', 'Pemotongan Tipis')->countAllResults() ?? 0;
+    }
+    public function countPewarnaanfrs()
+    {
+        return $this->where('status_frs =', 'Pewarnaan')->countAllResults() ?? 0;
+    }
+    public function countPembacaanfrs()
+    {
+        return $this->where('status_frs =', 'Pembacaan')->countAllResults() ?? 0;
+    }
+    public function countPenulisanfrs()
+    {
+        return $this->where('status_frs =', 'Penulisan')->countAllResults() ?? 0;
+    }
+    public function countPemverifikasifrs()
+    {
+        return $this->where('status_frs =', 'Pemverifikasi')->countAllResults() ?? 0;
+    }
+    public function countAuthorizedfrs()
+    {
+        return $this->where('status_frs =', 'Autorized')->countAllResults() ?? 0;
+    }
+    public function countPencetakanfrs()
+    {
+        return $this->where('status_frs =', 'Pencetakan')->countAllResults() ?? 0;
+    }
+
+    public function getfrsChartData()
+    {
+        return $this->select("DATE_FORMAT(tanggal_permintaan, '%Y') AS tahun, DATE_FORMAT(tanggal_permintaan, '%M') AS bulan, COUNT(*) AS total")
+            ->where('tanggal_permintaan IS NOT NULL')
+            ->groupBy("tahun, bulan")
+            ->orderBy("MIN(tanggal_permintaan)", "ASC")
+            ->findAll();
+    }
+
+    public function insertfrs(array $data): bool
+    {
+        if ($this->where('kode_frs', $data['kode_frs'])->first()) {
+            return false;
+        }
+
+        return $this->insertfrs($data) > 0;
+    }
+
+    public function getfrsWitfrstient($id_frs)
+    {
+        return $this->select('frs.*, patient.*')
+            ->join('patient', 'patient.id_pasien = frs.id_pasien')
+            ->where('frs.id_frs', $id_frs)
+            ->first();
+    }
+
+    public function updatefrs($id_frs, $data)
+    {
+        $builder = $this->db->table('frs');
+        $builder->where('id_frs', $id_frs);
+        $builder->update($data);
+        return $this->db->affectedRows();
+    }
+
+    public function updatePenerima($id_frs, $data)
+    {
+        // Validasi parameter
+        if (
+            empty($id_frs) || empty($data) || !is_array($data)
+        ) {
+            throw new \InvalidArgumentException('Parameter ID frs atau data tidak valid.');
+        }
+        // Mengambil table 'frs'
+        $builder = $this->db->table('frs');
+        // Menambahkan kondisi WHERE
+        $builder->where('id_frs', $id_frs);
+        // Melakukan update data
+        $updateResult = $builder->update($data);
+        // Mengecek apakah update berhasil
+        if ($updateResult) {
+            return $this->db->affectedRows();
+        } else {
+            throw new \RuntimeException('Update data gagal.');
+        }
+    }
+
+    public function updateStatusfrs($id_frs, $data)
+    {
+        // Validasi parameter
+        if (
+            empty($id_frs) || empty($data) || !is_array($data)
+        ) {
+            throw new \InvalidArgumentException('Parameter ID frs atau data tidak valid.');
+        }
+        // Mengambil table 'frs'
+        $builder = $this->db->table('frs');
+        // Menambahkan kondisi WHERE
+        $builder->where('id_frs', $id_frs);
+        // Melakukan update data
+        $updateResult = $builder->update($data);
+        // Mengecek apakah update berhasil
+        if ($updateResult) {
+            return $this->db->affectedRows(); // Mengembalikan jumlah baris yang terpengaruh
+        } else {
+            throw new \RuntimeException('Update data gagal.'); // Menangani error
+        }
     }
 }
