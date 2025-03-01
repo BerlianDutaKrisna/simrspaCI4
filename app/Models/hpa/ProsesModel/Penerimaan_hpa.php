@@ -35,7 +35,7 @@ class Penerimaan_hpa extends Model
         return $this->db->affectedRows() > 0;
     }
 
-    public function getpenerimaan_hpaWithRelations()
+    public function getPenerimaan_hpa()
     {
         return $this->select(
             '
@@ -43,12 +43,12 @@ class Penerimaan_hpa extends Model
         hpa.*, 
         patient.*, 
         users.nama_user AS nama_user_penerimaan_hpa,
-        mutu.total_nilai_mutu'
+        mutu_hpa.total_nilai_mutu_hpa'
         )
             ->join('hpa', 'penerimaan_hpa.id_hpa = hpa.id_hpa', 'left') // Relasi dengan tabel hpa
             ->join('patient', 'hpa.id_pasien = patient.id_pasien', 'left') // Relasi dengan tabel patient
             ->join('users', 'penerimaan_hpa.id_user_penerimaan_hpa = users.id_user', 'left') // Relasi dengan tabel users untuk penerimaan_hpa
-            ->join('mutu', 'hpa.id_hpa = mutu.id_hpa', 'left') // Relasi dengan tabel mutu berdasarkan id_hpa
+            ->join('mutu_hpa', 'hpa.id_hpa = mutu_hpa.id_hpa', 'left') // Relasi dengan tabel mutu_hpa berdasarkan id_hpa
             ->whereIn('hpa.status_hpa', ['penerimaan_hpa', 'Terdaftar']) // Menambahkan filter whereIn untuk status_hpa
             ->orderBy('hpa.kode_hpa', 'ASC')
             ->findAll();

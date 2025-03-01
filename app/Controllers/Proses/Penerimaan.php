@@ -3,55 +3,63 @@
 namespace App\Controllers\Proses;
 
 use App\Controllers\BaseController;
-use App\Models\HpaModel;
-use App\Models\ProsesModel\PenerimaanModel;
-use App\Models\ProsesModel\PengirisanModel;
+use App\Models\Hpa\HpaModel;
 use App\Models\UsersModel;
-use App\Models\MutuModel;
+use App\Models\PatientModel;
+use App\Models\Hpa\ProsesModel\Penerimaan_hpa;
+use App\Models\Hpa\ProsesModel\Pemotongan_hpa;
+use App\Models\Hpa\ProsesModel\Pembacaan_hpa;
+use App\Models\Hpa\ProsesModel\Penulisan_hpa;
+use App\Models\Hpa\ProsesModel\Pemverifikasi_hpa;
+use App\Models\Hpa\ProsesModel\Authorized_hpa;
+use App\Models\Hpa\ProsesModel\Pencetakan_hpa;
+use App\Models\Hpa\Mutu_hpa;
+use CodeIgniter\Exceptions\PageNotFoundException;
 use Exception;
 
 class Penerimaan extends BaseController
 {
     protected $hpaModel;
-    protected $penerimaanModel;
-    protected $pengirisanModel;
     protected $userModel;
-    protected $mutuModel;
-    protected $session;
+    protected $patientModel;
+    protected $Penerimaan_hpa;
+    protected $Pemotongan_hpa;
+    protected $Pembacaan_hpa;
+    protected $Penulisan_hpa;
+    protected $Pemverifikasi_hpa;
+    protected $Authorized_hpa;
+    protected $Pencetakan_hpa;
+    protected $Mutu_hpa;
+    protected $validation;
 
     public function __construct()
     {
-        $this->hpaModel = new HpaModel();
-        $this->penerimaanModel = new PenerimaanModel();
-        $this->pengirisanModel = new PengirisanModel();
+        
+        $this->hpaModel = new hpaModel();
         $this->userModel = new UsersModel();
-        $this->mutuModel = new MutuModel();
-        $this->session = session();
+        $this->patientModel = new PatientModel();
+        $this->Penerimaan_hpa = new Penerimaan_hpa();
+        $this->Pemotongan_hpa = new Pemotongan_hpa();
+        $this->Pembacaan_hpa = new Pembacaan_hpa();
+        $this->Penulisan_hpa = new Penulisan_hpa();
+        $this->Pemverifikasi_hpa = new Pemverifikasi_hpa();
+        $this->Authorized_hpa = new Authorized_hpa();
+        $this->Pencetakan_hpa = new Pencetakan_hpa();
+        $this->Mutu_hpa = new Mutu_hpa();
+        $this->validation =  \Config\Services::validation();
+        $this->session = \Config\Services::session();
     }
 
-    public function index_penerimaan()
+    public function index_penerimaan_hpa()
     {
-        $penerimaanData = $this->penerimaanModel->getPenerimaanWithRelations();
-
+        $penerimaanData_hpa = $this->Penerimaan_hpa->getPenerimaan_hpa();
         $data = [
-            'penerimaanData' => $penerimaanData,
-            'countPenerimaan' => $this->hpaModel->countPenerimaan(),
-            'countPengirisan' => $this->hpaModel->countPengirisan(),
-            'countPemotongan' => $this->hpaModel->countPemotongan(),
-            'countPemprosesan' => $this->hpaModel->countPemprosesan(),
-            'countPenanaman' => $this->hpaModel->countPenanaman(),
-            'countPemotonganTipis' => $this->hpaModel->countPemotonganTipis(),
-            'countPewarnaan' => $this->hpaModel->countPewarnaan(),
-            'countPembacaan' => $this->hpaModel->countPembacaan(),
-            'countPenulisan' => $this->hpaModel->countPenulisan(),
-            'countPemverifikasi' => $this->hpaModel->countPemverifikasi(),
-            'countAutorized' => $this->hpaModel->countAutorized(),
-            'countPencetakan' => $this->hpaModel->countPencetakan(),
-            'id_user' => $this->session->get('id_user'),
             'nama_user' => $this->session->get('nama_user'),
+            'counts' => $this->getCounts(),
+            'penerimaanDatahpa' => $penerimaanData_hpa,
         ];
-
-        return view('proses/penerimaan', $data);
+        dd($data);
+        return view('proses/penerimaan_hpa', $data);
     }
 
     public function proses_penerimaan()

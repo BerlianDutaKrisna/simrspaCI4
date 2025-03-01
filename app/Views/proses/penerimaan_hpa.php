@@ -6,11 +6,11 @@
         <h6 class="m-0 font-weight-bold text-primary">Table Penerimaan</h6>
     </div>
     <div class="card-body">
-        <h1>Daftar Penerimaan</h1>
+        <h1>Daftar Penerimaan HPA</h1>
         <a href="<?= base_url('/dashboard') ?>" class="btn btn-primary mb-3">Kembali</a>
         <div class="row">
             <a href="<?= base_url('penerimaan/index_penerimaan') ?>" class="btn btn-danger btn-icon-split m-3">
-                <span class="text"><b style="color: white"><?= esc($countPenerimaan ?? ""); ?></b> HPA</span>
+                <span class="text"><b style="color: white"><?= esc($counts['countPenerimaanhpa'] ?? ""); ?></b> HPA</span>
                 <span class="icon text-white-50">
                     <i class="fas fa-drumstick-bite"></i>
                 </span>
@@ -57,9 +57,9 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <?php if (!empty($penerimaanData)): ?>
+                        <?php if (!empty($penerimaanData_hpa)): ?>
                             <?php $i = 1; ?>
-                            <?php foreach ($penerimaanData as $row): ?>
+                            <?php foreach ($penerimaanData_hpa as $row): ?>
                                 <tr>
                                     <td><?= $i ?></td>
                                     <td><?= $row['kode_hpa']; ?></td>

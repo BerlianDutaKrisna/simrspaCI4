@@ -51,7 +51,7 @@
         <h6 class="m-0 font-weight-bold text-primary">Pendaftaran Pemeriksaan</h6>
     </div>
     <div class="card-body">
-        <form action="<?= base_url('exam/insert') ?>" method="POST">
+        <form action="<?= base_url('hpa/insert') ?>" method="POST">
             <?= csrf_field(); ?> <!-- CSRF token untuk keamanan -->
 
             <!-- Hidden input untuk id_pasien -->
@@ -69,7 +69,7 @@
                 <div class="form-group col-md-3">
                     <label for="unit_asal">Unit Asal</label>
                     <select class="form-control" id="unit_asal" name="unit_asal" onchange="handleUnitAsalChange(this)">
-                        <option value="Belum Dipilih" selected>Belum Dipilih</option>
+                        <option value="" selected>Belum Dipilih</option>
                         <option value="OK">OK ELEKTIF</option>
                         <option value="OK">OK EMERGENCY</option>
                         <option value="Poli">Poli</option>
@@ -83,7 +83,7 @@
                 <div class="form-group col-md-3">
                     <label for="dokter_pengirim">Dokter Pengirim</label>
                     <select class="form-control" id="dokter_pengirim" name="dokter_pengirim" onchange="handleDokterPengirimChange(this)">
-                        <option value="Belum Dipilih" selected>Belum Dipilih</option>
+                        <option value="" selected>Belum Dipilih</option>
                         <option value="dr. Ihyan Amri, Sp.B">dr. Ihyan Amri, Sp.B</option>
                         <option value="dr. Andy Achmad Suanda, Sp.B">dr. Andy Achmad Suanda, Sp.B</option>
                         <option value="dr. Agus Maulana,Sp.B,FinaCs,M.Ked.Klin">dr. Agus Maulana,Sp.B,FinaCs,M.Ked.Klin</option>
@@ -125,7 +125,7 @@
                 <div class="form-group col-md-3">
                     <label for="tindakan_spesimen">Tindakan Spesimen</label>
                     <select class="form-control" id="tindakan_spesimen" name="tindakan_spesimen" onchange="handleTindakanSpesimenChange(this)">
-                        <option value="Belum Dipilih" selected>Belum Dipilih</option>
+                        <option value="" selected>Belum Dipilih</option>
                         <option value="Biopsi">Biopsi</option>
                         <option value="Biopsi Beberapa Tempat">Biopsi Beberapa Tempat</option>
                         <option value="Kerokan">Kerokan</option>
