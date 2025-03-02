@@ -16,12 +16,6 @@ class Dashboard extends BaseController
 
     public function index()
     {
-        // Pastikan sesi sudah diinisialisasi
-        if (!$this->session->get('logged_in')) {
-            return redirect()->to('/'); // Redirect ke halaman login jika belum login
-        }
-
-        // Ambil data dari sesi dan hitung
         $data = [
             'nama_user' => $this->session->get('nama_user'),
             'counts' => $this->getCounts(),

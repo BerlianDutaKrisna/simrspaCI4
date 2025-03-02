@@ -99,14 +99,14 @@ class Penerimaan extends BaseController
                     $this->hpaModel->update($id_hpa, ['status_hpa' => 'Penerimaan']);
                     $this->Penerimaan_hpa->update($id_penerimaan_hpa, [
                         'id_user_penerimaan_hpa' => $id_user,
-                        'status_penerimaan_hpa' => 'Proses Pemeriksaan',
+                        'status_penerimaan_hpa' => 'Proses Penerimaan',
                         'mulai_penerimaan_hpa' => date('Y-m-d H:i:s'),
                     ]);
                     break;
                 case 'selesai':
                     $this->Penerimaan_hpa->update($id_penerimaan_hpa, [
                         'id_user_penerimaan_hpa' => $id_user,
-                        'status_penerimaan_hpa' => 'Selesai Pemeriksaan',
+                        'status_penerimaan_hpa' => 'Selesai Penerimaan',
                         'selesai_penerimaan_hpa' => date('Y-m-d H:i:s'),
                     ]);
                     $this->Mutu_hpa->update($id_mutu, [
@@ -118,7 +118,7 @@ class Penerimaan extends BaseController
                 case 'reset':
                     $this->Penerimaan_hpa->update($id_penerimaan_hpa, [
                         'id_user_penerimaan_hpa' => null,
-                        'status_penerimaan_hpa' => 'Belum Pemeriksaan',
+                        'status_penerimaan_hpa' => 'Belum Penerimaan',
                         'mulai_penerimaan_hpa' => null,
                         'selesai_penerimaan_hpa' => null,
                     ]);

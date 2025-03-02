@@ -50,14 +50,20 @@
                     const validForMulai = Array.from(checkboxes).some(checkbox => {
                         if (checkbox.checked) {
                             const statuses = JSON.parse(checkbox.dataset.status); // Parse JSON
-                            return statuses.status_penerimaan_hpa === "Belum Pemeriksaan" ||
+                            return statuses.status_penerimaan_hpa === "Belum Penerimaan" ||
+                                statuses.status_penerimaan_frs === "Belum Penerimaan" ||
+                                statuses.status_penerimaan_srs === "Belum Penerimaan" ||
+                                statuses.status_penerimaan_ihc === "Belum Penerimaan" ||
                                 statuses.status_pengirisan === "Belum Pengirisan" ||
                                 statuses.status_pemotongan === "Belum Pemotongan" ||
                                 statuses.status_pemprosesan === "Belum Pemprosesan" ||
                                 statuses.status_penanaman === "Belum Penanaman" ||
                                 statuses.status_pemotongan_tipis === "Belum Pemotongan Tipis" ||
                                 statuses.status_pewarnaan === "Belum Pewarnaan" ||
-                                statuses.status_pembacaan === "Belum Pembacaan" ||
+                                statuses.status_pembacaan_hpa === "Belum Pembacaan" ||
+                                statuses.status_pembacaan_frs === "Belum Pembacaan" ||
+                                statuses.status_pembacaan_srs === "Belum Pembacaan" ||
+                                statuses.status_pembacaan_ihc === "Belum Pembacaan" ||
                                 statuses.status_penulisan === "Belum Penulisan" ||
                                 statuses.status_pemverifikasi === "Belum Pemverifikasi" ||
                                 statuses.status_autorized === "Belum Authorized" ||
@@ -72,7 +78,10 @@
                     const validForSelesai = Array.from(checkboxes).some(checkbox => {
                         if (checkbox.checked) {
                             const statuses = JSON.parse(checkbox.dataset.status); // Parse JSON
-                            return statuses.status_penerimaan_hpa === "Proses Pemeriksaan" ||
+                            return statuses.status_penerimaan_hpa === "Proses Penerimaan" ||
+                                statuses.status_penerimaan_frs === "Proses Penerimaan" ||
+                                statuses.status_penerimaan_srs === "Proses Penerimaan" ||
+                                statuses.status_penerimaan_ihc === "Proses Penerimaan" ||
                                 statuses.status_pengirisan === "Proses Pengirisan" ||
                                 statuses.status_pemotongan === "Proses Pemotongan" ||
                                 statuses.status_pemprosesan === "Proses Pemprosesan" ||
@@ -94,7 +103,10 @@
                     const validForLanjut = Array.from(checkboxes).some(checkbox => {
                         if (checkbox.checked) {
                             const statuses = JSON.parse(checkbox.dataset.status); // Parse JSON
-                            return statuses.status_penerimaan_hpa === "Selesai Pemeriksaan" ||
+                            return statuses.status_penerimaan_hpa === "Selesai Penerimaan" ||
+                                statuses.status_penerimaan_frs === "Selesai Penerimaan" ||
+                                statuses.status_penerimaan_srs === "Selesai Penerimaan" ||
+                                statuses.status_penerimaan_ihc === "Selesai Penerimaan" ||
                                 statuses.status_pengirisan === "Belum Pengirisan" ||
                                 statuses.status_pengirisan === "Proses Pengirisan" ||
                                 statuses.status_pengirisan === "Selesai Pengirisan" ||

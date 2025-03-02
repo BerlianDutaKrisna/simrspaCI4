@@ -160,7 +160,7 @@ class HpaController extends BaseController
             // Data penerimaan
             $penerimaanData = [
                 'id_hpa' => $id_hpa,
-                'status_penerimaan_hpa' => 'Belum Pemeriksaan',
+                'status_penerimaan_hpa' => 'Belum Penerimaan',
             ];
             // Simpan data penerimaan
             if (!$this->Penerimaan_hpa->insert($penerimaanData)) {

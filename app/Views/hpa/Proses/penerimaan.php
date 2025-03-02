@@ -48,7 +48,7 @@
                                             autocomplete="off">
                                     </td>
                                     <td>
-                                        <?php if ($row['status_penerimaan_hpa'] === "Proses Pemeriksaan"): ?>
+                                        <?php if ($row['status_penerimaan_hpa'] === "Proses Penerimaan"): ?>
                                             <input type="hidden" name="total_nilai_mutu" value="<?= esc($row['total_nilai_mutu_hpa']); ?>">
                                             <div class="form-check">
                                                 <input type="checkbox"

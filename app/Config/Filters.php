@@ -34,6 +34,7 @@ class Filters extends BaseFilters
         'forcehttps'    => ForceHTTPS::class,
         'pagecache'     => PageCache::class,
         'performance'   => PerformanceMetrics::class,
+        'auth' => \App\Filters\AuthFilter::class,
     ];
 
     /**
@@ -103,5 +104,31 @@ class Filters extends BaseFilters
      *
      * @var array<string, array<string, list<string>>>
      */
-    public array $filters = [];
+    public array $filters = [
+        'auth' => [
+            'before' => [
+                'dashboard',        // Proteksi akses ke dashboard
+                'users/*',          // Proteksi semua endpoint dalam users
+                'patient/*',        // Proteksi semua endpoint dalam patient
+                'hpa/*',            // Proteksi semua endpoint dalam hpa
+                'frs/*',            // Proteksi semua endpoint dalam frs
+                'penerimaan_hpa/*', // Proteksi semua endpoint dalam penerimaan_hpa
+                'penerimaan_frs/*', // Proteksi semua endpoint dalam penerimaan_frs
+                'pengirisan/*',     // Proteksi semua endpoint dalam pengirisan
+                'pemotongan/*',     // Proteksi semua endpoint dalam pemotongan
+                'pemprosesan/*',    // Proteksi semua endpoint dalam pemprosesan
+                'penanaman/*',      // Proteksi semua endpoint dalam penanaman
+                'pemotongan_tipis/*', // Proteksi semua endpoint dalam pemotongan tipis
+                'pewarnaan/*',      // Proteksi semua endpoint dalam pewarnaan
+                'pembacaan/*',      // Proteksi semua endpoint dalam pembacaan
+                'penulisan/*',      // Proteksi semua endpoint dalam penulisan
+                'pemverifikasi/*',  // Proteksi semua endpoint dalam pemverifikasi
+                'autorized/*',      // Proteksi semua endpoint dalam autorized
+                'pencetakan/*',     // Proteksi semua endpoint dalam pencetakan
+                'mutu/*',           // Proteksi semua endpoint dalam mutu
+                'cetak/*',          // Proteksi semua endpoint dalam cetak
+                'laporan_jumlah_pasien', // Proteksi akses laporan
+            ]
+        ]
+    ];
 }

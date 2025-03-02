@@ -23,6 +23,17 @@ abstract class BaseController extends Controller
     protected $srsModel;
     protected $ihcModel;
 
+    public function __construct()
+    {
+        // Inisialisasi session
+        $this->session = session();
+
+        // Cek apakah pengguna sudah login
+        if (!$this->session->get('logged_in')) {
+            header('Location: ' . base_url('/')); // Redirect ke halaman login
+            exit;
+        }
+    }
 
     public function initController(RequestInterface $request, ResponseInterface $response, LoggerInterface $logger)
     {
