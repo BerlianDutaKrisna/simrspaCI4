@@ -41,11 +41,11 @@ $routes->group('patient', function ($routes) {
 });
 
 // Route untuk hpa
-$routes->group('hpa',['namespace' => 'App\Controllers\Hpa'], function ($routes) {
-    $routes->get('index_hpa', 'HpaController::index_hpa'); 
-    $routes->get('register', 'HpaController::register'); 
+$routes->group('hpa', ['namespace' => 'App\Controllers\Hpa'], function ($routes) {
+    $routes->get('index_hpa', 'HpaController::index_hpa');
+    $routes->get('register', 'HpaController::register');
     $routes->post('insert', 'HpaController::insert');
-    $routes->get('edit_hpa/(:segment)', 'HpaController::edit_hpa/$1'); 
+    $routes->get('edit_hpa/(:segment)', 'HpaController::edit_hpa/$1');
     $routes->get('edit_makroskopis/(:segment)', 'HpaController::edit_makroskopis/$1');
     $routes->get('edit_mikroskopis/(:segment)', 'HpaController::edit_mikroskopis/$1');
     $routes->post('update/(:segment)', 'HpaController::update/$1');
@@ -62,15 +62,15 @@ $routes->group('hpa',['namespace' => 'App\Controllers\Hpa'], function ($routes) 
 });
 
 // Route untuk frs
-$routes->group('frs', ['namespace' => 'App\Controllers\frs'],function ($routes) {
+$routes->group('frs', ['namespace' => 'App\Controllers\frs'], function ($routes) {
     $routes->get('register_frs', 'frs::register_frs');
     $routes->post('insert', 'frs::insert');
     $routes->get('index_frs', 'frs::index_frs');
 });
 
 // Route untuk Penerimaan hpa
-$routes->group('penerimaan', ['namespace' => 'App\Controllers\Proses'], function ($routes) {
-    $routes->get('index_penerimaan_hpa', 'Penerimaan::index_penerimaan_hpa');
+$routes->group('penerimaan_hpa', ['namespace' => 'App\Controllers\Hpa\Proses'], function ($routes) {
+    $routes->get('index', 'Penerimaan::index');
     $routes->post('proses_penerimaan', 'Penerimaan::proses_penerimaan');
     $routes->get('penerimaan_details', 'Penerimaan::penerimaan_details');
     $routes->get('edit_penerimaan', 'Penerimaan::edit_penerimaan');

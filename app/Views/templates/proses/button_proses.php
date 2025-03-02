@@ -50,7 +50,7 @@
                     const validForMulai = Array.from(checkboxes).some(checkbox => {
                         if (checkbox.checked) {
                             const statuses = JSON.parse(checkbox.dataset.status); // Parse JSON
-                            return statuses.status_penerimaan === "Belum Pemeriksaan" ||
+                            return statuses.status_penerimaan_hpa === "Belum Pemeriksaan" ||
                                 statuses.status_pengirisan === "Belum Pengirisan" ||
                                 statuses.status_pemotongan === "Belum Pemotongan" ||
                                 statuses.status_pemprosesan === "Belum Pemprosesan" ||
@@ -72,7 +72,7 @@
                     const validForSelesai = Array.from(checkboxes).some(checkbox => {
                         if (checkbox.checked) {
                             const statuses = JSON.parse(checkbox.dataset.status); // Parse JSON
-                            return statuses.status_penerimaan === "Proses Pemeriksaan" ||
+                            return statuses.status_penerimaan_hpa === "Proses Pemeriksaan" ||
                                 statuses.status_pengirisan === "Proses Pengirisan" ||
                                 statuses.status_pemotongan === "Proses Pemotongan" ||
                                 statuses.status_pemprosesan === "Proses Pemprosesan" ||
@@ -94,7 +94,7 @@
                     const validForLanjut = Array.from(checkboxes).some(checkbox => {
                         if (checkbox.checked) {
                             const statuses = JSON.parse(checkbox.dataset.status); // Parse JSON
-                            return statuses.status_penerimaan === "Selesai Pemeriksaan" ||
+                            return statuses.status_penerimaan_hpa === "Selesai Pemeriksaan" ||
                                 statuses.status_pengirisan === "Belum Pengirisan" ||
                                 statuses.status_pengirisan === "Proses Pengirisan" ||
                                 statuses.status_pengirisan === "Selesai Pengirisan" ||

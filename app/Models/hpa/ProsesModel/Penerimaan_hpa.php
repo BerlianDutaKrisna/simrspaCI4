@@ -28,13 +28,6 @@ class Penerimaan_hpa extends Model
     protected $createdField  = 'created_at';
     protected $updatedField  = 'updated_at';
 
-    // Fungsi untuk insert data penerimaan_hpa
-    public function insertpenerimaan_hpa(array $data): bool
-    {
-        $this->insertpenerimaan_hpa($data);
-        return $this->db->affectedRows() > 0;
-    }
-
     public function getPenerimaan_hpa()
     {
         return $this->select(
@@ -43,13 +36,14 @@ class Penerimaan_hpa extends Model
         hpa.*, 
         patient.*, 
         users.nama_user AS nama_user_penerimaan_hpa,
+        mutu_hpa.id_mutu_hpa,
         mutu_hpa.total_nilai_mutu_hpa'
         )
             ->join('hpa', 'penerimaan_hpa.id_hpa = hpa.id_hpa', 'left') // Relasi dengan tabel hpa
             ->join('patient', 'hpa.id_pasien = patient.id_pasien', 'left') // Relasi dengan tabel patient
             ->join('users', 'penerimaan_hpa.id_user_penerimaan_hpa = users.id_user', 'left') // Relasi dengan tabel users untuk penerimaan_hpa
             ->join('mutu_hpa', 'hpa.id_hpa = mutu_hpa.id_hpa', 'left') // Relasi dengan tabel mutu_hpa berdasarkan id_hpa
-            ->whereIn('hpa.status_hpa', ['penerimaan_hpa', 'Terdaftar']) // Menambahkan filter whereIn untuk status_hpa
+            ->whereIn('hpa.status_hpa', ['penerimaan_hpa', 'Penerimaan']) // Menambahkan filter whereIn untuk status_hpa
             ->orderBy('hpa.kode_hpa', 'ASC')
             ->findAll();
     }

@@ -35,10 +35,9 @@
             </a>
         </div>
         <!-- Form -->
-        <form id="mainForm" action="<?= base_url('penerimaan/proses_penerimaan'); ?>" method="POST">
+        <form id="mainForm" method="POST" action="<?= base_url('penerimaan_hpa/proses_penerimaan') ?>">
+            <input type="hidden" id="action" name="action">
             <?= csrf_field(); ?>
-            <!-- Input Hidden -->
-            <input type="hidden" name="action" id="action" value="">
 
             <div class="table-responsive">
                 <table class="table table-bordered table-sm text-center" id="dataTable" width="100%" cellspacing="0">
@@ -47,7 +46,6 @@
                             <th>No</th>
                             <th>Kode HPA</th>
                             <th>Nama Pasien</th>
-                            <th>Status Penerimaan</th>
                             <th>Aksi</th>
                             <th>Kualitas Sediaan</th>
                             <th>Analis</th>
@@ -57,76 +55,53 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <?php if (!empty($penerimaanData_hpa)): ?>
+                        <?php if (!empty($penerimaanDatahpa)): ?>
                             <?php $i = 1; ?>
-                            <?php foreach ($penerimaanData_hpa as $row): ?>
+                            <?php foreach ($penerimaanDatahpa as $row): ?>
                                 <tr>
                                     <td><?= $i ?></td>
-                                    <td><?= $row['kode_hpa']; ?></td>
-                                    <td><?= $row['nama_pasien']; ?></td>
-                                    <td><?= $row['status_penerimaan']; ?></td>
+                                    <td><?= esc($row['kode_hpa']); ?></td>
+                                    <td><?= esc($row['nama_pasien']); ?></td>
                                     <td>
                                         <input type="checkbox"
                                             name="id_proses[]"
-                                            value="<?= $row['id_penerimaan']; ?>:<?= $row['id_hpa']; ?>:<?= $row['id_mutu']; ?>"
+                                            value="<?= esc($row['id_penerimaan_hpa']); ?>:<?= esc($row['id_hpa']); ?>:<?= esc($row['id_mutu_hpa']); ?>"
                                             class="form-control form-control-user checkbox-item"
                                             data-status='<?= json_encode([
-                                                                'status_penerimaan' => $row['status_penerimaan'] ?? ""
+                                                                'status_penerimaan_hpa' => $row['status_penerimaan_hpa'] ?? ""
                                                             ]) ?>'
                                             autocomplete="off">
                                     </td>
                                     <td>
-                                        <?php if ($row['status_penerimaan'] === "Proses Pemeriksaan"): ?>
-                                            <input type="hidden" name="total_nilai_mutu" value="<?= $row['total_nilai_mutu']; ?>">
-                                            <!-- Menampilkan form checkbox ketika status penerimaan adalah 'Proses Pemeriksaan' -->
+                                        <?php if ($row['status_penerimaan_hpa'] === "Proses Pemeriksaan"): ?>
+                                            <input type="hidden" name="total_nilai_mutu" value="<?= esc($row['total_nilai_mutu_hpa']); ?>">
                                             <div class="form-check">
                                                 <input type="checkbox"
                                                     name="indikator_1"
                                                     value="10"
-                                                    id="indikator_1_<?= $row['id_mutu']; ?>"
+                                                    id="indikator_1_<?= esc($row['id_mutu_hpa']); ?>"
                                                     class="form-check-input">
-                                                <label class="form-check-label" for="indikator_1_<?= $row['id_mutu']; ?>">
+                                                <label class="form-check-label" for="indikator_1_<?= esc($row['id_mutu_hpa']); ?>">
                                                     Vol cairan fiksasi sesuai
                                                 </label>
                                             </div>
-                                            <div class="form-check">
-                                                <input type="checkbox"
-                                                    name="indikator_2"
-                                                    value="10"
-                                                    id="indikator_2_<?= $row['id_mutu']; ?>"
-                                                    class="form-check-input">
-                                                <label class="form-check-label" for="indikator_2_<?= $row['id_mutu']; ?>">
-                                                    Jaringan terfiksasi merata
-                                                </label>
-                                            </div>
                                         <?php else: ?>
-                                            <!-- Menampilkan total_nilai_mutu jika status penerimaan 'Belum Diperiksa' atau 'Sudah Diperiksa' -->
-                                            <?= $row['total_nilai_mutu']; ?> %
+                                            <?= esc($row['total_nilai_mutu_hpa']); ?> %
                                         <?php endif; ?>
                                     </td>
-                                    <td><?= $row['nama_user_penerimaan']; ?></td>
+                                    <td><?= esc($row['nama_user_penerimaan_hpa']); ?></td>
                                     <td>
-                                        <?= empty($row['mulai_penerimaan']) ? '-' : esc(date('H:i , d-m-Y', strtotime($row['mulai_penerimaan']))); ?>
+                                        <?= empty($row['mulai_penerimaan_hpa']) ? '-' : esc(date('H:i, d-m-Y', strtotime($row['mulai_penerimaan_hpa']))); ?>
                                     </td>
                                     <td>
-                                        <?= empty($row['selesai_penerimaan']) ? '-' : esc(date('H:i , d-m-Y', strtotime($row['selesai_penerimaan']))); ?>
+                                        <?= empty($row['selesai_penerimaan_hpa']) ? '-' : esc(date('H:i, d-m-Y', strtotime($row['selesai_penerimaan_hpa']))); ?>
                                     </td>
                                     <td>
                                         <?php
                                         if (empty($row['tanggal_hasil'])) {
                                             echo 'Belum diisi';
                                         } else {
-                                            setlocale(LC_TIME, 'id_ID.utf8'); // Pastikan server mendukung lokal Indonesia
-                                            $tanggal = new DateTime($row['tanggal_hasil']);
-                                            $formatter = new IntlDateFormatter(
-                                                'id_ID',
-                                                IntlDateFormatter::FULL,
-                                                IntlDateFormatter::NONE,
-                                                'Asia/Jakarta',
-                                                IntlDateFormatter::GREGORIAN,
-                                                'EEEE, dd-MM-yyyy' // Format dengan nama hari
-                                            );
-                                            echo esc($formatter->format($tanggal));
+                                            echo esc(strftime('%A, %d-%m-%Y', strtotime($row['tanggal_hasil'])));
                                         }
                                         ?>
                                     </td>
@@ -141,9 +116,9 @@
                     </tbody>
                 </table>
             </div>
+        </form>
 
-
-            <?= $this->include('templates/proses/button_proses'); ?>
-            <?= $this->include('dashboard/jenis_tindakan'); ?>
-            <?= $this->include('templates/notifikasi'); ?>
-            <?= $this->include('templates/dashboard/footer_dashboard'); ?>
+        <?= $this->include('templates/proses/button_proses'); ?>
+        <?= $this->include('dashboard/jenis_tindakan'); ?>
+        <?= $this->include('templates/notifikasi'); ?>
+        <?= $this->include('templates/dashboard/footer_dashboard'); ?>

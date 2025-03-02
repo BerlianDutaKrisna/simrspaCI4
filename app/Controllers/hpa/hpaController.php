@@ -915,7 +915,7 @@ class HpaController extends BaseController
                     'lokasi_spesimen' => $data['lokasi_spesimen'],
                     'tindakan_spesimen' => $tindakan_spesimen,
                     'diagnosa_klinik' => $data['diagnosa_klinik'],
-                    'status_hpa' => $data['status_hpa'],
+                    'status_hpa' => 'Penerimaan',
                 ];
             // Simpan data HPA
             if (!$this->hpaModel->insert($hpaData)) {
@@ -926,7 +926,7 @@ class HpaController extends BaseController
             // Data penerimaan
             $penerimaanData = [
                 'id_hpa' => $id_hpa,
-                'status_penerimaan' => 'Belum Pemeriksaan',
+                'status_penerimaan_hpa' => 'Belum Pemeriksaan',
             ];
             // Simpan data penerimaan
             if (!$this->Penerimaan_hpa->insert($penerimaanData)) {

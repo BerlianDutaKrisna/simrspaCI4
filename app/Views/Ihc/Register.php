@@ -3,7 +3,7 @@
 
 <div class="card shadow mb-4">
     <div class="card-header py-3">
-        <h6 class="m-0 font-weight-bold text-primary">Pendaftaran Pemeriksaan FNAB</h6>
+        <h6 class="m-0 font-weight-bold text-primary">Pendaftaran Pemeriksaan</h6>
     </div>
     <div class="card-body">
         <h1>Data Pasien</h1>
@@ -51,25 +51,24 @@
         <h6 class="m-0 font-weight-bold text-primary">Pendaftaran Pemeriksaan</h6>
     </div>
     <div class="card-body">
-        <form action="<?= base_url('fnab/insert') ?>" method="POST">
+        <form action="<?= base_url('hpa/insert') ?>" method="POST">
             <?= csrf_field(); ?> <!-- CSRF token untuk keamanan -->
 
             <!-- Hidden input untuk id_pasien -->
             <input type="hidden" name="id_pasien" value="<?= isset($patient['id_pasien']) ? esc($patient['id_pasien']) : ''; ?>">
-            <input type="hidden" name="status_fnab" value="Terdaftar">
             <div class="form-row">
-                <!-- Form group untuk Kode fnab -->
+                <!-- Form group untuk Kode HPA -->
                 <div class="form-group col-md-3">
-                    <label for="kode_fnab">Kode FNAB</label>
-                    <input type="text" class="form-control" id="kode_fnab" name="kode_fnab"
-                        value="<?= esc($kode_fnab); ?>">
+                    <label for="kode_hpa">Kode HPA</label>
+                    <input type="text" class="form-control" id="kode_hpa" name="kode_hpa"
+                        value="<?= esc($kode_hpa); ?>">
                 </div>
 
                 <!-- Form group untuk Unit Asal -->
                 <div class="form-group col-md-3">
                     <label for="unit_asal">Unit Asal</label>
                     <select class="form-control" id="unit_asal" name="unit_asal" onchange="handleUnitAsalChange(this)">
-                        <option value="Belum Dipilih" selected>Belum Dipilih</option>
+                        <option value="" selected>Belum Dipilih</option>
                         <option value="OK">OK ELEKTIF</option>
                         <option value="OK">OK EMERGENCY</option>
                         <option value="Poli">Poli</option>
@@ -83,7 +82,7 @@
                 <div class="form-group col-md-3">
                     <label for="dokter_pengirim">Dokter Pengirim</label>
                     <select class="form-control" id="dokter_pengirim" name="dokter_pengirim" onchange="handleDokterPengirimChange(this)">
-                        <option value="Belum Dipilih" selected>Belum Dipilih</option>
+                        <option value="" selected>Belum Dipilih</option>
                         <option value="dr. Ihyan Amri, Sp.B">dr. Ihyan Amri, Sp.B</option>
                         <option value="dr. Andy Achmad Suanda, Sp.B">dr. Andy Achmad Suanda, Sp.B</option>
                         <option value="dr. Agus Maulana,Sp.B,FinaCs,M.Ked.Klin">dr. Agus Maulana,Sp.B,FinaCs,M.Ked.Klin</option>
@@ -125,9 +124,21 @@
                 <div class="form-group col-md-3">
                     <label for="tindakan_spesimen">Tindakan Spesimen</label>
                     <select class="form-control" id="tindakan_spesimen" name="tindakan_spesimen" onchange="handleTindakanSpesimenChange(this)">
-                        <option value="Fnab" selected>Fnab</option>
-                        <option value="Fnab dengan tutunan CT-Scan">Fnab dengan tutunan CT-Scan</option>
-                        <option value="Fnab dengan tuntunan Usg">Fnab dengan tuntunan Usg</option>
+                        <option value="" selected>Belum Dipilih</option>
+                        <option value="Biopsi">Biopsi</option>
+                        <option value="Biopsi Beberapa Tempat">Biopsi Beberapa Tempat</option>
+                        <option value="Kerokan">Kerokan</option>
+                        <option value="Extirpasi Tumor">Extirpasi Tumor</option>
+                        <option value="Koleksistektomi">Koleksistektomi</option>
+                        <option value="Tiroidektomi">Tiroidektomi</option>
+                        <option value="Mastektomi">Mastektomi</option>
+                        <option value="Appendiktomi">Appendiktomi</option>
+                        <option value="Miomektomi">Miomektomi</option>
+                        <option value="Kistektomi">Kistektomi</option>
+                        <option value="Omentektomi">Omentektomi</option>
+                        <option value="TAH-BSO">TAH-BSO</option>
+                        <option value="Reseksi sus">Reseksi Usus</option>
+                        <option value="Reseksi sus">Menentukan Radikalitas</option>
                         <option value="lainnya">Lainnya</option>
                     </select>
                     <input type="text" class="form-control mt-2 d-none" id="tindakan_spesimen_custom" name="tindakan_spesimen_custom" placeholder="Masukkan Tindakan Spesimen Lainnya">
@@ -148,31 +159,29 @@
 
 <script>
     // Function to set Tanggal Hasil based on Tanggal Permintaan
-    // Function to set Tanggal Hasil based on Tanggal Permintaan
     function setTanggalHasil() {
-        const tanggalPermintaanInput = document.getElementById('tanggal_permintaan');
-        const tanggalHasilInput = document.getElementById('tanggal_hasil');
+        const tanggalPermintaan = document.getElementById('tanggal_permintaan');
+        const tanggalHasil = document.getElementById('tanggal_hasil');
 
-        // Event listener untuk perubahan pada tanggal permintaan
-        tanggalPermintaanInput.addEventListener('change', function() {
-            const tanggalPermintaan = new Date(tanggalPermintaanInput.value);
+        const tanggalPermintaanValue = new Date(tanggalPermintaan.value);
 
-            // Tambahkan 1 hari
-            let tanggalHasil = new Date(tanggalPermintaan);
-            tanggalHasil.setDate(tanggalHasil.getDate() + 1);
-
-            // Cek apakah tanggal hasil jatuh pada hari Sabtu
-            if (tanggalHasil.getDay() === 6) { // 6 adalah hari Sabtu
-                tanggalHasil.setDate(tanggalHasil.getDate() + 2); // Tambah 2 hari
-            }
-
-            // Set nilai tanggal hasil ke input
-            tanggalHasilInput.value = tanggalHasil.toISOString().split('T')[0]; // Format YYYY-MM-DD
-        });
+        // Check if Tanggal Permintaan is a valid date
+        if (!isNaN(tanggalPermintaanValue)) {
+            tanggalPermintaanValue.setDate(tanggalPermintaanValue.getDate() + 7); // Add 7 days
+            tanggalHasil.value = tanggalPermintaanValue.toISOString().split('T')[0]; // Set Tanggal Hasil
+        }
     }
 
-    // Panggil fungsi saat halaman dimuat
-    document.addEventListener('DOMContentLoaded', setTanggalHasil);
+    // Set Tanggal Hasil on page load if Tanggal Permintaan is filled
+    window.addEventListener('load', function() {
+        // If Tanggal Permintaan has a value, set Tanggal Hasil
+        if (document.getElementById('tanggal_permintaan').value) {
+            setTanggalHasil();
+        }
+    });
+
+    // Update Tanggal Hasil whenever Tanggal Permintaan is changed
+    document.getElementById('tanggal_permintaan').addEventListener('change', setTanggalHasil);
 
     function handleUnitAsalChange(selectElement) {
         const customInput = document.getElementById('unit_asal_detail');
