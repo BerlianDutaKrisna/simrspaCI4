@@ -1,21 +1,22 @@
 <?php
 
-namespace App\Models\Fnab\ProsesModel;
+namespace App\Models\Hpa\Proses; // Update namespace sesuai dengan folder
+
 use CodeIgniter\Model;
 
-class PemotonganTipisModel extends Model // Update nama model
+class Pemotongan_tipis_hpa extends Model // Update nama model
 {
-    protected $table      = 'pemotongan_tipis'; // Nama tabel
-    protected $primaryKey = 'id_pemotongan_tipis'; // Nama primary key
+    protected $table      = 'pemotongan_tipis_hpa'; // Nama tabel
+    protected $primaryKey = 'id_pemotongan_tipis_hpa'; // Nama primary key
     protected $returnType = 'array';
 
     // Kolom-kolom yang dapat diisi melalui mass-assignment
     protected $allowedFields = [
         'id_hpa',
-        'id_user_pemotongan_tipis', // Update nama kolom
-        'status_pemotongan_tipis', // Update nama kolom
-        'mulai_pemotongan_tipis', // Update nama kolom
-        'selesai_pemotongan_tipis', // Update nama kolom
+        'id_user_pemotongan_tipis_hpa', // Update nama kolom
+        'status_pemotongan_tipis_hpa', // Update nama kolom
+        'mulai_pemotongan_tipis_hpa', // Update nama kolom
+        'selesai_pemotongan_tipis_hpa', // Update nama kolom
         'created_at',
         'updated_at'
     ];
@@ -39,15 +40,15 @@ class PemotonganTipisModel extends Model // Update nama model
     {
         return $this->select(
             '
-        pemotongan_tipis.*, 
+        pemotongan_tipis_hpa.*, 
         hpa.*, 
         patient.*, 
-        users.nama_user AS nama_user_pemotongan_tipis,
+        users.nama_user AS nama_user_pemotongan_tipis_hpa,
         mutu.total_nilai_mutu'
         )
-            ->join('hpa', 'pemotongan_tipis.id_hpa = hpa.id_hpa', 'left') // Relasi dengan tabel hpa
+            ->join('hpa', 'pemotongan_tipis_hpa.id_hpa = hpa.id_hpa', 'left') // Relasi dengan tabel hpa
             ->join('patient', 'hpa.id_pasien = patient.id_pasien', 'left') // Relasi dengan tabel patient
-            ->join('users', 'pemotongan_tipis.id_user_pemotongan_tipis = users.id_user', 'left') // Relasi dengan tabel users untuk pemotongan tipis
+            ->join('users', 'pemotongan_tipis_hpa.id_user_pemotongan_tipis_hpa = users.id_user', 'left') // Relasi dengan tabel users untuk pemotongan tipis
             ->join('mutu', 'hpa.id_hpa = mutu.id_hpa', 'left') // Relasi dengan tabel mutu berdasarkan id_hpa
             ->where('hpa.status_hpa', 'Pemotongan Tipis') // Filter berdasarkan status_hpa 'Pemotongan Tipis'
             ->orderBy('hpa.kode_hpa', 'ASC')
@@ -55,21 +56,17 @@ class PemotonganTipisModel extends Model // Update nama model
     }
 
     // Fungsi untuk mengupdate data pemotongan tipis
-    public function updatePemotonganTipis($id_pemotongan_tipis, $data) // Update nama fungsi dan parameter
+    public function updatePemotonganTipis($id_pemotongan_tipis_hpa, $data) // Update nama fungsi dan parameter
     {
         $builder = $this->db->table($this->table);  // Mengambil tabel pemotongan tipis
-        $builder->where('id_pemotongan_tipis', $id_pemotongan_tipis);  // Menentukan baris yang akan diupdate berdasarkan id_pemotongan_tipis
+        $builder->where('id_pemotongan_tipis_hpa', $id_pemotongan_tipis_hpa);  // Menentukan baris yang akan diupdate berdasarkan id_pemotongan_tipis_hpa
         $builder->update($data);  // Melakukan update dengan data yang dikirimkan
         return $this->db->affectedRows();  // Mengembalikan jumlah baris yang terpengaruh
     }
 
-    public function deletePemotonganTipis($id_pemotongan_tipis)
+    public function deletePemotonganTipis($id_pemotongan_tipis_hpa)
     {
-        return $this->delete($id_pemotongan_tipis);
+        return $this->delete($id_pemotongan_tipis_hpa);
     }
 
-    public function countPemotonganTipis()
-    {
-        return $this->where('status_pemotongan_tipis !=', 'Selesai Pemotongan Tipis')->countAllResults();
-    }
 }

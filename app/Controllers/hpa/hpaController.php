@@ -6,13 +6,14 @@ use App\Controllers\BaseController;
 use App\Models\Hpa\HpaModel;
 use App\Models\UsersModel;
 use App\Models\PatientModel;
-use App\Models\Hpa\ProsesModel\Penerimaan_hpa;
-use App\Models\Hpa\ProsesModel\Pemotongan_hpa;
-use App\Models\Hpa\ProsesModel\Pembacaan_hpa;
-use App\Models\Hpa\ProsesModel\Penulisan_hpa;
-use App\Models\Hpa\ProsesModel\Pemverifikasi_hpa;
-use App\Models\Hpa\ProsesModel\Authorized_hpa;
-use App\Models\Hpa\ProsesModel\Pencetakan_hpa;
+use App\Models\Hpa\Proses\Penerimaan_hpa;
+use App\Models\Hpa\Proses\Pengirisan_hpa;
+use App\Models\Hpa\Proses\Pemotongan_hpa;
+use App\Models\Hpa\Proses\Pembacaan_hpa;
+use App\Models\Hpa\Proses\Penulisan_hpa;
+use App\Models\Hpa\Proses\Pemverifikasi_hpa;
+use App\Models\Hpa\Proses\Authorized_hpa;
+use App\Models\Hpa\Proses\Pencetakan_hpa;
 use App\Models\Hpa\Mutu_hpa;
 use CodeIgniter\Exceptions\PageNotFoundException;
 use Exception;
@@ -24,6 +25,7 @@ class HpaController extends BaseController
     protected $userModel;
     protected $patientModel;
     protected $Penerimaan_hpa;
+    protected $Pengirisan_hpa;
     protected $Pemotongan_hpa;
     protected $Pembacaan_hpa;
     protected $Penulisan_hpa;
@@ -40,6 +42,7 @@ class HpaController extends BaseController
         $this->userModel = new UsersModel();
         $this->patientModel = new PatientModel();
         $this->Penerimaan_hpa = new Penerimaan_hpa();
+        $this->Pengirisan_hpa = new Pengirisan_hpa();
         $this->Pemotongan_hpa = new Pemotongan_hpa();
         $this->Pembacaan_hpa = new Pembacaan_hpa();
         $this->Penulisan_hpa = new Penulisan_hpa();
@@ -76,7 +79,145 @@ class HpaController extends BaseController
             'nama_user' => $nama_user
         ]);
     }
-    // Menampilkan halaman daftar hpa
+
+    public function register()
+    {
+        $lastHPA = $this->hpaModel->getLastKodeHPA();
+        $currentYear = date('y');
+        $nextNumber = 1;
+        if ($lastHPA) {
+            $lastKode = $lastHPA['kode_hpa'];
+            $lastParts = explode('/', $lastKode);
+            $lastYear = $lastParts[1];
+            if ($lastYear == $currentYear) {
+                $lastNumber = (int) explode('.', $lastParts[0])[1];
+                $nextNumber = $lastNumber + 1;
+            } else {
+                $nextNumber = 1;
+            }
+        } else {
+            $nextNumber = 1;
+        }
+        $kodeHPA = 'H.' . str_pad($nextNumber, 2, '0', STR_PAD_LEFT) . '/' . $currentYear;
+        $data = [
+            'id_user' => session()->get('id_user'),
+            'nama_user' => session()->get('nama_user'),
+            'kode_hpa' => $kodeHPA,
+            'patient' => null,
+        ];
+        $norm_pasien = $this->request->getGet('norm_pasien');
+        if ($norm_pasien) {
+            $patientModel = new PatientModel();
+            $patient = $patientModel->where('norm_pasien', $norm_pasien)->first();
+            $data['patient'] = $patient ?: null;
+        }
+        return view('Hpa/Register', $data);
+    }
+
+    public function insert()
+    {
+        try {
+            // Set rules untuk validasi
+            $this->validation->setRules([
+                'kode_hpa' => [
+                    'rules' => 'required|is_unique[hpa.kode_hpa]',
+                    'errors' => [
+                        'required' => 'Kode Hpa harus diisi.',
+                        'is_unique' => 'Kode Hpa sudah terdaftar!',
+                    ],
+                ],
+            ]);
+            // Jalankan validasi
+            $data = $this->request->getPost();
+            if (!$this->validation->run($data)) {
+                return redirect()->back()->withInput()->with('error', $this->validation->getErrors());
+            }
+            // Gabungkan unit_asal dan unit_asal_detail
+            $unit_asal = $data['unit_asal'] . ' ' . ($data['unit_asal_detail'] ?? '');
+            // Tentukan dokter_pengirim
+            $dokter_pengirim = !empty($data['dokter_pengirim']) ? $data['dokter_pengirim'] : $data['dokter_pengirim_custom'];
+            // Tentukan tindakan_spesimen
+            $tindakan_spesimen = !empty($data['tindakan_spesimen']) ? $data['tindakan_spesimen'] : $data['tindakan_spesimen_custom'];
+            // Data yang akan disimpan
+            $hpaData = [
+                'kode_hpa' => $data['kode_hpa'],
+                'id_pasien' => $data['id_pasien'],
+                'unit_asal' => $unit_asal,
+                'dokter_pengirim' => $dokter_pengirim,
+                'tanggal_permintaan' => $data['tanggal_permintaan'] ?: null,
+                'tanggal_hasil' => $data['tanggal_hasil'] ?: null,
+                'lokasi_spesimen' => $data['lokasi_spesimen'],
+                'tindakan_spesimen' => $tindakan_spesimen,
+                'diagnosa_klinik' => $data['diagnosa_klinik'],
+                'status_hpa' => 'Penerimaan',
+            ];
+            // Simpan data HPA
+            if (!$this->hpaModel->insert($hpaData)) {
+                throw new Exception('Gagal menyimpan data HPA: ' . $this->hpaModel->errors());
+            }
+            // Mendapatkan ID HPA yang baru diinsert
+            $id_hpa = $this->hpaModel->getInsertID();
+            // Data penerimaan
+            $penerimaanData = [
+                'id_hpa' => $id_hpa,
+                'status_penerimaan_hpa' => 'Belum Pemeriksaan',
+            ];
+            // Simpan data penerimaan
+            if (!$this->Penerimaan_hpa->insert($penerimaanData)) {
+                throw new Exception('Gagal menyimpan data penerimaan: ' . $this->Penerimaan_hpa->errors());
+            }
+            // Data mutu
+            $mutuData = [
+                'id_hpa' => $id_hpa,
+            ];
+            if (!$this->Mutu_hpa->insert($mutuData)) {
+                throw new Exception('Gagal menyimpan data mutu: ' . $this->Mutu_hpa->errors());
+            }
+            // Redirect dengan pesan sukses
+            return redirect()->to('/dashboard')->with('success', 'Data berhasil disimpan!');
+        } catch (Exception $e) {
+            // Jika terjadi error, tampilkan pesan error
+            log_message('error', 'Error inserting data: ' . $e->getMessage());
+            return redirect()->back()->withInput()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
+        }
+    }
+
+    public function delete()
+    {
+        // Mendapatkan data dari request
+        $id_hpa = $this->request->getPost('id_hpa');
+
+        // Cek apakah id_hpa valid
+        if ($id_hpa) {
+            // Inisialisasi model
+            $hpaModel = new HpaModel();
+
+            // Ambil instance dari database service
+            $db = \Config\Database::connect();
+
+            // Mulai transaksi untuk memastikan kedua operasi berjalan atomik
+            $db->transStart();
+
+            // Hapus data dari tabel hpa
+            $deleteHpa = $hpaModel->delete($id_hpa);
+
+            // Cek apakah delete berhasil
+            if ($deleteHpa) {
+                // Selesaikan transaksi
+                $db->transComplete();
+
+                // Cek apakah transaksi berhasil
+                if ($db->transStatus() === FALSE) {
+                    return $this->response->setJSON(['success' => false, 'message' => 'Gagal menghapus data.']);
+                }
+            } else {
+                // Jika id_hpa tidak valid, kirimkan response error
+                return $this->response->setJSON(['success' => false, 'message' => 'ID HPA tidak valid.']);
+            }
+        }
+        return $this->response->setJSON(['success' => true, 'message' => 'Data berhasil dihapus.']);
+    }
+
     public function index_buku_penerima()
     {
         // Mengambil data dari session
@@ -844,143 +985,5 @@ class HpaController extends BaseController
 
         // Redirect setelah berhasil mengupdate data
         return redirect()->to('hpa/index_hpa')->with('success', 'Status HPA berhasil disimpan.');
-    }
-
-    public function register()
-    {
-        $lastHPA = $this->hpaModel->getLastKodeHPA();
-        $currentYear = date('y');
-        $nextNumber = 1;
-        if ($lastHPA) {
-            $lastKode = $lastHPA['kode_hpa'];
-            $lastParts = explode('/', $lastKode);
-            $lastYear = $lastParts[1];
-            if ($lastYear == $currentYear) {
-                $lastNumber = (int) explode('.', $lastParts[0])[1];
-                $nextNumber = $lastNumber + 1;
-            } else {
-                $nextNumber = 1;
-            }
-        } else {
-            $nextNumber = 1;
-        }
-        $kodeHPA = 'H.' . str_pad($nextNumber, 2, '0', STR_PAD_LEFT) . '/' . $currentYear;
-        $data = [
-            'id_user' => session()->get('id_user'),
-            'nama_user' => session()->get('nama_user'),
-            'kode_hpa' => $kodeHPA,
-            'patient' => null,
-        ];
-        $norm_pasien = $this->request->getGet('norm_pasien');
-        if ($norm_pasien) {
-            $patientModel = new PatientModel();
-            $patient = $patientModel->where('norm_pasien', $norm_pasien)->first();
-            $data['patient'] = $patient ?: null;
-        }
-        return view('Hpa/Register', $data);
-    }
-
-    public function insert()
-    {
-        try {
-            // Set rules untuk validasi
-            $this->validation->setRules([
-                'kode_hpa' => [
-                    'rules' => 'required|is_unique[hpa.kode_hpa]',
-                    'errors' => [
-                        'required' => 'Kode Hpa harus diisi.',
-                        'is_unique' => 'Kode Hpa sudah terdaftar!',
-                    ],
-                ],
-            ]);
-            // Jalankan validasi
-            $data = $this->request->getPost();
-            if (!$this->validation->run($data)) {
-                return redirect()->back()->withInput()->with('error', $this->validation->getErrors());
-            }
-            // Gabungkan unit_asal dan unit_asal_detail
-            $unit_asal = $data['unit_asal'] . ' ' . ($data['unit_asal_detail'] ?? '');
-            // Tentukan dokter_pengirim
-            $dokter_pengirim = !empty($data['dokter_pengirim']) ? $data['dokter_pengirim'] : $data['dokter_pengirim_custom'];
-            // Tentukan tindakan_spesimen
-            $tindakan_spesimen = !empty($data['tindakan_spesimen']) ? $data['tindakan_spesimen'] : $data['tindakan_spesimen_custom'];
-            // Data yang akan disimpan
-            $hpaData = [
-                    'kode_hpa' => $data['kode_hpa'],
-                    'id_pasien' => $data['id_pasien'],
-                    'unit_asal' => $unit_asal,
-                    'dokter_pengirim' => $dokter_pengirim,
-                    'tanggal_permintaan' => $data['tanggal_permintaan'] ?: null,
-                    'tanggal_hasil' => $data['tanggal_hasil'] ?: null,
-                    'lokasi_spesimen' => $data['lokasi_spesimen'],
-                    'tindakan_spesimen' => $tindakan_spesimen,
-                    'diagnosa_klinik' => $data['diagnosa_klinik'],
-                    'status_hpa' => 'Penerimaan',
-                ];
-            // Simpan data HPA
-            if (!$this->hpaModel->insert($hpaData)) {
-                throw new Exception('Gagal menyimpan data HPA: ' . $this->hpaModel->errors());
-            }
-            // Mendapatkan ID HPA yang baru diinsert
-            $id_hpa = $this->hpaModel->getInsertID();
-            // Data penerimaan
-            $penerimaanData = [
-                'id_hpa' => $id_hpa,
-                'status_penerimaan_hpa' => 'Belum Pemeriksaan',
-            ];
-            // Simpan data penerimaan
-            if (!$this->Penerimaan_hpa->insert($penerimaanData)) {
-                throw new Exception('Gagal menyimpan data penerimaan: ' . $this->Penerimaan_hpa->errors());
-            }
-            // Data mutu
-            $mutuData = [
-                'id_hpa' => $id_hpa,
-            ];
-            if (!$this->Mutu_hpa->insert($mutuData)) {
-                throw new Exception('Gagal menyimpan data mutu: ' . $this->Mutu_hpa->errors());
-            }
-            // Redirect dengan pesan sukses
-            return redirect()->to('/dashboard')->with('success', 'Data berhasil disimpan!');
-        } catch (Exception $e) {
-            // Jika terjadi error, tampilkan pesan error
-            log_message('error', 'Error inserting data: ' . $e->getMessage());
-            return redirect()->back()->withInput()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
-        }
-    }
-
-    public function delete()
-    {
-        // Mendapatkan data dari request
-        $id_hpa = $this->request->getPost('id_hpa');
-
-        // Cek apakah id_hpa valid
-        if ($id_hpa) {
-            // Inisialisasi model
-            $hpaModel = new HpaModel();
-
-            // Ambil instance dari database service
-            $db = \Config\Database::connect();
-
-            // Mulai transaksi untuk memastikan kedua operasi berjalan atomik
-            $db->transStart();
-
-            // Hapus data dari tabel hpa
-            $deleteHpa = $hpaModel->delete($id_hpa);
-
-            // Cek apakah delete berhasil
-            if ($deleteHpa) {
-                // Selesaikan transaksi
-                $db->transComplete();
-
-                // Cek apakah transaksi berhasil
-                if ($db->transStatus() === FALSE) {
-                    return $this->response->setJSON(['success' => false, 'message' => 'Gagal menghapus data.']);
-                }
-            } else {
-                // Jika id_hpa tidak valid, kirimkan response error
-                return $this->response->setJSON(['success' => false, 'message' => 'ID HPA tidak valid.']);
-            }
-        }
-        return $this->response->setJSON(['success' => true, 'message' => 'Data berhasil dihapus.']);
     }
 }

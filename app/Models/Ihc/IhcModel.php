@@ -46,7 +46,7 @@ class IhcModel extends Model
     }
     public function countPenerimaanihc()
     {
-        return $this->where('status_ihc', 'Terdaftar')->countAllResults() ?? 0;
+        return $this->where('status_ihc', 'Penerimaan')->countAllResults() ?? 0;
     }
     public function countPengirisanihc()
     {

@@ -27,7 +27,7 @@ class Dashboard extends BaseController
             'counts' => $this->getCounts(),
             'chartData' => json_encode($this->hpaModel->getHpaChartData(), JSON_NUMERIC_CHECK)
         ];
-
+        
         return view('dashboard/dashboard', $data);
     }
 }

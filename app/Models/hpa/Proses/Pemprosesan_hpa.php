@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models\Hpa\ProsesModel; // Update namespace sesuai dengan folder
+namespace App\Models\Hpa\Proses; // Update namespace sesuai dengan folder
 
 use CodeIgniter\Model;
 

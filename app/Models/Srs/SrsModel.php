@@ -46,7 +46,7 @@ class SrsModel extends Model
     }
     public function countPenerimaansrs()
     {
-        return $this->where('status_srs', 'Terdaftar')->countAllResults() ?? 0;
+        return $this->where('status_srs', 'Penerimaan')->countAllResults() ?? 0;
     }
     public function countPengirisansrs()
     {

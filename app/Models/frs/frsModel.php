@@ -46,7 +46,7 @@ class FrsModel extends Model
     }
     public function countPenerimaanfrs()
     {
-        return $this->where('status_frs', 'Terdaftar')->countAllResults() ?? 0;
+        return $this->where('status_frs', 'Penerimaan')->countAllResults() ?? 0;
     }
     public function countPengirisanfrs()
     {

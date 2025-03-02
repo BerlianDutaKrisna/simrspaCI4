@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Controllers\Proses;
+namespace App\Controllers\Frs\Proses;
 
 use App\Controllers\BaseController;
-use App\Models\ProsesModel\PembacaanModel;
-use App\Models\ProsesModel\PenulisanModel;
+use App\Models\Frs\ProsesModel\PembacaanModel;
+use App\Models\Frs\ProsesModel\PenulisanModel;
 use App\Models\HpaModel;
 use App\Models\UsersModel;
 use App\Models\MutuModel;
@@ -21,11 +21,6 @@ class Pembacaan extends BaseController
 
     public function __construct()
     {
-        $this->pembacaanModel = new PembacaanModel();
-        $this->penulisanModel = new PenulisanModel();
-        $this->userModel = new UsersModel();
-        $this->hpaModel = new HpaModel();
-        $this->mutuModel = new MutuModel();
         $this->session = session();
     }
 

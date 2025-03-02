@@ -39,14 +39,13 @@ class HpaModel extends Model
     {
         return $this->orderBy('id_hpa', 'DESC')->first(); // Ambil data terakhir berdasarkan ID
     }
-
     public function countProseshpa()
     {
         return $this->where('status_hpa !=', 'Selesai')->countAllResults() ?? 0;
     }
     public function countPenerimaanhpa()
     {
-        return $this->where('status_hpa', 'Terdaftar')->countAllResults() ?? 0;
+        return $this->where('status_hpa', 'Penerimaan')->countAllResults() ?? 0;
     }
     public function countPengirisanhpa()
     {

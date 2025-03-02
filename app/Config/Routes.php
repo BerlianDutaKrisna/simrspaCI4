@@ -62,14 +62,23 @@ $routes->group('hpa', ['namespace' => 'App\Controllers\Hpa'], function ($routes)
 });
 
 // Route untuk frs
-$routes->group('frs', ['namespace' => 'App\Controllers\frs'], function ($routes) {
-    $routes->get('register_frs', 'frs::register_frs');
-    $routes->post('insert', 'frs::insert');
+$routes->group('frs', ['namespace' => 'App\Controllers\Frs'], function ($routes) {
+    $routes->get('register', 'FrsController::register');
+    $routes->post('insert', 'FrsController::insert');
     $routes->get('index_frs', 'frs::index_frs');
 });
 
 // Route untuk Penerimaan hpa
 $routes->group('penerimaan_hpa', ['namespace' => 'App\Controllers\Hpa\Proses'], function ($routes) {
+    $routes->get('index', 'Penerimaan::index');
+    $routes->post('proses_penerimaan', 'Penerimaan::proses_penerimaan');
+    $routes->get('penerimaan_details', 'Penerimaan::penerimaan_details');
+    $routes->get('edit_penerimaan', 'Penerimaan::edit_penerimaan');
+    $routes->post('update_penerimaan', 'Penerimaan::update_penerimaan');
+});
+
+// Route untuk Penerimaan frs
+$routes->group('penerimaan_frs', ['namespace' => 'App\Controllers\Frs\Proses'], function ($routes) {
     $routes->get('index', 'Penerimaan::index');
     $routes->post('proses_penerimaan', 'Penerimaan::proses_penerimaan');
     $routes->get('penerimaan_details', 'Penerimaan::penerimaan_details');

@@ -8,32 +8,7 @@
     <div class="card-body">
         <h1>Daftar Penerimaan HPA</h1>
         <a href="<?= base_url('/dashboard') ?>" class="btn btn-primary mb-3">Kembali</a>
-        <div class="row">
-            <a href="<?= base_url('penerimaan/index_penerimaan') ?>" class="btn btn-danger btn-icon-split m-3">
-                <span class="text"><b style="color: white"><?= esc($counts['countPenerimaanhpa'] ?? ""); ?></b> HPA</span>
-                <span class="icon text-white-50">
-                    <i class="fas fa-drumstick-bite"></i>
-                </span>
-            </a>
-            <a href="<?= base_url('penerimaan_fnab/index_penerimaan') ?>" class="btn btn-primary btn-icon-split m-3">
-                <span class="text"><b style="color: white"><?= esc($countPenerimaan ?? ""); ?></b> FNAB</span>
-                <span class="icon text-white-50">
-                    <i class="fas fa-syringe"></i>
-                </span>
-            </a>
-            <a href="<?= base_url('penerimaan/index_penerimaan') ?>" class="btn btn-success btn-icon-split m-3">
-                <span class="text"><b style="color: white"><?= esc($countPenerimaan ?? ""); ?></b> SRS</span>
-                <span class="icon text-white-50">
-                    <i class="fas fa-prescription-bottle"></i>
-                </span>
-            </a>
-            <a href="<?= base_url('penerimaan/index_penerimaan') ?>" class="btn btn-warning btn-icon-split m-3">
-                <span class="text"><b style="color: white"><?= esc($countPenerimaan ?? ""); ?></b> IHC</span>
-                <span class="icon text-white-50">
-                    <i class="fas fa-vials"></i>
-                </span>
-            </a>
-        </div>
+        <?= $this->include('templates/proses/button_penerimaan'); ?>
         <!-- Form -->
         <form id="mainForm" method="POST" action="<?= base_url('penerimaan_hpa/proses_penerimaan') ?>">
             <input type="hidden" id="action" name="action">
