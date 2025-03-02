@@ -1,47 +1,47 @@
 <?php
 
-namespace App\Controllers\Frs;
+namespace App\Controllers\Srs;
 
 use App\Controllers\BaseController;
-use App\Models\Frs\FrsModel;
+use App\Models\Srs\srsModel;
 use App\Models\UsersModel;
 use App\Models\PatientModel;
-use App\Models\Frs\Proses\Penerimaan_frs;
-use App\Models\Frs\Proses\Pembacaan_frs;
-use App\Models\Frs\Proses\Penulisan_frs;
-use App\Models\Frs\Proses\Pemverifikasi_frs;
-use App\Models\Frs\Proses\Authorized_frs;
-use App\Models\Frs\Proses\Pencetakan_frs;
-use App\Models\Frs\Mutu_frs;
+use App\Models\Srs\Proses\Penerimaan_srs;
+use App\Models\Srs\Proses\Pembacaan_srs;
+use App\Models\Srs\Proses\Penulisan_srs;
+use App\Models\Srs\Proses\Pemverifikasi_srs;
+use App\Models\Srs\Proses\Authorized_srs;
+use App\Models\Srs\Proses\Pencetakan_srs;
+use App\Models\Srs\Mutu_srs;
 use Exception;
 
-class FrsController extends BaseController
+class srsController extends BaseController
 {
-    protected $frsModel;
+    protected $srsModel;
     protected $usersModel;
     protected $patientModel;
-    protected $Penerimaan_frs;
-    protected $Pemotongan_frs;
-    protected $Pembacaan_frs;
-    protected $Penulisan_frs;
-    protected $Pemverifikasi_frs;
-    protected $Authorized_frs;
-    protected $Pencetakan_frs;
-    protected $Mutu_frs;
+    protected $Penerimaan_srs;
+    protected $Pemotongan_srs;
+    protected $Pembacaan_srs;
+    protected $Penulisan_srs;
+    protected $Pemverifikasi_srs;
+    protected $Authorized_srs;
+    protected $Pencetakan_srs;
+    protected $Mutu_srs;
     protected $validation;
 
     public function __construct()
     {
-        $this->frsModel = new frsModel();
+        $this->srsModel = new srsModel();
         $this->usersModel = new UsersModel();
         $this->patientModel = new PatientModel();
-        $this->Penerimaan_frs = new Penerimaan_frs();;
-        $this->Pembacaan_frs = new Pembacaan_frs();
-        $this->Penulisan_frs = new Penulisan_frs();
-        $this->Pemverifikasi_frs = new Pemverifikasi_frs();
-        $this->Authorized_frs = new Authorized_frs();
-        $this->Pencetakan_frs = new Pencetakan_frs();
-        $this->Mutu_frs = new Mutu_frs();
+        $this->Penerimaan_srs = new Penerimaan_srs();;
+        $this->Pembacaan_srs = new Pembacaan_srs();
+        $this->Penulisan_srs = new Penulisan_srs();
+        $this->Pemverifikasi_srs = new Pemverifikasi_srs();
+        $this->Authorized_srs = new Authorized_srs();
+        $this->Pencetakan_srs = new Pencetakan_srs();
+        $this->Mutu_srs = new Mutu_srs();
         $this->validation =  \Config\Services::validation();
     }
 
@@ -57,16 +57,16 @@ class FrsController extends BaseController
             return redirect()->to('login'); // Redirect ke halaman login jika session tidak ada
         }
 
-        // Memanggil model frsModel untuk mengambil data
-        $frsModel = new frsModel();
-        $frsData = $frsModel->getfrsWithAllPatient();
+        // Memanggil model srsModel untuk mengambil data
+        $srsModel = new srsModel();
+        $srsData = $srsModel->getsrsWithAllPatient();
 
-        // Pastikan $frsData berisi array
-        if (!$frsData) {
-            $frsData = []; // Jika tidak ada data, set menjadi array kosong
+        // Pastikan $srsData berisi array
+        if (!$srsData) {
+            $srsData = []; // Jika tidak ada data, set menjadi array kosong
         }
-        return view('frs/index_frs', [
-            'frsData' => $frsData,
+        return view('srs/index_srs', [
+            'srsData' => $srsData,
             'id_user' => $id_user,
             'nama_user' => $nama_user
         ]);
@@ -74,11 +74,11 @@ class FrsController extends BaseController
 
     public function register()
     {
-        $lastfrs = $this->frsModel->getLastKodefrs();
+        $lastsrs = $this->srsModel->getLastKodesrs();
         $currentYear = date('y');
         $nextNumber = 1;
-        if ($lastfrs) {
-            $lastKode = $lastfrs['kode_frs'];
+        if ($lastsrs) {
+            $lastKode = $lastsrs['kode_srs'];
             $lastParts = explode('/', $lastKode);
             $lastYear = $lastParts[1];
             if ($lastYear == $currentYear) {
@@ -90,11 +90,11 @@ class FrsController extends BaseController
         } else {
             $nextNumber = 1;
         }
-        $kodefrs = 'FRS.' . str_pad($nextNumber, 2, '0', STR_PAD_LEFT) . '/' . $currentYear;
+        $kodesrs = 'SRS.' . str_pad($nextNumber, 2, '0', STR_PAD_LEFT) . '/' . $currentYear;
         $data = [
             'id_user' => session()->get('id_user'),
             'nama_user' => session()->get('nama_user'),
-            'kode_frs' => $kodefrs,
+            'kode_srs' => $kodesrs,
             'patient' => null,
         ];
         $norm_pasien = $this->request->getGet('norm_pasien');
@@ -103,7 +103,7 @@ class FrsController extends BaseController
             $patient = $patientModel->where('norm_pasien', $norm_pasien)->first();
             $data['patient'] = $patient ?: null;
         }
-        return view('Frs/Register', $data);
+        return view('Srs/Register', $data);
     }
 
     public function insert()
@@ -111,11 +111,11 @@ class FrsController extends BaseController
         try {
             // Set rules untuk validasi
             $this->validation->setRules([
-                'kode_frs' => [
-                    'rules' => 'required|is_unique[frs.kode_frs]',
+                'kode_srs' => [
+                    'rules' => 'required|is_unique[srs.kode_srs]',
                     'errors' => [
-                        'required' => 'Kode frs harus diisi.',
-                        'is_unique' => 'Kode frs sudah terdaftar!',
+                        'required' => 'Kode srs harus diisi.',
+                        'is_unique' => 'Kode srs sudah terdaftar!',
                     ],
                 ],
             ]);
@@ -131,8 +131,8 @@ class FrsController extends BaseController
             // Tentukan tindakan_spesimen
             $tindakan_spesimen = !empty($data['tindakan_spesimen']) ? $data['tindakan_spesimen'] : $data['tindakan_spesimen_custom'];
             // Data yang akan disimpan
-            $frsData = [
-                'kode_frs' => $data['kode_frs'],
+            $srsData = [
+                'kode_srs' => $data['kode_srs'],
                 'id_pasien' => $data['id_pasien'],
                 'unit_asal' => $unit_asal,
                 'dokter_pengirim' => $dokter_pengirim,
@@ -141,29 +141,29 @@ class FrsController extends BaseController
                 'lokasi_spesimen' => $data['lokasi_spesimen'],
                 'tindakan_spesimen' => $tindakan_spesimen,
                 'diagnosa_klinik' => $data['diagnosa_klinik'],
-                'status_frs' => 'Penerimaan',
+                'status_srs' => 'Penerimaan',
             ];
-            // Simpan data frs
-            if (!$this->frsModel->insert($frsData)) {
-                throw new Exception('Gagal menyimpan data frs: ' . $this->frsModel->errors());
+            // Simpan data srs
+            if (!$this->srsModel->insert($srsData)) {
+                throw new Exception('Gagal menyimpan data srs: ' . $this->srsModel->errors());
             }
-            // Mendapatkan ID frs yang baru diinsert
-            $id_frs = $this->frsModel->getInsertID();
+            // Mendapatkan ID srs yang baru diinsert
+            $id_srs = $this->srsModel->getInsertID();
             // Data penerimaan
             $penerimaanData = [
-                'id_frs' => $id_frs,
-                'status_penerimaan_frs' => 'Belum Penerimaan',
+                'id_srs' => $id_srs,
+                'status_penerimaan_srs' => 'Belum Penerimaan',
             ];
             // Simpan data penerimaan
-            if (!$this->Penerimaan_frs->insert($penerimaanData)) {
-                throw new Exception('Gagal menyimpan data penerimaan: ' . $this->Penerimaan_frs->errors());
+            if (!$this->Penerimaan_srs->insert($penerimaanData)) {
+                throw new Exception('Gagal menyimpan data penerimaan: ' . $this->Penerimaan_srs->errors());
             }
             // Data mutu
             $mutuData = [
-                'id_frs' => $id_frs,
+                'id_srs' => $id_srs,
             ];
-            if (!$this->Mutu_frs->insert($mutuData)) {
-                throw new Exception('Gagal menyimpan data mutu: ' . $this->Mutu_frs->errors());
+            if (!$this->Mutu_srs->insert($mutuData)) {
+                throw new Exception('Gagal menyimpan data mutu: ' . $this->Mutu_srs->errors());
             }
             // Redirect dengan pesan sukses
             return redirect()->to('/dashboard')->with('success', 'Data berhasil disimpan!');
@@ -177,12 +177,12 @@ class FrsController extends BaseController
     public function delete()
     {
         // Mendapatkan data dari request
-        $id_frs = $this->request->getPost('id_frs');
+        $id_srs = $this->request->getPost('id_srs');
 
-        // Cek apakah id_frs valid
-        if ($id_frs) {
+        // Cek apakah id_srs valid
+        if ($id_srs) {
             // Inisialisasi model
-            $frsModel = new frsModel();
+            $srsModel = new srsModel();
 
             // Ambil instance dari database service
             $db = \Config\Database::connect();
@@ -190,11 +190,11 @@ class FrsController extends BaseController
             // Mulai transaksi untuk memastikan kedua operasi berjalan atomik
             $db->transStart();
 
-            // Hapus data dari tabel frs
-            $deletefrs = $frsModel->delete($id_frs);
+            // Hapus data dari tabel srs
+            $deletesrs = $srsModel->delete($id_srs);
 
             // Cek apakah delete berhasil
-            if ($deletefrs) {
+            if ($deletesrs) {
                 // Selesaikan transaksi
                 $db->transComplete();
 
@@ -203,8 +203,8 @@ class FrsController extends BaseController
                     return $this->response->setJSON(['success' => false, 'message' => 'Gagal menghapus data.']);
                 }
             } else {
-                // Jika id_frs tidak valid, kirimkan response error
-                return $this->response->setJSON(['success' => false, 'message' => 'ID frs tidak valid.']);
+                // Jika id_srs tidak valid, kirimkan response error
+                return $this->response->setJSON(['success' => false, 'message' => 'ID srs tidak valid.']);
             }
         }
         return $this->response->setJSON(['success' => true, 'message' => 'Data berhasil dihapus.']);
@@ -222,18 +222,18 @@ class FrsController extends BaseController
             return redirect()->to('login'); // Redirect ke halaman login jika session tidak ada
         }
 
-        // Memanggil model frsModel untuk mengambil data
-        $frsModel = new frsModel();
-        $frsData = $frsModel->getfrsWithAllPatient();
+        // Memanggil model srsModel untuk mengambil data
+        $srsModel = new srsModel();
+        $srsData = $srsModel->getsrsWithAllPatient();
 
-        // Pastikan $frsData berisi array
-        if (!$frsData) {
-            $frsData = []; // Jika tidak ada data, set menjadi array kosong
+        // Pastikan $srsData berisi array
+        if (!$srsData) {
+            $srsData = []; // Jika tidak ada data, set menjadi array kosong
         }
 
         // Kirimkan data ke view
-        return view('frs/index_buku_penerima', [
-            'frsData' => $frsData,
+        return view('srs/index_buku_penerima', [
+            'srsData' => $srsData,
             'id_user' => $id_user,
             'nama_user' => $nama_user
         ]);
@@ -244,46 +244,46 @@ class FrsController extends BaseController
         // Set zona waktu Indonesia/Jakarta (opsional jika sudah diatur dalam konfigurasi)
         date_default_timezone_set('Asia/Jakarta');
         // Mendapatkan data dari request
-        $id_frs = $this->request->getPost('id_frs');
+        $id_srs = $this->request->getPost('id_srs');
         // Inisialisasi model
-        $frsModel = new frsModel();
+        $srsModel = new srsModel();
 
         // Mengambil data dari form
-        $penerima_frs = $this->request->getPost('penerima_frs');
+        $penerima_srs = $this->request->getPost('penerima_srs');
 
         // Data yang akan diupdate
         $data = [
-            'penerima_frs' => $penerima_frs,
+            'penerima_srs' => $penerima_srs,
             'tanggal_penerima' => date('Y-m-d H:i:s'),
         ];
 
-        // Update data penerima_frs berdasarkan id_frs
-        $frsModel->updatePenerima($id_frs, $data);
+        // Update data penerima_srs berdasarkan id_srs
+        $srsModel->updatePenerima($id_srs, $data);
 
         // Redirect setelah berhasil mengupdate data
-        return redirect()->to('frs/index_buku_penerima')->with('success', 'Penerima berhasil disimpan.');
+        return redirect()->to('srs/index_buku_penerima')->with('success', 'Penerima berhasil disimpan.');
     }
     
 
-    public function update_print_frs($id_frs)
+    public function update_print_srs($id_srs)
     {
 
         date_default_timezone_set('Asia/Jakarta');
-        $frsModel = new frsModel();
-        $Pemverifikasi_frs = new Pemverifikasi_frs();
-        $Authorized_frs = new Authorized_frs();
-        $Pencetakan_frs = new Pencetakan_frs();
+        $srsModel = new srsModel();
+        $Pemverifikasi_srs = new Pemverifikasi_srs();
+        $Authorized_srs = new Authorized_srs();
+        $Pencetakan_srs = new Pencetakan_srs();
 
         $id_user = session()->get('id_user');
 
-        // Mendapatkan id_frs dari POST
-        if (!$id_frs) {
-            return redirect()->back()->with('error', 'Terjadi kesalahan: ID frs tidak ditemukan.');
+        // Mendapatkan id_srs dari POST
+        if (!$id_srs) {
+            return redirect()->back()->with('error', 'Terjadi kesalahan: ID srs tidak ditemukan.');
         }
 
         // Mengambil data dari POST dan melakukan update
         $data = $this->request->getPost();
-        $frsModel->update($id_frs, $data);
+        $srsModel->update($id_srs, $data);
 
         $redirect = $this->request->getPost('redirect');
 
@@ -294,7 +294,7 @@ class FrsController extends BaseController
         // Cek ke halaman mana harus diarahkan setelah update
         if ($redirect === 'index_pemverifikasi' && isset($_POST['id_pemverifikasi'])) {
             $id_pemverifikasi = $this->request->getPost('id_pemverifikasi');
-            $Pemverifikasi_frs->updatePemverifikasi($id_pemverifikasi, [
+            $Pemverifikasi_srs->updatePemverifikasi($id_pemverifikasi, [
                 'id_user_pemverifikasi' => $id_user,
                 'status_pemverifikasi' => 'Selesai Pemverifikasi',
                 'selesai_pemverifikasi' => date('Y-m-d H:i:s'),
@@ -304,7 +304,7 @@ class FrsController extends BaseController
 
         if ($redirect === 'index_autorized' && isset($_POST['id_autorized'])) {
             $id_autorized = $this->request->getPost('id_autorized');
-            $Authorized_frs->updateAutorized($id_autorized, [
+            $Authorized_srs->updateAutorized($id_autorized, [
                 'id_user_autorized' => $id_user,
                 'status_autorized' => 'Selesai Authorized',
                 'selesai_autorized' => date('Y-m-d H:i:s'),
@@ -314,7 +314,7 @@ class FrsController extends BaseController
 
         if ($redirect === 'index_pencetakan' && isset($_POST['id_pencetakan'])) {
             $id_pencetakan = $this->request->getPost('id_pencetakan');
-            $Pencetakan_frs->updatePencetakan($id_pencetakan, [
+            $Pencetakan_srs->updatePencetakan($id_pencetakan, [
                 'id_user_pencetakan' => $id_user,
                 'status_pencetakan' => 'Selesai Pencetakan',
                 'selesai_pencetakan' => date('Y-m-d H:i:s'),
@@ -327,28 +327,28 @@ class FrsController extends BaseController
     }
 
 
-    public function uploadFotoMakroskopis($id_frs)
+    public function uploadFotoMakroskopis($id_srs)
     {
         date_default_timezone_set('Asia/Jakarta');
-        $frsModel = new frsModel();
+        $srsModel = new srsModel();
 
-        // Ambil data frs untuk mendapatkan nama file lama
-        $frs = $frsModel->find($id_frs);
+        // Ambil data srs untuk mendapatkan nama file lama
+        $srs = $srsModel->find($id_srs);
 
-        if (!$frs) {
-            return redirect()->back()->with('error', 'Data frs tidak ditemukan.');
+        if (!$srs) {
+            return redirect()->back()->with('error', 'Data srs tidak ditemukan.');
         }
 
-        // Ambil kode_frs dan ekstrak nomor dari format "H.nomor/25"
-        $kode_frs = $frs['kode_frs'];
-        preg_match('/H\.(\d+)\/\d+/', $kode_frs, $matches);
-        $kode_frs = isset($matches[1]) ? $matches[1] : '000';
+        // Ambil kode_srs dan ekstrak nomor dari format "H.nomor/25"
+        $kode_srs = $srs['kode_srs'];
+        preg_match('/H\.(\d+)\/\d+/', $kode_srs, $matches);
+        $kode_srs = isset($matches[1]) ? $matches[1] : '000';
 
         // Validasi input file
         $validation = \Config\Services::validation();
         $validation->setRules([
-            'foto_makroskopis_frs' => [
-                'rules' => 'uploaded[foto_makroskopis_frs]|ext_in[foto_makroskopis_frs,jpg,jpeg,png]',
+            'foto_makroskopis_srs' => [
+                'rules' => 'uploaded[foto_makroskopis_srs]|ext_in[foto_makroskopis_srs,jpg,jpeg,png]',
                 'errors' => [
                     'uploaded' => 'Harap unggah file foto makroskopis.',
                     'ext_in' => 'File harus berformat JPG, JPEG, atau PNG.',
@@ -361,22 +361,22 @@ class FrsController extends BaseController
         }
 
         // Proses upload file
-        $file = $this->request->getFile('foto_makroskopis_frs');
+        $file = $this->request->getFile('foto_makroskopis_srs');
 
         if ($file->isValid() && !$file->hasMoved()) {
             // Generate nama file baru berdasarkan waktu
-            $newFileName = $kode_frs . date('dmY') . '.' . $file->getExtension();
+            $newFileName = $kode_srs . date('dmY') . '.' . $file->getExtension();
 
             // Tentukan folder tujuan upload
-            $uploadPath = ROOTPATH . 'public/uploads/frs/makroskopis/';
+            $uploadPath = ROOTPATH . 'public/uploads/srs/makroskopis/';
             // Pastikan folder tujuan ada
             if (!is_dir($uploadPath)) {
                 mkdir($uploadPath, 0777, true); // Membuat folder jika belum ada
             }
 
             // Hapus file lama jika ada
-            if (!empty($frs['foto_makroskopis_frs'])) {
-                $oldFilePath = $uploadPath . $frs['foto_makroskopis_frs'];
+            if (!empty($srs['foto_makroskopis_srs'])) {
+                $oldFilePath = $uploadPath . $srs['foto_makroskopis_srs'];
                 if (file_exists($oldFilePath)) {
                     unlink($oldFilePath); // Hapus file lama
                 }
@@ -385,7 +385,7 @@ class FrsController extends BaseController
             // Pindahkan file baru ke folder tujuan dengan nama baru
             if ($file->move($uploadPath, $newFileName)) {
                 // Update nama file baru di database
-                $frsModel->update($id_frs, ['foto_makroskopis_frs' => $newFileName]);
+                $srsModel->update($id_srs, ['foto_makroskopis_srs' => $newFileName]);
 
                 // Berhasil, redirect dengan pesan sukses
                 return redirect()->back()->with('success', 'Foto makroskopis berhasil diunggah dan diperbarui.');
@@ -399,19 +399,19 @@ class FrsController extends BaseController
         }
     }
 
-    public function uploadFotoMikroskopis($id_frs)
+    public function uploadFotoMikroskopis($id_srs)
     {
         date_default_timezone_set('Asia/Jakarta');
-        $frsModel = new frsModel();
+        $srsModel = new srsModel();
 
-        // Ambil data frs untuk mendapatkan nama file lama
-        $frs = $frsModel->find($id_frs);
+        // Ambil data srs untuk mendapatkan nama file lama
+        $srs = $srsModel->find($id_srs);
 
         // Validasi input file
         $validation = \Config\Services::validation();
         $validation->setRules([
-            'foto_mikroskopis_frs' => [
-                'rules' => 'uploaded[foto_mikroskopis_frs]|ext_in[foto_mikroskopis_frs,jpg,jpeg,png]|max_size[foto_mikroskopis_frs,5000]', // 5MB max size
+            'foto_mikroskopis_srs' => [
+                'rules' => 'uploaded[foto_mikroskopis_srs]|ext_in[foto_mikroskopis_srs,jpg,jpeg,png]|max_size[foto_mikroskopis_srs,5000]', // 5MB max size
                 'errors' => [
                     'uploaded' => 'Harap unggah file foto mikroskopis.',
                     'ext_in' => 'File harus berformat JPG, JPEG, atau PNG.',
@@ -424,22 +424,22 @@ class FrsController extends BaseController
         }
 
         // Proses upload file
-        $file = $this->request->getFile('foto_mikroskopis_frs');
+        $file = $this->request->getFile('foto_mikroskopis_srs');
 
         if ($file->isValid() && !$file->hasMoved()) {
             // Generate nama file baru berdasarkan waktu
             $newFileName = date('HisdmY') . '.' . $file->getExtension();
 
             // Tentukan folder tujuan upload
-            $uploadPath = ROOTPATH . 'public/uploads/frs/mikroskopis/';
+            $uploadPath = ROOTPATH . 'public/uploads/srs/mikroskopis/';
             // Pastikan folder tujuan ada
             if (!is_dir($uploadPath)) {
                 mkdir($uploadPath, 0777, true); // Membuat folder jika belum ada
             }
 
             // Hapus file lama jika ada
-            if (!empty($frs['foto_mikroskopis_frs'])) {
-                $oldFilePath = $uploadPath . $frs['foto_mikroskopis_frs'];
+            if (!empty($srs['foto_mikroskopis_srs'])) {
+                $oldFilePath = $uploadPath . $srs['foto_mikroskopis_srs'];
                 if (file_exists($oldFilePath)) {
                     unlink($oldFilePath); // Hapus file lama
                 }
@@ -448,7 +448,7 @@ class FrsController extends BaseController
             // Pindahkan file baru ke folder tujuan dengan nama baru
             if ($file->move($uploadPath, $newFileName)) {
                 // Update nama file baru di database
-                $frsModel->update($id_frs, ['foto_mikroskopis_frs' => $newFileName]);
+                $srsModel->update($id_srs, ['foto_mikroskopis_srs' => $newFileName]);
 
                 // Berhasil, redirect dengan pesan sukses
                 return redirect()->back()->with('success', 'Foto mikroskopis berhasil diunggah dan diperbarui.');
@@ -462,24 +462,24 @@ class FrsController extends BaseController
         }
     }
 
-    public function update_status_frs()
+    public function update_status_srs()
     {
-        $id_frs = $this->request->getPost('id_frs');
+        $id_srs = $this->request->getPost('id_srs');
         // Inisialisasi model
-        $frsModel = new frsModel();
+        $srsModel = new srsModel();
 
         // Mengambil data dari form
-        $status_frs = $this->request->getPost('status_frs');
+        $status_srs = $this->request->getPost('status_srs');
 
         // Data yang akan diupdate
         $data = [
-            'status_frs' => $status_frs,
+            'status_srs' => $status_srs,
         ];
 
-        // Update data status_frs berdasarkan id_frs
-        $frsModel->updateStatusfrs($id_frs, $data);
+        // Update data status_srs berdasarkan id_srs
+        $srsModel->updateStatussrs($id_srs, $data);
 
         // Redirect setelah berhasil mengupdate data
-        return redirect()->to('frs/index_frs')->with('success', 'Status frs berhasil disimpan.');
+        return redirect()->to('srs/index_srs')->with('success', 'Status srs berhasil disimpan.');
     }
 }

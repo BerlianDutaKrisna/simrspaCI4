@@ -53,3 +53,5 @@
         }
     });
 </script>
+<?= $this->include('templates/notifikasi'); ?>
+<?= $this->include('templates/auth/footer_auth'); ?>

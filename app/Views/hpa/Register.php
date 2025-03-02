@@ -69,8 +69,8 @@
                     <label for="unit_asal">Unit Asal</label>
                     <select class="form-control" id="unit_asal" name="unit_asal" onchange="handleUnitAsalChange(this)">
                         <option value="" selected>Belum Dipilih</option>
-                        <option value="OK">OK ELEKTIF</option>
-                        <option value="OK">OK EMERGENCY</option>
+                        <option value="OK Elektif">OK ELEKTIF</option>
+                        <option value="OK Emergency">OK EMERGENCY</option>
                         <option value="Poli">Poli</option>
                         <option value="Ruangan">Ruangan</option>
                         <option value="lainnya">Lainnya</option>
@@ -86,12 +86,12 @@
                         <option value="dr. Ihyan Amri, Sp.B">dr. Ihyan Amri, Sp.B</option>
                         <option value="dr. Andy Achmad Suanda, Sp.B">dr. Andy Achmad Suanda, Sp.B</option>
                         <option value="dr. Agus Maulana,Sp.B,FinaCs,M.Ked.Klin">dr. Agus Maulana,Sp.B,FinaCs,M.Ked.Klin</option>
-                        <option value="ddr. Fransiscus Arifin, Sp.">dr. Fransiscus Arifin, Sp.B</option>
+                        <option value="dr. Fransiscus Arifin, Sp.">dr. Fransiscus Arifin, Sp.B</option>
                         <option value="dr. I Putu Agus Suarta, Sp.OG K.Onk">dr. I Putu Agus Suarta, Sp.OG K.Onk</option>
                         <option value="dr. Dharma Putra Perjuangan Banjarnahor, Sp.OG K. FM">dr. Dharma Putra Perjuangan Banjarnahor, Sp.OG K. FM</option>
                         <option value="dr. Unggul Karyo Nugroho, Sp.Og">dr. Unggul Karyo Nugroho, Sp.Og</option>
                         <option value="dr. Nurlaella Iswan Nusi, Sp.OG">dr. Nurlaella Iswan Nusi, Sp.OG.</option>
-                        <option value="dr. Okky Prasetyo, Sp.BM">dr. Okky Prasetyo, Sp.BM</option>
+                        <option value="drg. Okky Prasetyo, Sp.BM">drg. Okky Prasetyo, Sp.BM</option>
                         <option value="dr. Taufik Indrawan, Sp.U">dr. Taufik Indrawan, Sp.U</option>
                         <option value="dr. dr. Chairani Fitri Saphira, Sp.BP-RE (K)">dr. dr. Chairani Fitri Saphira, Sp.BP-RE (K)</option>
                         <option value="dr. Billy Daniel Messakh, Sp.B">dr. Billy Daniel Messakh, Sp.B</option>
@@ -137,8 +137,8 @@
                         <option value="Kistektomi">Kistektomi</option>
                         <option value="Omentektomi">Omentektomi</option>
                         <option value="TAH-BSO">TAH-BSO</option>
-                        <option value="Reseksi sus">Reseksi Usus</option>
-                        <option value="Reseksi sus">Menentukan Radikalitas</option>
+                        <option value="Reseksi usus">Reseksi Usus</option>
+                        <option value="Menentukan Radikalitas">Menentukan Radikalitas</option>
                         <option value="lainnya">Lainnya</option>
                     </select>
                     <input type="text" class="form-control mt-2 d-none" id="tindakan_spesimen_custom" name="tindakan_spesimen_custom" placeholder="Masukkan Tindakan Spesimen Lainnya">

@@ -65,7 +65,21 @@ $routes->group('hpa', ['namespace' => 'App\Controllers\Hpa'], function ($routes)
 $routes->group('frs', ['namespace' => 'App\Controllers\Frs'], function ($routes) {
     $routes->get('register', 'FrsController::register');
     $routes->post('insert', 'FrsController::insert');
-    $routes->get('index_frs', 'frs::index_frs');
+    $routes->get('index', 'FrsController::index');
+});
+
+// Route untuk srs
+$routes->group('srs', ['namespace' => 'App\Controllers\Srs'], function ($routes) {
+    $routes->get('register', 'SrsController::register');
+    $routes->post('insert', 'SrsController::insert');
+    $routes->get('index', 'SrsController::index');
+});
+
+// Route untuk ihc
+$routes->group('ihc', ['namespace' => 'App\Controllers\Ihc'], function ($routes) {
+    $routes->get('register', 'IhcController::register');
+    $routes->post('insert', 'IhcController::insert');
+    $routes->get('index', 'IhcController::index');
 });
 
 // Route untuk Penerimaan hpa

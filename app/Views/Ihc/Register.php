@@ -48,20 +48,20 @@
 
 <div class="card shadow mb-4">
     <div class="card-header py-3">
-        <h6 class="m-0 font-weight-bold text-primary">Pendaftaran Pemeriksaan</h6>
+        <h6 class="m-0 font-weight-bold text-primary">Pendaftaran Pemeriksaan IHC</h6>
     </div>
     <div class="card-body">
-        <form action="<?= base_url('hpa/insert') ?>" method="POST">
+        <form action="<?= base_url('ihc/insert') ?>" method="POST">
             <?= csrf_field(); ?> <!-- CSRF token untuk keamanan -->
 
             <!-- Hidden input untuk id_pasien -->
             <input type="hidden" name="id_pasien" value="<?= isset($patient['id_pasien']) ? esc($patient['id_pasien']) : ''; ?>">
             <div class="form-row">
-                <!-- Form group untuk Kode HPA -->
+                <!-- Form group untuk Kode ihc -->
                 <div class="form-group col-md-3">
-                    <label for="kode_hpa">Kode HPA</label>
-                    <input type="text" class="form-control" id="kode_hpa" name="kode_hpa"
-                        value="<?= esc($kode_hpa); ?>">
+                    <label for="kode_ihc">Kode IHC</label>
+                    <input type="text" class="form-control" id="kode_ihc" name="kode_ihc"
+                        value="<?= esc($kode_ihc); ?>">
                 </div>
 
                 <!-- Form group untuk Unit Asal -->
@@ -69,8 +69,6 @@
                     <label for="unit_asal">Unit Asal</label>
                     <select class="form-control" id="unit_asal" name="unit_asal" onchange="handleUnitAsalChange(this)">
                         <option value="" selected>Belum Dipilih</option>
-                        <option value="OK">OK ELEKTIF</option>
-                        <option value="OK">OK EMERGENCY</option>
                         <option value="Poli">Poli</option>
                         <option value="Ruangan">Ruangan</option>
                         <option value="lainnya">Lainnya</option>
@@ -124,21 +122,7 @@
                 <div class="form-group col-md-3">
                     <label for="tindakan_spesimen">Tindakan Spesimen</label>
                     <select class="form-control" id="tindakan_spesimen" name="tindakan_spesimen" onchange="handleTindakanSpesimenChange(this)">
-                        <option value="" selected>Belum Dipilih</option>
-                        <option value="Biopsi">Biopsi</option>
-                        <option value="Biopsi Beberapa Tempat">Biopsi Beberapa Tempat</option>
-                        <option value="Kerokan">Kerokan</option>
-                        <option value="Extirpasi Tumor">Extirpasi Tumor</option>
-                        <option value="Koleksistektomi">Koleksistektomi</option>
-                        <option value="Tiroidektomi">Tiroidektomi</option>
-                        <option value="Mastektomi">Mastektomi</option>
-                        <option value="Appendiktomi">Appendiktomi</option>
-                        <option value="Miomektomi">Miomektomi</option>
-                        <option value="Kistektomi">Kistektomi</option>
-                        <option value="Omentektomi">Omentektomi</option>
-                        <option value="TAH-BSO">TAH-BSO</option>
-                        <option value="Reseksi sus">Reseksi Usus</option>
-                        <option value="Reseksi sus">Menentukan Radikalitas</option>
+                        <option value="Imunohistokimia" selected>Imunohistokimia</option>
                         <option value="lainnya">Lainnya</option>
                     </select>
                     <input type="text" class="form-control mt-2 d-none" id="tindakan_spesimen_custom" name="tindakan_spesimen_custom" placeholder="Masukkan Tindakan Spesimen Lainnya">

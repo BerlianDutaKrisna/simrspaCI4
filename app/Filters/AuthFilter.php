@@ -14,13 +14,13 @@ class AuthFilter implements FilterInterface
 
         // Cek apakah pengguna sudah login
         if (!$session->get('logged_in')) {
-            return redirect()->to('/login')->with('error', 'Silakan login terlebih dahulu.');
+            return redirect()->to('/')->with('error', 'Silakan login terlebih dahulu.');
         }
 
         // Cek apakah id_user dan nama_user ada dalam sesi
         if (is_null($session->get('id_user')) || is_null($session->get('nama_user'))) {
             log_message('error', 'Data sesi hilang: id_user atau nama_user');
-            return redirect()->to('/login')->with('error', 'Sesi Anda telah berakhir, silakan login kembali.');
+            return redirect()->to('/')->with('error', 'Sesi Anda telah berakhir, silakan login kembali.');
         }
     }
 
