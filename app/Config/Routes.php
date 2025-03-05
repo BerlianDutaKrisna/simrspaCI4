@@ -100,6 +100,24 @@ $routes->group('penerimaan_frs', ['namespace' => 'App\Controllers\Frs\Proses'], 
     $routes->post('update_penerimaan', 'Penerimaan::update_penerimaan');
 });
 
+// Route untuk Penerimaan srs
+$routes->group('penerimaan_srs', ['namespace' => 'App\Controllers\Srs\Proses'], function ($routes) {
+    $routes->get('index', 'Penerimaan::index');
+    $routes->post('proses_penerimaan', 'Penerimaan::proses_penerimaan');
+    $routes->get('penerimaan_details', 'Penerimaan::penerimaan_details');
+    $routes->get('edit_penerimaan', 'Penerimaan::edit_penerimaan');
+    $routes->post('update_penerimaan', 'Penerimaan::update_penerimaan');
+});
+
+// Route untuk Penerimaan ihc
+$routes->group('penerimaan_ihc', ['namespace' => 'App\Controllers\Ihc\Proses'], function ($routes) {
+    $routes->get('index', 'Penerimaan::index');
+    $routes->post('proses_penerimaan', 'Penerimaan::proses_penerimaan');
+    $routes->get('penerimaan_details', 'Penerimaan::penerimaan_details');
+    $routes->get('edit_penerimaan', 'Penerimaan::edit_penerimaan');
+    $routes->post('update_penerimaan', 'Penerimaan::update_penerimaan');
+});
+
 // Route untuk Pengirisan
 $routes->group('pengirisan', ['namespace' => 'App\Controllers\Proses'], function ($routes) {
     $routes->get('index_pengirisan', 'Pengirisan::index_pengirisan'); // Menampilkan halaman pengirisan
