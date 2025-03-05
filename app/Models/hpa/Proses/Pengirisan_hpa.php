@@ -36,7 +36,7 @@ class Pengirisan_hpa extends Model
     }
 
     // Mengambil data pengirisan_hpa dengan relasi
-    public function getpengirisan_hpaWithRelations()
+    public function getPengirisan_hpa()
     {
         return $this->select(
             '
@@ -44,12 +44,12 @@ class Pengirisan_hpa extends Model
         hpa.*, 
         patient.*, 
         users.nama_user AS nama_user_pengirisan_hpa,
-        mutu.total_nilai_mutu'
+        mutu_hpa.total_nilai_mutu_hpa'
         )
             ->join('hpa', 'pengirisan_hpa.id_hpa = hpa.id_hpa', 'left') // Relasi dengan tabel hpa
             ->join('patient', 'hpa.id_pasien = patient.id_pasien', 'left') // Relasi dengan tabel patient
             ->join('users', 'pengirisan_hpa.id_user_pengirisan_hpa = users.id_user', 'left') // Relasi dengan tabel users untuk pengirisan_hpa
-            ->join('mutu', 'hpa.id_hpa = mutu.id_hpa', 'left') // Relasi dengan tabel mutu berdasarkan id_hpa
+            ->join('mutu_hpa', 'hpa.id_hpa = mutu_hpa.id_hpa', 'left') // Relasi dengan tabel mutu_hpa berdasarkan id_hpa
             ->where('hpa.status_hpa', 'pengirisan_hpa') // Filter berdasarkan status_hpa 'pengirisan_hpa'
             ->orderBy('hpa.kode_hpa', 'ASC')
             ->findAll();

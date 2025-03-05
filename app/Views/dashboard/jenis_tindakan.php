@@ -25,10 +25,10 @@
 
             <!-- Tombol 2: Pengirisan -->
             <div class="col">
-                <a href="<?= base_url('pengirisan/index_pengirisan') ?>" class="btn btn-primary btn-icon-split btn-sm d-flex justify-content-between m-2">
-                    <span class="text"><b style="color: white"><?= esc($countPengirisan ?? ""); ?></b> Pengirisan</span>
+                <a href="<?= base_url('pengirisan_hpa/index') ?>" class="btn btn-primary btn-icon-split btn-sm d-flex justify-content-between m-2">
+                    <span class="text"><b style="color: white"><?= esc($counts['countPengirisan'] ?? 0); ?></b> Pengirisan</span>
                     <span class="icon text-white-50">
-                        <i class="fas fa-puzzle-piece"></i> <!-- Ikon untuk Pengirisan -->
+                        <i class="fas fa-puzzle-piece"></i>
                     </span>
                 </a>
             </div>

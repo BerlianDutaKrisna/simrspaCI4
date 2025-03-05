@@ -119,9 +119,9 @@ $routes->group('penerimaan_ihc', ['namespace' => 'App\Controllers\Ihc\Proses'], 
 });
 
 // Route untuk Pengirisan
-$routes->group('pengirisan', ['namespace' => 'App\Controllers\Proses'], function ($routes) {
-    $routes->get('index_pengirisan', 'Pengirisan::index_pengirisan'); // Menampilkan halaman pengirisan
-    $routes->post('proses_pengirisan', 'Pengirisan::proses_pengirisan'); // Proses pengirisan
+$routes->group('pengirisan_hpa', ['namespace' => 'App\Controllers\Hpa\Proses'], function ($routes) {
+    $routes->get('index', 'Pengirisan::index'); 
+    $routes->post('proses_pengirisan', 'Pengirisan::proses_pengirisan');
     $routes->get('pengirisan_details', 'Pengirisan::pengirisan_details');
     $routes->post('delete', 'Pengirisan::delete');
     $routes->get('edit_pengirisan', 'Pengirisan::edit_pengirisan');
@@ -129,7 +129,7 @@ $routes->group('pengirisan', ['namespace' => 'App\Controllers\Proses'], function
 });
 
 // Route untuk Pemotongan
-$routes->group('pemotongan', ['namespace' => 'App\Controllers\Proses'], function ($routes) {
+$routes->group('pemotongan', ['namespace' => 'App\Controllers\Hpa\Proses'], function ($routes) {
     $routes->get('index_pemotongan', 'Pemotongan::index_pemotongan'); // Menampilkan halaman pemotongan
     $routes->post('proses_pemotongan', 'Pemotongan::proses_pemotongan'); // Proses pemotongan
     $routes->get('pemotongan_details', 'Pemotongan::pemotongan_details');
@@ -139,7 +139,7 @@ $routes->group('pemotongan', ['namespace' => 'App\Controllers\Proses'], function
 });
 
 // Route untuk Pemprosesan
-$routes->group('pemprosesan', ['namespace' => 'App\Controllers\Proses'], function ($routes) {
+$routes->group('pemprosesan', ['namespace' => 'App\Controllers\Hpa\Proses'], function ($routes) {
     $routes->get('index_pemprosesan', 'Pemprosesan::index_pemprosesan'); // Menampilkan halaman pemprosesan
     $routes->post('proses_pemprosesan', 'Pemprosesan::proses_pemprosesan'); // Proses pemprosesan
     $routes->get('pemprosesan_details', 'Pemprosesan::pemprosesan_details');
@@ -149,7 +149,7 @@ $routes->group('pemprosesan', ['namespace' => 'App\Controllers\Proses'], functio
 });
 
 // Route untuk Penanaman
-$routes->group('penanaman', ['namespace' => 'App\Controllers\Proses'], function ($routes) {
+$routes->group('penanaman', ['namespace' => 'App\Controllers\Hpa\Proses'], function ($routes) {
     $routes->get('index_penanaman', 'Penanaman::index_penanaman'); // Menampilkan halaman penanaman
     $routes->post('proses_penanaman', 'Penanaman::proses_penanaman'); // Proses penanaman
     $routes->get('penanaman_details', 'Penanaman::penanaman_details');
@@ -159,7 +159,7 @@ $routes->group('penanaman', ['namespace' => 'App\Controllers\Proses'], function 
 });
 
 // Route untuk Pemotongan Tipis
-$routes->group('pemotongan_tipis', ['namespace' => 'App\Controllers\Proses'], function ($routes) {
+$routes->group('pemotongan_tipis', ['namespace' => 'App\Controllers\Hpa\Proses'], function ($routes) {
     $routes->get('index_pemotongan_tipis', 'PemotonganTipis::index_pemotongan_tipis'); // Menampilkan halaman pemotongan tipis
     $routes->post('proses_pemotongan_tipis', 'PemotonganTipis::proses_pemotongan_tipis'); // Proses pemotongan tipis
     $routes->get('pemotongan_tipis_details', 'PemotonganTipis::pemotongan_tipis_details');
@@ -169,7 +169,7 @@ $routes->group('pemotongan_tipis', ['namespace' => 'App\Controllers\Proses'], fu
 });
 
 // Route untuk Pewarnaan
-$routes->group('pewarnaan', ['namespace' => 'App\Controllers\Proses'], function ($routes) {
+$routes->group('pewarnaan', ['namespace' => 'App\Controllers\Hpa\Proses'], function ($routes) {
     $routes->get('index_pewarnaan', 'Pewarnaan::index_pewarnaan'); // Menampilkan halaman pewarnaan
     $routes->post('proses_pewarnaan', 'Pewarnaan::proses_pewarnaan'); // Proses pewarnaan
     $routes->get('pewarnaan_details', 'Pewarnaan::pewarnaan_details');
@@ -179,7 +179,7 @@ $routes->group('pewarnaan', ['namespace' => 'App\Controllers\Proses'], function 
 });
 
 // Route untuk Pembacaan
-$routes->group('pembacaan', ['namespace' => 'App\Controllers\Proses'], function ($routes) {
+$routes->group('pembacaan', ['namespace' => 'App\Controllers\Hpa\Proses'], function ($routes) {
     $routes->get('index_pembacaan', 'Pembacaan::index_pembacaan'); // Menampilkan halaman pembacaan
     $routes->post('proses_pembacaan', 'Pembacaan::proses_pembacaan'); // Proses pembacaan
     $routes->get('pembacaan_details', 'Pembacaan::pembacaan_details');
