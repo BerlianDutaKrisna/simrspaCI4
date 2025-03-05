@@ -133,6 +133,7 @@ class ihcController extends BaseController
             // Data yang akan disimpan
             $ihcData = [
                 'kode_ihc' => $data['kode_ihc'],
+                'kode_block_ihc' => $data['kode_block_ihc'],
                 'id_pasien' => $data['id_pasien'],
                 'unit_asal' => $unit_asal,
                 'dokter_pengirim' => $dokter_pengirim,

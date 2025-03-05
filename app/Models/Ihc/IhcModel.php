@@ -10,6 +10,7 @@ class IhcModel extends Model
     protected $primaryKey = 'id_ihc';
     protected $allowedFields = [
         'kode_ihc',
+        'kode_block_ihc',
         'id_pasien',
         'unit_asal',
         'dokter_pengirim',

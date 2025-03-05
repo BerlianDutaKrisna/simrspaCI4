@@ -21,6 +21,11 @@ class Ihc extends Migration
                 'null'       => false,
                 'unique'     => true,
             ],
+            'kode_block_ihc' => [
+                'type'       => 'VARCHAR',
+                'constraint' => 50,
+                'null'       => true,
+            ],
             'id_pasien' => [
                 'type'       => 'INT',
                 'constraint' => 11,

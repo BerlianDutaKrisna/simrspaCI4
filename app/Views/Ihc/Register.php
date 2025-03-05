@@ -109,15 +109,18 @@
             </div>
 
             <div class="form-row">
-                <div class="form-group col-md-3">
+                <div class="form-group col-md-2">
                     <label for="tanggal_hasil">Tanggal Hasil</label>
                     <input type="date" class="form-control" id="tanggal_hasil" name="tanggal_hasil" value="<?= old('tanggal_hasil'); ?>">
                 </div>
-                <div class="form-group col-md-3">
+                <div class="form-group col-md-2">
                     <label for="lokasi_spesimen">Lokasi Spesimen</label>
                     <input type="text" class="form-control" id="lokasi_spesimen" name="lokasi_spesimen" placeholder="Masukkan Lokasi Spesimen" value="<?= old('lokasi_spesimen'); ?>">
                 </div>
-
+                <div class="form-group col-md-2">
+                    <label for="kode_block_ihc">Blok Parafin No</label>
+                    <input type="text" class="form-control" id="kode_block_ihc" name="kode_block_ihc" placeholder="Masukkan Blok Parafin No" value="<?= old('kode_block_ihc'); ?>">
+                </div>
                 <!-- Form group untuk Tindakan Spesimen -->
                 <div class="form-group col-md-3">
                     <label for="tindakan_spesimen">Tindakan Spesimen</label>
