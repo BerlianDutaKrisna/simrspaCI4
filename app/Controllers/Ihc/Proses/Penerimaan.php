@@ -1,61 +1,61 @@
 <?php
 
-namespace App\Controllers\frs\Proses;
+namespace App\Controllers\Ihc\Proses;
 
 use App\Controllers\BaseController;
-use App\Models\frs\frsModel;
+use App\Models\ihc\ihcModel;
 use App\Models\UsersModel;
 use App\Models\PatientModel;
-use App\Models\frs\Proses\Penerimaan_frs;
-use App\Models\frs\Proses\Pembacaan_frs;
-use App\Models\frs\Proses\Penulisan_frs;
-use App\Models\frs\Proses\Pemverifikasi_frs;
-use App\Models\frs\Proses\Authorized_frs;
-use App\Models\frs\Proses\Pencetakan_frs;
-use App\Models\frs\Mutu_frs;
+use App\Models\Ihc\Proses\Penerimaan_ihc;
+use App\Models\Ihc\Proses\Pembacaan_ihc;
+use App\Models\Ihc\Proses\Penulisan_ihc;
+use App\Models\Ihc\Proses\Pemverifikasi_ihc;
+use App\Models\Ihc\Proses\Authorized_ihc;
+use App\Models\Ihc\Proses\Pencetakan_ihc;
+use App\Models\Ihc\Mutu_ihc;
 use CodeIgniter\Exceptions\PageNotFoundException;
 use Exception;
 
 class Penerimaan extends BaseController
 {
-    protected $frsModel;
+    protected $ihcModel;
     protected $userModel;
     protected $patientModel;
-    protected $Penerimaan_frs;
-    protected $Pembacaan_frs;
-    protected $Penulisan_frs;
-    protected $Pemverifikasi_frs;
-    protected $Authorized_frs;
-    protected $Pencetakan_frs;
-    protected $Mutu_frs;
+    protected $Penerimaan_ihc;
+    protected $Pembacaan_ihc;
+    protected $Penulisan_ihc;
+    protected $Pemverifikasi_ihc;
+    protected $Authorized_ihc;
+    protected $Pencetakan_ihc;
+    protected $Mutu_ihc;
     protected $validation;
 
     public function __construct()
     {
-        $this->frsModel = new frsModel();
+        $this->ihcModel = new ihcModel();
         $this->userModel = new UsersModel();
         $this->patientModel = new PatientModel();
-        $this->Penerimaan_frs = new Penerimaan_frs();
-        $this->Pembacaan_frs = new Pembacaan_frs();
-        $this->Penulisan_frs = new Penulisan_frs();
-        $this->Pemverifikasi_frs = new Pemverifikasi_frs();
-        $this->Authorized_frs = new Authorized_frs();
-        $this->Pencetakan_frs = new Pencetakan_frs();
-        $this->Mutu_frs = new Mutu_frs();
+        $this->Penerimaan_ihc = new Penerimaan_ihc();
+        $this->Pembacaan_ihc = new Pembacaan_ihc();
+        $this->Penulisan_ihc = new Penulisan_ihc();
+        $this->Pemverifikasi_ihc = new Pemverifikasi_ihc();
+        $this->Authorized_ihc = new Authorized_ihc();
+        $this->Pencetakan_ihc = new Pencetakan_ihc();
+        $this->Mutu_ihc = new Mutu_ihc();
         $this->validation =  \Config\Services::validation();
         $this->session = \Config\Services::session();
     }
 
     public function index()
     {
-        $penerimaanData_frs = $this->Penerimaan_frs->getPenerimaan_frs();
+        $penerimaanData_ihc = $this->Penerimaan_ihc->getPenerimaan_ihc();
         $data = [
             'nama_user' => $this->session->get('nama_user'),
             'counts' => $this->getCounts(),
-            'penerimaanDatafrs' => $penerimaanData_frs,
+            'penerimaanDataihc' => $penerimaanData_ihc,
         ];
 
-        return view('frs/Proses/penerimaan', $data);
+        return view('Ihc/Proses/penerimaan', $data);
     }
 
     public function proses_penerimaan()
@@ -70,55 +70,70 @@ class Penerimaan extends BaseController
             }
 
             foreach ($selectedIds as $id) {
-                list($id_penerimaan_frs, $id_frs, $id_mutu_frs) = explode(':', $id);
-                // $indikator_1 = (string) ($this->request->getPost('indikator_1') ?? '0');
-                // $indikator_2 = (string) ($this->request->getPost('indikator_2') ?? '0');
-                // $total_nilai_mutu_frs = $this->request->getPost('total_nilai_mutu_frs');
-                $this->processAction($action, $id_penerimaan_frs, $id_frs, $id_user, $id_mutu_frs);
+                list($id_penerimaan_ihc, $id_ihc, $id_mutu_ihc) = explode(':', $id);
+                $indikator_1 = (string) ($this->request->getPost('indikator_1') ?? '0');
+                $indikator_2 = (string) ($this->request->getPost('indikator_2') ?? '0');
+                $indikator_3 = (string) ($this->request->getPost('indikator_3') ?? '0');
+                $total_nilai_mutu_ihc = $this->request->getPost('total_nilai_mutu_ihc');
+                $this->processAction($action, $id_penerimaan_ihc, $id_ihc, $id_user, $id_mutu_ihc, $indikator_1, $indikator_2, $indikator_3, $total_nilai_mutu_ihc);
             }
 
-            return redirect()->to('penerimaan_frs/index');
+            return redirect()->to('penerimaan_ihc/index');
         } catch (Exception $e) {
             return redirect()->back()->with('error', $e->getMessage());
         }
     }
 
-    private function processAction($action, $id_penerimaan_frs, $id_frs, $id_user, $id_mutu_frs)
+    private function processAction($action, $id_penerimaan_ihc, $id_ihc, $id_user, $id_mutu_ihc, $indikator_1, $indikator_2, $indikator_3, $total_nilai_mutu_ihc)
     {
         date_default_timezone_set('Asia/Jakarta');
 
         try {
             switch ($action) {
                 case 'mulai':
-                    $this->frsModel->update($id_frs, ['status_frs' => 'Penerimaan']);
-                    $this->Penerimaan_frs->update($id_penerimaan_frs, [
-                        'id_user_penerimaan_frs' => $id_user,
-                        'status_penerimaan_frs' => 'Proses Penerimaan',
-                        'mulai_penerimaan_frs' => date('Y-m-d H:i:s'),
+                    $this->ihcModel->update($id_ihc, ['status_ihc' => 'Penerimaan']);
+                    $this->Penerimaan_ihc->update($id_penerimaan_ihc, [
+                        'id_user_penerimaan_ihc' => $id_user,
+                        'status_penerimaan_ihc' => 'Proses Penerimaan',
+                        'mulai_penerimaan_ihc' => date('Y-m-d H:i:s'),
                     ]);
                     break;
                 case 'selesai':
-                    $this->Penerimaan_frs->update($id_penerimaan_frs, [
-                        'id_user_penerimaan_frs' => $id_user,
-                        'status_penerimaan_frs' => 'Selesai Penerimaan',
-                        'selesai_penerimaan_frs' => date('Y-m-d H:i:s'),
+                    $this->Penerimaan_ihc->update($id_penerimaan_ihc, [
+                        'id_user_penerimaan_ihc' => $id_user,
+                        'status_penerimaan_ihc' => 'Selesai Penerimaan',
+                        'selesai_penerimaan_ihc' => date('Y-m-d H:i:s'),
+                    ]);
+                    break;
+                    $this->Mutu_ihc->update($id_mutu, [
+                        'indikator_1' => $indikator_1,
+                        'indikator_2' => $indikator_2,
+                        'indikator_3' => $indikator_3,
+                        'total_nilai_mutu_ihc' => $total_nilai_mutu_ihc + $indikator_1 + $indikator_2 + $indikator_3,
                     ]);
                     break;
                 case 'reset':
-                    $this->Penerimaan_frs->update($id_penerimaan_frs, [
-                        'id_user_penerimaan_frs' => null,
-                        'status_penerimaan_frs' => 'Belum Penerimaan',
-                        'mulai_penerimaan_frs' => null,
-                        'selesai_penerimaan_frs' => null,
+                    $this->Penerimaan_ihc->update($id_penerimaan_ihc, [
+                        'id_user_penerimaan_ihc' => null,
+                        'status_penerimaan_ihc' => 'Belum Penerimaan',
+                        'mulai_penerimaan_ihc' => null,
+                        'selesai_penerimaan_ihc' => null,
+                    ]);
+                    break;
+                    $this->Mutu_ihc->update($id_mutu, [
+                        'indikator_1' => '0',
+                        'indikator_2' => '0',
+                        'indikator_3' => '0',
+                        'total_nilai_mutu_ihc' => '0',
                     ]);
                     break;
                 case 'lanjut':
-                    $this->frsModel->update($id_frs, ['status_frs' => 'Pembacaan']);
+                    $this->ihcModel->update($id_ihc, ['status_ihc' => 'Pembacaan']);
                     $pembacaanData = [
-                        'id_frs'            => $id_frs,
-                        'status_pembacaan_frs' => 'Belum Pembacaan',
+                        'id_ihc'            => $id_ihc,
+                        'status_pembacaan_ihc' => 'Belum Pembacaan',
                     ];
-                    if (!$this->Pembacaan_frs->insert($pembacaanData)) {
+                    if (!$this->Pembacaan_ihc->insert($pembacaanData)) {
                         throw new Exception('Gagal menyimpan data Pembacaan.');
                     }
                     break;
@@ -131,21 +146,21 @@ class Penerimaan extends BaseController
 
     public function penerimaan_details()
     {
-        // Ambil id_penerimaan_frs dari parameter GET
-        $id_penerimaan_frs = $this->request->getGet('id_penerimaan_frs');
+        // Ambil id_penerimaan_ihc dari parameter GET
+        $id_penerimaan_ihc = $this->request->getGet('id_penerimaan_ihc');
 
-        if ($id_penerimaan_frs) {
+        if ($id_penerimaan_ihc) {
             // Gunakan model yang sudah diinisialisasi di constructor
-            $data = $this->Penerimaan_frs->select(
+            $data = $this->Penerimaan_ihc->select(
                 'penerimaan.*, 
-            frs.*, 
+            ihc.*, 
             patient.*, 
             users.nama_user AS nama_user_penerimaan'
             )
-                ->join('frs', 'penerimaan.id_frs = frs.id_frs', 'left')
-                ->join('patient', 'frs.id_pasien = patient.id_pasien', 'left')
-                ->join('users', 'penerimaan.id_user_penerimaan_frs = users.id_user', 'left')
-                ->where('penerimaan.id_penerimaan_frs', $id_penerimaan_frs)
+                ->join('ihc', 'penerimaan.id_ihc = ihc.id_ihc', 'left')
+                ->join('patient', 'ihc.id_pasien = patient.id_pasien', 'left')
+                ->join('users', 'penerimaan.id_user_penerimaan_ihc = users.id_user', 'left')
+                ->where('penerimaan.id_penerimaan_ihc', $id_penerimaan_ihc)
                 ->first();
 
             if ($data) {
@@ -160,14 +175,14 @@ class Penerimaan extends BaseController
 
     public function edit_penerimaan()
     {
-        $id_penerimaan_frs = $this->request->getGet('id_penerimaan_frs');
+        $id_penerimaan_ihc = $this->request->getGet('id_penerimaan_ihc');
 
-        if (!$id_penerimaan_frs) {
+        if (!$id_penerimaan_ihc) {
             throw new \CodeIgniter\Exceptions\PageNotFoundException('ID penerimaan tidak ditemukan.');
         }
 
         // Ambil data penerimaan
-        $penerimaanData = $this->Penerimaan_frs->find($id_penerimaan_frs);
+        $penerimaanData = $this->Penerimaan_ihc->find($id_penerimaan_ihc);
 
         if (!$penerimaanData) {
             throw new \CodeIgniter\Exceptions\PageNotFoundException('Data penerimaan tidak ditemukan.');
@@ -188,21 +203,21 @@ class Penerimaan extends BaseController
 
     public function update_penerimaan()
     {
-        $id_penerimaan_frs = $this->request->getPost('id_penerimaan_frs');
+        $id_penerimaan_ihc = $this->request->getPost('id_penerimaan_ihc');
 
         // Gabungkan input tanggal dan waktu
-        $mulai_penerimaan_frs = $this->request->getPost('mulai_penerimaan_frs_date') . ' ' . $this->request->getPost('mulai_penerimaan_frs_time');
-        $selesai_penerimaan_frs = $this->request->getPost('selesai_penerimaan_frs_date') . ' ' . $this->request->getPost('selesai_penerimaan_frs_time');
+        $mulai_penerimaan_ihc = $this->request->getPost('mulai_penerimaan_ihc_date') . ' ' . $this->request->getPost('mulai_penerimaan_ihc_time');
+        $selesai_penerimaan_ihc = $this->request->getPost('selesai_penerimaan_ihc_date') . ' ' . $this->request->getPost('selesai_penerimaan_ihc_time');
 
         $data = [
-            'id_user_penerimaan_frs' => $this->request->getPost('id_user_penerimaan_frs'),
-            'status_penerimaan_frs'  => $this->request->getPost('status_penerimaan_frs'),
-            'mulai_penerimaan_frs'   => $mulai_penerimaan_frs,
-            'selesai_penerimaan_frs' => $selesai_penerimaan_frs,
+            'id_user_penerimaan_ihc' => $this->request->getPost('id_user_penerimaan_ihc'),
+            'status_penerimaan_ihc'  => $this->request->getPost('status_penerimaan_ihc'),
+            'mulai_penerimaan_ihc'   => $mulai_penerimaan_ihc,
+            'selesai_penerimaan_ihc' => $selesai_penerimaan_ihc,
             'updated_at'         => date('Y-m-d H:i:s'),
         ];
 
-        if (!$this->Penerimaan_frs->update($id_penerimaan_frs, $data)) {
+        if (!$this->Penerimaan_ihc->update($id_penerimaan_ihc, $data)) {
             return redirect()->back()->with('error', 'Gagal mengupdate data.')->withInput();
         }
 

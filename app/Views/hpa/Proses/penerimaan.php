@@ -57,7 +57,17 @@
                                                     id="indikator_1_<?= esc($row['id_mutu_hpa']); ?>"
                                                     class="form-check-input">
                                                 <label class="form-check-label" for="indikator_1_<?= esc($row['id_mutu_hpa']); ?>">
-                                                    Vol cairan fiksasi sesuai
+                                                    Vol cairan fiksasi sesuai?
+                                                </label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input type="checkbox"
+                                                    name="indikator_2"
+                                                    value="10"
+                                                    id="indikator_2_<?= esc($row['id_mutu_hpa']); ?>"
+                                                    class="form-check-input">
+                                                <label class="form-check-label" for="indikator_2_<?= esc($row['id_mutu_hpa']); ?>">
+                                                    jaringan terfiksasi merata?
                                                 </label>
                                             </div>
                                         <?php else: ?>

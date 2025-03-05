@@ -1,61 +1,61 @@
 <?php
 
-namespace App\Controllers\frs\Proses;
+namespace App\Controllers\Srs\Proses;
 
 use App\Controllers\BaseController;
-use App\Models\frs\frsModel;
+use App\Models\Srs\SrsModel;
 use App\Models\UsersModel;
 use App\Models\PatientModel;
-use App\Models\frs\Proses\Penerimaan_frs;
-use App\Models\frs\Proses\Pembacaan_frs;
-use App\Models\frs\Proses\Penulisan_frs;
-use App\Models\frs\Proses\Pemverifikasi_frs;
-use App\Models\frs\Proses\Authorized_frs;
-use App\Models\frs\Proses\Pencetakan_frs;
-use App\Models\frs\Mutu_frs;
+use App\Models\Srs\Proses\Penerimaan_srs;
+use App\Models\Srs\Proses\Pembacaan_srs;
+use App\Models\Srs\Proses\Penulisan_srs;
+use App\Models\Srs\Proses\Pemverifikasi_srs;
+use App\Models\Srs\Proses\Authorized_srs;
+use App\Models\Srs\Proses\Pencetakan_srs;
+use App\Models\Srs\Mutu_srs;
 use CodeIgniter\Exceptions\PageNotFoundException;
 use Exception;
 
 class Penerimaan extends BaseController
 {
-    protected $frsModel;
+    protected $srsModel;
     protected $userModel;
     protected $patientModel;
-    protected $Penerimaan_frs;
-    protected $Pembacaan_frs;
-    protected $Penulisan_frs;
-    protected $Pemverifikasi_frs;
-    protected $Authorized_frs;
-    protected $Pencetakan_frs;
-    protected $Mutu_frs;
+    protected $Penerimaan_srs;
+    protected $Pembacaan_srs;
+    protected $Penulisan_srs;
+    protected $Pemverifikasi_srs;
+    protected $Authorized_srs;
+    protected $Pencetakan_srs;
+    protected $Mutu_srs;
     protected $validation;
 
     public function __construct()
     {
-        $this->frsModel = new frsModel();
+        $this->srsModel = new srsModel();
         $this->userModel = new UsersModel();
         $this->patientModel = new PatientModel();
-        $this->Penerimaan_frs = new Penerimaan_frs();
-        $this->Pembacaan_frs = new Pembacaan_frs();
-        $this->Penulisan_frs = new Penulisan_frs();
-        $this->Pemverifikasi_frs = new Pemverifikasi_frs();
-        $this->Authorized_frs = new Authorized_frs();
-        $this->Pencetakan_frs = new Pencetakan_frs();
-        $this->Mutu_frs = new Mutu_frs();
+        $this->Penerimaan_srs = new Penerimaan_srs();
+        $this->Pembacaan_srs = new Pembacaan_srs();
+        $this->Penulisan_srs = new Penulisan_srs();
+        $this->Pemverifikasi_srs = new Pemverifikasi_srs();
+        $this->Authorized_srs = new Authorized_srs();
+        $this->Pencetakan_srs = new Pencetakan_srs();
+        $this->Mutu_srs = new Mutu_srs();
         $this->validation =  \Config\Services::validation();
         $this->session = \Config\Services::session();
     }
 
     public function index()
     {
-        $penerimaanData_frs = $this->Penerimaan_frs->getPenerimaan_frs();
+        $penerimaanData_srs = $this->Penerimaan_srs->getPenerimaan_srs();
         $data = [
             'nama_user' => $this->session->get('nama_user'),
             'counts' => $this->getCounts(),
-            'penerimaanDatafrs' => $penerimaanData_frs,
+            'penerimaanDatasrs' => $penerimaanData_srs,
         ];
 
-        return view('frs/Proses/penerimaan', $data);
+        return view('Srs/Proses/penerimaan', $data);
     }
 
     public function proses_penerimaan()
@@ -70,55 +70,64 @@ class Penerimaan extends BaseController
             }
 
             foreach ($selectedIds as $id) {
-                list($id_penerimaan_frs, $id_frs, $id_mutu_frs) = explode(':', $id);
-                // $indikator_1 = (string) ($this->request->getPost('indikator_1') ?? '0');
-                // $indikator_2 = (string) ($this->request->getPost('indikator_2') ?? '0');
-                // $total_nilai_mutu_frs = $this->request->getPost('total_nilai_mutu_frs');
-                $this->processAction($action, $id_penerimaan_frs, $id_frs, $id_user, $id_mutu_frs);
+                list($id_penerimaan_srs, $id_srs, $id_mutu_srs) = explode(':', $id);
+                $indikator_1 = (string) ($this->request->getPost('indikator_1') ?? '0');
+                $total_nilai_mutu_srs = $this->request->getPost('total_nilai_mutu_srs');
+                $this->processAction($action, $id_penerimaan_srs, $id_srs, $id_user, $id_mutu_srs, $indikator_1, $total_nilai_mutu_srs);
             }
 
-            return redirect()->to('penerimaan_frs/index');
+            return redirect()->to('penerimaan_srs/index');
         } catch (Exception $e) {
             return redirect()->back()->with('error', $e->getMessage());
         }
     }
 
-    private function processAction($action, $id_penerimaan_frs, $id_frs, $id_user, $id_mutu_frs)
+    private function processAction($action, $id_penerimaan_srs, $id_srs, $id_user, $id_mutu_srs, $indikator_1, $total_nilai_mutu_srs)
     {
         date_default_timezone_set('Asia/Jakarta');
 
         try {
             switch ($action) {
                 case 'mulai':
-                    $this->frsModel->update($id_frs, ['status_frs' => 'Penerimaan']);
-                    $this->Penerimaan_frs->update($id_penerimaan_frs, [
-                        'id_user_penerimaan_frs' => $id_user,
-                        'status_penerimaan_frs' => 'Proses Penerimaan',
-                        'mulai_penerimaan_frs' => date('Y-m-d H:i:s'),
+                    $this->srsModel->update($id_srs, ['status_srs' => 'Penerimaan']);
+                    $this->Penerimaan_srs->update($id_penerimaan_srs, [
+                        'id_user_penerimaan_srs' => $id_user,
+                        'status_penerimaan_srs' => 'Proses Penerimaan',
+                        'mulai_penerimaan_srs' => date('Y-m-d H:i:s'),
                     ]);
                     break;
                 case 'selesai':
-                    $this->Penerimaan_frs->update($id_penerimaan_frs, [
-                        'id_user_penerimaan_frs' => $id_user,
-                        'status_penerimaan_frs' => 'Selesai Penerimaan',
-                        'selesai_penerimaan_frs' => date('Y-m-d H:i:s'),
+                    $this->Penerimaan_srs->update($id_penerimaan_srs, [
+                        'id_user_penerimaan_srs' => $id_user,
+                        'status_penerimaan_srs' => 'Selesai Penerimaan',
+                        'selesai_penerimaan_srs' => date('Y-m-d H:i:s'),
+                    ]);
+                    break;
+                    $this->Mutu_srs->update($id_mutu, [
+                        'indikator_1' => $indikator_1,
+                        'total_nilai_mutu_srs' => $total_nilai_mutu_srs + $indikator_1,
                     ]);
                     break;
                 case 'reset':
-                    $this->Penerimaan_frs->update($id_penerimaan_frs, [
-                        'id_user_penerimaan_frs' => null,
-                        'status_penerimaan_frs' => 'Belum Penerimaan',
-                        'mulai_penerimaan_frs' => null,
-                        'selesai_penerimaan_frs' => null,
+                    $this->Penerimaan_srs->update($id_penerimaan_srs, [
+                        'id_user_penerimaan_srs' => null,
+                        'status_penerimaan_srs' => 'Belum Penerimaan',
+                        'mulai_penerimaan_srs' => null,
+                        'selesai_penerimaan_srs' => null,
+                    ]);
+                    break;
+                    $this->Mutu_srs->update($id_mutu, [
+                        'indikator_1' => '0',
+                        'total_nilai_mutu_srs' => '0',
                     ]);
                     break;
                 case 'lanjut':
-                    $this->frsModel->update($id_frs, ['status_frs' => 'Pembacaan']);
+                    $this->srsModel->update($id_srs, ['status_srs' => 'Pembacaan']);
                     $pembacaanData = [
-                        'id_frs'            => $id_frs,
-                        'status_pembacaan_frs' => 'Belum Pembacaan',
+                        'id_srs'            => $id_srs,
+                        'status_pembacaan_srs' => 'Belum Pembacaan',
                     ];
-                    if (!$this->Pembacaan_frs->insert($pembacaanData)) {
+                    if (!$this->Pembacaan_srs->insert($pembacaanData)) {
                         throw new Exception('Gagal menyimpan data Pembacaan.');
                     }
                     break;
@@ -131,21 +140,21 @@ class Penerimaan extends BaseController
 
     public function penerimaan_details()
     {
-        // Ambil id_penerimaan_frs dari parameter GET
-        $id_penerimaan_frs = $this->request->getGet('id_penerimaan_frs');
+        // Ambil id_penerimaan_srs dari parameter GET
+        $id_penerimaan_srs = $this->request->getGet('id_penerimaan_srs');
 
-        if ($id_penerimaan_frs) {
+        if ($id_penerimaan_srs) {
             // Gunakan model yang sudah diinisialisasi di constructor
-            $data = $this->Penerimaan_frs->select(
+            $data = $this->Penerimaan_srs->select(
                 'penerimaan.*, 
-            frs.*, 
+            srs.*, 
             patient.*, 
             users.nama_user AS nama_user_penerimaan'
             )
-                ->join('frs', 'penerimaan.id_frs = frs.id_frs', 'left')
-                ->join('patient', 'frs.id_pasien = patient.id_pasien', 'left')
-                ->join('users', 'penerimaan.id_user_penerimaan_frs = users.id_user', 'left')
-                ->where('penerimaan.id_penerimaan_frs', $id_penerimaan_frs)
+                ->join('srs', 'penerimaan.id_srs = srs.id_srs', 'left')
+                ->join('patient', 'srs.id_pasien = patient.id_pasien', 'left')
+                ->join('users', 'penerimaan.id_user_penerimaan_srs = users.id_user', 'left')
+                ->where('penerimaan.id_penerimaan_srs', $id_penerimaan_srs)
                 ->first();
 
             if ($data) {
@@ -160,14 +169,14 @@ class Penerimaan extends BaseController
 
     public function edit_penerimaan()
     {
-        $id_penerimaan_frs = $this->request->getGet('id_penerimaan_frs');
+        $id_penerimaan_srs = $this->request->getGet('id_penerimaan_srs');
 
-        if (!$id_penerimaan_frs) {
+        if (!$id_penerimaan_srs) {
             throw new \CodeIgniter\Exceptions\PageNotFoundException('ID penerimaan tidak ditemukan.');
         }
 
         // Ambil data penerimaan
-        $penerimaanData = $this->Penerimaan_frs->find($id_penerimaan_frs);
+        $penerimaanData = $this->Penerimaan_srs->find($id_penerimaan_srs);
 
         if (!$penerimaanData) {
             throw new \CodeIgniter\Exceptions\PageNotFoundException('Data penerimaan tidak ditemukan.');
@@ -188,21 +197,21 @@ class Penerimaan extends BaseController
 
     public function update_penerimaan()
     {
-        $id_penerimaan_frs = $this->request->getPost('id_penerimaan_frs');
+        $id_penerimaan_srs = $this->request->getPost('id_penerimaan_srs');
 
         // Gabungkan input tanggal dan waktu
-        $mulai_penerimaan_frs = $this->request->getPost('mulai_penerimaan_frs_date') . ' ' . $this->request->getPost('mulai_penerimaan_frs_time');
-        $selesai_penerimaan_frs = $this->request->getPost('selesai_penerimaan_frs_date') . ' ' . $this->request->getPost('selesai_penerimaan_frs_time');
+        $mulai_penerimaan_srs = $this->request->getPost('mulai_penerimaan_srs_date') . ' ' . $this->request->getPost('mulai_penerimaan_srs_time');
+        $selesai_penerimaan_srs = $this->request->getPost('selesai_penerimaan_srs_date') . ' ' . $this->request->getPost('selesai_penerimaan_srs_time');
 
         $data = [
-            'id_user_penerimaan_frs' => $this->request->getPost('id_user_penerimaan_frs'),
-            'status_penerimaan_frs'  => $this->request->getPost('status_penerimaan_frs'),
-            'mulai_penerimaan_frs'   => $mulai_penerimaan_frs,
-            'selesai_penerimaan_frs' => $selesai_penerimaan_frs,
+            'id_user_penerimaan_srs' => $this->request->getPost('id_user_penerimaan_srs'),
+            'status_penerimaan_srs'  => $this->request->getPost('status_penerimaan_srs'),
+            'mulai_penerimaan_srs'   => $mulai_penerimaan_srs,
+            'selesai_penerimaan_srs' => $selesai_penerimaan_srs,
             'updated_at'         => date('Y-m-d H:i:s'),
         ];
 
-        if (!$this->Penerimaan_frs->update($id_penerimaan_frs, $data)) {
+        if (!$this->Penerimaan_srs->update($id_penerimaan_srs, $data)) {
             return redirect()->back()->with('error', 'Gagal mengupdate data.')->withInput();
         }
 
