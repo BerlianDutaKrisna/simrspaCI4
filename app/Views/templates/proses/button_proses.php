@@ -54,12 +54,12 @@
                                 statuses.status_penerimaan_frs === "Belum Penerimaan" ||
                                 statuses.status_penerimaan_srs === "Belum Penerimaan" ||
                                 statuses.status_penerimaan_ihc === "Belum Penerimaan" ||
-                                statuses.status_pengirisan === "Belum Pengirisan" ||
-                                statuses.status_pemotongan === "Belum Pemotongan" ||
-                                statuses.status_pemprosesan === "Belum Pemprosesan" ||
-                                statuses.status_penanaman === "Belum Penanaman" ||
-                                statuses.status_pemotongan_tipis === "Belum Pemotongan Tipis" ||
-                                statuses.status_pewarnaan === "Belum Pewarnaan" ||
+                                statuses.status_pengirisan_hpa === "Belum Pengirisan" ||
+                                statuses.status_pemotongan_hpa === "Belum Pemotongan" ||
+                                statuses.status_pemprosesan_hpa === "Belum Pemprosesan" ||
+                                statuses.status_penanaman_hpa === "Belum Penanaman" ||
+                                statuses.status_pemotongan_tipis_hpa === "Belum Pemotongan Tipis" ||
+                                statuses.status_pewarnaan_hpa === "Belum Pewarnaan" ||
                                 statuses.status_pembacaan_hpa === "Belum Pembacaan" ||
                                 statuses.status_pembacaan_frs === "Belum Pembacaan" ||
                                 statuses.status_pembacaan_srs === "Belum Pembacaan" ||
@@ -82,12 +82,12 @@
                                 statuses.status_penerimaan_frs === "Proses Penerimaan" ||
                                 statuses.status_penerimaan_srs === "Proses Penerimaan" ||
                                 statuses.status_penerimaan_ihc === "Proses Penerimaan" ||
-                                statuses.status_pengirisan === "Proses Pengirisan" ||
-                                statuses.status_pemotongan === "Proses Pemotongan" ||
-                                statuses.status_pemprosesan === "Proses Pemprosesan" ||
-                                statuses.status_penanaman === "Proses Penanaman" ||
-                                statuses.status_pemotongan_tipis === "Proses Pemotongan Tipis" ||
-                                statuses.status_pewarnaan === "Proses Pewarnaan" ||
+                                statuses.status_pengirisan_hpa === "Proses Pengirisan" ||
+                                statuses.status_pemotongan_hpa === "Proses Pemotongan" ||
+                                statuses.status_pemprosesan_hpa === "Proses Pemprosesan" ||
+                                statuses.status_penanaman_hpa === "Proses Penanaman" ||
+                                statuses.status_pemotongan_tipis_hpa === "Proses Pemotongan Tipis" ||
+                                statuses.status_pewarnaan_hpa === "Proses Pewarnaan" ||
                                 statuses.status_pembacaan === "Proses Pembacaan" ||
                                 statuses.status_penulisan === "Proses Penulisan" ||
                                 statuses.status_pemverifikasi === "Proses Pemverifikasi" ||
@@ -107,14 +107,14 @@
                                 statuses.status_penerimaan_frs === "Selesai Penerimaan" ||
                                 statuses.status_penerimaan_srs === "Selesai Penerimaan" ||
                                 statuses.status_penerimaan_ihc === "Selesai Penerimaan" ||
-                                statuses.status_pengirisan === "Belum Pengirisan" ||
-                                statuses.status_pengirisan === "Proses Pengirisan" ||
-                                statuses.status_pengirisan === "Selesai Pengirisan" ||
-                                statuses.status_pemotongan === "Selesai Pemotongan" ||
-                                statuses.status_pemprosesan === "Selesai Pemprosesan" ||
-                                statuses.status_penanaman === "Selesai Penanaman" ||
-                                statuses.status_pemotongan_tipis === "Selesai Pemotongan Tipis" ||
-                                statuses.status_pewarnaan === "Selesai Pewarnaan" ||
+                                statuses.status_pengirisan_hpa === "Belum Pengirisan" ||
+                                statuses.status_pengirisan_hpa === "Proses Pengirisan" ||
+                                statuses.status_pengirisan_hpa === "Selesai Pengirisan" ||
+                                statuses.status_pemotongan_hpa === "Selesai Pemotongan" ||
+                                statuses.status_pemprosesan_hpa === "Selesai Pemprosesan" ||
+                                statuses.status_penanaman_hpa === "Selesai Penanaman" ||
+                                statuses.status_pemotongan_tipis_hpa === "Selesai Pemotongan Tipis" ||
+                                statuses.status_pewarnaan_hpa === "Selesai Pewarnaan" ||
                                 statuses.status_pembacaan === "Belum Pembacaan" ||
                                 statuses.status_pembacaan === "Proses Pembacaan" ||
                                 statuses.status_pembacaan === "Selesai Pembacaan" ||

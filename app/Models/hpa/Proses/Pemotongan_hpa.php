@@ -37,24 +37,25 @@ class Pemotongan_hpa extends Model
     }
 
     // Mengambil data pemotongan_hpa dengan relasi
-    public function getpemotongan_hpaWithRelations()
-{
-    return $this->select(
-        '
+    public function getPemotongan_hpa()
+    {
+        return $this->select(
+            '
         pemotongan_hpa.*, 
         hpa.*, 
         patient.*, 
         users.nama_user AS nama_user_pemotongan_hpa,
-        mutu.total_nilai_mutu'
-    )
-        ->join('hpa', 'pemotongan_hpa.id_hpa = hpa.id_hpa', 'left')
-        ->join('patient', 'hpa.id_pasien = patient.id_pasien', 'left') 
-        ->join('users', 'pemotongan_hpa.id_user_pemotongan_hpa = users.id_user', 'left') 
-        ->join('mutu', 'hpa.id_hpa = mutu.id_hpa', 'left')
-        ->where('hpa.status_hpa', 'pemotongan_hpa')
-        ->orderBy('hpa.kode_hpa', 'ASC') 
-        ->findAll();
-}
+        mutu_hpa.id_mutu_hpa,
+        mutu_hpa.total_nilai_mutu_hpa'
+        )
+            ->join('hpa', 'pemotongan_hpa.id_hpa = hpa.id_hpa', 'left') // Relasi dengan tabel hpa
+            ->join('patient', 'hpa.id_pasien = patient.id_pasien', 'left') // Relasi dengan tabel patient
+            ->join('users', 'pemotongan_hpa.id_user_pemotongan_hpa = users.id_user', 'left') // Relasi dengan tabel users untuk pemotongan_hpa
+            ->join('mutu_hpa', 'hpa.id_hpa = mutu_hpa.id_hpa', 'left') // Relasi dengan tabel mutu_hpa berdasarkan id_hpa
+            ->whereIn('hpa.status_hpa', ['Pemotongan']) // Menambahkan filter whereIn untuk status_hpa
+            ->orderBy('hpa.kode_hpa', 'ASC')
+            ->findAll();
+    }
 
 
     // Fungsi untuk mengupdate data pemotongan_hpa

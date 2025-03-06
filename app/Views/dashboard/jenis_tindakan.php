@@ -26,7 +26,7 @@
             <!-- Tombol 2: Pengirisan -->
             <div class="col">
                 <a href="<?= base_url('pengirisan_hpa/index') ?>" class="btn btn-primary btn-icon-split btn-sm d-flex justify-content-between m-2">
-                    <span class="text"><b style="color: white"><?= esc($counts['countPengirisan'] ?? 0); ?></b> Pengirisan</span>
+                    <span class="text"><b style="color: white"><?= esc($counts['countPengirisanhpa'] ?? 0); ?></b> Pengirisan</span>
                     <span class="icon text-white-50">
                         <i class="fas fa-puzzle-piece"></i>
                     </span>
@@ -35,8 +35,8 @@
 
             <!-- Tombol 3: Pemotongan -->
             <div class="col">
-                <a href="<?= base_url('pemotongan/index_pemotongan') ?>" class="btn btn-primary btn-icon-split btn-sm d-flex justify-content-between m-2">
-                    <span class="text"><b style="color: white"><?= esc($countPemotongan ?? ""); ?></b> Pemotongan</span>
+                <a href="<?= base_url('pemotongan_hpa/index') ?>" class="btn btn-primary btn-icon-split btn-sm d-flex justify-content-between m-2">
+                    <span class="text"><b style="color: white"><?= esc($counts['countPemotonganhpa'] ?? 0); ?></b> Pemotongan</span>
                     <span class="icon text-white-50">
                         <i class="fas fa-cut"></i> <!-- Ikon untuk Pemotongan -->
                     </span>
@@ -45,8 +45,8 @@
 
             <!-- Tombol 4: Pemprosesan -->
             <div class="col">
-                <a href="<?= base_url('pemprosesan/index_pemprosesan') ?>" class="btn btn-primary btn-icon-split btn-sm d-flex justify-content-between m-2">
-                    <span class="text"><b style="color: white"><?= esc($countPemprosesan ?? ""); ?></b> Pemprosesan</span>
+                <a href="<?= base_url('pemprosesan_hpa/index') ?>" class="btn btn-primary btn-icon-split btn-sm d-flex justify-content-between m-2">
+                    <span class="text"><b style="color: white"><?= esc($counts['countPemprosesanhpa'] ?? 0); ?></b> Pemprosesan</span>
                     <span class="icon text-white-50">
                         <i class="fas fa-sync"></i> <!-- Ikon untuk Pemprosesan -->
                     </span>
@@ -55,8 +55,8 @@
 
             <!-- Tombol 5: Penanaman -->
             <div class="col">
-                <a href="<?= base_url('penanaman/index_penanaman') ?>" class="btn btn-primary btn-icon-split btn-sm d-flex justify-content-between m-2">
-                    <span class="text"><b style="color: white"><?= esc($countPenanaman ?? ""); ?></b> Penanaman</span>
+                <a href="<?= base_url('penanaman_hpa/index') ?>" class="btn btn-primary btn-icon-split btn-sm d-flex justify-content-between m-2">
+                    <span class="text"><b style="color: white"><?= esc($counts['countPenanamanhpa'] ?? 0); ?></b> Penanaman</span>
                     <span class="icon text-white-50">
                         <i class="fas fa-download"></i> <!-- Ikon untuk Penanaman -->
                     </span>
@@ -65,8 +65,8 @@
 
             <!-- Tombol 6: Pemotongan Tipis -->
             <div class="col">
-                <a href="<?= base_url('pemotongan_tipis/index_pemotongan_tipis') ?>" class="btn btn-primary btn-icon-split btn-sm d-flex justify-content-between m-2">
-                    <span class="text"><b style="color: white"><?= esc($countPemotonganTipis ?? ""); ?></b> Pemotongan Tipis</span>
+                <a href="<?= base_url('pemotongan_tipis_hpa/index') ?>" class="btn btn-primary btn-icon-split btn-sm d-flex justify-content-between m-2">
+                    <span class="text"><b style="color: white"><?= esc($counts['countPemotonganTipishpa'] ?? 0); ?></b> Pemotongan Tipis</span>
                     <span class="icon text-white-50">
                         <i class="fas fa-grip-horizontal"></i> <!-- Ikon untuk Pemotongan Tipis -->
                     </span>
@@ -75,8 +75,8 @@
 
             <!-- Tombol 7: Pewarnaan -->
             <div class="col">
-                <a href="<?= base_url('pewarnaan/index_pewarnaan') ?>" class="btn btn-primary btn-icon-split btn-sm d-flex justify-content-between m-2">
-                    <span class="text"><b style="color: white"><?= esc($countPewarnaan ?? ""); ?></b> Pewarnaan</span>
+                <a href="<?= base_url('pewarnaan_hpa/index') ?>" class="btn btn-primary btn-icon-split btn-sm d-flex justify-content-between m-2">
+                    <span class="text"><b style="color: white"><?= esc($counts['countPewarnaanhpa'] ?? 0); ?></b> Pewarnaan</span>
                     <span class="icon text-white-50">
                         <i class="fas fa-fill-drip"></i> <!-- Ikon untuk Pewarnaan -->
                     </span>
@@ -85,8 +85,17 @@
 
             <!-- Tombol 8: Pembacaan -->
             <div class="col">
-                <a href="<?= base_url('pembacaan/index_pembacaan') ?>" class="btn btn-info btn-icon-split btn-sm d-flex justify-content-between m-2">
-                    <span class="text"><b style="color: white"><?= esc($countPembacaan ?? ""); ?></b> Pembacaan</span>
+                <a href="<?= base_url('pembacaan_hpa/index') ?>" class="btn btn-info btn-icon-split btn-sm d-flex justify-content-between m-2">
+                    <span class="text"><b style="color: white">
+                    <?php
+                            $contsTotalPembacaan =
+                                ($counts['countPembacaanhpa'] ?? 0) +
+                                ($counts['countPembacaanfrs'] ?? 0) +
+                                ($counts['countPembacaansrs'] ?? 0) +
+                                ($counts['countPembacaanihc'] ?? 0);
+                            ?>
+                            <?= esc($contsTotalPembacaan ?? 0) ?>
+                    </b> Pembacaan</span>
                     <span class="icon text-white-50">
                         <i class="fas fa-microscope"></i> <!-- Ikon untuk Pembacaan -->
                     </span>
@@ -95,8 +104,17 @@
 
             <!-- Tombol 9: Penulisan -->
             <div class="col">
-                <a href="<?= base_url('penulisan/index_penulisan') ?>" class="btn btn-primary btn-icon-split btn-sm d-flex justify-content-between m-2">
-                    <span class="text"><b style="color: white"><?= esc($countPenulisan ?? ""); ?></b> Penulisan</span>
+                <a href="<?= base_url('penulisan_hpa/index') ?>" class="btn btn-primary btn-icon-split btn-sm d-flex justify-content-between m-2">
+                    <span class="text"><b style="color: white">
+                    <?php
+                            $contsTotalPenulisan =
+                                ($counts['countPenulisanhpa'] ?? 0) +
+                                ($counts['countPenulisanfrs'] ?? 0) +
+                                ($counts['countPenulisansrs'] ?? 0) +
+                                ($counts['countPenulisanihc'] ?? 0);
+                            ?>
+                            <?= esc($contsTotalPenulisan ?? 0) ?>
+                    </b> Penulisan</span>
                     <span class="icon text-white-50">
                         <i class="fas fa-keyboard"></i> <!-- Ikon untuk Penulisan -->
                     </span>
@@ -105,8 +123,15 @@
 
             <!-- Tombol 10: Pemverifikasi -->
             <div class="col">
-                <a href="<?= base_url('pemverifikasi/index_pemverifikasi') ?>" class="btn btn-success btn-icon-split btn-sm d-flex justify-content-between m-2">
-                    <span class="text"><b style="color: white"><?= esc($countPemverifikasi ?? ""); ?></b> Pemverifikasi</span>
+                <a href="<?= base_url('pemverifikasi_hpa/index') ?>" class="btn btn-success btn-icon-split btn-sm d-flex justify-content-between m-2">
+                    <span class="text"><b style="color: white"><?php
+                            $contsTotalPemverifikasi =
+                                ($counts['countPemverifikasihpa'] ?? 0) +
+                                ($counts['countPemverifikasifrs'] ?? 0) +
+                                ($counts['countPemverifikasisrs'] ?? 0) +
+                                ($counts['countPemverifikasiihc'] ?? 0);
+                            ?>
+                            <?= esc($contsTotalPemverifikasi ?? 0) ?></b> Pemverifikasi</span>
                     <span class="icon text-white-50">
                         <i class="fas fa-check-square"></i>
                     </span>
@@ -115,8 +140,15 @@
 
             <!-- Tombol 11: Autorized -->
             <div class="col">
-                <a href="<?= base_url('autorized/index_autorized') ?>" class="btn btn-info btn-icon-split btn-sm d-flex justify-content-between m-2">
-                    <span class="text"><b style="color: white"><?= esc($countAutorized ?? ""); ?></b> Authorized</span>
+                <a href="<?= base_url('authorized_hpa/index') ?>" class="btn btn-info btn-icon-split btn-sm d-flex justify-content-between m-2">
+                    <span class="text"><b style="color: white"><?php
+                            $contsTotalAuthorised =
+                                ($counts['countAuthorisedhpa'] ?? 0) +
+                                ($counts['countAuthorisedfrs'] ?? 0) +
+                                ($counts['countAuthorisedsrs'] ?? 0) +
+                                ($counts['countAuthorisedihc'] ?? 0);
+                            ?>
+                            <?= esc($contsTotalAuthorised ?? 0) ?></b> Authorized</span>
                     <span class="icon text-white-50">
                         <i class="fas fa-vote-yea"></i>
                     </span>
@@ -125,8 +157,17 @@
 
             <!-- Tombol 11: pencetakan -->
             <div class="col">
-                <a href="<?= base_url('pencetakan/index_pencetakan') ?>" class="btn btn-primary btn-icon-split btn-sm d-flex justify-content-between m-2">
-                    <span class="text"><b style="color: white"><?= esc($countPencetakan ?? ""); ?></b> pencetakan</span>
+                <a href="<?= base_url('pencetakan_hpa/index') ?>" class="btn btn-primary btn-icon-split btn-sm d-flex justify-content-between m-2">
+                    <span class="text"><b style="color: white">
+                    <?php
+                            $contsTotalPencetakan =
+                                ($counts['countPencetakanhpa'] ?? 0) +
+                                ($counts['countPencetakanfrs'] ?? 0) +
+                                ($counts['countPencetakansrs'] ?? 0) +
+                                ($counts['countPencetakanihc'] ?? 0);
+                            ?>
+                            <?= esc($contsTotalPencetakan ?? 0) ?>
+                    </b> pencetakan</span>
                     <span class="icon text-white-50">
                         <i class="fas fa-print"></i>
                     </span>

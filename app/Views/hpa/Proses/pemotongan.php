@@ -10,7 +10,7 @@
         <a href="<?= base_url('/dashboard') ?>" class="btn btn-primary mb-3">Kembali</a>
 
         <!-- Form -->
-        <form id="mainForm" action="<?= base_url('pemotongan/proses_pemotongan'); ?>" method="POST">
+        <form id="mainForm" action="<?= base_url('pemotongan_hpa/proses_pemotongan'); ?>" method="POST">
             <?= csrf_field(); ?>
             <!-- Input Hidden -->
             <input type="hidden" name="action" id="action" value="">
@@ -32,30 +32,30 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <?php if (!empty($pemotonganData)): ?>
+                        <?php if (!empty($pemotonganDatahpa)): ?>
                             <?php $i = 1; ?>
-                            <?php foreach ($pemotonganData as $row): ?>
+                            <?php foreach ($pemotonganDatahpa as $row): ?>
                                 <tr>
                                     <td><?= $i ?></td>
                                     <td><?= $row['kode_hpa']; ?></td>
                                     <td><?= $row['nama_pasien']; ?></td>
-                                    <td><?= $row['status_pemotongan']; ?></td>
+                                    <td><?= $row['status_pemotongan_hpa']; ?></td>
                                     <td>
                                         <input type="checkbox"
                                             name="id_proses[]"
-                                            value="<?= $row['id_pemotongan']; ?>:<?= $row['id_hpa']; ?>:<?= $row['id_mutu']; ?>"
+                                            value="<?= $row['id_pemotongan_hpa']; ?>:<?= $row['id_hpa']; ?>:<?= $row['id_mutu_hpa']; ?>"
                                             class="form-control form-control-user checkbox-item"
                                             data-status='<?= json_encode([
-                                                                'status_pemotongan' => $row['status_pemotongan'] ?? ""
+                                                                'status_pemotongan_hpa' => $row['status_pemotongan_hpa'] ?? ""
                                                             ]) ?>'
                                             autocomplete="off">
                                     </td>
-                                    <td><?= $row['nama_user_pemotongan']; ?></td>
+                                    <td><?= $row['nama_user_pemotongan_hpa']; ?></td>
                                     <td>
-                                        <?= empty($row['mulai_pemotongan']) ? '-' : esc(date('H:i , d-m-Y', strtotime($row['mulai_pemotongan']))); ?>
+                                        <?= empty($row['mulai_pemotongan_hpa']) ? '-' : esc(date('H:i , d-m-Y', strtotime($row['mulai_pemotongan_hpa']))); ?>
                                     </td>
                                     <td>
-                                        <?= empty($row['selesai_pemotongan']) ? '-' : esc(date('H:i , d-m-Y', strtotime($row['selesai_pemotongan']))); ?>
+                                        <?= empty($row['selesai_pemotongan_hpa']) ? '-' : esc(date('H:i , d-m-Y', strtotime($row['selesai_pemotongan_hpa']))); ?>
                                     </td>
                                     <td>
                                         <?php
@@ -76,13 +76,13 @@
                                         }
                                         ?>
                                     </td>
-                                    <?php if (in_array($row['status_pemotongan'], ["Proses Pemotongan"])): ?>
+                                    <?php if (in_array($row['status_pemotongan_hpa'], ["Proses Pemotongan"])): ?>
                                         <td>
                                             <a href="<?= base_url('exam/edit_makroskopis/' . esc($row['id_hpa'])) ?>" class="btn btn-warning btn-sm">
                                                 <i class="fas fa-pen"></i> Detail
                                             </a>
                                         </td>
-                                    <?php elseif (in_array($row['status_pemotongan'], ["Selesai Pemotongan"])): ?>
+                                    <?php elseif (in_array($row['status_pemotongan_hpa'], ["Selesai Pemotongan"])): ?>
                                         <td>
                                             <a href="<?= base_url('exam/edit_makroskopis/' . esc($row['id_hpa'])) ?>" class="btn btn-success btn-sm">
                                                 <i class="fas fa-pen"></i> Detail

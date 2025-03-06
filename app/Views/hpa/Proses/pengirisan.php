@@ -10,7 +10,7 @@
         <a href="<?= base_url('/dashboard') ?>" class="btn btn-primary mb-3">Kembali</a>
 
         <!-- Form -->
-        <form id="mainForm" action="<?= base_url('pengirisan/proses_pengirisan'); ?>" method="POST">
+        <form id="mainForm" action="<?= base_url('pengirisan_hpa/proses_pengirisan'); ?>" method="POST">
             <?= csrf_field(); ?>
             <!-- Input Hidden -->
             <input type="hidden" name="action" id="action" value="">
@@ -31,30 +31,30 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <?php if (!empty($pengirisanData)): ?>
+                        <?php if (!empty($pengirisanDatahpa)): ?>
                             <?php $i = 1; ?>
-                            <?php foreach ($pengirisanData as $row): ?>
+                            <?php foreach ($pengirisanDatahpa as $row): ?>
                                 <tr>
                                     <td><?= $i ?></td>
                                     <td><?= $row['kode_hpa']; ?></td>
                                     <td><?= $row['nama_pasien']; ?></td>
-                                    <td><?= $row['status_pengirisan']; ?></td>
+                                    <td><?= $row['status_pengirisan_hpa']; ?></td>
                                     <td>
                                         <input type="checkbox"
                                             name="id_proses[]"
-                                            value="<?= $row['id_pengirisan']; ?>:<?= $row['id_hpa']; ?>:<?= $row['id_mutu']; ?>"
+                                            value="<?= $row['id_pengirisan_hpa']; ?>:<?= $row['id_hpa']; ?>:<?= $row['id_mutu_hpa']; ?>"
                                             class="form-control form-control-user checkbox-item"
                                             data-status='<?= json_encode([
-                                                                'status_pengirisan' => $row['status_pengirisan'] ?? "",
+                                                                'status_pengirisan_hpa' => $row['status_pengirisan_hpa'] ?? "",
                                                             ]) ?>'
                                             autocomplete="off">
                                     </td>
-                                    <td><?= $row['nama_user_pengirisan']; ?></td>
+                                    <td><?= $row['nama_user_pengirisan_hpa']; ?></td>
                                     <td>
-                                        <?= empty($row['mulai_pengirisan']) ? '-' : esc(date('H:i , d-m-Y', strtotime($row['mulai_pengirisan']))); ?>
+                                        <?= empty($row['mulai_pengirisan_hpa']) ? '-' : esc(date('H:i , d-m-Y', strtotime($row['mulai_pengirisan_hpa']))); ?>
                                     </td>
                                     <td>
-                                        <?= empty($row['selesai_pengirisan']) ? '-' : esc(date('H:i , d-m-Y', strtotime($row['selesai_pengirisan']))); ?>
+                                        <?= empty($row['selesai_pengirisan_hpa']) ? '-' : esc(date('H:i , d-m-Y', strtotime($row['selesai_pengirisan_hpa']))); ?>
                                     </td>
                                     <td>
                                         <?php

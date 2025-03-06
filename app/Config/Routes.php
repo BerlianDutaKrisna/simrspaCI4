@@ -129,8 +129,8 @@ $routes->group('pengirisan_hpa', ['namespace' => 'App\Controllers\Hpa\Proses'], 
 });
 
 // Route untuk Pemotongan
-$routes->group('pemotongan', ['namespace' => 'App\Controllers\Hpa\Proses'], function ($routes) {
-    $routes->get('index_pemotongan', 'Pemotongan::index_pemotongan'); // Menampilkan halaman pemotongan
+$routes->group('pemotongan_hpa', ['namespace' => 'App\Controllers\Hpa\Proses'], function ($routes) {
+    $routes->get('index', 'Pemotongan::index'); // Menampilkan halaman pemotongan
     $routes->post('proses_pemotongan', 'Pemotongan::proses_pemotongan'); // Proses pemotongan
     $routes->get('pemotongan_details', 'Pemotongan::pemotongan_details');
     $routes->post('delete', 'Pemotongan::delete');

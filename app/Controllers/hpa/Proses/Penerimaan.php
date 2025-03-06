@@ -23,15 +23,15 @@ class Penerimaan extends BaseController
     protected $hpaModel;
     protected $userModel;
     protected $patientModel;
-    protected $Penerimaan_hpa;
-    protected $Pengirisan_hpa;
-    protected $Pemotongan_hpa;
-    protected $Pembacaan_hpa;
-    protected $Penulisan_hpa;
-    protected $Pemverifikasi_hpa;
-    protected $Authorized_hpa;
-    protected $Pencetakan_hpa;
-    protected $Mutu_hpa;
+    protected $penerimaan_hpa;
+    protected $pengirisan_hpa;
+    protected $pemotongan_hpa;
+    protected $pembacaan_hpa;
+    protected $penulisan_hpa;
+    protected $pemverifikasi_hpa;
+    protected $authorized_hpa;
+    protected $pencetakan_hpa;
+    protected $mutu_hpa;
     protected $validation;
 
     public function __construct()
@@ -39,22 +39,22 @@ class Penerimaan extends BaseController
         $this->hpaModel = new HpaModel();
         $this->userModel = new UsersModel();
         $this->patientModel = new PatientModel();
-        $this->Penerimaan_hpa = new Penerimaan_hpa();
-        $this->Pengirisan_hpa = new Pengirisan_hpa();
-        $this->Pemotongan_hpa = new Pemotongan_hpa();
-        $this->Pembacaan_hpa = new Pembacaan_hpa();
-        $this->Penulisan_hpa = new Penulisan_hpa();
-        $this->Pemverifikasi_hpa = new Pemverifikasi_hpa();
-        $this->Authorized_hpa = new Authorized_hpa();
-        $this->Pencetakan_hpa = new Pencetakan_hpa();
-        $this->Mutu_hpa = new Mutu_hpa();
+        $this->penerimaan_hpa = new Penerimaan_hpa();
+        $this->pengirisan_hpa = new Pengirisan_hpa();
+        $this->pemotongan_hpa = new Pemotongan_hpa();
+        $this->pembacaan_hpa = new Pembacaan_hpa();
+        $this->penulisan_hpa = new Penulisan_hpa();
+        $this->pemverifikasi_hpa = new Pemverifikasi_hpa();
+        $this->authorized_hpa = new Authorized_hpa();
+        $this->pencetakan_hpa = new Pencetakan_hpa();
+        $this->mutu_hpa = new Mutu_hpa();
         $this->validation =  \Config\Services::validation();
         $this->session = \Config\Services::session();
     }
 
     public function index()
     {
-        $penerimaanData_hpa = $this->Penerimaan_hpa->getPenerimaan_hpa();
+        $penerimaanData_hpa = $this->penerimaan_hpa->getPenerimaan_hpa();
         $data = [
             'nama_user' => $this->session->get('nama_user'),
             'counts' => $this->getCounts(),
@@ -97,32 +97,32 @@ class Penerimaan extends BaseController
             switch ($action) {
                 case 'mulai':
                     $this->hpaModel->update($id_hpa, ['status_hpa' => 'Penerimaan']);
-                    $this->Penerimaan_hpa->update($id_penerimaan_hpa, [
+                    $this->penerimaan_hpa->update($id_penerimaan_hpa, [
                         'id_user_penerimaan_hpa' => $id_user,
                         'status_penerimaan_hpa' => 'Proses Penerimaan',
                         'mulai_penerimaan_hpa' => date('Y-m-d H:i:s'),
                     ]);
                     break;
                 case 'selesai':
-                    $this->Penerimaan_hpa->update($id_penerimaan_hpa, [
+                    $this->penerimaan_hpa->update($id_penerimaan_hpa, [
                         'id_user_penerimaan_hpa' => $id_user,
                         'status_penerimaan_hpa' => 'Selesai Penerimaan',
                         'selesai_penerimaan_hpa' => date('Y-m-d H:i:s'),
                     ]);
-                    $this->Mutu_hpa->update($id_mutu, [
+                    $this->mutu_hpa->update($id_mutu, [
                         'indikator_1' => $indikator_1,
                         'indikator_2' => $indikator_2,
                         'total_nilai_mutu_hpa' => $total_nilai_mutu_hpa + $indikator_1 + $indikator_2,
                     ]);
                     break;
                 case 'reset':
-                    $this->Penerimaan_hpa->update($id_penerimaan_hpa, [
+                    $this->penerimaan_hpa->update($id_penerimaan_hpa, [
                         'id_user_penerimaan_hpa' => null,
                         'status_penerimaan_hpa' => 'Belum Penerimaan',
                         'mulai_penerimaan_hpa' => null,
                         'selesai_penerimaan_hpa' => null,
                     ]);
-                    $this->Mutu_hpa->update($id_mutu, [
+                    $this->mutu_hpa->update($id_mutu, [
                         'indikator_1' => '0',
                         'indikator_2' => '0',
                         'total_nilai_mutu_hpa' => '0',
@@ -134,7 +134,7 @@ class Penerimaan extends BaseController
                         'id_hpa'            => $id_hpa,
                         'status_pengirisan_hpa' => 'Belum Pengirisan',
                     ];
-                    if (!$this->Pengirisan_hpa->insert($pengirisanData)) {
+                    if (!$this->pengirisan_hpa->insert($pengirisanData)) {
                         throw new Exception('Gagal menyimpan data pengirisan.');
                     }
                     break;
@@ -152,7 +152,7 @@ class Penerimaan extends BaseController
 
         if ($id_penerimaan_hpa) {
             // Gunakan model yang sudah diinisialisasi di constructor
-            $data = $this->Penerimaan_hpa->select(
+            $data = $this->penerimaan_hpa->select(
                 'penerimaan.*, 
             hpa.*, 
             patient.*, 
@@ -183,7 +183,7 @@ class Penerimaan extends BaseController
         }
 
         // Ambil data penerimaan
-        $penerimaanData = $this->Penerimaan_hpa->find($id_penerimaan_hpa);
+        $penerimaanData = $this->penerimaan_hpa->find($id_penerimaan_hpa);
 
         if (!$penerimaanData) {
             throw new \CodeIgniter\Exceptions\PageNotFoundException('Data penerimaan tidak ditemukan.');
@@ -218,7 +218,7 @@ class Penerimaan extends BaseController
             'updated_at'         => date('Y-m-d H:i:s'),
         ];
 
-        if (!$this->Penerimaan_hpa->update($id_penerimaan_hpa, $data)) {
+        if (!$this->penerimaan_hpa->update($id_penerimaan_hpa, $data)) {
             return redirect()->back()->with('error', 'Gagal mengupdate data.')->withInput();
         }
 
