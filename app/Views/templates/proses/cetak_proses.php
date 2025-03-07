@@ -147,17 +147,18 @@
             </tr>
             <tr>
             <td class="no-border"></td>
-                <td class="foto-makroskopis">
-                    <img src="<?= $hpa['foto_makroskopis_hpa'] !== null
-                                        ? base_url('uploads/hpa/makroskopis/' . $hpa['foto_makroskopis_hpa'])
-                                        : base_url('img/no_photo.jpg') ?>"
-                        width="200"
-                        alt="Foto Makroskopis"
-                        class="img-thumbnail"
-                        id="fotoMakroskopis"
-                        data-toggle="modal"
-                        data-target="#fotoModal">
-                </td>
+            <td class="foto-makroskopis">
+                <img src="<?= $hpa['foto_makroskopis_hpa'] !== null
+                                ? base_url('uploads/hpa/makroskopis/' . $hpa['foto_makroskopis_hpa'])
+                                : base_url('img/no_photo.jpg') ?>"
+                    width="200"
+                    alt="Foto Makroskopis"
+                    class="img-thumbnail"
+                    id="fotoMakroskopis"
+                    data-toggle="modal"
+                    data-target="#fotoModal"
+                    style="object-fit: cover; aspect-ratio: 16 / 9; max-width: 100%; height: auto;">
+            </td>
             </tr>
         </table>
 
