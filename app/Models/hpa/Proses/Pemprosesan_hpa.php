@@ -36,7 +36,7 @@ class Pemprosesan_hpa extends Model // Update nama model
     }
 
     // Mengambil data pemprosesan_hpa dengan relasi
-    public function getpemprosesan_hpaWithRelations() // Update nama fungsi
+    public function getpemprosesan_hpa()
     {
         return $this->select(
             '
@@ -44,13 +44,14 @@ class Pemprosesan_hpa extends Model // Update nama model
         hpa.*, 
         patient.*, 
         users.nama_user AS nama_user_pemprosesan_hpa,
-        mutu.total_nilai_mutu'
+        mutu_hpa.id_mutu_hpa,
+        mutu_hpa.total_nilai_mutu_hpa'
         )
-            ->join('hpa', 'pemprosesan_hpa.id_hpa = hpa.id_hpa', 'left') // Relasi dengan tabel hpa
-            ->join('patient', 'hpa.id_pasien = patient.id_pasien', 'left') // Relasi dengan tabel patient
-            ->join('users', 'pemprosesan_hpa.id_user_pemprosesan_hpa = users.id_user', 'left') // Relasi dengan tabel users untuk pemprosesan_hpa
-            ->join('mutu', 'hpa.id_hpa = mutu.id_hpa', 'left') // Relasi dengan tabel mutu berdasarkan id_hpa
-            ->where('hpa.status_hpa', 'pemprosesan_hpa') // Filter berdasarkan status_hpa 'pemprosesan_hpa'
+            ->join('hpa', 'pemprosesan_hpa.id_hpa = hpa.id_hpa', 'left')
+            ->join('patient', 'hpa.id_pasien = patient.id_pasien', 'left')
+            ->join('users', 'pemprosesan_hpa.id_user_pemprosesan_hpa = users.id_user', 'left') 
+            ->join('mutu_hpa', 'hpa.id_hpa = mutu_hpa.id_hpa', 'left')
+            ->whereIn('hpa.status_hpa', ['Pemprosesan']) 
             ->orderBy('hpa.kode_hpa', 'ASC')
             ->findAll();
     }

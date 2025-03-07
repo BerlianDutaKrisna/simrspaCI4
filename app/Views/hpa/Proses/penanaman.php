@@ -10,7 +10,7 @@
         <a href="<?= base_url('/dashboard') ?>" class="btn btn-primary mb-3">Kembali</a>
 
         <!-- Form -->
-        <form id="mainForm" action="<?= base_url('penanaman/proses_penanaman'); ?>" method="POST">
+        <form id="mainForm" action="<?= base_url('penanaman_hpa/proses_penanaman'); ?>" method="POST">
             <?= csrf_field(); ?>
             <!-- Input Hidden -->
             <input type="hidden" name="action" id="action" value="">
@@ -33,50 +33,50 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <?php if (!empty($penanamanData)): ?>
+                        <?php if (!empty($penanamanDatahpa)): ?>
                             <?php $i = 1; ?>
-                            <?php foreach ($penanamanData as $row): ?>
+                            <?php foreach ($penanamanDatahpa as $row): ?>
                                 <tr>
                                     <td><?= $i ?></td>
                                     <td><?= $row['kode_hpa']; ?></td>
                                     <td><?= $row['nama_pasien']; ?></td>
-                                    <td><?= $row['status_penanaman']; ?></td>
+                                    <td><?= $row['status_penanaman_hpa']; ?></td>
                                     <td>
                                         <input type="checkbox"
                                             name="id_proses[]"
-                                            value="<?= $row['id_penanaman']; ?>:<?= $row['id_hpa']; ?>:<?= $row['id_mutu']; ?>"
+                                            value="<?= $row['id_penanaman_hpa']; ?>:<?= $row['id_hpa']; ?>:<?= $row['id_mutu_hpa']; ?>"
                                             class="form-control form-control-user checkbox-item"
                                             data-status='<?= json_encode([
-                                                                'status_penanaman' => $row['status_penanaman'] ?? ""
+                                                                'status_penanaman_hpa' => $row['status_penanaman_hpa'] ?? ""
                                                             ]) ?>'
                                             autocomplete="off">
                                     </td>
                                     <td>
-                                        <?php if ($row['status_penanaman'] === "Proses Penanaman"): ?>
-                                            <input type="hidden" name="total_nilai_mutu" value="<?= $row['total_nilai_mutu']; ?>">
-                                            <!-- Menampilkan form checkbox ketika status penanaman adalah 'Proses Pemeriksaan' -->
+                                        <?php if ($row['status_penanaman_hpa'] === "Proses Penanaman"): ?>
+                                            <input type="hidden" name="total_nilai_mutu_hpa" value="<?= $row['total_nilai_mutu_hpa']; ?>">
+                                            <!-- Menampilkan form checkbox ketika status penanaman_hpa adalah 'Proses Pemeriksaan' -->
                                             <div class="form-check">
                                                 <input type="checkbox"
                                                     name="indikator_3"
                                                     value="10"
-                                                    id="indikator_3_<?= $row['id_mutu']; ?>"
+                                                    id="indikator_3_<?= $row['id_mutu_hpa']; ?>"
                                                     class="form-check-input">
-                                                <label class="form-check-label" for="indikator_3_<?= $row['id_mutu']; ?>">
+                                                <label class="form-check-label" for="indikator_3_<?= $row['id_mutu_hpa']; ?>">
                                                     Blok parafin tidak ada fragmentasi
                                                 </label>
                                             </div>
                                         <?php else: ?>
-                                            <!-- Menampilkan total_nilai_mutu jika status penanaman 'Belum Diperiksa' atau 'Sudah Diperiksa' -->
-                                            <?= $row['total_nilai_mutu']; ?> %
+                                            <!-- Menampilkan total_nilai_mutu_hpa jika status penanaman_hpa 'Belum Diperiksa' atau 'Sudah Diperiksa' -->
+                                            <?= $row['total_nilai_mutu_hpa']; ?> %
                                         <?php endif; ?>
                                     </td>
                                     <td><?= $row['jumlah_slide']; ?></td>
-                                    <td><?= $row['nama_user_penanaman']; ?></td>
+                                    <td><?= $row['nama_user_penanaman_hpa']; ?></td>
                                     <td>
-                                        <?= empty($row['mulai_penanaman']) ? '-' : esc(date('H:i , d-m-Y', strtotime($row['mulai_penanaman']))); ?>
+                                        <?= empty($row['mulai_penanaman_hpa']) ? '-' : esc(date('H:i , d-m-Y', strtotime($row['mulai_penanaman_hpa']))); ?>
                                     </td>
                                     <td>
-                                        <?= empty($row['selesai_penanaman']) ? '-' : esc(date('H:i , d-m-Y', strtotime($row['selesai_penanaman']))); ?>
+                                        <?= empty($row['selesai_penanaman_hpa']) ? '-' : esc(date('H:i , d-m-Y', strtotime($row['selesai_penanaman_hpa']))); ?>
                                     </td>
                                     <td>
                                         <?php

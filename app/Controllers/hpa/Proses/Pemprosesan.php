@@ -1,210 +1,164 @@
 <?php
 
-namespace App\Controllers\Proses;
+namespace App\Controllers\Hpa\Proses;
 
 use App\Controllers\BaseController;
-use App\Models\ProsesModel\PemprosesanModel;
-use App\Models\ProsesModel\PenanamanModel;
-use App\Models\HpaModel;
+use App\Models\Hpa\HpaModel;
 use App\Models\UsersModel;
+use App\Models\PatientModel;
+use App\Models\Hpa\Proses\Penerimaan_hpa;
+use App\Models\Hpa\Proses\Pengirisan_hpa;
+use App\Models\Hpa\Proses\Pemotongan_hpa;
+use App\Models\Hpa\Proses\Pemprosesan_hpa;
+use App\Models\Hpa\Proses\Penanaman_hpa;
+use App\Models\Hpa\Proses\Pembacaan_hpa;
+use App\Models\Hpa\Proses\Penulisan_hpa;
+use App\Models\Hpa\Proses\Pemverifikasi_hpa;
+use App\Models\Hpa\Proses\Authorized_hpa;
+use App\Models\Hpa\Proses\Pencetakan_hpa;
+use App\Models\Hpa\Mutu_hpa;
+use CodeIgniter\Exceptions\PageNotFoundException;
 use Exception;
 
 class Pemprosesan extends BaseController
 {
-    protected $pemprosesanModel;
-    protected $penanamanModel;
-    protected $userModel;
     protected $hpaModel;
-    protected $session;
+    protected $userModel;
+    protected $patientModel;
+    protected $penerimaan_hpa;
+    protected $pengirisan_hpa;
+    protected $pemotongan_hpa;
+    protected $pemprosesan_hpa;
+    protected $penanaman_hpa;
+    protected $pembacaan_hpa;
+    protected $penulisan_hpa;
+    protected $pemverifikasi_hpa;
+    protected $authorized_hpa;
+    protected $pencetakan_hpa;
+    protected $mutu_hpa;
+    protected $validation;
 
     public function __construct()
     {
-        $this->pemprosesanModel = new PemprosesanModel();
-        $this->penanamanModel = new PenanamanModel();
-        $this->userModel = new UsersModel();
         $this->hpaModel = new HpaModel();
-        $this->session = session();
+        $this->userModel = new UsersModel();
+        $this->patientModel = new PatientModel();
+        $this->penerimaan_hpa = new Penerimaan_hpa();
+        $this->pengirisan_hpa = new Pengirisan_hpa();
+        $this->pemotongan_hpa = new Pemotongan_hpa();
+        $this->pemprosesan_hpa = new Pemprosesan_hpa();
+        $this->penanaman_hpa = new Penanaman_hpa();
+        $this->pembacaan_hpa = new Pembacaan_hpa();
+        $this->penulisan_hpa = new Penulisan_hpa();
+        $this->pemverifikasi_hpa = new Pemverifikasi_hpa();
+        $this->authorized_hpa = new Authorized_hpa();
+        $this->pencetakan_hpa = new Pencetakan_hpa();
+        $this->mutu_hpa = new Mutu_hpa();
+        $this->validation =  \Config\Services::validation();
+        $this->session = \Config\Services::session();
     }
 
-    public function index_pemprosesan() 
+    public function index()
     {
-        $pemprosesanData = $this->pemprosesanModel->getPemprosesanWithRelations();
-
+        $pemprosesanData_hpa = $this->pemprosesan_hpa->getpemprosesan_hpa();
         $data = [
-            'pemprosesanData' => $pemprosesanData,
-            'countPenerimaan' => $this->hpaModel->countPenerimaan(),
-            'countPengirisan' => $this->hpaModel->countPengirisan(),
-            'countPemotongan' => $this->hpaModel->countPemotongan(),
-            'countPemprosesan' => $this->hpaModel->countPemprosesan(),
-            'countPenanaman' => $this->hpaModel->countPenanaman(),
-            'countPemotonganTipis' => $this->hpaModel->countPemotonganTipis(),
-            'countPewarnaan' => $this->hpaModel->countPewarnaan(),
-            'countPembacaan' => $this->hpaModel->countPembacaan(),
-            'countPenulisan' => $this->hpaModel->countPenulisan(),
-            'countPemverifikasi' => $this->hpaModel->countPemverifikasi(),
-            'countAutorized' => $this->hpaModel->countAutorized(),
-            'countPencetakan' => $this->hpaModel->countPencetakan(),
-            'id_user' => $this->session->get('id_user'),
             'nama_user' => $this->session->get('nama_user'),
+            'counts' => $this->getCounts(),
+            'pemprosesanDatahpa' => $pemprosesanData_hpa,
         ];
-
-        return view('proses/pemprosesan', $data); // Update view
+        
+        return view('Hpa/Proses/pemprosesan', $data);
     }
 
-    public function proses_pemprosesan() // Update method
+    public function proses_pemprosesan()
     {
-        // Get user ID from session
-        $id_user = session()->get('id_user');
-
-        // Form validation rules
-        $validation = \Config\Services::validation();
-        $validation->setRules([
-            'id_proses' => [
-                'rules' => 'required',
-                'errors' => ['required' => 'Pilih data terlebih dahulu.'],
-            ],
-            'action' => [
-                'rules' => 'required',
-                'errors' => ['required' => 'Tombol aksi harus diklik.'],
-            ],
-        ]);
-
-        // Check validation
-        if (!$validation->run($this->request->getPost())) {
-            return redirect()->back()->withInput()->with('errors', $validation->getErrors());
-        }
+        $id_user = $this->session->get('id_user');
 
         try {
-            // Get the selected IDs and action
             $selectedIds = $this->request->getPost('id_proses');
             $action = $this->request->getPost('action');
-
-            // Check if selected IDs are provided
             if (!is_array($selectedIds)) {
                 $selectedIds = [$selectedIds];
             }
 
-            // Process the action for each selected item
-            if (!empty($selectedIds)) {
-                foreach ($selectedIds as $id) {
-                    list($id_pemprosesan, $id_hpa, $id_mutu) = explode(':', $id);
-
-                    $this->processAction($action, $id_pemprosesan, $id_hpa, $id_user, $id_mutu); // Update method call
-                }
-
-                return redirect()->to('/pemprosesan/index_pemprosesan'); // Update URL
+            foreach ($selectedIds as $id) {
+                list($id_pemprosesan_hpa, $id_hpa, $id_mutu_hpa) = explode(':', $id);
+                $indikator_3 = (string) ($this->request->getPost('indikator_3') ?? '0');
+                $total_nilai_mutu_hpa = $this->request->getPost('total_nilai_mutu_hpa');
+                $this->processAction($action, $id_pemprosesan_hpa, $id_hpa, $id_user, $id_mutu_hpa, $indikator_3, $total_nilai_mutu_hpa);
             }
-        } catch (\Exception $e) {
+
+            return redirect()->to('pemprosesan_hpa/index');
+        } catch (Exception $e) {
             return redirect()->back()->with('error', $e->getMessage());
         }
     }
 
-    // Process action based on the action value
-    private function processAction($action, $id_pemprosesan, $id_hpa, $id_user, $id_mutu) // Update parameter
+    private function processAction($action, $id_pemprosesan_hpa, $id_hpa, $id_user, $id_mutu_hpa, $indikator_3, $total_nilai_mutu_hpa)
     {
-        // Set zona waktu Indonesia/Jakarta
         date_default_timezone_set('Asia/Jakarta');
-
-        $hpaModel = new HpaModel();
-        $pemprosesanModel = new PemprosesanModel();
-        $penanamanModel = new PenanamanModel();
 
         try {
             switch ($action) {
                 case 'mulai':
-                    // Update data pemprosesan
-                    $pemprosesanModel->updatePemprosesan($id_pemprosesan, [
-                        'id_user_pemprosesan' => $id_user,
-                        'status_pemprosesan' => 'Proses Pemprosesan',
-                        'mulai_pemprosesan' => date('Y-m-d H:i:s'),
+                    $this->pemprosesan_hpa->update($id_pemprosesan_hpa, [
+                        'id_user_pemprosesan_hpa' => $id_user,
+                        'status_pemprosesan_hpa' => 'Proses Pemprosesan',
+                        'mulai_pemprosesan_hpa' => date('Y-m-d H:i:s'),
                     ]);
                     break;
-
                 case 'selesai':
-                    // Update data pemprosesan ketika selesai
-                    $pemprosesanModel->updatePemprosesan($id_pemprosesan, [
-                        'id_user_pemprosesan' => $id_user,
-                        'status_pemprosesan' => 'Selesai Pemprosesan',
-                        'selesai_pemprosesan' => date('Y-m-d H:i:s'),
+                    $this->pemprosesan_hpa->update($id_pemprosesan_hpa, [
+                        'id_user_pemprosesan_hpa' => $id_user,
+                        'status_pemprosesan_hpa' => 'Selesai Pemprosesan',
+                        'selesai_pemprosesan_hpa' => date('Y-m-d H:i:s'),
                     ]);
                     break;
-
-                    // TOMBOL RESET PENGECEKAN
                 case 'reset':
-                    $pemprosesanModel->updatePemprosesan($id_pemprosesan, [
-                        'id_user_pemprosesan' => null,
-                        'status_pemprosesan' => 'Belum Pemprosesan',
-                        'mulai_pemprosesan' => null,
-                        'selesai_pemprosesan' => null,
+                    $this->pemprosesan_hpa->update($id_pemprosesan_hpa, [
+                        'id_user_pemprosesan_hpa' => null,
+                        'status_pemprosesan_hpa' => 'Belum Pemprosesan',
+                        'mulai_pemprosesan_hpa' => null,
+                        'selesai_pemprosesan_hpa' => null,
                     ]);
                     break;
-
-                    // TOMBOL KEMBALI
-                case 'kembalikan':
-                    $pemprosesanModel->deletePemprosesan($id_pemprosesan);
-                    $hpaModel->updateHpa($id_hpa, [
-                        'status_hpa' => 'Pemotongan',
-                        'id_pemprosesan' => null,
-                    ]);
-                    break;   
-
                 case 'lanjut':
-                    // Update status_hpa menjadi 'penanaman' pada tabel hpa
-                    $hpaModel->updateHpa($id_hpa, ['status_hpa' => 'Penanaman']);
-
-                    // Data untuk tabel penanaman
+                    $this->hpaModel->update($id_hpa, ['status_hpa' => 'Penanaman']);
                     $penanamanData = [
-                        'id_hpa'              => $id_hpa,
-                        'status_penanaman'  => 'Belum Penanaman',
+                        'id_hpa'            => $id_hpa,
+                        'status_penanaman_hpa' => 'Belum Penanaman',
                     ];
-
-                    // Simpan data ke tabel penanaman
-                    if (!$penanamanModel->insert($penanamanData)) {
+                    if (!$this->penanaman_hpa->insert($penanamanData)) {
                         throw new Exception('Gagal menyimpan data penanaman.');
                     }
-
-                    // Ambil id_penanaman yang baru saja disimpan
-                    $id_penanaman = $penanamanModel->getInsertID();
-
-                    // Update id_penanaman pada tabel hpa
-                    $hpaModel->update($id_hpa, ['id_penanaman' => $id_penanaman]);
                     break;
             }
-        } catch (\Exception $e) {
-            // Tangani error yang terjadi selama proses action
+        } catch (Exception $e) {
             log_message('error', 'Error in processAction: ' . $e->getMessage());
-            throw new \Exception('Terjadi kesalahan saat memproses aksi: ' . $e->getMessage());
+            throw new Exception('Terjadi kesalahan saat memproses aksi: ' . $e->getMessage());
         }
     }
 
     public function pemprosesan_details()
     {
-        // Ambil id_pemprosesan dari parameter GET
-        $id_pemprosesan = $this->request->getGet('id_pemprosesan');
+        // Ambil id_pemprosesan_hpa dari parameter GET
+        $id_pemprosesan_hpa = $this->request->getGet('id_pemprosesan_hpa');
 
-        if ($id_pemprosesan) {
-            // Muat model pemprosesan
-            $model = new PemprosesanModel();
-
-            // Ambil data pemprosesan berdasarkan id_pemprosesan dan relasi yang ada
-            $data = $model->select(
+        if ($id_pemprosesan_hpa) {
+            // Gunakan model yang sudah diinisialisasi di constructor
+            $data = $this->pemprosesan_hpa->select(
                 'pemprosesan.*, 
-                hpa.*, 
-                patient.*, 
-                users.nama_user AS nama_user_pemprosesan'
+            hpa.*, 
+            patient.*, 
+            users.nama_user AS nama_user_pemprosesan'
             )
-                ->join(
-                    'hpa',
-                    'pemprosesan.id_hpa = hpa.id_hpa',
-                    'left'
-                ) // Relasi dengan tabel hpa
+                ->join('hpa', 'pemprosesan.id_hpa = hpa.id_hpa', 'left')
                 ->join('patient', 'hpa.id_pasien = patient.id_pasien', 'left')
-                ->join('users', 'pemprosesan.id_user_pemprosesan = users.id_user', 'left')
-                ->where('pemprosesan.id_pemprosesan', $id_pemprosesan)
+                ->join('users', 'pemprosesan.id_user_pemprosesan_hpa = users.id_user', 'left')
+                ->where('pemprosesan.id_pemprosesan_hpa', $id_pemprosesan_hpa)
                 ->first();
 
             if ($data) {
-                // Kirimkan data dalam format JSON
                 return $this->response->setJSON($data);
             } else {
                 return $this->response->setJSON(['error' => 'Data tidak ditemukan.']);
@@ -214,75 +168,27 @@ class Pemprosesan extends BaseController
         }
     }
 
-    public function delete()
-    {
-        // Mendapatkan data dari request
-        $id_pemprosesan = $this->request->getPost('id_pemprosesan');
-        $id_hpa = $this->request->getPost('id_hpa');
-
-        if ($id_pemprosesan && $id_hpa) {
-            // Load model
-            $pemprosesanModel = new PemprosesanModel();
-            $hpaModel = new HpaModel();
-
-            // Ambil instance dari database service
-            $db = \Config\Database::connect();
-
-            // Mulai transaksi untuk memastikan kedua operasi berjalan atomik
-            $db->transStart();
-
-            // Hapus data dari tabel pemprosesan
-            $deleteResult = $pemprosesanModel->deletePemprosesan($id_pemprosesan);
-
-            // Cek apakah delete berhasil
-            if ($deleteResult) {
-                // Update field id_pemprosesan menjadi null pada tabel hpa
-                $hpaModel->updateHpa($id_hpa, [
-                    'status_hpa' => 'Pemotongan',
-                    'id_pemprosesan' => null,
-                ]);
-
-                // Selesaikan transaksi
-                $db->transComplete();
-
-                // Cek apakah transaksi berhasil
-                if ($db->transStatus() === FALSE) {
-                    return $this->response->setJSON(['success' => false, 'message' => 'Gagal menghapus atau memperbarui data.']);
-                }
-
-                return $this->response->setJSON(['success' => true]);
-            } else {
-                // Jika delete gagal, rollback transaksi
-                $db->transRollback();
-                return $this->response->setJSON(['success' => false, 'message' => 'Gagal menghapus data pemprosesan.']);
-            }
-        } else {
-            return $this->response->setJSON(['success' => false, 'message' => 'ID tidak valid.']);
-        }
-    }
-
     public function edit_pemprosesan()
     {
-        $id_pemprosesan = $this->request->getGet('id_pemprosesan');
+        $id_pemprosesan_hpa = $this->request->getGet('id_pemprosesan_hpa');
 
-        if (!$id_pemprosesan) {
+        if (!$id_pemprosesan_hpa) {
             throw new \CodeIgniter\Exceptions\PageNotFoundException('ID pemprosesan tidak ditemukan.');
         }
 
-        // Ambil data pemprosesan berdasarkan ID
-        $pemprosesanData = $this->pemprosesanModel->find($id_pemprosesan);
+        // Ambil data pemprosesan
+        $pemprosesanData = $this->pemprosesan_hpa->find($id_pemprosesan_hpa);
 
         if (!$pemprosesanData) {
             throw new \CodeIgniter\Exceptions\PageNotFoundException('Data pemprosesan tidak ditemukan.');
         }
 
         // Ambil data users dengan status_user = 'Analis'
-        // Pastikan nama model benar
         $users = $this->userModel->where('status_user', 'Analis')->findAll();
 
         $data = [
             'pemprosesanData' => $pemprosesanData,
-            'users' => $users, // Tambahkan data users ke view
+            'users' => $users,
             'id_user' => session()->get('id_user'),
             'nama_user' => session()->get('nama_user'),
         ];
@@ -292,29 +198,24 @@ class Pemprosesan extends BaseController
 
     public function update_pemprosesan()
     {
-        $id_pemprosesan = $this->request->getPost('id_pemprosesan');
-        // Get individual date and time inputs
-        $mulai_date = $this->request->getPost('mulai_pemprosesan_date');
-        $mulai_time = $this->request->getPost('mulai_pemprosesan_time');
-        $selesai_date = $this->request->getPost('selesai_pemprosesan_date');
-        $selesai_time = $this->request->getPost('selesai_pemprosesan_time');
+        $id_pemprosesan_hpa = $this->request->getPost('id_pemprosesan_hpa');
 
-        // Combine date and time into one value
-        $mulai_pemprosesan = $mulai_date . ' ' . $mulai_time;  // Format: YYYY-MM-DD HH:MM
-        $selesai_pemprosesan = $selesai_date . ' ' . $selesai_time;  // Format: YYYY-MM-DD HH:MM
+        // Gabungkan input tanggal dan waktu
+        $mulai_pemprosesan_hpa = $this->request->getPost('mulai_pemprosesan_hpa_date') . ' ' . $this->request->getPost('mulai_pemprosesan_hpa_time');
+        $selesai_pemprosesan_hpa = $this->request->getPost('selesai_pemprosesan_hpa_date') . ' ' . $this->request->getPost('selesai_pemprosesan_hpa_time');
 
         $data = [
-            'id_user_pemprosesan' => $this->request->getPost('id_user_pemprosesan'),
-            'status_pemprosesan'  => $this->request->getPost('status_pemprosesan'),
-            'mulai_pemprosesan'   => $mulai_pemprosesan,
-            'selesai_pemprosesan' => $selesai_pemprosesan,
+            'id_user_pemprosesan_hpa' => $this->request->getPost('id_user_pemprosesan_hpa'),
+            'status_pemprosesan_hpa'  => $this->request->getPost('status_pemprosesan_hpa'),
+            'mulai_pemprosesan_hpa'   => $mulai_pemprosesan_hpa,
+            'selesai_pemprosesan_hpa' => $selesai_pemprosesan_hpa,
             'updated_at'         => date('Y-m-d H:i:s'),
         ];
 
-        if (!$this->pemprosesanModel->update($id_pemprosesan, $data)) {
+        if (!$this->pemprosesan_hpa->update($id_pemprosesan_hpa, $data)) {
             return redirect()->back()->with('error', 'Gagal mengupdate data.')->withInput();
         }
 
-        return redirect()->to(base_url('exam/index_exam'))->with('success', 'Data berhasil diperbarui.');
+        return redirect()->to(base_url('pemprosesan/index_pemprosesan'))->with('success', 'Data berhasil diperbarui.');
     }
 }

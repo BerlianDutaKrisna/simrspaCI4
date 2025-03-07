@@ -36,7 +36,7 @@ class Penanaman_hpa extends Model // Update nama model
     }
 
     // Mengambil data penanaman_hpa dengan relasi
-    public function getpenanaman_hpaWithRelations() // Update nama fungsi
+    public function getpenanaman_hpa()
     {
         return $this->select(
             '
@@ -44,13 +44,14 @@ class Penanaman_hpa extends Model // Update nama model
         hpa.*, 
         patient.*, 
         users.nama_user AS nama_user_penanaman_hpa,
-        mutu.total_nilai_mutu'
+        mutu_hpa.id_mutu_hpa,
+        mutu_hpa.total_nilai_mutu_hpa'
         )
-            ->join('hpa', 'penanaman_hpa.id_hpa = hpa.id_hpa', 'left') // Relasi dengan tabel hpa
-            ->join('patient', 'hpa.id_pasien = patient.id_pasien', 'left') // Relasi dengan tabel patient
-            ->join('users', 'penanaman_hpa.id_user_penanaman_hpa = users.id_user', 'left') // Relasi dengan tabel users untuk penanaman_hpa
-            ->join('mutu', 'hpa.id_hpa = mutu.id_hpa', 'left') // Relasi dengan tabel mutu berdasarkan id_hpa
-            ->where('hpa.status_hpa', 'penanaman_hpa') // Filter berdasarkan status_hpa 'penanaman_hpa'
+            ->join('hpa', 'penanaman_hpa.id_hpa = hpa.id_hpa', 'left')
+            ->join('patient', 'hpa.id_pasien = patient.id_pasien', 'left')
+            ->join('users', 'penanaman_hpa.id_user_penanaman_hpa = users.id_user', 'left') 
+            ->join('mutu_hpa', 'hpa.id_hpa = mutu_hpa.id_hpa', 'left')
+            ->whereIn('hpa.status_hpa', ['Penanaman']) 
             ->orderBy('hpa.kode_hpa', 'ASC')
             ->findAll();
     }

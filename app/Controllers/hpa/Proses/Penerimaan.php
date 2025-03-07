@@ -76,11 +76,11 @@ class Penerimaan extends BaseController
             }
 
             foreach ($selectedIds as $id) {
-                list($id_penerimaan_hpa, $id_hpa, $id_mutu) = explode(':', $id);
+                list($id_penerimaan_hpa, $id_hpa, $id_mutu_hpa) = explode(':', $id);
                 $indikator_1 = (string) ($this->request->getPost('indikator_1') ?? '0');
                 $indikator_2 = (string) ($this->request->getPost('indikator_2') ?? '0');
                 $total_nilai_mutu_hpa = $this->request->getPost('total_nilai_mutu_hpa');
-                $this->processAction($action, $id_penerimaan_hpa, $id_hpa, $id_user, $id_mutu, $indikator_1, $indikator_2, $total_nilai_mutu_hpa);
+                $this->processAction($action, $id_penerimaan_hpa, $id_hpa, $id_user, $id_mutu_hpa, $indikator_1, $indikator_2, $total_nilai_mutu_hpa);
             }
 
             return redirect()->to('penerimaan_hpa/index');
@@ -89,7 +89,7 @@ class Penerimaan extends BaseController
         }
     }
 
-    private function processAction($action, $id_penerimaan_hpa, $id_hpa, $id_user, $id_mutu, $indikator_1, $indikator_2, $total_nilai_mutu_hpa)
+    private function processAction($action, $id_penerimaan_hpa, $id_hpa, $id_user, $id_mutu_hpa, $indikator_1, $indikator_2, $total_nilai_mutu_hpa)
     {
         date_default_timezone_set('Asia/Jakarta');
 
@@ -109,7 +109,7 @@ class Penerimaan extends BaseController
                         'status_penerimaan_hpa' => 'Selesai Penerimaan',
                         'selesai_penerimaan_hpa' => date('Y-m-d H:i:s'),
                     ]);
-                    $this->mutu_hpa->update($id_mutu, [
+                    $this->mutu_hpa->update($id_mutu_hpa, [
                         'indikator_1' => $indikator_1,
                         'indikator_2' => $indikator_2,
                         'total_nilai_mutu_hpa' => $total_nilai_mutu_hpa + $indikator_1 + $indikator_2,
@@ -122,7 +122,7 @@ class Penerimaan extends BaseController
                         'mulai_penerimaan_hpa' => null,
                         'selesai_penerimaan_hpa' => null,
                     ]);
-                    $this->mutu_hpa->update($id_mutu, [
+                    $this->mutu_hpa->update($id_mutu_hpa, [
                         'indikator_1' => '0',
                         'indikator_2' => '0',
                         'total_nilai_mutu_hpa' => '0',

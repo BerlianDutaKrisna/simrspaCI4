@@ -36,7 +36,7 @@ class Pewarnaan_hpa extends Model // Update nama model
     }
 
     // Mengambil data pewarnaan_hpa dengan relasi
-    public function getpewarnaan_hpaWithRelations() // Update nama fungsi
+    public function getpewarnaan_hpa()
     {
         return $this->select(
             '
@@ -44,13 +44,14 @@ class Pewarnaan_hpa extends Model // Update nama model
         hpa.*, 
         patient.*, 
         users.nama_user AS nama_user_pewarnaan_hpa,
-        mutu.total_nilai_mutu'
+        mutu_hpa.id_mutu_hpa,
+        mutu_hpa.total_nilai_mutu_hpa'
         )
-            ->join('hpa', 'pewarnaan_hpa.id_hpa = hpa.id_hpa', 'left') // Relasi dengan tabel hpa
-            ->join('patient', 'hpa.id_pasien = patient.id_pasien', 'left') // Relasi dengan tabel patient
-            ->join('users', 'pewarnaan_hpa.id_user_pewarnaan_hpa = users.id_user', 'left') // Relasi dengan tabel users untuk pewarnaan_hpa
-            ->join('mutu', 'hpa.id_hpa = mutu.id_hpa', 'left') // Relasi dengan tabel mutu berdasarkan id_hpa
-            ->where('hpa.status_hpa', 'pewarnaan_hpa') // Filter berdasarkan status_hpa 'pewarnaan_hpa'
+            ->join('hpa', 'pewarnaan_hpa.id_hpa = hpa.id_hpa', 'left')
+            ->join('patient', 'hpa.id_pasien = patient.id_pasien', 'left')
+            ->join('users', 'pewarnaan_hpa.id_user_pewarnaan_hpa = users.id_user', 'left') 
+            ->join('mutu_hpa', 'hpa.id_hpa = mutu_hpa.id_hpa', 'left')
+            ->whereIn('hpa.status_hpa', ['Pewarnaan']) 
             ->orderBy('hpa.kode_hpa', 'ASC')
             ->findAll();
     }

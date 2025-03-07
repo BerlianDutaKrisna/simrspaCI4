@@ -10,7 +10,7 @@
         <a href="<?= base_url('/dashboard') ?>" class="btn btn-primary mb-3">Kembali</a>
 
         <!-- Form -->
-        <form id="mainForm" action="<?= base_url('pemotongan_tipis/proses_pemotongan_tipis'); ?>" method="POST">
+        <form id="mainForm" action="<?= base_url('pemotongan_tipis_hpa/proses_pemotongan_tipis'); ?>" method="POST">
             <?= csrf_field(); ?>
             <!-- Input Hidden -->
             <input type="hidden" name="action" id="action" value="">
@@ -32,31 +32,31 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <?php if (!empty($pemotonganTipisData)): ?>
+                        <?php if (!empty($pemotonganTipisDatahpa)): ?>
                             <?php $i = 1; ?>
-                            <?php foreach ($pemotonganTipisData as $row): ?>
+                            <?php foreach ($pemotonganTipisDatahpa as $row): ?>
                                 <tr>
                                     <td><?= $i ?></td>
                                     <td><?= $row['kode_hpa']; ?></td>
                                     <td><?= $row['nama_pasien']; ?></td>
-                                    <td><?= $row['status_pemotongan_tipis']; ?></td>
+                                    <td><?= $row['status_pemotongan_tipis_hpa']; ?></td>
                                     <td>
                                         <input type="checkbox"
                                             name="id_proses[]"
-                                            value="<?= $row['id_pemotongan_tipis']; ?>:<?= $row['id_hpa']; ?>:<?= $row['id_mutu']; ?>"
+                                            value="<?= $row['id_pemotongan_tipis_hpa']; ?>:<?= $row['id_hpa']; ?>:<?= $row['id_mutu_hpa']; ?>"
                                             class="form-control form-control-user checkbox-item"
                                             data-status='<?= json_encode([
-                                                                'status_pemotongan_tipis' => $row['status_pemotongan_tipis'] ?? ""
+                                                                'status_pemotongan_tipis_hpa' => $row['status_pemotongan_tipis_hpa'] ?? ""
                                                             ]) ?>'
                                             autocomplete="off">
                                     </td>
                                     <td><?= $row['jumlah_slide']; ?></td>
-                                    <td><?= $row['nama_user_pemotongan_tipis']; ?></td>
+                                    <td><?= $row['nama_user_pemotongan_tipis_hpa']; ?></td>
                                     <td>
-                                        <?= empty($row['mulai_pemotongan_tipis']) ? '-' : esc(date('H:i , d-m-Y', strtotime($row['mulai_pemotongan_tipis']))); ?>
+                                        <?= empty($row['mulai_pemotongan_tipis_hpa']) ? '-' : esc(date('H:i , d-m-Y', strtotime($row['mulai_pemotongan_tipis_hpa']))); ?>
                                     </td>
                                     <td>
-                                        <?= empty($row['selesai_pemotongan_tipis']) ? '-' : esc(date('H:i , d-m-Y', strtotime($row['selesai_pemotongan_tipis']))); ?>
+                                        <?= empty($row['selesai_pemotongan_tipis_hpa']) ? '-' : esc(date('H:i , d-m-Y', strtotime($row['selesai_pemotongan_tipis_hpa']))); ?>
                                     </td>
                                     <td>
                                         <?php
