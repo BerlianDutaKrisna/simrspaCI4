@@ -1,310 +1,194 @@
 <?php
 
-namespace App\Controllers\Proses;
+namespace App\Controllers\Hpa\Proses;
 
 use App\Controllers\BaseController;
-use App\Models\ProsesModel\AutorizedModel;
-use App\Models\ProsesModel\PencetakanModel;
-use App\Models\HpaModel;
+use App\Models\Hpa\HpaModel;
 use App\Models\UsersModel;
-use App\Models\MutuModel;
+use App\Models\PatientModel;
+use App\Models\Hpa\Proses\Authorized_hpa;
+use App\Models\Hpa\Proses\Pencetakan_hpa;
+use App\Models\Hpa\Mutu_hpa;
 use Exception;
 
-class Autorized extends BaseController
+class Pewarnaan extends BaseController
 {
-    protected $autorizedModel;
-    protected $userModel;
     protected $hpaModel;
-    protected $mutuModel;
-    protected $session;
+    protected $userModel;
+    protected $patientModel;
+    protected $authorized_hpa;
+    protected $pencetakan_hpa;
+    protected $mutu_hpa;
+    protected $validation;
 
     public function __construct()
     {
-        $this->autorizedModel = new AutorizedModel();
-        $this->userModel = new UsersModel();
         $this->hpaModel = new HpaModel();
-        $this->mutuModel = new MutuModel();
-        $this->session = session();
+        $this->userModel = new UsersModel();
+        $this->patientModel = new PatientModel();
+        $this->authorized_hpa = new Authorized_hpa();
+        $this->pencetakan_hpa = new Pencetakan_hpa();
+        $this->mutu_hpa = new Mutu_hpa();
+        $this->validation =  \Config\Services::validation();
+        $this->session = \Config\Services::session();
     }
 
-    public function index_autorized()
+    public function index()
     {
-        $autorizedData = $this->autorizedModel->getAutorizedWithRelations();
-
+        $authorizedData_hpa = $this->authorized_hpa->getauthorized_hpa();
         $data = [
-            'autorizedData' => $autorizedData,
-            'countPenerimaan' => $this->hpaModel->countPenerimaan(),
-            'countPengirisan' => $this->hpaModel->countPengirisan(),
-            'countPemotongan' => $this->hpaModel->countPemotongan(),
-            'countPemprosesan' => $this->hpaModel->countPemprosesan(),
-            'countPenanaman' => $this->hpaModel->countPenanaman(),
-            'countPemotonganTipis' => $this->hpaModel->countPemotonganTipis(),
-            'countPewarnaan' => $this->hpaModel->countPewarnaan(),
-            'countPembacaan' => $this->hpaModel->countPembacaan(),
-            'countPenulisan' => $this->hpaModel->countPenulisan(),
-            'countPemverifikasi' => $this->hpaModel->countPemverifikasi(),
-            'countAutorized' => $this->hpaModel->countAutorized(),
-            'countPencetakan' => $this->hpaModel->countPencetakan(),
-            'id_user' => $this->session->get('id_user'),
             'nama_user' => $this->session->get('nama_user'),
+            'counts' => $this->getCounts(),
+            'authorizedDatahpa' => $authorizedData_hpa,
         ];
 
-        return view('proses/autorized', $data); // Update view
+        return view('Hpa/Proses/authorized', $data);
     }
 
-    public function proses_autorized() // Update nama method
+    public function proses_authorized()
     {
-        // Get user ID from session
-        $id_user = session()->get('id_user');
-
-        // Form validation rules
-        $validation = \Config\Services::validation();
-        $validation->setRules([
-            'id_proses' => [
-                'rules' => 'required',
-                'errors' => ['required' => 'Pilih data terlebih dahulu.'],
-            ],
-            'action' => [
-                'rules' => 'required',
-                'errors' => ['required' => 'Tombol aksi harus diklik.'],
-            ],
-        ]);
-
-        // Check validation
-        if (!$validation->run($this->request->getPost())) {
-            return redirect()->back()->withInput()->with('errors', $validation->getErrors());
-        }
+        $id_user = $this->session->get('id_user');
 
         try {
-            // Get the selected IDs and action
             $selectedIds = $this->request->getPost('id_proses');
             $action = $this->request->getPost('action');
-
-            // Check if selected IDs are provided
             if (!is_array($selectedIds)) {
                 $selectedIds = [$selectedIds];
             }
 
-            // Process the action for each selected item
-            if (!empty($selectedIds)) {
-                foreach ($selectedIds as $id) {
-                    list($id_autorized, $id_hpa, $id_mutu) = explode(':', $id);
-
-                    $this->processAction($action, $id_autorized, $id_hpa, $id_user, $id_mutu); // Update nama variabel
-                }
-
-                return redirect()->to('/autorized/index_autorized'); // Update nama route
+            foreach ($selectedIds as $id) {
+                list($id_authorized_hpa, $id_hpa, $id_mutu_hpa) = explode(':', $id);
+                $this->processAction($action, $id_authorized_hpa, $id_hpa, $id_user, $id_mutu_hpa);
             }
-        } catch (\Exception $e) {
+
+            return redirect()->to('authorized_hpa/index');
+        } catch (Exception $e) {
             return redirect()->back()->with('error', $e->getMessage());
         }
     }
 
-    // Process action based on the action value
-    private function processAction($action, $id_autorized, $id_hpa, $id_user, $id_mutu) // Update nama variabel
+    private function processAction($action, $id_authorized_hpa, $id_hpa, $id_user, $id_mutu_hpa)
     {
-        // Set zona waktu Indonesia/Jakarta
         date_default_timezone_set('Asia/Jakarta');
-
-        $hpaModel = new HpaModel();
-        $autorizedModel = new autorizedModel();
-        $pencetakanModel = new PencetakanModel();
 
         try {
             switch ($action) {
-                    // TOMBOL MULAI PENGECEKAN
                 case 'mulai':
-                    $autorizedModel->updateAutorized($id_autorized, [ // Update nama method dan variabel
-                        'id_user_autorized' => $id_user,
-                        'status_autorized' => 'Proses Authorized',
-                        'mulai_autorized' => date('Y-m-d H:i:s'),
+                    $this->authorized_hpa->update($id_authorized_hpa, [
+                        'id_user_authorized_hpa' => $id_user,
+                        'status_authorized_hpa' => 'Proses Authorized',
+                        'mulai_authorized_hpa' => date('Y-m-d H:i:s'),
                     ]);
                     break;
-
-                    // TOMBOL SELESAI PENGECEKAN
                 case 'selesai':
-                    $autorizedModel->updateAutorized($id_autorized, [ // Update nama method dan variabel
-                        'id_user_autorized' => $id_user,
-                        'status_autorized' => 'Selesai Authorized',
-                        'selesai_autorized' => date('Y-m-d H:i:s'),
+                    $this->authorized_hpa->update($id_authorized_hpa, [
+                        'id_user_authorized_hpa' => $id_user,
+                        'status_authorized_hpa' => 'Selesai Authorized',
+                        'selesai_authorized_hpa' => date('Y-m-d H:i:s'),
                     ]);
                     break;
-
                 case 'reset':
-                    $autorizedModel->updateAutorized($id_autorized, [
-                        'id_user_autorized' => null,
-                        'status_autorized' => 'Belum Authorized',
-                        'mulai_autorized' => null,
-                        'selesai_autorized' => null,
+                    $this->authorized_hpa->update($id_authorized_hpa, [
+                        'id_user_authorized_hpa' => null,
+                        'status_authorized_hpa' => 'Belum Authorized',
+                        'mulai_authorized_hpa' => null,
+                        'selesai_authorized_hpa' => null,
                     ]);
                     break;
-
-                case 'kembalikan':
-                    $autorizedModel->deleteAutorized($id_autorized);
-                    $hpaModel->updateHpa($id_hpa, [
-                        'status_hpa' => 'Pemverifikasi',
-                        'id_autorized' => null,
-                    ]);
-                    break;
-
                 case 'lanjut':
-                    $hpaModel->updateHpa($id_hpa, ['status_hpa' => 'Pencetakan']);
+                    $this->hpaModel->update($id_hpa, ['status_hpa' => 'Pencetakan']);
                     $pencetakanData = [
-                        'id_hpa' => $id_hpa,
-                        'status_pencetakan' => 'Belum Pencetakan',
+                        'id_hpa'            => $id_hpa,
+                        'status_pencetakan_hpa' => 'Belum Pencetakan',
                     ];
-
-                    if (!$pencetakanModel->insert($pencetakanData)) { // Update nama method dan variabel
+                    if (!$this->pencetakan_hpa->insert($pencetakanData)) {
                         throw new Exception('Gagal menyimpan data pencetakan.');
                     }
-
-                    $id_pencetakan = $pencetakanModel->getInsertID(); // Update nama variabel
-                    $hpaModel->update($id_hpa, ['id_pencetakan' => $id_pencetakan]); // Update nama variabel
                     break;
             }
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             log_message('error', 'Error in processAction: ' . $e->getMessage());
-            throw new \Exception('Terjadi kesalahan saat memproses aksi: ' . $e->getMessage());
+            throw new Exception('Terjadi kesalahan saat memproses aksi: ' . $e->getMessage());
         }
     }
 
-    public function autorized_details()
+    public function authorized_details()
     {
-        // Ambil id_autorized dari parameter GET
-        $id_autorized = $this->request->getGet('id_autorized');
+        // Ambil id_authorized_hpa dari parameter GET
+        $id_authorized_hpa = $this->request->getGet('id_authorized_hpa');
 
-        if ($id_autorized) {
-            // Muat model autorized
-            $model = new autorizedModel();
-
-            // Ambil data autorized berdasarkan id_autorized dan relasi yang ada
-            $data = $model->select(
-                'autorized.*, 
-                hpa.*, 
-                patient.*, 
-                users.nama_user AS nama_user_autorized'
+        if ($id_authorized_hpa) {
+            // Gunakan model yang sudah diinisialisasi di constructor
+            $data = $this->authorized_hpa->select(
+                'authorized.*, 
+            hpa.*, 
+            patient.*, 
+            users.nama_user AS nama_user_authorized'
             )
-                ->join(
-                    'hpa',
-                    'autorized.id_hpa = hpa.id_hpa',
-                    'left'
-                ) // Relasi dengan tabel hpa
+                ->join('hpa', 'authorized.id_hpa = hpa.id_hpa', 'left')
                 ->join('patient', 'hpa.id_pasien = patient.id_pasien', 'left')
-                ->join('users', 'autorized.id_user_autorized = users.id_user', 'left')
-                ->where('autorized.id_autorized', $id_autorized)
+                ->join('users', 'authorized.id_user_authorized_hpa = users.id_user', 'left')
+                ->where('authorized.id_authorized_hpa', $id_authorized_hpa)
                 ->first();
 
             if ($data) {
-                // Kirimkan data dalam format JSON
                 return $this->response->setJSON($data);
             } else {
                 return $this->response->setJSON(['error' => 'Data tidak ditemukan.']);
             }
         } else {
-            return $this->response->setJSON(['error' => 'ID autorized tidak ditemukan.']);
+            return $this->response->setJSON(['error' => 'ID authorized tidak ditemukan.']);
         }
     }
 
-    public function delete()
+    public function edit_authorized()
     {
-        // Mendapatkan data dari request
-        $id_autorized = $this->request->getPost('id_autorized');
-        $id_hpa = $this->request->getPost('id_hpa');
+        $id_authorized_hpa = $this->request->getGet('id_authorized_hpa');
 
-        if ($id_autorized && $id_hpa) {
-            // Load model
-            $autorizedModel = new AutorizedModel();
-            $hpaModel = new HpaModel();
-
-            // Ambil instance dari database service
-            $db = \Config\Database::connect();
-
-            // Mulai transaksi untuk memastikan kedua operasi berjalan atomik
-            $db->transStart();
-
-            // Hapus data dari tabel autorized
-            $deleteResult = $autorizedModel->deleteAutorized($id_autorized);
-
-            // Cek apakah delete berhasil
-            if ($deleteResult) {
-                $hpaModel->updateHpa($id_hpa, [
-                    'status_hpa' => 'Pemverifikasi',
-                    'id_autorized' => null,
-                ]);
-
-                // Selesaikan transaksi
-                $db->transComplete();
-
-                // Cek apakah transaksi berhasil
-                if ($db->transStatus() === FALSE) {
-                    return $this->response->setJSON(['success' => false, 'message' => 'Gagal menghapus atau memperbarui data.']);
-                }
-
-                return $this->response->setJSON(['success' => true]);
-            } else {
-                // Jika delete gagal, rollback transaksi
-                $db->transRollback();
-                return $this->response->setJSON(['success' => false, 'message' => 'Gagal menghapus data autorized.']);
-            }
-        } else {
-            return $this->response->setJSON(['success' => false, 'message' => 'ID tidak valid.']);
-        }
-    }
-
-    public function edit_autorized()
-    {
-        $id_autorized = $this->request->getGet('id_autorized');
-
-        if (!$id_autorized) {
-            throw new \CodeIgniter\Exceptions\PageNotFoundException('ID autorized tidak ditemukan.');
+        if (!$id_authorized_hpa) {
+            throw new \CodeIgniter\Exceptions\PageNotFoundException('ID authorized tidak ditemukan.');
         }
 
-        // Ambil data autorized berdasarkan ID
-        $autorizedData = $this->autorizedModel->find($id_autorized);
+        // Ambil data authorized
+        $authorizedData = $this->authorized_hpa->find($id_authorized_hpa);
 
-        if (!$autorizedData) {
-            throw new \CodeIgniter\Exceptions\PageNotFoundException('Data autorized tidak ditemukan.');
+        if (!$authorizedData) {
+            throw new \CodeIgniter\Exceptions\PageNotFoundException('Data authorized tidak ditemukan.');
         }
 
         // Ambil data users dengan status_user = 'Analis'
-        // Pastikan nama model benar
         $users = $this->userModel->where('status_user', 'Analis')->findAll();
 
         $data = [
-            'autorizedData' => $autorizedData,
-            'users' => $users, // Tambahkan data users ke view
+            'authorizedData' => $authorizedData,
+            'users' => $users,
             'id_user' => session()->get('id_user'),
             'nama_user' => session()->get('nama_user'),
         ];
 
-        return view('edit_proses/edit_autorized', $data);
+        return view('edit_proses/edit_authorized', $data);
     }
 
-    public function update_autorized()
+    public function update_authorized()
     {
-        $id_autorized = $this->request->getPost('id_autorized');
-        // Get individual date and time inputs
-        $mulai_date = $this->request->getPost('mulai_autorized_date');
-        $mulai_time = $this->request->getPost('mulai_autorized_time');
-        $selesai_date = $this->request->getPost('selesai_autorized_date');
-        $selesai_time = $this->request->getPost('selesai_autorized_time');
+        $id_authorized_hpa = $this->request->getPost('id_authorized_hpa');
 
-        // Combine date and time into one value
-        $mulai_autorized = $mulai_date . ' ' . $mulai_time;  // Format: YYYY-MM-DD HH:MM
-        $selesai_autorized = $selesai_date . ' ' . $selesai_time;  // Format: YYYY-MM-DD HH:MM
+        // Gabungkan input tanggal dan waktu
+        $mulai_authorized_hpa = $this->request->getPost('mulai_authorized_hpa_date') . ' ' . $this->request->getPost('mulai_authorized_hpa_time');
+        $selesai_authorized_hpa = $this->request->getPost('selesai_authorized_hpa_date') . ' ' . $this->request->getPost('selesai_authorized_hpa_time');
 
         $data = [
-            'id_user_autorized' => $this->request->getPost('id_user_autorized'),
-            'status_autorized'  => $this->request->getPost('status_autorized'),
-            'mulai_autorized'   => $mulai_autorized,
-            'selesai_autorized' => $selesai_autorized,
+            'id_user_authorized_hpa' => $this->request->getPost('id_user_authorized_hpa'),
+            'status_authorized_hpa'  => $this->request->getPost('status_authorized_hpa'),
+            'mulai_authorized_hpa'   => $mulai_authorized_hpa,
+            'selesai_authorized_hpa' => $selesai_authorized_hpa,
             'updated_at'         => date('Y-m-d H:i:s'),
         ];
 
-        if (!$this->autorizedModel->update($id_autorized, $data)) {
+        if (!$this->authorized_hpa->update($id_authorized_hpa, $data)) {
             return redirect()->back()->with('error', 'Gagal mengupdate data.')->withInput();
         }
 
-        return redirect()->to(base_url('exam/index_exam'))->with('success', 'Data berhasil diperbarui.');
+        return redirect()->to(base_url('authorized/index_authorized'))->with('success', 'Data berhasil diperbarui.');
     }
 }

@@ -23,17 +23,7 @@
                 </a>
             </div>
 
-            <!-- Tombol 2: Pengirisan -->
-            <div class="col">
-                <a href="<?= base_url('pengirisan_hpa/index') ?>" class="btn btn-primary btn-icon-split btn-sm d-flex justify-content-between m-2">
-                    <span class="text"><b style="color: white"><?= esc($counts['countPengirisanhpa'] ?? 0); ?></b> Pengirisan</span>
-                    <span class="icon text-white-50">
-                        <i class="fas fa-puzzle-piece"></i>
-                    </span>
-                </a>
-            </div>
-
-            <!-- Tombol 3: Pemotongan -->
+            <!-- Tombol 2: Pemotongan -->
             <div class="col">
                 <a href="<?= base_url('pemotongan_hpa/index') ?>" class="btn btn-primary btn-icon-split btn-sm d-flex justify-content-between m-2">
                     <span class="text"><b style="color: white"><?= esc($counts['countPemotonganhpa'] ?? 0); ?></b> Pemotongan</span>
@@ -43,7 +33,7 @@
                 </a>
             </div>
 
-            <!-- Tombol 4: Pemprosesan -->
+            <!-- Tombol 3: Pemprosesan -->
             <div class="col">
                 <a href="<?= base_url('pemprosesan_hpa/index') ?>" class="btn btn-primary btn-icon-split btn-sm d-flex justify-content-between m-2">
                     <span class="text"><b style="color: white"><?= esc($counts['countPemprosesanhpa'] ?? 0); ?></b> Pemprosesan</span>
@@ -53,7 +43,7 @@
                 </a>
             </div>
 
-            <!-- Tombol 5: Penanaman -->
+            <!-- Tombol 4: Penanaman -->
             <div class="col">
                 <a href="<?= base_url('penanaman_hpa/index') ?>" class="btn btn-primary btn-icon-split btn-sm d-flex justify-content-between m-2">
                     <span class="text"><b style="color: white"><?= esc($counts['countPenanamanhpa'] ?? 0); ?></b> Penanaman</span>
@@ -63,7 +53,7 @@
                 </a>
             </div>
 
-            <!-- Tombol 6: Pemotongan Tipis -->
+            <!-- Tombol 5: Pemotongan Tipis -->
             <div class="col">
                 <a href="<?= base_url('pemotongan_tipis_hpa/index') ?>" class="btn btn-primary btn-icon-split btn-sm d-flex justify-content-between m-2">
                     <span class="text"><b style="color: white"><?= esc($counts['countPemotonganTipishpa'] ?? 0); ?></b> Pemotongan Tipis</span>
@@ -73,7 +63,7 @@
                 </a>
             </div>
 
-            <!-- Tombol 7: Pewarnaan -->
+            <!-- Tombol 6: Pewarnaan -->
             <div class="col">
                 <a href="<?= base_url('pewarnaan_hpa/index') ?>" class="btn btn-primary btn-icon-split btn-sm d-flex justify-content-between m-2">
                     <span class="text"><b style="color: white"><?= esc($counts['countPewarnaanhpa'] ?? 0); ?></b> Pewarnaan</span>
@@ -83,7 +73,7 @@
                 </a>
             </div>
 
-            <!-- Tombol 8: Pembacaan -->
+            <!-- Tombol 7: Pembacaan -->
             <div class="col">
                 <a href="<?= base_url('pembacaan_hpa/index') ?>" class="btn btn-info btn-icon-split btn-sm d-flex justify-content-between m-2">
                     <span class="text"><b style="color: white">
@@ -102,7 +92,7 @@
                 </a>
             </div>
 
-            <!-- Tombol 9: Penulisan -->
+            <!-- Tombol 8: Penulisan -->
             <div class="col">
                 <a href="<?= base_url('penulisan_hpa/index') ?>" class="btn btn-primary btn-icon-split btn-sm d-flex justify-content-between m-2">
                     <span class="text"><b style="color: white">
@@ -121,7 +111,7 @@
                 </a>
             </div>
 
-            <!-- Tombol 10: Pemverifikasi -->
+            <!-- Tombol 9: Pemverifikasi -->
             <div class="col">
                 <a href="<?= base_url('pemverifikasi_hpa/index') ?>" class="btn btn-success btn-icon-split btn-sm d-flex justify-content-between m-2">
                     <span class="text"><b style="color: white"><?php
@@ -138,7 +128,7 @@
                 </a>
             </div>
 
-            <!-- Tombol 11: Autorized -->
+            <!-- Tombol 10: Autorized -->
             <div class="col">
                 <a href="<?= base_url('authorized_hpa/index') ?>" class="btn btn-info btn-icon-split btn-sm d-flex justify-content-between m-2">
                     <span class="text"><b style="color: white"><?php

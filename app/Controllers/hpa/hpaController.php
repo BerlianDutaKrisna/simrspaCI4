@@ -7,7 +7,6 @@ use App\Models\Hpa\HpaModel;
 use App\Models\UsersModel;
 use App\Models\PatientModel;
 use App\Models\Hpa\Proses\Penerimaan_hpa;
-use App\Models\Hpa\Proses\Pengirisan_hpa;
 use App\Models\Hpa\Proses\Pemotongan_hpa;
 use App\Models\Hpa\Proses\Pembacaan_hpa;
 use App\Models\Hpa\Proses\Penulisan_hpa;
@@ -25,7 +24,6 @@ class HpaController extends BaseController
     protected $userModel;
     protected $patientModel;
     protected $Penerimaan_hpa;
-    protected $Pengirisan_hpa;
     protected $Pemotongan_hpa;
     protected $Pembacaan_hpa;
     protected $Penulisan_hpa;
@@ -42,7 +40,6 @@ class HpaController extends BaseController
         $this->userModel = new UsersModel();
         $this->patientModel = new PatientModel();
         $this->Penerimaan_hpa = new Penerimaan_hpa();
-        $this->Pengirisan_hpa = new Pengirisan_hpa();
         $this->Pemotongan_hpa = new Pemotongan_hpa();
         $this->Pembacaan_hpa = new Pembacaan_hpa();
         $this->Penulisan_hpa = new Penulisan_hpa();

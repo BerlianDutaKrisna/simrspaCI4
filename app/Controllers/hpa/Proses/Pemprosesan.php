@@ -6,18 +6,9 @@ use App\Controllers\BaseController;
 use App\Models\Hpa\HpaModel;
 use App\Models\UsersModel;
 use App\Models\PatientModel;
-use App\Models\Hpa\Proses\Penerimaan_hpa;
-use App\Models\Hpa\Proses\Pengirisan_hpa;
-use App\Models\Hpa\Proses\Pemotongan_hpa;
 use App\Models\Hpa\Proses\Pemprosesan_hpa;
 use App\Models\Hpa\Proses\Penanaman_hpa;
-use App\Models\Hpa\Proses\Pembacaan_hpa;
-use App\Models\Hpa\Proses\Penulisan_hpa;
-use App\Models\Hpa\Proses\Pemverifikasi_hpa;
-use App\Models\Hpa\Proses\Authorized_hpa;
-use App\Models\Hpa\Proses\Pencetakan_hpa;
 use App\Models\Hpa\Mutu_hpa;
-use CodeIgniter\Exceptions\PageNotFoundException;
 use Exception;
 
 class Pemprosesan extends BaseController
@@ -25,16 +16,8 @@ class Pemprosesan extends BaseController
     protected $hpaModel;
     protected $userModel;
     protected $patientModel;
-    protected $penerimaan_hpa;
-    protected $pengirisan_hpa;
-    protected $pemotongan_hpa;
     protected $pemprosesan_hpa;
     protected $penanaman_hpa;
-    protected $pembacaan_hpa;
-    protected $penulisan_hpa;
-    protected $pemverifikasi_hpa;
-    protected $authorized_hpa;
-    protected $pencetakan_hpa;
     protected $mutu_hpa;
     protected $validation;
 
@@ -43,16 +26,8 @@ class Pemprosesan extends BaseController
         $this->hpaModel = new HpaModel();
         $this->userModel = new UsersModel();
         $this->patientModel = new PatientModel();
-        $this->penerimaan_hpa = new Penerimaan_hpa();
-        $this->pengirisan_hpa = new Pengirisan_hpa();
-        $this->pemotongan_hpa = new Pemotongan_hpa();
         $this->pemprosesan_hpa = new Pemprosesan_hpa();
         $this->penanaman_hpa = new Penanaman_hpa();
-        $this->pembacaan_hpa = new Pembacaan_hpa();
-        $this->penulisan_hpa = new Penulisan_hpa();
-        $this->pemverifikasi_hpa = new Pemverifikasi_hpa();
-        $this->authorized_hpa = new Authorized_hpa();
-        $this->pencetakan_hpa = new Pencetakan_hpa();
         $this->mutu_hpa = new Mutu_hpa();
         $this->validation =  \Config\Services::validation();
         $this->session = \Config\Services::session();
@@ -83,9 +58,7 @@ class Pemprosesan extends BaseController
 
             foreach ($selectedIds as $id) {
                 list($id_pemprosesan_hpa, $id_hpa, $id_mutu_hpa) = explode(':', $id);
-                $indikator_3 = (string) ($this->request->getPost('indikator_3') ?? '0');
-                $total_nilai_mutu_hpa = $this->request->getPost('total_nilai_mutu_hpa');
-                $this->processAction($action, $id_pemprosesan_hpa, $id_hpa, $id_user, $id_mutu_hpa, $indikator_3, $total_nilai_mutu_hpa);
+                $this->processAction($action, $id_pemprosesan_hpa, $id_hpa, $id_user, $id_mutu_hpa);
             }
 
             return redirect()->to('pemprosesan_hpa/index');
@@ -94,7 +67,7 @@ class Pemprosesan extends BaseController
         }
     }
 
-    private function processAction($action, $id_pemprosesan_hpa, $id_hpa, $id_user, $id_mutu_hpa, $indikator_3, $total_nilai_mutu_hpa)
+    private function processAction($action, $id_pemprosesan_hpa, $id_hpa, $id_user, $id_mutu_hpa)
     {
         date_default_timezone_set('Asia/Jakarta');
 

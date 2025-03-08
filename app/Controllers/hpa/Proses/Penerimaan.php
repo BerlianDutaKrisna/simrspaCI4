@@ -7,15 +7,8 @@ use App\Models\Hpa\HpaModel;
 use App\Models\UsersModel;
 use App\Models\PatientModel;
 use App\Models\Hpa\Proses\Penerimaan_hpa;
-use App\Models\Hpa\Proses\Pengirisan_hpa;
 use App\Models\Hpa\Proses\Pemotongan_hpa;
-use App\Models\Hpa\Proses\Pembacaan_hpa;
-use App\Models\Hpa\Proses\Penulisan_hpa;
-use App\Models\Hpa\Proses\Pemverifikasi_hpa;
-use App\Models\Hpa\Proses\Authorized_hpa;
-use App\Models\Hpa\Proses\Pencetakan_hpa;
 use App\Models\Hpa\Mutu_hpa;
-use CodeIgniter\Exceptions\PageNotFoundException;
 use Exception;
 
 class Penerimaan extends BaseController
@@ -24,13 +17,7 @@ class Penerimaan extends BaseController
     protected $userModel;
     protected $patientModel;
     protected $penerimaan_hpa;
-    protected $pengirisan_hpa;
     protected $pemotongan_hpa;
-    protected $pembacaan_hpa;
-    protected $penulisan_hpa;
-    protected $pemverifikasi_hpa;
-    protected $authorized_hpa;
-    protected $pencetakan_hpa;
     protected $mutu_hpa;
     protected $validation;
 
@@ -40,13 +27,7 @@ class Penerimaan extends BaseController
         $this->userModel = new UsersModel();
         $this->patientModel = new PatientModel();
         $this->penerimaan_hpa = new Penerimaan_hpa();
-        $this->pengirisan_hpa = new Pengirisan_hpa();
         $this->pemotongan_hpa = new Pemotongan_hpa();
-        $this->pembacaan_hpa = new Pembacaan_hpa();
-        $this->penulisan_hpa = new Penulisan_hpa();
-        $this->pemverifikasi_hpa = new Pemverifikasi_hpa();
-        $this->authorized_hpa = new Authorized_hpa();
-        $this->pencetakan_hpa = new Pencetakan_hpa();
         $this->mutu_hpa = new Mutu_hpa();
         $this->validation =  \Config\Services::validation();
         $this->session = \Config\Services::session();
@@ -129,13 +110,13 @@ class Penerimaan extends BaseController
                     ]);
                     break;
                 case 'lanjut':
-                    $this->hpaModel->update($id_hpa, ['status_hpa' => 'Pengirisan']);
-                    $pengirisanData = [
+                    $this->hpaModel->update($id_hpa, ['status_hpa' => 'Pemotongan']);
+                    $pemotonganData = [
                         'id_hpa'            => $id_hpa,
-                        'status_pengirisan_hpa' => 'Belum Pengirisan',
+                        'status_pemotongan_hpa' => 'Belum pemotongan',
                     ];
-                    if (!$this->pengirisan_hpa->insert($pengirisanData)) {
-                        throw new Exception('Gagal menyimpan data pengirisan.');
+                    if (!$this->pemotongan_hpa->insert($pemotonganData)) {
+                        throw new Exception('Gagal menyimpan data pemotongan.');
                     }
                     break;
             }
