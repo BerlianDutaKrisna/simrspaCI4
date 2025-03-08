@@ -65,11 +65,11 @@
                                 <td><?= esc($row['diagnosa_klinik'] ?? 'Belum Diisi') ?></td>
                                 <td>
                                     <?php
-                                    if (empty($row['tanggal_hasil'])) {
-                                        echo 'Belum diisi';
+                                    $tanggal_hasil = $row['tanggal_hasil'] ?? "";
+                                    if ($tanggal_hasil === "") {
+                                        echo ''; 
                                     } else {
-                                        setlocale(LC_TIME, 'id_ID.utf8');
-                                        $tanggal = new DateTime($row['tanggal_hasil']);
+                                        $tanggal = new DateTime($tanggal_hasil);
                                         $formatter = new IntlDateFormatter(
                                             'id_ID',
                                             IntlDateFormatter::FULL,
@@ -82,7 +82,6 @@
                                     }
                                     ?>
                                 </td>
-
                                 <td><?= esc($row['status_hpa'] ?? 'Belum Diisi') ?></td>
                                 <td><?= esc(strip_tags($row['hasil_hpa'] ?? 'Belum Ada Hasil')) ?></td>
                                 <td class="text-center">

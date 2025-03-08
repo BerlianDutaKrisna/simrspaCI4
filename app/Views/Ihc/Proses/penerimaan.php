@@ -57,7 +57,7 @@
                                                     id="indikator_1_<?= esc($row['id_mutu_ihc']); ?>"
                                                     class="form-check-input">
                                                 <label class="form-check-label" for="indikator_1_<?= esc($row['id_mutu_ihc']); ?>">
-                                                KTP?
+                                                    KTP?
                                                 </label>
                                             </div>
                                             <div class="form-check">
@@ -67,7 +67,7 @@
                                                     id="indikator_2_<?= esc($row['id_mutu_ihc']); ?>"
                                                     class="form-check-input">
                                                 <label class="form-check-label" for="indikator_2_<?= esc($row['id_mutu_ihc']); ?>">
-                                                BPJS?
+                                                    BPJS?
                                                 </label>
                                             </div>
                                             <div class="form-check">
@@ -77,7 +77,7 @@
                                                     id="indikator_3_<?= esc($row['id_mutu_ihc']); ?>"
                                                     class="form-check-input">
                                                 <label class="form-check-label" for="indikator_3_<?= esc($row['id_mutu_ihc']); ?>">
-                                                Hasil Lab Sebelumnya?
+                                                    Hasil Lab Sebelumnya?
                                                 </label>
                                             </div>
                                         <?php else: ?>
@@ -93,10 +93,20 @@
                                     </td>
                                     <td>
                                         <?php
-                                        if (empty($row['tanggal_hasil'])) {
-                                            echo 'Belum diisi';
+                                        $tanggal_hasil = $row['tanggal_hasil'] ?? "";
+                                        if ($tanggal_hasil === "") {
+                                            echo '';
                                         } else {
-                                            echo esc(strftime('%A, %d-%m-%Y', strtotime($row['tanggal_hasil'])));
+                                            $tanggal = new DateTime($tanggal_hasil);
+                                            $formatter = new IntlDateFormatter(
+                                                'id_ID',
+                                                IntlDateFormatter::FULL,
+                                                IntlDateFormatter::NONE,
+                                                'Asia/Jakarta',
+                                                IntlDateFormatter::GREGORIAN,
+                                                'EEEE, dd-MM-yyyy'
+                                            );
+                                            echo esc($formatter->format($tanggal));
                                         }
                                         ?>
                                     </td>

@@ -56,13 +56,24 @@
                                     </td>
                                     <td>
                                         <?php
-                                        if (empty($row['tanggal_hasil'])) {
-                                            echo 'Belum diisi';
+                                        $tanggal_hasil = $row['tanggal_hasil'] ?? "";
+                                        if ($tanggal_hasil === "") {
+                                            echo '';
                                         } else {
-                                            echo esc(strftime('%A, %d-%m-%Y', strtotime($row['tanggal_hasil'])));
+                                            $tanggal = new DateTime($tanggal_hasil);
+                                            $formatter = new IntlDateFormatter(
+                                                'id_ID',
+                                                IntlDateFormatter::FULL,
+                                                IntlDateFormatter::NONE,
+                                                'Asia/Jakarta',
+                                                IntlDateFormatter::GREGORIAN,
+                                                'EEEE, dd-MM-yyyy'
+                                            );
+                                            echo esc($formatter->format($tanggal));
                                         }
                                         ?>
-                                    </td><?php if (in_array($row['status_penerimaan_frs'], ["Proses Penerimaan"])): ?>
+                                    </td>
+                                    <?php if (in_array($row['status_penerimaan_frs'], ["Proses Penerimaan"])): ?>
                                         <td>
                                             <a href="<?= base_url('exam/edit_makroskopis/' . esc($row['id_frs'])) ?>" class="btn btn-warning btn-sm">
                                                 <i class="fas fa-pen"></i> Informed Consent

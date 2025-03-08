@@ -148,40 +148,40 @@
                                     <td>
                                         <?= empty($row['selesai_pembacaan']) ? '-' : esc(date('H:i , d-m-Y', strtotime($row['selesai_pembacaan']))); ?>
                                     </td>
-                                    <td>
+                                    <<td>
                                         <?php
-                                        if (empty($row['tanggal_hasil'])) {
-                                            echo 'Belum diisi';
+                                        $tanggal_hasil = $row['tanggal_hasil'] ?? "";
+                                        if ($tanggal_hasil === "") {
+                                            echo '';
                                         } else {
-                                            setlocale(LC_TIME, 'id_ID.utf8'); // Pastikan server mendukung lokal Indonesia
-                                            $tanggal = new DateTime($row['tanggal_hasil']);
+                                            $tanggal = new DateTime($tanggal_hasil);
                                             $formatter = new IntlDateFormatter(
                                                 'id_ID',
                                                 IntlDateFormatter::FULL,
                                                 IntlDateFormatter::NONE,
                                                 'Asia/Jakarta',
                                                 IntlDateFormatter::GREGORIAN,
-                                                'EEEE, dd-MM-yyyy' // Format dengan nama hari
+                                                'EEEE, dd-MM-yyyy'
                                             );
                                             echo esc($formatter->format($tanggal));
                                         }
                                         ?>
-                                    </td>
-                                    <?php if (in_array($row['status_pembacaan'], ["Proses Pembacaan"])): ?>
-                                        <td>
-                                            <a href="<?= base_url('exam/edit_mikroskopis/' . esc($row['id_hpa'])) ?>" class="btn btn-warning btn-sm">
-                                                <i class="fas fa-pen"></i> Detail
-                                            </a>
                                         </td>
-                                    <?php elseif (in_array($row['status_pembacaan'], ["Selesai Pembacaan"])): ?>
-                                        <td>
-                                            <a href="<?= base_url('exam/edit_mikroskopis/' . esc($row['id_hpa'])) ?>" class="btn btn-success btn-sm mx-1">
-                                                <i class="fas fa-pen"></i> Detail
-                                            </a>
-                                        </td>
-                                    <?php else: ?>
-                                        <td></td>
-                                    <?php endif; ?>
+                                        <?php if (in_array($row['status_pembacaan'], ["Proses Pembacaan"])): ?>
+                                            <td>
+                                                <a href="<?= base_url('exam/edit_mikroskopis/' . esc($row['id_hpa'])) ?>" class="btn btn-warning btn-sm">
+                                                    <i class="fas fa-pen"></i> Detail
+                                                </a>
+                                            </td>
+                                        <?php elseif (in_array($row['status_pembacaan'], ["Selesai Pembacaan"])): ?>
+                                            <td>
+                                                <a href="<?= base_url('exam/edit_mikroskopis/' . esc($row['id_hpa'])) ?>" class="btn btn-success btn-sm mx-1">
+                                                    <i class="fas fa-pen"></i> Detail
+                                                </a>
+                                            </td>
+                                        <?php else: ?>
+                                            <td></td>
+                                        <?php endif; ?>
                                 </tr>
                                 <?php $i++; ?>
                             <?php endforeach; ?>

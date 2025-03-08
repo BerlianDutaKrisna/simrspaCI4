@@ -94,7 +94,7 @@
 
             <!-- Tombol 8: Penulisan -->
             <div class="col">
-                <a href="<?= base_url('penulisan_hpa/index') ?>" class="btn btn-primary btn-icon-split btn-sm d-flex justify-content-between m-2">
+                <a href="<?= base_url('penulisan_hpa/index') ?>" class="btn btn-secondary btn-icon-split btn-sm d-flex justify-content-between m-2">
                     <span class="text"><b style="color: white">
                     <?php
                             $contsTotalPenulisan =
@@ -147,7 +147,7 @@
 
             <!-- Tombol 11: pencetakan -->
             <div class="col">
-                <a href="<?= base_url('pencetakan_hpa/index') ?>" class="btn btn-primary btn-icon-split btn-sm d-flex justify-content-between m-2">
+                <a href="<?= base_url('pencetakan_hpa/index') ?>" class="btn btn-secondary btn-icon-split btn-sm d-flex justify-content-between m-2">
                     <span class="text"><b style="color: white">
                     <?php
                             $contsTotalPencetakan =
@@ -157,7 +157,7 @@
                                 ($counts['countPencetakanihc'] ?? 0);
                             ?>
                             <?= esc($contsTotalPencetakan ?? 0) ?>
-                    </b> pencetakan</span>
+                    </b> Pencetakan</span>
                     <span class="icon text-white-50">
                         <i class="fas fa-print"></i>
                     </span>
