@@ -60,7 +60,7 @@ class Penerimaan extends BaseController
                 list($id_penerimaan_hpa, $id_hpa, $id_mutu_hpa) = explode(':', $id);
                 $indikator_1 = (string) ($this->request->getPost('indikator_1') ?? '0');
                 $indikator_2 = (string) ($this->request->getPost('indikator_2') ?? '0');
-                $total_nilai_mutu_hpa = $this->request->getPost('total_nilai_mutu_hpa');
+                $total_nilai_mutu_hpa = (string) ($this->request->getPost('total_nilai_mutu_hpa') ?? '0');
                 $this->processAction($action, $id_penerimaan_hpa, $id_hpa, $id_user, $id_mutu_hpa, $indikator_1, $indikator_2, $total_nilai_mutu_hpa);
             }
 
@@ -113,7 +113,7 @@ class Penerimaan extends BaseController
                     $this->hpaModel->update($id_hpa, ['status_hpa' => 'Pemotongan']);
                     $pemotonganData = [
                         'id_hpa'            => $id_hpa,
-                        'status_pemotongan_hpa' => 'Belum pemotongan',
+                        'status_pemotongan_hpa' => 'Belum Pemotongan',
                     ];
                     if (!$this->pemotongan_hpa->insert($pemotonganData)) {
                         throw new Exception('Gagal menyimpan data pemotongan.');

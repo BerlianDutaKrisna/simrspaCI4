@@ -7,13 +7,13 @@
     </div>
     <div class="card-body">
         <h1>Edit Data Makroskopis</h1>
-        <a href="<?= base_url('pemotongan/index_pemotongan') ?>" class="btn btn-primary mb-3">Kembali</a>
+        <a href="<?= base_url('pemotongan_hpa/index') ?>" class="btn btn-primary mb-3">Kembali</a>
 
         <!-- Form -->
         <form id="form-hpa" method="POST" enctype="multipart/form-data">
             <?= csrf_field(); ?>
             <input type="hidden" name="id_hpa" value="<?= $hpa['id_hpa'] ?>">
-            <input type="hidden" name="id_pemotongan" value="<?= $pemotongan['id_pemotongan'] ?>">
+            <input type="hidden" name="id_pemotongan_hpa" value="<?= $pemotongan['id_pemotongan_hpa'] ?>">
             <input type="hidden" name="page_source" value="edit_makroskopis">
 
             <!-- Kolom Kode HPA dan Diagnosa -->
@@ -106,7 +106,7 @@
 
                         <!-- Tombol Upload -->
                         <button type="submit" class="btn btn-primary mt-2" id="uploadButton"
-                            formaction="<?= base_url('exam/uploadFotoMakroskopis/' . $hpa['id_hpa']) ?>">
+                            formaction="<?= base_url('hpa/uploadFotoMakroskopis/' . $hpa['id_hpa']) ?>">
                             <i class="fas fa-cloud-upload-alt"></i> Upload
                         </button>
                 </div>
@@ -180,12 +180,12 @@
             <div class="form-group row">
                 <label class="col-sm-2 col-form-label">Dokter Makroskopis</label>
                 <div class="col-sm-4">
-                    <select class="form-control" id="id_user_dokter_pemotongan" name="id_user_dokter_pemotongan">
-                        <option value="" <?= empty($hpa['id_user_dokter_pemotongan']) ? 'selected' : '' ?>>-- Pilih Dokter --</option>
+                    <select class="form-control" id="id_user_dokter_pemotongan_hpa" name="id_user_dokter_pemotongan_hpa">
+                        <option value="" <?= empty($hpa['id_user_dokter_pemotongan_hpa']) ? 'selected' : '' ?>>-- Pilih Dokter --</option>
                         <?php foreach ($users as $user): ?>
                             <?php if ($user['status_user'] === 'Dokter'): ?>
                                 <option value="<?= $user['id_user'] ?>"
-                                    <?= isset($pemotongan['id_user_dokter_pemotongan']) && $user['id_user'] == $pemotongan['id_user_dokter_pemotongan'] ? 'selected' : '' ?>>
+                                    <?= isset($pemotongan['id_user_dokter_pemotongan_hpa']) && $user['id_user'] == $pemotongan['id_user_dokter_pemotongan_hpa'] ? 'selected' : '' ?>>
                                     <?= $user['nama_user'] ?>
                                 </option>
                             <?php endif; ?>
@@ -217,7 +217,7 @@
                 <div class="col-sm-6 text-center mb-3">
                     <button type="submit"
                         class="btn btn-success btn-user w-100"
-                        formaction="<?= base_url('exam/update/' . $hpa['id_hpa']); ?>">
+                        formaction="<?= base_url('hpa/update/' . $hpa['id_hpa']); ?>">
                         Simpan
                     </button>
                 </div>

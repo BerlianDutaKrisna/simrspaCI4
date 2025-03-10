@@ -78,13 +78,13 @@
                                     </td>
                                     <?php if (in_array($row['status_pemotongan_hpa'], ["Proses Pemotongan"])): ?>
                                         <td>
-                                            <a href="<?= base_url('exam/edit_makroskopis/' . esc($row['id_hpa'])) ?>" class="btn btn-warning btn-sm">
+                                            <a href="<?= base_url('hpa/edit_makroskopis/' . esc($row['id_hpa']) . '/' . esc($row['id_pemotongan_hpa'])) ?>" class="btn btn-warning btn-sm">
                                                 <i class="fas fa-pen"></i> Detail
                                             </a>
                                         </td>
                                     <?php elseif (in_array($row['status_pemotongan_hpa'], ["Selesai Pemotongan"])): ?>
                                         <td>
-                                            <a href="<?= base_url('exam/edit_makroskopis/' . esc($row['id_hpa'])) ?>" class="btn btn-success btn-sm">
+                                        <a href="<?= base_url('hpa/edit_makroskopis/' . esc($row['id_hpa']) . '/' . esc($row['id_pemotongan_hpa'])) ?>" class="btn btn-success btn-sm">
                                                 <i class="fas fa-pen"></i> Detail
                                             </a>
                                         </td>
