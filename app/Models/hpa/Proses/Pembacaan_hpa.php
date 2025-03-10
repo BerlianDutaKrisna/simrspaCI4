@@ -36,21 +36,22 @@ class Pembacaan_hpa extends Model // Update nama model
     }
 
     // Mengambil data pembacaan_hpa dengan relasi
-    public function getpembacaan_hpaWithRelations()
+    public function getpembacaan_hpa()
     {
         return $this->select(
-            'pembacaan_hpa.*, 
+            '
+        pembacaan_hpa.*, 
         hpa.*, 
         patient.*, 
-        users.nama_user AS nama_user_dokter_pemotongan,
-        mutu.total_nilai_mutu'
+        users.nama_user AS nama_user_pembacaan_hpa,
+        mutu_hpa.id_mutu_hpa,
+        mutu_hpa.total_nilai_mutu_hpa'
         )
-            ->join('hpa', 'pembacaan_hpa.id_hpa = hpa.id_hpa', 'left') // Relasi dengan tabel hpa
-            ->join('patient', 'hpa.id_pasien = patient.id_pasien', 'left') // Relasi dengan tabel patient
-            ->join('pemotongan', 'hpa.id_pemotongan = pemotongan.id_pemotongan', 'left') // Relasi dengan tabel pemotongan
-            ->join('users', 'pemotongan.id_user_dokter_pemotongan = users.id_user', 'left') // Relasi dengan tabel users untuk dokter pemotongan
-            ->join('mutu', 'hpa.id_hpa = mutu.id_hpa', 'left') // Relasi dengan tabel mutu berdasarkan id_hpa
-            ->where('hpa.status_hpa', 'pembacaan_hpa') // Filter berdasarkan status_hpa 'pembacaan_hpa'
+            ->join('hpa', 'pembacaan_hpa.id_hpa = hpa.id_hpa', 'left')
+            ->join('patient', 'hpa.id_pasien = patient.id_pasien', 'left')
+            ->join('users', 'pembacaan_hpa.id_user_pembacaan_hpa = users.id_user', 'left') 
+            ->join('mutu_hpa', 'hpa.id_hpa = mutu_hpa.id_hpa', 'left')
+            ->whereIn('hpa.status_hpa', ['Pembacaan']) 
             ->orderBy('hpa.kode_hpa', 'ASC')
             ->findAll();
     }

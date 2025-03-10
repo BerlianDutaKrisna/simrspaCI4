@@ -59,7 +59,7 @@ class Penanaman extends BaseController
             foreach ($selectedIds as $id) {
                 list($id_penanaman_hpa, $id_hpa, $id_mutu_hpa) = explode(':', $id);
                 $indikator_3 = (string) ($this->request->getPost('indikator_3') ?? '0');
-                $total_nilai_mutu_hpa = $this->request->getPost('total_nilai_mutu_hpa');
+                $total_nilai_mutu_hpa = (string) ($this->request->getPost('total_nilai_mutu_hpa') ?? '0');
                 $this->processAction($action, $id_penanaman_hpa, $id_hpa, $id_user, $id_mutu_hpa, $indikator_3, $total_nilai_mutu_hpa);
             }
 
@@ -88,7 +88,6 @@ class Penanaman extends BaseController
                         'status_penanaman_hpa' => 'Selesai Penanaman',
                         'selesai_penanaman_hpa' => date('Y-m-d H:i:s'),
                     ]);
-                    break;
                     $this->mutu_hpa->update($id_mutu_hpa, [
                         'indikator_3' => $indikator_3,
                         'total_nilai_mutu_hpa' => $total_nilai_mutu_hpa + $indikator_3,

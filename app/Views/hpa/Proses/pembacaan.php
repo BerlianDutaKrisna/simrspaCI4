@@ -35,31 +35,31 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <?php if (!empty($pembacaanData)): ?>
+                        <?php if (!empty($pembacaanDatahpa)): ?>
                             <?php $i = 1; ?>
-                            <?php foreach ($pembacaanData as $row): ?>
+                            <?php foreach ($pembacaanDatahpa as $row): ?>
                                 <tr>
                                     <td><?= $i ?></td>
                                     <td><?= $row['kode_hpa']; ?></td>
                                     <td><?= $row['nama_pasien']; ?></td>
-                                    <td><?= $row['status_pembacaan']; ?></td>
+                                    <td><?= $row['status_pembacaan_hpa']; ?></td>
                                     <td>
                                         <input type="checkbox"
                                             name="id_proses[]"
-                                            value="<?= $row['id_pembacaan']; ?>:<?= $row['id_hpa']; ?>:<?= $row['id_mutu']; ?>"
+                                            value="<?= $row['id_pembacaan_hpa']; ?>:<?= $row['id_hpa']; ?>:<?= $row['id_mutu_hpa']; ?>"
                                             class="form-control form-control-user checkbox-item"
                                             data-status='<?= json_encode([
-                                                                'status_pembacaan' => $row['status_pembacaan'] ?? ""
+                                                                'status_pembacaan_hpa' => $row['status_pembacaan_hpa'] ?? ""
                                                             ]) ?>'
                                             autocomplete="off">
                                     </td>
                                     <td>
-                                        <?php if ($row['status_pembacaan'] === "Proses Pembacaan"): ?>
-                                            <input type="hidden" name="total_nilai_mutu" value="<?= $row['total_nilai_mutu']; ?>">
+                                        <?php if ($row['status_pembacaan_hpa'] === "Proses Pembacaan"): ?>
+                                            <input type="hidden" name="total_nilai_mutu_hpa" value="<?= $row['total_nilai_mutu_hpa']; ?>">
                                             <!-- Menampilkan form checkbox ketika status pembacaan adalah 'Proses pembacaan' -->
                                             <div class="form-check">
-                                                <input type="checkbox" id="checkAll_<?= $row['id_mutu']; ?>" class="form-check-input">
-                                                <label class="form-check-label" for="checkAll_<?= $row['id_mutu']; ?>">
+                                                <input type="checkbox" id="checkAll_<?= $row['id_mutu_hpa']; ?>" class="form-check-input">
+                                                <label class="form-check-label" for="checkAll_<?= $row['id_mutu_hpa']; ?>">
                                                     Pilih Semua
                                                 </label>
                                             </div>
@@ -68,9 +68,9 @@
                                                 <input type="checkbox"
                                                     name="indikator_4"
                                                     value="10"
-                                                    id="indikator_4_<?= $row['id_mutu']; ?>"
+                                                    id="indikator_4_<?= $row['id_mutu_hpa']; ?>"
                                                     class="form-check-input child-checkbox">
-                                                <label class="form-check-label" for="indikator_4_<?= $row['id_mutu']; ?>">
+                                                <label class="form-check-label" for="indikator_4_<?= $row['id_mutu_hpa']; ?>">
                                                     Sediaan tanpa lipatan
                                                 </label>
                                             </div>
@@ -78,9 +78,9 @@
                                                 <input type="checkbox"
                                                     name="indikator_5"
                                                     value="10"
-                                                    id="indikator_5_<?= $row['id_mutu']; ?>"
+                                                    id="indikator_5_<?= $row['id_mutu_hpa']; ?>"
                                                     class="form-check-input child-checkbox">
-                                                <label class="form-check-label" for="indikator_5_<?= $row['id_mutu']; ?>">
+                                                <label class="form-check-label" for="indikator_5_<?= $row['id_mutu_hpa']; ?>">
                                                     Sediaan tanpa goresan mata pisau
                                                 </label>
                                             </div>
@@ -88,9 +88,9 @@
                                                 <input type="checkbox"
                                                     name="indikator_6"
                                                     value="10"
-                                                    id="indikator_6_<?= $row['id_mutu']; ?>"
+                                                    id="indikator_6_<?= $row['id_mutu_hpa']; ?>"
                                                     class="form-check-input child-checkbox">
-                                                <label class="form-check-label" for="indikator_6_<?= $row['id_mutu']; ?>">
+                                                <label class="form-check-label" for="indikator_6_<?= $row['id_mutu_hpa']; ?>">
                                                     Kontras warna sediaan cukup jelas
                                                 </label>
                                             </div>
@@ -98,9 +98,9 @@
                                                 <input type="checkbox"
                                                     name="indikator_7"
                                                     value="10"
-                                                    id="indikator_7_<?= $row['id_mutu']; ?>"
+                                                    id="indikator_7_<?= $row['id_mutu_hpa']; ?>"
                                                     class="form-check-input child-checkbox">
-                                                <label class="form-check-label" for="indikator_7_<?= $row['id_mutu']; ?>">
+                                                <label class="form-check-label" for="indikator_7_<?= $row['id_mutu_hpa']; ?>">
                                                     Sediaan tanpa gelembung udara
                                                 </label>
                                             </div>
@@ -108,16 +108,16 @@
                                                 <input type="checkbox"
                                                     name="indikator_8"
                                                     value="10"
-                                                    id="indikator_8_<?= $row['id_mutu']; ?>"
+                                                    id="indikator_8_<?= $row['id_mutu_hpa']; ?>"
                                                     class="form-check-input child-checkbox">
-                                                <label class="form-check-label" for="indikator_8_<?= $row['id_mutu']; ?>">
+                                                <label class="form-check-label" for="indikator_8_<?= $row['id_mutu_hpa']; ?>">
                                                     Sediaan tanpa bercak / sidik jari
                                                 </label>
                                             </div>
 
                                             <script>
                                                 document.addEventListener('DOMContentLoaded', function() {
-                                                    const checkAll = document.getElementById('checkAll_<?= $row['id_mutu']; ?>');
+                                                    const checkAll = document.getElementById('checkAll_<?= $row['id_mutu_hpa']; ?>');
                                                     const checkboxes = document.querySelectorAll('.child-checkbox');
 
                                                     // Ketika "Pilih Semua" dicentang/ditandai
@@ -136,12 +136,12 @@
                                                 });
                                             </script>
                                         <?php else: ?>
-                                            <!-- Menampilkan total_nilai_mutu jika status pembacaan 'Belum Diperiksa' atau 'Sudah Diperiksa' -->
-                                            <?= $row['total_nilai_mutu']; ?> %
+                                            <!-- Menampilkan total_nilai_mutu_hpa jika status pembacaan 'Belum Diperiksa' atau 'Sudah Diperiksa' -->
+                                            <?= $row['total_nilai_mutu_hpa']; ?> %
                                         <?php endif; ?>
                                     </td>
                                     <td><?= $row['jumlah_slide']; ?></td>
-                                    <td><?= $row['nama_user_dokter_pemotongan']; ?></td>
+                                    <td><?= $row['nama_user_dokter_pemotongan_hpa']; ?></td>
                                     <td>
                                         <?= empty($row['mulai_pembacaan']) ? '-' : esc(date('H:i , d-m-Y', strtotime($row['mulai_pembacaan']))); ?>
                                     </td>
@@ -167,13 +167,13 @@
                                         }
                                         ?>
                                     </td>
-                                    <?php if (in_array($row['status_pembacaan'], ["Proses Pembacaan"])): ?>
+                                    <?php if (in_array($row['status_pembacaan_hpa'], ["Proses Pembacaan"])): ?>
                                         <td>
                                             <a href="<?= base_url('exam/edit_mikroskopis/' . esc($row['id_hpa'])) ?>" class="btn btn-warning btn-sm">
                                                 <i class="fas fa-pen"></i> Detail
                                             </a>
                                         </td>
-                                    <?php elseif (in_array($row['status_pembacaan'], ["Selesai Pembacaan"])): ?>
+                                    <?php elseif (in_array($row['status_pembacaan_hpa'], ["Selesai Pembacaan"])): ?>
                                         <td>
                                             <a href="<?= base_url('exam/edit_mikroskopis/' . esc($row['id_hpa'])) ?>" class="btn btn-success btn-sm mx-1">
                                                 <i class="fas fa-pen"></i> Detail

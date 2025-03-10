@@ -180,7 +180,7 @@ $routes->group('pewarnaan_hpa', ['namespace' => 'App\Controllers\Hpa\Proses'], f
 
 // Route untuk Pembacaan
 $routes->group('pembacaan_hpa', ['namespace' => 'App\Controllers\Hpa\Proses'], function ($routes) {
-    $routes->get('index_pembacaan', 'Pembacaan::index_pembacaan'); // Menampilkan halaman pembacaan
+    $routes->get('index', 'Pembacaan::index'); // Menampilkan halaman pembacaan
     $routes->post('proses_pembacaan', 'Pembacaan::proses_pembacaan'); // Proses pembacaan
     $routes->get('pembacaan_details', 'Pembacaan::pembacaan_details');
     $routes->post('delete', 'Pembacaan::delete');
@@ -189,8 +189,8 @@ $routes->group('pembacaan_hpa', ['namespace' => 'App\Controllers\Hpa\Proses'], f
 });
 
 // Route untuk Penulisan
-$routes->group('penulisan', ['namespace' => 'App\Controllers\Proses'], function ($routes) {
-    $routes->get('index_penulisan', 'Penulisan::index_penulisan'); // Menampilkan halaman penulisan
+$routes->group('penulisan_hpa', ['namespace' => 'App\Controllers\Proses'], function ($routes) {
+    $routes->get('index', 'Penulisan::index'); // Menampilkan halaman penulisan
     $routes->post('proses_penulisan', 'Penulisan::proses_penulisan'); // Proses penulisan
     $routes->get('penulisan_details', 'Penulisan::penulisan_details');
     $routes->post('delete', 'Penulisan::delete');
@@ -199,8 +199,8 @@ $routes->group('penulisan', ['namespace' => 'App\Controllers\Proses'], function 
 });
 
 // Route untuk Pemverifikasi
-$routes->group('pemverifikasi', ['namespace' => 'App\Controllers\Proses'], function ($routes) {
-    $routes->get('index_pemverifikasi', 'Pemverifikasi::index_pemverifikasi'); // Menampilkan halaman pemverifikasi
+$routes->group('pemverifikasi_hpa', ['namespace' => 'App\Controllers\Proses'], function ($routes) {
+    $routes->get('index', 'Pemverifikasi::index'); // Menampilkan halaman pemverifikasi
     $routes->post('proses_pemverifikasi', 'Pemverifikasi::proses_pemverifikasi'); // Proses pemverifikasi
     $routes->get('pemverifikasi_details', 'Pemverifikasi::pemverifikasi_details');
     $routes->post('delete', 'Pemverifikasi::delete');
@@ -208,19 +208,19 @@ $routes->group('pemverifikasi', ['namespace' => 'App\Controllers\Proses'], funct
     $routes->post('update_pemverifikasi', 'Pemverifikasi::update_pemverifikasi');
 });
 
-// Route untuk Autorized
-$routes->group('autorized', ['namespace' => 'App\Controllers\Proses'], function ($routes) {
-    $routes->get('index_autorized', 'Autorized::index_autorized'); // Menampilkan halaman autorized
-    $routes->post('proses_autorized', 'Autorized::proses_autorized'); // Proses autorized
-    $routes->get('autorized_details', 'Autorized::autorized_details');
-    $routes->post('delete', 'Autorized::delete');
-    $routes->get('edit_autorized', 'Autorized::edit_autorized');
-    $routes->post('update_autorized', 'Autorized::update_autorized');
+// Route untuk Authorized
+$routes->group('authorized_hpa', ['namespace' => 'App\Controllers\Proses'], function ($routes) {
+    $routes->get('index', 'Authorized::index'); // Menampilkan halaman authorized
+    $routes->post('proses_authorized', 'Authorized::proses_authorized'); // Proses authorized
+    $routes->get('authorized_details', 'Authorized::authorized_details');
+    $routes->post('delete', 'Authorized::delete');
+    $routes->get('edit_authorized', 'Authorized::edit_authorized');
+    $routes->post('update_authorized', 'Authorized::update_authorized');
 });
 
 // Route untuk Pencetakan
-$routes->group('pencetakan', ['namespace' => 'App\Controllers\Proses'], function ($routes) {
-    $routes->get('index_pencetakan', 'Pencetakan::index_pencetakan'); // Menampilkan halaman pencetakan
+$routes->group('pencetakan_hpa', ['namespace' => 'App\Controllers\Proses'], function ($routes) {
+    $routes->get('index', 'Pencetakan::index'); // Menampilkan halaman pencetakan
     $routes->post('proses_pencetakan', 'Pencetakan::proses_pencetakan'); // Proses pencetakan
     $routes->get('pencetakan_details', 'Pencetakan::pencetakan_details');
     $routes->post('delete', 'Pencetakan::delete');
