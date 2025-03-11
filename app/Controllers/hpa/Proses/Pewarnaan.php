@@ -99,7 +99,7 @@ class Pewarnaan extends BaseController
                     $this->hpaModel->update($id_hpa, ['status_hpa' => 'Pembacaan']);
                     $pembacaanData = [
                         'id_hpa'            => $id_hpa,
-                        'status_pembacaan_hpa' => 'Belum pembacaan',
+                        'status_pembacaan_hpa' => 'Belum Pembacaan',
                     ];
                     if (!$this->pembacaan_hpa->insert($pembacaanData)) {
                         throw new Exception('Gagal menyimpan data pembacaan.');

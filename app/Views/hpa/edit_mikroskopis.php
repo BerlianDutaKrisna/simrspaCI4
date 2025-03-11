@@ -8,16 +8,17 @@
         </div>
         <div class="card-body">
             <h1>Edit Data Mikroskopis</h1>
-            <a href="<?= base_url('pembacaan/index_pembacaan') ?>" class="btn btn-primary mb-3">Kembali</a>
+            <a href="<?= base_url('pembacaan_hpa/index') ?>" class="btn btn-primary mb-3">Kembali</a>
 
             <!-- Form -->
             <form id="form-hpa" method="POST" enctype="multipart/form-data">
                 <?= csrf_field(); ?>
                 <input type="hidden" name="id_hpa" value="<?= $hpa['id_hpa'] ?>">
-                <input type="hidden" name="id_pembacaan" value="<?= $pembacaan['id_pembacaan'] ?>">
-                <input type="hidden" name="id_mutu" value="<?= $hpa['id_mutu'] ?>">
+                <input type="hidden" name="id_pemotongan_hpa" value="<?= $pemotongan_hpa['id_pemotongan_hpa'] ?>">
+                <input type="hidden" name="id_pembacaan_hpa" value="<?= $pembacaan_hpa['id_pembacaan_hpa'] ?>">
+                <input type="hidden" name="id_mutu_hpa" value="<?= $mutu['id_mutu_hpa'] ?>">
                 <input type="hidden" name="page_source" value="edit_mikroskopis">
-                <input type="hidden" name="total_nilai_mutu" value="<?= $pembacaan['total_nilai_mutu']; ?>">
+                <input type="hidden" name="total_nilai_mutu_hpa" value="<?= $pembacaan_hpa['total_nilai_mutu_hpa']; ?>">
 
 
                 <!-- Kolom Kode HPA dan Diagnosa -->
@@ -100,7 +101,7 @@
                             data-target="#fotoModal">
                         <input type="file" name="foto_makroskopis_hpa" id="foto_makroskopis_hpa" class="form-control form-control-user mt-2">
                         <button type="submit" class="btn btn-primary mt-2"
-                            formaction="<?= base_url('exam/uploadFotoMakroskopis/' . $hpa['id_hpa']); ?>">
+                            formaction="<?= base_url('hpa/uploadFotoMakroskopis/' . $hpa['id_hpa']); ?>">
                             <i class="fas fa-cloud-upload-alt"></i> Upload
                         </button>
                     </div>
@@ -129,7 +130,7 @@
                             data-target="#fotoModal">
                         <input type="file" name="foto_mikroskopis_hpa" id="foto_mikroskopis_hpa" class="form-control form-control-user mt-2">
                         <button type="submit" class="btn btn-primary mt-2"
-                            formaction="<?= base_url('exam/uploadFotoMikroskopis/' . $hpa['id_hpa']); ?>">
+                            formaction="<?= base_url('hpa/uploadFotoMikroskopis/' . $hpa['id_hpa']); ?>">
                             <i class="fas fa-cloud-upload-alt"></i> Upload
                         </button>
                     </div>
@@ -156,12 +157,12 @@
                 <div class="form-group row">
                     <label class="col-sm-2 col-form-label" for="jumlah_slide">Dokter yang membaca</label>
                     <div class="col-sm-4">
-                        <select class="form-control" id="id_user_dokter_pemotongan" name="id_user_dokter_pemotongan">
-                            <option value="" <?= empty($hpa['id_user_dokter_pemotongan']) ? 'selected' : '' ?>>-- Pilih Dokter --</option>
+                        <select class="form-control" id="id_user_dokter_pemotongan_hpa" name="id_user_dokter_pemotongan_hpa">
+                            <option value="" <?= empty($pemotongan_hpa['id_user_dokter_pemotongan_hpa']) ? 'selected' : '' ?>>-- Pilih Dokter --</option>
                             <?php foreach ($users as $user): ?>
                                 <?php if ($user['status_user'] === 'Dokter'): ?>
                                     <option value="<?= $user['id_user'] ?>"
-                                        <?= isset($pemotongan['id_user_dokter_pemotongan']) && $user['id_user'] == $pemotongan['id_user_dokter_pemotongan'] ? 'selected' : '' ?>>
+                                        <?= isset($pemotongan_hpa['id_user_dokter_pemotongan_hpa']) && $user['id_user'] == $pemotongan_hpa['id_user_dokter_pemotongan_hpa'] ? 'selected' : '' ?>>
                                         <?= $user['nama_user'] ?>
                                     </option>
                                 <?php endif; ?>
@@ -171,11 +172,11 @@
                 </div>
 
                 <div class="form-group row">
-                    <label class="col-sm-2 col-form-label">Mutu</label>
+                    <label class="col-sm-2 col-form-label">mutu_hpa</label>
                     <div class="col-sm-4">
                         <div class="form-check">
-                            <input type="checkbox" id="checkAll_<?= $hpa['id_mutu']; ?>" class="form-check-input">
-                            <label class="form-check-label" for="checkAll_<?= $hpa['id_mutu']; ?>">
+                            <input type="checkbox" id="checkAll_<?= $mutu['id_mutu_hpa']; ?>" class="form-check-input">
+                            <label class="form-check-label" for="checkAll_<?= $mutu['id_mutu_hpa']; ?>">
                                 Pilih Semua
                             </label>
                         </div>
@@ -184,10 +185,10 @@
                             <input type="checkbox"
                                 name="indikator_4"
                                 value="10"
-                                id="indikator_4_<?= $hpa['id_mutu']; ?>"
+                                id="indikator_4_<?= $mutu['id_mutu_hpa']; ?>"
                                 class="form-check-input child-checkbox"
-                                <?= ($pembacaan['indikator_4'] !== "0") ? 'checked' : ''; ?>>
-                            <label class="form-check-label" for="indikator_4_<?= $hpa['id_mutu']; ?>">
+                                <?= ($pembacaan_hpa['indikator_4'] !== "0") ? 'checked' : ''; ?>>
+                            <label class="form-check-label" for="indikator_4_<?= $mutu['id_mutu_hpa']; ?>">
                                 Sediaan tanpa lipatan
                             </label>
                         </div>
@@ -196,10 +197,10 @@
                             <input type="checkbox"
                                 name="indikator_5"
                                 value="10"
-                                id="indikator_5_<?= $hpa['id_mutu']; ?>"
+                                id="indikator_5_<?= $mutu['id_mutu_hpa']; ?>"
                                 class="form-check-input child-checkbox"
-                                <?= ($pembacaan['indikator_5'] !== "0") ? 'checked' : ''; ?>>
-                            <label class="form-check-label" for="indikator_5_<?= $hpa['id_mutu']; ?>">
+                                <?= ($pembacaan_hpa['indikator_5'] !== "0") ? 'checked' : ''; ?>>
+                            <label class="form-check-label" for="indikator_5_<?= $mutu['id_mutu_hpa']; ?>">
                                 Sediaan tanpa goresan mata pisau
                             </label>
                         </div>
@@ -208,10 +209,10 @@
                             <input type="checkbox"
                                 name="indikator_6"
                                 value="10"
-                                id="indikator_6_<?= $hpa['id_mutu']; ?>"
+                                id="indikator_6_<?= $mutu['id_mutu_hpa']; ?>"
                                 class="form-check-input child-checkbox"
-                                <?= ($pembacaan['indikator_6'] !== "0") ? 'checked' : ''; ?>>
-                            <label class="form-check-label" for="indikator_6_<?= $hpa['id_mutu']; ?>">
+                                <?= ($pembacaan_hpa['indikator_6'] !== "0") ? 'checked' : ''; ?>>
+                            <label class="form-check-label" for="indikator_6_<?= $mutu['id_mutu_hpa']; ?>">
                                 Kontras warna sediaan cukup jelas
                             </label>
                         </div>
@@ -220,10 +221,10 @@
                             <input type="checkbox"
                                 name="indikator_7"
                                 value="10"
-                                id="indikator_7_<?= $hpa['id_mutu']; ?>"
+                                id="indikator_7_<?= $mutu['id_mutu_hpa']; ?>"
                                 class="form-check-input child-checkbox"
-                                <?= ($pembacaan['indikator_7'] !== "0") ? 'checked' : ''; ?>>
-                            <label class="form-check-label" for="indikator_7_<?= $hpa['id_mutu']; ?>">
+                                <?= ($pembacaan_hpa['indikator_7'] !== "0") ? 'checked' : ''; ?>>
+                            <label class="form-check-label" for="indikator_7_<?= $mutu['id_mutu_hpa']; ?>">
                                 Sediaan tanpa gelembung udara
                             </label>
                         </div>
@@ -232,17 +233,17 @@
                             <input type="checkbox"
                                 name="indikator_8"
                                 value="10"
-                                id="indikator_8_<?= $hpa['id_mutu']; ?>"
+                                id="indikator_8_<?= $mutu['id_mutu_hpa']; ?>"
                                 class="form-check-input child-checkbox"
-                                <?= ($pembacaan['indikator_8'] !== "0") ? 'checked' : ''; ?>>
-                            <label class="form-check-label" for="indikator_8_<?= $hpa['id_mutu']; ?>">
+                                <?= ($pembacaan_hpa['indikator_8'] !== "0") ? 'checked' : ''; ?>>
+                            <label class="form-check-label" for="indikator_8_<?= $mutu['id_mutu_hpa']; ?>">
                                 Sediaan tanpa bercak / sidik jari
                             </label>
                         </div>
 
                         <script>
                             document.addEventListener('DOMContentLoaded', function() {
-                                const checkAll = document.getElementById('checkAll_<?= $hpa['id_mutu']; ?>');
+                                const checkAll = document.getElementById('checkAll_<?= $mutu['id_mutu_hpa']; ?>');
                                 const checkboxes = document.querySelectorAll('.child-checkbox');
 
                                 // Ketika "Pilih Semua" dicentang/ditandai
@@ -271,7 +272,7 @@
                     <div class="col-sm-6 text-center mb-3">
                         <button type="submit"
                             class="btn btn-success btn-user w-100"
-                            formaction="<?= base_url('exam/update/' . $hpa['id_hpa']); ?>">
+                            formaction="<?= base_url('hpa/update/' . $hpa['id_hpa']); ?>">
                             Simpan
                         </button>
                     </div>

@@ -41,7 +41,7 @@ class Pembacaan extends BaseController
             'counts' => $this->getCounts(),
             'pembacaanDatahpa' => $pembacaanData_hpa,
         ];
-        dd($data);
+        
         return view('Hpa/Proses/pembacaan', $data);
     }
 
@@ -58,7 +58,13 @@ class Pembacaan extends BaseController
 
             foreach ($selectedIds as $id) {
                 list($id_pembacaan_hpa, $id_hpa, $id_mutu_hpa) = explode(':', $id);
-                $this->processAction($action, $id_pembacaan_hpa, $id_hpa, $id_user, $id_mutu_hpa);
+                $indikator_4 = (string) ($this->request->getPost('indikator_4') ?? '0');
+                $indikator_5 = (string) ($this->request->getPost('indikator_5') ?? '0');
+                $indikator_6 = (string) ($this->request->getPost('indikator_6') ?? '0');
+                $indikator_7 = (string) ($this->request->getPost('indikator_7') ?? '0');
+                $indikator_8 = (string) ($this->request->getPost('indikator_8') ?? '0');
+                $total_nilai_mutu_hpa = (string) ($this->request->getPost('total_nilai_mutu_hpa') ?? '0');
+                $this->processAction($action, $id_pembacaan_hpa, $id_hpa, $id_user, $id_mutu_hpa, $indikator_4, $indikator_5, $indikator_6, $indikator_7, $indikator_8, $total_nilai_mutu_hpa);
             }
 
             return redirect()->to('pembacaan_hpa/index');
@@ -67,7 +73,7 @@ class Pembacaan extends BaseController
         }
     }
 
-    private function processAction($action, $id_pembacaan_hpa, $id_hpa, $id_user, $id_mutu_hpa)
+    private function processAction($action, $id_pembacaan_hpa, $id_hpa, $id_user, $id_mutu_hpa, $indikator_4, $indikator_5, $indikator_6, $indikator_7, $indikator_8, $total_nilai_mutu_hpa)
     {
         date_default_timezone_set('Asia/Jakarta');
 
@@ -86,6 +92,14 @@ class Pembacaan extends BaseController
                         'status_pembacaan_hpa' => 'Selesai Pembacaan',
                         'selesai_pembacaan_hpa' => date('Y-m-d H:i:s'),
                     ]);
+                    $this->mutu_hpa->update($id_mutu_hpa, [
+                        'indikator_4' => $indikator_4,
+                        'indikator_5' => $indikator_5,
+                        'indikator_6' => $indikator_6,
+                        'indikator_7' => $indikator_7,
+                        'indikator_8' => $indikator_8,
+                        'total_nilai_mutu_hpa' => $total_nilai_mutu_hpa + $indikator_4 + $indikator_5 + $indikator_6 + $indikator_7 + $indikator_8,
+                    ]);
                     break;
                 case 'reset':
                     $this->pembacaan_hpa->update($id_pembacaan_hpa, [
@@ -93,6 +107,14 @@ class Pembacaan extends BaseController
                         'status_pembacaan_hpa' => 'Belum Pembacaan',
                         'mulai_pembacaan_hpa' => null,
                         'selesai_pembacaan_hpa' => null,
+                    ]);
+                    $this->mutu_hpa->update($id_mutu_hpa, [
+                        'indikator_4' => '0',
+                        'indikator_5' => '0',
+                        'indikator_6' => '0',
+                        'indikator_7' => '0',
+                        'indikator_8' => '0',
+                        'total_nilai_mutu_hpa' => '30',
                     ]);
                     break;
                 case 'lanjut':

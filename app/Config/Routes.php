@@ -47,7 +47,7 @@ $routes->group('hpa', ['namespace' => 'App\Controllers\Hpa'], function ($routes)
     $routes->post('insert', 'HpaController::insert');
     $routes->get('edit_hpa/(:segment)', 'HpaController::edit_hpa/$1');
     $routes->get('edit_makroskopis/(:segment)/(:segment)', 'HpaController::edit_makroskopis/$1/$2');
-    $routes->get('edit_mikroskopis/(:segment)', 'HpaController::edit_mikroskopis/$1');
+    $routes->get('edit_mikroskopis/(:segment)/(:segment)/(:segment)/(:segment)', 'HpaController::edit_mikroskopis/$1/$2/$3/$4');
     $routes->post('update/(:segment)', 'HpaController::update/$1');
     $routes->post('update_print_hpa/(:segment)', 'HpaController::update_print_hpa/$1');
     $routes->get('index_buku_penerima', 'HpaController::index_buku_penerima');

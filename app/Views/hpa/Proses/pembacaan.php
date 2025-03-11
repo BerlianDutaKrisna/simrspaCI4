@@ -11,7 +11,7 @@
         <a href="<?= base_url('/dashboard') ?>" class="btn btn-primary mb-3">Kembali</a>
 
         <!-- Form -->
-        <form id="mainForm" action="<?= base_url('pembacaan/proses_pembacaan'); ?>" method="POST">
+        <form id="mainForm" action="<?= base_url('pembacaan_hpa/proses_pembacaan'); ?>" method="POST">
             <?= csrf_field(); ?>
             <!-- Input Hidden -->
             <input type="hidden" name="action" id="action" value="">
@@ -143,10 +143,10 @@
                                     <td><?= $row['jumlah_slide']; ?></td>
                                     <td><?= $row['nama_user_dokter_pemotongan_hpa']; ?></td>
                                     <td>
-                                        <?= empty($row['mulai_pembacaan']) ? '-' : esc(date('H:i , d-m-Y', strtotime($row['mulai_pembacaan']))); ?>
+                                        <?= empty($row['mulai_pembacaan_hpa']) ? '-' : esc(date('H:i , d-m-Y', strtotime($row['mulai_pembacaan_hpa']))); ?>
                                     </td>
                                     <td>
-                                        <?= empty($row['selesai_pembacaan']) ? '-' : esc(date('H:i , d-m-Y', strtotime($row['selesai_pembacaan']))); ?>
+                                        <?= empty($row['selesai_pembacaan_hpa']) ? '-' : esc(date('H:i , d-m-Y', strtotime($row['selesai_pembacaan_hpa']))); ?>
                                     </td>
                                     <td>
                                         <?php
@@ -169,13 +169,13 @@
                                     </td>
                                     <?php if (in_array($row['status_pembacaan_hpa'], ["Proses Pembacaan"])): ?>
                                         <td>
-                                            <a href="<?= base_url('exam/edit_mikroskopis/' . esc($row['id_hpa'])) ?>" class="btn btn-warning btn-sm">
+                                            <a href="<?= base_url('hpa/edit_mikroskopis/' . esc($row['id_hpa']) . '/' . esc($row['id_pemotongan_hpa']) . '/' . esc($row['id_pembacaan_hpa']) . '/' . esc($row['id_mutu_hpa'])) ?>" class="btn btn-warning btn-sm">
                                                 <i class="fas fa-pen"></i> Detail
                                             </a>
                                         </td>
                                     <?php elseif (in_array($row['status_pembacaan_hpa'], ["Selesai Pembacaan"])): ?>
                                         <td>
-                                            <a href="<?= base_url('exam/edit_mikroskopis/' . esc($row['id_hpa'])) ?>" class="btn btn-success btn-sm mx-1">
+                                            <a href="<?= base_url('hpa/edit_mikroskopis/' . esc($row['id_hpa']) . '/' . esc($row['id_pemotongan_hpa']) . '/' . esc($row['id_pembacaan_hpa']) . '/' . esc($row['id_mutu_hpa'])) ?>" class="btn btn-success btn-sm">
                                                 <i class="fas fa-pen"></i> Detail
                                             </a>
                                         </td>

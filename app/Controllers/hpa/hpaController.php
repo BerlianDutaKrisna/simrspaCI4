@@ -3,6 +3,7 @@
 namespace App\Controllers\Hpa;
 
 use App\Controllers\BaseController;
+use App\Controllers\mutu;
 use App\Models\Hpa\HpaModel;
 use App\Models\UsersModel;
 use App\Models\PatientModel;
@@ -374,50 +375,38 @@ class HpaController extends BaseController
     
 
     // Menampilkan form edit hpa
-    public function edit_mikroskopis($id_hpa)
+    public function edit_mikroskopis($id_hpa, $id_pemotongan_hpa, $id_pembacaan_hpa, $id_mutu_hpa)
     {
-        $hpaModel = new HpaModel();
-        $userModel = new UsersModel();
-        $Pemotongan_hpa = new Pemotongan_hpa();
-        $pembacaan_hpa_hpa = new pembacaan_hpa();
-        $Mutu_hpa = new Mutu_hpa();
-
         // Ambil data hpa berdasarkan ID
-        $hpa = $hpaModel->getHpaWithPatient($id_hpa);
+        $hpa = $this->hpaModel->getHpaWithPatient($id_hpa);
         if (!$hpa) {
             return redirect()->back()->with('message', ['error' => 'HPA tidak ditemukan.']);
         }
 
-        // Ambil id_pemotongan_hpa dan id_pembacaan_hpa dari data hpa
-        $id_pemotongan_hpa = $hpa['id_pemotongan_hpa'];
-        $id_pembacaan_hpa = $hpa['id_pembacaan_hpa'];
-        $id_mutu_hpa = $hpa['id_mutu_hpa'];
-
-
         // Ambil data pemotongan dan pembacaan_hpa berdasarkan ID
-        $pemotongan = $Pemotongan_hpa->find($id_pemotongan_hpa);
-        $pembacaan_hpa = $pembacaan_hpa_hpa->find($id_pembacaan_hpa);
-        $mutu = $Mutu_hpa->find($id_mutu_hpa);
+        $pemotongan_hpa = $this->pemotongan_hpa->find($id_pemotongan_hpa);
+        $pembacaan_hpa = $this->pembacaan_hpa->find($id_pembacaan_hpa);
+        $mutu = $this->mutu_hpa->find($id_mutu_hpa);
 
         // Inisialisasi dokter dan analis
         $dokter_nama = null;
         $analis_nama = null;
 
-        if ($pemotongan) {
+        if ($pemotongan_hpa) {
             // Ambil nama dokter dan analis jika ID tersedia
-            if (!empty($pemotongan['id_user_dokter_pemotongan_hpa'])) {
-                $dokter = $userModel->find($pemotongan['id_user_dokter_pemotongan_hpa']);
+            if (!empty($pemotongan_hpa['id_user_dokter_pemotongan_hpa'])) {
+                $dokter = $this->userModel->find($pemotongan_hpa['id_user_dokter_pemotongan_hpa']);
                 $dokter_nama = $dokter ? $dokter['nama_user'] : null;
             }
 
-            if (!empty($pemotongan['id_user_pemotongan'])) {
-                $analis = $userModel->find($pemotongan['id_user_pemotongan']);
+            if (!empty($pemotongan_hpa['id_user_pemotongan'])) {
+                $analis = $this->userModel->find($pemotongan_hpa['id_user_pemotongan']);
                 $analis_nama = $analis ? $analis['nama_user'] : null;
             }
 
             // Tambahkan ke array pemotongan
-            $pemotongan['dokter_nama'] = $dokter_nama;
-            $pemotongan['analis_nama'] = $analis_nama;
+            $pemotongan_hpa['dokter_nama'] = $dokter_nama;
+            $pemotongan_hpa['analis_nama'] = $analis_nama;
         }
 
         // Pastikan mutu tidak kosong sebelum mengambil indikator
@@ -436,18 +425,19 @@ class HpaController extends BaseController
         $pembacaan_hpa['indikator_8'] = $indikator_8;
         $pembacaan_hpa['total_nilai_mutu_hpa'] = $total_nilai_mutu_hpa;
         // Ambil data pengguna dengan status "Dokter" dari tabel users
-        $users = $userModel->where('status_user', 'Dokter')->findAll();
+        $users = $this->userModel->where('status_user', 'Dokter')->findAll();
 
         // Persiapkan data yang akan dikirim ke view
         $data = [
-            'hpa' => $hpa,               // Data HPA
-            'pemotongan' => $pemotongan, // Data Pemotongan
-            'pembacaan_hpa' => $pembacaan_hpa,   // Data pembacaan_hpa
-            'users' => $users,           // Data Pengguna (Dokter)
+            'hpa' => $hpa,
+            'pemotongan_hpa' => $pemotongan_hpa,
+            'pembacaan_hpa' => $pembacaan_hpa,
+            'mutu' => $mutu,
+            'users' => $users,
             'id_user' => session()->get('id_user'),
             'nama_user' => session()->get('nama_user'),
         ];
-
+        
         return view('hpa/edit_mikroskopis', $data);
     }
 
@@ -596,15 +586,15 @@ class HpaController extends BaseController
                     return redirect()->to('hpa/edit_makroskopis/' . $id_hpa . '/' . $id_pemotongan_hpa)->with('success', 'Data makroskopis berhasil diperbarui.');
 
                 case 'edit_mikroskopis':
+                    $id_pemotongan_hpa = $this->request->getPost('id_pemotongan_hpa');
                     $id_pembacaan_hpa = $this->request->getPost('id_pembacaan_hpa');
-                    $id_user_dokter_pembacaan_hpa = $this->request->getPost('id_user_dokter_pemotongan_hpa');
+                    $id_user_dokter_pembacaan_hpa = (int) $this->request->getPost('id_user_dokter_pemotongan_hpa');
                     $this->pembacaan_hpa->update($id_pembacaan_hpa, [
                         'id_user_pembacaan_hpa' => $id_user,
                         'id_user_dokter_pembacaan_hpa' => $id_user_dokter_pembacaan_hpa,
-                        'status_pembacaan_hpa' => 'Selesai pembacaan_hpa',
+                        'status_pembacaan_hpa' => 'Selesai Pembacaan',
                         'selesai_pembacaan_hpa' => date('Y-m-d H:i:s'),
                     ]);
-
                     $id_mutu_hpa = $this->request->getPost('id_mutu_hpa');
                     $indikator_4 = (string) ($this->request->getPost('indikator_4') ?? '0');
                     $indikator_5 = (string) ($this->request->getPost('indikator_5') ?? '0');
@@ -621,7 +611,7 @@ class HpaController extends BaseController
                         'indikator_8' => $indikator_8,
                         'total_nilai_mutu_hpa' => $keseluruhan_nilai_mutu,
                     ]);
-                    return redirect()->to('hpa/edit_mikroskopis/' . $id_hpa)->with('success', 'Data mikroskopis berhasil diperbarui.');
+                    return redirect()->to('hpa/edit_mikroskopis/' . $id_hpa . '/' . $id_pemotongan_hpa . '/' . $id_pembacaan_hpa . '/' . $id_mutu_hpa)->with('success', 'Data mikroskopis berhasil diperbarui.');
 
                 case 'edit_penulisan':
                     $id_penulisan = $this->request->getPost('id_penulisan');
