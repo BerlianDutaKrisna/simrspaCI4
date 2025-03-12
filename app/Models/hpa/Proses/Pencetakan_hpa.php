@@ -59,7 +59,7 @@ class Pencetakan_hpa extends Model // Update nama model
             ->join('pembacaan_hpa', 'hpa.id_hpa = pembacaan_hpa.id_hpa', 'left')
             ->join('pemverifikasi_hpa', 'hpa.id_hpa = pemverifikasi_hpa.id_hpa', 'left')
             ->join('authorized_hpa', 'hpa.id_hpa = authorized_hpa.id_hpa', 'left')
-            ->where('hpa.status_hpa', 'Authorized') // Sesuaikan jika ada kondisi lain
+            ->where('hpa.status_hpa', 'Pencetakan') // Sesuaikan jika ada kondisi lain
             ->orderBy('hpa.kode_hpa', 'ASC')
             ->findAll();
     }

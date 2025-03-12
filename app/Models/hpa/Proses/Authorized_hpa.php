@@ -59,7 +59,7 @@ class Authorized_hpa extends Model // Update nama model
             ->join('pembacaan_hpa', 'hpa.id_hpa = pembacaan_hpa.id_hpa', 'left')
             ->join('pemverifikasi_hpa', 'hpa.id_hpa = pemverifikasi_hpa.id_hpa', 'left')
             ->join('pencetakan_hpa', 'hpa.id_hpa = pencetakan_hpa.id_hpa', 'left')
-            ->where('hpa.status_hpa', 'Authorized') // whereIn diubah ke where karena hanya satu kondisi
+            ->where('hpa.status_hpa', 'Authorized')
             ->orderBy('hpa.kode_hpa', 'ASC')
             ->findAll();
     }

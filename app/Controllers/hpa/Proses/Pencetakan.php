@@ -10,7 +10,7 @@ use App\Models\Hpa\Proses\Pencetakan_hpa;
 use App\Models\Hpa\Mutu_hpa;
 use Exception;
 
-class Pewarnaan extends BaseController
+class Pencetakan extends BaseController
 {
     protected $hpaModel;
     protected $userModel;
@@ -38,7 +38,7 @@ class Pewarnaan extends BaseController
             'counts' => $this->getCounts(),
             'pencetakanDatahpa' => $pencetakanData_hpa,
         ];
-
+        
         return view('Hpa/Proses/pencetakan', $data);
     }
 
