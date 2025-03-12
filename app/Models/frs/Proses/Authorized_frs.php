@@ -35,28 +35,34 @@ class Authorized_frs extends Model // Update nama model
         return $this->db->affectedRows() > 0;
     }
 
-    // Mengambil data authorized_frs dengan relasi
-    public function getauthorized_frsWithRelations()
-    {
-        return $this->select(
-            '
-        authorized_frs.*, 
-        frs.*, 
+    public function getauthorized_hpa()
+{
+    return $this->select(
+        '
+        authorized_hpa.*, 
+        hpa.*, 
         patient.*, 
-        dokter_pemotongan.nama_user AS nama_user_dokter_pemotongan, 
-        users.nama_user AS nama_user_authorized_frs, 
-        mutu.total_nilai_mutu'
-        )
-            ->join('frs', 'authorized_frs.id_frs = frs.id_frs', 'left')
-            ->join('patient', 'frs.id_pasien = patient.id_pasien', 'left')
-            ->join('pemotongan', 'frs.id_pemotongan = pemotongan.id_pemotongan', 'left')
-            ->join('users AS dokter_pemotongan', 'pemotongan.id_user_dokter_pemotongan = dokter_pemotongan.id_user', 'left') // Benar-benar mengambil nama dokter pemotongan
-            ->join('users', 'authorized_frs.id_user_authorized_frs = users.id_user', 'left') // Mengambil nama user untuk authorized_frs
-            ->join('mutu', 'frs.id_frs = mutu.id_frs', 'left')
-            ->where('frs.status_frs', 'authorized_frs')
-            ->orderBy('frs.kode_frs', 'ASC')
-            ->findAll();
-    }
+        users.nama_user AS nama_user_authorized_hpa,
+        mutu_hpa.id_mutu_hpa,
+        mutu_hpa.total_nilai_mutu_hpa,
+        penerimaan_hpa.id_penerimaan_hpa,
+        pembacaan_hpa.id_pembacaan_hpa,
+        pembacaan_hpa.id_pembacaan_hpa, 
+        pemverifikasi_hpa.id_pemverifikasi_hpa,
+        pencetakan_hpa.id_pencetakan_hpa'
+    )
+        ->join('hpa', 'authorized_hpa.id_hpa = hpa.id_hpa', 'left')
+        ->join('patient', 'hpa.id_pasien = patient.id_pasien', 'left')
+        ->join('users', 'authorized_hpa.id_user_authorized_hpa = users.id_user', 'left') 
+        ->join('mutu_hpa', 'hpa.id_hpa = mutu_hpa.id_hpa', 'left')
+        ->join('penerimaan_hpa', 'hpa.id_hpa = penerimaan_hpa.id_hpa', 'left')
+        ->join('pembacaan_hpa', 'hpa.id_hpa = pembacaan_hpa.id_hpa', 'left')
+        ->join('authorized_hpa', 'hpa.id_hpa = authorized_hpa.id_hpa', 'left')
+        ->join('pencetakan_hpa', 'hpa.id_hpa = pencetakan_hpa.id_hpa', 'left')
+        ->whereIn('hpa.status_hpa', ['Authorized']) 
+        ->orderBy('hpa.kode_hpa', 'ASC')
+        ->findAll();
+}
 
     // Fungsi untuk mengupdate data authorized_frs
     public function updateauthorized_frs($id_authorized_frs, $data) // Update nama fungsi dan parameter

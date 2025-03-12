@@ -36,9 +36,9 @@ class Pemverifikasi_hpa extends Model // Update nama model
     }
 
     public function getpemverifikasi_hpa()
-{
-    return $this->select(
-        '
+    {
+        return $this->select(
+            '
         pemverifikasi_hpa.*, 
         hpa.*, 
         patient.*, 
@@ -50,19 +50,19 @@ class Pemverifikasi_hpa extends Model // Update nama model
         pembacaan_hpa.id_pembacaan_hpa, 
         authorized_hpa.id_authorized_hpa,
         pencetakan_hpa.id_pencetakan_hpa'
-    )
-        ->join('hpa', 'pemverifikasi_hpa.id_hpa = hpa.id_hpa', 'left')
-        ->join('patient', 'hpa.id_pasien = patient.id_pasien', 'left')
-        ->join('users', 'pemverifikasi_hpa.id_user_pemverifikasi_hpa = users.id_user', 'left') 
-        ->join('mutu_hpa', 'hpa.id_hpa = mutu_hpa.id_hpa', 'left')
-        ->join('penerimaan_hpa', 'hpa.id_hpa = penerimaan_hpa.id_hpa', 'left')
-        ->join('pembacaan_hpa', 'hpa.id_hpa = pembacaan_hpa.id_hpa', 'left')
-        ->join('authorized_hpa', 'hpa.id_hpa = authorized_hpa.id_hpa', 'left')
-        ->join('pencetakan_hpa', 'hpa.id_hpa = pencetakan_hpa.id_hpa', 'left')
-        ->whereIn('hpa.status_hpa', ['Pemverifikasi']) 
-        ->orderBy('hpa.kode_hpa', 'ASC')
-        ->findAll();
-}
+        )
+            ->join('hpa', 'pemverifikasi_hpa.id_hpa = hpa.id_hpa', 'left')
+            ->join('patient', 'hpa.id_pasien = patient.id_pasien', 'left')
+            ->join('users', 'pemverifikasi_hpa.id_user_pemverifikasi_hpa = users.id_user', 'left')
+            ->join('mutu_hpa', 'hpa.id_hpa = mutu_hpa.id_hpa', 'left')
+            ->join('penerimaan_hpa', 'hpa.id_hpa = penerimaan_hpa.id_hpa', 'left')
+            ->join('pembacaan_hpa', 'hpa.id_hpa = pembacaan_hpa.id_hpa', 'left')
+            ->join('authorized_hpa', 'hpa.id_hpa = authorized_hpa.id_hpa', 'left')
+            ->join('pencetakan_hpa', 'hpa.id_hpa = pencetakan_hpa.id_hpa', 'left')
+            ->whereIn('hpa.status_hpa', ['Pemverifikasi'])
+            ->orderBy('hpa.kode_hpa', 'ASC')
+            ->findAll();
+    }
 
     // Fungsi untuk mengupdate data pemverifikasi_hpa
     public function updatepemverifikasi_hpa($id_pemverifikasi_hpa, $data) // Update nama fungsi dan parameter
@@ -77,5 +77,4 @@ class Pemverifikasi_hpa extends Model // Update nama model
     {
         return $this->delete($id_pemverifikasi_hpa);
     }
-
 }
