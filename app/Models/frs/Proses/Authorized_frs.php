@@ -36,9 +36,9 @@ class Authorized_frs extends Model // Update nama model
     }
 
     public function getauthorized_hpa()
-{
-    return $this->select(
-        '
+    {
+        return $this->select(
+            '
         authorized_hpa.*, 
         hpa.*, 
         patient.*, 
@@ -50,19 +50,19 @@ class Authorized_frs extends Model // Update nama model
         pembacaan_hpa.id_pembacaan_hpa, 
         pemverifikasi_hpa.id_pemverifikasi_hpa,
         pencetakan_hpa.id_pencetakan_hpa'
-    )
-        ->join('hpa', 'authorized_hpa.id_hpa = hpa.id_hpa', 'left')
-        ->join('patient', 'hpa.id_pasien = patient.id_pasien', 'left')
-        ->join('users', 'authorized_hpa.id_user_authorized_hpa = users.id_user', 'left') 
-        ->join('mutu_hpa', 'hpa.id_hpa = mutu_hpa.id_hpa', 'left')
-        ->join('penerimaan_hpa', 'hpa.id_hpa = penerimaan_hpa.id_hpa', 'left')
-        ->join('pembacaan_hpa', 'hpa.id_hpa = pembacaan_hpa.id_hpa', 'left')
-        ->join('authorized_hpa', 'hpa.id_hpa = authorized_hpa.id_hpa', 'left')
-        ->join('pencetakan_hpa', 'hpa.id_hpa = pencetakan_hpa.id_hpa', 'left')
-        ->whereIn('hpa.status_hpa', ['Authorized']) 
-        ->orderBy('hpa.kode_hpa', 'ASC')
-        ->findAll();
-}
+        )
+            ->join('hpa', 'authorized_hpa.id_hpa = hpa.id_hpa', 'left')
+            ->join('patient', 'hpa.id_pasien = patient.id_pasien', 'left')
+            ->join('users', 'authorized_hpa.id_user_authorized_hpa = users.id_user', 'left')
+            ->join('mutu_hpa', 'hpa.id_hpa = mutu_hpa.id_hpa', 'left')
+            ->join('penerimaan_hpa', 'hpa.id_hpa = penerimaan_hpa.id_hpa', 'left')
+            ->join('pembacaan_hpa', 'hpa.id_hpa = pembacaan_hpa.id_hpa', 'left')
+            ->join('authorized_hpa', 'hpa.id_hpa = authorized_hpa.id_hpa', 'left')
+            ->join('pencetakan_hpa', 'hpa.id_hpa = pencetakan_hpa.id_hpa', 'left')
+            ->whereIn('hpa.status_hpa', ['Authorized'])
+            ->orderBy('hpa.kode_hpa', 'ASC')
+            ->findAll();
+    }
 
     // Fungsi untuk mengupdate data authorized_frs
     public function updateauthorized_frs($id_authorized_frs, $data) // Update nama fungsi dan parameter
@@ -77,5 +77,4 @@ class Authorized_frs extends Model // Update nama model
     {
         return $this->delete($id_authorized_frs);
     }
-
 }

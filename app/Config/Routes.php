@@ -209,8 +209,8 @@ $routes->group('pemverifikasi_hpa', ['namespace' => 'App\Controllers\Hpa\Proses'
 
 // Route untuk Authorized
 $routes->group('authorized_hpa', ['namespace' => 'App\Controllers\Hpa\Proses'], function ($routes) {
-    $routes->get('index', 'Authorized::index'); // Menampilkan halaman authorized
-    $routes->post('proses_authorized', 'Authorized::proses_authorized'); // Proses authorized
+    $routes->get('index', 'Authorized::index');
+    $routes->post('proses_authorized', 'Authorized::proses_authorized'); 
     $routes->get('authorized_details', 'Authorized::authorized_details');
     $routes->post('delete', 'Authorized::delete');
     $routes->get('edit_authorized', 'Authorized::edit_authorized');

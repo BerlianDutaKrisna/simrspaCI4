@@ -35,8 +35,7 @@ class Pencetakan_hpa extends Model // Update nama model
         return $this->db->affectedRows() > 0;
     }
 
-    // Mengambil data pencetakan_hpa dengan relasi
-    public function getpencetakan_hpaWithRelations() // Update nama fungsi
+    public function getpencetakan_hpa()
     {
         return $this->select(
             '
@@ -44,16 +43,27 @@ class Pencetakan_hpa extends Model // Update nama model
         hpa.*, 
         patient.*, 
         users.nama_user AS nama_user_pencetakan_hpa,
-        mutu.total_nilai_mutu'
+        mutu_hpa.id_mutu_hpa,
+        mutu_hpa.total_nilai_mutu_hpa,
+        penerimaan_hpa.id_penerimaan_hpa,
+        pembacaan_hpa.id_pembacaan_hpa, 
+        pemverifikasi_hpa.id_pemverifikasi_hpa,
+        authorized_hpa.id_authorized_hpa
+        '
         )
-            ->join('hpa', 'pencetakan_hpa.id_hpa = hpa.id_hpa', 'left') // Relasi dengan tabel hpa
-            ->join('patient', 'hpa.id_pasien = patient.id_pasien', 'left') // Relasi dengan tabel patient
-            ->join('users', 'pencetakan_hpa.id_user_pencetakan_hpa = users.id_user', 'left') // Relasi dengan tabel users untuk pencetakan_hpa
-            ->join('mutu', 'hpa.id_hpa = mutu.id_hpa', 'left') // Relasi dengan tabel mutu berdasarkan id_hpa
-            ->where('hpa.status_hpa', 'pencetakan_hpa') // Filter berdasarkan status_hpa 'pencetakan_hpa'
+            ->join('hpa', 'pencetakan_hpa.id_hpa = hpa.id_hpa', 'left')
+            ->join('patient', 'hpa.id_pasien = patient.id_pasien', 'left')
+            ->join('users', 'pencetakan_hpa.id_user_pencetakan_hpa = users.id_user', 'left')
+            ->join('mutu_hpa', 'hpa.id_hpa = mutu_hpa.id_hpa', 'left')
+            ->join('penerimaan_hpa', 'hpa.id_hpa = penerimaan_hpa.id_hpa', 'left')
+            ->join('pembacaan_hpa', 'hpa.id_hpa = pembacaan_hpa.id_hpa', 'left')
+            ->join('pemverifikasi_hpa', 'hpa.id_hpa = pemverifikasi_hpa.id_hpa', 'left')
+            ->join('authorized_hpa', 'hpa.id_hpa = authorized_hpa.id_hpa', 'left')
+            ->where('hpa.status_hpa', 'Authorized') // Sesuaikan jika ada kondisi lain
             ->orderBy('hpa.kode_hpa', 'ASC')
             ->findAll();
     }
+
 
     // Fungsi untuk mengupdate data pencetakan_hpa
     public function updatepencetakan_hpa($id_pencetakan_hpa, $data) // Update nama fungsi dan parameter
@@ -68,5 +78,4 @@ class Pencetakan_hpa extends Model // Update nama model
     {
         return $this->delete($id_pencetakan_hpa);
     }
-
 }

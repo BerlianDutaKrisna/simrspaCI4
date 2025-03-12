@@ -83,7 +83,7 @@
                                                             esc($row['id_hpa']) . '/' .
                                                             esc($row['id_penerimaan_hpa']) . '/' .
                                                             esc($row['id_pembacaan_hpa']) . '/' .
-                                                            esc($row['id_pemverifikasi_hpa']) . '/' .
+                                                            esc(isset($row['id_pemverifikasi_hpa']) ? $row['id_pemverifikasi_hpa'] : '0'). '/' .
                                                             esc(isset($row['id_authorized_hpa']) ? $row['id_authorized_hpa'] : '0') . '/' .
                                                             esc(isset($row['id_pencetakan_hpa']) ? $row['id_pencetakan_hpa'] : '0') .
                                                             '?redirect=index_pemverifikasi_hpa') ?>" class="btn btn-warning btn-sm">
@@ -96,7 +96,7 @@
                                                             esc($row['id_hpa']) . '/' .
                                                             esc($row['id_penerimaan_hpa']) . '/' .
                                                             esc($row['id_pembacaan_hpa']) . '/' .
-                                                            esc($row['id_pemverifikasi_hpa']) . '/' .
+                                                            esc(isset($row['id_pemverifikasi_hpa']) ? $row['id_pemverifikasi_hpa'] : '0'). '/' .
                                                             esc(isset($row['id_authorized_hpa']) ? $row['id_authorized_hpa'] : '0') . '/' .
                                                             esc(isset($row['id_pencetakan_hpa']) ? $row['id_pencetakan_hpa'] : '0') .
                                                             '?redirect=index_pemverifikasi_hpa') ?>" class="btn btn-success btn-sm">
