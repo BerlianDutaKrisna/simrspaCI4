@@ -8,14 +8,15 @@
         </div>
         <div class="card-body">
             <h1 class="h3 mb-4">Form Penulisan</h1>
-            <a href="<?= base_url('penulisan/index_penulisan') ?>" class="btn btn-primary mb-3">Kembali</a>
+            <a href="<?= base_url('penulisan_hpa/index') ?>" class="btn btn-primary mb-3">Kembali</a>
 
             <!-- Form -->
             <form id="form-hpa" method="POST">
                 <?= csrf_field(); ?>
                 <input type="hidden" name="id_hpa" value="<?= $hpa['id_hpa'] ?>">
                 <input type="hidden" name="kode_hpa" value="<?= $hpa['kode_hpa'] ?>">
-                <input type="hidden" name="id_penulisan" value="<?= $penulisan['id_penulisan'] ?>">
+                <input type="hidden" name="id_pembacaan_hpa" value="<?= $pembacaan['id_pembacaan_hpa'] ?>">
+                <input type="hidden" name="id_penulisan_hpa" value="<?= $penulisan['id_penulisan_hpa'] ?>">
                 <input type="hidden" name="page_source" value="edit_penulisan">
 
                 <!-- Kolom Kode HPA dan Diagnosa -->
@@ -226,12 +227,12 @@
 
                     <label class="col-sm-2 col-form-label">Dokter yang membaca</label>
                     <div class="col-sm-4">
-                        <select class="form-control" id="id_user_dokter_pemotongan" name="id_user_dokter_pemotongan">
-                            <option value="" <?= empty($hpa['id_user_dokter_pemotongan']) ? 'selected' : '' ?>>-- Pilih Dokter --</option>
+                        <select class="form-control" id="id_user_dokter_pembacaan_hpa" name="id_user_dokter_pembacaan_hpa">
+                            <option value="" <?= empty($hpa['id_user_dokter_pembacaan_hpa']) ? 'selected' : '' ?>>-- Pilih Dokter --</option>
                             <?php foreach ($users as $user): ?>
                                 <?php if ($user['status_user'] === 'Dokter'): ?>
                                     <option value="<?= $user['id_user'] ?>"
-                                        <?= isset($pemotongan['id_user_dokter_pemotongan']) && $user['id_user'] == $pemotongan['id_user_dokter_pemotongan'] ? 'selected' : '' ?>>
+                                        <?= isset($pembacaan['id_user_dokter_pembacaan_hpa']) && $user['id_user'] == $pembacaan['id_user_dokter_pembacaan_hpa'] ? 'selected' : '' ?>>
                                         <?= $user['nama_user'] ?>
                                     </option>
                                 <?php endif; ?>
@@ -245,7 +246,7 @@
                         <!-- Tombol Simpan -->
                         <button type="submit"
                             class="btn btn-success btn-user w-100"
-                            formaction="<?= base_url('exam/update/' . $hpa['id_hpa']); ?>">
+                            formaction="<?= base_url('hpa/update/' . $hpa['id_hpa']); ?>">
                             <i class="fas fa-save"></i> Simpan
                         </button>
                     </div>

@@ -35,22 +35,28 @@ class Penulisan_hpa extends Model // Update nama model
         return $this->db->affectedRows() > 0;
     }
 
-    // Mengambil data penulisan_hpa dengan relasi
-    public function getpenulisan_hpaWithRelations() // Update nama fungsi
+     // Mengambil data pembacaan_hpa dengan relasi
+    public function getpenulisan_hpa()
     {
         return $this->select(
             '
-        penulisan_hpa.*, 
-        hpa.*, 
-        patient.*, 
-        users.nama_user AS nama_user_penulisan_hpa,
-        mutu.total_nilai_mutu'
+            penulisan_hpa.*, 
+            hpa.*, 
+            patient.*, 
+            users.nama_user AS nama_user_penulisan_hpa,
+            mutu_hpa.id_mutu_hpa,
+            mutu_hpa.total_nilai_mutu_hpa,
+            pembacaan_hpa.id_pembacaan_hpa, 
+            pembacaan_hpa.id_user_dokter_pembacaan_hpa,
+            dokter_pembacaan.nama_user AS nama_user_dokter_pembacaan_hpa'
         )
-            ->join('hpa', 'penulisan_hpa.id_hpa = hpa.id_hpa', 'left') // Relasi dengan tabel hpa
-            ->join('patient', 'hpa.id_pasien = patient.id_pasien', 'left') // Relasi dengan tabel patient
-            ->join('users', 'penulisan_hpa.id_user_penulisan_hpa = users.id_user', 'left') // Relasi dengan tabel users untuk penulisan_hpa
-            ->join('mutu', 'hpa.id_hpa = mutu.id_hpa', 'left') // Relasi dengan tabel mutu berdasarkan id_hpa
-            ->where('hpa.status_hpa', 'penulisan_hpa') // Filter berdasarkan status_hpa 'penulisan_hpa'
+            ->join('hpa', 'penulisan_hpa.id_hpa = hpa.id_hpa', 'left')
+            ->join('patient', 'hpa.id_pasien = patient.id_pasien', 'left')
+            ->join('users', 'penulisan_hpa.id_user_penulisan_hpa = users.id_user', 'left')
+            ->join('mutu_hpa', 'hpa.id_hpa = mutu_hpa.id_hpa', 'left')
+            ->join('pembacaan_hpa', 'hpa.id_hpa = pembacaan_hpa.id_hpa', 'left')
+            ->join('users AS dokter_pembacaan', 'pembacaan_hpa.id_user_dokter_pembacaan_hpa = dokter_pembacaan.id_user', 'left')
+            ->whereIn('hpa.status_hpa', ['Penulisan'])
             ->orderBy('hpa.kode_hpa', 'ASC')
             ->findAll();
     }

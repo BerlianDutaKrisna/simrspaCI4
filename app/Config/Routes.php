@@ -48,6 +48,7 @@ $routes->group('hpa', ['namespace' => 'App\Controllers\Hpa'], function ($routes)
     $routes->get('edit_hpa/(:segment)', 'HpaController::edit_hpa/$1');
     $routes->get('edit_makroskopis/(:segment)/(:segment)', 'HpaController::edit_makroskopis/$1/$2');
     $routes->get('edit_mikroskopis/(:segment)/(:segment)/(:segment)/(:segment)', 'HpaController::edit_mikroskopis/$1/$2/$3/$4');
+    $routes->get('edit_penulisan/(:segment)/(:segment)/(:segment)', 'HpaController::edit_penulisan/$1/$2/$3');
     $routes->post('update/(:segment)', 'HpaController::update/$1');
     $routes->post('update_print_hpa/(:segment)', 'HpaController::update_print_hpa/$1');
     $routes->get('index_buku_penerima', 'HpaController::index_buku_penerima');
@@ -56,8 +57,6 @@ $routes->group('hpa', ['namespace' => 'App\Controllers\Hpa'], function ($routes)
     $routes->post('delete', 'HpaController::delete');
     $routes->post('uploadFotoMakroskopis/(:num)', 'HpaController::uploadFotoMakroskopis/$1');
     $routes->post('uploadFotoMikroskopis/(:num)', 'HpaController::uploadFotoMikroskopis/$1');
-    $routes->get('edit_penulisan/(:num)', 'HpaController::edit_penulisan/$1');
-    $routes->post('update_penulisan/(:segment)', 'HpaController::update_penulisan/$1');
     $routes->get('edit_print_hpa/(:num)', 'HpaController::edit_print_hpa/$1');
 });
 
@@ -189,7 +188,7 @@ $routes->group('pembacaan_hpa', ['namespace' => 'App\Controllers\Hpa\Proses'], f
 });
 
 // Route untuk Penulisan
-$routes->group('penulisan_hpa', ['namespace' => 'App\Controllers\Proses'], function ($routes) {
+$routes->group('penulisan_hpa', ['namespace' => 'App\Controllers\Hpa\Proses'], function ($routes) {
     $routes->get('index', 'Penulisan::index'); // Menampilkan halaman penulisan
     $routes->post('proses_penulisan', 'Penulisan::proses_penulisan'); // Proses penulisan
     $routes->get('penulisan_details', 'Penulisan::penulisan_details');
@@ -199,7 +198,7 @@ $routes->group('penulisan_hpa', ['namespace' => 'App\Controllers\Proses'], funct
 });
 
 // Route untuk Pemverifikasi
-$routes->group('pemverifikasi_hpa', ['namespace' => 'App\Controllers\Proses'], function ($routes) {
+$routes->group('pemverifikasi_hpa', ['namespace' => 'App\Controllers\Hpa\Proses'], function ($routes) {
     $routes->get('index', 'Pemverifikasi::index'); // Menampilkan halaman pemverifikasi
     $routes->post('proses_pemverifikasi', 'Pemverifikasi::proses_pemverifikasi'); // Proses pemverifikasi
     $routes->get('pemverifikasi_details', 'Pemverifikasi::pemverifikasi_details');
@@ -209,7 +208,7 @@ $routes->group('pemverifikasi_hpa', ['namespace' => 'App\Controllers\Proses'], f
 });
 
 // Route untuk Authorized
-$routes->group('authorized_hpa', ['namespace' => 'App\Controllers\Proses'], function ($routes) {
+$routes->group('authorized_hpa', ['namespace' => 'App\Controllers\Hpa\Proses'], function ($routes) {
     $routes->get('index', 'Authorized::index'); // Menampilkan halaman authorized
     $routes->post('proses_authorized', 'Authorized::proses_authorized'); // Proses authorized
     $routes->get('authorized_details', 'Authorized::authorized_details');
@@ -219,7 +218,7 @@ $routes->group('authorized_hpa', ['namespace' => 'App\Controllers\Proses'], func
 });
 
 // Route untuk Pencetakan
-$routes->group('pencetakan_hpa', ['namespace' => 'App\Controllers\Proses'], function ($routes) {
+$routes->group('pencetakan_hpa', ['namespace' => 'App\Controllers\Hpa\Proses'], function ($routes) {
     $routes->get('index', 'Pencetakan::index'); // Menampilkan halaman pencetakan
     $routes->post('proses_pencetakan', 'Pencetakan::proses_pencetakan'); // Proses pencetakan
     $routes->get('pencetakan_details', 'Pencetakan::pencetakan_details');

@@ -441,49 +441,34 @@ class HpaController extends BaseController
         return view('hpa/edit_mikroskopis', $data);
     }
 
-    public function edit_penulisan($id_hpa)
+    public function edit_penulisan($id_hpa, $id_pembacaan_hpa, $id_penulisan_hpa)
     {
-
-        $hpaModel = new HpaModel();
-        $userModel = new UsersModel();
-        $Pemotongan_hpa = new Pemotongan_hpa();
-        $Penulisan_hpa = new Penulisan_hpa();
-
-        $data['id_user'] = session()->get('id_user');
-        $data['nama_user'] = session()->get('nama_user');
-
-        // Ambil data hpa berdasarkan ID
-        $hpa = $hpaModel->getHpaWithPatient($id_hpa);
-
-        // Ambil id_pemotongan_hpa dari data hpa
-        $id_pemotongan_hpa = $hpa['id_pemotongan_hpa'];
-        $id_penulisan = $hpa['id_penulisan'];
-
-        $pemotongan = $Pemotongan_hpa->find($id_pemotongan_hpa);
-        $penulisan = $Penulisan_hpa->find($id_penulisan);
-
-        $users = $userModel->where('status_user', 'Dokter')->findAll();
-
-        // Ambil nama dokter dari pemotongan berdasarkan id_user_dokter_pemotongan_hpa
-        if ($pemotongan && !empty($pemotongan['id_user_dokter_pemotongan_hpa'])) {
-            $dokter = $userModel->find($pemotongan['id_user_dokter_pemotongan_hpa']);
-            $pemotongan['dokter_nama'] = $dokter ? $dokter['nama_user'] : null;
+        $hpa = $this->hpaModel->getHpaWithPatient($id_hpa);    
+        $pembacaan = $this->pembacaan_hpa->find($id_pembacaan_hpa);
+        $penulisan = $this->penulisan_hpa->find($id_penulisan_hpa);
+        $users = $this->userModel->where('status_user', 'Dokter')->findAll();
+    
+        // Ambil nama dokter dari pembacaan berdasarkan id_user_dokter_pembacaan_hpa
+        if ($pembacaan && !empty($pembacaan['id_user_dokter_pembacaan_hpa'])) {
+            $dokter = $this->userModel->find($pembacaan['id_user_dokter_pembacaan_hpa']);
+            $pembacaan['dokter_nama'] = $dokter ? $dokter['nama_user'] : null;
         } else {
-            $pemotongan['dokter_nama'] = null;
+            $pembacaan['dokter_nama'] = null;
         }
-
-        // Persiapkan data yang akan dikirim ke view
+    
+        // Data yang akan dikirim ke view
         $data = [
-            'hpa' => $hpa,
-            'pemotongan' => $pemotongan,
-            'penulisan' => $penulisan,
-            'users' => $users,
             'id_user' => session()->get('id_user'),
             'nama_user' => session()->get('nama_user'),
+            'hpa' => $hpa,
+            'pembacaan' => $pembacaan,
+            'penulisan' => $penulisan,
+            'users' => $users,
         ];
-
+        
         return view('hpa/edit_penulisan', $data);
     }
+    
 
     public function edit_print_hpa($id_hpa)
     {
@@ -614,11 +599,12 @@ class HpaController extends BaseController
                     return redirect()->to('hpa/edit_mikroskopis/' . $id_hpa . '/' . $id_pemotongan_hpa . '/' . $id_pembacaan_hpa . '/' . $id_mutu_hpa)->with('success', 'Data mikroskopis berhasil diperbarui.');
 
                 case 'edit_penulisan':
-                    $id_penulisan = $this->request->getPost('id_penulisan');
-                    $this->penulisan_hpa->update($id_penulisan, [
-                        'id_user_penulisan' => $id_user,
-                        'status_penulisan' => 'Selesai Penulisan',
-                        'selesai_penulisan' => date('Y-m-d H:i:s'),
+                    $id_pembacaan_hpa = $this->request->getPost('id_pembacaan_hpa');
+                    $id_penulisan_hpa = $this->request->getPost('id_penulisan_hpa');
+                    $this->penulisan_hpa->update($id_penulisan_hpa, [
+                        'id_user_penulisan_hpa' => $id_user,
+                        'status_penulisan_hpa' => 'Selesai Penulisan',
+                        'selesai_penulisan_hpa' => date('Y-m-d H:i:s'),
                     ]);
 
                     // Ambil data dari form
@@ -721,7 +707,7 @@ class HpaController extends BaseController
                         'print_hpa' => $print_hpa,
                     ]);
 
-                    return redirect()->to('hpa/edit_penulisan/' . $id_hpa)->with('success', 'Data penulisan berhasil diperbarui.');
+                    return redirect()->to('hpa/edit_penulisan/' . $id_hpa . '/' . $id_pembacaan_hpa . '/' . $id_penulisan_hpa)->with('success', 'Data penulisan berhasil diperbarui.');
 
                 default:
                     return redirect()->back()->with('success', 'Data berhasil diperbarui.');
