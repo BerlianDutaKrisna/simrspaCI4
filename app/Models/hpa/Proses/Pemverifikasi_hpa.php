@@ -35,25 +35,34 @@ class Pemverifikasi_hpa extends Model // Update nama model
         return $this->db->affectedRows() > 0;
     }
 
-    // Mengambil data pemverifikasi_hpa dengan relasi
-    public function getpemverifikasi_hpaWithRelations() // Update nama fungsi
-    {
-        return $this->select(
-            '
+    public function getpemverifikasi_hpa()
+{
+    return $this->select(
+        '
         pemverifikasi_hpa.*, 
         hpa.*, 
         patient.*, 
         users.nama_user AS nama_user_pemverifikasi_hpa,
-        mutu.total_nilai_mutu'
-        )
-            ->join('hpa', 'pemverifikasi_hpa.id_hpa = hpa.id_hpa', 'left') // Relasi dengan tabel hpa
-            ->join('patient', 'hpa.id_pasien = patient.id_pasien', 'left') // Relasi dengan tabel patient
-            ->join('users', 'pemverifikasi_hpa.id_user_pemverifikasi_hpa = users.id_user', 'left') // Relasi dengan tabel users untuk pemverifikasi_hpa
-            ->join('mutu', 'hpa.id_hpa = mutu.id_hpa', 'left') // Relasi dengan tabel mutu berdasarkan id_hpa
-            ->where('hpa.status_hpa', 'pemverifikasi_hpa') // Filter berdasarkan status_hpa 'pemverifikasi_hpa'
-            ->orderBy('hpa.kode_hpa', 'ASC')
-            ->findAll();
-    }
+        mutu_hpa.id_mutu_hpa,
+        mutu_hpa.total_nilai_mutu_hpa,
+        penerimaan_hpa.id_penerimaan_hpa,
+        pembacaan_hpa.id_pembacaan_hpa,
+        pembacaan_hpa.id_pembacaan_hpa, 
+        authorized_hpa.id_authorized_hpa,
+        pencetakan_hpa.id_pencetakan_hpa'
+    )
+        ->join('hpa', 'pemverifikasi_hpa.id_hpa = hpa.id_hpa', 'left')
+        ->join('patient', 'hpa.id_pasien = patient.id_pasien', 'left')
+        ->join('users', 'pemverifikasi_hpa.id_user_pemverifikasi_hpa = users.id_user', 'left') 
+        ->join('mutu_hpa', 'hpa.id_hpa = mutu_hpa.id_hpa', 'left')
+        ->join('penerimaan_hpa', 'hpa.id_hpa = penerimaan_hpa.id_hpa', 'left')
+        ->join('pembacaan_hpa', 'hpa.id_hpa = pembacaan_hpa.id_hpa', 'left')
+        ->join('authorized_hpa', 'hpa.id_hpa = authorized_hpa.id_hpa', 'left')
+        ->join('pencetakan_hpa', 'hpa.id_hpa = pencetakan_hpa.id_hpa', 'left')
+        ->whereIn('hpa.status_hpa', ['Pemverifikasi']) 
+        ->orderBy('hpa.kode_hpa', 'ASC')
+        ->findAll();
+}
 
     // Fungsi untuk mengupdate data pemverifikasi_hpa
     public function updatepemverifikasi_hpa($id_pemverifikasi_hpa, $data) // Update nama fungsi dan parameter

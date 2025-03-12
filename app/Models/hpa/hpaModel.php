@@ -85,7 +85,7 @@ class HpaModel extends Model
     }
     public function countAuthorizedhpa()
     {
-        return $this->where('status_hpa =', 'Autorized')->countAllResults() ?? 0;
+        return $this->where('status_hpa =', 'Authorized')->countAllResults() ?? 0;
     }
     public function countPencetakanhpa()
     {

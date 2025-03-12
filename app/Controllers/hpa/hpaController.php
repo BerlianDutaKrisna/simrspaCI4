@@ -470,42 +470,28 @@ class HpaController extends BaseController
     }
     
 
-    public function edit_print_hpa($id_hpa)
+    public function edit_print_hpa($id_hpa, $id_penerimaan_hpa, $id_pembacaan_hpa, $id_pemverivifikasi_hpa, $id_authorized_hpa, $id_pencetakan_hpa)
     {
-        $hpaModel = new HpaModel();
-        $Penerimaan_hpa = new Penerimaan_hpa();
-        $pembacaan_hpa_hpa = new pembacaan_hpa();
-        $Pemverifikasi_hpa = new Pemverifikasi_hpa();
-        $Authorized_hpa = new Authorized_hpa();
-        $Pencetakan_hpa = new Pencetakan_hpa();
-
         // Ambil data hpa berdasarkan ID
-        $hpa = $hpaModel->getHpaWithPatient($id_hpa);
-
-        // Ambil id_pemotongan_hpa dari data hpa
-        $id_penerimaan = $hpa['id_penerimaan'];
-        $id_pembacaan_hpa = $hpa['id_pembacaan_hpa'];
-        $id_pemverivifikasi = $hpa['id_pemverifikasi'];
-        $id_autorized = $hpa['id_autorized'];
-        $id_pencetakan = $hpa['id_pencetakan'];
-
-        $penerimaan = $Penerimaan_hpa->find($id_penerimaan);
-        $pembacaan_hpa = $pembacaan_hpa_hpa->find($id_pembacaan_hpa);
-        $pemverifikasi = $Pemverifikasi_hpa->find($id_pemverivifikasi);
-        $autorized = $Authorized_hpa->find($id_autorized);
-        $pencetakan = $Pencetakan_hpa->find($id_pencetakan);
+        $hpa = $this->hpaModel->getHpaWithPatient($id_hpa);
+        $penerimaan_hpa = $this->penerimaan_hpa->find($id_penerimaan_hpa);
+        $pembacaan_hpa = $this->pembacaan_hpa->find($id_pembacaan_hpa);
+        $pemverifikasi_hpa = $this->pemverifikasi_hpa->find($id_pemverivifikasi_hpa) ?? [];
+        $authorized_hpa = $this->authorized_hpa->find($id_authorized_hpa) ?? [];
+        $pencetakan_hpa = $this->pencetakan_hpa->find($id_pencetakan_hpa) ?? [];
 
         // Persiapkan data yang akan dikirim ke view
         $data = [
-            'hpa' => $hpa,
-            'penerimaan' => $penerimaan,
-            'pembacaan_hpa' => $pembacaan_hpa,
-            'pemverifikasi' => $pemverifikasi,
-            'autorized' => $autorized,
-            'pencetakan' => $pencetakan,
             'id_user' => session()->get('id_user'),
             'nama_user' => session()->get('nama_user'),
+            'hpa' => $hpa,
+            'penerimaan_hpa' => $penerimaan_hpa,
+            'pembacaan_hpa' => $pembacaan_hpa,
+            'pemverifikasi_hpa' => $pemverifikasi_hpa,
+            'authorized_hpa' => $authorized_hpa,
+            'pencetakan_hpa' => $pencetakan_hpa,
         ];
+        
         return view('hpa/edit_print_hpa', $data);
     }
 
@@ -720,59 +706,46 @@ class HpaController extends BaseController
     {
 
         date_default_timezone_set('Asia/Jakarta');
-        $hpaModel = new HpaModel();
-        $Pemverifikasi_hpa = new Pemverifikasi_hpa();
-        $Authorized_hpa = new Authorized_hpa();
-        $Pencetakan_hpa = new Pencetakan_hpa();
-
         $id_user = session()->get('id_user');
-
         // Mendapatkan id_hpa dari POST
         if (!$id_hpa) {
             return redirect()->back()->with('error', 'Terjadi kesalahan: ID HPA tidak ditemukan.');
         }
-
         // Mengambil data dari POST dan melakukan update
         $data = $this->request->getPost();
-        $hpaModel->update($id_hpa, $data);
-
+        $this->hpaModel->update($id_hpa, $data);
         $redirect = $this->request->getPost('redirect');
-
         if (!$redirect) {
             return redirect()->back()->with('error', 'Terjadi kesalahan: Halaman asal tidak ditemukan.');
         }
-
         // Cek ke halaman mana harus diarahkan setelah update
-        if ($redirect === 'index_pemverifikasi' && isset($_POST['id_pemverifikasi'])) {
-            $id_pemverifikasi = $this->request->getPost('id_pemverifikasi');
-            $Pemverifikasi_hpa->updatePemverifikasi($id_pemverifikasi, [
-                'id_user_pemverifikasi' => $id_user,
-                'status_pemverifikasi' => 'Selesai Pemverifikasi',
-                'selesai_pemverifikasi' => date('Y-m-d H:i:s'),
+        if ($redirect === 'index_pemverifikasi_hpa' && isset($_POST['id_pemverifikasi_hpa'])) {
+            $id_pemverifikasi_hpa = $this->request->getPost('id_pemverifikasi_hpa');
+            $this->pemverifikasi_hpa->update($id_pemverifikasi_hpa, [
+                'id_user_pemverifikasi_hpa' => $id_user,
+                'status_pemverifikasi_hpa' => 'Selesai Pemverifikasi',
+                'selesai_pemverifikasi_hpa' => date('Y-m-d H:i:s'),
             ]);
-            return redirect()->to('pemverifikasi/index_pemverifikasi')->with('success', 'Data berhasil diverifikasi.');
+            return redirect()->to('pemverifikasi_hpa/index')->with('success', 'Data berhasil diverifikasi.');
         }
-
-        if ($redirect === 'index_autorized' && isset($_POST['id_autorized'])) {
-            $id_autorized = $this->request->getPost('id_autorized');
-            $Authorized_hpa->updateAutorized($id_autorized, [
-                'id_user_autorized' => $id_user,
-                'status_autorized' => 'Selesai Authorized',
-                'selesai_autorized' => date('Y-m-d H:i:s'),
+        if ($redirect === 'index_authorized_hpa' && isset($_POST['id_authorized_hpa'])) {
+            $id_authorized_hpa = $this->request->getPost('id_authorized_hpa');
+            $this->authorized_hpa->update($id_authorized_hpa, [
+                'id_user_authorized_hpa' => $id_user,
+                'status_authorized_hpa' => 'Selesai Authorized',
+                'selesai_authorized_hpa' => date('Y-m-d H:i:s'),
             ]);
-            return redirect()->to('autorized/index_autorized')->with('success', 'Data berhasil diauthorized.');
+            return redirect()->to('authorized_hpa/index')->with('success', 'Data berhasil diauthorized.');
         }
-
-        if ($redirect === 'index_pencetakan' && isset($_POST['id_pencetakan'])) {
-            $id_pencetakan = $this->request->getPost('id_pencetakan');
-            $Pencetakan_hpa->updatePencetakan($id_pencetakan, [
-                'id_user_pencetakan' => $id_user,
-                'status_pencetakan' => 'Selesai Pencetakan',
-                'selesai_pencetakan' => date('Y-m-d H:i:s'),
+        if ($redirect === 'index_pencetakan_hpa' && isset($_POST['id_pencetakan_hpa'])) {
+            $id_pencetakan_hpa = $this->request->getPost('id_pencetakan_hpa');
+            $this->pencetakan_hpa->update($id_pencetakan_hpa, [
+                'id_user_pencetakan_hpa' => $id_user,
+                'status_pencetakan_hpa' => 'Selesai Pencetakan',
+                'selesai_pencetakan_hpa' => date('Y-m-d H:i:s'),
             ]);
-            return redirect()->to('pencetakan/index_pencetakan')->with('success', 'Data berhasil dicetak.');
+            return redirect()->to('pencetakan_hpa/index')->with('success', 'Data berhasil dicetak.');
         }
-
         // Jika redirect tidak sesuai dengan yang diharapkan
         return redirect()->back()->with('error', 'Terjadi kesalahan: Halaman tujuan tidak valid.');
     }

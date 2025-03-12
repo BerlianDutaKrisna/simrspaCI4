@@ -49,15 +49,15 @@ $routes->group('hpa', ['namespace' => 'App\Controllers\Hpa'], function ($routes)
     $routes->get('edit_makroskopis/(:segment)/(:segment)', 'HpaController::edit_makroskopis/$1/$2');
     $routes->get('edit_mikroskopis/(:segment)/(:segment)/(:segment)/(:segment)', 'HpaController::edit_mikroskopis/$1/$2/$3/$4');
     $routes->get('edit_penulisan/(:segment)/(:segment)/(:segment)', 'HpaController::edit_penulisan/$1/$2/$3');
+    $routes->get('edit_print_hpa/(:segment)/(:segment)/(:segment)/(:segment)/(:segment)/(:segment)', 'HpaController::edit_print_hpa/$1/$2/$3/$4/$5/$6');
     $routes->post('update/(:segment)', 'HpaController::update/$1');
     $routes->post('update_print_hpa/(:segment)', 'HpaController::update_print_hpa/$1');
     $routes->get('index_buku_penerima', 'HpaController::index_buku_penerima');
     $routes->post('update_buku_penerima', 'HpaController::update_buku_penerima');
     $routes->post('update_status_hpa', 'HpaController::update_status_hpa');
     $routes->post('delete', 'HpaController::delete');
-    $routes->post('uploadFotoMakroskopis/(:num)', 'HpaController::uploadFotoMakroskopis/$1');
-    $routes->post('uploadFotoMikroskopis/(:num)', 'HpaController::uploadFotoMikroskopis/$1');
-    $routes->get('edit_print_hpa/(:num)', 'HpaController::edit_print_hpa/$1');
+    $routes->post('uploadFotoMakroskopis/(:segment)', 'HpaController::uploadFotoMakroskopis/$1');
+    $routes->post('uploadFotoMikroskopis/(:segment)', 'HpaController::uploadFotoMikroskopis/$1');
 });
 
 // Route untuk frs

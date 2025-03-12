@@ -133,10 +133,10 @@
                 <a href="<?= base_url('authorized_hpa/index') ?>" class="btn btn-info btn-icon-split btn-sm d-flex justify-content-between m-2">
                     <span class="text"><b style="color: white"><?php
                             $contsTotalAuthorised =
-                                ($counts['countAuthorisedhpa'] ?? 0) +
-                                ($counts['countAuthorisedfrs'] ?? 0) +
-                                ($counts['countAuthorisedsrs'] ?? 0) +
-                                ($counts['countAuthorisedihc'] ?? 0);
+                                ($counts['countAuthorizedhpa'] ?? 0) +
+                                ($counts['countAuthorizedfrs'] ?? 0) +
+                                ($counts['countAuthorizedsrs'] ?? 0) +
+                                ($counts['countAuthorizedihc'] ?? 0);
                             ?>
                             <?= esc($contsTotalAuthorised ?? 0) ?></b> Authorized</span>
                     <span class="icon text-white-50">

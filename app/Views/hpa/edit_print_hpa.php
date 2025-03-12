@@ -13,20 +13,14 @@
             <form id="form-hpa" method="POST" enctype="multipart/form-data">
                 <?= csrf_field(); ?>
                 <input type="hidden" name="id_hpa" value="<?= $hpa['id_hpa'] ?>">
-                <input type="hidden" name="id_pemverifikasi" value="<?= $hpa['id_pemverifikasi'] ?>">
-                <input type="hidden" name="id_autorized" value="<?= $hpa['id_autorized'] ?>">
-                <input type="hidden" name="id_pencetakan" value="<?= $hpa['id_pencetakan'] ?>">
+                <input type="hidden" name="id_pemverifikasi_hpa" value="<?= $pemverifikasi_hpa['id_pemverifikasi_hpa'] ?? '' ?>">
+                <input type="hidden" name="id_authorized_hpa" value="<?= $authorized_hpa['id_authorized_hpa'] ?? '' ?>">
+                <input type="hidden" name="id_pencetakan_hpa" value="<?= $pencetakan_hpa['id_pencetakan_hpa'] ?? '' ?>">
+
                 <input type="hidden" name="redirect" value="<?= $_GET['redirect'] ?? '' ?>">
 
                 <!-- Tombol Kembali  -->
-                <?php if (($_GET['redirect'] ?? '') === 'index_pencetakan'): ?>
-                    <button type="submit" class="btn btn-primary mb-3"
-                        formaction="<?= base_url('exam/update_print_hpa/' . $hpa['id_hpa']); ?>">
-                        Kembali
-                    </button>
-                <?php else: ?>
-                    <a href="javascript:history.back()" class="btn btn-primary mb-3">Kembali</a>
-                <?php endif; ?>
+                <a href="javascript:history.back()" class="btn btn-primary mb-3">Kembali</a>
 
                 <!-- Kolom print -->
                 <div class="form-group row">
@@ -40,8 +34,8 @@
                     <div class="col-sm-4 text-center">
                         <button type="submit"
                             class="btn btn-success btn-user w-100"
-                            formaction="<?= base_url('exam/update_print_hpa/' . $hpa['id_hpa']); ?>"
-                            <?= (($_GET['redirect'] ?? '') === 'index_pemverifikasi') ? '' : 'disabled' ?>>
+                            formaction="<?= base_url('hpa/update_print_hpa/' . $hpa['id_hpa']); ?>"
+                            <?= (($_GET['redirect'] ?? '') === 'index_pemverifikasi_hpa') ? '' : 'disabled' ?>>
                             <i class="fas fa-check-square"></i> Verifikasi
                         </button>
                     </div>
@@ -49,8 +43,8 @@
                     <div class="col-sm-4 text-center">
                         <button type="submit"
                             class="btn btn-info btn-user w-100"
-                            formaction="<?= base_url('exam/update_print_hpa/' . $hpa['id_hpa']); ?>"
-                            <?= (($_GET['redirect'] ?? '') === 'index_autorized') ? '' : 'disabled' ?>>
+                            formaction="<?= base_url('hpa/update_print_hpa/' . $hpa['id_hpa']); ?>"
+                            <?= (($_GET['redirect'] ?? '') === 'index_authorized_hpa') ? '' : 'disabled' ?>>
                             <i class="fas fa-vote-yea"></i> Authorized
                         </button>
                     </div>
@@ -58,14 +52,14 @@
                     <div class="col-sm-4 text-center">
                         <button type="submit"
                             class="btn btn-success btn-user w-100 mb-3"
-                            formaction="<?= base_url('exam/update_print_hpa/' . $hpa['id_hpa']); ?>"
-                            <?= (($_GET['redirect'] ?? '') === 'index_pencetakan') ? '' : 'disabled' ?>>
+                            formaction="<?= base_url('hpa/update_print_hpa/' . $hpa['id_hpa']); ?>"
+                            <?= (($_GET['redirect'] ?? '') === 'index_pencetakan_hpa') ? '' : 'disabled' ?>>
                             <i class="fas fa-save"></i> Simpan
                         </button>
                         <button type="button"
                             class="btn btn-primary btn-user w-100 w-md-auto"
                             onclick="cetakPrintHpa()"
-                            <?= (($_GET['redirect'] ?? '') === 'index_pencetakan') ? '' : 'disabled' ?>>
+                            <?= (($_GET['redirect'] ?? '') === 'index_pencetakan_hpa') ? '' : 'disabled' ?>>
                             <i class="fas fa-print"></i> Cetak
                         </button>
                     </div>
