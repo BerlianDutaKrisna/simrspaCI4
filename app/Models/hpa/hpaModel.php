@@ -110,20 +110,22 @@ class HpaModel extends Model
         return $this->insertHpa($data) > 0;
     }
 
-    public function getHpaWithPatient($id_hpa)
+    public function getHpaWithPatient()
     {
         return $this->select('hpa.*, patient.*')
         ->join('patient', 'patient.id_pasien = hpa.id_pasien')
-        ->where('hpa.id_hpa', $id_hpa)
-            ->first();
+        ->findAll();
     }
 
-    public function getHpaWitAllPatient()
-    {
-        return $this->select('hpa.*, patient.*')
-                    ->join('patient', 'patient.id_pasien = hpa.id_pasien', 'left')
-                    ->findAll();
-    }
+    public function getHpaWithRelationsProses($id_hpa)
+{
+    return $this->select('hpa.*, patient.*, pemotongan_hpa.*, pembacaan_hpa.*')
+                ->join('patient', 'patient.id_pasien = hpa.id_pasien', 'left')
+                ->join('pemotongan_hpa', 'pemotongan_hpa.id_hpa = hpa.id_hpa', 'left')
+                ->join('pembacaan_hpa', 'pembacaan_hpa.id_hpa = hpa.id_hpa', 'left')
+                ->where('hpa.id_hpa', $id_hpa)
+                ->first();
+}
 
     public function updateHpa($id_hpa, $data)
     {

@@ -102,7 +102,7 @@
             var data = {};
 
             if (action === "hpa") {
-                url = "<?= base_url('exam/delete'); ?>"; // URL penghapusan HPA
+                url = "<?= base_url('hpa/delete'); ?>"; // URL penghapusan HPA
                 data = {
                     id_hpa: id_hpa
                 };

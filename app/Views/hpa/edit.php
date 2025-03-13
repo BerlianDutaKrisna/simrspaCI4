@@ -9,7 +9,7 @@
 
         <div class="card-body">
             <h1>Edit Data Hpa</h1>
-            <a href="<?= base_url('exam/index_exam') ?>" class="btn btn-primary mb-3">Kembali</a>
+            <a href="<?= base_url('hpa/index') ?>" class="btn btn-primary mb-3">Kembali</a>
 
             <!-- Form -->
             <form id="form-hpa" method="POST" enctype="multipart/form-data">
@@ -173,45 +173,57 @@
                                 <textarea class="form-control summernote" name="hasil_hpa" id="hasil_hpa"><?= $hpa['hasil_hpa'] ?? '' ?></textarea>
                             </div>
                         </div>
+                        <!-- Dokter Pemotong -->
+                        <div class="form-group row">
+                            <label class="col-sm-2 col-form-label">Dokter yang memotong</label>
+                            <div class="col-sm-4">
+                                <select class="form-control" id="id_user_dokter_pemotongan_hpa" name="id_user_dokter_pemotongan_hpa">
+                                    <option value="" <?= empty($hpa['id_user_dokter_pemotongan_hpa']) ? 'selected' : '' ?>>-- Pilih Dokter --</option>
+                                    <?php foreach ($users as $user): ?>
+                                        <?php if ($user['status_user'] === 'Dokter'): ?>
+                                            <option value="<?= $user['id_user'] ?>"
+                                                <?= isset($pemotongan_hpa['id_user_dokter_pemotongan_hpa']) && $user['id_user'] == $pemotongan_hpa['id_user_dokter_pemotongan_hpa'] ? 'selected' : '' ?>>
+                                                <?= $user['nama_user'] ?>
+                                            </option>
+                                        <?php endif; ?>
+                                    <?php endforeach; ?>
+                                </select>
+                            </div>
+                        </div>
                     </div>
                     <!-- Kolom Kanan -->
                     <div class="col-sm-6">
-                        <div class="form-group">
+                        <div class="form-group row">
                             <label class="col-sm-2 col-form-label">Hasil keseluruhan:</label>
                         </div>
                         <textarea class="form-control summernote_hasil" name="print_hpa" id="print_hpa" rows="5">
                             <?= $hpa['print_hpa'] ?? '' ?>
                         </textarea>
+                        <div class="form-group row mt-3">
+                            <label class="col-sm-2 col-form-label">Dokter yang Membaca</label>
+                            <div class="col-sm-4">
+                                <select class="form-control" id="id_user_dokter_pembacaan_hpa" name="id_user_dokter_pembacaan_hpa">
+                                    <option value="" <?= empty($hpa['id_user_dokter_pembacaan_hpa']) ? 'selected' : '' ?>>-- Pilih Dokter --</option>
+                                    <?php foreach ($users as $user): ?>
+                                        <?php if ($user['status_user'] === 'Dokter'): ?>
+                                            <option value="<?= $user['id_user'] ?>"
+                                                <?= isset($pembacaan_hpa['id_user_dokter_pembacaan_hpa']) && $user['id_user'] == $pembacaan_hpa['id_user_dokter_pembacaan_hpa'] ? 'selected' : '' ?>>
+                                                <?= $user['nama_user'] ?>
+                                            </option>
+                                        <?php endif; ?>
+                                    <?php endforeach; ?>
+                                </select>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <!-- Kolom Hasil HPA dan Dokter -->
-                <div class="form-group row">
-                    <label class="col-sm-2 col-form-label"></label>
-                    <div class="col-sm-4">
 
-                    </div>
-
-                    <label class="col-sm-2 col-form-label">Dokter yang membaca</label>
-                    <div class="col-sm-4">
-                        <select class="form-control" id="id_user_dokter_pemotongan" name="id_user_dokter_pemotongan">
-                            <option value="" <?= empty($hpa['id_user_dokter_pemotongan']) ? 'selected' : '' ?>>-- Pilih Dokter --</option>
-                            <?php foreach ($users as $user): ?>
-                                <?php if ($user['status_user'] === 'Dokter'): ?>
-                                    <option value="<?= $user['id_user'] ?>"
-                                        <?= isset($pemotongan['id_user_dokter_pemotongan']) && $user['id_user'] == $pemotongan['id_user_dokter_pemotongan'] ? 'selected' : '' ?>>
-                                        <?= $user['nama_user'] ?>
-                                    </option>
-                                <?php endif; ?>
-                            <?php endforeach; ?>
-                        </select>
-                    </div>
-                </div>
                 <!-- Tombol Simpan -->
                 <div class="form-group row">
                     <div class="col-sm-12 text-center">
                         <button type="submit"
                             class="btn btn-success btn-user w-100"
-                            formaction="<?= base_url('exam/update/' . $hpa['id_hpa']); ?>">
+                            formaction="<?= base_url('hpa/update/' . $hpa['id_hpa']); ?>">
                             Simpan
                         </button>
                     </div>

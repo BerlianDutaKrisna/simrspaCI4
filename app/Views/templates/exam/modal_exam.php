@@ -35,14 +35,12 @@
                     <span aria-hidden="true">×</span>
                 </button>
             </div>
-            <form action="<?= base_url('exam/update_status_hpa') ?>" method="POST">
+            <form action="<?= base_url('hpa/update_status_hpa') ?>" method="POST">
                 <div class="modal-body">
                     <input type="hidden" id="id_hpa" name="id_hpa" value="">
                     <div class="form-group">
                         <label for="status_hpa">Status Hpa</label>
                         <select class="form-control" id="status_hpa" name="status_hpa">
-                            <option value="Belum Diproses" <?= old('status_hpa') == 'Belum Diproses' ? 'selected' : '' ?>>Belum Diproses</option>
-                            <option value="Terdaftar" <?= old('status_hpa') == 'Terdaftar' ? 'selected' : '' ?>>Terdaftar</option>
                             <option value="Penerimaan" <?= old('status_hpa') == 'Penerimaan' ? 'selected' : '' ?>>Penerimaan</option>
                             <option value="Pengirisan" <?= old('status_hpa') == 'Pengirisan' ? 'selected' : '' ?>>Pengirisan</option>
                             <option value="Pemotongan" <?= old('status_hpa') == 'Pemotongan' ? 'selected' : '' ?>>Pemotongan</option>
@@ -55,7 +53,7 @@
                             <option value="Pemverifikasi" <?= old('status_hpa') == 'Pemverifikasi' ? 'selected' : '' ?>>Pemverifikasi</option>
                             <option value="Authorized" <?= old('status_hpa') == 'Authorized' ? 'selected' : '' ?>>Authorized</option>
                             <option value="Pencetakan" <?= old('status_hpa') == 'Pencetakan' ? 'selected' : '' ?>>Pencetakan</option>
-                            <option value="Selesai Diproses" <?= old('status_hpa') == 'Selesai Diproses' ? 'selected' : '' ?>>Selesai Diproses</option>
+                            <option value="Selesai" <?= old('status_hpa') == 'Selesai' ? 'selected' : '' ?>>Selesai</option>
                         </select>
                     </div>
                 </div>
