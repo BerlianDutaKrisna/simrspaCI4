@@ -39,8 +39,17 @@
                         <a class="dropdown-item" href="<?= base_url('patient/index_patient') ?>">
                             <i class="fas fa-hospital-user fa-sm fa-fw mr-2 text-gray-600"></i> Patient Settings
                         </a>
-                        <a class="dropdown-item" href="<?= base_url('exam/index_exam') ?>">
-                            <i class="fas fa-vial fa-sm fa-fw mr-2 text-gray-600"></i> Hpa Settings
+                        <a class="dropdown-item" href="<?= base_url('hpa/index') ?>">
+                            <i class="fas fa-drumstick-bite fa-sm fa-fw mr-2 text-gray-600"></i> Hpa Settings
+                        </a>
+                        <a class="dropdown-item" href="<?= base_url('frs/index') ?>">
+                            <i class="fas fa-syringe fa-sm fa-fw mr-2 text-gray-600"></i> Frs Settings
+                        </a>
+                        <a class="dropdown-item" href="<?= base_url('srs/index') ?>">
+                            <i class="fas fa-prescription-bottle fa-sm fa-fw mr-2 text-gray-600"></i> Srs Settings
+                        </a>
+                        <a class="dropdown-item" href="<?= base_url('ihc/index') ?>">
+                            <i class="fas fa-vials fa-sm fa-fw mr-2 text-gray-600"></i> Ihc Settings
                         </a>
                     </div>
                     <div class="dropdown-divider"></div> <!-- Pembatas antara menu -->

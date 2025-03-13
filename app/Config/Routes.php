@@ -42,7 +42,7 @@ $routes->group('patient', function ($routes) {
 
 // Route untuk hpa
 $routes->group('hpa', ['namespace' => 'App\Controllers\Hpa'], function ($routes) {
-    $routes->get('index_hpa', 'HpaController::index_hpa');
+    $routes->get('index', 'HpaController::index');
     $routes->get('register', 'HpaController::register');
     $routes->post('insert', 'HpaController::insert');
     $routes->get('edit_hpa/(:segment)', 'HpaController::edit_hpa/$1');

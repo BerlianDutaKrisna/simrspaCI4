@@ -118,6 +118,13 @@ class HpaModel extends Model
             ->first();
     }
 
+    public function getHpaWitAllPatient()
+    {
+        return $this->select('hpa.*, patient.*')
+                    ->join('patient', 'patient.id_pasien = hpa.id_pasien', 'left')
+                    ->findAll();
+    }
+
     public function updateHpa($id_hpa, $data)
     {
         $builder = $this->db->table('hpa');  
