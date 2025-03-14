@@ -38,7 +38,7 @@ class Pencetakan extends BaseController
             'counts' => $this->getCounts(),
             'pencetakanDatahpa' => $pencetakanData_hpa,
         ];
-        
+
         return view('Hpa/Proses/pencetakan', $data);
     }
 
@@ -94,6 +94,12 @@ class Pencetakan extends BaseController
                     break;
                 case 'lanjut':
                     $this->hpaModel->update($id_hpa, ['status_hpa' => 'Selesai']);
+                    break;
+                case 'kembalikan':
+                    $this->pencetakan_hpa->delete($id_pencetakan_hpa);
+                    $this->hpaModel->update($id_hpa, [
+                        'status_hpa' => 'Authorized',
+                    ]);
                     break;
             }
         } catch (Exception $e) {

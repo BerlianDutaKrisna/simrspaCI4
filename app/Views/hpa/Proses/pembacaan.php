@@ -169,13 +169,13 @@
                                     </td>
                                     <?php if (in_array($row['status_pembacaan_hpa'], ["Proses Pembacaan"])): ?>
                                         <td>
-                                            <a href="<?= base_url('hpa/edit_mikroskopis/' . esc($row['id_hpa']) . '/' . esc($row['id_pemotongan_hpa']) . '/' . esc($row['id_pembacaan_hpa']) . '/' . esc($row['id_mutu_hpa'])) ?>" class="btn btn-warning btn-sm">
+                                            <a href="<?= base_url('hpa/edit_mikroskopis/' . esc($row['id_hpa'])) ?>" class="btn btn-warning btn-sm">
                                                 <i class="fas fa-pen"></i> Detail
                                             </a>
                                         </td>
                                     <?php elseif (in_array($row['status_pembacaan_hpa'], ["Selesai Pembacaan"])): ?>
                                         <td>
-                                            <a href="<?= base_url('hpa/edit_mikroskopis/' . esc($row['id_hpa']) . '/' . esc($row['id_pemotongan_hpa']) . '/' . esc($row['id_pembacaan_hpa']) . '/' . esc($row['id_mutu_hpa'])) ?>" class="btn btn-success btn-sm">
+                                            <a href="<?= base_url('hpa/edit_mikroskopis/' . esc($row['id_hpa'])) ?>" class="btn btn-success btn-sm">
                                                 <i class="fas fa-pen"></i> Detail
                                             </a>
                                         </td>

@@ -3,7 +3,6 @@
 namespace App\Controllers\Hpa;
 
 use App\Controllers\BaseController;
-use App\Controllers\mutu;
 use App\Models\Hpa\HpaModel;
 use App\Models\UsersModel;
 use App\Models\PatientModel;
@@ -256,8 +255,8 @@ class HpaController extends BaseController
                 $dokter_nama = $dokter ? $dokter['nama_user'] : null;
             }
 
-            if (!empty($pemotongan_hpa['id_user_pemotongan'])) {
-                $analis = $this->userModel->find($pemotongan_hpa['id_user_pemotongan']);
+            if (!empty($pemotongan_hpa['id_user_pemotongan_hpa'])) {
+                $analis = $this->userModel->find($pemotongan_hpa['id_user_pemotongan_hpa']);
                 $analis_nama = $analis ? $analis['nama_user'] : null;
             }
             // Tambahkan ke array pemotongan
@@ -291,34 +290,31 @@ class HpaController extends BaseController
         return view('hpa/edit', $data);
     }
 
-    public function edit_makroskopis($id_hpa, $id_pemotongan_hpa)
+    public function edit_makroskopis($id_hpa)
     {
         // Ambil data HPA berdasarkan ID
-        $hpa = $this->hpaModel->getHpaWithPatient($id_hpa);
+        $hpa = $this->hpaModel->getHpaWithRelationsProses($id_hpa);
         if (!$hpa) {
             return redirect()->back()->with('message', ['error' => 'HPA tidak ditemukan.']);
         }
-
+        $id_pemotongan_hpa = $hpa['id_pemotongan_hpa'];
         // Ambil data pemotongan berdasarkan id_pemotongan_hpa
         $pemotongan = $this->pemotongan_hpa->find($id_pemotongan_hpa);
-
         if (!empty($pemotongan)) {
             // Ambil nama dokter dan analis jika ID tersedia
             $pemotongan['dokter_nama'] = !empty($pemotongan['id_user_dokter_pemotongan_hpa'])
                 ? ($this->userModel->find($pemotongan['id_user_dokter_pemotongan_hpa'])['nama_user'] ?? null)
                 : null;
 
-            $pemotongan['analis_nama'] = !empty($pemotongan['id_user_pemotongan'])
-                ? ($this->userModel->find($pemotongan['id_user_pemotongan'])['nama_user'] ?? null)
+            $pemotongan['analis_nama'] = !empty($pemotongan['id_user_pemotongan_hpa'])
+                ? ($this->userModel->find($pemotongan['id_user_pemotongan_hpa'])['nama_user'] ?? null)
                 : null;
         } else {
             // Jika data pemotongan tidak ditemukan, set sebagai array kosong untuk mencegah error
             $pemotongan = [];
         }
-
         // Ambil data pengguna dengan status "Dokter"
         $users = $this->userModel->where('status_user', 'Dokter')->findAll();
-
         // Persiapkan data yang akan dikirim ke view
         $data = [
             'hpa'        => $hpa,
@@ -331,96 +327,92 @@ class HpaController extends BaseController
         return view('hpa/edit_makroskopis', $data);
     }
 
-
-    // Menampilkan form edit hpa
-    public function edit_mikroskopis($id_hpa, $id_pemotongan_hpa, $id_pembacaan_hpa, $id_mutu_hpa)
+    // Menampilkan form edit HPA mikroskopis
+    public function edit_mikroskopis($id_hpa)
     {
-        // Ambil data hpa berdasarkan ID
-        $hpa = $this->hpaModel->getHpaWithPatient($id_hpa);
+        // Ambil data HPA berdasarkan ID
+        $hpa = $this->hpaModel->getHpaWithRelationsProses($id_hpa);
         if (!$hpa) {
             return redirect()->back()->with('message', ['error' => 'HPA tidak ditemukan.']);
         }
-
         // Ambil data pemotongan dan pembacaan_hpa berdasarkan ID
-        $pemotongan_hpa = $this->pemotongan_hpa->find($id_pemotongan_hpa);
-        $pembacaan_hpa = $this->pembacaan_hpa->find($id_pembacaan_hpa);
-        $mutu = $this->mutu_hpa->find($id_mutu_hpa);
-
+        $id_pemotongan_hpa = $hpa['id_pemotongan_hpa'];
+        $id_pembacaan_hpa = $hpa['id_pembacaan_hpa'];
+        $id_mutu_hpa = $hpa['id_mutu_hpa'];
         // Inisialisasi dokter dan analis
         $dokter_nama = null;
         $analis_nama = null;
-
-        if ($pemotongan_hpa) {
-            // Ambil nama dokter dan analis jika ID tersedia
-            if (!empty($pemotongan_hpa['id_user_dokter_pemotongan_hpa'])) {
-                $dokter = $this->userModel->find($pemotongan_hpa['id_user_dokter_pemotongan_hpa']);
-                $dokter_nama = $dokter ? $dokter['nama_user'] : null;
+        $pemotongan_hpa = [];
+        if ($id_pemotongan_hpa) {
+            // Ambil data pemotongan_hpa dari model
+            $pemotongan_hpa = $this->pemotongan_hpa->find($id_pemotongan_hpa) ?? [];
+            if (!empty($pemotongan_hpa)) {
+                // Ambil nama dokter dan analis jika ID tersedia
+                $dokter_nama = !empty($pemotongan_hpa['id_user_dokter_pemotongan_hpa'])
+                    ? ($this->userModel->find($pemotongan_hpa['id_user_dokter_pemotongan_hpa'])['nama_user'] ?? null)
+                    : null;
+                $analis_nama = !empty($pemotongan_hpa['id_user_pemotongan_hpa'])
+                    ? ($this->userModel->find($pemotongan_hpa['id_user_pemotongan_hpa'])['nama_user'] ?? null)
+                    : null;
+                // Tambahkan informasi dokter dan analis ke dalam array pemotongan
+                $pemotongan_hpa['dokter_nama'] = $dokter_nama;
+                $pemotongan_hpa['analis_nama'] = $analis_nama;
             }
-
-            if (!empty($pemotongan_hpa['id_user_pemotongan'])) {
-                $analis = $this->userModel->find($pemotongan_hpa['id_user_pemotongan']);
-                $analis_nama = $analis ? $analis['nama_user'] : null;
-            }
-
-            // Tambahkan ke array pemotongan
-            $pemotongan_hpa['dokter_nama'] = $dokter_nama;
-            $pemotongan_hpa['analis_nama'] = $analis_nama;
         }
-
+        // Ambil data pembacaan_hpa jika tersedia
+        $pembacaan_hpa = $id_pembacaan_hpa ? $this->pembacaan_hpa->find($id_pembacaan_hpa) : [];
+        // Ambil data mutu jika tersedia
+        $mutu_hpa = $id_mutu_hpa ? $this->mutu_hpa->find($id_mutu_hpa) : null;
         // Pastikan mutu tidak kosong sebelum mengambil indikator
-        $indikator_4 = $mutu ? $mutu['indikator_4'] : "0";
-        $indikator_5 = $mutu ? $mutu['indikator_5'] : "0";
-        $indikator_6 = $mutu ? $mutu['indikator_6'] : "0";
-        $indikator_7 = $mutu ? $mutu['indikator_7'] : "0";
-        $indikator_8 = $mutu ? $mutu['indikator_8'] : "0";
-        $total_nilai_mutu_hpa = $mutu ? $mutu['total_nilai_mutu_hpa'] : "0";
-
-        // Tambahkan nilai indikator ke dalam pembacaan_hpa
-        $pembacaan_hpa['indikator_4'] = $indikator_4;
-        $pembacaan_hpa['indikator_5'] = $indikator_5;
-        $pembacaan_hpa['indikator_6'] = $indikator_6;
-        $pembacaan_hpa['indikator_7'] = $indikator_7;
-        $pembacaan_hpa['indikator_8'] = $indikator_8;
-        $pembacaan_hpa['total_nilai_mutu_hpa'] = $total_nilai_mutu_hpa;
-        // Ambil data pengguna dengan status "Dokter" dari tabel users
+        $mutu_hpa = [
+            'id_mutu_hpa' => $id_mutu_hpa ?? null,
+            'indikator_4' => $mutu_hpa['indikator_4'] ?? "0",
+            'indikator_5' => $mutu_hpa['indikator_5'] ?? "0",
+            'indikator_6' => $mutu_hpa['indikator_6'] ?? "0",
+            'indikator_7' => $mutu_hpa['indikator_7'] ?? "0",
+            'indikator_8' => $mutu_hpa['indikator_8'] ?? "0",
+            'total_nilai_mutu_hpa' => $mutu_hpa['total_nilai_mutu_hpa'] ?? "0"
+        ];
+        // Ambil data pengguna dengan status "Dokter"
         $users = $this->userModel->where('status_user', 'Dokter')->findAll();
-
         // Persiapkan data yang akan dikirim ke view
         $data = [
-            'hpa' => $hpa,
-            'pemotongan_hpa' => $pemotongan_hpa,
-            'pembacaan_hpa' => $pembacaan_hpa,
-            'mutu' => $mutu,
-            'users' => $users,
-            'id_user' => session()->get('id_user'),
-            'nama_user' => session()->get('nama_user'),
+            'hpa'             => $hpa,
+            'pemotongan_hpa'  => $pemotongan_hpa,
+            'pembacaan_hpa'   => $pembacaan_hpa,
+            'mutu_hpa'            => $mutu_hpa,
+            'users'           => $users,
+            'id_user'         => session()->get('id_user'),
+            'nama_user'       => session()->get('nama_user'),
         ];
 
         return view('hpa/edit_mikroskopis', $data);
     }
 
-    public function edit_penulisan($id_hpa, $id_pembacaan_hpa, $id_penulisan_hpa)
+    public function edit_penulisan($id_hpa)
     {
-        $hpa = $this->hpaModel->getHpaWithPatient($id_hpa);
-        $pembacaan = $this->pembacaan_hpa->find($id_pembacaan_hpa);
-        $penulisan = $this->penulisan_hpa->find($id_penulisan_hpa);
-        $users = $this->userModel->where('status_user', 'Dokter')->findAll();
-
-        // Ambil nama dokter dari pembacaan berdasarkan id_user_dokter_pembacaan_hpa
-        if ($pembacaan && !empty($pembacaan['id_user_dokter_pembacaan_hpa'])) {
-            $dokter = $this->userModel->find($pembacaan['id_user_dokter_pembacaan_hpa']);
-            $pembacaan['dokter_nama'] = $dokter ? $dokter['nama_user'] : null;
-        } else {
-            $pembacaan['dokter_nama'] = null;
+        // Ambil data hpa berdasarkan ID
+        $hpa = $this->hpaModel->getHpaWithRelationsProses($id_hpa);
+        if (!$hpa) {
+            return redirect()->back()->with('message', ['error' => 'HPA tidak ditemukan.']);
         }
-
+        $id_pembacaan_hpa = $hpa['id_pembacaan_hpa'];
+        $id_penulisan_hpa = $hpa['id_penulisan_hpa'];
+        $users = $this->userModel->where('status_user', 'Dokter')->findAll();
+        // Ambil nama dokter dari pembacaan berdasarkan id_user_dokter_pembacaan_hpa
+        if ($id_pembacaan_hpa && !empty($id_pembacaan_hpa['id_user_dokter_pembacaan_hpa'])) {
+            $dokter = $this->userModel->find($id_pembacaan_hpa['id_user_dokter_pembacaan_hpa']);
+            $id_pembacaan_hpa['dokter_nama'] = $dokter ? $dokter['nama_user'] : null;
+        } else {
+            $id_pembacaan_hpa['dokter_nama'] = null;
+        }
         // Data yang akan dikirim ke view
         $data = [
             'id_user' => session()->get('id_user'),
             'nama_user' => session()->get('nama_user'),
             'hpa' => $hpa,
-            'pembacaan' => $pembacaan,
-            'penulisan' => $penulisan,
+            'pembacaan' => $id_pembacaan_hpa,
+            'penulisan' => $id_penulisan_hpa,
             'users' => $users,
         ];
 
@@ -431,7 +423,7 @@ class HpaController extends BaseController
     public function edit_print_hpa($id_hpa, $id_penerimaan_hpa, $id_pembacaan_hpa, $id_pemverivifikasi_hpa, $id_authorized_hpa, $id_pencetakan_hpa)
     {
         // Ambil data hpa berdasarkan ID
-        $hpa = $this->hpaModel->getHpaWithPatient($id_hpa);
+        $hpa = $this->hpaModel->getHpaWithRelationsProses($id_hpa);
         $penerimaan_hpa = $this->penerimaan_hpa->find($id_penerimaan_hpa);
         $pembacaan_hpa = $this->pembacaan_hpa->find($id_pembacaan_hpa);
         $pemverifikasi_hpa = $this->pemverifikasi_hpa->find($id_pemverivifikasi_hpa) ?? [];
@@ -515,17 +507,15 @@ class HpaController extends BaseController
                     ]);
                 }
             }
-
             switch ($page_source) {
                 case 'edit_makroskopis':
                     $id_pemotongan_hpa = $this->request->getPost('id_pemotongan_hpa');
                     $this->pemotongan_hpa->update($id_pemotongan_hpa, [
-                        'id_user_pemotongan_hpa' => $id_user,
+                        'id_user_pemotongan_hpa_hpa' => $id_user,
                         'status_pemotongan_hpa' => 'Selesai Pemotongan',
                         'selesai_pemotongan_hpa' => date('Y-m-d H:i:s'),
                     ]);
-                    return redirect()->to('hpa/edit_makroskopis/' . $id_hpa . '/' . $id_pemotongan_hpa)->with('success', 'Data makroskopis berhasil diperbarui.');
-
+                    return redirect()->to('hpa/edit_makroskopis/' . $id_hpa)->with('success', 'Data makroskopis berhasil diperbarui.');
                 case 'edit_mikroskopis':
                     $id_pemotongan_hpa = $this->request->getPost('id_pemotongan_hpa');
                     $id_pembacaan_hpa = $this->request->getPost('id_pembacaan_hpa');
@@ -552,7 +542,7 @@ class HpaController extends BaseController
                         'indikator_8' => $indikator_8,
                         'total_nilai_mutu_hpa' => $keseluruhan_nilai_mutu,
                     ]);
-                    return redirect()->to('hpa/edit_mikroskopis/' . $id_hpa . '/' . $id_pemotongan_hpa . '/' . $id_pembacaan_hpa . '/' . $id_mutu_hpa)->with('success', 'Data mikroskopis berhasil diperbarui.');
+                    return redirect()->to('hpa/edit_mikroskopis/' . $id_hpa)->with('success', 'Data mikroskopis berhasil diperbarui.');
 
                 case 'edit_penulisan':
                     $id_pembacaan_hpa = $this->request->getPost('id_pembacaan_hpa');
@@ -663,7 +653,7 @@ class HpaController extends BaseController
                         'print_hpa' => $print_hpa,
                     ]);
 
-                    return redirect()->to('hpa/edit_penulisan/' . $id_hpa . '/' . $id_pembacaan_hpa . '/' . $id_penulisan_hpa)->with('success', 'Data penulisan berhasil diperbarui.');
+                    return redirect()->to('hpa/edit_penulisan/' . $id_hpa)->with('success', 'Data penulisan berhasil diperbarui.');
 
                 default:
                     return redirect()->back()->with('success', 'Data berhasil diperbarui.');
@@ -674,7 +664,6 @@ class HpaController extends BaseController
 
     public function update_print_hpa($id_hpa)
     {
-
         date_default_timezone_set('Asia/Jakarta');
         $id_user = session()->get('id_user');
         // Mendapatkan id_hpa dari POST
@@ -818,21 +807,17 @@ class HpaController extends BaseController
         if (!$this->validate($validation->getRules())) {
             return redirect()->back()->withInput()->with('errors', $validation->getErrors());
         }
-
         // Proses upload file
         $file = $this->request->getFile('foto_mikroskopis_hpa');
-
         if ($file->isValid() && !$file->hasMoved()) {
             // Generate nama file baru berdasarkan waktu
             $newFileName = date('HisdmY') . '.' . $file->getExtension();
-
             // Tentukan folder tujuan upload
             $uploadPath = ROOTPATH . 'public/uploads/hpa/mikroskopis/';
             // Pastikan folder tujuan ada
             if (!is_dir($uploadPath)) {
                 mkdir($uploadPath, 0777, true); // Membuat folder jika belum ada
             }
-
             // Hapus file lama jika ada
             if (!empty($hpa['foto_mikroskopis_hpa'])) {
                 $oldFilePath = $uploadPath . $hpa['foto_mikroskopis_hpa'];
@@ -840,12 +825,10 @@ class HpaController extends BaseController
                     unlink($oldFilePath); // Hapus file lama
                 }
             }
-
             // Pindahkan file baru ke folder tujuan dengan nama baru
             if ($file->move($uploadPath, $newFileName)) {
                 // Update nama file baru di database
                 $hpaModel->update($id_hpa, ['foto_mikroskopis_hpa' => $newFileName]);
-
                 // Berhasil, redirect dengan pesan sukses
                 return redirect()->back()->with('success', 'Foto mikroskopis berhasil diunggah dan diperbarui.');
             } else {

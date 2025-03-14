@@ -95,9 +95,9 @@ class HpaModel extends Model
     public function getHpaChartData()
     {
         return $this->select("DATE_FORMAT(tanggal_permintaan, '%Y') AS tahun, DATE_FORMAT(tanggal_permintaan, '%M') AS bulan, COUNT(*) AS total")
-        ->where('tanggal_permintaan IS NOT NULL')
-        ->groupBy("tahun, bulan")
-        ->orderBy("MIN(tanggal_permintaan)", "ASC")
+            ->where('tanggal_permintaan IS NOT NULL')
+            ->groupBy("tahun, bulan")
+            ->orderBy("MIN(tanggal_permintaan)", "ASC")
             ->findAll();
     }
 
@@ -113,26 +113,29 @@ class HpaModel extends Model
     public function getHpaWithPatient()
     {
         return $this->select('hpa.*, patient.*')
-        ->join('patient', 'patient.id_pasien = hpa.id_pasien')
-        ->findAll();
+            ->join('patient', 'patient.id_pasien = hpa.id_pasien')
+            ->findAll();
     }
 
     public function getHpaWithRelationsProses($id_hpa)
-{
-    return $this->select('hpa.*, patient.*, pemotongan_hpa.*, pembacaan_hpa.*')
-                ->join('patient', 'patient.id_pasien = hpa.id_pasien', 'left')
-                ->join('pemotongan_hpa', 'pemotongan_hpa.id_hpa = hpa.id_hpa', 'left')
-                ->join('pembacaan_hpa', 'pembacaan_hpa.id_hpa = hpa.id_hpa', 'left')
-                ->where('hpa.id_hpa', $id_hpa)
-                ->first();
-}
+    {
+        return $this->select('hpa.*, patient.*, penerimaan_hpa.*, pemotongan_hpa.*, pembacaan_hpa.*, penulisan_hpa.*, mutu_hpa.*')
+            ->join('patient', 'patient.id_pasien = hpa.id_pasien', 'left')
+            ->join('penerimaan_hpa', 'penerimaan_hpa.id_hpa = hpa.id_hpa', 'left')
+            ->join('pemotongan_hpa', 'pemotongan_hpa.id_hpa = hpa.id_hpa', 'left')
+            ->join('pembacaan_hpa', 'pembacaan_hpa.id_hpa = hpa.id_hpa', 'left')
+            ->join('penulisan_hpa', 'penulisan_hpa.id_hpa = hpa.id_hpa', 'left')
+            ->join('mutu_hpa', 'mutu_hpa.id_hpa = hpa.id_hpa', 'left')
+            ->where('hpa.id_hpa', $id_hpa)
+            ->first();
+    }
 
     public function updateHpa($id_hpa, $data)
     {
-        $builder = $this->db->table('hpa');  
-        $builder->where('id_hpa', $id_hpa); 
-        $builder->update($data);           
-        return $this->db->affectedRows(); 
+        $builder = $this->db->table('hpa');
+        $builder->where('id_hpa', $id_hpa);
+        $builder->update($data);
+        return $this->db->affectedRows();
     }
 
     public function updatePenerima($id_hpa, $data)
@@ -178,5 +181,4 @@ class HpaModel extends Model
             throw new \RuntimeException('Update data gagal.'); // Menangani error
         }
     }
-
 }

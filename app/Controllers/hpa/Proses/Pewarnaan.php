@@ -41,7 +41,7 @@ class Pewarnaan extends BaseController
             'counts' => $this->getCounts(),
             'pewarnaanDatahpa' => $pewarnaanData_hpa,
         ];
-        
+
         return view('Hpa/Proses/pewarnaan', $data);
     }
 
@@ -104,6 +104,12 @@ class Pewarnaan extends BaseController
                     if (!$this->pembacaan_hpa->insert($pembacaanData)) {
                         throw new Exception('Gagal menyimpan data pembacaan.');
                     }
+                    break;
+                case 'kembalikan':
+                    $this->pewarnaan_hpa->delete($id_pewarnaan_hpa);
+                    $this->hpaModel->update($id_hpa, [
+                        'status_hpa' => 'Pemotongan Tipis',
+                    ]);
                     break;
             }
         } catch (Exception $e) {

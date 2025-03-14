@@ -41,7 +41,7 @@ class Pembacaan extends BaseController
             'counts' => $this->getCounts(),
             'pembacaanDatahpa' => $pembacaanData_hpa,
         ];
-        
+
         return view('Hpa/Proses/pembacaan', $data);
     }
 
@@ -126,6 +126,12 @@ class Pembacaan extends BaseController
                     if (!$this->penulisan_hpa->insert($penulisanData)) {
                         throw new Exception('Gagal menyimpan data penulisan.');
                     }
+                    break;
+                case 'kembalikan':
+                    $this->pembacaan_hpa->delete($id_pembacaan_hpa);
+                    $this->hpaModel->update($id_hpa, [
+                        'status_hpa' => 'Pewarnaan',
+                    ]);
                     break;
             }
         } catch (Exception $e) {

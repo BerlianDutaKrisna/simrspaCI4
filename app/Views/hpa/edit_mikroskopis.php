@@ -16,9 +16,9 @@
                 <input type="hidden" name="id_hpa" value="<?= $hpa['id_hpa'] ?>">
                 <input type="hidden" name="id_pemotongan_hpa" value="<?= $pemotongan_hpa['id_pemotongan_hpa'] ?>">
                 <input type="hidden" name="id_pembacaan_hpa" value="<?= $pembacaan_hpa['id_pembacaan_hpa'] ?>">
-                <input type="hidden" name="id_mutu_hpa" value="<?= $mutu['id_mutu_hpa'] ?>">
+                <input type="hidden" name="id_mutu_hpa" value="<?= $mutu_hpa['id_mutu_hpa'] ?>">
                 <input type="hidden" name="page_source" value="edit_mikroskopis">
-                <input type="hidden" name="total_nilai_mutu_hpa" value="<?= $pembacaan_hpa['total_nilai_mutu_hpa']; ?>">
+                <input type="hidden" name="total_nilai_mutu_hpa" value="<?= $mutu_hpa['total_nilai_mutu_hpa']; ?>">
 
 
                 <!-- Kolom Kode HPA dan Diagnosa -->
@@ -175,8 +175,8 @@
                     <label class="col-sm-2 col-form-label">mutu_hpa</label>
                     <div class="col-sm-4">
                         <div class="form-check">
-                            <input type="checkbox" id="checkAll_<?= $mutu['id_mutu_hpa']; ?>" class="form-check-input">
-                            <label class="form-check-label" for="checkAll_<?= $mutu['id_mutu_hpa']; ?>">
+                            <input type="checkbox" id="checkAll_<?= $mutu_hpa['id_mutu_hpa']; ?>" class="form-check-input">
+                            <label class="form-check-label" for="checkAll_<?= $mutu_hpa['id_mutu_hpa']; ?>">
                                 Pilih Semua
                             </label>
                         </div>
@@ -185,10 +185,10 @@
                             <input type="checkbox"
                                 name="indikator_4"
                                 value="10"
-                                id="indikator_4_<?= $mutu['id_mutu_hpa']; ?>"
+                                id="indikator_4_<?= $mutu_hpa['id_mutu_hpa']; ?>"
                                 class="form-check-input child-checkbox"
-                                <?= ($pembacaan_hpa['indikator_4'] !== "0") ? 'checked' : ''; ?>>
-                            <label class="form-check-label" for="indikator_4_<?= $mutu['id_mutu_hpa']; ?>">
+                                <?= ($mutu_hpa['indikator_4'] !== "0") ? 'checked' : ''; ?>>
+                            <label class="form-check-label" for="indikator_4_<?= $mutu_hpa['id_mutu_hpa']; ?>">
                                 Sediaan tanpa lipatan
                             </label>
                         </div>
@@ -197,10 +197,10 @@
                             <input type="checkbox"
                                 name="indikator_5"
                                 value="10"
-                                id="indikator_5_<?= $mutu['id_mutu_hpa']; ?>"
+                                id="indikator_5_<?= $mutu_hpa['id_mutu_hpa']; ?>"
                                 class="form-check-input child-checkbox"
-                                <?= ($pembacaan_hpa['indikator_5'] !== "0") ? 'checked' : ''; ?>>
-                            <label class="form-check-label" for="indikator_5_<?= $mutu['id_mutu_hpa']; ?>">
+                                <?= ($mutu_hpa['indikator_5'] !== "0") ? 'checked' : ''; ?>>
+                            <label class="form-check-label" for="indikator_5_<?= $mutu_hpa['id_mutu_hpa']; ?>">
                                 Sediaan tanpa goresan mata pisau
                             </label>
                         </div>
@@ -209,10 +209,10 @@
                             <input type="checkbox"
                                 name="indikator_6"
                                 value="10"
-                                id="indikator_6_<?= $mutu['id_mutu_hpa']; ?>"
+                                id="indikator_6_<?= $mutu_hpa['id_mutu_hpa']; ?>"
                                 class="form-check-input child-checkbox"
-                                <?= ($pembacaan_hpa['indikator_6'] !== "0") ? 'checked' : ''; ?>>
-                            <label class="form-check-label" for="indikator_6_<?= $mutu['id_mutu_hpa']; ?>">
+                                <?= ($mutu_hpa['indikator_6'] !== "0") ? 'checked' : ''; ?>>
+                            <label class="form-check-label" for="indikator_6_<?= $mutu_hpa['id_mutu_hpa']; ?>">
                                 Kontras warna sediaan cukup jelas
                             </label>
                         </div>
@@ -221,10 +221,10 @@
                             <input type="checkbox"
                                 name="indikator_7"
                                 value="10"
-                                id="indikator_7_<?= $mutu['id_mutu_hpa']; ?>"
+                                id="indikator_7_<?= $mutu_hpa['id_mutu_hpa']; ?>"
                                 class="form-check-input child-checkbox"
-                                <?= ($pembacaan_hpa['indikator_7'] !== "0") ? 'checked' : ''; ?>>
-                            <label class="form-check-label" for="indikator_7_<?= $mutu['id_mutu_hpa']; ?>">
+                                <?= ($mutu_hpa['indikator_7'] !== "0") ? 'checked' : ''; ?>>
+                            <label class="form-check-label" for="indikator_7_<?= $mutu_hpa['id_mutu_hpa']; ?>">
                                 Sediaan tanpa gelembung udara
                             </label>
                         </div>
@@ -233,17 +233,17 @@
                             <input type="checkbox"
                                 name="indikator_8"
                                 value="10"
-                                id="indikator_8_<?= $mutu['id_mutu_hpa']; ?>"
+                                id="indikator_8_<?= $mutu_hpa['id_mutu_hpa']; ?>"
                                 class="form-check-input child-checkbox"
-                                <?= ($pembacaan_hpa['indikator_8'] !== "0") ? 'checked' : ''; ?>>
-                            <label class="form-check-label" for="indikator_8_<?= $mutu['id_mutu_hpa']; ?>">
+                                <?= ($mutu_hpa['indikator_8'] !== "0") ? 'checked' : ''; ?>>
+                            <label class="form-check-label" for="indikator_8_<?= $mutu_hpa['id_mutu_hpa']; ?>">
                                 Sediaan tanpa bercak / sidik jari
                             </label>
                         </div>
 
                         <script>
                             document.addEventListener('DOMContentLoaded', function() {
-                                const checkAll = document.getElementById('checkAll_<?= $mutu['id_mutu_hpa']; ?>');
+                                const checkAll = document.getElementById('checkAll_<?= $mutu_hpa['id_mutu_hpa']; ?>');
                                 const checkboxes = document.querySelectorAll('.child-checkbox');
 
                                 // Ketika "Pilih Semua" dicentang/ditandai

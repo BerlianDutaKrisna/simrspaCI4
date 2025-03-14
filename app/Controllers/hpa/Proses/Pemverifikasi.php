@@ -41,7 +41,7 @@ class Pemverifikasi extends BaseController
             'counts' => $this->getCounts(),
             'pemverifikasiDatahpa' => $pemverifikasiData_hpa,
         ];
-        
+
         return view('Hpa/Proses/pemverifikasi', $data);
     }
 
@@ -104,6 +104,12 @@ class Pemverifikasi extends BaseController
                     if (!$this->authorized_hpa->insert($authorizedData)) {
                         throw new Exception('Gagal menyimpan data authorized.');
                     }
+                    break;
+                case 'kembalikan':
+                    $this->pemverifikasi_hpa->delete($id_pemverifikasi_hpa);
+                    $this->hpaModel->update($id_hpa, [
+                        'status_hpa' => 'Penulisan',
+                    ]);
                     break;
             }
         } catch (Exception $e) {

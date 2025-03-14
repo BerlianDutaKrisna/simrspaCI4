@@ -41,7 +41,7 @@ class Penanaman extends BaseController
             'counts' => $this->getCounts(),
             'penanamanDatahpa' => $penanamanData_hpa,
         ];
-        
+
         return view('Hpa/Proses/penanaman', $data);
     }
 
@@ -115,6 +115,12 @@ class Penanaman extends BaseController
                     if (!$this->pemotongan_tipis_hpa->insert($pemotongan_tipisData)) {
                         throw new Exception('Gagal menyimpan data pemotongan_tipis.');
                     }
+                    break;
+                case 'kembalikan':
+                    $this->penanaman_hpa->delete($id_penanaman_hpa);
+                    $this->hpaModel->update($id_hpa, [
+                        'status_hpa' => 'Pemprosesan',
+                    ]);
                     break;
             }
         } catch (Exception $e) {

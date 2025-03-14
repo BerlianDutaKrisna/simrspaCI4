@@ -41,7 +41,7 @@ class Penulisan extends BaseController
             'counts' => $this->getCounts(),
             'penulisanDatahpa' => $penulisanData_hpa,
         ];
-        
+
         return view('Hpa/Proses/penulisan', $data);
     }
 
@@ -104,6 +104,12 @@ class Penulisan extends BaseController
                     if (!$this->pemverifikasi_hpa->insert($pemverifikasiData)) {
                         throw new Exception('Gagal menyimpan data pemverifikasi.');
                     }
+                    break;
+                case 'kembalikan':
+                    $this->penulisan_hpa->delete($id_penulisan_hpa);
+                    $this->hpaModel->update($id_hpa, [
+                        'status_hpa' => 'Pembacaan',
+                    ]);
                     break;
             }
         } catch (Exception $e) {

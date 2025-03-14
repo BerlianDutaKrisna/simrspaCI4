@@ -41,7 +41,7 @@ class Pemprosesan extends BaseController
             'counts' => $this->getCounts(),
             'pemprosesanDatahpa' => $pemprosesanData_hpa,
         ];
-        
+
         return view('Hpa/Proses/pemprosesan', $data);
     }
 
@@ -104,6 +104,12 @@ class Pemprosesan extends BaseController
                     if (!$this->penanaman_hpa->insert($penanamanData)) {
                         throw new Exception('Gagal menyimpan data penanaman.');
                     }
+                    break;
+                case 'kembalikan':
+                    $this->pemprosesan_hpa->delete($id_pemprosesan_hpa);
+                    $this->hpaModel->update($id_hpa, [
+                        'status_hpa' => 'Pemotongan',
+                    ]);
                     break;
             }
         } catch (Exception $e) {

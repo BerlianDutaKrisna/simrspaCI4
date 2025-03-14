@@ -140,7 +140,7 @@
         <table class="makroskopis-content-table">
             <tr>
                 <td>Makroskopis</td>
-                <td>Analis PA: <?= $pemotongan['analis_nama'] ?? '' ?> | Waktu Pemotongan: <?= isset($pemotongan['mulai_pemotongan']) ? date('H:i d-m-Y', strtotime($pemotongan['mulai_pemotongan'])) : ''; ?></td>
+                <td>Analis PA: <?= $pemotongan['analis_nama'] ?? '' ?> | Waktu Pemotongan: <?= isset($pemotongan['mulai_pemotongan_hpa']) ? date('H:i d-m-Y', strtotime($pemotongan['mulai_pemotongan_hpa'])) : ''; ?></td>
             </tr>
             <tr>
                 <td colspan="2">${detailMakroskopis}</td>
@@ -165,7 +165,7 @@
         <table class="mikroskopis-content-table">
             <tr>
                 <td>Mikroskopis</td>
-                <td>Dokter PA: <?= $pemotongan['dokter_nama'] ?? '' ?></td>
+                <td>Dokter PA: <?= $pemotongan['dokter_nama'] ?? '' ?> | Waktu pembacaan: <?= isset($pembacaan['mulai_pembacaan_hpa']) ? date('H:i d-m-Y', strtotime($pembacaan['mulai_pembacaan_hpa'])) : ''; ?></td>
             </tr>
             <tr>
                 <td colspan="2">${detailMikroskopis}</td>
