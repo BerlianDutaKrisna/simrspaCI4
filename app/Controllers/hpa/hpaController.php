@@ -391,31 +391,41 @@ class HpaController extends BaseController
 
     public function edit_penulisan($id_hpa)
     {
-        // Ambil data hpa berdasarkan ID
+        // Ambil data HPA berdasarkan ID
         $hpa = $this->hpaModel->getHpaWithRelationsProses($id_hpa);
         if (!$hpa) {
             return redirect()->back()->with('message', ['error' => 'HPA tidak ditemukan.']);
         }
-        $id_pembacaan_hpa = $hpa['id_pembacaan_hpa'];
-        $id_penulisan_hpa = $hpa['id_penulisan_hpa'];
-        $users = $this->userModel->where('status_user', 'Dokter')->findAll();
-        // Ambil nama dokter dari pembacaan berdasarkan id_user_dokter_pembacaan_hpa
-        if ($id_pembacaan_hpa && !empty($id_pembacaan_hpa['id_user_dokter_pembacaan_hpa'])) {
-            $dokter = $this->userModel->find($id_pembacaan_hpa['id_user_dokter_pembacaan_hpa']);
-            $id_pembacaan_hpa['dokter_nama'] = $dokter ? $dokter['nama_user'] : null;
-        } else {
-            $id_pembacaan_hpa['dokter_nama'] = null;
+        // Inisialisasi array untuk pembacaan dan penulisan HPA
+        $pembacaan_hpa = [];
+        $penulisan_hpa = [];
+        // Ambil data pembacaan HPA jika tersedia
+        if (!empty($hpa['id_pembacaan_hpa'])) {
+            $pembacaan_hpa = $this->pembacaan_hpa->find($hpa['id_pembacaan_hpa']) ?? [];
+            // Ambil nama dokter dari pembacaan jika tersedia
+            if (!empty($pembacaan_hpa['id_user_dokter_pembacaan_hpa'])) {
+                $dokter = $this->userModel->find($pembacaan_hpa['id_user_dokter_pembacaan_hpa']);
+                $pembacaan_hpa['dokter_nama'] = $dokter ? $dokter['nama_user'] : null;
+            } else {
+                $pembacaan_hpa['dokter_nama'] = null;
+            }
         }
+        // Ambil data penulisan HPA jika tersedia
+        if (!empty($hpa['id_penulisan_hpa'])) {
+            $penulisan_hpa = $this->penulisan_hpa->find($hpa['id_penulisan_hpa']) ?? [];
+        }
+        // Ambil daftar user dengan status "Dokter"
+        $users = $this->userModel->where('status_user', 'Dokter')->findAll();
         // Data yang akan dikirim ke view
         $data = [
             'id_user' => session()->get('id_user'),
             'nama_user' => session()->get('nama_user'),
             'hpa' => $hpa,
-            'pembacaan' => $id_pembacaan_hpa,
-            'penulisan' => $id_penulisan_hpa,
+            'pembacaan' => $pembacaan_hpa,
+            'penulisan' => $penulisan_hpa,
             'users' => $users,
         ];
-
+        
         return view('hpa/edit_penulisan', $data);
     }
 
