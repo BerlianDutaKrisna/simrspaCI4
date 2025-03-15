@@ -13,10 +13,11 @@ class Pembacaan_frs extends Model // Update nama model
     // Kolom-kolom yang dapat diisi melalui mass-assignment
     protected $allowedFields = [
         'id_frs',
-        'id_user_pembacaan_frs', // Update nama kolom
-        'status_pembacaan_frs', // Update nama kolom
-        'mulai_pembacaan_frs', // Update nama kolom
-        'selesai_pembacaan_frs', // Update nama kolom
+        'id_user_pembacaan_frs',
+        'status_pembacaan_frs',
+        'mulai_pembacaan_frs',
+        'selesai_pembacaan_frs',
+        'id_user_dokter_pembacaan_frs',
         'created_at',
         'updated_at'
     ];

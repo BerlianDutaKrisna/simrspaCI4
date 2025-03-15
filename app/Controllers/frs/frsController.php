@@ -261,7 +261,7 @@ class FrsController extends BaseController
             'id_user'         => session()->get('id_user'),
             'nama_user'       => session()->get('nama_user'),
         ];
-        dd($data);
+        
         return view('frs/edit_mikroskopis', $data);
     }
 
@@ -340,7 +340,6 @@ class FrsController extends BaseController
         if (!$frs) {
             return redirect()->back()->with('message', ['error' => 'frs tidak ditemukan.']);
         }
-        $id_pemotongan_frs = $frs['id_pemotongan_frs'];
         $id_pembacaan_frs = $frs['id_pembacaan_frs'];
 
         // Validasi form input
@@ -373,63 +372,17 @@ class FrsController extends BaseController
 
         // Proses update tabel frs
         if ($this->frsModel->update($id_frs, $data)) {
-            // Update data pemotongan jika id_user_dokter_pemotongan_frs ada
-            if (!empty($data['id_user_dokter_pemotongan_frs'])) {
-                $pemotongan = $this->pemotongan_frs->where('id_pemotongan_frs', $id_pemotongan_frs)->first();
-
-                if ($pemotongan) {
-                    $this->pemotongan_frs->update($pemotongan['id_pemotongan_frs'], [
-                        'id_user_dokter_pemotongan_frs' => $data['id_user_dokter_pemotongan_frs'],
-                    ]);
-                }
-            }
-            // Update data pembacaan jika id_user_dokter_pembacaan_frs ada
-            if (!empty($data['id_user_dokter_pembacaan_frs'])) {
-                $pembacaan = $this->pembacaan_frs->where('id_pembacaan_frs', $id_pembacaan_frs)->first();
-
-                if ($pembacaan) {
-                    $this->pembacaan_frs->update($pembacaan['id_pembacaan_frs'], [
-                        'id_user_dokter_pembacaan_frs' => $data['id_user_dokter_pembacaan_frs'],
-                    ]);
-                }
-            }
             switch ($page_source) {
-                case 'edit_makroskopis':
-                    $id_pemotongan_frs = $this->request->getPost('id_pemotongan_frs');
-                    $this->pemotongan_frs->update($id_pemotongan_frs, [
-                        'id_user_pemotongan_frs_frs' => $id_user,
-                        'status_pemotongan_frs' => 'Selesai Pemotongan',
-                        'selesai_pemotongan_frs' => date('Y-m-d H:i:s'),
-                    ]);
-                    return redirect()->to('frs/edit_makroskopis/' . $id_frs)->with('success', 'Data makroskopis berhasil diperbarui.');
                 case 'edit_mikroskopis':
-                    $id_pemotongan_frs = $this->request->getPost('id_pemotongan_frs');
                     $id_pembacaan_frs = $this->request->getPost('id_pembacaan_frs');
-                    $id_user_dokter_pembacaan_frs = (int) $this->request->getPost('id_user_dokter_pemotongan_frs');
+                    $id_user_dokter_pembacaan_frs = (int) $this->request->getPost('id_user_dokter_pembacaan_frs');
                     $this->pembacaan_frs->update($id_pembacaan_frs, [
                         'id_user_pembacaan_frs' => $id_user,
                         'id_user_dokter_pembacaan_frs' => $id_user_dokter_pembacaan_frs,
                         'status_pembacaan_frs' => 'Selesai Pembacaan',
                         'selesai_pembacaan_frs' => date('Y-m-d H:i:s'),
                     ]);
-                    $id_mutu_frs = $this->request->getPost('id_mutu_frs');
-                    $indikator_4 = (string) ($this->request->getPost('indikator_4') ?? '0');
-                    $indikator_5 = (string) ($this->request->getPost('indikator_5') ?? '0');
-                    $indikator_6 = (string) ($this->request->getPost('indikator_6') ?? '0');
-                    $indikator_7 = (string) ($this->request->getPost('indikator_7') ?? '0');
-                    $indikator_8 = (string) ($this->request->getPost('indikator_8') ?? '0');
-                    $total_nilai_mutu_frs = (string) ($this->request->getPost('total_nilai_mutu_frs') ?? '0');
-                    $keseluruhan_nilai_mutu = $total_nilai_mutu_frs + (int)$indikator_5 + (int)$indikator_6 + (int)$indikator_7 + (int)$indikator_8;
-                    $this->mutu_frs->update($id_mutu_frs, [
-                        'indikator_4' => $indikator_4,
-                        'indikator_5' => $indikator_5,
-                        'indikator_6' => $indikator_6,
-                        'indikator_7' => $indikator_7,
-                        'indikator_8' => $indikator_8,
-                        'total_nilai_mutu_frs' => $keseluruhan_nilai_mutu,
-                    ]);
                     return redirect()->to('frs/edit_mikroskopis/' . $id_frs)->with('success', 'Data mikroskopis berhasil diperbarui.');
-
                 case 'edit_penulisan':
                     $id_pembacaan_frs = $this->request->getPost('id_pembacaan_frs');
                     $id_penulisan_frs = $this->request->getPost('id_penulisan_frs');
@@ -438,7 +391,6 @@ class FrsController extends BaseController
                         'status_penulisan_frs' => 'Selesai Penulisan',
                         'selesai_penulisan_frs' => date('Y-m-d H:i:s'),
                     ]);
-
                     // Ambil data dari form
                     $lokasi_spesimen = $this->request->getPost('lokasi_spesimen');
                     $diagnosa_klinik = $this->request->getPost('diagnosa_klinik');
@@ -446,7 +398,6 @@ class FrsController extends BaseController
                     $mikroskopis_frs = $this->request->getPost('mikroskopis_frs');
                     $tindakan_spesimen = $this->request->getPost('tindakan_spesimen');
                     $hasil_frs = $this->request->getPost('hasil_frs');
-
                     // Simpan data lokasi, diagnosa, makroskopis, mikroskopis, hasil terlebih dahulu
                     $this->frsModel->update($id_frs, [
                         'lokasi_spesimen' => $lokasi_spesimen,
@@ -455,7 +406,6 @@ class FrsController extends BaseController
                         'mikroskopis_frs' => $mikroskopis_frs,
                         'hasil_frs' => $hasil_frs,
                     ]);
-
                     // Setelah semua data tersimpan, buat data print_frs
                     $print_frs = '
                     <table width="800pt" height="80">
@@ -538,9 +488,7 @@ class FrsController extends BaseController
                     $this->frsModel->update($id_frs, [
                         'print_frs' => $print_frs,
                     ]);
-
                     return redirect()->to('frs/edit_penulisan/' . $id_frs)->with('success', 'Data penulisan berhasil diperbarui.');
-
                 default:
                     return redirect()->back()->with('success', 'Data berhasil diperbarui.');
             }

@@ -425,7 +425,7 @@ class HpaController extends BaseController
             'penulisan' => $penulisan_hpa,
             'users' => $users,
         ];
-        
+
         return view('hpa/edit_penulisan', $data);
     }
 
@@ -527,9 +527,8 @@ class HpaController extends BaseController
                     ]);
                     return redirect()->to('hpa/edit_makroskopis/' . $id_hpa)->with('success', 'Data makroskopis berhasil diperbarui.');
                 case 'edit_mikroskopis':
-                    $id_pemotongan_hpa = $this->request->getPost('id_pemotongan_hpa');
                     $id_pembacaan_hpa = $this->request->getPost('id_pembacaan_hpa');
-                    $id_user_dokter_pembacaan_hpa = (int) $this->request->getPost('id_user_dokter_pemotongan_hpa');
+                    $id_user_dokter_pembacaan_hpa = (int) $this->request->getPost('id_user_dokter_pembacaan_hpa');
                     $this->pembacaan_hpa->update($id_pembacaan_hpa, [
                         'id_user_pembacaan_hpa' => $id_user,
                         'id_user_dokter_pembacaan_hpa' => $id_user_dokter_pembacaan_hpa,

@@ -169,17 +169,11 @@
 
                 <!-- Tombol Simpan -->
                 <div class="form-group row">
-                    <div class="col-sm-6 text-center mb-3">
+                    <div class="col-sm-12 text-center mb-3">
                         <button type="submit"
                             class="btn btn-success btn-user w-100"
                             formaction="<?= base_url('frs/update/' . $frs['id_frs']); ?>">
                             Simpan
-                        </button>
-                    </div>
-                    <div class="col-sm-6 text-center">
-                        <!-- Tombol Cetak -->
-                        <button type="button" class="btn btn-info btn-user w-100" onclick="cetakProses()">
-                            <i class="fas fa-print"></i> Cetak
                         </button>
                     </div>
                 </div>
@@ -224,4 +218,3 @@
 </div>
 <?= $this->include('templates/notifikasi') ?>
 <?= $this->include('templates/exam/footer_edit_exam'); ?>
-<?= $this->include('templates/proses/cetak_proses'); ?>
