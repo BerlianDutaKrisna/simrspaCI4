@@ -62,9 +62,11 @@ $routes->group('hpa', ['namespace' => 'App\Controllers\Hpa'], function ($routes)
 
 // Route untuk frs
 $routes->group('frs', ['namespace' => 'App\Controllers\Frs'], function ($routes) {
+    $routes->get('index', 'FrsController::index');
     $routes->get('register', 'FrsController::register');
     $routes->post('insert', 'FrsController::insert');
-    $routes->get('index', 'FrsController::index');
+    $routes->get('edit_mikroskopis/(:segment)', 'FrsController::edit_mikroskopis/$1');
+    $routes->post('update/(:segment)', 'FrsController::update/$1');
 });
 
 // Route untuk srs

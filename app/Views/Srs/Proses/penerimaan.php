@@ -19,15 +19,14 @@
                     <thead>
                         <tr>
                             <th>No</th>
+                            <th>Aksi</th>
+                            <th>Detail</th>
                             <th>Kode srs</th>
                             <th>Nama Pasien</th>
-                            <th>Aksi</th>
-                            <th>Kelengkapan Form</th>
                             <th>Analis</th>
                             <th>Mulai Penerimaan</th>
                             <th>Selesai Penerimaan</th>
                             <th>Deadline Hasil</th>
-                            <th>Detail</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -36,8 +35,6 @@
                             <?php foreach ($penerimaanDatasrs as $row): ?>
                                 <tr>
                                     <td><?= $i ?></td>
-                                    <td><?= esc($row['kode_srs']); ?></td>
-                                    <td><?= esc($row['nama_pasien']); ?></td>
                                     <td>
                                         <input type="checkbox"
                                             name="id_proses[]"
@@ -48,23 +45,23 @@
                                                             ]) ?>'
                                             autocomplete="off">
                                     </td>
-                                    <td>
-                                        <?php if ($row['status_penerimaan_srs'] === "Proses Penerimaan"): ?>
-                                            <input type="hidden" name="total_nilai_mutu" value="<?= esc($row['total_nilai_mutu_srs']); ?>">
-                                            <div class="form-check">
-                                                <input type="checkbox"
-                                                    name="indikator_1"
-                                                    value="10"
-                                                    id="indikator_1_<?= esc($row['id_mutu_srs']); ?>"
-                                                    class="form-check-input">
-                                                <label class="form-check-label" for="indikator_1_<?= esc($row['id_mutu_srs']); ?>">
-                                                    Lokasi dan Diagnosa tertulis pada form?
-                                                </label>
-                                            </div>
-                                        <?php else: ?>
-                                            <?= esc($row['total_nilai_mutu_srs']); ?> %
-                                        <?php endif; ?>
-                                    </td>
+                                    <?php if (in_array($row['status_penerimaan_srs'], ["Proses Penerimaan"])): ?>
+                                        <td>
+                                            <a href="<?= base_url('exam/edit_mikroskopis/' . esc($row['id_srs'])) ?>" class="btn btn-warning btn-sm">
+                                                <i class="fas fa-pen"></i> Detail
+                                            </a>
+                                        </td>
+                                    <?php elseif (in_array($row['status_penerimaan_srs'], ["Selesai Penerimaan"])): ?>
+                                        <td>
+                                            <a href="<?= base_url('exam/edit_mikroskopis/' . esc($row['id_srs'])) ?>" class="btn btn-success btn-sm mx-1">
+                                                <i class="fas fa-pen"></i> Detail
+                                            </a>
+                                        </td>
+                                    <?php else: ?>
+                                        <td></td>
+                                    <?php endif; ?>
+                                    <td><?= esc($row['kode_srs']); ?></td>
+                                    <td><?= esc($row['nama_pasien']); ?></td>
                                     <td><?= esc($row['nama_user_penerimaan_srs']); ?></td>
                                     <td>
                                         <?= empty($row['mulai_penerimaan_srs']) ? '-' : esc(date('H:i, d-m-Y', strtotime($row['mulai_penerimaan_srs']))); ?>
@@ -91,21 +88,6 @@
                                         }
                                         ?>
                                     </td>
-                                    <?php if (in_array($row['status_penerimaan_srs'], ["Proses Penerimaan"])): ?>
-                                        <td>
-                                            <a href="<?= base_url('exam/edit_mikroskopis/' . esc($row['id_srs'])) ?>" class="btn btn-warning btn-sm">
-                                                <i class="fas fa-pen"></i> Detail
-                                            </a>
-                                        </td>
-                                    <?php elseif (in_array($row['status_penerimaan_srs'], ["Selesai Penerimaan"])): ?>
-                                        <td>
-                                            <a href="<?= base_url('exam/edit_mikroskopis/' . esc($row['id_srs'])) ?>" class="btn btn-success btn-sm mx-1">
-                                                <i class="fas fa-pen"></i> Detail
-                                            </a>
-                                        </td>
-                                    <?php else: ?>
-                                        <td></td>
-                                    <?php endif; ?>
                                 </tr>
                                 <?php $i++; ?>
                             <?php endforeach; ?>

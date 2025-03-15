@@ -74,7 +74,16 @@ class Srs extends Migration
                 'type' => 'TEXT',
                 'null' => true,
             ],
+            'foto_makroskopis_hpa' => [
+                'type' => 'VARCHAR',
+                'constraint' => 255,
+                'null' => true,
+            ],
             'mikroskopis_srs' => [
+                'type' => 'TEXT',
+                'null' => true,
+            ],
+            'mikroskopis_frs' => [
                 'type' => 'TEXT',
                 'null' => true,
             ],

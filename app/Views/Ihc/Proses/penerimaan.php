@@ -19,10 +19,10 @@
                     <thead>
                         <tr>
                             <th>No</th>
-                            <th>Kode ihc</th>
-                            <th>Nama Pasien</th>
                             <th>Aksi</th>
                             <th>Kelengkapan Form</th>
+                            <th>Kode ihc</th>
+                            <th>Nama Pasien</th>
                             <th>Analis</th>
                             <th>Mulai Penerimaan</th>
                             <th>Selesai Penerimaan</th>
@@ -35,8 +35,6 @@
                             <?php foreach ($penerimaanDataihc as $row): ?>
                                 <tr>
                                     <td><?= $i ?></td>
-                                    <td><?= esc($row['kode_ihc']); ?></td>
-                                    <td><?= esc($row['nama_pasien']); ?></td>
                                     <td>
                                         <input type="checkbox"
                                             name="id_proses[]"
@@ -57,7 +55,7 @@
                                                     id="indikator_1_<?= esc($row['id_mutu_ihc']); ?>"
                                                     class="form-check-input">
                                                 <label class="form-check-label" for="indikator_1_<?= esc($row['id_mutu_ihc']); ?>">
-                                                    KTP?
+                                                    KTP
                                                 </label>
                                             </div>
                                             <div class="form-check">
@@ -67,7 +65,7 @@
                                                     id="indikator_2_<?= esc($row['id_mutu_ihc']); ?>"
                                                     class="form-check-input">
                                                 <label class="form-check-label" for="indikator_2_<?= esc($row['id_mutu_ihc']); ?>">
-                                                    BPJS?
+                                                    BPJS
                                                 </label>
                                             </div>
                                             <div class="form-check">
@@ -77,13 +75,15 @@
                                                     id="indikator_3_<?= esc($row['id_mutu_ihc']); ?>"
                                                     class="form-check-input">
                                                 <label class="form-check-label" for="indikator_3_<?= esc($row['id_mutu_ihc']); ?>">
-                                                    Hasil Lab Sebelumnya?
+                                                    Hasil Lab Sebelumnya
                                                 </label>
                                             </div>
                                         <?php else: ?>
                                             <?= esc($row['total_nilai_mutu_ihc']); ?> %
                                         <?php endif; ?>
                                     </td>
+                                    <td><?= esc($row['kode_ihc']); ?></td>
+                                    <td><?= esc($row['nama_pasien']); ?></td>
                                     <td><?= esc($row['nama_user_penerimaan_ihc']); ?></td>
                                     <td>
                                         <?= empty($row['mulai_penerimaan_ihc']) ? '-' : esc(date('H:i, d-m-Y', strtotime($row['mulai_penerimaan_ihc']))); ?>

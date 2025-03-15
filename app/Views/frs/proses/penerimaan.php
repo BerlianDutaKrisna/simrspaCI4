@@ -19,14 +19,14 @@
                     <thead>
                         <tr>
                             <th>No</th>
+                            <th>Aksi</th>
+                            <th>Detail</th>
                             <th>Kode FRS</th>
                             <th>Nama Pasien</th>
-                            <th>Aksi</th>
                             <th>Analis</th>
                             <th>Mulai Penerimaan</th>
                             <th>Selesai Penerimaan</th>
                             <th>Deadline Hasil</th>
-                            <th>Detail</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -35,8 +35,6 @@
                             <?php foreach ($penerimaanDatafrs as $row): ?>
                                 <tr>
                                     <td><?= $i ?></td>
-                                    <td><?= esc($row['kode_frs']); ?></td>
-                                    <td><?= esc($row['nama_pasien']); ?></td>
                                     <td>
                                         <input type="checkbox"
                                             name="id_proses[]"
@@ -47,6 +45,24 @@
                                                             ]) ?>'
                                             autocomplete="off">
                                     </td>
+                                    <?php if (in_array($row['status_penerimaan_frs'], ["Proses Penerimaan"])): ?>
+                                        <td>
+                                            <a href="<?= base_url('exam/edit_makroskopis/' . esc($row['id_frs'])) ?>" class="btn btn-warning btn-sm">
+                                                <i class="fas fa-pen"></i> Informed Consent
+                                            </a>
+                                        </td>
+                                    <?php elseif (in_array($row['status_penerimaan_frs'], ["Selesai Penerimaan"])): ?>
+                                        <td>
+                                            <a href="<?= base_url('exam/edit_makroskopis/' . esc($row['id_frs'])) ?>" class="btn btn-success btn-sm">
+                                                <i class="fas fa-pen"></i> Informed Consent
+                                            </a>
+                                        </td>
+                                    <?php else: ?>
+                                        <td></td>
+                                    <?php endif; ?>
+                                    <td><?= esc($row['kode_frs']); ?></td>
+                                    <td><?= esc($row['nama_pasien']); ?></td>
+
                                     <td><?= esc($row['nama_user_penerimaan_frs']); ?></td>
                                     <td>
                                         <?= empty($row['mulai_penerimaan_frs']) ? '-' : esc(date('H:i, d-m-Y', strtotime($row['mulai_penerimaan_frs']))); ?>
@@ -73,21 +89,6 @@
                                         }
                                         ?>
                                     </td>
-                                    <?php if (in_array($row['status_penerimaan_frs'], ["Proses Penerimaan"])): ?>
-                                        <td>
-                                            <a href="<?= base_url('exam/edit_makroskopis/' . esc($row['id_frs'])) ?>" class="btn btn-warning btn-sm">
-                                                <i class="fas fa-pen"></i> Informed Consent
-                                            </a>
-                                        </td>
-                                    <?php elseif (in_array($row['status_penerimaan_frs'], ["Selesai Penerimaan"])): ?>
-                                        <td>
-                                            <a href="<?= base_url('exam/edit_makroskopis/' . esc($row['id_frs'])) ?>" class="btn btn-success btn-sm">
-                                                <i class="fas fa-pen"></i> Informed Consent
-                                            </a>
-                                        </td>
-                                    <?php else: ?>
-                                        <td></td>
-                                    <?php endif; ?>
                                 </tr>
                                 <?php $i++; ?>
                             <?php endforeach; ?>

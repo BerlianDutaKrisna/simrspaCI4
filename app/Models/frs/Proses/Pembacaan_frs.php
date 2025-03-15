@@ -28,33 +28,30 @@ class Pembacaan_frs extends Model // Update nama model
     protected $createdField  = 'created_at';
     protected $updatedField  = 'updated_at';
 
-    // Fungsi untuk insert data pembacaan_frs
-    public function insertpembacaan_frs(array $data): bool // Update nama fungsi
-    {
-        $this->insert($data);
-        return $this->db->affectedRows() > 0;
-    }
-
     // Mengambil data pembacaan_frs dengan relasi
-    public function getpembacaan_frsWithRelations()
+    public function getpembacaan_frs()
     {
         return $this->select(
-            'pembacaan_frs.*, 
+            '
+        pembacaan_frs.*, 
         frs.*, 
         patient.*, 
-        users.nama_user AS nama_user_dokter_pemotongan,
-        mutu.total_nilai_mutu'
+        users.nama_user AS nama_user_pembacaan_frs,
+        mutu_frs.id_mutu_frs,
+        mutu_frs.total_nilai_mutu_frs,
+        pembacaan_frs.id_pembacaan_frs, 
+        pembacaan_frs.id_user_dokter_pembacaan_frs,
+        dokter_pembacaan.nama_user AS nama_user_dokter_pembacaan_frs'
         )
-            ->join('frs', 'pembacaan_frs.id_frs = frs.id_frs', 'left') // Relasi dengan tabel frs
-            ->join('patient', 'frs.id_pasien = patient.id_pasien', 'left') // Relasi dengan tabel patient
-            ->join('pemotongan', 'frs.id_pemotongan = pemotongan.id_pemotongan', 'left') // Relasi dengan tabel pemotongan
-            ->join('users', 'pemotongan.id_user_dokter_pemotongan = users.id_user', 'left') // Relasi dengan tabel users untuk dokter pemotongan
-            ->join('mutu', 'frs.id_frs = mutu.id_frs', 'left') // Relasi dengan tabel mutu berdasarkan id_frs
-            ->where('frs.status_frs', 'pembacaan_frs') // Filter berdasarkan status_frs 'pembacaan_frs'
+            ->join('frs', 'pembacaan_frs.id_frs = frs.id_frs', 'left')
+            ->join('patient', 'frs.id_pasien = patient.id_pasien', 'left')
+            ->join('users', 'pembacaan_frs.id_user_pembacaan_frs = users.id_user', 'left')
+            ->join('mutu_frs', 'frs.id_frs = mutu_frs.id_frs', 'left')
+            ->join('users AS dokter_pembacaan', 'pembacaan_frs.id_user_dokter_pembacaan_frs = dokter_pembacaan.id_user', 'left')
+            ->whereIn('frs.status_frs', ['Pembacaan'])
             ->orderBy('frs.kode_frs', 'ASC')
             ->findAll();
     }
-
 
     // Fungsi untuk mengupdate data pembacaan_frs
     public function updatepembacaan_frs($id_pembacaan_frs, $data) // Update nama fungsi dan parameter

@@ -119,6 +119,18 @@ class FrsModel extends Model
             ->first();
     }
 
+    public function getfrsWithRelationsProses($id_frs)
+    {
+        return $this->select('frs.*, patient.*, penerimaan_frs.*, pembacaan_frs.*, penulisan_frs.*, mutu_frs.*')
+            ->join('patient', 'patient.id_pasien = frs.id_pasien', 'left')
+            ->join('penerimaan_frs', 'penerimaan_frs.id_frs = frs.id_frs', 'left')
+            ->join('pembacaan_frs', 'pembacaan_frs.id_frs = frs.id_frs', 'left')
+            ->join('penulisan_frs', 'penulisan_frs.id_frs = frs.id_frs', 'left')
+            ->join('mutu_frs', 'mutu_frs.id_frs = frs.id_frs', 'left')
+            ->where('frs.id_frs', $id_frs)
+            ->first();
+    }
+
     public function updatefrs($id_frs, $data)
     {
         $builder = $this->db->table('frs');

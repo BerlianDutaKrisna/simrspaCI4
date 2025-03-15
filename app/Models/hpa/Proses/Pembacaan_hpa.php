@@ -29,13 +29,6 @@ class Pembacaan_hpa extends Model // Update nama model
     protected $createdField  = 'created_at';
     protected $updatedField  = 'updated_at';
 
-    // Fungsi untuk insert data pembacaan_hpa
-    public function insertpembacaan_hpa(array $data): bool // Update nama fungsi
-    {
-        $this->insert($data);
-        return $this->db->affectedRows() > 0;
-    }
-
     // Mengambil data pembacaan_hpa dengan relasi
     public function getpembacaan_hpa()
     {
@@ -61,10 +54,6 @@ class Pembacaan_hpa extends Model // Update nama model
             ->orderBy('hpa.kode_hpa', 'ASC')
             ->findAll();
     }
-    
-
-
-
     // Fungsi untuk mengupdate data pembacaan_hpa
     public function updatepembacaan_hpa($id_pembacaan_hpa, $data) // Update nama fungsi dan parameter
     {

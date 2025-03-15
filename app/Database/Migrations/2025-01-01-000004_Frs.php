@@ -74,6 +74,15 @@ class Frs extends Migration
                 'type' => 'TEXT',
                 'null' => true,
             ],
+            'foto_makroskopis_frs' => [
+                'type' => 'VARCHAR',
+                'constraint' => 255,
+                'null' => true,
+            ],
+            'mikroskopis_frs' => [
+                'type' => 'TEXT',
+                'null' => true,
+            ],
             'mikroskopis_frs' => [
                 'type' => 'TEXT',
                 'null' => true,

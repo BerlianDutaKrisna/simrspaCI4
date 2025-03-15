@@ -20,14 +20,14 @@ class FrsController extends BaseController
     protected $frsModel;
     protected $usersModel;
     protected $patientModel;
-    protected $Penerimaan_frs;
-    protected $Pemotongan_frs;
-    protected $Pembacaan_frs;
-    protected $Penulisan_frs;
-    protected $Pemverifikasi_frs;
-    protected $Authorized_frs;
-    protected $Pencetakan_frs;
-    protected $Mutu_frs;
+    protected $penerimaan_frs;
+    protected $pemotongan_frs;
+    protected $pembacaan_frs;
+    protected $penulisan_frs;
+    protected $pemverifikasi_frs;
+    protected $authorized_frs;
+    protected $pencetakan_frs;
+    protected $mutu_frs;
     protected $validation;
 
     public function __construct()
@@ -35,13 +35,13 @@ class FrsController extends BaseController
         $this->frsModel = new frsModel();
         $this->usersModel = new UsersModel();
         $this->patientModel = new PatientModel();
-        $this->Penerimaan_frs = new Penerimaan_frs();;
-        $this->Pembacaan_frs = new Pembacaan_frs();
-        $this->Penulisan_frs = new Penulisan_frs();
-        $this->Pemverifikasi_frs = new Pemverifikasi_frs();
-        $this->Authorized_frs = new Authorized_frs();
-        $this->Pencetakan_frs = new Pencetakan_frs();
-        $this->Mutu_frs = new Mutu_frs();
+        $this->penerimaan_frs = new Penerimaan_frs();;
+        $this->pembacaan_frs = new Pembacaan_frs();
+        $this->penulisan_frs = new Penulisan_frs();
+        $this->pemverifikasi_frs = new Pemverifikasi_frs();
+        $this->authorized_frs = new Authorized_frs();
+        $this->pencetakan_frs = new Pencetakan_frs();
+        $this->mutu_frs = new Mutu_frs();
         $this->validation =  \Config\Services::validation();
     }
 
@@ -155,15 +155,15 @@ class FrsController extends BaseController
                 'status_penerimaan_frs' => 'Belum Penerimaan',
             ];
             // Simpan data penerimaan
-            if (!$this->Penerimaan_frs->insert($penerimaanData)) {
-                throw new Exception('Gagal menyimpan data penerimaan: ' . $this->Penerimaan_frs->errors());
+            if (!$this->penerimaan_frs->insert($penerimaanData)) {
+                throw new Exception('Gagal menyimpan data penerimaan: ' . $this->penerimaan_frs->errors());
             }
             // Data mutu
             $mutuData = [
                 'id_frs' => $id_frs,
             ];
-            if (!$this->Mutu_frs->insert($mutuData)) {
-                throw new Exception('Gagal menyimpan data mutu: ' . $this->Mutu_frs->errors());
+            if (!$this->mutu_frs->insert($mutuData)) {
+                throw new Exception('Gagal menyimpan data mutu: ' . $this->mutu_frs->errors());
             }
             // Redirect dengan pesan sukses
             return redirect()->to('/dashboard')->with('success', 'Data berhasil disimpan!');
@@ -237,6 +237,315 @@ class FrsController extends BaseController
             'id_user' => $id_user,
             'nama_user' => $nama_user
         ]);
+    }
+
+    // Menampilkan form edit frs mikroskopis
+    public function edit_mikroskopis($id_frs)
+    {
+        // Ambil data frs berdasarkan ID
+        $frs = $this->frsModel->getfrsWithRelationsProses($id_frs);
+        if (!$frs) {
+            return redirect()->back()->with('message', ['error' => 'frs tidak ditemukan.']);
+        }
+        // Ambil data pemotongan dan pembacaan_frs berdasarkan ID
+        $id_pembacaan_frs = $frs['id_pembacaan_frs'];
+        // Ambil data pembacaan_frs jika tersedia
+        $pembacaan_frs = $id_pembacaan_frs ? $this->pembacaan_frs->find($id_pembacaan_frs) : [];
+        // Ambil data pengguna dengan status "Dokter"
+        $users = $this->usersModel->where('status_user', 'Dokter')->findAll();
+        // Persiapkan data yang akan dikirim ke view
+        $data = [
+            'frs'             => $frs,
+            'pembacaan_frs'   => $pembacaan_frs,
+            'users'           => $users,
+            'id_user'         => session()->get('id_user'),
+            'nama_user'       => session()->get('nama_user'),
+        ];
+        dd($data);
+        return view('frs/edit_mikroskopis', $data);
+    }
+
+    public function edit_penulisan($id_frs)
+    {
+        // Ambil data frs berdasarkan ID
+        $frs = $this->frsModel->getfrsWithRelationsProses($id_frs);
+        if (!$frs) {
+            return redirect()->back()->with('message', ['error' => 'frs tidak ditemukan.']);
+        }
+        // Inisialisasi array untuk pembacaan dan penulisan frs
+        $pembacaan_frs = [];
+        $penulisan_frs = [];
+        // Ambil data pembacaan frs jika tersedia
+        if (!empty($frs['id_pembacaan_frs'])) {
+            $pembacaan_frs = $this->pembacaan_frs->find($frs['id_pembacaan_frs']) ?? [];
+            // Ambil nama dokter dari pembacaan jika tersedia
+            if (!empty($pembacaan_frs['id_user_dokter_pembacaan_frs'])) {
+                $dokter = $this->usersModel->find($pembacaan_frs['id_user_dokter_pembacaan_frs']);
+                $pembacaan_frs['dokter_nama'] = $dokter ? $dokter['nama_user'] : null;
+            } else {
+                $pembacaan_frs['dokter_nama'] = null;
+            }
+        }
+        // Ambil data penulisan frs jika tersedia
+        if (!empty($frs['id_penulisan_frs'])) {
+            $penulisan_frs = $this->penulisan_frs->find($frs['id_penulisan_frs']) ?? [];
+        }
+        // Ambil daftar user dengan status "Dokter"
+        $users = $this->usersModel->where('status_user', 'Dokter')->findAll();
+        // Data yang akan dikirim ke view
+        $data = [
+            'id_user' => session()->get('id_user'),
+            'nama_user' => session()->get('nama_user'),
+            'frs' => $frs,
+            'pembacaan' => $pembacaan_frs,
+            'penulisan' => $penulisan_frs,
+            'users' => $users,
+        ];
+
+        return view('frs/edit_penulisan', $data);
+    }
+
+
+    public function edit_print_frs($id_frs, $id_penerimaan_frs, $id_pembacaan_frs, $id_pemverivifikasi_frs, $id_authorized_frs, $id_pencetakan_frs)
+    {
+        // Ambil data frs berdasarkan ID
+        $frs = $this->frsModel->getfrsWithRelationsProses($id_frs);
+        $penerimaan_frs = $this->penerimaan_frs->find($id_penerimaan_frs);
+        $pembacaan_frs = $this->pembacaan_frs->find($id_pembacaan_frs);
+        $pemverifikasi_frs = $this->pemverifikasi_frs->find($id_pemverivifikasi_frs) ?? [];
+        $authorized_frs = $this->authorized_frs->find($id_authorized_frs) ?? [];
+        $pencetakan_frs = $this->pencetakan_frs->find($id_pencetakan_frs) ?? [];
+
+        // Persiapkan data yang akan dikirim ke view
+        $data = [
+            'id_user' => session()->get('id_user'),
+            'nama_user' => session()->get('nama_user'),
+            'frs' => $frs,
+            'penerimaan_frs' => $penerimaan_frs,
+            'pembacaan_frs' => $pembacaan_frs,
+            'pemverifikasi_frs' => $pemverifikasi_frs,
+            'authorized_frs' => $authorized_frs,
+            'pencetakan_frs' => $pencetakan_frs,
+        ];
+
+        return view('frs/edit_print_frs', $data);
+    }
+
+    public function update($id_frs)
+    {
+        date_default_timezone_set('Asia/Jakarta');
+        $id_user = session()->get('id_user');
+
+        $frs = $this->frsModel->getfrsWithRelationsProses($id_frs);
+        if (!$frs) {
+            return redirect()->back()->with('message', ['error' => 'frs tidak ditemukan.']);
+        }
+        $id_pemotongan_frs = $frs['id_pemotongan_frs'];
+        $id_pembacaan_frs = $frs['id_pembacaan_frs'];
+
+        // Validasi form input
+        $validation = \Config\Services::validation();
+        $validation->setRules([
+            'kode_frs' => [
+                'rules' => 'required|is_unique[frs.kode_frs,id_frs,' . $id_frs . ']',
+                'errors' => [
+                    'required' => 'Kode frs harus diisi.',
+                    'is_unique' => 'Kode frs sudah terdaftar!',
+                ],
+            ],
+        ]);
+
+        if (!$this->validate($validation->getRules())) {
+            session()->setFlashdata('errors', $validation->getErrors()); // Simpan error ke session
+            return redirect()->back()->withInput(); // Redirect kembali ke halaman form
+        }
+
+        // Mengambil data dari form
+        $data = $this->request->getPost();
+        $page_source = $this->request->getPost('page_source');
+
+        // Mengubah 'jumlah_slide' jika memilih 'lainnya'
+        if ($this->request->getPost('jumlah_slide') === 'lainnya') {
+            $data['jumlah_slide'] = $this->request->getPost('jumlah_slide') === 'lainnya'
+                ? $this->request->getPost('jumlah_slide_custom')
+                : $this->request->getPost('jumlah_slide');
+        }
+
+        // Proses update tabel frs
+        if ($this->frsModel->update($id_frs, $data)) {
+            // Update data pemotongan jika id_user_dokter_pemotongan_frs ada
+            if (!empty($data['id_user_dokter_pemotongan_frs'])) {
+                $pemotongan = $this->pemotongan_frs->where('id_pemotongan_frs', $id_pemotongan_frs)->first();
+
+                if ($pemotongan) {
+                    $this->pemotongan_frs->update($pemotongan['id_pemotongan_frs'], [
+                        'id_user_dokter_pemotongan_frs' => $data['id_user_dokter_pemotongan_frs'],
+                    ]);
+                }
+            }
+            // Update data pembacaan jika id_user_dokter_pembacaan_frs ada
+            if (!empty($data['id_user_dokter_pembacaan_frs'])) {
+                $pembacaan = $this->pembacaan_frs->where('id_pembacaan_frs', $id_pembacaan_frs)->first();
+
+                if ($pembacaan) {
+                    $this->pembacaan_frs->update($pembacaan['id_pembacaan_frs'], [
+                        'id_user_dokter_pembacaan_frs' => $data['id_user_dokter_pembacaan_frs'],
+                    ]);
+                }
+            }
+            switch ($page_source) {
+                case 'edit_makroskopis':
+                    $id_pemotongan_frs = $this->request->getPost('id_pemotongan_frs');
+                    $this->pemotongan_frs->update($id_pemotongan_frs, [
+                        'id_user_pemotongan_frs_frs' => $id_user,
+                        'status_pemotongan_frs' => 'Selesai Pemotongan',
+                        'selesai_pemotongan_frs' => date('Y-m-d H:i:s'),
+                    ]);
+                    return redirect()->to('frs/edit_makroskopis/' . $id_frs)->with('success', 'Data makroskopis berhasil diperbarui.');
+                case 'edit_mikroskopis':
+                    $id_pemotongan_frs = $this->request->getPost('id_pemotongan_frs');
+                    $id_pembacaan_frs = $this->request->getPost('id_pembacaan_frs');
+                    $id_user_dokter_pembacaan_frs = (int) $this->request->getPost('id_user_dokter_pemotongan_frs');
+                    $this->pembacaan_frs->update($id_pembacaan_frs, [
+                        'id_user_pembacaan_frs' => $id_user,
+                        'id_user_dokter_pembacaan_frs' => $id_user_dokter_pembacaan_frs,
+                        'status_pembacaan_frs' => 'Selesai Pembacaan',
+                        'selesai_pembacaan_frs' => date('Y-m-d H:i:s'),
+                    ]);
+                    $id_mutu_frs = $this->request->getPost('id_mutu_frs');
+                    $indikator_4 = (string) ($this->request->getPost('indikator_4') ?? '0');
+                    $indikator_5 = (string) ($this->request->getPost('indikator_5') ?? '0');
+                    $indikator_6 = (string) ($this->request->getPost('indikator_6') ?? '0');
+                    $indikator_7 = (string) ($this->request->getPost('indikator_7') ?? '0');
+                    $indikator_8 = (string) ($this->request->getPost('indikator_8') ?? '0');
+                    $total_nilai_mutu_frs = (string) ($this->request->getPost('total_nilai_mutu_frs') ?? '0');
+                    $keseluruhan_nilai_mutu = $total_nilai_mutu_frs + (int)$indikator_5 + (int)$indikator_6 + (int)$indikator_7 + (int)$indikator_8;
+                    $this->mutu_frs->update($id_mutu_frs, [
+                        'indikator_4' => $indikator_4,
+                        'indikator_5' => $indikator_5,
+                        'indikator_6' => $indikator_6,
+                        'indikator_7' => $indikator_7,
+                        'indikator_8' => $indikator_8,
+                        'total_nilai_mutu_frs' => $keseluruhan_nilai_mutu,
+                    ]);
+                    return redirect()->to('frs/edit_mikroskopis/' . $id_frs)->with('success', 'Data mikroskopis berhasil diperbarui.');
+
+                case 'edit_penulisan':
+                    $id_pembacaan_frs = $this->request->getPost('id_pembacaan_frs');
+                    $id_penulisan_frs = $this->request->getPost('id_penulisan_frs');
+                    $this->penulisan_frs->update($id_penulisan_frs, [
+                        'id_user_penulisan_frs' => $id_user,
+                        'status_penulisan_frs' => 'Selesai Penulisan',
+                        'selesai_penulisan_frs' => date('Y-m-d H:i:s'),
+                    ]);
+
+                    // Ambil data dari form
+                    $lokasi_spesimen = $this->request->getPost('lokasi_spesimen');
+                    $diagnosa_klinik = $this->request->getPost('diagnosa_klinik');
+                    $makroskopis_frs = $this->request->getPost('makroskopis_frs');
+                    $mikroskopis_frs = $this->request->getPost('mikroskopis_frs');
+                    $tindakan_spesimen = $this->request->getPost('tindakan_spesimen');
+                    $hasil_frs = $this->request->getPost('hasil_frs');
+
+                    // Simpan data lokasi, diagnosa, makroskopis, mikroskopis, hasil terlebih dahulu
+                    $this->frsModel->update($id_frs, [
+                        'lokasi_spesimen' => $lokasi_spesimen,
+                        'diagnosa_klinik' => $diagnosa_klinik,
+                        'makroskopis_frs' => $makroskopis_frs,
+                        'mikroskopis_frs' => $mikroskopis_frs,
+                        'hasil_frs' => $hasil_frs,
+                    ]);
+
+                    // Setelah semua data tersimpan, buat data print_frs
+                    $print_frs = '
+                    <table width="800pt" height="80">
+                        <tbody>
+                            <tr>
+                                <td style="border: none;" width="200pt">
+                                    <font size="5" face="verdana"><b>LOKASI</b></font>
+                                </td>
+                                <td style="border: none;" width="10pt">
+                                    <font size="5" face="verdana"><b>:</b><br></font>
+                                </td>
+                                <td style="border: none;" width="590pt">
+                                    <font size="5" face="verdana">
+                                        <b>' . htmlspecialchars($lokasi_spesimen) . '<br></b>
+                                    </font>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="border: none;" width="200pt">
+                                    <font size="5" face="verdana"><b>DIAGNOSA KLINIK</b></font>
+                                </td>
+                                <td style="border: none;" width="10pt">
+                                    <font size="5" face="verdana"><b>:</b><br></font>
+                                </td>
+                                <td style="border: none;" width="590pt">
+                                    <font size="5" face="verdana"><b>' . htmlspecialchars($diagnosa_klinik) . '<br></b></font>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="border: none;" width="200pt">
+                                    <font size="5" face="verdana"><b>ICD</b></font>
+                                </td>
+                                <td style="border: none;" width="10pt">
+                                    <font size="5" face="verdana"><b>:</b></font>
+                                </td>
+                                <td style="border: none;" width="590pt">
+                                    <font size="5" face="verdana"><br></font>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <font size="5" face="verdana"><b>LAPORAN PEMERIKSAAN:<br></b></font>
+                    <div>
+                        <font size="5" face="verdana"><b> MAKROSKOPIK :</b></font>
+                    </div>
+                    <div>
+                        <font size="5" face="verdana">' . nl2br(htmlspecialchars(str_replace(['<p>', '</p>'], '', $makroskopis_frs))) . '</font>
+                    </div>
+                    <br>
+                    <div>
+                        <font size="5" face="verdana"><b>MIKROSKOPIK :</b><br></font>
+                    </div>
+                    <div>
+                        <font size="5" face="verdana">' . nl2br(htmlspecialchars(str_replace(['<p>', '</p>'], '', $mikroskopis_frs))) . '</font>
+                    </div>
+                    <br>
+                    <div>
+                        <font size="5" face="verdana"><b>KESIMPULAN :</b> ' . htmlspecialchars($lokasi_spesimen) . ', ' . htmlspecialchars($tindakan_spesimen) . ':</b></font>
+                    </div>
+                    <div>
+                        <font size="5" face="verdana"><b>' . strtoupper(htmlspecialchars(str_replace(['<p>', '</p>'], '', $hasil_frs))) . '</b></font>
+                    </div>
+                    <br>
+                    <div>
+                        <font size="5" face="verdana"><b><br><br></b></font>
+                    </div>
+                    <div>
+                        <font size="3"><i>
+                            <font face="verdana">Ket : <br></font>
+                        </i></font>
+                    </div>
+                    <div>
+                        <font size="5" face="verdana">
+                            <font size="3">
+                                <i>Jaringan telah dilakukan fiksasi dengan formalin sehingga terjadi perubahan ukuran makroskopis</i>
+                            </font>
+                        </font>
+                    </div>';
+                    // Simpan print_frs setelah semua data yang dibutuhkan telah ada
+                    $this->frsModel->update($id_frs, [
+                        'print_frs' => $print_frs,
+                    ]);
+
+                    return redirect()->to('frs/edit_penulisan/' . $id_frs)->with('success', 'Data penulisan berhasil diperbarui.');
+
+                default:
+                    return redirect()->back()->with('success', 'Data berhasil diperbarui.');
+            }
+        }
+        return redirect()->back()->with('error', 'Gagal memperbarui data.');
     }
 
     public function update_buku_penerima()

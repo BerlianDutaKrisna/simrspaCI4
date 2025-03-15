@@ -41,7 +41,7 @@ class Pembacaan extends BaseController
             'counts' => $this->getCounts(),
             'pembacaanDatafrs' => $pembacaanData_frs,
         ];
-
+        
         return view('frs/Proses/pembacaan', $data);
     }
 
@@ -58,13 +58,13 @@ class Pembacaan extends BaseController
 
             foreach ($selectedIds as $id) {
                 list($id_pembacaan_frs, $id_frs, $id_mutu_frs) = explode(':', $id);
-                $indikator_4 = (string) ($this->request->getPost('indikator_4') ?? '0');
-                $indikator_5 = (string) ($this->request->getPost('indikator_5') ?? '0');
-                $indikator_6 = (string) ($this->request->getPost('indikator_6') ?? '0');
-                $indikator_7 = (string) ($this->request->getPost('indikator_7') ?? '0');
-                $indikator_8 = (string) ($this->request->getPost('indikator_8') ?? '0');
-                $total_nilai_mutu_frs = (string) ($this->request->getPost('total_nilai_mutu_frs') ?? '0');
-                $this->processAction($action, $id_pembacaan_frs, $id_frs, $id_user, $id_mutu_frs, $indikator_4, $indikator_5, $indikator_6, $indikator_7, $indikator_8, $total_nilai_mutu_frs);
+                // $indikator_4 = (string) ($this->request->getPost('indikator_4') ?? '0');
+                // $indikator_5 = (string) ($this->request->getPost('indikator_5') ?? '0');
+                // $indikator_6 = (string) ($this->request->getPost('indikator_6') ?? '0');
+                // $indikator_7 = (string) ($this->request->getPost('indikator_7') ?? '0');
+                // $indikator_8 = (string) ($this->request->getPost('indikator_8') ?? '0');
+                // $total_nilai_mutu_frs = (string) ($this->request->getPost('total_nilai_mutu_frs') ?? '0');
+                $this->processAction($action, $id_pembacaan_frs, $id_frs, $id_user, $id_mutu_frs);
             }
 
             return redirect()->to('pembacaan_frs/index');
@@ -73,7 +73,7 @@ class Pembacaan extends BaseController
         }
     }
 
-    private function processAction($action, $id_pembacaan_frs, $id_frs, $id_user, $id_mutu_frs, $indikator_4, $indikator_5, $indikator_6, $indikator_7, $indikator_8, $total_nilai_mutu_frs)
+    private function processAction($action, $id_pembacaan_frs, $id_frs, $id_user, $id_mutu_frs)
     {
         date_default_timezone_set('Asia/Jakarta');
 
@@ -91,14 +91,6 @@ class Pembacaan extends BaseController
                         'id_user_pembacaan_frs' => $id_user,
                         'status_pembacaan_frs' => 'Selesai Pembacaan',
                         'selesai_pembacaan_frs' => date('Y-m-d H:i:s'),
-                    ]);
-                    $this->mutu_frs->update($id_mutu_frs, [
-                        'indikator_4' => $indikator_4,
-                        'indikator_5' => $indikator_5,
-                        'indikator_6' => $indikator_6,
-                        'indikator_7' => $indikator_7,
-                        'indikator_8' => $indikator_8,
-                        'total_nilai_mutu_frs' => $total_nilai_mutu_frs + $indikator_4 + $indikator_5 + $indikator_6 + $indikator_7 + $indikator_8,
                     ]);
                     break;
                 case 'reset':
@@ -130,7 +122,7 @@ class Pembacaan extends BaseController
                 case 'kembalikan':
                     $this->pembacaan_frs->delete($id_pembacaan_frs);
                     $this->frsModel->update($id_frs, [
-                        'status_frs' => 'Pewarnaan',
+                        'status_frs' => 'Penerimaan',
                     ]);
                     break;
             }
