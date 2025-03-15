@@ -301,47 +301,33 @@ class FrsController extends BaseController
             'penulisan' => $penulisan_frs,
             'users' => $users,
         ];
-
+        
         return view('frs/edit_penulisan', $data);
     }
 
-
-    public function edit_print_frs($id_frs, $id_penerimaan_frs, $id_pembacaan_frs, $id_pemverivifikasi_frs, $id_authorized_frs, $id_pencetakan_frs)
+    public function edit_print($id_frs)
     {
         // Ambil data frs berdasarkan ID
         $frs = $this->frsModel->getfrsWithRelationsProses($id_frs);
-        $penerimaan_frs = $this->penerimaan_frs->find($id_penerimaan_frs);
-        $pembacaan_frs = $this->pembacaan_frs->find($id_pembacaan_frs);
-        $pemverifikasi_frs = $this->pemverifikasi_frs->find($id_pemverivifikasi_frs) ?? [];
-        $authorized_frs = $this->authorized_frs->find($id_authorized_frs) ?? [];
-        $pencetakan_frs = $this->pencetakan_frs->find($id_pencetakan_frs) ?? [];
-
         // Persiapkan data yang akan dikirim ke view
         $data = [
             'id_user' => session()->get('id_user'),
             'nama_user' => session()->get('nama_user'),
             'frs' => $frs,
-            'penerimaan_frs' => $penerimaan_frs,
-            'pembacaan_frs' => $pembacaan_frs,
-            'pemverifikasi_frs' => $pemverifikasi_frs,
-            'authorized_frs' => $authorized_frs,
-            'pencetakan_frs' => $pencetakan_frs,
         ];
-
-        return view('frs/edit_print_frs', $data);
+        
+        return view('frs/edit_print', $data);
     }
 
     public function update($id_frs)
     {
         date_default_timezone_set('Asia/Jakarta');
         $id_user = session()->get('id_user');
-
         $frs = $this->frsModel->getfrsWithRelationsProses($id_frs);
         if (!$frs) {
             return redirect()->back()->with('message', ['error' => 'frs tidak ditemukan.']);
         }
         $id_pembacaan_frs = $frs['id_pembacaan_frs'];
-
         // Validasi form input
         $validation = \Config\Services::validation();
         $validation->setRules([
@@ -353,23 +339,19 @@ class FrsController extends BaseController
                 ],
             ],
         ]);
-
         if (!$this->validate($validation->getRules())) {
             session()->setFlashdata('errors', $validation->getErrors()); // Simpan error ke session
             return redirect()->back()->withInput(); // Redirect kembali ke halaman form
         }
-
         // Mengambil data dari form
         $data = $this->request->getPost();
         $page_source = $this->request->getPost('page_source');
-
         // Mengubah 'jumlah_slide' jika memilih 'lainnya'
         if ($this->request->getPost('jumlah_slide') === 'lainnya') {
             $data['jumlah_slide'] = $this->request->getPost('jumlah_slide') === 'lainnya'
                 ? $this->request->getPost('jumlah_slide_custom')
                 : $this->request->getPost('jumlah_slide');
         }
-
         // Proses update tabel frs
         if ($this->frsModel->update($id_frs, $data)) {
             switch ($page_source) {
@@ -468,22 +450,7 @@ class FrsController extends BaseController
                     <div>
                         <font size="5" face="verdana"><b>' . strtoupper(htmlspecialchars(str_replace(['<p>', '</p>'], '', $hasil_frs))) . '</b></font>
                     </div>
-                    <br>
-                    <div>
-                        <font size="5" face="verdana"><b><br><br></b></font>
-                    </div>
-                    <div>
-                        <font size="3"><i>
-                            <font face="verdana">Ket : <br></font>
-                        </i></font>
-                    </div>
-                    <div>
-                        <font size="5" face="verdana">
-                            <font size="3">
-                                <i>Jaringan telah dilakukan fiksasi dengan formalin sehingga terjadi perubahan ukuran makroskopis</i>
-                            </font>
-                        </font>
-                    </div>';
+                    <br>';
                     // Simpan print_frs setelah semua data yang dibutuhkan telah ada
                     $this->frsModel->update($id_frs, [
                         'print_frs' => $print_frs,
@@ -520,69 +487,54 @@ class FrsController extends BaseController
         // Redirect setelah berhasil mengupdate data
         return redirect()->to('frs/index_buku_penerima')->with('success', 'Penerima berhasil disimpan.');
     }
-    
 
-    public function update_print_frs($id_frs)
+
+    public function update_print($id_frs)
     {
-
         date_default_timezone_set('Asia/Jakarta');
-        $frsModel = new frsModel();
-        $Pemverifikasi_frs = new Pemverifikasi_frs();
-        $Authorized_frs = new Authorized_frs();
-        $Pencetakan_frs = new Pencetakan_frs();
-
         $id_user = session()->get('id_user');
-
         // Mendapatkan id_frs dari POST
         if (!$id_frs) {
             return redirect()->back()->with('error', 'Terjadi kesalahan: ID frs tidak ditemukan.');
         }
-
         // Mengambil data dari POST dan melakukan update
         $data = $this->request->getPost();
-        $frsModel->update($id_frs, $data);
-
+        $this->frsModel->update($id_frs, $data);
         $redirect = $this->request->getPost('redirect');
-
         if (!$redirect) {
             return redirect()->back()->with('error', 'Terjadi kesalahan: Halaman asal tidak ditemukan.');
         }
-
         // Cek ke halaman mana harus diarahkan setelah update
-        if ($redirect === 'index_pemverifikasi' && isset($_POST['id_pemverifikasi'])) {
-            $id_pemverifikasi = $this->request->getPost('id_pemverifikasi');
-            $Pemverifikasi_frs->updatePemverifikasi($id_pemverifikasi, [
-                'id_user_pemverifikasi' => $id_user,
-                'status_pemverifikasi' => 'Selesai Pemverifikasi',
-                'selesai_pemverifikasi' => date('Y-m-d H:i:s'),
+        if ($redirect === 'index_pemverifikasi_frs' && isset($_POST['id_pemverifikasi_frs'])) {
+            $id_pemverifikasi_frs = $this->request->getPost('id_pemverifikasi_frs');
+            $this->pemverifikasi_frs->update($id_pemverifikasi_frs, [
+                'id_user_pemverifikasi_frs' => $id_user,
+                'status_pemverifikasi_frs' => 'Selesai Pemverifikasi',
+                'selesai_pemverifikasi_frs' => date('Y-m-d H:i:s'),
             ]);
-            return redirect()->to('pemverifikasi/index_pemverifikasi')->with('success', 'Data berhasil diverifikasi.');
+            return redirect()->to('pemverifikasi_frs/index')->with('success', 'Data berhasil diverifikasi.');
         }
-
-        if ($redirect === 'index_autorized' && isset($_POST['id_autorized'])) {
-            $id_autorized = $this->request->getPost('id_autorized');
-            $Authorized_frs->updateAutorized($id_autorized, [
-                'id_user_autorized' => $id_user,
-                'status_autorized' => 'Selesai Authorized',
-                'selesai_autorized' => date('Y-m-d H:i:s'),
+        if ($redirect === 'index_authorized_frs' && isset($_POST['id_authorized_frs'])) {
+            $id_authorized_frs = $this->request->getPost('id_authorized_frs');
+            $this->authorized_frs->update($id_authorized_frs, [
+                'id_user_authorized_frs' => $id_user,
+                'status_authorized_frs' => 'Selesai Authorized',
+                'selesai_authorized_frs' => date('Y-m-d H:i:s'),
             ]);
-            return redirect()->to('autorized/index_autorized')->with('success', 'Data berhasil diauthorized.');
+            return redirect()->to('authorized_frs/index')->with('success', 'Data berhasil diauthorized.');
         }
-
-        if ($redirect === 'index_pencetakan' && isset($_POST['id_pencetakan'])) {
-            $id_pencetakan = $this->request->getPost('id_pencetakan');
-            $Pencetakan_frs->updatePencetakan($id_pencetakan, [
-                'id_user_pencetakan' => $id_user,
-                'status_pencetakan' => 'Selesai Pencetakan',
-                'selesai_pencetakan' => date('Y-m-d H:i:s'),
+        if ($redirect === 'index_pencetakan_frs' && isset($_POST['id_pencetakan_frs'])) {
+            $id_pencetakan_frs = $this->request->getPost('id_pencetakan_frs');
+            $this->pencetakan_frs->update($id_pencetakan_frs, [
+                'id_user_pencetakan_frs' => $id_user,
+                'status_pencetakan_frs' => 'Selesai Pencetakan',
+                'selesai_pencetakan_frs' => date('Y-m-d H:i:s'),
             ]);
-            return redirect()->to('pencetakan/index_pencetakan')->with('success', 'Data berhasil dicetak.');
+            return redirect()->to('pencetakan_frs/index')->with('success', 'Data berhasil dicetak.');
         }
-
         // Jika redirect tidak sesuai dengan yang diharapkan
         return redirect()->back()->with('error', 'Terjadi kesalahan: Halaman tujuan tidak valid.');
     }
-
 
     public function uploadFotoMakroskopis($id_frs)
     {

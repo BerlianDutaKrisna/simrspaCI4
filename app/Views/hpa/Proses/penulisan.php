@@ -8,6 +8,7 @@
     <div class="card-body">
         <h1>Daftar Penulisan</h1>
         <a href="<?= base_url('/dashboard') ?>" class="btn btn-primary mb-3">Kembali</a>
+        <?= $this->include('templates/proses/button_penulisan'); ?>
 
         <!-- Form -->
         <form id="mainForm" action="<?= base_url('penulisan_hpa/proses_penulisan'); ?>" method="POST">
@@ -20,15 +21,15 @@
                     <thead>
                         <tr>
                             <th>No</th>
+                            <th>Aksi</th>
+                            <th>Detail</th>
                             <th>Kode HPA</th>
                             <th>Nama Pasien</th>
                             <th>Status Penulisan</th>
-                            <th>Aksi</th>
                             <th>Admin</th>
                             <th>Mulai Penulisan</th>
                             <th>Selesai Penulisan</th>
                             <th>Deadline Hasil</th>
-                            <th>Detail</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -37,9 +38,6 @@
                             <?php foreach ($penulisanDatahpa as $row): ?>
                                 <tr>
                                     <td><?= $i ?></td>
-                                    <td><?= $row['kode_hpa']; ?></td>
-                                    <td><?= $row['nama_pasien']; ?></td>
-                                    <td><?= $row['status_penulisan_hpa']; ?></td>
                                     <td>
                                         <input type="checkbox"
                                             name="id_proses[]"
@@ -50,6 +48,24 @@
                                                             ]) ?>'
                                             autocomplete="off">
                                     </td>
+                                    <?php if (in_array($row['status_penulisan_hpa'], ["Proses Penulisan"])): ?>
+                                        <td>
+                                            <a href="<?= base_url('hpa/edit_penulisan/' . esc($row['id_hpa'])) ?>" class="btn btn-warning btn-sm">
+                                                <i class="fas fa-pen"></i> penulisan
+                                            </a>
+                                        </td>
+                                    <?php elseif (in_array($row['status_penulisan_hpa'], ["Selesai Penulisan"])): ?>
+                                        <td>
+                                            <a href="<?= base_url('hpa/edit_penulisan/' . esc($row['id_hpa'])) ?>" class="btn btn-success btn-sm mx-1">
+                                                <i class="fas fa-pen"></i> penulisan
+                                            </a>
+                                        </td>
+                                    <?php else: ?>
+                                        <td></td>
+                                    <?php endif; ?>
+                                    <td><?= $row['kode_hpa']; ?></td>
+                                    <td><?= $row['nama_pasien']; ?></td>
+                                    <td><?= $row['status_penulisan_hpa']; ?></td>
                                     <td><?= $row['nama_user_penulisan_hpa']; ?></td>
                                     <td>
                                         <?= empty($row['mulai_penulisan_hpa']) ? '-' : esc(date('H:i , d-m-Y', strtotime($row['mulai_penulisan_hpa']))); ?>
@@ -76,21 +92,6 @@
                                         }
                                         ?>
                                     </td>
-                                    <?php if (in_array($row['status_penulisan_hpa'], ["Proses Penulisan"])): ?>
-                                        <td>
-                                            <a href="<?= base_url('hpa/edit_penulisan/' . esc($row['id_hpa'])) ?>" class="btn btn-warning btn-sm">
-                                                <i class="fas fa-pen"></i> penulisan
-                                            </a>
-                                        </td>
-                                    <?php elseif (in_array($row['status_penulisan_hpa'], ["Selesai Penulisan"])): ?>
-                                        <td>
-                                            <a href="<?= base_url('hpa/edit_penulisan/' . esc($row['id_hpa'])) ?>" class="btn btn-success btn-sm mx-1">
-                                                <i class="fas fa-pen"></i> penulisan
-                                            </a>
-                                        </td>
-                                    <?php else: ?>
-                                        <td></td>
-                                    <?php endif; ?>
                                 </tr>
                                 <?php $i++; ?>
                             <?php endforeach; ?>

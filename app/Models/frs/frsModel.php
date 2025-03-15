@@ -86,7 +86,7 @@ class FrsModel extends Model
     }
     public function countAuthorizedfrs()
     {
-        return $this->where('status_frs =', 'Autorized')->countAllResults() ?? 0;
+        return $this->where('status_frs =', 'Authorized')->countAllResults() ?? 0;
     }
     public function countPencetakanfrs()
     {
@@ -121,11 +121,14 @@ class FrsModel extends Model
 
     public function getfrsWithRelationsProses($id_frs)
     {
-        return $this->select('frs.*, patient.*, penerimaan_frs.*, pembacaan_frs.*, penulisan_frs.*, mutu_frs.*')
+        return $this->select('frs.*, patient.*, penerimaan_frs.*, pembacaan_frs.*, penulisan_frs.*, pemverifikasi_frs.*, authorized_frs.*, pencetakan_frs.*, mutu_frs.*')
             ->join('patient', 'patient.id_pasien = frs.id_pasien', 'left')
             ->join('penerimaan_frs', 'penerimaan_frs.id_frs = frs.id_frs', 'left')
             ->join('pembacaan_frs', 'pembacaan_frs.id_frs = frs.id_frs', 'left')
             ->join('penulisan_frs', 'penulisan_frs.id_frs = frs.id_frs', 'left')
+            ->join('pemverifikasi_frs', 'pemverifikasi_frs.id_frs = frs.id_frs', 'left')
+            ->join('authorized_frs', 'authorized_frs.id_frs = frs.id_frs', 'left')
+            ->join('pencetakan_frs', 'pencetakan_frs.id_frs = frs.id_frs', 'left')
             ->join('mutu_frs', 'mutu_frs.id_frs = frs.id_frs', 'left')
             ->where('frs.id_frs', $id_frs)
             ->first();

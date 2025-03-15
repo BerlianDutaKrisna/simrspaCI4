@@ -13,10 +13,9 @@
             <form id="form-hpa" method="POST" enctype="multipart/form-data">
                 <?= csrf_field(); ?>
                 <input type="hidden" name="id_hpa" value="<?= $hpa['id_hpa'] ?>">
-                <input type="hidden" name="id_pemverifikasi_hpa" value="<?= $pemverifikasi_hpa['id_pemverifikasi_hpa'] ?? '' ?>">
-                <input type="hidden" name="id_authorized_hpa" value="<?= $authorized_hpa['id_authorized_hpa'] ?? '' ?>">
-                <input type="hidden" name="id_pencetakan_hpa" value="<?= $pencetakan_hpa['id_pencetakan_hpa'] ?? '' ?>">
-
+                <input type="hidden" name="id_pemverifikasi_hpa" value="<?= $hpa['id_pemverifikasi_hpa'] ?? '' ?>">
+                <input type="hidden" name="id_authorized_hpa" value="<?= $hpa['id_authorized_hpa'] ?? '' ?>">
+                <input type="hidden" name="id_pencetakan_hpa" value="<?= $hpa['id_pencetakan_hpa'] ?? '' ?>">
                 <input type="hidden" name="redirect" value="<?= $_GET['redirect'] ?? '' ?>">
 
                 <!-- Tombol Kembali  -->
@@ -34,7 +33,7 @@
                     <div class="col-sm-4 text-center">
                         <button type="submit"
                             class="btn btn-success btn-user w-100"
-                            formaction="<?= base_url('hpa/update_print_hpa/' . $hpa['id_hpa']); ?>"
+                            formaction="<?= base_url('hpa/update_print/' . $hpa['id_hpa']); ?>"
                             <?= (($_GET['redirect'] ?? '') === 'index_pemverifikasi_hpa') ? '' : 'disabled' ?>>
                             <i class="fas fa-check-square"></i> Verifikasi
                         </button>
@@ -43,7 +42,7 @@
                     <div class="col-sm-4 text-center">
                         <button type="submit"
                             class="btn btn-info btn-user w-100"
-                            formaction="<?= base_url('hpa/update_print_hpa/' . $hpa['id_hpa']); ?>"
+                            formaction="<?= base_url('hpa/update_print/' . $hpa['id_hpa']); ?>"
                             <?= (($_GET['redirect'] ?? '') === 'index_authorized_hpa') ? '' : 'disabled' ?>>
                             <i class="fas fa-vote-yea"></i> Authorized
                         </button>
@@ -71,4 +70,4 @@
 
 <?= $this->include('templates/notifikasi') ?>
 <?= $this->include('templates/cetak/footer_cetak'); ?>
-<?= $this->include('templates/exam/cetak_print_hpa'); ?>
+<?= $this->include('templates/exam/cetak_print'); ?>

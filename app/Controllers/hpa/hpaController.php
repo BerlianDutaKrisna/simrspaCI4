@@ -430,29 +430,18 @@ class HpaController extends BaseController
     }
 
 
-    public function edit_print_hpa($id_hpa, $id_penerimaan_hpa, $id_pembacaan_hpa, $id_pemverivifikasi_hpa, $id_authorized_hpa, $id_pencetakan_hpa)
+    public function edit_print($id_hpa)
     {
         // Ambil data hpa berdasarkan ID
         $hpa = $this->hpaModel->getHpaWithRelationsProses($id_hpa);
-        $penerimaan_hpa = $this->penerimaan_hpa->find($id_penerimaan_hpa);
-        $pembacaan_hpa = $this->pembacaan_hpa->find($id_pembacaan_hpa);
-        $pemverifikasi_hpa = $this->pemverifikasi_hpa->find($id_pemverivifikasi_hpa) ?? [];
-        $authorized_hpa = $this->authorized_hpa->find($id_authorized_hpa) ?? [];
-        $pencetakan_hpa = $this->pencetakan_hpa->find($id_pencetakan_hpa) ?? [];
-
         // Persiapkan data yang akan dikirim ke view
         $data = [
             'id_user' => session()->get('id_user'),
             'nama_user' => session()->get('nama_user'),
             'hpa' => $hpa,
-            'penerimaan_hpa' => $penerimaan_hpa,
-            'pembacaan_hpa' => $pembacaan_hpa,
-            'pemverifikasi_hpa' => $pemverifikasi_hpa,
-            'authorized_hpa' => $authorized_hpa,
-            'pencetakan_hpa' => $pencetakan_hpa,
         ];
-
-        return view('hpa/edit_print_hpa', $data);
+        
+        return view('hpa/edit_print', $data);
     }
 
     public function update($id_hpa)
@@ -671,7 +660,7 @@ class HpaController extends BaseController
         return redirect()->back()->with('error', 'Gagal memperbarui data.');
     }
 
-    public function update_print_hpa($id_hpa)
+    public function update_print($id_hpa)
     {
         date_default_timezone_set('Asia/Jakarta');
         $id_user = session()->get('id_user');

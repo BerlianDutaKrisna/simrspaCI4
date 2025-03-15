@@ -35,7 +35,7 @@ class Penulisan_hpa extends Model // Update nama model
         return $this->db->affectedRows() > 0;
     }
 
-     // Mengambil data pembacaan_hpa dengan relasi
+    // Mengambil data pembacaan_hpa dengan relasi
     public function getpenulisan_hpa()
     {
         return $this->select(

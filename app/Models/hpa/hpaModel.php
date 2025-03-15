@@ -119,12 +119,15 @@ class HpaModel extends Model
 
     public function getHpaWithRelationsProses($id_hpa)
     {
-        return $this->select('hpa.*, patient.*, penerimaan_hpa.*, pemotongan_hpa.*, pembacaan_hpa.*, penulisan_hpa.*, mutu_hpa.*')
+        return $this->select('hpa.*, patient.*, penerimaan_hpa.*, pemotongan_hpa.*, pembacaan_hpa.*, penulisan_hpa.*, pemverifikasi_hpa.*, authorized_hpa.*, pencetakan_hpa.*, mutu_hpa.*')
             ->join('patient', 'patient.id_pasien = hpa.id_pasien', 'left')
             ->join('penerimaan_hpa', 'penerimaan_hpa.id_hpa = hpa.id_hpa', 'left')
             ->join('pemotongan_hpa', 'pemotongan_hpa.id_hpa = hpa.id_hpa', 'left')
             ->join('pembacaan_hpa', 'pembacaan_hpa.id_hpa = hpa.id_hpa', 'left')
             ->join('penulisan_hpa', 'penulisan_hpa.id_hpa = hpa.id_hpa', 'left')
+            ->join('pemverifikasi_hpa', 'pemverifikasi_hpa.id_hpa = hpa.id_hpa', 'left')
+            ->join('authorized_hpa', 'authorized_hpa.id_hpa = hpa.id_hpa', 'left')
+            ->join('pencetakan_hpa', 'pencetakan_hpa.id_hpa = hpa.id_hpa', 'left')
             ->join('mutu_hpa', 'mutu_hpa.id_hpa = hpa.id_hpa', 'left')
             ->where('hpa.id_hpa', $id_hpa)
             ->first();

@@ -50,12 +50,12 @@ $routes->group('hpa', ['namespace' => 'App\Controllers\Hpa'], function ($routes)
     $routes->get('edit_makroskopis/(:segment)', 'HpaController::edit_makroskopis/$1');
     $routes->get('edit_mikroskopis/(:segment)', 'HpaController::edit_mikroskopis/$1');
     $routes->get('edit_penulisan/(:segment)', 'HpaController::edit_penulisan/$1');
-    $routes->get('edit_print_hpa/(:segment)', 'HpaController::edit_print_hpa/$1');
+    $routes->get('edit_print/(:segment)', 'HpaController::edit_print/$1');
     $routes->post('update/(:segment)', 'HpaController::update/$1');
-    $routes->post('update_print_hpa/(:segment)', 'HpaController::update_print_hpa/$1');
+    $routes->post('update_print/(:segment)', 'HpaController::update_print/$1');
     $routes->get('index_buku_penerima', 'HpaController::index_buku_penerima');
     $routes->post('update_buku_penerima', 'HpaController::update_buku_penerima');
-    $routes->post('update_status_hpa', 'HpaController::update_status_hpa');
+    $routes->post('update_status', 'HpaController::update_status');
     $routes->post('uploadFotoMakroskopis/(:segment)', 'HpaController::uploadFotoMakroskopis/$1');
     $routes->post('uploadFotoMikroskopis/(:segment)', 'HpaController::uploadFotoMikroskopis/$1');
 });
@@ -66,7 +66,10 @@ $routes->group('frs', ['namespace' => 'App\Controllers\Frs'], function ($routes)
     $routes->get('register', 'FrsController::register');
     $routes->post('insert', 'FrsController::insert');
     $routes->get('edit_mikroskopis/(:segment)', 'FrsController::edit_mikroskopis/$1');
+    $routes->get('edit_penulisan/(:segment)', 'FrsController::edit_penulisan/$1');
+    $routes->get('edit_print/(:segment)', 'FrsController::edit_print/$1');
     $routes->post('update/(:segment)', 'FrsController::update/$1');
+    $routes->post('update_print/(:segment)', 'FrsController::update_print/$1');
 });
 
 // Route untuk srs
@@ -219,7 +222,7 @@ $routes->group('pembacaan_ihc', ['namespace' => 'App\Controllers\Ihc\Proses'], f
     $routes->post('update_pembacaan', 'Pembacaan::update_pembacaan');
 });
 
-// Route untuk Penulisan
+// Route untuk Penulisan hpa
 $routes->group('penulisan_hpa', ['namespace' => 'App\Controllers\Hpa\Proses'], function ($routes) {
     $routes->get('index', 'Penulisan::index'); // Menampilkan halaman penulisan
     $routes->post('proses_penulisan', 'Penulisan::proses_penulisan'); // Proses penulisan
@@ -229,8 +232,68 @@ $routes->group('penulisan_hpa', ['namespace' => 'App\Controllers\Hpa\Proses'], f
     $routes->post('update_penulisan', 'Penulisan::update_penulisan');
 });
 
-// Route untuk Pemverifikasi
+// Route untuk Penulisan frs
+$routes->group('penulisan_frs', ['namespace' => 'App\Controllers\Frs\Proses'], function ($routes) {
+    $routes->get('index', 'Penulisan::index'); // Menampilkan halaman penulisan
+    $routes->post('proses_penulisan', 'Penulisan::proses_penulisan'); // Proses penulisan
+    $routes->get('penulisan_details', 'Penulisan::penulisan_details');
+    $routes->post('delete', 'Penulisan::delete');
+    $routes->get('edit_penulisan', 'Penulisan::edit_penulisan');
+    $routes->post('update_penulisan', 'Penulisan::update_penulisan');
+});
+
+// Route untuk Penulisan srs
+$routes->group('penulisan_srs', ['namespace' => 'App\Controllers\Srs\Proses'], function ($routes) {
+    $routes->get('index', 'Penulisan::index'); // Menampilkan halaman penulisan
+    $routes->post('proses_penulisan', 'Penulisan::proses_penulisan'); // Proses penulisan
+    $routes->get('penulisan_details', 'Penulisan::penulisan_details');
+    $routes->post('delete', 'Penulisan::delete');
+    $routes->get('edit_penulisan', 'Penulisan::edit_penulisan');
+    $routes->post('update_penulisan', 'Penulisan::update_penulisan');
+});
+
+// Route untuk Penulisan ihc
+$routes->group('penulisan_ihc', ['namespace' => 'App\Controllers\Ihc\Proses'], function ($routes) {
+    $routes->get('index', 'Penulisan::index'); // Menampilkan halaman penulisan
+    $routes->post('proses_penulisan', 'Penulisan::proses_penulisan'); // Proses penulisan
+    $routes->get('penulisan_details', 'Penulisan::penulisan_details');
+    $routes->post('delete', 'Penulisan::delete');
+    $routes->get('edit_penulisan', 'Penulisan::edit_penulisan');
+    $routes->post('update_penulisan', 'Penulisan::update_penulisan');
+});
+
+// Route untuk Pemverifikasi hpa
 $routes->group('pemverifikasi_hpa', ['namespace' => 'App\Controllers\Hpa\Proses'], function ($routes) {
+    $routes->get('index', 'Pemverifikasi::index'); // Menampilkan halaman pemverifikasi
+    $routes->post('proses_pemverifikasi', 'Pemverifikasi::proses_pemverifikasi'); // Proses pemverifikasi
+    $routes->get('pemverifikasi_details', 'Pemverifikasi::pemverifikasi_details');
+    $routes->post('delete', 'Pemverifikasi::delete');
+    $routes->get('edit_pemverifikasi', 'Pemverifikasi::edit_pemverifikasi');
+    $routes->post('update_pemverifikasi', 'Pemverifikasi::update_pemverifikasi');
+});
+
+// Route untuk Pemverifikasi frs
+$routes->group('pemverifikasi_frs', ['namespace' => 'App\Controllers\Frs\Proses'], function ($routes) {
+    $routes->get('index', 'Pemverifikasi::index'); // Menampilkan halaman pemverifikasi
+    $routes->post('proses_pemverifikasi', 'Pemverifikasi::proses_pemverifikasi'); // Proses pemverifikasi
+    $routes->get('pemverifikasi_details', 'Pemverifikasi::pemverifikasi_details');
+    $routes->post('delete', 'Pemverifikasi::delete');
+    $routes->get('edit_pemverifikasi', 'Pemverifikasi::edit_pemverifikasi');
+    $routes->post('update_pemverifikasi', 'Pemverifikasi::update_pemverifikasi');
+});
+
+// Route untuk Pemverifikasi srs
+$routes->group('pemverifikasi_srs', ['namespace' => 'App\Controllers\Srs\Proses'], function ($routes) {
+    $routes->get('index', 'Pemverifikasi::index'); // Menampilkan halaman pemverifikasi
+    $routes->post('proses_pemverifikasi', 'Pemverifikasi::proses_pemverifikasi'); // Proses pemverifikasi
+    $routes->get('pemverifikasi_details', 'Pemverifikasi::pemverifikasi_details');
+    $routes->post('delete', 'Pemverifikasi::delete');
+    $routes->get('edit_pemverifikasi', 'Pemverifikasi::edit_pemverifikasi');
+    $routes->post('update_pemverifikasi', 'Pemverifikasi::update_pemverifikasi');
+});
+
+// Route untuk Pemverifikasi ihc
+$routes->group('pemverifikasi_ihc', ['namespace' => 'App\Controllers\Ihc\Proses'], function ($routes) {
     $routes->get('index', 'Pemverifikasi::index'); // Menampilkan halaman pemverifikasi
     $routes->post('proses_pemverifikasi', 'Pemverifikasi::proses_pemverifikasi'); // Proses pemverifikasi
     $routes->get('pemverifikasi_details', 'Pemverifikasi::pemverifikasi_details');

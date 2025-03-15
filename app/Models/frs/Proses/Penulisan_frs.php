@@ -35,22 +35,28 @@ class Penulisan_frs extends Model // Update nama model
         return $this->db->affectedRows() > 0;
     }
 
-    // Mengambil data penulisan_frs dengan relasi
-    public function getpenulisan_frsWithRelations() // Update nama fungsi
+    // Mengambil data pembacaan_frs dengan relasi
+    public function getpenulisan_frs()
     {
         return $this->select(
             '
-        penulisan_frs.*, 
-        frs.*, 
-        patient.*, 
-        users.nama_user AS nama_user_penulisan_frs,
-        mutu.total_nilai_mutu'
+            penulisan_frs.*, 
+            frs.*, 
+            patient.*, 
+            users.nama_user AS nama_user_penulisan_frs,
+            mutu_frs.id_mutu_frs,
+            mutu_frs.total_nilai_mutu_frs,
+            pembacaan_frs.id_pembacaan_frs, 
+            pembacaan_frs.id_user_dokter_pembacaan_frs,
+            dokter_pembacaan.nama_user AS nama_user_dokter_pembacaan_frs'
         )
-            ->join('frs', 'penulisan_frs.id_frs = frs.id_frs', 'left') // Relasi dengan tabel frs
-            ->join('patient', 'frs.id_pasien = patient.id_pasien', 'left') // Relasi dengan tabel patient
-            ->join('users', 'penulisan_frs.id_user_penulisan_frs = users.id_user', 'left') // Relasi dengan tabel users untuk penulisan_frs
-            ->join('mutu', 'frs.id_frs = mutu.id_frs', 'left') // Relasi dengan tabel mutu berdasarkan id_frs
-            ->where('frs.status_frs', 'penulisan_frs') // Filter berdasarkan status_frs 'penulisan_frs'
+            ->join('frs', 'penulisan_frs.id_frs = frs.id_frs', 'left')
+            ->join('patient', 'frs.id_pasien = patient.id_pasien', 'left')
+            ->join('users', 'penulisan_frs.id_user_penulisan_frs = users.id_user', 'left')
+            ->join('mutu_frs', 'frs.id_frs = mutu_frs.id_frs', 'left')
+            ->join('pembacaan_frs', 'frs.id_frs = pembacaan_frs.id_frs', 'left')
+            ->join('users AS dokter_pembacaan', 'pembacaan_frs.id_user_dokter_pembacaan_frs = dokter_pembacaan.id_user', 'left')
+            ->whereIn('frs.status_frs', ['Penulisan'])
             ->orderBy('frs.kode_frs', 'ASC')
             ->findAll();
     }
