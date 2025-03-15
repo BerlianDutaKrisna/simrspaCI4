@@ -20,10 +20,10 @@
                     <thead>
                         <tr>
                             <th>No</th>
+                            <th>Aksi</th>
                             <th>Kode HPA</th>
                             <th>Nama Pasien</th>
                             <th>Status Pewarnaan</th>
-                            <th>Aksi</th>
                             <th>Analis</th>
                             <th>Mulai Pewarnaan</th>
                             <th>Selesai Pewarnaan</th>
@@ -36,9 +36,6 @@
                             <?php foreach ($pewarnaanDatahpa as $row): ?>
                                 <tr>
                                     <td><?= $i ?></td>
-                                    <td><?= $row['kode_hpa']; ?></td>
-                                    <td><?= $row['nama_pasien']; ?></td>
-                                    <td><?= $row['status_pewarnaan_hpa']; ?></td>
                                     <td>
                                         <input type="checkbox"
                                             name="id_proses[]"
@@ -49,6 +46,9 @@
                                                             ]) ?>'
                                             autocomplete="off">
                                     </td>
+                                    <td><?= $row['kode_hpa']; ?></td>
+                                    <td><?= $row['nama_pasien']; ?></td>
+                                    <td><?= $row['status_pewarnaan_hpa']; ?></td>
                                     <td><?= $row['nama_user_pewarnaan_hpa']; ?></td>
                                     <td>
                                         <?= empty($row['mulai_pewarnaan_hpa']) ? '-' : esc(date('H:i , d-m-Y', strtotime($row['mulai_pewarnaan_hpa']))); ?>

@@ -9,6 +9,7 @@
     <div class="card-body">
         <h1>Daftar Pembacaan</h1>
         <a href="<?= base_url('/dashboard') ?>" class="btn btn-primary mb-3">Kembali</a>
+        <?= $this->include('templates/proses/button_pembacaan'); ?>
 
         <!-- Form -->
         <form id="mainForm" action="<?= base_url('pembacaan_hpa/proses_pembacaan'); ?>" method="POST">
@@ -21,17 +22,17 @@
                     <thead>
                         <tr>
                             <th>No</th>
+                            <th>Aksi</th>
+                            <th>Detail</th>
                             <th>Kode HPA</th>
                             <th>Nama Pasien</th>
-                            <th>Status Pembacaan</th>
-                            <th>Aksi</th>
-                            <th>Kualitas Sediaan</th>
                             <th>jumlah slide</th>
                             <th>Dokter</th>
+                            <th>Status Pembacaan</th>
+                            <th>Kualitas Sediaan</th>
                             <th>Mulai Pembacaan</th>
                             <th>Selesai Pembacaan</th>
                             <th>Deadline Hasil</th>
-                            <th>Detail</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -40,9 +41,6 @@
                             <?php foreach ($pembacaanDatahpa as $row): ?>
                                 <tr>
                                     <td><?= $i ?></td>
-                                    <td><?= $row['kode_hpa']; ?></td>
-                                    <td><?= $row['nama_pasien']; ?></td>
-                                    <td><?= $row['status_pembacaan_hpa']; ?></td>
                                     <td>
                                         <input type="checkbox"
                                             name="id_proses[]"
@@ -53,6 +51,26 @@
                                                             ]) ?>'
                                             autocomplete="off">
                                     </td>
+                                    <?php if (in_array($row['status_pembacaan_hpa'], ["Proses Pembacaan"])): ?>
+                                        <td>
+                                            <a href="<?= base_url('hpa/edit_mikroskopis/' . esc($row['id_hpa'])) ?>" class="btn btn-warning btn-sm">
+                                                <i class="fas fa-pen"></i> Detail
+                                            </a>
+                                        </td>
+                                    <?php elseif (in_array($row['status_pembacaan_hpa'], ["Selesai Pembacaan"])): ?>
+                                        <td>
+                                            <a href="<?= base_url('hpa/edit_mikroskopis/' . esc($row['id_hpa'])) ?>" class="btn btn-success btn-sm">
+                                                <i class="fas fa-pen"></i> Detail
+                                            </a>
+                                        </td>
+                                    <?php else: ?>
+                                        <td></td>
+                                    <?php endif; ?>
+                                    <td><?= $row['kode_hpa']; ?></td>
+                                    <td><?= $row['nama_pasien']; ?></td>
+                                    <td><?= $row['jumlah_slide']; ?></td>
+                                    <td><?= $row['nama_user_dokter_pemotongan_hpa']; ?></td>
+                                    <td><?= $row['status_pembacaan_hpa']; ?></td>
                                     <td>
                                         <?php if ($row['status_pembacaan_hpa'] === "Proses Pembacaan"): ?>
                                             <input type="hidden" name="total_nilai_mutu_hpa" value="<?= $row['total_nilai_mutu_hpa']; ?>">
@@ -63,7 +81,6 @@
                                                     Pilih Semua
                                                 </label>
                                             </div>
-
                                             <div class="form-check">
                                                 <input type="checkbox"
                                                     name="indikator_4"
@@ -114,19 +131,16 @@
                                                     Sediaan tanpa bercak / sidik jari
                                                 </label>
                                             </div>
-
                                             <script>
                                                 document.addEventListener('DOMContentLoaded', function() {
                                                     const checkAll = document.getElementById('checkAll_<?= $row['id_mutu_hpa']; ?>');
                                                     const checkboxes = document.querySelectorAll('.child-checkbox');
-
                                                     // Ketika "Pilih Semua" dicentang/ditandai
                                                     checkAll.addEventListener('change', function() {
                                                         checkboxes.forEach(checkbox => {
                                                             checkbox.checked = checkAll.checked; // Semua checkbox mengikuti status "Pilih Semua"
                                                         });
                                                     });
-
                                                     // Update status "Pilih Semua" berdasarkan checkbox lainnya
                                                     checkboxes.forEach(checkbox => {
                                                         checkbox.addEventListener('change', function() {
@@ -140,8 +154,7 @@
                                             <?= $row['total_nilai_mutu_hpa']; ?> %
                                         <?php endif; ?>
                                     </td>
-                                    <td><?= $row['jumlah_slide']; ?></td>
-                                    <td><?= $row['nama_user_dokter_pemotongan_hpa']; ?></td>
+
                                     <td>
                                         <?= empty($row['mulai_pembacaan_hpa']) ? '-' : esc(date('H:i , d-m-Y', strtotime($row['mulai_pembacaan_hpa']))); ?>
                                     </td>
@@ -167,21 +180,6 @@
                                         }
                                         ?>
                                     </td>
-                                    <?php if (in_array($row['status_pembacaan_hpa'], ["Proses Pembacaan"])): ?>
-                                        <td>
-                                            <a href="<?= base_url('hpa/edit_mikroskopis/' . esc($row['id_hpa'])) ?>" class="btn btn-warning btn-sm">
-                                                <i class="fas fa-pen"></i> Detail
-                                            </a>
-                                        </td>
-                                    <?php elseif (in_array($row['status_pembacaan_hpa'], ["Selesai Pembacaan"])): ?>
-                                        <td>
-                                            <a href="<?= base_url('hpa/edit_mikroskopis/' . esc($row['id_hpa'])) ?>" class="btn btn-success btn-sm">
-                                                <i class="fas fa-pen"></i> Detail
-                                            </a>
-                                        </td>
-                                    <?php else: ?>
-                                        <td></td>
-                                    <?php endif; ?>
                                 </tr>
                                 <?php $i++; ?>
                             <?php endforeach; ?>

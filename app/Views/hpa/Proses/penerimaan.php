@@ -19,10 +19,10 @@
                     <thead>
                         <tr>
                             <th>No</th>
-                            <th>Kode HPA</th>
-                            <th>Nama Pasien</th>
                             <th>Aksi</th>
                             <th>Kualitas Sediaan</th>
+                            <th>Kode HPA</th>
+                            <th>Nama Pasien</th>
                             <th>Analis</th>
                             <th>Mulai Penerimaan</th>
                             <th>Selesai Penerimaan</th>
@@ -35,8 +35,6 @@
                             <?php foreach ($penerimaanDatahpa as $row): ?>
                                 <tr>
                                     <td><?= $i ?></td>
-                                    <td><?= esc($row['kode_hpa']); ?></td>
-                                    <td><?= esc($row['nama_pasien']); ?></td>
                                     <td>
                                         <input type="checkbox"
                                             name="id_proses[]"
@@ -74,6 +72,8 @@
                                             <?= esc($row['total_nilai_mutu_hpa']); ?> %
                                         <?php endif; ?>
                                     </td>
+                                    <td><?= esc($row['kode_hpa']); ?></td>
+                                    <td><?= esc($row['nama_pasien']); ?></td>
                                     <td><?= esc($row['nama_user_penerimaan_hpa']); ?></td>
                                     <td>
                                         <?= empty($row['mulai_penerimaan_hpa']) ? '-' : esc(date('H:i, d-m-Y', strtotime($row['mulai_penerimaan_hpa']))); ?>

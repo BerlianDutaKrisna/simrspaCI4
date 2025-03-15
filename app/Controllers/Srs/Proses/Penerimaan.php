@@ -72,7 +72,7 @@ class Penerimaan extends BaseController
             foreach ($selectedIds as $id) {
                 list($id_penerimaan_srs, $id_srs, $id_mutu_srs) = explode(':', $id);
                 $indikator_1 = (string) ($this->request->getPost('indikator_1') ?? '0');
-                $total_nilai_mutu_srs = $this->request->getPost('total_nilai_mutu_srs');
+                $total_nilai_mutu_srs = (string) ($this->request->getPost('total_nilai_mutu_srs') ?? '0');
                 $this->processAction($action, $id_penerimaan_srs, $id_srs, $id_user, $id_mutu_srs, $indikator_1, $total_nilai_mutu_srs);
             }
 
@@ -102,8 +102,7 @@ class Penerimaan extends BaseController
                         'status_penerimaan_srs' => 'Selesai Penerimaan',
                         'selesai_penerimaan_srs' => date('Y-m-d H:i:s'),
                     ]);
-                    break;
-                    $this->Mutu_srs->update($id_mutu, [
+                    $this->Mutu_srs->update($id_mutu_srs, [
                         'indikator_1' => $indikator_1,
                         'total_nilai_mutu_srs' => $total_nilai_mutu_srs + $indikator_1,
                     ]);

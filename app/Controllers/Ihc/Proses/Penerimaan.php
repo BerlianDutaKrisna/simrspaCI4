@@ -74,7 +74,7 @@ class Penerimaan extends BaseController
                 $indikator_1 = (string) ($this->request->getPost('indikator_1') ?? '0');
                 $indikator_2 = (string) ($this->request->getPost('indikator_2') ?? '0');
                 $indikator_3 = (string) ($this->request->getPost('indikator_3') ?? '0');
-                $total_nilai_mutu_ihc = $this->request->getPost('total_nilai_mutu_ihc');
+                $total_nilai_mutu_ihc = (string) ($this->request->getPost('total_nilai_mutu_ihc') ?? '0');
                 $this->processAction($action, $id_penerimaan_ihc, $id_ihc, $id_user, $id_mutu_ihc, $indikator_1, $indikator_2, $indikator_3, $total_nilai_mutu_ihc);
             }
 
@@ -104,8 +104,7 @@ class Penerimaan extends BaseController
                         'status_penerimaan_ihc' => 'Selesai Penerimaan',
                         'selesai_penerimaan_ihc' => date('Y-m-d H:i:s'),
                     ]);
-                    break;
-                    $this->Mutu_ihc->update($id_mutu, [
+                    $this->Mutu_ihc->update($id_mutu_ihc, [
                         'indikator_1' => $indikator_1,
                         'indikator_2' => $indikator_2,
                         'indikator_3' => $indikator_3,

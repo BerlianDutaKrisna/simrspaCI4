@@ -177,8 +177,38 @@ $routes->group('pewarnaan_hpa', ['namespace' => 'App\Controllers\Hpa\Proses'], f
     $routes->post('update_pewarnaan', 'Pewarnaan::update_pewarnaan');
 });
 
-// Route untuk Pembacaan
+// Route untuk Pembacaan hpa
 $routes->group('pembacaan_hpa', ['namespace' => 'App\Controllers\Hpa\Proses'], function ($routes) {
+    $routes->get('index', 'Pembacaan::index'); // Menampilkan halaman pembacaan
+    $routes->post('proses_pembacaan', 'Pembacaan::proses_pembacaan'); // Proses pembacaan
+    $routes->get('pembacaan_details', 'Pembacaan::pembacaan_details');
+    $routes->post('delete', 'Pembacaan::delete');
+    $routes->get('edit_pembacaan', 'Pembacaan::edit_pembacaan');
+    $routes->post('update_pembacaan', 'Pembacaan::update_pembacaan');
+});
+
+// Route untuk Pembacaan frs
+$routes->group('pembacaan_frs', ['namespace' => 'App\Controllers\Frs\Proses'], function ($routes) {
+    $routes->get('index', 'Pembacaan::index'); // Menampilkan halaman pembacaan
+    $routes->post('proses_pembacaan', 'Pembacaan::proses_pembacaan'); // Proses pembacaan
+    $routes->get('pembacaan_details', 'Pembacaan::pembacaan_details');
+    $routes->post('delete', 'Pembacaan::delete');
+    $routes->get('edit_pembacaan', 'Pembacaan::edit_pembacaan');
+    $routes->post('update_pembacaan', 'Pembacaan::update_pembacaan');
+});
+
+// Route untuk Pembacaan srs
+$routes->group('pembacaan_srs', ['namespace' => 'App\Controllers\Srs\Proses'], function ($routes) {
+    $routes->get('index', 'Pembacaan::index'); // Menampilkan halaman pembacaan
+    $routes->post('proses_pembacaan', 'Pembacaan::proses_pembacaan'); // Proses pembacaan
+    $routes->get('pembacaan_details', 'Pembacaan::pembacaan_details');
+    $routes->post('delete', 'Pembacaan::delete');
+    $routes->get('edit_pembacaan', 'Pembacaan::edit_pembacaan');
+    $routes->post('update_pembacaan', 'Pembacaan::update_pembacaan');
+});
+
+// Route untuk Pembacaan ihc
+$routes->group('pembacaan_ihc', ['namespace' => 'App\Controllers\Ihc\Proses'], function ($routes) {
     $routes->get('index', 'Pembacaan::index'); // Menampilkan halaman pembacaan
     $routes->post('proses_pembacaan', 'Pembacaan::proses_pembacaan'); // Proses pembacaan
     $routes->get('pembacaan_details', 'Pembacaan::pembacaan_details');

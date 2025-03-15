@@ -37,9 +37,6 @@
                             <?php foreach ($pemotonganTipisDatahpa as $row): ?>
                                 <tr>
                                     <td><?= $i ?></td>
-                                    <td><?= $row['kode_hpa']; ?></td>
-                                    <td><?= $row['nama_pasien']; ?></td>
-                                    <td><?= $row['status_pemotongan_tipis_hpa']; ?></td>
                                     <td>
                                         <input type="checkbox"
                                             name="id_proses[]"
@@ -50,6 +47,10 @@
                                                             ]) ?>'
                                             autocomplete="off">
                                     </td>
+                                    <td><?= $row['kode_hpa']; ?></td>
+                                    <td><?= $row['nama_pasien']; ?></td>
+                                    <td><?= $row['status_pemotongan_tipis_hpa']; ?></td>
+
                                     <td><?= $row['jumlah_slide']; ?></td>
                                     <td><?= $row['nama_user_pemotongan_tipis_hpa']; ?></td>
                                     <td>

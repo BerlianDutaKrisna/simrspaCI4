@@ -21,14 +21,14 @@
                         <tr>
                             <th>No</th>
                             <th>Kode HPA</th>
-                            <th>Nama Pasien</th>
-                            <th>Status Pemotongan</th>
                             <th>Aksi</th>
+                            <th>Nama Pasien</th>
+                            <th>Detail</th>
+                            <th>Status Pemotongan</th>
                             <th>Analis</th>
                             <th>Mulai Pemotongan</th>
                             <th>Selesai Pemotongan</th>
                             <th>Deadline Hasil</th>
-                            <th>Detail</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -37,9 +37,6 @@
                             <?php foreach ($pemotonganDatahpa as $row): ?>
                                 <tr>
                                     <td><?= $i ?></td>
-                                    <td><?= $row['kode_hpa']; ?></td>
-                                    <td><?= $row['nama_pasien']; ?></td>
-                                    <td><?= $row['status_pemotongan_hpa']; ?></td>
                                     <td>
                                         <input type="checkbox"
                                             name="id_proses[]"
@@ -50,6 +47,24 @@
                                                             ]) ?>'
                                             autocomplete="off">
                                     </td>
+                                    <?php if (in_array($row['status_pemotongan_hpa'], ["Proses Pemotongan"])): ?>
+                                        <td>
+                                            <a href="<?= base_url('hpa/edit_makroskopis/' . esc($row['id_hpa'])) ?>" class="btn btn-warning btn-sm">
+                                                <i class="fas fa-pen"></i> Detail
+                                            </a>
+                                        </td>
+                                    <?php elseif (in_array($row['status_pemotongan_hpa'], ["Selesai Pemotongan"])): ?>
+                                        <td>
+                                            <a href="<?= base_url('hpa/edit_makroskopis/' . esc($row['id_hpa'])) ?>" class="btn btn-success btn-sm">
+                                                <i class="fas fa-pen"></i> Detail
+                                            </a>
+                                        </td>
+                                    <?php else: ?>
+                                        <td></td>
+                                    <?php endif; ?>
+                                    <td><?= $row['kode_hpa']; ?></td>
+                                    <td><?= $row['nama_pasien']; ?></td>
+                                    <td><?= $row['status_pemotongan_hpa']; ?></td>
                                     <td><?= $row['nama_user_pemotongan_hpa']; ?></td>
                                     <td>
                                         <?= empty($row['mulai_pemotongan_hpa']) ? '-' : esc(date('H:i , d-m-Y', strtotime($row['mulai_pemotongan_hpa']))); ?>
@@ -76,21 +91,6 @@
                                         }
                                         ?>
                                     </td>
-                                    <?php if (in_array($row['status_pemotongan_hpa'], ["Proses Pemotongan"])): ?>
-                                        <td>
-                                            <a href="<?= base_url('hpa/edit_makroskopis/' . esc($row['id_hpa'])) ?>" class="btn btn-warning btn-sm">
-                                                <i class="fas fa-pen"></i> Detail
-                                            </a>
-                                        </td>
-                                    <?php elseif (in_array($row['status_pemotongan_hpa'], ["Selesai Pemotongan"])): ?>
-                                        <td>
-                                            <a href="<?= base_url('hpa/edit_makroskopis/' . esc($row['id_hpa'])) ?>" class="btn btn-success btn-sm">
-                                                <i class="fas fa-pen"></i> Detail
-                                            </a>
-                                        </td>
-                                    <?php else: ?>
-                                        <td></td>
-                                    <?php endif; ?>
                                 </tr>
                                 <?php $i++; ?>
                             <?php endforeach; ?>

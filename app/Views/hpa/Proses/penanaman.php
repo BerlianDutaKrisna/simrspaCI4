@@ -20,11 +20,11 @@
                     <thead>
                         <tr>
                             <th>No</th>
+                            <th>Aksi</th>
+                            <th>Kualitas Sediaan</th>
                             <th>Kode HPA</th>
                             <th>Nama Pasien</th>
                             <th>Status Penanaman</th>
-                            <th>Aksi</th>
-                            <th>Kualitas Sediaan</th>
                             <th>Jumlah Slide</th>
                             <th>Analis</th>
                             <th>Mulai Penanaman</th>
@@ -38,9 +38,6 @@
                             <?php foreach ($penanamanDatahpa as $row): ?>
                                 <tr>
                                     <td><?= $i ?></td>
-                                    <td><?= $row['kode_hpa']; ?></td>
-                                    <td><?= $row['nama_pasien']; ?></td>
-                                    <td><?= $row['status_penanaman_hpa']; ?></td>
                                     <td>
                                         <input type="checkbox"
                                             name="id_proses[]"
@@ -70,6 +67,9 @@
                                             <?= $row['total_nilai_mutu_hpa']; ?> %
                                         <?php endif; ?>
                                     </td>
+                                    <td><?= $row['kode_hpa']; ?></td>
+                                    <td><?= $row['nama_pasien']; ?></td>
+                                    <td><?= $row['status_penanaman_hpa']; ?></td>
                                     <td><?= $row['jumlah_slide']; ?></td>
                                     <td><?= $row['nama_user_penanaman_hpa']; ?></td>
                                     <td>
