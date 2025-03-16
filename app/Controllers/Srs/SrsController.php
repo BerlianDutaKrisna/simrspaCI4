@@ -127,7 +127,9 @@ class srsController extends BaseController
             // Gabungkan unit_asal dan unit_asal_detail
             $unit_asal = $data['unit_asal'] . ' ' . ($data['unit_asal_detail'] ?? '');
             // Tentukan dokter_pengirim
-            $dokter_pengirim = !empty($data['dokter_pengirim']) ? $data['dokter_pengirim'] : $data['dokter_pengirim_custom'];
+            $dokter_pengirim = ($data['dokter_pengirim'] !== "lainnya")
+                ? $data['dokter_pengirim']
+                : $data['dokter_pengirim_custom'];
             // Tentukan tindakan_spesimen
             $tindakan_spesimen = !empty($data['tindakan_spesimen']) ? $data['tindakan_spesimen'] : $data['tindakan_spesimen_custom'];
             // Data yang akan disimpan

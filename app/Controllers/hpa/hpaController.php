@@ -21,7 +21,7 @@ use Exception;
 class HpaController extends BaseController
 {
     protected $hpaModel;
-    protected $userModel;
+    protected $usersModel;
     protected $patientModel;
     protected $penerimaan_hpa;
     protected $pemotongan_hpa;
@@ -37,7 +37,7 @@ class HpaController extends BaseController
     {
         // Inisialisasi model HPA
         $this->hpaModel = new hpaModel();
-        $this->userModel = new UsersModel();
+        $this->usersModel = new UsersModel();
         $this->patientModel = new PatientModel();
         $this->penerimaan_hpa = new Penerimaan_hpa();
         $this->pemotongan_hpa = new Pemotongan_hpa();
@@ -116,7 +116,9 @@ class HpaController extends BaseController
             // Gabungkan unit_asal dan unit_asal_detail
             $unit_asal = $data['unit_asal'] . ' ' . ($data['unit_asal_detail'] ?? '');
             // Tentukan dokter_pengirim
-            $dokter_pengirim = !empty($data['dokter_pengirim']) ? $data['dokter_pengirim'] : $data['dokter_pengirim_custom'];
+            $dokter_pengirim = ($data['dokter_pengirim'] !== "lainnya")
+                ? $data['dokter_pengirim']
+                : $data['dokter_pengirim_custom'];
             // Tentukan tindakan_spesimen
             $tindakan_spesimen = !empty($data['tindakan_spesimen']) ? $data['tindakan_spesimen'] : $data['tindakan_spesimen_custom'];
             // Data yang akan disimpan
@@ -242,7 +244,7 @@ class HpaController extends BaseController
         $id_pemotongan_hpa = $hpa['id_pemotongan_hpa'];
         $id_pembacaan_hpa = $hpa['id_pembacaan_hpa'];
         // Ambil data pengguna dengan status "Dokter"
-        $users = $this->userModel->where('status_user', 'Dokter')->findAll();
+        $users = $this->usersModel->where('status_user', 'Dokter')->findAll();
         // Ambil data pemotongan berdasarkan ID
         $pemotongan_hpa = $this->pemotongan_hpa->find($id_pemotongan_hpa);
         $pembacaan_hpa = $this->pembacaan_hpa->find($id_pembacaan_hpa);
@@ -251,12 +253,12 @@ class HpaController extends BaseController
         if ($pemotongan_hpa) {
             // Ambil nama dokter dan analis jika ID tersedia
             if (!empty($pemotongan_hpa['id_user_dokter_pemotongan_hpa'])) {
-                $dokter = $this->userModel->find($pemotongan_hpa['id_user_dokter_pemotongan_hpa']);
+                $dokter = $this->usersModel->find($pemotongan_hpa['id_user_dokter_pemotongan_hpa']);
                 $dokter_nama = $dokter ? $dokter['nama_user'] : null;
             }
 
             if (!empty($pemotongan_hpa['id_user_pemotongan_hpa'])) {
-                $analis = $this->userModel->find($pemotongan_hpa['id_user_pemotongan_hpa']);
+                $analis = $this->usersModel->find($pemotongan_hpa['id_user_pemotongan_hpa']);
                 $analis_nama = $analis ? $analis['nama_user'] : null;
             }
             // Tambahkan ke array pemotongan
@@ -266,12 +268,12 @@ class HpaController extends BaseController
         if ($pembacaan_hpa) {
             // Ambil nama dokter dan analis jika ID tersedia
             if (!empty($pembacaan_hpa['id_user_dokter_pembacaan_hpa'])) {
-                $dokter = $this->userModel->find($pembacaan_hpa['id_user_dokter_pembacaan_hpa']);
+                $dokter = $this->usersModel->find($pembacaan_hpa['id_user_dokter_pembacaan_hpa']);
                 $dokter_nama = $dokter ? $dokter['nama_user'] : null;
             }
 
             if (!empty($pembacaan_hpa['id_user_pembacaan'])) {
-                $analis = $this->userModel->find($pembacaan_hpa['id_user_pembacaan']);
+                $analis = $this->usersModel->find($pembacaan_hpa['id_user_pembacaan']);
                 $analis_nama = $analis ? $analis['nama_user'] : null;
             }
             // Tambahkan ke array pembacaan
@@ -303,18 +305,18 @@ class HpaController extends BaseController
         if (!empty($pemotongan)) {
             // Ambil nama dokter dan analis jika ID tersedia
             $pemotongan['dokter_nama'] = !empty($pemotongan['id_user_dokter_pemotongan_hpa'])
-                ? ($this->userModel->find($pemotongan['id_user_dokter_pemotongan_hpa'])['nama_user'] ?? null)
+                ? ($this->usersModel->find($pemotongan['id_user_dokter_pemotongan_hpa'])['nama_user'] ?? null)
                 : null;
 
             $pemotongan['analis_nama'] = !empty($pemotongan['id_user_pemotongan_hpa'])
-                ? ($this->userModel->find($pemotongan['id_user_pemotongan_hpa'])['nama_user'] ?? null)
+                ? ($this->usersModel->find($pemotongan['id_user_pemotongan_hpa'])['nama_user'] ?? null)
                 : null;
         } else {
             // Jika data pemotongan tidak ditemukan, set sebagai array kosong untuk mencegah error
             $pemotongan = [];
         }
         // Ambil data pengguna dengan status "Dokter"
-        $users = $this->userModel->where('status_user', 'Dokter')->findAll();
+        $users = $this->usersModel->where('status_user', 'Dokter')->findAll();
         // Persiapkan data yang akan dikirim ke view
         $data = [
             'hpa'        => $hpa,
@@ -349,10 +351,10 @@ class HpaController extends BaseController
             if (!empty($pemotongan_hpa)) {
                 // Ambil nama dokter dan analis jika ID tersedia
                 $dokter_nama = !empty($pemotongan_hpa['id_user_dokter_pemotongan_hpa'])
-                    ? ($this->userModel->find($pemotongan_hpa['id_user_dokter_pemotongan_hpa'])['nama_user'] ?? null)
+                    ? ($this->usersModel->find($pemotongan_hpa['id_user_dokter_pemotongan_hpa'])['nama_user'] ?? null)
                     : null;
                 $analis_nama = !empty($pemotongan_hpa['id_user_pemotongan_hpa'])
-                    ? ($this->userModel->find($pemotongan_hpa['id_user_pemotongan_hpa'])['nama_user'] ?? null)
+                    ? ($this->usersModel->find($pemotongan_hpa['id_user_pemotongan_hpa'])['nama_user'] ?? null)
                     : null;
                 // Tambahkan informasi dokter dan analis ke dalam array pemotongan
                 $pemotongan_hpa['dokter_nama'] = $dokter_nama;
@@ -374,7 +376,7 @@ class HpaController extends BaseController
             'total_nilai_mutu_hpa' => $mutu_hpa['total_nilai_mutu_hpa'] ?? "0"
         ];
         // Ambil data pengguna dengan status "Dokter"
-        $users = $this->userModel->where('status_user', 'Dokter')->findAll();
+        $users = $this->usersModel->where('status_user', 'Dokter')->findAll();
         // Persiapkan data yang akan dikirim ke view
         $data = [
             'hpa'             => $hpa,
@@ -404,7 +406,7 @@ class HpaController extends BaseController
             $pembacaan_hpa = $this->pembacaan_hpa->find($hpa['id_pembacaan_hpa']) ?? [];
             // Ambil nama dokter dari pembacaan jika tersedia
             if (!empty($pembacaan_hpa['id_user_dokter_pembacaan_hpa'])) {
-                $dokter = $this->userModel->find($pembacaan_hpa['id_user_dokter_pembacaan_hpa']);
+                $dokter = $this->usersModel->find($pembacaan_hpa['id_user_dokter_pembacaan_hpa']);
                 $pembacaan_hpa['dokter_nama'] = $dokter ? $dokter['nama_user'] : null;
             } else {
                 $pembacaan_hpa['dokter_nama'] = null;
@@ -415,7 +417,7 @@ class HpaController extends BaseController
             $penulisan_hpa = $this->penulisan_hpa->find($hpa['id_penulisan_hpa']) ?? [];
         }
         // Ambil daftar user dengan status "Dokter"
-        $users = $this->userModel->where('status_user', 'Dokter')->findAll();
+        $users = $this->usersModel->where('status_user', 'Dokter')->findAll();
         // Data yang akan dikirim ke view
         $data = [
             'id_user' => session()->get('id_user'),
@@ -425,7 +427,7 @@ class HpaController extends BaseController
             'penulisan' => $penulisan_hpa,
             'users' => $users,
         ];
-        
+
         return view('hpa/edit_penulisan', $data);
     }
 
@@ -440,7 +442,7 @@ class HpaController extends BaseController
             'nama_user' => session()->get('nama_user'),
             'hpa' => $hpa,
         ];
-        
+
         return view('hpa/edit_print', $data);
     }
 

@@ -102,21 +102,11 @@ class FrsModel extends Model
             ->findAll();
     }
 
-    public function insertfrs(array $data): bool
-    {
-        if ($this->where('kode_frs', $data['kode_frs'])->first()) {
-            return false;
-        }
-
-        return $this->insertfrs($data) > 0;
-    }
-
-    public function getfrsWitfrstient($id_frs)
+    public function getfrsWithPatient()
     {
         return $this->select('frs.*, patient.*')
             ->join('patient', 'patient.id_pasien = frs.id_pasien')
-            ->where('frs.id_frs', $id_frs)
-            ->first();
+            ->findAll();
     }
 
     public function getfrsWithRelationsProses($id_frs)

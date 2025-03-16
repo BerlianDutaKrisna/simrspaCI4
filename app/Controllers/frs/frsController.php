@@ -47,29 +47,14 @@ class FrsController extends BaseController
 
     public function index()
     {
-        // Mengambil data dari session
-        $session = session();
-        $id_user = $session->get('id_user');
-        $nama_user = $session->get('nama_user');
-
-        // Memastikan session terisi dengan benar
-        if (!$id_user || !$nama_user) {
-            return redirect()->to('login'); // Redirect ke halaman login jika session tidak ada
-        }
-
-        // Memanggil model frsModel untuk mengambil data
-        $frsModel = new frsModel();
-        $frsData = $frsModel->getfrsWithAllPatient();
-
-        // Pastikan $frsData berisi array
-        if (!$frsData) {
-            $frsData = []; // Jika tidak ada data, set menjadi array kosong
-        }
-        return view('frs/index_frs', [
-            'frsData' => $frsData,
-            'id_user' => $id_user,
-            'nama_user' => $nama_user
-        ]);
+        $frsData = $this->frsModel->getfrsWithPatient();
+        $data = [
+            'id_user' => session()->get('id_user'),
+            'nama_user' => session()->get('nama_user'),
+            'frsData' => $frsData
+        ];
+        
+        return view('frs/index', $data);
     }
 
     public function register()
@@ -127,7 +112,9 @@ class FrsController extends BaseController
             // Gabungkan unit_asal dan unit_asal_detail
             $unit_asal = $data['unit_asal'] . ' ' . ($data['unit_asal_detail'] ?? '');
             // Tentukan dokter_pengirim
-            $dokter_pengirim = !empty($data['dokter_pengirim']) ? $data['dokter_pengirim'] : $data['dokter_pengirim_custom'];
+            $dokter_pengirim = ($data['dokter_pengirim'] !== "lainnya")
+                ? $data['dokter_pengirim']
+                : $data['dokter_pengirim_custom'];
             // Tentukan tindakan_spesimen
             $tindakan_spesimen = !empty($data['tindakan_spesimen']) ? $data['tindakan_spesimen'] : $data['tindakan_spesimen_custom'];
             // Data yang akan disimpan
@@ -173,41 +160,18 @@ class FrsController extends BaseController
             return redirect()->back()->withInput()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
         }
     }
-
+    
     public function delete()
     {
-        // Mendapatkan data dari request
         $id_frs = $this->request->getPost('id_frs');
-
-        // Cek apakah id_frs valid
-        if ($id_frs) {
-            // Inisialisasi model
-            $frsModel = new frsModel();
-
-            // Ambil instance dari database service
-            $db = \Config\Database::connect();
-
-            // Mulai transaksi untuk memastikan kedua operasi berjalan atomik
-            $db->transStart();
-
-            // Hapus data dari tabel frs
-            $deletefrs = $frsModel->delete($id_frs);
-
-            // Cek apakah delete berhasil
-            if ($deletefrs) {
-                // Selesaikan transaksi
-                $db->transComplete();
-
-                // Cek apakah transaksi berhasil
-                if ($db->transStatus() === FALSE) {
-                    return $this->response->setJSON(['success' => false, 'message' => 'Gagal menghapus data.']);
-                }
-            } else {
-                // Jika id_frs tidak valid, kirimkan response error
-                return $this->response->setJSON(['success' => false, 'message' => 'ID frs tidak valid.']);
-            }
+        if (!$id_frs) {
+            return $this->response->setJSON(['success' => false, 'message' => 'ID frs tidak valid.']);
         }
-        return $this->response->setJSON(['success' => true, 'message' => 'Data berhasil dihapus.']);
+        if ($this->frsModel->delete($id_frs)) {
+            return $this->response->setJSON(['success' => true, 'message' => 'Data berhasil dihapus.']);
+        } else {
+            return $this->response->setJSON(['success' => false, 'message' => 'Gagal menghapus data.']);
+        }
     }
     
     public function index_buku_penerima()
@@ -237,6 +201,48 @@ class FrsController extends BaseController
             'id_user' => $id_user,
             'nama_user' => $nama_user
         ]);
+    }
+
+    // Menampilkan form edit frs
+    public function edit($id_frs)
+    {
+        // Ambil data frs berdasarkan ID
+        $frs = $this->frsModel->getfrsWithRelationsProses($id_frs);
+        if (!$frs) {
+            return redirect()->back()->with('message', ['error' => 'frs tidak ditemukan.']);
+        }
+        $id_pembacaan_frs = $frs['id_pembacaan_frs'];
+        // Ambil data pengguna dengan status "Dokter"
+        $users = $this->usersModel->where('status_user', 'Dokter')->findAll();
+        // Ambil data pemotongan berdasarkan ID
+        $pembacaan_frs = $this->pembacaan_frs->find($id_pembacaan_frs);
+        $dokter_nama = null;
+        $analis_nama = null;
+        if ($pembacaan_frs) {
+            // Ambil nama dokter dan analis jika ID tersedia
+            if (!empty($pembacaan_frs['id_user_dokter_pembacaan_frs'])) {
+                $dokter = $this->usersModel->find($pembacaan_frs['id_user_dokter_pembacaan_frs']);
+                $dokter_nama = $dokter ? $dokter['nama_user'] : null;
+            }
+
+            if (!empty($pembacaan_frs['id_user_pembacaan'])) {
+                $analis = $this->usersModel->find($pembacaan_frs['id_user_pembacaan']);
+                $analis_nama = $analis ? $analis['nama_user'] : null;
+            }
+            // Tambahkan ke array pembacaan
+            $pembacaan_frs['dokter_nama'] = $dokter_nama;
+            $pembacaan_frs['analis_nama'] = $analis_nama;
+        }
+        // Data yang dikirim ke view
+        $data = [
+            'id_user'    => session()->get('id_user'),
+            'nama_user'  => session()->get('nama_user'),
+            'frs'        => $frs,
+            'pembacaan_frs' => $pembacaan_frs,
+            'users'      => $users,
+        ];
+        
+        return view('frs/edit', $data);
     }
 
     // Menampilkan form edit frs mikroskopis

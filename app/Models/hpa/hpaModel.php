@@ -101,15 +101,6 @@ class HpaModel extends Model
             ->findAll();
     }
 
-    public function insertHpa(array $data): bool
-    {
-        if ($this->where('kode_hpa', $data['kode_hpa'])->first()) {
-            return false;
-        }
-
-        return $this->insertHpa($data) > 0;
-    }
-
     public function getHpaWithPatient()
     {
         return $this->select('hpa.*, patient.*')
