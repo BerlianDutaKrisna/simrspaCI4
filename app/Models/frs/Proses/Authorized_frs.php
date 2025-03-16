@@ -35,32 +35,32 @@ class Authorized_frs extends Model // Update nama model
         return $this->db->affectedRows() > 0;
     }
 
-    public function getauthorized_hpa()
+    public function getauthorized_frs()
     {
         return $this->select(
             '
-        authorized_hpa.*, 
-        hpa.*, 
+        authorized_frs.*, 
+        frs.*, 
         patient.*, 
-        users.nama_user AS nama_user_authorized_hpa,
-        mutu_hpa.id_mutu_hpa,
-        mutu_hpa.total_nilai_mutu_hpa,
-        penerimaan_hpa.id_penerimaan_hpa,
-        pembacaan_hpa.id_pembacaan_hpa,
-        pembacaan_hpa.id_pembacaan_hpa, 
-        pemverifikasi_hpa.id_pemverifikasi_hpa,
-        pencetakan_hpa.id_pencetakan_hpa'
+        users.nama_user AS nama_user_authorized_frs,
+        mutu_frs.id_mutu_frs,
+        mutu_frs.total_nilai_mutu_frs,
+        penerimaan_frs.id_penerimaan_frs,
+        pembacaan_frs.id_pembacaan_frs, 
+        pemverifikasi_frs.id_pemverifikasi_frs,
+        pencetakan_frs.id_pencetakan_frs
+        '
         )
-            ->join('hpa', 'authorized_hpa.id_hpa = hpa.id_hpa', 'left')
-            ->join('patient', 'hpa.id_pasien = patient.id_pasien', 'left')
-            ->join('users', 'authorized_hpa.id_user_authorized_hpa = users.id_user', 'left')
-            ->join('mutu_hpa', 'hpa.id_hpa = mutu_hpa.id_hpa', 'left')
-            ->join('penerimaan_hpa', 'hpa.id_hpa = penerimaan_hpa.id_hpa', 'left')
-            ->join('pembacaan_hpa', 'hpa.id_hpa = pembacaan_hpa.id_hpa', 'left')
-            ->join('authorized_hpa', 'hpa.id_hpa = authorized_hpa.id_hpa', 'left')
-            ->join('pencetakan_hpa', 'hpa.id_hpa = pencetakan_hpa.id_hpa', 'left')
-            ->whereIn('hpa.status_hpa', ['Authorized'])
-            ->orderBy('hpa.kode_hpa', 'ASC')
+            ->join('frs', 'authorized_frs.id_frs = frs.id_frs', 'left')
+            ->join('patient', 'frs.id_pasien = patient.id_pasien', 'left')
+            ->join('users', 'authorized_frs.id_user_authorized_frs = users.id_user', 'left')
+            ->join('mutu_frs', 'frs.id_frs = mutu_frs.id_frs', 'left')
+            ->join('penerimaan_frs', 'frs.id_frs = penerimaan_frs.id_frs', 'left')
+            ->join('pembacaan_frs', 'frs.id_frs = pembacaan_frs.id_frs', 'left')
+            ->join('pemverifikasi_frs', 'frs.id_frs = pemverifikasi_frs.id_frs', 'left')
+            ->join('pencetakan_frs', 'frs.id_frs = pencetakan_frs.id_frs', 'left')
+            ->where('frs.status_frs', 'Authorized')
+            ->orderBy('frs.kode_frs', 'ASC')
             ->findAll();
     }
 

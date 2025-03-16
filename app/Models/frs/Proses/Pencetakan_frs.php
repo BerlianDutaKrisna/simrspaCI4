@@ -35,8 +35,7 @@ class Pencetakan_frs extends Model // Update nama model
         return $this->db->affectedRows() > 0;
     }
 
-    // Mengambil data pencetakan_frs dengan relasi
-    public function getpencetakan_frsWithRelations() // Update nama fungsi
+    public function getpencetakan_frs()
     {
         return $this->select(
             '
@@ -44,13 +43,23 @@ class Pencetakan_frs extends Model // Update nama model
         frs.*, 
         patient.*, 
         users.nama_user AS nama_user_pencetakan_frs,
-        mutu.total_nilai_mutu'
+        mutu_frs.id_mutu_frs,
+        mutu_frs.total_nilai_mutu_frs,
+        penerimaan_frs.id_penerimaan_frs,
+        pembacaan_frs.id_pembacaan_frs, 
+        pemverifikasi_frs.id_pemverifikasi_frs,
+        authorized_frs.id_authorized_frs
+        '
         )
-            ->join('frs', 'pencetakan_frs.id_frs = frs.id_frs', 'left') // Relasi dengan tabel frs
-            ->join('patient', 'frs.id_pasien = patient.id_pasien', 'left') // Relasi dengan tabel patient
-            ->join('users', 'pencetakan_frs.id_user_pencetakan_frs = users.id_user', 'left') // Relasi dengan tabel users untuk pencetakan_frs
-            ->join('mutu', 'frs.id_frs = mutu.id_frs', 'left') // Relasi dengan tabel mutu berdasarkan id_frs
-            ->where('frs.status_frs', 'pencetakan_frs') // Filter berdasarkan status_frs 'pencetakan_frs'
+            ->join('frs', 'pencetakan_frs.id_frs = frs.id_frs', 'left')
+            ->join('patient', 'frs.id_pasien = patient.id_pasien', 'left')
+            ->join('users', 'pencetakan_frs.id_user_pencetakan_frs = users.id_user', 'left')
+            ->join('mutu_frs', 'frs.id_frs = mutu_frs.id_frs', 'left')
+            ->join('penerimaan_frs', 'frs.id_frs = penerimaan_frs.id_frs', 'left')
+            ->join('pembacaan_frs', 'frs.id_frs = pembacaan_frs.id_frs', 'left')
+            ->join('pemverifikasi_frs', 'frs.id_frs = pemverifikasi_frs.id_frs', 'left')
+            ->join('authorized_frs', 'frs.id_frs = authorized_frs.id_frs', 'left')
+            ->where('frs.status_frs', 'Pencetakan') // Sesuaikan jika ada kondisi lain
             ->orderBy('frs.kode_frs', 'ASC')
             ->findAll();
     }

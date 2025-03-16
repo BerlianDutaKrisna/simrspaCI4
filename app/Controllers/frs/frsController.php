@@ -530,7 +530,7 @@ class FrsController extends BaseController
                 'status_pencetakan_frs' => 'Selesai Pencetakan',
                 'selesai_pencetakan_frs' => date('Y-m-d H:i:s'),
             ]);
-            return redirect()->to('pencetakan_frs/index')->with('success', 'Data berhasil dicetak.');
+            return redirect()->to('pencetakan_frs/index')->with('success', 'Data berhasil simpan.');
         }
         // Jika redirect tidak sesuai dengan yang diharapkan
         return redirect()->back()->with('error', 'Terjadi kesalahan: Halaman tujuan tidak valid.');

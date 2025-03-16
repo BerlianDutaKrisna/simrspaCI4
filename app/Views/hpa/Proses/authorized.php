@@ -4,11 +4,12 @@
 
 <div class="card shadow mb-4">
     <div class="card-header py-3">
-        <h6 class="m-0 font-weight-bold text-primary">Table authorized</h6>
+        <h6 class="m-0 font-weight-bold text-primary">Table Authorized</h6>
     </div>
     <div class="card-body">
-        <h1>Daftar authorized</h1>
+        <h1>Daftar Authorized Histopatologi</h1>
         <a href="<?= base_url('/dashboard') ?>" class="btn btn-primary mb-3">Kembali</a>
+        <?= $this->include('templates/proses/button_authorized'); ?>
 
         <!-- Form -->
         <form id="mainForm" action="<?= base_url('authorized_hpa/proses_authorized'); ?>" method="POST">
@@ -21,15 +22,15 @@
                     <thead>
                         <tr>
                             <th>No</th>
+                            <th>Aksi</th>
+                            <th>Detail</th>
                             <th>Kode HPA</th>
                             <th>Nama Pasien</th>
-                            <th>Status authorized</th>
-                            <th>Aksi</th>
-                            <th>Analis</th>
-                            <th>Mulai authorized</th>
-                            <th>Selesai authorized</th>
+                            <th>Status Authorized</th>
+                            <th>Dokter</th>
+                            <th>Mulai Authorized</th>
+                            <th>Selesai Authorized</th>
                             <th>Deadline Hasil</th>
-                            <th>Detail</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -38,19 +39,38 @@
                             <?php foreach ($authorizedDatahpa as $row): ?>
                                 <tr>
                                     <td><?= $i ?></td>
+                                    <td>
+                                <input type="checkbox"
+                                    name="id_proses[]"
+                                    value="<?= $row['id_authorized_hpa']; ?>:<?= $row['id_hpa']; ?>:<?= $row['id_mutu_hpa']; ?>"
+                                    class="form-control form-control-user checkbox-item"
+                                    data-status='<?= json_encode([
+                                                        'status_authorized_hpa' => $row['status_authorized_hpa'] ?? ""
+                                                    ]) ?>'
+                                    autocomplete="off">
+                            </td>
+                            <?php if (in_array($row['status_authorized_hpa'], ["Proses Authorized"])): ?>
+                                <td>
+                                    <a href="<?= base_url('hpa/edit_print/' .
+                                                    esc($row['id_hpa']) .
+                                                    '?redirect=index_authorized_hpa') ?>" class="btn btn-warning btn-sm">
+                                        <i class="fas fa-eye"></i> Cek Verifikasi
+                                    </a>
+                                </td>
+                            <?php elseif (in_array($row['status_authorized_hpa'], ["Selesai Authorized"])): ?>
+                                <td>
+                                    <a href="<?= base_url('hpa/edit_print/' .
+                                                    esc($row['id_hpa']) .
+                                                    '?redirect=index_authorized_hpa') ?>" class="btn btn-success btn-sm">
+                                        <i class="fas fa-eye"></i> Cek Verifikasi
+                                    </a>
+                                </td>
+                            <?php else: ?>
+                                <td></td>
+                            <?php endif; ?>
                                     <td><?= $row['kode_hpa']; ?></td>
                                     <td><?= $row['nama_pasien']; ?></td>
                                     <td><?= $row['status_authorized_hpa']; ?></td>
-                                    <td>
-                                        <input type="checkbox"
-                                            name="id_proses[]"
-                                            value="<?= $row['id_authorized_hpa']; ?>:<?= $row['id_hpa']; ?>:<?= $row['id_mutu_hpa']; ?>"
-                                            class="form-control form-control-user checkbox-item"
-                                            data-status='<?= json_encode([
-                                                                'status_authorized_hpa' => $row['status_authorized_hpa'] ?? ""
-                                                            ]) ?>'
-                                            autocomplete="off">
-                                    </td>
                                     <td><?= $row['nama_user_authorized_hpa']; ?></td>
                                     <td>
                                         <?= empty($row['mulai_authorized_hpa']) ? '-' : esc(date('H:i , d-m-Y', strtotime($row['mulai_authorized_hpa']))); ?>
@@ -77,35 +97,6 @@
                                         }
                                         ?>
                                     </td>
-                                    <?php if (in_array($row['status_authorized_hpa'], ["Proses Authorized"])): ?>
-                                        <td>
-                                            <a href="<?= base_url('hpa/edit_print_hpa/' .
-                                                            esc($row['id_hpa']) . '/' .
-                                                            esc($row['id_penerimaan_hpa']) . '/' .
-                                                            esc($row['id_pembacaan_hpa']) . '/' .
-                                                            esc(isset($row['id_pemverifikasi_hpa']) ? $row['id_pemverifikasi_hpa'] : '0'). '/' .
-                                                            esc(isset($row['id_authorized_hpa']) ? $row['id_authorized_hpa'] : '0') . '/' .
-                                                            esc(isset($row['id_pencetakan_hpa']) ? $row['id_pencetakan_hpa'] : '0') .
-                                                            '?redirect=index_authorized_hpa') ?>" class="btn btn-warning btn-sm">
-                                                <i class="fas fa-eye"></i> Cek Penulisan
-                                            </a>
-                                        </td>
-                                    <?php elseif (in_array($row['status_authorized_hpa'], ["Selesai Authorized"])): ?>
-                                        <td>
-                                        <a href="<?= base_url('hpa/edit_print_hpa/' .
-                                                            esc($row['id_hpa']) . '/' .
-                                                            esc($row['id_penerimaan_hpa']) . '/' .
-                                                            esc($row['id_pembacaan_hpa']) . '/' .
-                                                            esc(isset($row['id_pemverifikasi_hpa']) ? $row['id_pemverifikasi_hpa'] : '0'). '/' .
-                                                            esc(isset($row['id_authorized_hpa']) ? $row['id_authorized_hpa'] : '0') . '/' .
-                                                            esc(isset($row['id_pencetakan_hpa']) ? $row['id_pencetakan_hpa'] : '0') .
-                                                            '?redirect=index_authorized_hpa') ?>" class="btn btn-success btn-sm">
-                                                <i class="fas fa-eye"></i> Cek Penulisan
-                                            </a>
-                                        </td>
-                                    <?php else: ?>
-                                        <td></td>
-                                    <?php endif; ?>
                                 </tr>
                                 <?php $i++; ?>
                             <?php endforeach; ?>

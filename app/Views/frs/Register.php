@@ -69,7 +69,7 @@
                     <label for="unit_asal">Unit Asal</label>
                     <select class="form-control" id="unit_asal" name="unit_asal" onchange="handleUnitAsalChange(this)">
                         <option value="" selected>Belum Dipilih</option>
-                        <option value="Poli">Poli</option>
+                        <option value="Klinik">Poli/Klinik</option>
                         <option value="Ruangan">Ruangan</option>
                         <option value="lainnya">Lainnya</option>
                     </select>
@@ -177,7 +177,7 @@
 
     function handleUnitAsalChange(selectElement) {
         const customInput = document.getElementById('unit_asal_detail');
-        if (selectElement.value === 'Ruangan' || selectElement.value === 'Poli' || selectElement.value === 'lainnya') {
+        if (selectElement.value === 'Ruangan' || selectElement.value === 'Klinik' || selectElement.value === 'lainnya') {
             customInput.classList.remove('d-none');
         } else {
             customInput.classList.add('d-none');

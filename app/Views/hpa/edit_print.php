@@ -4,10 +4,10 @@
 <div class="container-fluid">
     <div class="card shadow mb-4">
         <div class="card-header py-3">
-            <h6 class="m-0 font-weight-bold text-primary">Print HPA</h6>
+            <h6 class="m-0 font-weight-bold text-primary">Print Histopatologi</h6>
         </div>
         <div class="card-body">
-            <h1 class="h3 mb-4">Form Print HPA</h1>
+            <h1 class="h3 mb-4">Form Print Histopatologi</h1>
 
             <!-- Form -->
             <form id="form-hpa" method="POST" enctype="multipart/form-data">
@@ -51,7 +51,7 @@
                     <div class="col-sm-4 text-center">
                         <button type="submit"
                             class="btn btn-success btn-user w-100 mb-3"
-                            formaction="<?= base_url('hpa/update_print_hpa/' . $hpa['id_hpa']); ?>"
+                            formaction="<?= base_url('hpa/update_print/' . $hpa['id_hpa']); ?>"
                             <?= (($_GET['redirect'] ?? '') === 'index_pencetakan_hpa') ? '' : 'disabled' ?>>
                             <i class="fas fa-save"></i> Simpan
                         </button>

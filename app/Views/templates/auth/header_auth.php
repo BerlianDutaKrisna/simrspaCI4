@@ -9,7 +9,7 @@
     <meta name="author" content="">
 
     <title>Traker Histopatologi</title>
-    <link href='img/favicon.ico' rel='shortcut icon'>
+    <link href="<?= base_url('img/favicon.ico') ?>" rel="shortcut icon">
     <link href="<?= base_url('assets/fontawesome/css/all.min.css') ?>" rel="stylesheet" type="text/css">
     <link href="<?= base_url('css/sb-admin-2.css') ?>" rel="stylesheet">
 </head>

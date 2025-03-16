@@ -5,6 +5,7 @@
             <!-- Left Side: Developer Information -->
             <div class="col-md-6 text-center text-md-left">
                 <p class="mb-0">© 2025 SIMRSPA - Developed by <strong>Berlian Duta Krisna S.Tr.Kes</strong></p>
+                <p class="mb-0 text-sm">Versi 2.0</p>
                 <!-- Menampilkan informasi pengembang aplikasi dengan nama dan gelar -->
             </div>
             <!-- Right Side: Social Media & Contact Info -->

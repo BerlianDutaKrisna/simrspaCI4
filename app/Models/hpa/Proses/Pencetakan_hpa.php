@@ -64,7 +64,6 @@ class Pencetakan_hpa extends Model // Update nama model
             ->findAll();
     }
 
-
     // Fungsi untuk mengupdate data pencetakan_hpa
     public function updatepencetakan_hpa($id_pencetakan_hpa, $data) // Update nama fungsi dan parameter
     {

@@ -82,7 +82,11 @@
         });
 
         // Cek status penulisan
-        var statusPenulisan = "<?= $penulisan['status_penulisan_hpa'] ?? '' ?>";
+        var statusPenulisan = "<?=
+                                $penulisan['status_penulisan_hpa'] ??
+                                    $penulisan['status_penulisan_frs'] ??
+                                    $penulisan['status_penulisan_srs'] ??
+                                    $penulisan['status_penulisan_ihc'] ?? '' ?>";
 
         if (statusPenulisan !== "Selesai Penulisan") {
             $('.summernote_print').summernote('disable');

@@ -4,11 +4,12 @@
 
 <div class="card shadow mb-4">
     <div class="card-header py-3">
-        <h6 class="m-0 font-weight-bold text-primary">Table pencetakan</h6>
+        <h6 class="m-0 font-weight-bold text-primary">Table Pencetakan</h6>
     </div>
     <div class="card-body">
-        <h1>Daftar pencetakan</h1>
+        <h1>Daftar Pencetakan Histopatologi</h1>
         <a href="<?= base_url('/dashboard') ?>" class="btn btn-primary mb-3">Kembali</a>
+        <?= $this->include('templates/proses/button_pencetakan'); ?>
 
         <!-- Form -->
         <form id="mainForm" action="<?= base_url('pencetakan_hpa/proses_pencetakan'); ?>" method="POST">
@@ -21,15 +22,15 @@
                     <thead>
                         <tr>
                             <th>No</th>
+                            <th>Aksi</th>
+                            <th>Detail</th>
                             <th>Kode HPA</th>
                             <th>Nama Pasien</th>
                             <th>Status pencetakan</th>
-                            <th>Aksi</th>
-                            <th>Analis</th>
+                            <th>Admin</th>
                             <th>Mulai pencetakan</th>
                             <th>Selesai pencetakan</th>
                             <th>Deadline Hasil</th>
-                            <th>Detail</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -38,9 +39,6 @@
                             <?php foreach ($pencetakanDatahpa as $row): ?>
                                 <tr>
                                     <td><?= $i ?></td>
-                                    <td><?= $row['kode_hpa']; ?></td>
-                                    <td><?= $row['nama_pasien']; ?></td>
-                                    <td><?= $row['status_pencetakan_hpa']; ?></td>
                                     <td>
                                         <input type="checkbox"
                                             name="id_proses[]"
@@ -51,6 +49,28 @@
                                                             ]) ?>'
                                             autocomplete="off">
                                     </td>
+                                    <?php if (in_array($row['status_pencetakan_hpa'], ["Proses Pencetakan"])): ?>
+                                        <td>
+                                            <a href="<?= base_url('hpa/edit_print/' .
+                                                            esc($row['id_hpa']) .
+                                                            '?redirect=index_pencetakan_hpa') ?>" class="btn btn-warning btn-sm">
+                                                <i class="fas fa-print"></i> Cetak Hasil
+                                            </a>
+                                        </td>
+                                    <?php elseif (in_array($row['status_pencetakan_hpa'], ["Selesai Pencetakan"])): ?>
+                                        <td>
+                                        <a href="<?= base_url('hpa/edit_print/' .
+                                                            esc($row['id_hpa']) .
+                                                            '?redirect=index_pencetakan_hpa') ?>" class="btn btn-success btn-sm">
+                                                <i class="fas fa-print"></i> Cetak Hasil
+                                            </a>
+                                        </td>
+                                    <?php else: ?>
+                                        <td></td>
+                                    <?php endif; ?>
+                                    <td><?= $row['kode_hpa']; ?></td>
+                                    <td><?= $row['nama_pasien']; ?></td>
+                                    <td><?= $row['status_pencetakan_hpa']; ?></td>
                                     <td><?= $row['nama_user_pencetakan_hpa']; ?></td>
                                     <td>
                                         <?= empty($row['mulai_pencetakan_hpa']) ? '-' : esc(date('H:i , d-m-Y', strtotime($row['mulai_pencetakan_hpa']))); ?>
@@ -77,35 +97,6 @@
                                         }
                                         ?>
                                     </td>
-                                    <?php if (in_array($row['status_pencetakan_hpa'], ["Proses Pencetakan"])): ?>
-                                        <td>
-                                            <a href="<?= base_url('hpa/edit_print_hpa/' .
-                                                            esc($row['id_hpa']) . '/' .
-                                                            esc($row['id_penerimaan_hpa']) . '/' .
-                                                            esc($row['id_pembacaan_hpa']) . '/' .
-                                                            esc(isset($row['id_pemverifikasi_hpa']) ? $row['id_pemverifikasi_hpa'] : '0'). '/' .
-                                                            esc(isset($row['id_authorized_hpa']) ? $row['id_authorized_hpa'] : '0') . '/' .
-                                                            esc(isset($row['id_pencetakan_hpa']) ? $row['id_pencetakan_hpa'] : '0') .
-                                                            '?redirect=index_pencetakan_hpa') ?>" class="btn btn-warning btn-sm">
-                                                <i class="fas fa-eye"></i> Cek Penulisan
-                                            </a>
-                                        </td>
-                                    <?php elseif (in_array($row['status_pencetakan_hpa'], ["Selesai Pencetakan"])): ?>
-                                        <td>
-                                        <a href="<?= base_url('hpa/edit_print_hpa/' .
-                                                            esc($row['id_hpa']) . '/' .
-                                                            esc($row['id_penerimaan_hpa']) . '/' .
-                                                            esc($row['id_pembacaan_hpa']) . '/' .
-                                                            esc(isset($row['id_pemverifikasi_hpa']) ? $row['id_pemverifikasi_hpa'] : '0'). '/' .
-                                                            esc(isset($row['id_authorized_hpa']) ? $row['id_authorized_hpa'] : '0') . '/' .
-                                                            esc(isset($row['id_pencetakan_hpa']) ? $row['id_pencetakan_hpa'] : '0') .
-                                                            '?redirect=index_pencetakan_hpa') ?>" class="btn btn-success btn-sm">
-                                                <i class="fas fa-eye"></i> Cek Penulisan
-                                            </a>
-                                        </td>
-                                    <?php else: ?>
-                                        <td></td>
-                                    <?php endif; ?>
                                 </tr>
                                 <?php $i++; ?>
                             <?php endforeach; ?>

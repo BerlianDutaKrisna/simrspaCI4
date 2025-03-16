@@ -302,7 +302,7 @@ $routes->group('pemverifikasi_ihc', ['namespace' => 'App\Controllers\Ihc\Proses'
     $routes->post('update_pemverifikasi', 'Pemverifikasi::update_pemverifikasi');
 });
 
-// Route untuk Authorized
+// Route untuk Authorized hpa
 $routes->group('authorized_hpa', ['namespace' => 'App\Controllers\Hpa\Proses'], function ($routes) {
     $routes->get('index', 'Authorized::index');
     $routes->post('proses_authorized', 'Authorized::proses_authorized'); 
@@ -312,8 +312,68 @@ $routes->group('authorized_hpa', ['namespace' => 'App\Controllers\Hpa\Proses'], 
     $routes->post('update_authorized', 'Authorized::update_authorized');
 });
 
-// Route untuk Pencetakan
+// Route untuk Authorized frs
+$routes->group('authorized_frs', ['namespace' => 'App\Controllers\Frs\Proses'], function ($routes) {
+    $routes->get('index', 'Authorized::index');
+    $routes->post('proses_authorized', 'Authorized::proses_authorized'); 
+    $routes->get('authorized_details', 'Authorized::authorized_details');
+    $routes->post('delete', 'Authorized::delete');
+    $routes->get('edit_authorized', 'Authorized::edit_authorized');
+    $routes->post('update_authorized', 'Authorized::update_authorized');
+});
+
+// Route untuk Authorized srs
+$routes->group('authorized_srs', ['namespace' => 'App\Controllers\Srs\Proses'], function ($routes) {
+    $routes->get('index', 'Authorized::index');
+    $routes->post('proses_authorized', 'Authorized::proses_authorized'); 
+    $routes->get('authorized_details', 'Authorized::authorized_details');
+    $routes->post('delete', 'Authorized::delete');
+    $routes->get('edit_authorized', 'Authorized::edit_authorized');
+    $routes->post('update_authorized', 'Authorized::update_authorized');
+});
+
+// Route untuk Authorized ihc
+$routes->group('authorized_ihc', ['namespace' => 'App\Controllers\ihc\Proses'], function ($routes) {
+    $routes->get('index', 'Authorized::index');
+    $routes->post('proses_authorized', 'Authorized::proses_authorized'); 
+    $routes->get('authorized_details', 'Authorized::authorized_details');
+    $routes->post('delete', 'Authorized::delete');
+    $routes->get('edit_authorized', 'Authorized::edit_authorized');
+    $routes->post('update_authorized', 'Authorized::update_authorized');
+});
+
+// Route untuk Pencetakan hpa
 $routes->group('pencetakan_hpa', ['namespace' => 'App\Controllers\Hpa\Proses'], function ($routes) {
+    $routes->get('index', 'Pencetakan::index'); // Menampilkan halaman pencetakan
+    $routes->post('proses_pencetakan', 'Pencetakan::proses_pencetakan'); // Proses pencetakan
+    $routes->get('pencetakan_details', 'Pencetakan::pencetakan_details');
+    $routes->post('delete', 'Pencetakan::delete');
+    $routes->get('edit_pencetakan', 'Pencetakan::edit_pencetakan');
+    $routes->post('update_pencetakan', 'Pencetakan::update_pencetakan');
+});
+
+// Route untuk Pencetakan frs
+$routes->group('pencetakan_frs', ['namespace' => 'App\Controllers\Frs\Proses'], function ($routes) {
+    $routes->get('index', 'Pencetakan::index'); // Menampilkan halaman pencetakan
+    $routes->post('proses_pencetakan', 'Pencetakan::proses_pencetakan'); // Proses pencetakan
+    $routes->get('pencetakan_details', 'Pencetakan::pencetakan_details');
+    $routes->post('delete', 'Pencetakan::delete');
+    $routes->get('edit_pencetakan', 'Pencetakan::edit_pencetakan');
+    $routes->post('update_pencetakan', 'Pencetakan::update_pencetakan');
+});
+
+// Route untuk Pencetakan srs
+$routes->group('pencetakan_srs', ['namespace' => 'App\Controllers\Srs\Proses'], function ($routes) {
+    $routes->get('index', 'Pencetakan::index'); // Menampilkan halaman pencetakan
+    $routes->post('proses_pencetakan', 'Pencetakan::proses_pencetakan'); // Proses pencetakan
+    $routes->get('pencetakan_details', 'Pencetakan::pencetakan_details');
+    $routes->post('delete', 'Pencetakan::delete');
+    $routes->get('edit_pencetakan', 'Pencetakan::edit_pencetakan');
+    $routes->post('update_pencetakan', 'Pencetakan::update_pencetakan');
+});
+
+// Route untuk Pencetakan ihc
+$routes->group('pencetakan_ihc', ['namespace' => 'App\Controllers\Ihc\Proses'], function ($routes) {
     $routes->get('index', 'Pencetakan::index'); // Menampilkan halaman pencetakan
     $routes->post('proses_pencetakan', 'Pencetakan::proses_pencetakan'); // Proses pencetakan
     $routes->get('pencetakan_details', 'Pencetakan::pencetakan_details');

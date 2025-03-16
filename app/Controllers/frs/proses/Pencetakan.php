@@ -1,190 +1,133 @@
 <?php
 
-namespace App\Controllers\Proses;
+namespace App\Controllers\Frs\Proses;
 
 use App\Controllers\BaseController;
-use App\Models\ProsesModel\PencetakanModel;
-use App\Models\HpaModel;
+use App\Models\Frs\frsModel;
 use App\Models\UsersModel;
-use App\Models\MutuModel;
+use App\Models\PatientModel;
+use App\Models\Frs\Proses\Pencetakan_frs;
+use App\Models\Frs\Mutu_frs;
 use Exception;
 
 class Pencetakan extends BaseController
 {
-    protected $pencetakanModel;
+    protected $frsModel;
     protected $userModel;
-    protected $hpaModel;
-    protected $mutuModel;
-    protected $session;
+    protected $patientModel;
+    protected $pencetakan_frs;
+    protected $mutu_frs;
+    protected $validation;
 
     public function __construct()
     {
-        $this->pencetakanModel = new PencetakanModel();
+        $this->frsModel = new frsModel();
         $this->userModel = new UsersModel();
-        $this->hpaModel = new HpaModel();
-        $this->mutuModel = new MutuModel();
-        $this->session = session();
+        $this->patientModel = new PatientModel();
+        $this->pencetakan_frs = new Pencetakan_frs();
+        $this->mutu_frs = new Mutu_frs();
+        $this->validation =  \Config\Services::validation();
+        $this->session = \Config\Services::session();
     }
 
-    public function index_pencetakan()
+    public function index()
     {
-        $pencetakanData = $this->pencetakanModel->getPencetakanWithRelations();
-
+        $pencetakanData_frs = $this->pencetakan_frs->getpencetakan_frs();
         $data = [
-            'pencetakanData' => $pencetakanData,
-            'countPenerimaan' => $this->hpaModel->countPenerimaan(),
-            'countPengirisan' => $this->hpaModel->countPengirisan(),
-            'countPemotongan' => $this->hpaModel->countPemotongan(),
-            'countPemprosesan' => $this->hpaModel->countPemprosesan(),
-            'countPenanaman' => $this->hpaModel->countPenanaman(),
-            'countPemotonganTipis' => $this->hpaModel->countPemotonganTipis(),
-            'countPewarnaan' => $this->hpaModel->countPewarnaan(),
-            'countPembacaan' => $this->hpaModel->countPembacaan(),
-            'countPenulisan' => $this->hpaModel->countPenulisan(),
-            'countPemverifikasi' => $this->hpaModel->countPemverifikasi(),
-            'countAutorized' => $this->hpaModel->countAutorized(),
-            'countPencetakan' => $this->hpaModel->countPencetakan(),
-            'id_user' => $this->session->get('id_user'),
             'nama_user' => $this->session->get('nama_user'),
+            'counts' => $this->getCounts(),
+            'pencetakanDatafrs' => $pencetakanData_frs,
         ];
 
-        return view('proses/pencetakan', $data); // Update view
+        return view('frs/Proses/pencetakan', $data);
     }
 
-
-    public function proses_pencetakan() // Update nama method
+    public function proses_pencetakan()
     {
-        // Get user ID from session
-        $id_user = session()->get('id_user');
-
-        // Form validation rules
-        $validation = \Config\Services::validation();
-        $validation->setRules([
-            'id_proses' => [
-                'rules' => 'required',
-                'errors' => ['required' => 'Pilih data terlebih dahulu.'],
-            ],
-            'action' => [
-                'rules' => 'required',
-                'errors' => ['required' => 'Tombol aksi harus diklik.'],
-            ],
-        ]);
-
-        // Check validation
-        if (!$validation->run($this->request->getPost())) {
-            return redirect()->back()->withInput()->with('errors', $validation->getErrors());
-        }
+        $id_user = $this->session->get('id_user');
 
         try {
-            // Get the selected IDs and action
             $selectedIds = $this->request->getPost('id_proses');
             $action = $this->request->getPost('action');
-
-            // Check if selected IDs are provided
             if (!is_array($selectedIds)) {
                 $selectedIds = [$selectedIds];
             }
 
-            // Process the action for each selected item
-            if (!empty($selectedIds)) {
-                foreach ($selectedIds as $id) {
-                    list($id_pencetakan, $id_hpa, $id_mutu) = explode(':', $id);
-
-                    $this->processAction($action, $id_pencetakan, $id_hpa, $id_user, $id_mutu); // Update nama variabel
-                }
-
-                return redirect()->to('/pencetakan/index_pencetakan'); // Update nama route
+            foreach ($selectedIds as $id) {
+                list($id_pencetakan_frs, $id_frs, $id_mutu_frs) = explode(':', $id);
+                $this->processAction($action, $id_pencetakan_frs, $id_frs, $id_user, $id_mutu_frs);
             }
-        } catch (\Exception $e) {
+
+            return redirect()->to('pencetakan_frs/index');
+        } catch (Exception $e) {
             return redirect()->back()->with('error', $e->getMessage());
         }
     }
 
-    // Process action based on the action value
-    private function processAction($action, $id_pencetakan, $id_hpa, $id_user, $id_mutu) // Update nama variabel
+    private function processAction($action, $id_pencetakan_frs, $id_frs, $id_user, $id_mutu_frs)
     {
-        // Set zona waktu Indonesia/Jakarta
         date_default_timezone_set('Asia/Jakarta');
-
-        $hpaModel = new HpaModel();
-        $pencetakanModel = new PencetakanModel(); // Update nama model
 
         try {
             switch ($action) {
-                    // TOMBOL MULAI PENGECEKAN
                 case 'mulai':
-                    $pencetakanModel->updatePencetakan($id_pencetakan, [ // Update nama method dan variabel
-                        'id_user_pencetakan' => $id_user,
-                        'status_pencetakan' => 'Proses Pencetakan',
-                        'mulai_pencetakan' => date('Y-m-d H:i:s'),
+                    $this->pencetakan_frs->update($id_pencetakan_frs, [
+                        'id_user_pencetakan_frs' => $id_user,
+                        'status_pencetakan_frs' => 'Proses Pencetakan',
+                        'mulai_pencetakan_frs' => date('Y-m-d H:i:s'),
                     ]);
                     break;
-
-                    // TOMBOL SELESAI PENGECEKAN
                 case 'selesai':
-                    $pencetakanModel->updatePencetakan($id_pencetakan, [ // Update nama method dan variabel
-                        'id_user_pencetakan' => $id_user,
-                        'status_pencetakan' => 'Selesai Pencetakan',
-                        'selesai_pencetakan' => date('Y-m-d H:i:s'),
+                    $this->pencetakan_frs->update($id_pencetakan_frs, [
+                        'id_user_pencetakan_frs' => $id_user,
+                        'status_pencetakan_frs' => 'Selesai Pencetakan',
+                        'selesai_pencetakan_frs' => date('Y-m-d H:i:s'),
                     ]);
                     break;
-
-                    // TOMBOL KEMBALIKAN PENGECEKAN
                 case 'reset':
-                    $pencetakanModel->updatePencetakan($id_pencetakan, [ // Update nama method dan variabel
-                        'id_user_pencetakan' => null,
-                        'status_pencetakan' => 'Belum Pencetakan',
-                        'mulai_pencetakan' => null,
-                        'selesai_pencetakan' => null,
+                    $this->pencetakan_frs->update($id_pencetakan_frs, [
+                        'id_user_pencetakan_frs' => null,
+                        'status_pencetakan_frs' => 'Belum Pencetakan',
+                        'mulai_pencetakan_frs' => null,
+                        'selesai_pencetakan_frs' => null,
                     ]);
                     break;
-
-                case 'kembalikan':
-                    $pencetakanModel->deletePencetakan($id_pencetakan);
-                    $hpaModel->updateHpa($id_hpa, [
-                        'status_hpa' => 'Autorized',
-                        'id_pencetakan' => null,
-                    ]);
-                    break;
-
                 case 'lanjut':
-                    $hpaModel->updateHpa($id_hpa, ['status_hpa' => 'Selesai']); // Update status
+                    $this->frsModel->update($id_frs, ['status_frs' => 'Selesai']);
+                    break;
+                case 'kembalikan':
+                    $this->pencetakan_frs->delete($id_pencetakan_frs);
+                    $this->frsModel->update($id_frs, [
+                        'status_frs' => 'Authorized',
+                    ]);
                     break;
             }
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             log_message('error', 'Error in processAction: ' . $e->getMessage());
-            throw new \Exception('Terjadi kesalahan saat memproses aksi: ' . $e->getMessage());
+            throw new Exception('Terjadi kesalahan saat memproses aksi: ' . $e->getMessage());
         }
     }
 
     public function pencetakan_details()
     {
-        // Ambil id_pencetakan dari parameter GET
-        $id_pencetakan = $this->request->getGet('id_pencetakan');
+        // Ambil id_pencetakan_frs dari parameter GET
+        $id_pencetakan_frs = $this->request->getGet('id_pencetakan_frs');
 
-        if ($id_pencetakan) {
-            // Muat model pencetakan
-            $model = new PencetakanModel();
-
-            // Ambil data pencetakan berdasarkan id_pencetakan dan relasi yang ada
-            $data = $model->select(
+        if ($id_pencetakan_frs) {
+            // Gunakan model yang sudah diinisialisasi di constructor
+            $data = $this->pencetakan_frs->select(
                 'pencetakan.*, 
-                hpa.*, 
-                patient.*, 
-                users.nama_user AS nama_user_pencetakan'
+            frs.*, 
+            patient.*, 
+            users.nama_user AS nama_user_pencetakan'
             )
-                ->join(
-                    'hpa',
-                    'pencetakan.id_hpa = hpa.id_hpa',
-                    'left'
-                ) // Relasi dengan tabel hpa
-                ->join('patient', 'hpa.id_pasien = patient.id_pasien', 'left')
-                ->join('users', 'pencetakan.id_user_pencetakan = users.id_user', 'left')
-                ->where('pencetakan.id_pencetakan', $id_pencetakan)
+                ->join('frs', 'pencetakan.id_frs = frs.id_frs', 'left')
+                ->join('patient', 'frs.id_pasien = patient.id_pasien', 'left')
+                ->join('users', 'pencetakan.id_user_pencetakan_frs = users.id_user', 'left')
+                ->where('pencetakan.id_pencetakan_frs', $id_pencetakan_frs)
                 ->first();
 
             if ($data) {
-                // Kirimkan data dalam format JSON
                 return $this->response->setJSON($data);
             } else {
                 return $this->response->setJSON(['error' => 'Data tidak ditemukan.']);
@@ -194,74 +137,27 @@ class Pencetakan extends BaseController
         }
     }
 
-    public function delete()
-    {
-        // Mendapatkan data dari request
-        $id_pencetakan = $this->request->getPost('id_pencetakan');
-        $id_hpa = $this->request->getPost('id_hpa');
-
-        if ($id_pencetakan && $id_hpa) {
-            // Load model
-            $pencetakanModel = new PencetakanModel();
-            $hpaModel = new HpaModel();
-
-            // Ambil instance dari database service
-            $db = \Config\Database::connect();
-
-            // Mulai transaksi untuk memastikan kedua operasi berjalan atomik
-            $db->transStart();
-
-            // Hapus data dari tabel pencetakan
-            $deleteResult = $pencetakanModel->deletePencetakan($id_pencetakan);
-
-            // Cek apakah delete berhasil
-            if ($deleteResult) {
-                $hpaModel->updateHpa($id_hpa, [
-                    'status_hpa' => 'Autorized',
-                    'id_pencetakan' => null,
-                ]);
-
-                // Selesaikan transaksi
-                $db->transComplete();
-
-                // Cek apakah transaksi berhasil
-                if ($db->transStatus() === FALSE) {
-                    return $this->response->setJSON(['success' => false, 'message' => 'Gagal menghapus atau memperbarui data.']);
-                }
-
-                return $this->response->setJSON(['success' => true]);
-            } else {
-                // Jika delete gagal, rollback transaksi
-                $db->transRollback();
-                return $this->response->setJSON(['success' => false, 'message' => 'Gagal menghapus data pencetakan.']);
-            }
-        } else {
-            return $this->response->setJSON(['success' => false, 'message' => 'ID tidak valid.']);
-        }
-    }
-
     public function edit_pencetakan()
     {
-        $id_pencetakan = $this->request->getGet('id_pencetakan');
+        $id_pencetakan_frs = $this->request->getGet('id_pencetakan_frs');
 
-        if (!$id_pencetakan) {
+        if (!$id_pencetakan_frs) {
             throw new \CodeIgniter\Exceptions\PageNotFoundException('ID pencetakan tidak ditemukan.');
         }
 
-        // Ambil data pencetakan berdasarkan ID
-        $pencetakanData = $this->pencetakanModel->find($id_pencetakan);
+        // Ambil data pencetakan
+        $pencetakanData = $this->pencetakan_frs->find($id_pencetakan_frs);
 
         if (!$pencetakanData) {
             throw new \CodeIgniter\Exceptions\PageNotFoundException('Data pencetakan tidak ditemukan.');
         }
 
         // Ambil data users dengan status_user = 'Analis'
-        // Pastikan nama model benar
         $users = $this->userModel->where('status_user', 'Analis')->findAll();
 
         $data = [
             'pencetakanData' => $pencetakanData,
-            'users' => $users, // Tambahkan data users ke view
+            'users' => $users,
             'id_user' => session()->get('id_user'),
             'nama_user' => session()->get('nama_user'),
         ];
@@ -271,29 +167,24 @@ class Pencetakan extends BaseController
 
     public function update_pencetakan()
     {
-        $id_pencetakan = $this->request->getPost('id_pencetakan');
-        // Get individual date and time inputs
-        $mulai_date = $this->request->getPost('mulai_pencetakan_date');
-        $mulai_time = $this->request->getPost('mulai_pencetakan_time');
-        $selesai_date = $this->request->getPost('selesai_pencetakan_date');
-        $selesai_time = $this->request->getPost('selesai_pencetakan_time');
+        $id_pencetakan_frs = $this->request->getPost('id_pencetakan_frs');
 
-        // Combine date and time into one value
-        $mulai_pencetakan = $mulai_date . ' ' . $mulai_time;  // Format: YYYY-MM-DD HH:MM
-        $selesai_pencetakan = $selesai_date . ' ' . $selesai_time;  // Format: YYYY-MM-DD HH:MM
+        // Gabungkan input tanggal dan waktu
+        $mulai_pencetakan_frs = $this->request->getPost('mulai_pencetakan_frs_date') . ' ' . $this->request->getPost('mulai_pencetakan_frs_time');
+        $selesai_pencetakan_frs = $this->request->getPost('selesai_pencetakan_frs_date') . ' ' . $this->request->getPost('selesai_pencetakan_frs_time');
 
         $data = [
-            'id_user_pencetakan' => $this->request->getPost('id_user_pencetakan'),
-            'status_pencetakan'  => $this->request->getPost('status_pencetakan'),
-            'mulai_pencetakan'   => $mulai_pencetakan,
-            'selesai_pencetakan' => $selesai_pencetakan,
+            'id_user_pencetakan_frs' => $this->request->getPost('id_user_pencetakan_frs'),
+            'status_pencetakan_frs'  => $this->request->getPost('status_pencetakan_frs'),
+            'mulai_pencetakan_frs'   => $mulai_pencetakan_frs,
+            'selesai_pencetakan_frs' => $selesai_pencetakan_frs,
             'updated_at'         => date('Y-m-d H:i:s'),
         ];
 
-        if (!$this->pencetakanModel->update($id_pencetakan, $data)) {
+        if (!$this->pencetakan_frs->update($id_pencetakan_frs, $data)) {
             return redirect()->back()->with('error', 'Gagal mengupdate data.')->withInput();
         }
 
-        return redirect()->to(base_url('exam/index_exam'))->with('success', 'Data berhasil diperbarui.');
+        return redirect()->to(base_url('pencetakan/index_pencetakan'))->with('success', 'Data berhasil diperbarui.');
     }
 }

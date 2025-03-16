@@ -51,7 +51,7 @@
                     <div class="col-sm-4 text-center">
                         <button type="submit"
                             class="btn btn-success btn-user w-100 mb-3"
-                            formaction="<?= base_url('frs/update_print_frs/' . $frs['id_frs']); ?>"
+                            formaction="<?= base_url('frs/update_print/' . $frs['id_frs']); ?>"
                             <?= (($_GET['redirect'] ?? '') === 'index_pencetakan_frs') ? '' : 'disabled' ?>>
                             <i class="fas fa-save"></i> Simpan
                         </button>
@@ -70,4 +70,4 @@
 
 <?= $this->include('templates/notifikasi') ?>
 <?= $this->include('templates/cetak/footer_cetak'); ?>
-<?= $this->include('templates/exam/cetak_print'); ?>
+<?= $this->include('templates/exam/cetak_print_frs'); ?>
