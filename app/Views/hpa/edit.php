@@ -8,7 +8,7 @@
         </div>
 
         <div class="card-body">
-            <h1>Edit Data Hpa</h1>
+            <h1>Edit Data Histopatologi</h1>
             <a href="<?= base_url('hpa/index') ?>" class="btn btn-primary mb-3">Kembali</a>
 
             <!-- Form -->

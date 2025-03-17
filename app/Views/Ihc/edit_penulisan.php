@@ -7,7 +7,7 @@
             <h6 class="m-0 font-weight-bold text-primary">Penulisan</h6>
         </div>
         <div class="card-body">
-            <h1 class="h3 mb-4">Form Penulisan</h1>
+            <h1 class="h3 mb-4">Form Penulisan Imunohistokimia</h1>
             <a href="<?= base_url('penulisan_ihc/index') ?>" class="btn btn-primary mb-3">Kembali</a>
 
             <!-- Form -->

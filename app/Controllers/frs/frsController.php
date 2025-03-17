@@ -329,11 +329,13 @@ class FrsController extends BaseController
     {
         date_default_timezone_set('Asia/Jakarta');
         $id_user = session()->get('id_user');
+        
         $frs = $this->frsModel->getfrsWithRelationsProses($id_frs);
         if (!$frs) {
             return redirect()->back()->with('message', ['error' => 'frs tidak ditemukan.']);
         }
         $id_pembacaan_frs = $frs['id_pembacaan_frs'];
+
         // Validasi form input
         $validation = \Config\Services::validation();
         $validation->setRules([
@@ -360,6 +362,16 @@ class FrsController extends BaseController
         }
         // Proses update tabel frs
         if ($this->frsModel->update($id_frs, $data)) {
+            // Update data pembacaan jika id_user_dokter_pembacaan_frs ada
+            if (!empty($data['id_user_dokter_pembacaan_frs'])) {
+                $pembacaan = $this->pembacaan_frs->where('id_pembacaan_frs', $id_pembacaan_frs)->first();
+
+                if ($pembacaan) {
+                    $this->pembacaan_frs->update($pembacaan['id_pembacaan_frs'], [
+                        'id_user_dokter_pembacaan_frs' => $data['id_user_dokter_pembacaan_frs'],
+                    ]);
+                }
+            }
             switch ($page_source) {
                 case 'edit_mikroskopis':
                     $id_pembacaan_frs = $this->request->getPost('id_pembacaan_frs');
@@ -372,7 +384,6 @@ class FrsController extends BaseController
                     ]);
                     return redirect()->to('frs/edit_mikroskopis/' . $id_frs)->with('success', 'Data mikroskopis berhasil diperbarui.');
                 case 'edit_penulisan':
-                    $id_pembacaan_frs = $this->request->getPost('id_pembacaan_frs');
                     $id_penulisan_frs = $this->request->getPost('id_penulisan_frs');
                     $this->penulisan_frs->update($id_penulisan_frs, [
                         'id_user_penulisan_frs' => $id_user,

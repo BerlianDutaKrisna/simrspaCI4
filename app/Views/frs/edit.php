@@ -8,7 +8,7 @@
         </div>
 
         <div class="card-body">
-            <h1>Edit Data frs</h1>
+            <h1>Edit Data Fine Needle Aspiration Biopsy</h1>
             <a href="<?= base_url('frs/index') ?>" class="btn btn-primary mb-3">Kembali</a>
 
             <!-- Form -->

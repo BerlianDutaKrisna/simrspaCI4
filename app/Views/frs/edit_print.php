@@ -7,7 +7,7 @@
             <h6 class="m-0 font-weight-bold text-primary">Print frs</h6>
         </div>
         <div class="card-body">
-            <h1 class="h3 mb-4">Form Print frs</h1>
+            <h1 class="h3 mb-4">Form Print Fine Needle Aspiration Biopsy</h1>
 
             <!-- Form -->
             <form id="form-frs" method="POST" enctype="multipart/form-data">

@@ -7,7 +7,7 @@
             <h6 class="m-0 font-weight-bold text-primary">Edit Mikroskopis</h6>
         </div>
         <div class="card-body">
-            <h1>Edit Data Mikroskopis</h1>
+            <h1>Edit Data Mikroskopis Fine Needle Aspiration Biopsy</h1>
             <a href="<?= base_url('pembacaan_frs/index') ?>" class="btn btn-primary mb-3">Kembali</a>
 
             <!-- Form -->
@@ -149,7 +149,7 @@
                         </textarea>
                     </div>
                 </div>
-                
+
                 <div class="form-group row">
                     <label class="col-sm-2 col-form-label" for="jumlah_slide">Dokter yang membaca</label>
                     <div class="col-sm-4">

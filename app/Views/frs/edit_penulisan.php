@@ -7,7 +7,7 @@
             <h6 class="m-0 font-weight-bold text-primary">Penulisan</h6>
         </div>
         <div class="card-body">
-            <h1 class="h3 mb-4">Form Penulisan</h1>
+            <h1 class="h3 mb-4">Form Penulisan Fine Needle Aspiration Biopsy</h1>
             <a href="<?= base_url('penulisan_frs/index') ?>" class="btn btn-primary mb-3">Kembali</a>
 
             <!-- Form -->
@@ -187,7 +187,7 @@
                 <div class="form-group row">
                     <label class="col-sm-2 col-form-label"></label>
                     <div class="col-sm-4">
-                        
+
                     </div>
 
                     <label class="col-sm-2 col-form-label">Dokter yang membaca</label>

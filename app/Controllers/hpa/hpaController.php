@@ -519,10 +519,8 @@ class HpaController extends BaseController
                     return redirect()->to('hpa/edit_makroskopis/' . $id_hpa)->with('success', 'Data makroskopis berhasil diperbarui.');
                 case 'edit_mikroskopis':
                     $id_pembacaan_hpa = $this->request->getPost('id_pembacaan_hpa');
-                    $id_user_dokter_pembacaan_hpa = (int) $this->request->getPost('id_user_dokter_pembacaan_hpa');
                     $this->pembacaan_hpa->update($id_pembacaan_hpa, [
                         'id_user_pembacaan_hpa' => $id_user,
-                        'id_user_dokter_pembacaan_hpa' => $id_user_dokter_pembacaan_hpa,
                         'status_pembacaan_hpa' => 'Selesai Pembacaan',
                         'selesai_pembacaan_hpa' => date('Y-m-d H:i:s'),
                     ]);
@@ -545,7 +543,6 @@ class HpaController extends BaseController
                     return redirect()->to('hpa/edit_mikroskopis/' . $id_hpa)->with('success', 'Data mikroskopis berhasil diperbarui.');
 
                 case 'edit_penulisan':
-                    $id_pembacaan_hpa = $this->request->getPost('id_pembacaan_hpa');
                     $id_penulisan_hpa = $this->request->getPost('id_penulisan_hpa');
                     $this->penulisan_hpa->update($id_penulisan_hpa, [
                         'id_user_penulisan_hpa' => $id_user,

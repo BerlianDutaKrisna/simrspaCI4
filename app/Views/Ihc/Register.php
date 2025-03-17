@@ -6,7 +6,7 @@
         <h6 class="m-0 font-weight-bold text-primary">Pendaftaran Pemeriksaan</h6>
     </div>
     <div class="card-body">
-        <h1>Data Pasien</h1>
+        <h1>Data Pasien Imunohistokimia</h1>
         <!-- Tombol Kembali ke Dashboard -->
         <a href="<?= base_url('/dashboard') ?>" class="btn btn-primary mb-3">Kembali</a>
 
@@ -48,7 +48,7 @@
 
 <div class="card shadow mb-4">
     <div class="card-header py-3">
-        <h6 class="m-0 font-weight-bold text-primary">Pendaftaran Pemeriksaan IHC</h6>
+        <h6 class="m-0 font-weight-bold text-primary">Pendaftaran Pemeriksaan Imunohistokimia</h6>
     </div>
     <div class="card-body">
         <form action="<?= base_url('ihc/insert') ?>" method="POST">

@@ -6,7 +6,7 @@
         <h6 class="m-0 font-weight-bold text-primary">Buku Penerimaan Hasil</h6>
     </div>
     <div class="card-body">
-        <h1>Buku Penerimaan Hasil</h1>
+        <h1>Buku Penerimaan Hasil Histopatologi</h1>
         <a href="<?= base_url('/dashboard') ?>" class="btn btn-primary mb-3">Kembali</a>
 
         <div class="table-responsive">
@@ -67,7 +67,7 @@
                                     <?php
                                     $tanggal_hasil = $row['tanggal_hasil'] ?? "";
                                     if ($tanggal_hasil === "") {
-                                        echo ''; 
+                                        echo '';
                                     } else {
                                         $tanggal = new DateTime($tanggal_hasil);
                                         $formatter = new IntlDateFormatter(

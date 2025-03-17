@@ -4,11 +4,11 @@
 <div class="container-fluid">
     <div class="card shadow mb-4">
         <div class="card-header py-3">
-            <h6 class="m-0 font-weight-bold text-primary">Edit frs</h6>
+            <h6 class="m-0 font-weight-bold text-primary">Edit Ihc</h6>
         </div>
 
         <div class="card-body">
-            <h1>Edit Data frs</h1>
+            <h1>Edit Data Imunohistokimia</h1>
             <a href="<?= base_url('frs/index') ?>" class="btn btn-primary mb-3">Kembali</a>
 
             <!-- Form -->

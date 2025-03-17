@@ -361,6 +361,16 @@ class ihcController extends BaseController
         }
         // Proses update tabel ihc
         if ($this->ihcModel->update($id_ihc, $data)) {
+            // Update data pembacaan jika id_user_dokter_pembacaan_ihc ada
+            if (!empty($data['id_user_dokter_pembacaan_ihc'])) {
+                $pembacaan = $this->pembacaan_ihc->where('id_pembacaan_ihc', $id_pembacaan_ihc)->first();
+
+                if ($pembacaan) {
+                    $this->pembacaan_ihc->update($pembacaan['id_pembacaan_ihc'], [
+                        'id_user_dokter_pembacaan_ihc' => $data['id_user_dokter_pembacaan_ihc'],
+                    ]);
+                }
+            }
             switch ($page_source) {
                 case 'edit_mikroskopis':
                     $id_pembacaan_ihc = $this->request->getPost('id_pembacaan_ihc');
@@ -373,7 +383,6 @@ class ihcController extends BaseController
                     ]);
                     return redirect()->to('ihc/edit_mikroskopis/' . $id_ihc)->with('success', 'Data mikroskopis berhasil diperbarui.');
                 case 'edit_penulisan':
-                    $id_pembacaan_ihc = $this->request->getPost('id_pembacaan_ihc');
                     $id_penulisan_ihc = $this->request->getPost('id_penulisan_ihc');
                     $this->penulisan_ihc->update($id_penulisan_ihc, [
                         'id_user_penulisan_ihc' => $id_user,

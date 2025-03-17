@@ -20,14 +20,14 @@ class srsController extends BaseController
     protected $srsModel;
     protected $usersModel;
     protected $patientModel;
-    protected $Penerimaan_srs;
-    protected $Pemotongan_srs;
-    protected $Pembacaan_srs;
-    protected $Penulisan_srs;
-    protected $Pemverifikasi_srs;
-    protected $Authorized_srs;
-    protected $Pencetakan_srs;
-    protected $Mutu_srs;
+    protected $penerimaan_srs;
+    protected $pemotongan_srs;
+    protected $pembacaan_srs;
+    protected $penulisan_srs;
+    protected $pemverifikasi_srs;
+    protected $authorized_srs;
+    protected $pencetakan_srs;
+    protected $mutu_srs;
     protected $validation;
 
     public function __construct()
@@ -35,41 +35,26 @@ class srsController extends BaseController
         $this->srsModel = new srsModel();
         $this->usersModel = new UsersModel();
         $this->patientModel = new PatientModel();
-        $this->Penerimaan_srs = new Penerimaan_srs();;
-        $this->Pembacaan_srs = new Pembacaan_srs();
-        $this->Penulisan_srs = new Penulisan_srs();
-        $this->Pemverifikasi_srs = new Pemverifikasi_srs();
-        $this->Authorized_srs = new Authorized_srs();
-        $this->Pencetakan_srs = new Pencetakan_srs();
-        $this->Mutu_srs = new Mutu_srs();
+        $this->penerimaan_srs = new Penerimaan_srs();;
+        $this->pembacaan_srs = new Pembacaan_srs();
+        $this->penulisan_srs = new Penulisan_srs();
+        $this->pemverifikasi_srs = new Pemverifikasi_srs();
+        $this->authorized_srs = new Authorized_srs();
+        $this->pencetakan_srs = new Pencetakan_srs();
+        $this->mutu_srs = new Mutu_srs();
         $this->validation =  \Config\Services::validation();
     }
 
     public function index()
     {
-        // Mengambil data dari session
-        $session = session();
-        $id_user = $session->get('id_user');
-        $nama_user = $session->get('nama_user');
+        $srsData = $this->srsModel->getsrsWithPatient();
+        $data = [
+            'id_user' => session()->get('id_user'),
+            'nama_user' => session()->get('nama_user'),
+            'srsData' => $srsData
+        ];
 
-        // Memastikan session terisi dengan benar
-        if (!$id_user || !$nama_user) {
-            return redirect()->to('login'); // Redirect ke halaman login jika session tidak ada
-        }
-
-        // Memanggil model srsModel untuk mengambil data
-        $srsModel = new srsModel();
-        $srsData = $srsModel->getsrsWithAllPatient();
-
-        // Pastikan $srsData berisi array
-        if (!$srsData) {
-            $srsData = []; // Jika tidak ada data, set menjadi array kosong
-        }
-        return view('srs/index_srs', [
-            'srsData' => $srsData,
-            'id_user' => $id_user,
-            'nama_user' => $nama_user
-        ]);
+        return view('srs/index', $data);
     }
 
     public function register()
@@ -90,7 +75,7 @@ class srsController extends BaseController
         } else {
             $nextNumber = 1;
         }
-        $kodesrs = 'SRS.' . str_pad($nextNumber, 2, '0', STR_PAD_LEFT) . '/' . $currentYear;
+        $kodesrs = 'srs.' . str_pad($nextNumber, 2, '0', STR_PAD_LEFT) . '/' . $currentYear;
         $data = [
             'id_user' => session()->get('id_user'),
             'nama_user' => session()->get('nama_user'),
@@ -103,7 +88,7 @@ class srsController extends BaseController
             $patient = $patientModel->where('norm_pasien', $norm_pasien)->first();
             $data['patient'] = $patient ?: null;
         }
-        return view('Srs/Register', $data);
+        return view('srs/Register', $data);
     }
 
     public function insert()
@@ -157,15 +142,15 @@ class srsController extends BaseController
                 'status_penerimaan_srs' => 'Belum Penerimaan',
             ];
             // Simpan data penerimaan
-            if (!$this->Penerimaan_srs->insert($penerimaanData)) {
-                throw new Exception('Gagal menyimpan data penerimaan: ' . $this->Penerimaan_srs->errors());
+            if (!$this->penerimaan_srs->insert($penerimaanData)) {
+                throw new Exception('Gagal menyimpan data penerimaan: ' . $this->penerimaan_srs->errors());
             }
             // Data mutu
             $mutuData = [
                 'id_srs' => $id_srs,
             ];
-            if (!$this->Mutu_srs->insert($mutuData)) {
-                throw new Exception('Gagal menyimpan data mutu: ' . $this->Mutu_srs->errors());
+            if (!$this->mutu_srs->insert($mutuData)) {
+                throw new Exception('Gagal menyimpan data mutu: ' . $this->mutu_srs->errors());
             }
             // Redirect dengan pesan sukses
             return redirect()->to('/dashboard')->with('success', 'Data berhasil disimpan!');
@@ -178,40 +163,17 @@ class srsController extends BaseController
 
     public function delete()
     {
-        // Mendapatkan data dari request
         $id_srs = $this->request->getPost('id_srs');
-
-        // Cek apakah id_srs valid
-        if ($id_srs) {
-            // Inisialisasi model
-            $srsModel = new srsModel();
-
-            // Ambil instance dari database service
-            $db = \Config\Database::connect();
-
-            // Mulai transaksi untuk memastikan kedua operasi berjalan atomik
-            $db->transStart();
-
-            // Hapus data dari tabel srs
-            $deletesrs = $srsModel->delete($id_srs);
-
-            // Cek apakah delete berhasil
-            if ($deletesrs) {
-                // Selesaikan transaksi
-                $db->transComplete();
-
-                // Cek apakah transaksi berhasil
-                if ($db->transStatus() === FALSE) {
-                    return $this->response->setJSON(['success' => false, 'message' => 'Gagal menghapus data.']);
-                }
-            } else {
-                // Jika id_srs tidak valid, kirimkan response error
-                return $this->response->setJSON(['success' => false, 'message' => 'ID srs tidak valid.']);
-            }
+        if (!$id_srs) {
+            return $this->response->setJSON(['success' => false, 'message' => 'ID srs tidak valid.']);
         }
-        return $this->response->setJSON(['success' => true, 'message' => 'Data berhasil dihapus.']);
+        if ($this->srsModel->delete($id_srs)) {
+            return $this->response->setJSON(['success' => true, 'message' => 'Data berhasil dihapus.']);
+        } else {
+            return $this->response->setJSON(['success' => false, 'message' => 'Gagal menghapus data.']);
+        }
     }
-    
+
     public function index_buku_penerima()
     {
         // Mengambil data dari session
@@ -241,6 +203,283 @@ class srsController extends BaseController
         ]);
     }
 
+    // Menampilkan form edit srs
+    public function edit($id_srs)
+    {
+        // Ambil data srs berdasarkan ID
+        $srs = $this->srsModel->getsrsWithRelationsProses($id_srs);
+        if (!$srs) {
+            return redirect()->back()->with('message', ['error' => 'srs tidak ditemukan.']);
+        }
+        $id_pembacaan_srs = $srs['id_pembacaan_srs'];
+        // Ambil data pengguna dengan status "Dokter"
+        $users = $this->usersModel->where('status_user', 'Dokter')->findAll();
+        // Ambil data pemotongan berdasarkan ID
+        $pembacaan_srs = $this->pembacaan_srs->find($id_pembacaan_srs);
+        $dokter_nama = null;
+        $analis_nama = null;
+        if ($pembacaan_srs) {
+            // Ambil nama dokter dan analis jika ID tersedia
+            if (!empty($pembacaan_srs['id_user_dokter_pembacaan_srs'])) {
+                $dokter = $this->usersModel->find($pembacaan_srs['id_user_dokter_pembacaan_srs']);
+                $dokter_nama = $dokter ? $dokter['nama_user'] : null;
+            }
+
+            if (!empty($pembacaan_srs['id_user_pembacaan'])) {
+                $analis = $this->usersModel->find($pembacaan_srs['id_user_pembacaan']);
+                $analis_nama = $analis ? $analis['nama_user'] : null;
+            }
+            // Tambahkan ke array pembacaan
+            $pembacaan_srs['dokter_nama'] = $dokter_nama;
+            $pembacaan_srs['analis_nama'] = $analis_nama;
+        }
+        // Data yang dikirim ke view
+        $data = [
+            'id_user'    => session()->get('id_user'),
+            'nama_user'  => session()->get('nama_user'),
+            'srs'        => $srs,
+            'pembacaan_srs' => $pembacaan_srs,
+            'users'      => $users,
+        ];
+
+        return view('srs/edit', $data);
+    }
+
+    // Menampilkan form edit srs mikroskopis
+    public function edit_mikroskopis($id_srs)
+    {
+        // Ambil data srs berdasarkan ID
+        $srs = $this->srsModel->getsrsWithRelationsProses($id_srs);
+        if (!$srs) {
+            return redirect()->back()->with('message', ['error' => 'srs tidak ditemukan.']);
+        }
+        // Ambil data pemotongan dan pembacaan_srs berdasarkan ID
+        $id_pembacaan_srs = $srs['id_pembacaan_srs'];
+        // Ambil data pembacaan_srs jika tersedia
+        $pembacaan_srs = $id_pembacaan_srs ? $this->pembacaan_srs->find($id_pembacaan_srs) : [];
+        // Ambil data pengguna dengan status "Dokter"
+        $users = $this->usersModel->where('status_user', 'Dokter')->findAll();
+        // Persiapkan data yang akan dikirim ke view
+        $data = [
+            'srs'             => $srs,
+            'pembacaan_srs'   => $pembacaan_srs,
+            'users'           => $users,
+            'id_user'         => session()->get('id_user'),
+            'nama_user'       => session()->get('nama_user'),
+        ];
+
+        return view('srs/edit_mikroskopis', $data);
+    }
+
+    public function edit_penulisan($id_srs)
+    {
+        // Ambil data srs berdasarkan ID
+        $srs = $this->srsModel->getsrsWithRelationsProses($id_srs);
+        if (!$srs) {
+            return redirect()->back()->with('message', ['error' => 'srs tidak ditemukan.']);
+        }
+        // Inisialisasi array untuk pembacaan dan penulisan srs
+        $pembacaan_srs = [];
+        $penulisan_srs = [];
+        // Ambil data pembacaan srs jika tersedia
+        if (!empty($srs['id_pembacaan_srs'])) {
+            $pembacaan_srs = $this->pembacaan_srs->find($srs['id_pembacaan_srs']) ?? [];
+            // Ambil nama dokter dari pembacaan jika tersedia
+            if (!empty($pembacaan_srs['id_user_dokter_pembacaan_srs'])) {
+                $dokter = $this->usersModel->find($pembacaan_srs['id_user_dokter_pembacaan_srs']);
+                $pembacaan_srs['dokter_nama'] = $dokter ? $dokter['nama_user'] : null;
+            } else {
+                $pembacaan_srs['dokter_nama'] = null;
+            }
+        }
+        // Ambil data penulisan srs jika tersedia
+        if (!empty($srs['id_penulisan_srs'])) {
+            $penulisan_srs = $this->penulisan_srs->find($srs['id_penulisan_srs']) ?? [];
+        }
+        // Ambil daftar user dengan status "Dokter"
+        $users = $this->usersModel->where('status_user', 'Dokter')->findAll();
+        // Data yang akan dikirim ke view
+        $data = [
+            'id_user' => session()->get('id_user'),
+            'nama_user' => session()->get('nama_user'),
+            'srs' => $srs,
+            'pembacaan' => $pembacaan_srs,
+            'penulisan' => $penulisan_srs,
+            'users' => $users,
+        ];
+
+        return view('srs/edit_penulisan', $data);
+    }
+
+    public function edit_print($id_srs)
+    {
+        // Ambil data srs berdasarkan ID
+        $srs = $this->srsModel->getsrsWithRelationsProses($id_srs);
+        // Persiapkan data yang akan dikirim ke view
+        $data = [
+            'id_user' => session()->get('id_user'),
+            'nama_user' => session()->get('nama_user'),
+            'srs' => $srs,
+        ];
+
+        return view('srs/edit_print', $data);
+    }
+
+    public function update($id_srs)
+    {
+        date_default_timezone_set('Asia/Jakarta');
+        $id_user = session()->get('id_user');
+
+        $srs = $this->srsModel->getsrsWithRelationsProses($id_srs);
+        if (!$srs) {
+            return redirect()->back()->with('message', ['error' => 'srs tidak ditemukan.']);
+        }
+        $id_pembacaan_srs = $srs['id_pembacaan_srs'];
+
+        // Validasi form input
+        $validation = \Config\Services::validation();
+        $validation->setRules([
+            'kode_srs' => [
+                'rules' => 'required|is_unique[srs.kode_srs,id_srs,' . $id_srs . ']',
+                'errors' => [
+                    'required' => 'Kode srs harus diisi.',
+                    'is_unique' => 'Kode srs sudah terdaftar!',
+                ],
+            ],
+        ]);
+        if (!$this->validate($validation->getRules())) {
+            session()->setFlashdata('errors', $validation->getErrors()); // Simpan error ke session
+            return redirect()->back()->withInput(); // Redirect kembali ke halaman form
+        }
+        // Mengambil data dari form
+        $data = $this->request->getPost();
+        $page_source = $this->request->getPost('page_source');
+        // Mengubah 'jumlah_slide' jika memilih 'lainnya'
+        if ($this->request->getPost('jumlah_slide') === 'lainnya') {
+            $data['jumlah_slide'] = $this->request->getPost('jumlah_slide') === 'lainnya'
+                ? $this->request->getPost('jumlah_slide_custom')
+                : $this->request->getPost('jumlah_slide');
+        }
+        // Proses update tabel srs
+        if ($this->srsModel->update($id_srs, $data)) {
+            // Update data pembacaan jika id_user_dokter_pembacaan_srs ada
+            if (!empty($data['id_user_dokter_pembacaan_srs'])) {
+                $pembacaan = $this->pembacaan_srs->where('id_pembacaan_srs', $id_pembacaan_srs)->first();
+
+                if ($pembacaan) {
+                    $this->pembacaan_srs->update($pembacaan['id_pembacaan_srs'], [
+                        'id_user_dokter_pembacaan_srs' => $data['id_user_dokter_pembacaan_srs'],
+                    ]);
+                }
+            }
+            switch ($page_source) {
+                case 'edit_mikroskopis':
+                    $id_pembacaan_srs = $this->request->getPost('id_pembacaan_srs');
+                    $id_user_dokter_pembacaan_srs = (int) $this->request->getPost('id_user_dokter_pembacaan_srs');
+                    $this->pembacaan_srs->update($id_pembacaan_srs, [
+                        'id_user_pembacaan_srs' => $id_user,
+                        'id_user_dokter_pembacaan_srs' => $id_user_dokter_pembacaan_srs,
+                        'status_pembacaan_srs' => 'Selesai Pembacaan',
+                        'selesai_pembacaan_srs' => date('Y-m-d H:i:s'),
+                    ]);
+                    return redirect()->to('srs/edit_mikroskopis/' . $id_srs)->with('success', 'Data mikroskopis berhasil diperbarui.');
+                case 'edit_penulisan':
+                    $id_penulisan_srs = $this->request->getPost('id_penulisan_srs');
+                    $this->penulisan_srs->update($id_penulisan_srs, [
+                        'id_user_penulisan_srs' => $id_user,
+                        'status_penulisan_srs' => 'Selesai Penulisan',
+                        'selesai_penulisan_srs' => date('Y-m-d H:i:s'),
+                    ]);
+                    // Ambil data dari form
+                    $lokasi_spesimen = $this->request->getPost('lokasi_spesimen');
+                    $diagnosa_klinik = $this->request->getPost('diagnosa_klinik');
+                    $makroskopis_srs = $this->request->getPost('makroskopis_srs');
+                    $mikroskopis_srs = $this->request->getPost('mikroskopis_srs');
+                    $tindakan_spesimen = $this->request->getPost('tindakan_spesimen');
+                    $hasil_srs = $this->request->getPost('hasil_srs');
+                    // Simpan data lokasi, diagnosa, makroskopis, mikroskopis, hasil terlebih dahulu
+                    $this->srsModel->update($id_srs, [
+                        'lokasi_spesimen' => $lokasi_spesimen,
+                        'diagnosa_klinik' => $diagnosa_klinik,
+                        'makroskopis_srs' => $makroskopis_srs,
+                        'mikroskopis_srs' => $mikroskopis_srs,
+                        'hasil_srs' => $hasil_srs,
+                    ]);
+                    // Setelah semua data tersimpan, buat data print_srs
+                    $print_srs = '
+                    <table width="800pt" height="80">
+                        <tbody>
+                            <tr>
+                                <td style="border: none;" width="200pt">
+                                    <font size="5" face="verdana"><b>LOKASI</b></font>
+                                </td>
+                                <td style="border: none;" width="10pt">
+                                    <font size="5" face="verdana"><b>:</b><br></font>
+                                </td>
+                                <td style="border: none;" width="590pt">
+                                    <font size="5" face="verdana">
+                                        <b>' . htmlspecialchars($lokasi_spesimen) . '<br></b>
+                                    </font>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="border: none;" width="200pt">
+                                    <font size="5" face="verdana"><b>DIAGNOSA KLINIK</b></font>
+                                </td>
+                                <td style="border: none;" width="10pt">
+                                    <font size="5" face="verdana"><b>:</b><br></font>
+                                </td>
+                                <td style="border: none;" width="590pt">
+                                    <font size="5" face="verdana"><b>' . htmlspecialchars($diagnosa_klinik) . '<br></b></font>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="border: none;" width="200pt">
+                                    <font size="5" face="verdana"><b>ICD</b></font>
+                                </td>
+                                <td style="border: none;" width="10pt">
+                                    <font size="5" face="verdana"><b>:</b></font>
+                                </td>
+                                <td style="border: none;" width="590pt">
+                                    <font size="5" face="verdana"><br></font>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <font size="5" face="verdana"><b>LAPORAN PEMERIKSAAN:<br></b></font>
+                    <div>
+                        <font size="5" face="verdana"><b> MAKROSKOPIK :</b></font>
+                    </div>
+                    <div>
+                        <font size="5" face="verdana">' . nl2br(htmlspecialchars(str_replace(['<p>', '</p>'], '', $makroskopis_srs))) . '</font>
+                    </div>
+                    <br>
+                    <div>
+                        <font size="5" face="verdana"><b>MIKROSKOPIK :</b><br></font>
+                    </div>
+                    <div>
+                        <font size="5" face="verdana">' . nl2br(htmlspecialchars(str_replace(['<p>', '</p>'], '', $mikroskopis_srs))) . '</font>
+                    </div>
+                    <br>
+                    <div>
+                        <font size="5" face="verdana"><b>KESIMPULAN :</b> ' . htmlspecialchars($lokasi_spesimen) . ', ' . htmlspecialchars($tindakan_spesimen) . ':</b></font>
+                    </div>
+                    <div>
+                        <font size="5" face="verdana"><b>' . strtoupper(htmlspecialchars(str_replace(['<p>', '</p>'], '', $hasil_srs))) . '</b></font>
+                    </div>
+                    <br>';
+                    // Simpan print_srs setelah semua data yang dibutuhkan telah ada
+                    $this->srsModel->update($id_srs, [
+                        'print_srs' => $print_srs,
+                    ]);
+                    return redirect()->to('srs/edit_penulisan/' . $id_srs)->with('success', 'Data penulisan berhasil diperbarui.');
+                default:
+                    return redirect()->back()->with('success', 'Data berhasil diperbarui.');
+            }
+        }
+        return redirect()->back()->with('error', 'Gagal memperbarui data.');
+    }
+
     public function update_buku_penerima()
     {
         // Set zona waktu Indonesia/Jakarta (opsional jika sudah diatur dalam konfigurasi)
@@ -265,69 +504,54 @@ class srsController extends BaseController
         // Redirect setelah berhasil mengupdate data
         return redirect()->to('srs/index_buku_penerima')->with('success', 'Penerima berhasil disimpan.');
     }
-    
 
-    public function update_print_srs($id_srs)
+
+    public function update_print($id_srs)
     {
-
         date_default_timezone_set('Asia/Jakarta');
-        $srsModel = new srsModel();
-        $Pemverifikasi_srs = new Pemverifikasi_srs();
-        $Authorized_srs = new Authorized_srs();
-        $Pencetakan_srs = new Pencetakan_srs();
-
         $id_user = session()->get('id_user');
-
         // Mendapatkan id_srs dari POST
         if (!$id_srs) {
             return redirect()->back()->with('error', 'Terjadi kesalahan: ID srs tidak ditemukan.');
         }
-
         // Mengambil data dari POST dan melakukan update
         $data = $this->request->getPost();
-        $srsModel->update($id_srs, $data);
-
+        $this->srsModel->update($id_srs, $data);
         $redirect = $this->request->getPost('redirect');
-
         if (!$redirect) {
             return redirect()->back()->with('error', 'Terjadi kesalahan: Halaman asal tidak ditemukan.');
         }
-
         // Cek ke halaman mana harus diarahkan setelah update
-        if ($redirect === 'index_pemverifikasi' && isset($_POST['id_pemverifikasi'])) {
-            $id_pemverifikasi = $this->request->getPost('id_pemverifikasi');
-            $Pemverifikasi_srs->updatePemverifikasi($id_pemverifikasi, [
-                'id_user_pemverifikasi' => $id_user,
-                'status_pemverifikasi' => 'Selesai Pemverifikasi',
-                'selesai_pemverifikasi' => date('Y-m-d H:i:s'),
+        if ($redirect === 'index_pemverifikasi_srs' && isset($_POST['id_pemverifikasi_srs'])) {
+            $id_pemverifikasi_srs = $this->request->getPost('id_pemverifikasi_srs');
+            $this->pemverifikasi_srs->update($id_pemverifikasi_srs, [
+                'id_user_pemverifikasi_srs' => $id_user,
+                'status_pemverifikasi_srs' => 'Selesai Pemverifikasi',
+                'selesai_pemverifikasi_srs' => date('Y-m-d H:i:s'),
             ]);
-            return redirect()->to('pemverifikasi/index_pemverifikasi')->with('success', 'Data berhasil diverifikasi.');
+            return redirect()->to('pemverifikasi_srs/index')->with('success', 'Data berhasil diverifikasi.');
         }
-
-        if ($redirect === 'index_autorized' && isset($_POST['id_autorized'])) {
-            $id_autorized = $this->request->getPost('id_autorized');
-            $Authorized_srs->updateAutorized($id_autorized, [
-                'id_user_autorized' => $id_user,
-                'status_autorized' => 'Selesai Authorized',
-                'selesai_autorized' => date('Y-m-d H:i:s'),
+        if ($redirect === 'index_authorized_srs' && isset($_POST['id_authorized_srs'])) {
+            $id_authorized_srs = $this->request->getPost('id_authorized_srs');
+            $this->authorized_srs->update($id_authorized_srs, [
+                'id_user_authorized_srs' => $id_user,
+                'status_authorized_srs' => 'Selesai Authorized',
+                'selesai_authorized_srs' => date('Y-m-d H:i:s'),
             ]);
-            return redirect()->to('autorized/index_autorized')->with('success', 'Data berhasil diauthorized.');
+            return redirect()->to('authorized_srs/index')->with('success', 'Data berhasil diauthorized.');
         }
-
-        if ($redirect === 'index_pencetakan' && isset($_POST['id_pencetakan'])) {
-            $id_pencetakan = $this->request->getPost('id_pencetakan');
-            $Pencetakan_srs->updatePencetakan($id_pencetakan, [
-                'id_user_pencetakan' => $id_user,
-                'status_pencetakan' => 'Selesai Pencetakan',
-                'selesai_pencetakan' => date('Y-m-d H:i:s'),
+        if ($redirect === 'index_pencetakan_srs' && isset($_POST['id_pencetakan_srs'])) {
+            $id_pencetakan_srs = $this->request->getPost('id_pencetakan_srs');
+            $this->pencetakan_srs->update($id_pencetakan_srs, [
+                'id_user_pencetakan_srs' => $id_user,
+                'status_pencetakan_srs' => 'Selesai Pencetakan',
+                'selesai_pencetakan_srs' => date('Y-m-d H:i:s'),
             ]);
-            return redirect()->to('pencetakan/index_pencetakan')->with('success', 'Data berhasil dicetak.');
+            return redirect()->to('pencetakan_srs/index')->with('success', 'Data berhasil simpan.');
         }
-
         // Jika redirect tidak sesuai dengan yang diharapkan
         return redirect()->back()->with('error', 'Terjadi kesalahan: Halaman tujuan tidak valid.');
     }
-
 
     public function uploadFotoMakroskopis($id_srs)
     {

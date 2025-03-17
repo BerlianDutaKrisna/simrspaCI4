@@ -7,7 +7,7 @@
             <h6 class="m-0 font-weight-bold text-primary">Print ihc</h6>
         </div>
         <div class="card-body">
-            <h1 class="h3 mb-4">Form Print ihc</h1>
+            <h1 class="h3 mb-4">Form Print Imunohistokimia</h1>
 
             <!-- Form -->
             <form id="form-ihc" method="POST" enctype="multipart/form-data">
