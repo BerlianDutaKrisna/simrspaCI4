@@ -8,9 +8,10 @@
     <div class="card-body">
         <h1>Daftar Penulisan</h1>
         <a href="<?= base_url('/dashboard') ?>" class="btn btn-primary mb-3">Kembali</a>
+        <?= $this->include('templates/proses/button_penulisan'); ?>
 
         <!-- Form -->
-        <form id="mainForm" action="<?= base_url('penulisan/proses_penulisan'); ?>" method="POST">
+        <form id="mainForm" action="<?= base_url('penulisan_ihc/proses_penulisan'); ?>" method="POST">
             <?= csrf_field(); ?>
             <!-- Input Hidden -->
             <input type="hidden" name="action" id="action" value="">
@@ -20,77 +21,77 @@
                     <thead>
                         <tr>
                             <th>No</th>
-                            <th>Kode HPA</th>
+                            <th>Aksi</th>
+                            <th>Detail</th>
+                            <th>Kode ihc</th>
                             <th>Nama Pasien</th>
                             <th>Status Penulisan</th>
-                            <th>Aksi</th>
                             <th>Admin</th>
                             <th>Mulai Penulisan</th>
                             <th>Selesai Penulisan</th>
                             <th>Deadline Hasil</th>
-                            <th>Detail</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <?php if (!empty($penulisanData)): ?>
+                        <?php if (!empty($penulisanDataihc)): ?>
                             <?php $i = 1; ?>
-                            <?php foreach ($penulisanData as $row): ?>
+                            <?php foreach ($penulisanDataihc as $row): ?>
                                 <tr>
                                     <td><?= $i ?></td>
-                                    <td><?= $row['kode_hpa']; ?></td>
-                                    <td><?= $row['nama_pasien']; ?></td>
-                                    <td><?= $row['status_penulisan']; ?></td>
                                     <td>
                                         <input type="checkbox"
                                             name="id_proses[]"
-                                            value="<?= $row['id_penulisan']; ?>:<?= $row['id_hpa']; ?>:<?= $row['id_mutu']; ?>"
+                                            value="<?= $row['id_penulisan_ihc']; ?>:<?= $row['id_ihc']; ?>:<?= $row['id_mutu_ihc']; ?>"
                                             class="form-control form-control-user checkbox-item"
                                             data-status='<?= json_encode([
-                                                                'status_penulisan' => $row['status_penulisan'] ?? ""
+                                                                'status_penulisan_ihc' => $row['status_penulisan_ihc'] ?? ""
                                                             ]) ?>'
                                             autocomplete="off">
                                     </td>
-                                    <td><?= $row['nama_user_penulisan']; ?></td>
+                                    <?php if (in_array($row['status_penulisan_ihc'], ["Proses Penulisan"])): ?>
+                                        <td>
+                                            <a href="<?= base_url('ihc/edit_penulisan/' . esc($row['id_ihc'])) ?>" class="btn btn-warning btn-sm">
+                                                <i class="fas fa-pen"></i> penulisan
+                                            </a>
+                                        </td>
+                                    <?php elseif (in_array($row['status_penulisan_ihc'], ["Selesai Penulisan"])): ?>
+                                        <td>
+                                            <a href="<?= base_url('ihc/edit_penulisan/' . esc($row['id_ihc'])) ?>" class="btn btn-success btn-sm mx-1">
+                                                <i class="fas fa-pen"></i> penulisan
+                                            </a>
+                                        </td>
+                                    <?php else: ?>
+                                        <td></td>
+                                    <?php endif; ?>
+                                    <td><?= $row['kode_ihc']; ?></td>
+                                    <td><?= $row['nama_pasien']; ?></td>
+                                    <td><?= $row['status_penulisan_ihc']; ?></td>
+                                    <td><?= $row['nama_user_penulisan_ihc']; ?></td>
                                     <td>
-                                        <?= empty($row['mulai_penulisan']) ? '-' : esc(date('H:i , d-m-Y', strtotime($row['mulai_penulisan']))); ?>
+                                        <?= empty($row['mulai_penulisan_ihc']) ? '-' : esc(date('H:i , d-m-Y', strtotime($row['mulai_penulisan_ihc']))); ?>
                                     </td>
                                     <td>
-                                        <?= empty($row['selesai_penulisan']) ? '-' : esc(date('H:i , d-m-Y', strtotime($row['selesai_penulisan']))); ?>
+                                        <?= empty($row['selesai_penulisan_ihc']) ? '-' : esc(date('H:i , d-m-Y', strtotime($row['selesai_penulisan_ihc']))); ?>
                                     </td>
                                     <td>
                                         <?php
-                                        if (empty($row['tanggal_hasil'])) {
-                                            echo 'Belum diisi';
+                                        $tanggal_hasil = $row['tanggal_hasil'] ?? "";
+                                        if ($tanggal_hasil === "") {
+                                            echo '';
                                         } else {
-                                            setlocale(LC_TIME, 'id_ID.utf8'); // Pastikan server mendukung lokal Indonesia
-                                            $tanggal = new DateTime($row['tanggal_hasil']);
+                                            $tanggal = new DateTime($tanggal_hasil);
                                             $formatter = new IntlDateFormatter(
                                                 'id_ID',
                                                 IntlDateFormatter::FULL,
                                                 IntlDateFormatter::NONE,
                                                 'Asia/Jakarta',
                                                 IntlDateFormatter::GREGORIAN,
-                                                'EEEE, dd-MM-yyyy' // Format dengan nama hari
+                                                'EEEE, dd-MM-yyyy'
                                             );
                                             echo esc($formatter->format($tanggal));
                                         }
                                         ?>
                                     </td>
-                                    <?php if (in_array($row['status_penulisan'], ["Proses Penulisan"])): ?>
-                                        <td>
-                                            <a href="<?= base_url('exam/edit_penulisan/' . esc($row['id_hpa'])) ?>" class="btn btn-warning btn-sm">
-                                                <i class="fas fa-pen"></i> Penulisan
-                                            </a>
-                                        </td>
-                                    <?php elseif (in_array($row['status_penulisan'], ["Selesai Penulisan"])): ?>
-                                        <td>
-                                            <a href="<?= base_url('exam/edit_penulisan/' . esc($row['id_hpa'])) ?>" class="btn btn-success btn-sm mx-1">
-                                                <i class="fas fa-pen"></i> Penulisan
-                                            </a>
-                                        </td>
-                                    <?php else: ?>
-                                        <td></td>
-                                    <?php endif; ?>
                                 </tr>
                                 <?php $i++; ?>
                             <?php endforeach; ?>

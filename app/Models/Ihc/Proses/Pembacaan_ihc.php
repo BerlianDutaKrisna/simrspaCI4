@@ -28,29 +28,27 @@ class Pembacaan_ihc extends Model // Update nama model
     protected $createdField  = 'created_at';
     protected $updatedField  = 'updated_at';
 
-    // Fungsi untuk insert data pembacaan_ihc
-    public function insertpembacaan_ihc(array $data): bool // Update nama fungsi
-    {
-        $this->insert($data);
-        return $this->db->affectedRows() > 0;
-    }
-
     // Mengambil data pembacaan_ihc dengan relasi
-    public function getpembacaan_ihcWithRelations()
+    public function getpembacaan_ihc()
     {
         return $this->select(
-            'pembacaan_ihc.*, 
+            '
+        pembacaan_ihc.*, 
         ihc.*, 
         patient.*, 
-        users.nama_user AS nama_user_dokter_pemotongan,
-        mutu.total_nilai_mutu'
+        users.nama_user AS nama_user_pembacaan_ihc,
+        mutu_ihc.id_mutu_ihc,
+        mutu_ihc.total_nilai_mutu_ihc,
+        pembacaan_ihc.id_pembacaan_ihc, 
+        pembacaan_ihc.id_user_dokter_pembacaan_ihc,
+        dokter_pembacaan.nama_user AS nama_user_dokter_pembacaan_ihc'
         )
-            ->join('ihc', 'pembacaan_ihc.id_ihc = ihc.id_ihc', 'left') // Relasi dengan tabel ihc
-            ->join('patient', 'ihc.id_pasien = patient.id_pasien', 'left') // Relasi dengan tabel patient
-            ->join('pemotongan', 'ihc.id_pemotongan = pemotongan.id_pemotongan', 'left') // Relasi dengan tabel pemotongan
-            ->join('users', 'pemotongan.id_user_dokter_pemotongan = users.id_user', 'left') // Relasi dengan tabel users untuk dokter pemotongan
-            ->join('mutu', 'ihc.id_ihc = mutu.id_ihc', 'left') // Relasi dengan tabel mutu berdasarkan id_ihc
-            ->where('ihc.status_ihc', 'pembacaan_ihc') // Filter berdasarkan status_ihc 'pembacaan_ihc'
+            ->join('ihc', 'pembacaan_ihc.id_ihc = ihc.id_ihc', 'left')
+            ->join('patient', 'ihc.id_pasien = patient.id_pasien', 'left')
+            ->join('users', 'pembacaan_ihc.id_user_pembacaan_ihc = users.id_user', 'left')
+            ->join('mutu_ihc', 'ihc.id_ihc = mutu_ihc.id_ihc', 'left')
+            ->join('users AS dokter_pembacaan', 'pembacaan_ihc.id_user_dokter_pembacaan_ihc = dokter_pembacaan.id_user', 'left')
+            ->whereIn('ihc.status_ihc', ['Pembacaan'])
             ->orderBy('ihc.kode_ihc', 'ASC')
             ->findAll();
     }

@@ -83,9 +83,16 @@ $routes->group('srs', ['namespace' => 'App\Controllers\Srs'], function ($routes)
 
 // Route untuk ihc
 $routes->group('ihc', ['namespace' => 'App\Controllers\Ihc'], function ($routes) {
+    $routes->get('index', 'IhcController::index');
     $routes->get('register', 'IhcController::register');
     $routes->post('insert', 'IhcController::insert');
-    $routes->get('index', 'IhcController::index');
+    $routes->post('delete', 'HpaController::delete');
+    $routes->get('edit/(:segment)', 'IhcController::edit/$1');
+    $routes->get('edit_mikroskopis/(:segment)', 'IhcController::edit_mikroskopis/$1');
+    $routes->get('edit_penulisan/(:segment)', 'IhcController::edit_penulisan/$1');
+    $routes->get('edit_print/(:segment)', 'IhcController::edit_print/$1');
+    $routes->post('update/(:segment)', 'IhcController::update/$1');
+    $routes->post('update_print/(:segment)', 'IhcController::update_print/$1');
 });
 
 // Route untuk Penerimaan hpa
