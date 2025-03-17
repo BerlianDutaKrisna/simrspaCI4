@@ -92,28 +92,21 @@
                         </div>
                         <div class="col-sm-10">
                             <textarea class="form-control summernote" name="makroskopis_ihc" id="makroskopis_ihc">
-                            <div>
-                                <font size="5" face="verdana">Dilakukan potong ulang blok parafin <?= $ihc['kode_block_ihc'] ?? '' ?> dan pengecatan imunohistokimia dengan antibodi ER, PR, Her2 Neu, serta Ki-67.</font>
-                            </div>
+                                <?= $ihc['makroskopis_ihc'] ?? '' ?>
                             </textarea>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 col-form-label" for="kode_block_ihc">Kode Block Ihc</label>
+                        </div>
+                        <div class="col-sm-5">
+                            <input type="text" name="kode_block_ihc" value="<?= $ihc['kode_block_ihc'] ?? '' ?>" class="form-control form-control-user">
                         </div>
                         <div class="form-group">
                             <label class="col-sm-2 col-form-label">Mikroskopis</label>
                         </div>
                         <div class="col-sm-10">
                             <textarea class="form-control summernote" name="mikroskopis_ihc" id="mikroskopis_ihc">
-                            <div>
-                                <font size="5" face="verdana">ER: </font>
-                            </div>
-                            <div>
-                                <font size="5" face="verdana">PR: </font>
-                            </div>
-                            <div>
-                                <font size="5" face="verdana">Her2 Neu: </font>
-                            </div>
-                            <div>
-                                <font size="5" face="verdana">Ki-67: </font>
-                            </div>
+                                <?= $ihc['mikroskopis_ihc'] ?? '' ?>
                             </textarea>
                         </div>
                         <div class="form-group">
@@ -121,18 +114,7 @@
                         </div>
                         <div class="col-sm-10">
                             <textarea class="form-control summernote" name="hasil_ihc" id="hasil_ihc">
-                            <div>
-                                <font size="5" face="verdana"><b>ER: </b></font>
-                            </div>
-                            <div>
-                                <font size="5" face="verdana"><b>PR: </b></font>
-                            </div>
-                            <div>
-                                <font size="5" face="verdana"><b>Her2 Neu: </b></font>
-                            </div>
-                            <div>
-                                <font size="5" face="verdana"><b>Ki-67: </b></font>
-                            </div>
+                                <?= $ihc['hasil_ihc'] ?? '' ?>
                             </textarea>
                         </div>
                     </div>

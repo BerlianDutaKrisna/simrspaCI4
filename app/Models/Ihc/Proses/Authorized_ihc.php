@@ -13,10 +13,11 @@ class Authorized_ihc extends Model // Update nama model
     // Kolom-kolom yang dapat diisi melalui mass-assignment
     protected $allowedFields = [
         'id_ihc',
-        'id_user_authorized_ihc', // Update nama kolom
-        'status_authorized_ihc', // Update nama kolom
-        'mulai_authorized_ihc', // Update nama kolom
-        'selesai_authorized_ihc', // Update nama kolom
+        'id_user_authorized_ihc',
+        'status_authorized_ihc',
+        'mulai_authorized_ihc',
+        'selesai_authorized_ihc',
+        'id_user_dokter_authorized_ihc',
         'created_at',
         'updated_at'
     ];

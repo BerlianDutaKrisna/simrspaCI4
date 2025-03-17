@@ -448,8 +448,6 @@ class ihcController extends BaseController
                             <br>
                             <div>
                                 <font size="5" face="verdana"><b>MIKROSKOPIK :</b></font>
-                            </div>
-                            <div>
                                 <font size="5" face="verdana">' . nl2br(htmlspecialchars(str_replace(['<p>', '</p>'], '', $mikroskopis_ihc))) . '</font>
                             </div>
                             <br>

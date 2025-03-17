@@ -13,10 +13,11 @@ class Pembacaan_ihc extends Model // Update nama model
     // Kolom-kolom yang dapat diisi melalui mass-assignment
     protected $allowedFields = [
         'id_ihc',
-        'id_user_pembacaan_ihc', // Update nama kolom
-        'status_pembacaan_ihc', // Update nama kolom
-        'mulai_pembacaan_ihc', // Update nama kolom
-        'selesai_pembacaan_ihc', // Update nama kolom
+        'id_user_pembacaan_ihc',
+        'status_pembacaan_ihc',
+        'mulai_pembacaan_ihc',
+        'selesai_pembacaan_ihc',
+        'id_user_dokter_pembacaan_ihc',
         'created_at',
         'updated_at'
     ];
@@ -52,7 +53,6 @@ class Pembacaan_ihc extends Model // Update nama model
             ->orderBy('ihc.kode_ihc', 'ASC')
             ->findAll();
     }
-
 
     // Fungsi untuk mengupdate data pembacaan_ihc
     public function updatepembacaan_ihc($id_pembacaan_ihc, $data) // Update nama fungsi dan parameter

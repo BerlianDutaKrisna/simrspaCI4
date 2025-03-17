@@ -44,10 +44,12 @@
     }
 
     $(document).ready(function() {
+        // Inisialisasi Summernote
         $('.summernote').summernote({
             placeholder: '',
             tabsize: 2,
             height: 200,
+            emptyPara: '',
             toolbar: [
                 ['style', ['bold', 'italic', 'underline', 'clear']], // tombol gaya teks
                 ['font', ['fontsize', 'fontname']], // font dan ukuran font
@@ -55,6 +57,61 @@
                 ['color', ['color']], // pilihan warna
                 ['view', ['codeview', 'help']] // menampilkan kode HTML dan bantuan
             ],
+        });
+
+        // Fungsi untuk mengisi default value pada Makroskopis
+        function setDefaultMakroskopis() {
+            var kodeBlock = $('input[name="kode_block_ihc"]').val().trim(); // Ambil nilai terbaru
+            var contentMakroskopis = $('#makroskopis_ihc').summernote('code').trim();
+            if (!contentMakroskopis || contentMakroskopis === '<p><br></p>' || contentMakroskopis.includes('Dilakukan potong ulang blok parafin')) {
+                $('#makroskopis_ihc').summernote('code',
+                    `<font size="5" face="verdana">Dilakukan potong ulang blok parafin ${kodeBlock} dan pengecatan imunohistokimia dengan antibodi ER, PR, Her2 Neu, serta Ki-67.</font>`
+                );
+            }
+        }
+
+        // Fungsi untuk mengisi default value pada Mikroskopis
+        function setDefaultMikroskopis() {
+            var contentMikroskopis = $('#mikroskopis_ihc').summernote('code').trim();
+            if (!contentMikroskopis || contentMikroskopis === '<p><br></p>') {
+                $('#mikroskopis_ihc').summernote('code', 
+                `<font size="5" face="verdana">
+                ER:&nbsp;<br>
+                PR:&nbsp;<br>
+                Her2 Neu:&nbsp;<br>
+                Ki-67:&nbsp;</font>
+        `);
+            }
+        }
+
+        // Fungsi untuk mengisi default value pada Hasil IHC
+        function setDefaultHasilIHC() {
+            var contentHasilIhc = $('#hasil_ihc').summernote('code').trim();
+            if (!contentHasilIhc || contentHasilIhc === '<p><br></p>') {
+                $('#hasil_ihc').summernote('code', `
+                <div><font size="5" face="verdana"><b>ER:</b>&nbsp;</font></div>
+                <div><font size="5" face="verdana"><b>PR:</b>&nbsp;</font></div>
+                <div><font size="5" face="verdana"><b>HER2 NEU:</b>&nbsp;</font></div>
+                <div><font size="5" face="verdana"><b>KI-67:</b>&nbsp;</font></div>
+            `);
+            }
+        }
+
+        // Set default value saat halaman dimuat
+        setDefaultMakroskopis();
+        setDefaultMikroskopis();
+        setDefaultHasilIHC();
+
+        // Perbarui konten Makroskopis jika kode_block_ihc berubah
+        $('input[name="kode_block_ihc"]').on('input', function() {
+            setDefaultMakroskopis();
+        });
+
+        // Pastikan konten Summernote diperbarui saat inisialisasi selesai
+        $('#makroskopis_ihc, #mikroskopis_ihc, #hasil_ihc').on('summernote.init', function() {
+            setDefaultMakroskopis();
+            setDefaultMikroskopis();
+            setDefaultHasilIHC();
         });
     });
 
@@ -90,6 +147,19 @@
 
         if (statusPenulisan !== "Selesai Penulisan") {
             $('.summernote_print').summernote('disable');
+        }
+    });
+
+    $(document).ready(function() {
+        // Inisialisasi Summernote
+        $('.summernote_makroskopis_ihc').summernote();
+
+        // Cek apakah isi kosong, lalu isi dengan default value
+        var currentContent = $('#makroskopis_ihc').summernote('code').trim();
+        if (!currentContent || currentContent === '<p><br></p>') {
+            $('#makroskopis_ihc').summernote('code',
+                '<font size="5" face="verdana">Dilakukan potong ulang blok parafin <?= $ihc['kode_block_ihc'] ?? '' ?> dan pengecatan imunohistokimia dengan antibodi ER, PR, Her2 Neu, serta Ki-67.</font>'
+            );
         }
     });
 </script>

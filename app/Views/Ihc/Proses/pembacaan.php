@@ -7,7 +7,7 @@
         <h6 class="m-0 font-weight-bold text-primary">Table Pembacaan</h6>
     </div>
     <div class="card-body">
-        <h1>Daftar Pembacaan</h1>
+        <h1>Daftar Pembacaan Imunohistokimia</h1>
         <a href="<?= base_url('/dashboard') ?>" class="btn btn-primary mb-3">Kembali</a>
         <?= $this->include('templates/proses/button_pembacaan'); ?>
 
@@ -24,7 +24,7 @@
                             <th>No</th>
                             <th>Aksi</th>
                             <th>Detail</th>
-                            <th>Kode ihc</th>
+                            <th>Kode Ihc</th>
                             <th>Nama Pasien</th>
                             <th>Dokter</th>
                             <th>Status Pembacaan</th>

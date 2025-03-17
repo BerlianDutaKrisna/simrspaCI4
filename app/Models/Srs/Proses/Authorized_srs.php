@@ -13,10 +13,11 @@ class Authorized_srs extends Model // Update nama model
     // Kolom-kolom yang dapat diisi melalui mass-assignment
     protected $allowedFields = [
         'id_srs',
-        'id_user_authorized_srs', // Update nama kolom
-        'status_authorized_srs', // Update nama kolom
-        'mulai_authorized_srs', // Update nama kolom
-        'selesai_authorized_srs', // Update nama kolom
+        'id_user_authorized_srs',
+        'status_authorized_srs',
+        'mulai_authorized_srs',
+        'selesai_authorized_srs',
+        'id_user_dokter_authorized_srs',
         'created_at',
         'updated_at'
     ];

@@ -13,10 +13,11 @@ class Authorized_hpa extends Model // Update nama model
     // Kolom-kolom yang dapat diisi melalui mass-assignment
     protected $allowedFields = [
         'id_hpa',
-        'id_user_authorized_hpa', // Update nama kolom
-        'status_authorized_hpa', // Update nama kolom
-        'mulai_authorized_hpa', // Update nama kolom
-        'selesai_authorized_hpa', // Update nama kolom
+        'id_user_authorized_hpa',
+        'status_authorized_hpa',
+        'mulai_authorized_hpa',
+        'selesai_authorized_hpa',
+        'id_user_dokter_authorized_hpa',
         'created_at',
         'updated_at'
     ];
