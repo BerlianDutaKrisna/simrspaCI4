@@ -75,7 +75,7 @@ class ihcController extends BaseController
         } else {
             $nextNumber = 1;
         }
-        $kodeihc = 'ihc.' . str_pad($nextNumber, 2, '0', STR_PAD_LEFT) . '/' . $currentYear;
+        $kodeihc = 'IHC.' . str_pad($nextNumber, 2, '0', STR_PAD_LEFT) . '/' . $currentYear;
         $data = [
             'id_user' => session()->get('id_user'),
             'nama_user' => session()->get('nama_user'),
@@ -126,6 +126,7 @@ class ihcController extends BaseController
                 'tanggal_permintaan' => $data['tanggal_permintaan'] ?: null,
                 'tanggal_hasil' => $data['tanggal_hasil'] ?: null,
                 'lokasi_spesimen' => $data['lokasi_spesimen'],
+                'kode_block_ihc' => $data['kode_block_ihc'],
                 'tindakan_spesimen' => $tindakan_spesimen,
                 'diagnosa_klinik' => $data['diagnosa_klinik'],
                 'status_ihc' => 'Penerimaan',
