@@ -386,6 +386,7 @@ class ihcController extends BaseController
                     $makroskopis_ihc = $this->request->getPost('makroskopis_ihc');
                     $mikroskopis_ihc = $this->request->getPost('mikroskopis_ihc');
                     $tindakan_spesimen = $this->request->getPost('tindakan_spesimen');
+                    $kode_block_ihc = $this->request->getPost('kode_block_ihc');
                     $hasil_ihc = $this->request->getPost('hasil_ihc');
                     // Simpan data lokasi, diagnosa, makroskopis, mikroskopis, hasil terlebih dahulu
                     $this->ihcModel->update($id_ihc, [
@@ -393,71 +394,72 @@ class ihcController extends BaseController
                         'diagnosa_klinik' => $diagnosa_klinik,
                         'makroskopis_ihc' => $makroskopis_ihc,
                         'mikroskopis_ihc' => $mikroskopis_ihc,
+                        'kode_block_ihc' => $kode_block_ihc,
                         'hasil_ihc' => $hasil_ihc,
                     ]);
                     // Setelah semua data tersimpan, buat data print_ihc
                     $print_ihc = '
                     <table width="800pt" height="80">
-                        <tbody>
-                            <tr>
-                                <td style="border: none;" width="200pt">
-                                    <font size="5" face="verdana"><b>LOKASI</b></font>
-                                </td>
-                                <td style="border: none;" width="10pt">
-                                    <font size="5" face="verdana"><b>:</b><br></font>
-                                </td>
-                                <td style="border: none;" width="590pt">
-                                    <font size="5" face="verdana">
-                                        <b>' . htmlspecialchars($lokasi_spesimen) . '<br></b>
-                                    </font>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td style="border: none;" width="200pt">
-                                    <font size="5" face="verdana"><b>DIAGNOSA KLINIK</b></font>
-                                </td>
-                                <td style="border: none;" width="10pt">
-                                    <font size="5" face="verdana"><b>:</b><br></font>
-                                </td>
-                                <td style="border: none;" width="590pt">
-                                    <font size="5" face="verdana"><b>' . htmlspecialchars($diagnosa_klinik) . '<br></b></font>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td style="border: none;" width="200pt">
-                                    <font size="5" face="verdana"><b>ICD</b></font>
-                                </td>
-                                <td style="border: none;" width="10pt">
-                                    <font size="5" face="verdana"><b>:</b></font>
-                                </td>
-                                <td style="border: none;" width="590pt">
-                                    <font size="5" face="verdana"><br></font>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <font size="5" face="verdana"><b>LAPORAN PEMERIKSAAN:<br></b></font>
-                    <div>
-                        <font size="5" face="verdana"><b> MAKROSKOPIK :</b></font>
-                    </div>
-                    <div>
-                        <font size="5" face="verdana">' . nl2br(htmlspecialchars(str_replace(['<p>', '</p>'], '', $makroskopis_ihc))) . '</font>
-                    </div>
-                    <br>
-                    <div>
-                        <font size="5" face="verdana"><b>MIKROSKOPIK :</b><br></font>
-                    </div>
-                    <div>
-                        <font size="5" face="verdana">' . nl2br(htmlspecialchars(str_replace(['<p>', '</p>'], '', $mikroskopis_ihc))) . '</font>
-                    </div>
-                    <br>
-                    <div>
-                        <font size="5" face="verdana"><b>KESIMPULAN :</b> ' . htmlspecialchars($lokasi_spesimen) . ', ' . htmlspecialchars($tindakan_spesimen) . ':</b></font>
-                    </div>
-                    <div>
-                        <font size="5" face="verdana"><b>' . strtoupper(htmlspecialchars(str_replace(['<p>', '</p>'], '', $hasil_ihc))) . '</b></font>
-                    </div>
-                    <br>';
+                            <tbody>
+                                <tr>
+                                    <td style="border: none;" width="200pt">
+                                        <font size="5" face="verdana"><b>LOKASI</b></font>
+                                    </td>
+                                    <td style="border: none;" width="10pt">
+                                        <font size="5" face="verdana"><b>:</b><br></font>
+                                    </td>
+                                    <td style="border: none;" width="590pt">
+                                        <font size="5" face="verdana">
+                                            <b>' . nl2br(htmlspecialchars(str_replace(['<p>', '</p>'], '', $lokasi_spesimen))) . '<br></b>
+                                        </font>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="border: none;" width="200pt">
+                                        <font size="5" face="verdana"><b>DIAGNOSA KLINIK</b></font>
+                                    </td>
+                                    <td style="border: none;" width="10pt">
+                                        <font size="5" face="verdana"><b>:</b><br></font>
+                                    </td>
+                                    <td style="border: none;" width="590pt">
+                                        <font size="5" face="verdana"><b>' . nl2br(htmlspecialchars(str_replace(['<p>', '</p>'], '', $diagnosa_klinik))) . '<br></b></font>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="border: none;" width="200pt">
+                                        <font size="5" face="verdana"><b>ICD</b></font>
+                                    </td>
+                                    <td style="border: none;" width="10pt">
+                                        <font size="5" face="verdana"><b>:</b></font>
+                                    </td>
+                                    <td style="border: none;" width="590pt">
+                                        <font size="5" face="verdana"><br></font>
+                                    </td>
+                                </tr>
+                            </tbody>
+                            </table>
+                            <font size="5" face="verdana"><b>LAPORAN PEMERIKSAAN:</b></font>
+                            <div>
+                                <font size="5" face="verdana"><b>MAKROSKOPIK :</b></font>
+                            </div>
+                            <div>
+                                <font size="5" face="verdana">' . nl2br(htmlspecialchars(str_replace(['<p>', '</p>'], '', $makroskopis_ihc))) . '</font>
+                            </div>
+                            <br>
+                            <div>
+                                <font size="5" face="verdana"><b>MIKROSKOPIK :</b></font>
+                            </div>
+                            <div>
+                                <font size="5" face="verdana">' . nl2br(htmlspecialchars(str_replace(['<p>', '</p>'], '', $mikroskopis_ihc))) . '</font>
+                            </div>
+                            <br>
+                            <div>
+                                <font size="5" face="verdana"><b>KESIMPULAN :</b> Blok Parafin No. ' . nl2br(htmlspecialchars(str_replace(['<p>', '</p>'], '', $kode_block_ihc))) . ', ' . nl2br(htmlspecialchars(str_replace(['<p>', '</p>'], '', $tindakan_spesimen))) . ':</b></font>
+                            </div>
+                            <div>
+                                <font size="5" face="verdana"><b>' . strtoupper(htmlspecialchars(str_replace(['<p>', '</p>'], '', $hasil_ihc))) . '</b></font>
+                            </div>
+                            <br>';
                     // Simpan print_ihc setelah semua data yang dibutuhkan telah ada
                     $this->ihcModel->update($id_ihc, [
                         'print_ihc' => $print_ihc,

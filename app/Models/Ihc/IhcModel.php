@@ -112,14 +112,14 @@ class ihcModel extends Model
 
     public function getihcWithRelationsProses($id_ihc)
     {
-        return $this->select('ihc.*, patient.*, penerimaan_ihc.*, pembacaan_ihc.*, penulisan_ihc.*, pemverifikasi_ihc.*, authorized_ihc.*, pecetakan_ihc.*, mutu_ihc.*')
+        return $this->select('ihc.*, patient.*, penerimaan_ihc.*, pembacaan_ihc.*, penulisan_ihc.*, pemverifikasi_ihc.*, authorized_ihc.*, pencetakan_ihc.*, mutu_ihc.*')
             ->join('patient', 'patient.id_pasien = ihc.id_pasien', 'left')
             ->join('penerimaan_ihc', 'penerimaan_ihc.id_ihc = ihc.id_ihc', 'left')
             ->join('pembacaan_ihc', 'pembacaan_ihc.id_ihc = ihc.id_ihc', 'left')
             ->join('penulisan_ihc', 'penulisan_ihc.id_ihc = ihc.id_ihc', 'left')
             ->join('pemverifikasi_ihc', 'pemverifikasi_ihc.id_ihc = ihc.id_ihc', 'left')
             ->join('authorized_ihc', 'authorized_ihc.id_ihc = ihc.id_ihc', 'left')
-            ->join('pecetakan_ihc', 'pecetakan_ihc.id_ihc = ihc.id_ihc', 'left')
+            ->join('pencetakan_ihc', 'pencetakan_ihc.id_ihc = ihc.id_ihc', 'left')
             ->join('mutu_ihc', 'mutu_ihc.id_ihc = ihc.id_ihc', 'left')
             ->where('ihc.id_ihc', $id_ihc)
             ->first();
