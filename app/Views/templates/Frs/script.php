@@ -25,32 +25,32 @@
         // Menangani event click pada tombol Penerima untuk memunculkan modal
         $('#penerimaModal').on('show.bs.modal', function(event) {
             var button = $(event.relatedTarget); // Tombol yang memicu modal
-            var id_hpa = button.data('id_hpa'); // Kode HPA
-            var penerima_hpa = button.data('penerima_hpa'); // Nama penerima
+            var id_frs = button.data('id_frs'); // Kode frs
+            var penerima_frs = button.data('penerima_frs'); // Nama penerima
 
             var modal = $(this);
-            modal.find('#id_hpa').val(id_hpa); // Isi id_hpa ke input hidden
-            modal.find('#penerima_hpa').val(""); // Isi penerima_hpa dengan data dari tombol
+            modal.find('#id_frs').val(id_frs); // Isi id_frs ke input hidden
+            modal.find('#penerima_frs').val(""); // Isi penerima_frs dengan data dari tombol
         });
         // ==========================
-        // Modal Status HPA
+        // Modal Status frs
         // ==========================
-        $('#statusHpaModal').on('show.bs.modal', function(event) {
+        $('#statusfrsModal').on('show.bs.modal', function(event) {
             var button = $(event.relatedTarget); // Button that triggered the modal
-            var idHpa = button.data('id_hpa'); // Extract id_hpa from data-* attributes
-            var statusHpa = button.data('status_hpa'); // Extract status_hpa
+            var idfrs = button.data('id_frs'); // Extract id_frs from data-* attributes
+            var statusfrs = button.data('status_frs'); // Extract status_frs
 
             var modal = $(this);
-            modal.find('.modal-body #id_hpa').val(idHpa); // Set id_hpa in the modal input
-            modal.find('.modal-body #status_hpa').val(statusHpa); // Set status_hpa in the select
+            modal.find('.modal-body #id_frs').val(idfrs); // Set id_frs in the modal input
+            modal.find('.modal-body #status_frs').val(statusfrs); // Set status_frs in the select
         });
 
         // ==========================
         // Hapus DATA
         // ==========================
-        $(document).on("click", ".delete-hpa, .delete-frs, .delete-pengirisan, .delete-pemotongan, .delete-pemprosesan, .delete-penanaman, .delete-pemotongan_tipis, .delete-pewarnaan, .delete-pembacaan, .delete-penulisan, .delete-pemverifikasi, .delete-autorized, .delete-pencetakan", function() {
-            var action = $(this).data("action"); // Menyimpan data action (hpa atau pengirisan)
-            var id_hpa = $(this).data("id_hpa");
+        $(document).on("click", ".delete-frs, .delete-frs, .delete-pengirisan, .delete-pemotongan, .delete-pemprosesan, .delete-penanaman, .delete-pemotongan_tipis, .delete-pewarnaan, .delete-pembacaan, .delete-penulisan, .delete-pemverifikasi, .delete-autorized, .delete-pencetakan", function() {
+            var action = $(this).data("action"); // Menyimpan data action (frs atau pengirisan)
+            var id_frs = $(this).data("id_frs");
             var id_frs = $(this).data("id_frs");
             var id_pengirisan = $(this).data("id_pengirisan");
             var id_pemotongan = $(this).data("id_pemotongan");
@@ -66,7 +66,7 @@
 
             // Menyimpan data ID yang dibutuhkan untuk operasi delete
             $("#confirmDelete").data("action", action);
-            $("#confirmDelete").data("id_hpa", id_hpa);
+            $("#confirmDelete").data("id_frs", id_frs);
             $("#confirmDelete").data("id_frs", id_frs);
             $("#confirmDelete").data("id_pengirisan", id_pengirisan);
             $("#confirmDelete").data("id_pemotongan", id_pemotongan);
@@ -87,7 +87,7 @@
         // Menangani klik konfirmasi hapus pada modal
         $("#confirmDelete").on("click", function() {
             var action = $(this).data("action");
-            var id_hpa = $(this).data("id_hpa");
+            var id_frs = $(this).data("id_frs");
             var id_frs = $(this).data("id_frs");
             var id_pengirisan = $(this).data("id_pengirisan");
             var id_pemotongan = $(this).data("id_pemotongan");
@@ -104,10 +104,10 @@
             var url = "";
             var data = {};
 
-            if (action === "hpa") {
-                url = "<?= base_url('hpa/delete'); ?>"; // URL penghapusan HPA
+            if (action === "frs") {
+                url = "<?= base_url('frs/delete'); ?>"; // URL penghapusan frs
                 data = {
-                    id_hpa: id_hpa
+                    id_frs: id_frs
                 };
             } else if (action === "frs") {
                 url = "<?= base_url('frs/delete'); ?>"; // URL penghapusan frs
@@ -118,67 +118,67 @@
                 url = "<?= base_url('pengirisan/delete'); ?>"; // URL penghapusan pengirisan
                 data = {
                     id_pengirisan: id_pengirisan,
-                    id_hpa: id_hpa
+                    id_frs: id_frs
                 };
             } else if (action === "pemotongan") {
                 url = "<?= base_url('pemotongan/delete'); ?>"; // URL penghapusan pemotongan
                 data = {
                     id_pemotongan: id_pemotongan,
-                    id_hpa: id_hpa
+                    id_frs: id_frs
                 };
             } else if (action === "pemprosesan") {
                 url = "<?= base_url('pemprosesan/delete'); ?>"; // URL penghapusan pemprosesan
                 data = {
                     id_pemprosesan: id_pemprosesan,
-                    id_hpa: id_hpa
+                    id_frs: id_frs
                 };
             } else if (action === "penanaman") {
                 url = "<?= base_url('penanaman/delete'); ?>"; // URL penghapusan penanaman
                 data = {
                     id_penanaman: id_penanaman,
-                    id_hpa: id_hpa
+                    id_frs: id_frs
                 };
             } else if (action === "pemotongan_tipis") {
                 url = "<?= base_url('pemotongan_tipis/delete'); ?>"; // URL penghapusan pemotongan_tipis
                 data = {
                     id_pemotongan_tipis: id_pemotongan_tipis,
-                    id_hpa: id_hpa
+                    id_frs: id_frs
                 };
             } else if (action === "pewarnaan") {
                 url = "<?= base_url('pewarnaan/delete'); ?>"; // URL penghapusan pewarnaan
                 data = {
                     id_pewarnaan: id_pewarnaan,
-                    id_hpa: id_hpa
+                    id_frs: id_frs
                 };
             } else if (action === "pembacaan") {
                 url = "<?= base_url('pembacaan/delete'); ?>"; // URL penghapusan pembacaan
                 data = {
                     id_pembacaan: id_pembacaan,
-                    id_hpa: id_hpa
+                    id_frs: id_frs
                 };
             } else if (action === "penulisan") {
                 url = "<?= base_url('penulisan/delete'); ?>"; // URL penghapusan penulisan
                 data = {
                     id_penulisan: id_penulisan,
-                    id_hpa: id_hpa
+                    id_frs: id_frs
                 };
             } else if (action === "pemverifikasi") {
                 url = "<?= base_url('pemverifikasi/delete'); ?>"; // URL penghapusan pemverifikasi
                 data = {
                     id_pemverifikasi: id_pemverifikasi,
-                    id_hpa: id_hpa
+                    id_frs: id_frs
                 };
             } else if (action === "autorized") {
                 url = "<?= base_url('autorized/delete'); ?>"; // URL penghapusan autorized
                 data = {
                     id_autorized: id_autorized,
-                    id_hpa: id_hpa
+                    id_frs: id_frs
                 };
             } else if (action === "pencetakan") {
                 url = "<?= base_url('pencetakan/delete'); ?>"; // URL penghapusan pencetakan
                 data = {
                     id_pencetakan: id_pencetakan,
-                    id_hpa: id_hpa
+                    id_frs: id_frs
                 };
             }
 
@@ -337,7 +337,7 @@
                         if (action === "penerimaan") {
                             // Menampilkan detail penerimaan
                             detailHtml = `
-                        <p><strong>Kode HPA:</strong> ${response.kode_hpa || "-"}</p>
+                        <p><strong>Kode frs:</strong> ${response.kode_frs || "-"}</p>
                         <p><strong>Dikerjakan Oleh:</strong> ${response.nama_user_penerimaan || "-"}</p>
                         <p><strong>Status Penerimaan:</strong> ${response.status_penerimaan || "-"}</p>
                         <p><strong>Mulai Penerimaan:</strong> ${formatDateTime(response.mulai_penerimaan)}</p>
@@ -346,7 +346,7 @@
                         } else if (action === "pengirisan") {
                             // Menampilkan detail pengirisan
                             detailHtml = `
-                        <p><strong>Kode HPA:</strong> ${response.kode_hpa || "-"}</p>
+                        <p><strong>Kode frs:</strong> ${response.kode_frs || "-"}</p>
                         <p><strong>Dikerjakan Oleh:</strong> ${response.nama_user_pengirisan || "-"}</p>
                         <p><strong>Status Pengirisan:</strong> ${response.status_pengirisan || "-"}</p>
                         <p><strong>Mulai Pengirisan:</strong> ${formatDateTime(response.mulai_pengirisan)}</p>
@@ -355,7 +355,7 @@
                         } else if (action === "pemotongan") {
                             // Menampilkan detail pemotongan
                             detailHtml = `
-                        <p><strong>Kode HPA:</strong> ${response.kode_hpa || "-"}</p>
+                        <p><strong>Kode frs:</strong> ${response.kode_frs || "-"}</p>
                         <p><strong>Dikerjakan Oleh:</strong> ${response.nama_user_pemotongan || "-"}</p>
                         <p><strong>Status Pemotongan:</strong> ${response.status_pemotongan || "-"}</p>
                         <p><strong>Mulai Pemotongan:</strong> ${formatDateTime(response.mulai_pemotongan)}</p>
@@ -364,7 +364,7 @@
                         } else if (action === "pemprosesan") {
                             // Menampilkan detail pemprosesan
                             detailHtml = `
-                        <p><strong>Kode HPA:</strong> ${response.kode_hpa || "-"}</p>
+                        <p><strong>Kode frs:</strong> ${response.kode_frs || "-"}</p>
                         <p><strong>Dikerjakan Oleh:</strong> ${response.nama_user_pemprosesan || "-"}</p>
                         <p><strong>Status Pemprosesan:</strong> ${response.status_pemprosesan || "-"}</p>
                         <p><strong>Mulai Pemprosesan:</strong> ${formatDateTime(response.mulai_pemprosesan)}</p>
@@ -373,7 +373,7 @@
                         } else if (action === "penanaman") {
                             // Menampilkan detail penanaman
                             detailHtml = `
-                        <p><strong>Kode HPA:</strong> ${response.kode_hpa || "-"}</p>
+                        <p><strong>Kode frs:</strong> ${response.kode_frs || "-"}</p>
                         <p><strong>Dikerjakan Oleh:</strong> ${response.nama_user_penanaman || "-"}</p>
                         <p><strong>Status Penanaman:</strong> ${response.status_penanaman || "-"}</p>
                         <p><strong>Mulai Penanaman:</strong> ${formatDateTime(response.mulai_penanaman)}</p>
@@ -382,7 +382,7 @@
                         } else if (action === "pemotongan_tipis") {
                             // Menampilkan detail pemotongan_tipis
                             detailHtml = `
-                        <p><strong>Kode HPA:</strong> ${response.kode_hpa || "-"}</p>
+                        <p><strong>Kode frs:</strong> ${response.kode_frs || "-"}</p>
                         <p><strong>Dikerjakan Oleh:</strong> ${response.nama_user_pemotongan_tipis || "-"}</p>
                         <p><strong>Status Pemotongan Tipis:</strong> ${response.status_pemotongan_tipis || "-"}</p>
                         <p><strong>Mulai Pemotongan Tipis:</strong> ${formatDateTime(response.mulai_pemotongan_tipis)}</p>
@@ -391,7 +391,7 @@
                         } else if (action === "pewarnaan") {
                             // Menampilkan detail pewarnaan
                             detailHtml = `
-                        <p><strong>Kode HPA:</strong> ${response.kode_hpa || "-"}</p>
+                        <p><strong>Kode frs:</strong> ${response.kode_frs || "-"}</p>
                         <p><strong>Dikerjakan Oleh:</strong> ${response.nama_user_pewarnaan || "-"}</p>
                         <p><strong>Status Pewarnaan:</strong> ${response.status_pewarnaan || "-"}</p>
                         <p><strong>Mulai Pewarnaan:</strong> ${formatDateTime(response.mulai_pewarnaan)}</p>
@@ -400,7 +400,7 @@
                         } else if (action === "pembacaan") {
                             // Menampilkan detail pembacaan
                             detailHtml = `
-                        <p><strong>Kode HPA:</strong> ${response.kode_hpa || "-"}</p>
+                        <p><strong>Kode frs:</strong> ${response.kode_frs || "-"}</p>
                         <p><strong>Dikerjakan Oleh:</strong> ${response.nama_user_pembacaan || "-"}</p>
                         <p><strong>Status Pembacaan:</strong> ${response.status_pembacaan || "-"}</p>
                         <p><strong>Mulai Pembacaan:</strong> ${formatDateTime(response.mulai_pembacaan)}</p>
@@ -409,7 +409,7 @@
                         } else if (action === "penulisan") {
                             // Menampilkan detail penulisan
                             detailHtml = `
-                        <p><strong>Kode HPA:</strong> ${response.kode_hpa || "-"}</p>
+                        <p><strong>Kode frs:</strong> ${response.kode_frs || "-"}</p>
                         <p><strong>Dikerjakan Oleh:</strong> ${response.nama_user_penulisan || "-"}</p>
                         <p><strong>Status Penulisan:</strong> ${response.status_penulisan || "-"}</p>
                         <p><strong>Mulai Penulisan:</strong> ${formatDateTime(response.mulai_penulisan)}</p>
@@ -418,7 +418,7 @@
                         } else if (action === "pemverifikasi") {
                             // Menampilkan detail pemverifikasi
                             detailHtml = `
-                        <p><strong>Kode HPA:</strong> ${response.kode_hpa || "-"}</p>
+                        <p><strong>Kode frs:</strong> ${response.kode_frs || "-"}</p>
                         <p><strong>Dikerjakan Oleh:</strong> ${response.nama_user_pemverifikasi || "-"}</p>
                         <p><strong>Status Pemverifikasi:</strong> ${response.status_pemverifikasi || "-"}</p>
                         <p><strong>Mulai Pemverifikasi:</strong> ${formatDateTime(response.mulai_pemverifikasi)}</p>
@@ -427,7 +427,7 @@
                         } else if (action === "autorized") {
                             // Menampilkan detail autorized
                             detailHtml = `
-                        <p><strong>Kode HPA:</strong> ${response.kode_hpa || "-"}</p>
+                        <p><strong>Kode frs:</strong> ${response.kode_frs || "-"}</p>
                         <p><strong>Dikerjakan Oleh:</strong> ${response.nama_user_autorized || "-"}</p>
                         <p><strong>Status autorized:</strong> ${response.status_autorized || "-"}</p>
                         <p><strong>Mulai autorized:</strong> ${formatDateTime(response.mulai_autorized)}</p>
@@ -436,7 +436,7 @@
                         } else if (action === "pencetakan") {
                             // Menampilkan detail pencetakan
                             detailHtml = `
-                        <p><strong>Kode HPA:</strong> ${response.kode_hpa || "-"}</p>
+                        <p><strong>Kode frs:</strong> ${response.kode_frs || "-"}</p>
                         <p><strong>Dikerjakan Oleh:</strong> ${response.nama_user_pencetakan || "-"}</p>
                         <p><strong>Status Pencetakan:</strong> ${response.status_pencetakan || "-"}</p>
                         <p><strong>Mulai Pencetakan:</strong> ${formatDateTime(response.mulai_pencetakan)}</p>
@@ -445,7 +445,7 @@
                         } else if (action === "mutu") {
                             // Menampilkan detail mutu
                             detailHtml = `
-                        <p><strong>Kode HPA:</strong> ${response.kode_hpa || "-"}</p>
+                        <p><strong>Kode frs:</strong> ${response.kode_frs || "-"}</p>
                         <p><strong>Volume cairan sesuai:</strong> ${response.indikator_1 || "-"}</p>
                         <p><strong>Jaringan terfiksasi merata:</strong> ${response.indikator_2 || "-"}</p>
                         <p><strong>Blok parafin tidak ada fragmentasi:</strong> ${response.indikator_3 || "-"}</p>

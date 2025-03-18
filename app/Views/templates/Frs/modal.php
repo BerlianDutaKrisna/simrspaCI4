@@ -3,17 +3,17 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="penerimaModalLabel">Penerima Hasil HPA</h5>
+                <h5 class="modal-title" id="penerimaModalLabel">Penerima Hasil frs</h5>
                 <button class="close" type="button" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">×</span>
                 </button>
             </div>
-            <form action="<?= base_url('hpa/update_buku_penerima') ?>" method="POST">
+            <form action="<?= base_url('frs/update_buku_penerima') ?>" method="POST">
                 <div class="modal-body">
-                    <input type="hidden" id="id_hpa" name="id_hpa" value="">
+                    <input type="hidden" id="id_frs" name="id_frs" value="">
                     <div class="form-group">
-                        <label for="penerima_hpa">Nama Penerima / Hubungan dengan Pasien</label>
-                        <input type="text" class="form-control" id="penerima_hpa" name="penerima_hpa" required>
+                        <label for="penerima_frs">Nama Penerima / Hubungan dengan Pasien</label>
+                        <input type="text" class="form-control" id="penerima_frs" name="penerima_frs" required>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -25,35 +25,35 @@
     </div>
 </div>
 
-<!-- Modal Status Hpa -->
-<div class="modal fade" id="statusHpaModal" tabindex="-1" role="dialog" aria-labelledby="statusHpaModalLabel" aria-hidden="true">
+<!-- Modal Status frs -->
+<div class="modal fade" id="statusfrsModal" tabindex="-1" role="dialog" aria-labelledby="statusfrsModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="statusHpaModalLabel">Edit Status Hpa</h5>
+                <h5 class="modal-title" id="statusfrsModalLabel">Edit Status frs</h5>
                 <button class="close" type="button" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">×</span>
                 </button>
             </div>
-            <form action="<?= base_url('hpa/update_status_hpa') ?>" method="POST">
+            <form action="<?= base_url('frs/update_status_frs') ?>" method="POST">
                 <div class="modal-body">
-                    <input type="hidden" id="id_hpa" name="id_hpa" value="">
+                    <input type="hidden" id="id_frs" name="id_frs" value="">
                     <div class="form-group">
-                        <label for="status_hpa">Status Hpa</label>
-                        <select class="form-control" id="status_hpa" name="status_hpa">
-                            <option value="Penerimaan" <?= old('status_hpa') == 'Penerimaan' ? 'selected' : '' ?>>Penerimaan</option>
-                            <option value="Pengirisan" <?= old('status_hpa') == 'Pengirisan' ? 'selected' : '' ?>>Pengirisan</option>
-                            <option value="Pemotongan" <?= old('status_hpa') == 'Pemotongan' ? 'selected' : '' ?>>Pemotongan</option>
-                            <option value="Pemprosesan" <?= old('status_hpa') == 'Pemprosesan' ? 'selected' : '' ?>>Pemprosesan</option>
-                            <option value="Penanaman" <?= old('status_hpa') == 'Penanaman' ? 'selected' : '' ?>>Penanaman</option>
-                            <option value="Pemotongan Tipis" <?= old('status_hpa') == 'Pemotongan Tipis' ? 'selected' : '' ?>>Pemotongan Tipis</option>
-                            <option value="Pewarnaan" <?= old('status_hpa') == 'Pewarnaan' ? 'selected' : '' ?>>Pewarnaan</option>
-                            <option value="Pembacaan" <?= old('status_hpa') == 'Pembacaan' ? 'selected' : '' ?>>Pembacaan</option>
-                            <option value="Penulisan" <?= old('status_hpa') == 'Penulisan' ? 'selected' : '' ?>>Penulisan</option>
-                            <option value="Pemverifikasi" <?= old('status_hpa') == 'Pemverifikasi' ? 'selected' : '' ?>>Pemverifikasi</option>
-                            <option value="Authorized" <?= old('status_hpa') == 'Authorized' ? 'selected' : '' ?>>Authorized</option>
-                            <option value="Pencetakan" <?= old('status_hpa') == 'Pencetakan' ? 'selected' : '' ?>>Pencetakan</option>
-                            <option value="Selesai" <?= old('status_hpa') == 'Selesai' ? 'selected' : '' ?>>Selesai</option>
+                        <label for="status_frs">Status frs</label>
+                        <select class="form-control" id="status_frs" name="status_frs">
+                            <option value="Penerimaan" <?= old('status_frs') == 'Penerimaan' ? 'selected' : '' ?>>Penerimaan</option>
+                            <option value="Pengirisan" <?= old('status_frs') == 'Pengirisan' ? 'selected' : '' ?>>Pengirisan</option>
+                            <option value="Pemotongan" <?= old('status_frs') == 'Pemotongan' ? 'selected' : '' ?>>Pemotongan</option>
+                            <option value="Pemprosesan" <?= old('status_frs') == 'Pemprosesan' ? 'selected' : '' ?>>Pemprosesan</option>
+                            <option value="Penanaman" <?= old('status_frs') == 'Penanaman' ? 'selected' : '' ?>>Penanaman</option>
+                            <option value="Pemotongan Tipis" <?= old('status_frs') == 'Pemotongan Tipis' ? 'selected' : '' ?>>Pemotongan Tipis</option>
+                            <option value="Pewarnaan" <?= old('status_frs') == 'Pewarnaan' ? 'selected' : '' ?>>Pewarnaan</option>
+                            <option value="Pembacaan" <?= old('status_frs') == 'Pembacaan' ? 'selected' : '' ?>>Pembacaan</option>
+                            <option value="Penulisan" <?= old('status_frs') == 'Penulisan' ? 'selected' : '' ?>>Penulisan</option>
+                            <option value="Pemverifikasi" <?= old('status_frs') == 'Pemverifikasi' ? 'selected' : '' ?>>Pemverifikasi</option>
+                            <option value="Authorized" <?= old('status_frs') == 'Authorized' ? 'selected' : '' ?>>Authorized</option>
+                            <option value="Pencetakan" <?= old('status_frs') == 'Pencetakan' ? 'selected' : '' ?>>Pencetakan</option>
+                            <option value="Selesai" <?= old('status_frs') == 'Selesai' ? 'selected' : '' ?>>Selesai</option>
                         </select>
                     </div>
                 </div>

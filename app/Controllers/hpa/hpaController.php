@@ -52,7 +52,7 @@ class HpaController extends BaseController
 
     public function index()
     {
-        $hpaData = $this->hpaModel->getHpaWithPatient();
+        $hpaData = $this->hpaModel->gethpaWithPatient();
         $data = [
             'id_user' => session()->get('id_user'),
             'nama_user' => session()->get('nama_user'),
@@ -61,6 +61,21 @@ class HpaController extends BaseController
         return view('Hpa/index', $data);
     }
 
+    public function index_buku_penerima()
+    {
+        // Mengambil data HPA menggunakan properti yang sudah ada
+        $hpaData = $this->hpaModel->gethpapaWithPatient() ?? [];
+
+        // Kirimkan data ke view
+        $data = [
+            'id_user'    => session()->get('id_user'),
+            'nama_user'  => session()->get('nama_user'),
+            'hpaData' => $hpaData,
+        ];
+        
+        return view('hpa/index_buku_penerima', $data);
+    }
+    
     public function register()
     {
         $lastHPA = $this->hpaModel->getLastKodeHPA();
@@ -176,23 +191,6 @@ class HpaController extends BaseController
         } else {
             return $this->response->setJSON(['success' => false, 'message' => 'Gagal menghapus data.']);
         }
-    }
-
-
-    public function index_buku_penerima()
-    {
-        // Mengambil data HPA menggunakan properti yang sudah ada
-        $hpaData = $this->hpaModel->getHpaWithAllPatient() ?? [];
-
-        // Kirimkan data ke view
-        $data = [
-            'id_user'    => session()->get('id_user'),
-            'nama_user'  => session()->get('nama_user'),
-            'hpaData' => $hpaData,
-        ];
-        
-        return view('hpa/index_buku_penerima', $data);
-
     }
 
     public function update_buku_penerima()

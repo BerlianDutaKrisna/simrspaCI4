@@ -1,18 +1,18 @@
 <?php
 
-namespace App\Controllers\Srs;
+namespace App\Controllers\srs;
 
 use App\Controllers\BaseController;
-use App\Models\Srs\srsModel;
+use App\Models\srs\srsModel;
 use App\Models\UsersModel;
 use App\Models\PatientModel;
-use App\Models\Srs\Proses\Penerimaan_srs;
-use App\Models\Srs\Proses\Pembacaan_srs;
-use App\Models\Srs\Proses\Penulisan_srs;
-use App\Models\Srs\Proses\Pemverifikasi_srs;
-use App\Models\Srs\Proses\Authorized_srs;
-use App\Models\Srs\Proses\Pencetakan_srs;
-use App\Models\Srs\Mutu_srs;
+use App\Models\srs\Proses\Penerimaan_srs;
+use App\Models\srs\Proses\Pembacaan_srs;
+use App\Models\srs\Proses\Penulisan_srs;
+use App\Models\srs\Proses\Pemverifikasi_srs;
+use App\Models\srs\Proses\Authorized_srs;
+use App\Models\srs\Proses\Pencetakan_srs;
+use App\Models\srs\Mutu_srs;
 use Exception;
 
 class srsController extends BaseController
@@ -47,7 +47,7 @@ class srsController extends BaseController
 
     public function index()
     {
-        $srsData = $this->srsModel->getsrsWitsrstient();
+        $srsData = $this->srsModel->getsrsWithPatient();
         $data = [
             'id_user' => session()->get('id_user'),
             'nama_user' => session()->get('nama_user'),
@@ -55,6 +55,21 @@ class srsController extends BaseController
         ];
         
         return view('srs/index', $data);
+    }
+
+    public function index_buku_penerima()
+    {
+        // Mengambil data srs menggunakan properti yang sudah ada
+        $srsData = $this->srsModel->getsrsWithPatient() ?? [];
+
+        // Kirimkan data ke view
+        $data = [
+            'id_user'    => session()->get('id_user'),
+            'nama_user'  => session()->get('nama_user'),
+            'srsData' => $srsData,
+        ];
+        
+        return view('srs/index_buku_penerima', $data);
     }
 
     public function register()
@@ -75,7 +90,7 @@ class srsController extends BaseController
         } else {
             $nextNumber = 1;
         }
-        $kodesrs = 'SRS.' . str_pad($nextNumber, 2, '0', STR_PAD_LEFT) . '/' . $currentYear;
+        $kodesrs = 'srs.' . str_pad($nextNumber, 2, '0', STR_PAD_LEFT) . '/' . $currentYear;
         $data = [
             'id_user' => session()->get('id_user'),
             'nama_user' => session()->get('nama_user'),
@@ -174,35 +189,6 @@ class srsController extends BaseController
         }
     }
     
-    public function index_buku_penerima()
-    {
-        // Mengambil data dari session
-        $session = session();
-        $id_user = $session->get('id_user');
-        $nama_user = $session->get('nama_user');
-
-        // Memastikan session terisi dengan benar
-        if (!$id_user || !$nama_user) {
-            return redirect()->to('login'); // Redirect ke halaman login jika session tidak ada
-        }
-
-        // Memanggil model srsModel untuk mengambil data
-        $srsModel = new srsModel();
-        $srsData = $srsModel->getsrsWithAllPatient();
-
-        // Pastikan $srsData berisi array
-        if (!$srsData) {
-            $srsData = []; // Jika tidak ada data, set menjadi array kosong
-        }
-
-        // Kirimkan data ke view
-        return view('srs/index_buku_penerima', [
-            'srsData' => $srsData,
-            'id_user' => $id_user,
-            'nama_user' => $nama_user
-        ]);
-    }
-
     // Menampilkan form edit srs
     public function edit($id_srs)
     {
@@ -243,45 +229,6 @@ class srsController extends BaseController
         ];
         
         return view('srs/edit', $data);
-    }
-
-    // menampilkan from edit srs
-    public function edit_makroskopis($id_srs)
-    {
-        // Ambil data srs berdasarkan ID  
-        $srs = $this->srsModel->getsrsWithRelationsProses($id_srs);
-
-        if (!$srs) {
-            return redirect()->back()->with('message', ['error' => 'srs tidak ditemukan.']);
-        }
-        $id_pembacaan_srs = $srs['id_pembacaan_srs'];
-        // Ambil data pembacaan berdasarkan id_pembacaan_srs
-        $pembacaan = $this->pembacaan_srs->find($id_pembacaan_srs);
-        if (!empty($pembacaan)) {
-            // Ambil nama dokter dan analis jika ID tersedia
-            $pembacaan['dokter_nama'] = !empty($pembacaan['id_user_dokter_pembacaan_srs'])
-                ? ($this->usersModel->find($pembacaan['id_user_dokter_pembacaan_srs'])['nama_user'] ?? null)
-                : null;
-
-            $pembacaan['analis_nama'] = !empty($pembacaan['id_user_pembacaan_srs'])
-                ? ($this->usersModel->find($pembacaan['id_user_pembacaan_srs'])['nama_user'] ?? null)
-                : null;
-        } else {
-            // Jika data pembacaan tidak ditemukan, set sebagai array kosong untuk mencegah error
-            $pembacaan = [];
-        }
-        // Ambil data pengguna dengan status "Dokter"
-        $users = $this->usersModel->where('status_user', 'Dokter')->findAll();
-        // Persiapkan data yang akan dikirim ke view
-        $data = [
-            'srs'        => $srs,
-            'pembacaan' => $pembacaan,
-            'users'      => $users,
-            'id_user'    => $this->session->get('id_user'),
-            'nama_user'  => $this->session->get('nama_user'),
-        ];
-        
-        return view('srs/edit_makroskopis', $data);
     }
 
     // Menampilkan form edit srs mikroskopis
@@ -412,14 +359,6 @@ class srsController extends BaseController
                 }
             }
             switch ($page_source) {
-                case 'edit_makroskopis':
-                    $id_penerimaan_srs = $this->request->getPost('id_penerimaan_srs');
-                    $this->penerimaan_srs->update($id_penerimaan_srs, [
-                        'id_user_penerimaan_srs_srs' => $id_user,
-                        'status_penerimaan_srs' => 'Selesai Penerimaan',
-                        'selesai_penerimaan_srs' => date('Y-m-d H:i:s'),
-                    ]);
-                    return redirect()->to('srs/edit_makroskopis/' . $id_srs)->with('success', 'Data mikroskopis berhasil diperbarui.');
                 case 'edit_mikroskopis':
                     $id_pembacaan_srs = $this->request->getPost('id_pembacaan_srs');
                     $this->pembacaan_srs->update($id_pembacaan_srs, [

@@ -57,6 +57,21 @@ class FrsController extends BaseController
         return view('frs/index', $data);
     }
 
+    public function index_buku_penerima()
+    {
+        // Mengambil data frs menggunakan properti yang sudah ada
+        $frsData = $this->frsModel->getfrsWithPatient() ?? [];
+
+        // Kirimkan data ke view
+        $data = [
+            'id_user'    => session()->get('id_user'),
+            'nama_user'  => session()->get('nama_user'),
+            'frsData' => $frsData,
+        ];
+        
+        return view('frs/index_buku_penerima', $data);
+    }
+
     public function register()
     {
         $lastfrs = $this->frsModel->getLastKodefrs();
@@ -174,35 +189,6 @@ class FrsController extends BaseController
         }
     }
     
-    public function index_buku_penerima()
-    {
-        // Mengambil data dari session
-        $session = session();
-        $id_user = $session->get('id_user');
-        $nama_user = $session->get('nama_user');
-
-        // Memastikan session terisi dengan benar
-        if (!$id_user || !$nama_user) {
-            return redirect()->to('login'); // Redirect ke halaman login jika session tidak ada
-        }
-
-        // Memanggil model frsModel untuk mengambil data
-        $frsModel = new frsModel();
-        $frsData = $frsModel->getfrsWithAllPatient();
-
-        // Pastikan $frsData berisi array
-        if (!$frsData) {
-            $frsData = []; // Jika tidak ada data, set menjadi array kosong
-        }
-
-        // Kirimkan data ke view
-        return view('frs/index_buku_penerima', [
-            'frsData' => $frsData,
-            'id_user' => $id_user,
-            'nama_user' => $nama_user
-        ]);
-    }
-
     // Menampilkan form edit frs
     public function edit($id_frs)
     {

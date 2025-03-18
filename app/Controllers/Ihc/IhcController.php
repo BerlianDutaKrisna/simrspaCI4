@@ -57,6 +57,21 @@ class ihcController extends BaseController
         return view('ihc/index', $data);
     }
 
+    public function index_buku_penerima()
+    {
+        // Mengambil data ihc menggunakan properti yang sudah ada
+        $ihcData = $this->ihcModel->getihcWithPatient() ?? [];
+
+        // Kirimkan data ke view
+        $data = [
+            'id_user'    => session()->get('id_user'),
+            'nama_user'  => session()->get('nama_user'),
+            'ihcData' => $ihcData,
+        ];
+        
+        return view('ihc/index_buku_penerima', $data);
+    }
+
     public function register()
     {
         $lastihc = $this->ihcModel->getLastKodeihc();
@@ -175,35 +190,6 @@ class ihcController extends BaseController
         }
     }
     
-    public function index_buku_penerima()
-    {
-        // Mengambil data dari session
-        $session = session();
-        $id_user = $session->get('id_user');
-        $nama_user = $session->get('nama_user');
-
-        // Memastikan session terisi dengan benar
-        if (!$id_user || !$nama_user) {
-            return redirect()->to('login'); // Redirect ke halaman login jika session tidak ada
-        }
-
-        // Memanggil model ihcModel untuk mengambil data
-        $ihcModel = new ihcModel();
-        $ihcData = $ihcModel->getihcWithAllPatient();
-
-        // Pastikan $ihcData berisi array
-        if (!$ihcData) {
-            $ihcData = []; // Jika tidak ada data, set menjadi array kosong
-        }
-
-        // Kirimkan data ke view
-        return view('ihc/index_buku_penerima', [
-            'ihcData' => $ihcData,
-            'id_user' => $id_user,
-            'nama_user' => $nama_user
-        ]);
-    }
-
     // Menampilkan form edit ihc
     public function edit($id_ihc)
     {

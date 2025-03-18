@@ -73,6 +73,10 @@ $routes->group('frs', ['namespace' => 'App\Controllers\Frs'], function ($routes)
     $routes->get('edit_print/(:segment)', 'FrsController::edit_print/$1');
     $routes->post('update/(:segment)', 'FrsController::update/$1');
     $routes->post('update_print/(:segment)', 'FrsController::update_print/$1');
+    $routes->post('update_buku_penerima', 'FrsController::update_buku_penerima');
+    $routes->post('update_status', 'FrsController::update_status');
+    $routes->post('uploadFotoMakroskopis/(:segment)', 'FrsController::uploadFotoMakroskopis/$1');
+    $routes->post('uploadFotoMikroskopis/(:segment)', 'FrsController::uploadFotoMikroskopis/$1');
 });
 
 // Route untuk srs
@@ -89,6 +93,10 @@ $routes->group('srs', ['namespace' => 'App\Controllers\Srs'], function ($routes)
     $routes->get('edit_print/(:segment)', 'SrsController::edit_print/$1');
     $routes->post('update/(:segment)', 'SrsController::update/$1');
     $routes->post('update_print/(:segment)', 'SrsController::update_print/$1');
+    $routes->post('update_buku_penerima', 'SrsController::update_buku_penerima');
+    $routes->post('update_status', 'SrsController::update_status');
+    $routes->post('uploadFotoMakroskopis/(:segment)', 'SrsController::uploadFotoMakroskopis/$1');
+    $routes->post('uploadFotoMikroskopis/(:segment)', 'SrsController::uploadFotoMikroskopis/$1');
 });
 
 // Route untuk ihc
@@ -104,6 +112,10 @@ $routes->group('ihc', ['namespace' => 'App\Controllers\Ihc'], function ($routes)
     $routes->get('edit_print/(:segment)', 'IhcController::edit_print/$1');
     $routes->post('update/(:segment)', 'IhcController::update/$1');
     $routes->post('update_print/(:segment)', 'IhcController::update_print/$1');
+    $routes->post('update_buku_penerima', 'ihcController::update_buku_penerima');
+    $routes->post('update_status', 'ihcController::update_status');
+    $routes->post('uploadFotoMakroskopis/(:segment)', 'ihcController::uploadFotoMakroskopis/$1');
+    $routes->post('uploadFotoMikroskopis/(:segment)', 'ihcController::uploadFotoMikroskopis/$1');
 });
 
 // Route untuk Penerimaan hpa
