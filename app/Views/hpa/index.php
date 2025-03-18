@@ -77,7 +77,7 @@
     </div>
 </div>
 
-<?= $this->include('templates/exam/modal_exam') ?>
+<?= $this->include('templates/hpa/modal') ?>
 <?= $this->include('templates/notifikasi') ?>
 <?= $this->include('templates/dashboard/footer_dashboard') ?>
-<?= $this->include('templates/exam/script_exam') ?>
+<?= $this->include('templates/hpa/script') ?>

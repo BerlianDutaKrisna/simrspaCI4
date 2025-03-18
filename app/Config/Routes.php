@@ -43,6 +43,7 @@ $routes->group('patient', function ($routes) {
 // Route untuk hpa
 $routes->group('hpa', ['namespace' => 'App\Controllers\Hpa'], function ($routes) {
     $routes->get('index', 'HpaController::index');
+    $routes->get('index_buku_penerima', 'HpaController::index_buku_penerima');
     $routes->get('register', 'HpaController::register');
     $routes->post('insert', 'HpaController::insert');
     $routes->post('delete', 'HpaController::delete');
@@ -53,7 +54,6 @@ $routes->group('hpa', ['namespace' => 'App\Controllers\Hpa'], function ($routes)
     $routes->get('edit_print/(:segment)', 'HpaController::edit_print/$1');
     $routes->post('update/(:segment)', 'HpaController::update/$1');
     $routes->post('update_print/(:segment)', 'HpaController::update_print/$1');
-    $routes->get('index_buku_penerima', 'HpaController::index_buku_penerima');
     $routes->post('update_buku_penerima', 'HpaController::update_buku_penerima');
     $routes->post('update_status', 'HpaController::update_status');
     $routes->post('uploadFotoMakroskopis/(:segment)', 'HpaController::uploadFotoMakroskopis/$1');
@@ -63,6 +63,7 @@ $routes->group('hpa', ['namespace' => 'App\Controllers\Hpa'], function ($routes)
 // Route untuk frs
 $routes->group('frs', ['namespace' => 'App\Controllers\Frs'], function ($routes) {
     $routes->get('index', 'FrsController::index');
+    $routes->get('index_buku_penerima', 'HpaController::index_buku_penerima');
     $routes->get('register', 'FrsController::register');
     $routes->post('insert', 'FrsController::insert');
     $routes->post('delete', 'HpaController::delete');
@@ -79,11 +80,13 @@ $routes->group('srs', ['namespace' => 'App\Controllers\Srs'], function ($routes)
     $routes->get('register', 'SrsController::register');
     $routes->post('insert', 'SrsController::insert');
     $routes->get('index', 'SrsController::index');
+    $routes->get('index_buku_penerima', 'HpaController::index_buku_penerima');
 });
 
 // Route untuk ihc
 $routes->group('ihc', ['namespace' => 'App\Controllers\Ihc'], function ($routes) {
     $routes->get('index', 'IhcController::index');
+    $routes->get('index_buku_penerima', 'HpaController::index_buku_penerima');
     $routes->get('register', 'IhcController::register');
     $routes->post('insert', 'IhcController::insert');
     $routes->post('delete', 'HpaController::delete');

@@ -8,7 +8,7 @@
                     <span aria-hidden="true">×</span>
                 </button>
             </div>
-            <form action="<?= base_url('exam/update_buku_penerima') ?>" method="POST">
+            <form action="<?= base_url('hpa/update_buku_penerima') ?>" method="POST">
                 <div class="modal-body">
                     <input type="hidden" id="id_hpa" name="id_hpa" value="">
                     <div class="form-group">

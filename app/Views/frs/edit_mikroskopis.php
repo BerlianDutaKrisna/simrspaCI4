@@ -1,4 +1,4 @@
-<?= $this->include('templates/exam/header_edit_exam'); ?>
+<?= $this->include('templates/frs/header_edit'); ?>
 <?= $this->include('templates/dashboard/navbar_dashboard'); ?>
 
 <div class="container-fluid">
@@ -217,4 +217,4 @@
     </div>
 </div>
 <?= $this->include('templates/notifikasi') ?>
-<?= $this->include('templates/exam/footer_edit_exam'); ?>
+<?= $this->include('templates/frs/footer_edit'); ?>
