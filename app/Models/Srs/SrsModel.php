@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Models\Srs;
+namespace App\Models\srs;
 
 use CodeIgniter\Model;
 
-class SrsModel extends Model
+class srsModel extends Model
 {
     protected $table = 'srs';
     protected $primaryKey = 'id_srs';
@@ -86,7 +86,7 @@ class SrsModel extends Model
     }
     public function countAuthorizedsrs()
     {
-        return $this->where('status_srs =', 'Autorized')->countAllResults() ?? 0;
+        return $this->where('status_srs =', 'Authorized')->countAllResults() ?? 0;
     }
     public function countPencetakansrs()
     {
@@ -102,19 +102,24 @@ class SrsModel extends Model
             ->findAll();
     }
 
-    public function insertsrs(array $data): bool
-    {
-        if ($this->where('kode_srs', $data['kode_srs'])->first()) {
-            return false;
-        }
-
-        return $this->insertsrs($data) > 0;
-    }
-
-    public function getsrsWitsrstient($id_srs)
+    public function getsrsWithPatient()
     {
         return $this->select('srs.*, patient.*')
             ->join('patient', 'patient.id_pasien = srs.id_pasien')
+            ->findAll();
+    }
+
+    public function getsrsWithRelationsProses($id_srs)
+    {
+        return $this->select('srs.*, patient.*, penerimaan_srs.*, pembacaan_srs.*, penulisan_srs.*, pemverifikasi_srs.*, authorized_srs.*, pencetakan_srs.*, mutu_srs.*')
+            ->join('patient', 'patient.id_pasien = srs.id_pasien', 'left')
+            ->join('penerimaan_srs', 'penerimaan_srs.id_srs = srs.id_srs', 'left')
+            ->join('pembacaan_srs', 'pembacaan_srs.id_srs = srs.id_srs', 'left')
+            ->join('penulisan_srs', 'penulisan_srs.id_srs = srs.id_srs', 'left')
+            ->join('pemverifikasi_srs', 'pemverifikasi_srs.id_srs = srs.id_srs', 'left')
+            ->join('authorized_srs', 'authorized_srs.id_srs = srs.id_srs', 'left')
+            ->join('pencetakan_srs', 'pencetakan_srs.id_srs = srs.id_srs', 'left')
+            ->join('mutu_srs', 'mutu_srs.id_srs = srs.id_srs', 'left')
             ->where('srs.id_srs', $id_srs)
             ->first();
     }

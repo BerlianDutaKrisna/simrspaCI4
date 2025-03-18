@@ -1,48 +1,48 @@
 <?php
 
-namespace App\Controllers\Frs\Proses;
+namespace App\Controllers\Srs\Proses;
 
 use App\Controllers\BaseController;
-use App\Models\Frs\frsModel;
+use App\Models\Srs\srsModel;
 use App\Models\UsersModel;
 use App\Models\PatientModel;
-use App\Models\Frs\Proses\Authorized_frs;
-use App\Models\Frs\Proses\Pencetakan_frs;
-use App\Models\Frs\Mutu_frs;
+use App\Models\Srs\Proses\Authorized_srs;
+use App\Models\Srs\Proses\Pencetakan_srs;
+use App\Models\Srs\Mutu_srs;
 use Exception;
 
 class Authorized extends BaseController
 {
-    protected $frsModel;
+    protected $srsModel;
     protected $userModel;
     protected $patientModel;
-    protected $authorized_frs;
-    protected $pencetakan_frs;
-    protected $mutu_frs;
+    protected $authorized_srs;
+    protected $pencetakan_srs;
+    protected $mutu_srs;
     protected $validation;
 
     public function __construct()
     {
-        $this->frsModel = new frsModel();
+        $this->srsModel = new srsModel();
         $this->userModel = new UsersModel();
         $this->patientModel = new PatientModel();
-        $this->authorized_frs = new Authorized_frs();
-        $this->pencetakan_frs = new Pencetakan_frs();
-        $this->mutu_frs = new Mutu_frs();
+        $this->authorized_srs = new Authorized_srs();
+        $this->pencetakan_srs = new Pencetakan_srs();
+        $this->mutu_srs = new Mutu_srs();
         $this->validation =  \Config\Services::validation();
         $this->session = \Config\Services::session();
     }
 
     public function index()
     {
-        $authorizedData_frs = $this->authorized_frs->getauthorized_frs();
+        $authorizedData_srs = $this->authorized_srs->getauthorized_srs();
         $data = [
             'nama_user' => $this->session->get('nama_user'),
             'counts' => $this->getCounts(),
-            'authorizedDatafrs' => $authorizedData_frs,
+            'authorizedDatasrs' => $authorizedData_srs,
         ];
         
-        return view('frs/Proses/authorized', $data);
+        return view('srs/Proses/authorized', $data);
     }
 
     public function proses_authorized()
@@ -57,58 +57,58 @@ class Authorized extends BaseController
             }
 
             foreach ($selectedIds as $id) {
-                list($id_authorized_frs, $id_frs, $id_mutu_frs) = explode(':', $id);
-                $this->processAction($action, $id_authorized_frs, $id_frs, $id_user, $id_mutu_frs);
+                list($id_authorized_srs, $id_srs, $id_mutu_srs) = explode(':', $id);
+                $this->processAction($action, $id_authorized_srs, $id_srs, $id_user, $id_mutu_srs);
             }
 
-            return redirect()->to('authorized_frs/index');
+            return redirect()->to('authorized_srs/index');
         } catch (Exception $e) {
             return redirect()->back()->with('error', $e->getMessage());
         }
     }
 
-    private function processAction($action, $id_authorized_frs, $id_frs, $id_user, $id_mutu_frs)
+    private function processAction($action, $id_authorized_srs, $id_srs, $id_user, $id_mutu_srs)
     {
         date_default_timezone_set('Asia/Jakarta');
 
         try {
             switch ($action) {
                 case 'mulai':
-                    $this->authorized_frs->update($id_authorized_frs, [
-                        'id_user_authorized_frs' => $id_user,
-                        'status_authorized_frs' => 'Proses Authorized',
-                        'mulai_authorized_frs' => date('Y-m-d H:i:s'),
+                    $this->authorized_srs->update($id_authorized_srs, [
+                        'id_user_authorized_srs' => $id_user,
+                        'status_authorized_srs' => 'Proses Authorized',
+                        'mulai_authorized_srs' => date('Y-m-d H:i:s'),
                     ]);
                     break;
                 case 'selesai':
-                    $this->authorized_frs->update($id_authorized_frs, [
-                        'id_user_authorized_frs' => $id_user,
-                        'status_authorized_frs' => 'Selesai Authorized',
-                        'selesai_authorized_frs' => date('Y-m-d H:i:s'),
+                    $this->authorized_srs->update($id_authorized_srs, [
+                        'id_user_authorized_srs' => $id_user,
+                        'status_authorized_srs' => 'Selesai Authorized',
+                        'selesai_authorized_srs' => date('Y-m-d H:i:s'),
                     ]);
                     break;
                 case 'reset':
-                    $this->authorized_frs->update($id_authorized_frs, [
-                        'id_user_authorized_frs' => null,
-                        'status_authorized_frs' => 'Belum Authorized',
-                        'mulai_authorized_frs' => null,
-                        'selesai_authorized_frs' => null,
+                    $this->authorized_srs->update($id_authorized_srs, [
+                        'id_user_authorized_srs' => null,
+                        'status_authorized_srs' => 'Belum Authorized',
+                        'mulai_authorized_srs' => null,
+                        'selesai_authorized_srs' => null,
                     ]);
                     break;
                 case 'lanjut':
-                    $this->frsModel->update($id_frs, ['status_frs' => 'Pencetakan']);
+                    $this->srsModel->update($id_srs, ['status_srs' => 'Pencetakan']);
                     $pencetakanData = [
-                        'id_frs'            => $id_frs,
-                        'status_pencetakan_frs' => 'Belum Pencetakan',
+                        'id_srs'            => $id_srs,
+                        'status_pencetakan_srs' => 'Belum Pencetakan',
                     ];
-                    if (!$this->pencetakan_frs->insert($pencetakanData)) {
+                    if (!$this->pencetakan_srs->insert($pencetakanData)) {
                         throw new Exception('Gagal menyimpan data pencetakan.');
                     }
                     break;
                 case 'kembalikan':
-                    $this->authorized_frs->delete($id_authorized_frs);
-                    $this->frsModel->update($id_frs, [
-                        'status_frs' => 'Pemverifikasi',
+                    $this->authorized_srs->delete($id_authorized_srs);
+                    $this->srsModel->update($id_srs, [
+                        'status_srs' => 'Pemverifikasi',
                     ]);
                     break;
             }
@@ -120,21 +120,21 @@ class Authorized extends BaseController
 
     public function authorized_details()
     {
-        // Ambil id_authorized_frs dari parameter GET
-        $id_authorized_frs = $this->request->getGet('id_authorized_frs');
+        // Ambil id_authorized_srs dari parameter GET
+        $id_authorized_srs = $this->request->getGet('id_authorized_srs');
 
-        if ($id_authorized_frs) {
+        if ($id_authorized_srs) {
             // Gunakan model yang sudah diinisialisasi di constructor
-            $data = $this->authorized_frs->select(
+            $data = $this->authorized_srs->select(
                 'authorized.*, 
-            frs.*, 
+            srs.*, 
             patient.*, 
             users.nama_user AS nama_user_authorized'
             )
-                ->join('frs', 'authorized.id_frs = frs.id_frs', 'left')
-                ->join('patient', 'frs.id_pasien = patient.id_pasien', 'left')
-                ->join('users', 'authorized.id_user_authorized_frs = users.id_user', 'left')
-                ->where('authorized.id_authorized_frs', $id_authorized_frs)
+                ->join('srs', 'authorized.id_srs = srs.id_srs', 'left')
+                ->join('patient', 'srs.id_pasien = patient.id_pasien', 'left')
+                ->join('users', 'authorized.id_user_authorized_srs = users.id_user', 'left')
+                ->where('authorized.id_authorized_srs', $id_authorized_srs)
                 ->first();
 
             if ($data) {
@@ -149,14 +149,14 @@ class Authorized extends BaseController
 
     public function edit_authorized()
     {
-        $id_authorized_frs = $this->request->getGet('id_authorized_frs');
+        $id_authorized_srs = $this->request->getGet('id_authorized_srs');
 
-        if (!$id_authorized_frs) {
+        if (!$id_authorized_srs) {
             throw new \CodeIgniter\Exceptions\PageNotFoundException('ID authorized tidak ditemukan.');
         }
 
         // Ambil data authorized
-        $authorizedData = $this->authorized_frs->find($id_authorized_frs);
+        $authorizedData = $this->authorized_srs->find($id_authorized_srs);
 
         if (!$authorizedData) {
             throw new \CodeIgniter\Exceptions\PageNotFoundException('Data authorized tidak ditemukan.');
@@ -177,21 +177,21 @@ class Authorized extends BaseController
 
     public function update_authorized()
     {
-        $id_authorized_frs = $this->request->getPost('id_authorized_frs');
+        $id_authorized_srs = $this->request->getPost('id_authorized_srs');
 
         // Gabungkan input tanggal dan waktu
-        $mulai_authorized_frs = $this->request->getPost('mulai_authorized_frs_date') . ' ' . $this->request->getPost('mulai_authorized_frs_time');
-        $selesai_authorized_frs = $this->request->getPost('selesai_authorized_frs_date') . ' ' . $this->request->getPost('selesai_authorized_frs_time');
+        $mulai_authorized_srs = $this->request->getPost('mulai_authorized_srs_date') . ' ' . $this->request->getPost('mulai_authorized_srs_time');
+        $selesai_authorized_srs = $this->request->getPost('selesai_authorized_srs_date') . ' ' . $this->request->getPost('selesai_authorized_srs_time');
 
         $data = [
-            'id_user_authorized_frs' => $this->request->getPost('id_user_authorized_frs'),
-            'status_authorized_frs'  => $this->request->getPost('status_authorized_frs'),
-            'mulai_authorized_frs'   => $mulai_authorized_frs,
-            'selesai_authorized_frs' => $selesai_authorized_frs,
+            'id_user_authorized_srs' => $this->request->getPost('id_user_authorized_srs'),
+            'status_authorized_srs'  => $this->request->getPost('status_authorized_srs'),
+            'mulai_authorized_srs'   => $mulai_authorized_srs,
+            'selesai_authorized_srs' => $selesai_authorized_srs,
             'updated_at'         => date('Y-m-d H:i:s'),
         ];
 
-        if (!$this->authorized_frs->update($id_authorized_frs, $data)) {
+        if (!$this->authorized_srs->update($id_authorized_srs, $data)) {
             return redirect()->back()->with('error', 'Gagal mengupdate data.')->withInput();
         }
 

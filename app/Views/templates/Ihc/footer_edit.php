@@ -74,12 +74,11 @@
         function setDefaultMikroskopis() {
             var contentMikroskopis = $('#mikroskopis_ihc').summernote('code').trim();
             if (!contentMikroskopis || contentMikroskopis === '<p><br></p>') {
-                $('#mikroskopis_ihc').summernote('code', 
-                `<font size="5" face="verdana">
-                ER:&nbsp;<br>
-                PR:&nbsp;<br>
-                Her2 Neu:&nbsp;<br>
-                Ki-67:&nbsp;</font>
+                $('#mikroskopis_ihc').summernote('code', `
+                ER: <br>
+                PR: <br>
+                Her2 Neu: <br>
+                Ki-67 : 
         `);
             }
         }
@@ -89,10 +88,10 @@
             var contentHasilIhc = $('#hasil_ihc').summernote('code').trim();
             if (!contentHasilIhc || contentHasilIhc === '<p><br></p>') {
                 $('#hasil_ihc').summernote('code', `
-                <div><font size="5" face="verdana"><b>ER:</b>&nbsp;</font></div>
-                <div><font size="5" face="verdana"><b>PR:</b>&nbsp;</font></div>
-                <div><font size="5" face="verdana"><b>HER2 NEU:</b>&nbsp;</font></div>
-                <div><font size="5" face="verdana"><b>KI-67:</b>&nbsp;</font></div>
+                <div><font size="5" face="verdana"><b>ER:</b> </font></div>
+                <div><font size="5" face="verdana"><b>PR:</b> </font> </div>
+                <div><font size="5" face="verdana"><b>HER2 NEU:</b> </font></div>
+                <div><font size="5" face="verdana"><b>KI-67: INDEKS PROLIFERASI</b> </font></div>
             `);
             }
         }

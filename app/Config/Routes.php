@@ -63,10 +63,10 @@ $routes->group('hpa', ['namespace' => 'App\Controllers\Hpa'], function ($routes)
 // Route untuk frs
 $routes->group('frs', ['namespace' => 'App\Controllers\Frs'], function ($routes) {
     $routes->get('index', 'FrsController::index');
-    $routes->get('index_buku_penerima', 'HpaController::index_buku_penerima');
+    $routes->get('index_buku_penerima', 'FrsController::index_buku_penerima');
     $routes->get('register', 'FrsController::register');
     $routes->post('insert', 'FrsController::insert');
-    $routes->post('delete', 'HpaController::delete');
+    $routes->post('delete', 'FrsController::delete');
     $routes->get('edit/(:segment)', 'FrsController::edit/$1');
     $routes->get('edit_mikroskopis/(:segment)', 'FrsController::edit_mikroskopis/$1');
     $routes->get('edit_penulisan/(:segment)', 'FrsController::edit_penulisan/$1');
@@ -77,19 +77,27 @@ $routes->group('frs', ['namespace' => 'App\Controllers\Frs'], function ($routes)
 
 // Route untuk srs
 $routes->group('srs', ['namespace' => 'App\Controllers\Srs'], function ($routes) {
+    $routes->get('index', 'SrsController::index');
+    $routes->get('index_buku_penerima', 'SrsController::index_buku_penerima');
     $routes->get('register', 'SrsController::register');
     $routes->post('insert', 'SrsController::insert');
-    $routes->get('index', 'SrsController::index');
-    $routes->get('index_buku_penerima', 'HpaController::index_buku_penerima');
+    $routes->post('delete', 'SrsController::delete');
+    $routes->get('edit/(:segment)', 'SrsController::edit/$1');
+    $routes->get('edit_makroskopis/(:segment)', 'SrsController::edit_makroskopis/$1');
+    $routes->get('edit_mikroskopis/(:segment)', 'SrsController::edit_mikroskopis/$1');
+    $routes->get('edit_penulisan/(:segment)', 'SrsController::edit_penulisan/$1');
+    $routes->get('edit_print/(:segment)', 'SrsController::edit_print/$1');
+    $routes->post('update/(:segment)', 'SrsController::update/$1');
+    $routes->post('update_print/(:segment)', 'SrsController::update_print/$1');
 });
 
 // Route untuk ihc
 $routes->group('ihc', ['namespace' => 'App\Controllers\Ihc'], function ($routes) {
     $routes->get('index', 'IhcController::index');
-    $routes->get('index_buku_penerima', 'HpaController::index_buku_penerima');
+    $routes->get('index_buku_penerima', 'IhcController::index_buku_penerima');
     $routes->get('register', 'IhcController::register');
     $routes->post('insert', 'IhcController::insert');
-    $routes->post('delete', 'HpaController::delete');
+    $routes->post('delete', 'IhcController::delete');
     $routes->get('edit/(:segment)', 'IhcController::edit/$1');
     $routes->get('edit_mikroskopis/(:segment)', 'IhcController::edit_mikroskopis/$1');
     $routes->get('edit_penulisan/(:segment)', 'IhcController::edit_penulisan/$1');

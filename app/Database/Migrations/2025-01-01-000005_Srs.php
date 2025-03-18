@@ -74,7 +74,7 @@ class Srs extends Migration
                 'type' => 'TEXT',
                 'null' => true,
             ],
-            'foto_makroskopis_hpa' => [
+            'foto_makroskopis_srs' => [
                 'type' => 'VARCHAR',
                 'constraint' => 255,
                 'null' => true,
@@ -83,8 +83,9 @@ class Srs extends Migration
                 'type' => 'TEXT',
                 'null' => true,
             ],
-            'mikroskopis_frs' => [
-                'type' => 'TEXT',
+            'foto_mikroskopis_srs' => [
+                'type' => 'VARCHAR',
+                'constraint' => 255,
                 'null' => true,
             ],
             'jumlah_slide' => [

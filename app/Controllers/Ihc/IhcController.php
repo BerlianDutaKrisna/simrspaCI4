@@ -374,10 +374,8 @@ class ihcController extends BaseController
             switch ($page_source) {
                 case 'edit_mikroskopis':
                     $id_pembacaan_ihc = $this->request->getPost('id_pembacaan_ihc');
-                    $id_user_dokter_pembacaan_ihc = (int) $this->request->getPost('id_user_dokter_pembacaan_ihc');
                     $this->pembacaan_ihc->update($id_pembacaan_ihc, [
                         'id_user_pembacaan_ihc' => $id_user,
-                        'id_user_dokter_pembacaan_ihc' => $id_user_dokter_pembacaan_ihc,
                         'status_pembacaan_ihc' => 'Selesai Pembacaan',
                         'selesai_pembacaan_ihc' => date('Y-m-d H:i:s'),
                     ]);
@@ -457,7 +455,7 @@ class ihcController extends BaseController
                             <br>
                             <div>
                                 <font size="5" face="verdana"><b>MIKROSKOPIK :</b></font>
-                                <font size="5" face="verdana">' . nl2br(htmlspecialchars(str_replace(['<p>', '</p>'], '', $mikroskopis_ihc))) . '</font>
+                                <font size="5" face="verdana">' . nl2br(htmlspecialchars(str_replace(['<p>', '</p>', '<br>'], '', $mikroskopis_ihc))) . '</font>
                             </div>
                             <br>
                             <div>

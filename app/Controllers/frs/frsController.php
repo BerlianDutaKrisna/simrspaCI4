@@ -375,10 +375,8 @@ class FrsController extends BaseController
             switch ($page_source) {
                 case 'edit_mikroskopis':
                     $id_pembacaan_frs = $this->request->getPost('id_pembacaan_frs');
-                    $id_user_dokter_pembacaan_frs = (int) $this->request->getPost('id_user_dokter_pembacaan_frs');
                     $this->pembacaan_frs->update($id_pembacaan_frs, [
                         'id_user_pembacaan_frs' => $id_user,
-                        'id_user_dokter_pembacaan_frs' => $id_user_dokter_pembacaan_frs,
                         'status_pembacaan_frs' => 'Selesai Pembacaan',
                         'selesai_pembacaan_frs' => date('Y-m-d H:i:s'),
                     ]);
