@@ -20,14 +20,14 @@ class ihcController extends BaseController
     protected $ihcModel;
     protected $usersModel;
     protected $patientModel;
-    protected $Penerimaan_ihc;
-    protected $Pemotongan_ihc;
-    protected $Pembacaan_ihc;
-    protected $Penulisan_ihc;
-    protected $Pemverifikasi_ihc;
-    protected $Authorized_ihc;
-    protected $Pencetakan_ihc;
-    protected $Mutu_ihc;
+    protected $penerimaan_ihc;
+    protected $pemotongan_ihc;
+    protected $pembacaan_ihc;
+    protected $penulisan_ihc;
+    protected $pemverifikasi_ihc;
+    protected $authorized_ihc;
+    protected $pencetakan_ihc;
+    protected $mutu_ihc;
     protected $validation;
 
     public function __construct()
@@ -35,41 +35,41 @@ class ihcController extends BaseController
         $this->ihcModel = new ihcModel();
         $this->usersModel = new UsersModel();
         $this->patientModel = new PatientModel();
-        $this->Penerimaan_ihc = new Penerimaan_ihc();;
-        $this->Pembacaan_ihc = new Pembacaan_ihc();
-        $this->Penulisan_ihc = new Penulisan_ihc();
-        $this->Pemverifikasi_ihc = new Pemverifikasi_ihc();
-        $this->Authorized_ihc = new Authorized_ihc();
-        $this->Pencetakan_ihc = new Pencetakan_ihc();
-        $this->Mutu_ihc = new Mutu_ihc();
+        $this->penerimaan_ihc = new Penerimaan_ihc();;
+        $this->pembacaan_ihc = new Pembacaan_ihc();
+        $this->penulisan_ihc = new Penulisan_ihc();
+        $this->pemverifikasi_ihc = new Pemverifikasi_ihc();
+        $this->authorized_ihc = new Authorized_ihc();
+        $this->pencetakan_ihc = new Pencetakan_ihc();
+        $this->mutu_ihc = new Mutu_ihc();
         $this->validation =  \Config\Services::validation();
     }
 
     public function index()
     {
-        // Mengambil data dari session
-        $session = session();
-        $id_user = $session->get('id_user');
-        $nama_user = $session->get('nama_user');
+        $ihcData = $this->ihcModel->getihcWithPatient();
+        $data = [
+            'id_user' => session()->get('id_user'),
+            'nama_user' => session()->get('nama_user'),
+            'ihcData' => $ihcData
+        ];
+        
+        return view('ihc/index', $data);
+    }
 
-        // Memastikan session terisi dengan benar
-        if (!$id_user || !$nama_user) {
-            return redirect()->to('login'); // Redirect ke halaman login jika session tidak ada
-        }
+    public function index_buku_penerima()
+    {
+        // Mengambil data ihc menggunakan properti yang sudah ada
+        $ihcData = $this->ihcModel->getihcWithPatient() ?? [];
 
-        // Memanggil model ihcModel untuk mengambil data
-        $ihcModel = new ihcModel();
-        $ihcData = $ihcModel->getihcWithAllPatient();
-
-        // Pastikan $ihcData berisi array
-        if (!$ihcData) {
-            $ihcData = []; // Jika tidak ada data, set menjadi array kosong
-        }
-        return view('ihc/index_ihc', [
+        // Kirimkan data ke view
+        $data = [
+            'id_user'    => session()->get('id_user'),
+            'nama_user'  => session()->get('nama_user'),
             'ihcData' => $ihcData,
-            'id_user' => $id_user,
-            'nama_user' => $nama_user
-        ]);
+        ];
+        
+        return view('ihc/index_buku_penerima', $data);
     }
 
     public function register()
@@ -103,7 +103,7 @@ class ihcController extends BaseController
             $patient = $patientModel->where('norm_pasien', $norm_pasien)->first();
             $data['patient'] = $patient ?: null;
         }
-        return view('Ihc/Register', $data);
+        return view('ihc/Register', $data);
     }
 
     public function insert()
@@ -135,13 +135,13 @@ class ihcController extends BaseController
             // Data yang akan disimpan
             $ihcData = [
                 'kode_ihc' => $data['kode_ihc'],
-                'kode_block_ihc' => $data['kode_block_ihc'],
                 'id_pasien' => $data['id_pasien'],
                 'unit_asal' => $unit_asal,
                 'dokter_pengirim' => $dokter_pengirim,
                 'tanggal_permintaan' => $data['tanggal_permintaan'] ?: null,
                 'tanggal_hasil' => $data['tanggal_hasil'] ?: null,
                 'lokasi_spesimen' => $data['lokasi_spesimen'],
+                'kode_block_ihc' => $data['kode_block_ihc'],
                 'tindakan_spesimen' => $tindakan_spesimen,
                 'diagnosa_klinik' => $data['diagnosa_klinik'],
                 'status_ihc' => 'Penerimaan',
@@ -158,15 +158,15 @@ class ihcController extends BaseController
                 'status_penerimaan_ihc' => 'Belum Penerimaan',
             ];
             // Simpan data penerimaan
-            if (!$this->Penerimaan_ihc->insert($penerimaanData)) {
-                throw new Exception('Gagal menyimpan data penerimaan: ' . $this->Penerimaan_ihc->errors());
+            if (!$this->penerimaan_ihc->insert($penerimaanData)) {
+                throw new Exception('Gagal menyimpan data penerimaan: ' . $this->penerimaan_ihc->errors());
             }
             // Data mutu
             $mutuData = [
                 'id_ihc' => $id_ihc,
             ];
-            if (!$this->Mutu_ihc->insert($mutuData)) {
-                throw new Exception('Gagal menyimpan data mutu: ' . $this->Mutu_ihc->errors());
+            if (!$this->mutu_ihc->insert($mutuData)) {
+                throw new Exception('Gagal menyimpan data mutu: ' . $this->mutu_ihc->errors());
             }
             // Redirect dengan pesan sukses
             return redirect()->to('/dashboard')->with('success', 'Data berhasil disimpan!');
@@ -176,70 +176,291 @@ class ihcController extends BaseController
             return redirect()->back()->withInput()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
         }
     }
-
+    
     public function delete()
     {
-        // Mendapatkan data dari request
         $id_ihc = $this->request->getPost('id_ihc');
-
-        // Cek apakah id_ihc valid
-        if ($id_ihc) {
-            // Inisialisasi model
-            $ihcModel = new ihcModel();
-
-            // Ambil instance dari database service
-            $db = \Config\Database::connect();
-
-            // Mulai transaksi untuk memastikan kedua operasi berjalan atomik
-            $db->transStart();
-
-            // Hapus data dari tabel ihc
-            $deleteihc = $ihcModel->delete($id_ihc);
-
-            // Cek apakah delete berhasil
-            if ($deleteihc) {
-                // Selesaikan transaksi
-                $db->transComplete();
-
-                // Cek apakah transaksi berhasil
-                if ($db->transStatus() === FALSE) {
-                    return $this->response->setJSON(['success' => false, 'message' => 'Gagal menghapus data.']);
-                }
-            } else {
-                // Jika id_ihc tidak valid, kirimkan response error
-                return $this->response->setJSON(['success' => false, 'message' => 'ID ihc tidak valid.']);
-            }
+        if (!$id_ihc) {
+            return $this->response->setJSON(['success' => false, 'message' => 'ID ihc tidak valid.']);
         }
-        return $this->response->setJSON(['success' => true, 'message' => 'Data berhasil dihapus.']);
+        if ($this->ihcModel->delete($id_ihc)) {
+            return $this->response->setJSON(['success' => true, 'message' => 'Data berhasil dihapus.']);
+        } else {
+            return $this->response->setJSON(['success' => false, 'message' => 'Gagal menghapus data.']);
+        }
     }
     
-    public function index_buku_penerima()
+    // Menampilkan form edit ihc
+    public function edit($id_ihc)
     {
-        // Mengambil data dari session
-        $session = session();
-        $id_user = $session->get('id_user');
-        $nama_user = $session->get('nama_user');
-
-        // Memastikan session terisi dengan benar
-        if (!$id_user || !$nama_user) {
-            return redirect()->to('login'); // Redirect ke halaman login jika session tidak ada
+        // Ambil data ihc berdasarkan ID
+        $ihc = $this->ihcModel->getihcWithRelationsProses($id_ihc);
+        if (!$ihc) {
+            return redirect()->back()->with('message', ['error' => 'ihc tidak ditemukan.']);
         }
+        $id_pembacaan_ihc = $ihc['id_pembacaan_ihc'];
+        // Ambil data pengguna dengan status "Dokter"
+        $users = $this->usersModel->where('status_user', 'Dokter')->findAll();
+        // Ambil data pemotongan berdasarkan ID
+        $pembacaan_ihc = $this->pembacaan_ihc->find($id_pembacaan_ihc);
+        $dokter_nama = null;
+        $analis_nama = null;
+        if ($pembacaan_ihc) {
+            // Ambil nama dokter dan analis jika ID tersedia
+            if (!empty($pembacaan_ihc['id_user_dokter_pembacaan_ihc'])) {
+                $dokter = $this->usersModel->find($pembacaan_ihc['id_user_dokter_pembacaan_ihc']);
+                $dokter_nama = $dokter ? $dokter['nama_user'] : null;
+            }
 
-        // Memanggil model ihcModel untuk mengambil data
-        $ihcModel = new ihcModel();
-        $ihcData = $ihcModel->getihcWithAllPatient();
-
-        // Pastikan $ihcData berisi array
-        if (!$ihcData) {
-            $ihcData = []; // Jika tidak ada data, set menjadi array kosong
+            if (!empty($pembacaan_ihc['id_user_pembacaan'])) {
+                $analis = $this->usersModel->find($pembacaan_ihc['id_user_pembacaan']);
+                $analis_nama = $analis ? $analis['nama_user'] : null;
+            }
+            // Tambahkan ke array pembacaan
+            $pembacaan_ihc['dokter_nama'] = $dokter_nama;
+            $pembacaan_ihc['analis_nama'] = $analis_nama;
         }
+        // Data yang dikirim ke view
+        $data = [
+            'id_user'    => session()->get('id_user'),
+            'nama_user'  => session()->get('nama_user'),
+            'ihc'        => $ihc,
+            'pembacaan_ihc' => $pembacaan_ihc,
+            'users'      => $users,
+        ];
+        
+        return view('ihc/edit', $data);
+    }
 
-        // Kirimkan data ke view
-        return view('ihc/index_buku_penerima', [
-            'ihcData' => $ihcData,
-            'id_user' => $id_user,
-            'nama_user' => $nama_user
+    // Menampilkan form edit ihc mikroskopis
+    public function edit_mikroskopis($id_ihc)
+    {
+        // Ambil data ihc berdasarkan ID
+        $ihc = $this->ihcModel->getihcWithRelationsProses($id_ihc);
+        if (!$ihc) {
+            return redirect()->back()->with('message', ['error' => 'ihc tidak ditemukan.']);
+        }
+        // Ambil data pemotongan dan pembacaan_ihc berdasarkan ID
+        $id_pembacaan_ihc = $ihc['id_pembacaan_ihc'];
+        // Ambil data pembacaan_ihc jika tersedia
+        $pembacaan_ihc = $id_pembacaan_ihc ? $this->pembacaan_ihc->find($id_pembacaan_ihc) : [];
+        // Ambil data pengguna dengan status "Dokter"
+        $users = $this->usersModel->where('status_user', 'Dokter')->findAll();
+        // Persiapkan data yang akan dikirim ke view
+        $data = [
+            'ihc'             => $ihc,
+            'pembacaan_ihc'   => $pembacaan_ihc,
+            'users'           => $users,
+            'id_user'         => session()->get('id_user'),
+            'nama_user'       => session()->get('nama_user'),
+        ];
+        
+        return view('ihc/edit_mikroskopis', $data);
+    }
+
+    public function edit_penulisan($id_ihc)
+    {
+        // Ambil data ihc berdasarkan ID
+        $ihc = $this->ihcModel->getihcWithRelationsProses($id_ihc);
+        if (!$ihc) {
+            return redirect()->back()->with('message', ['error' => 'ihc tidak ditemukan.']);
+        }
+        // Inisialisasi array untuk pembacaan dan penulisan ihc
+        $pembacaan_ihc = [];
+        $penulisan_ihc = [];
+        // Ambil data pembacaan ihc jika tersedia
+        if (!empty($ihc['id_pembacaan_ihc'])) {
+            $pembacaan_ihc = $this->pembacaan_ihc->find($ihc['id_pembacaan_ihc']) ?? [];
+            // Ambil nama dokter dari pembacaan jika tersedia
+            if (!empty($pembacaan_ihc['id_user_dokter_pembacaan_ihc'])) {
+                $dokter = $this->usersModel->find($pembacaan_ihc['id_user_dokter_pembacaan_ihc']);
+                $pembacaan_ihc['dokter_nama'] = $dokter ? $dokter['nama_user'] : null;
+            } else {
+                $pembacaan_ihc['dokter_nama'] = null;
+            }
+        }
+        // Ambil data penulisan ihc jika tersedia
+        if (!empty($ihc['id_penulisan_ihc'])) {
+            $penulisan_ihc = $this->penulisan_ihc->find($ihc['id_penulisan_ihc']) ?? [];
+        }
+        // Ambil daftar user dengan status "Dokter"
+        $users = $this->usersModel->where('status_user', 'Dokter')->findAll();
+        // Data yang akan dikirim ke view
+        $data = [
+            'id_user' => session()->get('id_user'),
+            'nama_user' => session()->get('nama_user'),
+            'ihc' => $ihc,
+            'pembacaan' => $pembacaan_ihc,
+            'penulisan' => $penulisan_ihc,
+            'users' => $users,
+        ];
+        
+        return view('ihc/edit_penulisan', $data);
+    }
+
+    public function edit_print($id_ihc)
+    {
+        // Ambil data ihc berdasarkan ID
+        $ihc = $this->ihcModel->getihcWithRelationsProses($id_ihc);
+        // Persiapkan data yang akan dikirim ke view
+        $data = [
+            'id_user' => session()->get('id_user'),
+            'nama_user' => session()->get('nama_user'),
+            'ihc' => $ihc,
+        ];
+        
+        return view('ihc/edit_print', $data);
+    }
+
+    public function update($id_ihc)
+    {
+        date_default_timezone_set('Asia/Jakarta');
+        $id_user = session()->get('id_user');
+        $ihc = $this->ihcModel->getihcWithRelationsProses($id_ihc);
+        if (!$ihc) {
+            return redirect()->back()->with('message', ['error' => 'ihc tidak ditemukan.']);
+        }
+        $id_pembacaan_ihc = $ihc['id_pembacaan_ihc'];
+        // Validasi form input
+        $validation = \Config\Services::validation();
+        $validation->setRules([
+            'kode_ihc' => [
+                'rules' => 'required|is_unique[ihc.kode_ihc,id_ihc,' . $id_ihc . ']',
+                'errors' => [
+                    'required' => 'Kode ihc harus diisi.',
+                    'is_unique' => 'Kode ihc sudah terdaftar!',
+                ],
+            ],
         ]);
+        if (!$this->validate($validation->getRules())) {
+            session()->setFlashdata('errors', $validation->getErrors()); // Simpan error ke session
+            return redirect()->back()->withInput(); // Redirect kembali ke halaman form
+        }
+        // Mengambil data dari form
+        $data = $this->request->getPost();
+        $page_source = $this->request->getPost('page_source');
+        // Mengubah 'jumlah_slide' jika memilih 'lainnya'
+        if ($this->request->getPost('jumlah_slide') === 'lainnya') {
+            $data['jumlah_slide'] = $this->request->getPost('jumlah_slide') === 'lainnya'
+                ? $this->request->getPost('jumlah_slide_custom')
+                : $this->request->getPost('jumlah_slide');
+        }
+        // Proses update tabel ihc
+        if ($this->ihcModel->update($id_ihc, $data)) {
+            // Update data pembacaan jika id_user_dokter_pembacaan_ihc ada
+            if (!empty($data['id_user_dokter_pembacaan_ihc'])) {
+                $pembacaan = $this->pembacaan_ihc->where('id_pembacaan_ihc', $id_pembacaan_ihc)->first();
+
+                if ($pembacaan) {
+                    $this->pembacaan_ihc->update($pembacaan['id_pembacaan_ihc'], [
+                        'id_user_dokter_pembacaan_ihc' => $data['id_user_dokter_pembacaan_ihc'],
+                    ]);
+                }
+            }
+            switch ($page_source) {
+                case 'edit_mikroskopis':
+                    $id_pembacaan_ihc = $this->request->getPost('id_pembacaan_ihc');
+                    $this->pembacaan_ihc->update($id_pembacaan_ihc, [
+                        'id_user_pembacaan_ihc' => $id_user,
+                        'status_pembacaan_ihc' => 'Selesai Pembacaan',
+                        'selesai_pembacaan_ihc' => date('Y-m-d H:i:s'),
+                    ]);
+                    return redirect()->to('ihc/edit_mikroskopis/' . $id_ihc)->with('success', 'Data mikroskopis berhasil diperbarui.');
+                case 'edit_penulisan':
+                    $id_penulisan_ihc = $this->request->getPost('id_penulisan_ihc');
+                    $this->penulisan_ihc->update($id_penulisan_ihc, [
+                        'id_user_penulisan_ihc' => $id_user,
+                        'status_penulisan_ihc' => 'Selesai Penulisan',
+                        'selesai_penulisan_ihc' => date('Y-m-d H:i:s'),
+                    ]);
+                    // Ambil data dari form
+                    $lokasi_spesimen = $this->request->getPost('lokasi_spesimen');
+                    $diagnosa_klinik = $this->request->getPost('diagnosa_klinik');
+                    $makroskopis_ihc = $this->request->getPost('makroskopis_ihc');
+                    $mikroskopis_ihc = $this->request->getPost('mikroskopis_ihc');
+                    $tindakan_spesimen = $this->request->getPost('tindakan_spesimen');
+                    $kode_block_ihc = $this->request->getPost('kode_block_ihc');
+                    $hasil_ihc = $this->request->getPost('hasil_ihc');
+                    // Simpan data lokasi, diagnosa, makroskopis, mikroskopis, hasil terlebih dahulu
+                    $this->ihcModel->update($id_ihc, [
+                        'lokasi_spesimen' => $lokasi_spesimen,
+                        'diagnosa_klinik' => $diagnosa_klinik,
+                        'makroskopis_ihc' => $makroskopis_ihc,
+                        'mikroskopis_ihc' => $mikroskopis_ihc,
+                        'kode_block_ihc' => $kode_block_ihc,
+                        'hasil_ihc' => $hasil_ihc,
+                    ]);
+                    // Setelah semua data tersimpan, buat data print_ihc
+                    $print_ihc = '
+                    <table width="800pt" height="80">
+                            <tbody>
+                                <tr>
+                                    <td style="border: none;" width="200pt">
+                                        <font size="5" face="verdana"><b>LOKASI</b></font>
+                                    </td>
+                                    <td style="border: none;" width="10pt">
+                                        <font size="5" face="verdana"><b>:</b><br></font>
+                                    </td>
+                                    <td style="border: none;" width="590pt">
+                                        <font size="5" face="verdana">
+                                            <b>' . nl2br(htmlspecialchars(str_replace(['<p>', '</p>'], '', $lokasi_spesimen))) . '<br></b>
+                                        </font>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="border: none;" width="200pt">
+                                        <font size="5" face="verdana"><b>DIAGNOSA KLINIK</b></font>
+                                    </td>
+                                    <td style="border: none;" width="10pt">
+                                        <font size="5" face="verdana"><b>:</b><br></font>
+                                    </td>
+                                    <td style="border: none;" width="590pt">
+                                        <font size="5" face="verdana"><b>' . nl2br(htmlspecialchars(str_replace(['<p>', '</p>'], '', $diagnosa_klinik))) . '<br></b></font>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="border: none;" width="200pt">
+                                        <font size="5" face="verdana"><b>ICD</b></font>
+                                    </td>
+                                    <td style="border: none;" width="10pt">
+                                        <font size="5" face="verdana"><b>:</b></font>
+                                    </td>
+                                    <td style="border: none;" width="590pt">
+                                        <font size="5" face="verdana"><br></font>
+                                    </td>
+                                </tr>
+                            </tbody>
+                            </table>
+                            <font size="5" face="verdana"><b>LAPORAN PEMERIKSAAN:</b></font>
+                            <div>
+                                <font size="5" face="verdana"><b>MAKROSKOPIK :</b></font>
+                            </div>
+                            <div>
+                                <font size="5" face="verdana">' . nl2br(htmlspecialchars(str_replace(['<p>', '</p>'], '', $makroskopis_ihc))) . '</font>
+                            </div>
+                            <br>
+                            <div>
+                                <font size="5" face="verdana"><b>MIKROSKOPIK :</b></font>
+                                <font size="5" face="verdana">' . nl2br(htmlspecialchars(str_replace(['<p>', '</p>', '<br>'], '', $mikroskopis_ihc))) . '</font>
+                            </div>
+                            <br>
+                            <div>
+                                <font size="5" face="verdana"><b>KESIMPULAN :</b> Blok Parafin No. ' . nl2br(htmlspecialchars(str_replace(['<p>', '</p>'], '', $kode_block_ihc))) . ', ' . nl2br(htmlspecialchars(str_replace(['<p>', '</p>'], '', $tindakan_spesimen))) . ':</b></font>
+                            </div>
+                            <div>
+                                <font size="5" face="verdana"><b>' . strtoupper(htmlspecialchars(str_replace(['<p>', '</p>'], '', $hasil_ihc))) . '</b></font>
+                            </div>
+                            <br>';
+                    // Simpan print_ihc setelah semua data yang dibutuhkan telah ada
+                    $this->ihcModel->update($id_ihc, [
+                        'print_ihc' => $print_ihc,
+                    ]);
+                    return redirect()->to('ihc/edit_penulisan/' . $id_ihc)->with('success', 'Data penulisan berhasil diperbarui.');
+                default:
+                    return redirect()->back()->with('success', 'Data berhasil diperbarui.');
+            }
+        }
+        return redirect()->back()->with('error', 'Gagal memperbarui data.');
     }
 
     public function update_buku_penerima()
@@ -266,69 +487,54 @@ class ihcController extends BaseController
         // Redirect setelah berhasil mengupdate data
         return redirect()->to('ihc/index_buku_penerima')->with('success', 'Penerima berhasil disimpan.');
     }
-    
 
-    public function update_print_ihc($id_ihc)
+
+    public function update_print($id_ihc)
     {
-
         date_default_timezone_set('Asia/Jakarta');
-        $ihcModel = new ihcModel();
-        $Pemverifikasi_ihc = new Pemverifikasi_ihc();
-        $Authorized_ihc = new Authorized_ihc();
-        $Pencetakan_ihc = new Pencetakan_ihc();
-
         $id_user = session()->get('id_user');
-
         // Mendapatkan id_ihc dari POST
         if (!$id_ihc) {
             return redirect()->back()->with('error', 'Terjadi kesalahan: ID ihc tidak ditemukan.');
         }
-
         // Mengambil data dari POST dan melakukan update
         $data = $this->request->getPost();
-        $ihcModel->update($id_ihc, $data);
-
+        $this->ihcModel->update($id_ihc, $data);
         $redirect = $this->request->getPost('redirect');
-
         if (!$redirect) {
             return redirect()->back()->with('error', 'Terjadi kesalahan: Halaman asal tidak ditemukan.');
         }
-
         // Cek ke halaman mana harus diarahkan setelah update
-        if ($redirect === 'index_pemverifikasi' && isset($_POST['id_pemverifikasi'])) {
-            $id_pemverifikasi = $this->request->getPost('id_pemverifikasi');
-            $Pemverifikasi_ihc->updatePemverifikasi($id_pemverifikasi, [
-                'id_user_pemverifikasi' => $id_user,
-                'status_pemverifikasi' => 'Selesai Pemverifikasi',
-                'selesai_pemverifikasi' => date('Y-m-d H:i:s'),
+        if ($redirect === 'index_pemverifikasi_ihc' && isset($_POST['id_pemverifikasi_ihc'])) {
+            $id_pemverifikasi_ihc = $this->request->getPost('id_pemverifikasi_ihc');
+            $this->pemverifikasi_ihc->update($id_pemverifikasi_ihc, [
+                'id_user_pemverifikasi_ihc' => $id_user,
+                'status_pemverifikasi_ihc' => 'Selesai Pemverifikasi',
+                'selesai_pemverifikasi_ihc' => date('Y-m-d H:i:s'),
             ]);
-            return redirect()->to('pemverifikasi/index_pemverifikasi')->with('success', 'Data berhasil diverifikasi.');
+            return redirect()->to('pemverifikasi_ihc/index')->with('success', 'Data berhasil diverifikasi.');
         }
-
-        if ($redirect === 'index_autorized' && isset($_POST['id_autorized'])) {
-            $id_autorized = $this->request->getPost('id_autorized');
-            $Authorized_ihc->updateAutorized($id_autorized, [
-                'id_user_autorized' => $id_user,
-                'status_autorized' => 'Selesai Authorized',
-                'selesai_autorized' => date('Y-m-d H:i:s'),
+        if ($redirect === 'index_authorized_ihc' && isset($_POST['id_authorized_ihc'])) {
+            $id_authorized_ihc = $this->request->getPost('id_authorized_ihc');
+            $this->authorized_ihc->update($id_authorized_ihc, [
+                'id_user_authorized_ihc' => $id_user,
+                'status_authorized_ihc' => 'Selesai Authorized',
+                'selesai_authorized_ihc' => date('Y-m-d H:i:s'),
             ]);
-            return redirect()->to('autorized/index_autorized')->with('success', 'Data berhasil diauthorized.');
+            return redirect()->to('authorized_ihc/index')->with('success', 'Data berhasil diauthorized.');
         }
-
-        if ($redirect === 'index_pencetakan' && isset($_POST['id_pencetakan'])) {
-            $id_pencetakan = $this->request->getPost('id_pencetakan');
-            $Pencetakan_ihc->updatePencetakan($id_pencetakan, [
-                'id_user_pencetakan' => $id_user,
-                'status_pencetakan' => 'Selesai Pencetakan',
-                'selesai_pencetakan' => date('Y-m-d H:i:s'),
+        if ($redirect === 'index_pencetakan_ihc' && isset($_POST['id_pencetakan_ihc'])) {
+            $id_pencetakan_ihc = $this->request->getPost('id_pencetakan_ihc');
+            $this->pencetakan_ihc->update($id_pencetakan_ihc, [
+                'id_user_pencetakan_ihc' => $id_user,
+                'status_pencetakan_ihc' => 'Selesai Pencetakan',
+                'selesai_pencetakan_ihc' => date('Y-m-d H:i:s'),
             ]);
-            return redirect()->to('pencetakan/index_pencetakan')->with('success', 'Data berhasil dicetak.');
+            return redirect()->to('pencetakan_ihc/index')->with('success', 'Data berhasil simpan.');
         }
-
         // Jika redirect tidak sesuai dengan yang diharapkan
         return redirect()->back()->with('error', 'Terjadi kesalahan: Halaman tujuan tidak valid.');
     }
-
 
     public function uploadFotoMakroskopis($id_ihc)
     {
@@ -465,24 +671,18 @@ class ihcController extends BaseController
         }
     }
 
-    public function update_status_ihc()
+    public function update_status()
     {
         $id_ihc = $this->request->getPost('id_ihc');
-        // Inisialisasi model
-        $ihcModel = new ihcModel();
-
-        // Mengambil data dari form
         $status_ihc = $this->request->getPost('status_ihc');
-
-        // Data yang akan diupdate
+        if (!$id_ihc) {
+            return redirect()->back()->with('error', 'ID ihc tidak ditemukan.');
+        }
         $data = [
             'status_ihc' => $status_ihc,
         ];
+        $this->ihcModel->update($id_ihc, $data);
 
-        // Update data status_ihc berdasarkan id_ihc
-        $ihcModel->updateStatusihc($id_ihc, $data);
-
-        // Redirect setelah berhasil mengupdate data
-        return redirect()->to('ihc/index_ihc')->with('success', 'Status ihc berhasil disimpan.');
+        return redirect()->to('ihc/index')->with('success', 'Status ihc berhasil disimpan.');
     }
 }

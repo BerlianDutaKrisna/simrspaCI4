@@ -8,7 +8,7 @@
             <h6 class="m-0 font-weight-bold text-primary">Data Pemeriksaan</h6>
         </div>
         <div class="card-body">
-            <h1>Daftar Pemeriksaan</h1>
+            <h1>Daftar Pemeriksaan Fine Needle Aspiration Biopsy</h1>
 
             <!-- Tombol Kembali ke Dashboard -->
             <a href="<?= base_url('/dashboard') ?>" class="btn btn-primary mb-3">Kembali</a>
@@ -19,10 +19,9 @@
                     <thead>
                         <tr>
                             <th>No</th>
+                            <th>Norm Pasien</th>
                             <th>Kode frs</th>
                             <th>Nama Pasien</th>
-                            <th>Norm Pasien</th>
-                            <th>Status frs</th>
                             <th>Aksi</th>
                         </tr>
                     </thead>
@@ -32,19 +31,9 @@
                             <?php foreach ($frsData as $row) : ?>
                                 <tr>
                                     <td><?= $i ?></td>
+                                    <td><?= esc($row['norm_pasien']) ?></td>
                                     <td><?= esc($row['kode_frs']) ?></td>
                                     <td><?= esc($row['nama_pasien']) ?></td>
-                                    <td><?= esc($row['norm_pasien']) ?></td>
-                                    <td>
-                                        <a href="#"
-                                            class="btn btn-info btn-sm"
-                                            data-toggle="modal"
-                                            data-target="#statusfrsModal"
-                                            data-id_frs="<?= esc($row['id_frs']) ?>"
-                                            data-status_frs="<?= esc($row['status_frs']) ?>">
-                                            <?= esc($row['status_frs']) ?>
-                                        </a>
-                                    </td>
                                     <td>
                                         <div class="d-flex justify-content-around">
                                             <!-- Tombol Edit -->
@@ -77,7 +66,7 @@
     </div>
 </div>
 
-<?= $this->include('templates/exam/modal_exam') ?>
+<?= $this->include('templates/frs/modal') ?>
 <?= $this->include('templates/notifikasi') ?>
 <?= $this->include('templates/dashboard/footer_dashboard') ?>
-<?= $this->include('templates/exam/script_exam') ?>
+<?= $this->include('templates/frs/script') ?>

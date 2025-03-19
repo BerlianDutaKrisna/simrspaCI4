@@ -28,13 +28,6 @@ class Pemverifikasi_frs extends Model // Update nama model
     protected $createdField  = 'created_at';
     protected $updatedField  = 'updated_at';
 
-    // Fungsi untuk insert data pemverifikasi_frs
-    public function insertpemverifikasi_frs(array $data): bool // Update nama fungsi
-    {
-        $this->insert($data);
-        return $this->db->affectedRows() > 0;
-    }
-
     public function getpemverifikasi_frs()
     {
         return $this->select(

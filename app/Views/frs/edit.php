@@ -1,4 +1,4 @@
-<?= $this->include('templates/exam/header_edit_exam'); ?>
+<?= $this->include('templates/frs/header_edit'); ?>
 <?= $this->include('templates/dashboard/navbar_dashboard'); ?>
 
 <div class="container-fluid">
@@ -8,7 +8,7 @@
         </div>
 
         <div class="card-body">
-            <h1>Edit Data frs</h1>
+            <h1>Edit Data Histopatologi</h1>
             <a href="<?= base_url('frs/index') ?>" class="btn btn-primary mb-3">Kembali</a>
 
             <!-- Form -->
@@ -98,7 +98,7 @@
                                     data-target="#fotoModal">
                                 <input type="file" name="foto_makroskopis_frs" id="foto_makroskopis_frs" class="form-control form-control-user mt-2">
                                 <button type="submit" class="btn btn-primary mt-2"
-                                    formaction="<?= base_url('exam/uploadFotoMakroskopis/' . $frs['id_frs']); ?>">
+                                    formaction="<?= base_url('frs/uploadFotoMakroskopis/' . $frs['id_frs']); ?>">
                                     <i class="fas fa-cloud-upload-alt"></i> Upload
                                 </button>
                             </div>
@@ -121,7 +121,7 @@
                                     data-target="#fotoModal">
                                 <input type="file" name="foto_mikroskopis_frs" id="foto_mikroskopis_frs" class="form-control form-control-user mt-2">
                                 <button type="submit" class="btn btn-primary mt-2"
-                                    formaction="<?= base_url('exam/uploadFotoMikroskopis/' . $frs['id_frs']); ?>">
+                                    formaction="<?= base_url('frs/uploadFotoMikroskopis/' . $frs['id_frs']); ?>">
                                     <i class="fas fa-cloud-upload-alt"></i> Upload
                                 </button>
                             </div>
@@ -173,6 +173,23 @@
                                 <textarea class="form-control summernote" name="hasil_frs" id="hasil_frs"><?= $frs['hasil_frs'] ?? '' ?></textarea>
                             </div>
                         </div>
+                        <!-- Dokter Pemotong -->
+                        <div class="form-group row">
+                            <label class="col-sm-2 col-form-label">Dokter yang memotong</label>
+                            <div class="col-sm-4">
+                                <select class="form-control" id="id_user_dokter_pemotongan_frs" name="id_user_dokter_pemotongan_frs">
+                                    <option value="" <?= empty($frs['id_user_dokter_pemotongan_frs']) ? 'selected' : '' ?>>-- Pilih Dokter --</option>
+                                    <?php foreach ($users as $user): ?>
+                                        <?php if ($user['status_user'] === 'Dokter'): ?>
+                                            <option value="<?= $user['id_user'] ?>"
+                                                <?= isset($pemotongan_frs['id_user_dokter_pemotongan_frs']) && $user['id_user'] == $pemotongan_frs['id_user_dokter_pemotongan_frs'] ? 'selected' : '' ?>>
+                                                <?= $user['nama_user'] ?>
+                                            </option>
+                                        <?php endif; ?>
+                                    <?php endforeach; ?>
+                                </select>
+                            </div>
+                        </div>
                     </div>
                     <!-- Kolom Kanan -->
                     <div class="col-sm-6">
@@ -203,11 +220,21 @@
 
                 <!-- Tombol Simpan -->
                 <div class="form-group row">
-                    <div class="col-sm-12 text-center">
+                    <div class="col-sm-4 text-center">
                         <button type="submit"
                             class="btn btn-success btn-user w-100"
                             formaction="<?= base_url('frs/update/' . $frs['id_frs']); ?>">
                             Simpan
+                        </button>
+                    </div>
+                    <div class="col-sm-4 text-center">
+                        <button type="button" class="btn btn-info btn-user w-100 w-md-auto" onclick="cetakProses()">
+                            <i class="fas fa-print"></i> Cetak Proses
+                        </button>
+                    </div>
+                    <div class="col-sm-4 text-center">
+                        <button type="button" class="btn btn-primary btn-user w-100 w-md-auto" onclick="cetakPrintfrs()">
+                            <i class="fas fa-print"></i> Cetak Hasil
                         </button>
                     </div>
                 </div>
@@ -252,4 +279,6 @@
 </div>
 
 <?= $this->include('templates/notifikasi') ?>
-<?= $this->include('templates/exam/footer_edit_exam'); ?>
+<?= $this->include('templates/frs/footer_edit'); ?>
+<?= $this->include('templates/frs/cetak_proses'); ?>
+<?= $this->include('templates/frs/cetak_print'); ?>

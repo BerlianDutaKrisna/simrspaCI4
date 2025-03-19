@@ -1,4 +1,4 @@
-<?= $this->include('templates/exam/header_edit_exam'); ?>
+<?= $this->include('templates/hpa/header_edit'); ?>
 <?= $this->include('templates/dashboard/navbar_dashboard'); ?>
 
 <div class="container-fluid">
@@ -8,7 +8,7 @@
         </div>
 
         <div class="card-body">
-            <h1>Edit Data Hpa</h1>
+            <h1>Edit Data Histopatologi</h1>
             <a href="<?= base_url('hpa/index') ?>" class="btn btn-primary mb-3">Kembali</a>
 
             <!-- Form -->
@@ -98,7 +98,7 @@
                                     data-target="#fotoModal">
                                 <input type="file" name="foto_makroskopis_hpa" id="foto_makroskopis_hpa" class="form-control form-control-user mt-2">
                                 <button type="submit" class="btn btn-primary mt-2"
-                                    formaction="<?= base_url('exam/uploadFotoMakroskopis/' . $hpa['id_hpa']); ?>">
+                                    formaction="<?= base_url('hpa/uploadFotoMakroskopis/' . $hpa['id_hpa']); ?>">
                                     <i class="fas fa-cloud-upload-alt"></i> Upload
                                 </button>
                             </div>
@@ -121,7 +121,7 @@
                                     data-target="#fotoModal">
                                 <input type="file" name="foto_mikroskopis_hpa" id="foto_mikroskopis_hpa" class="form-control form-control-user mt-2">
                                 <button type="submit" class="btn btn-primary mt-2"
-                                    formaction="<?= base_url('exam/uploadFotoMikroskopis/' . $hpa['id_hpa']); ?>">
+                                    formaction="<?= base_url('hpa/uploadFotoMikroskopis/' . $hpa['id_hpa']); ?>">
                                     <i class="fas fa-cloud-upload-alt"></i> Upload
                                 </button>
                             </div>
@@ -220,11 +220,21 @@
 
                 <!-- Tombol Simpan -->
                 <div class="form-group row">
-                    <div class="col-sm-12 text-center">
+                    <div class="col-sm-4 text-center">
                         <button type="submit"
                             class="btn btn-success btn-user w-100"
                             formaction="<?= base_url('hpa/update/' . $hpa['id_hpa']); ?>">
                             Simpan
+                        </button>
+                    </div>
+                    <div class="col-sm-4 text-center">
+                        <button type="button" class="btn btn-info btn-user w-100 w-md-auto" onclick="cetakProses()">
+                            <i class="fas fa-print"></i> Cetak Proses
+                        </button>
+                    </div>
+                    <div class="col-sm-4 text-center">
+                        <button type="button" class="btn btn-primary btn-user w-100 w-md-auto" onclick="cetakPrintHpa()">
+                            <i class="fas fa-print"></i> Cetak Hasil
                         </button>
                     </div>
                 </div>
@@ -269,4 +279,6 @@
 </div>
 
 <?= $this->include('templates/notifikasi') ?>
-<?= $this->include('templates/exam/footer_edit_exam'); ?>
+<?= $this->include('templates/hpa/footer_edit'); ?>
+<?= $this->include('templates/hpa/cetak_proses'); ?>
+<?= $this->include('templates/hpa/cetak_print'); ?>

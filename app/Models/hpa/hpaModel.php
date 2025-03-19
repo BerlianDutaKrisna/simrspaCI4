@@ -101,7 +101,7 @@ class HpaModel extends Model
             ->findAll();
     }
 
-    public function getHpaWithPatient()
+    public function gethpaWithPatient()
     {
         return $this->select('hpa.*, patient.*')
             ->join('patient', 'patient.id_pasien = hpa.id_pasien')

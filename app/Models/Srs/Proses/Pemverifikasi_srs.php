@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models\Srs\Proses; // Update namespace sesuai dengan folder
+namespace App\Models\srs\Proses; // Update namespace sesuai dengan folder
 
 use CodeIgniter\Model;
 
@@ -28,15 +28,7 @@ class Pemverifikasi_srs extends Model // Update nama model
     protected $createdField  = 'created_at';
     protected $updatedField  = 'updated_at';
 
-    // Fungsi untuk insert data pemverifikasi_srs
-    public function insertpemverifikasi_srs(array $data): bool // Update nama fungsi
-    {
-        $this->insert($data);
-        return $this->db->affectedRows() > 0;
-    }
-
-    // Mengambil data pemverifikasi_srs dengan relasi
-    public function getpemverifikasi_srsWithRelations() // Update nama fungsi
+    public function getpemverifikasi_srs()
     {
         return $this->select(
             '
@@ -44,13 +36,23 @@ class Pemverifikasi_srs extends Model // Update nama model
         srs.*, 
         patient.*, 
         users.nama_user AS nama_user_pemverifikasi_srs,
-        mutu.total_nilai_mutu'
+        mutu_srs.id_mutu_srs,
+        mutu_srs.total_nilai_mutu_srs,
+        penerimaan_srs.id_penerimaan_srs,
+        pembacaan_srs.id_pembacaan_srs,
+        pembacaan_srs.id_pembacaan_srs, 
+        authorized_srs.id_authorized_srs,
+        pencetakan_srs.id_pencetakan_srs'
         )
-            ->join('srs', 'pemverifikasi_srs.id_srs = srs.id_srs', 'left') // Relasi dengan tabel srs
-            ->join('patient', 'srs.id_pasien = patient.id_pasien', 'left') // Relasi dengan tabel patient
-            ->join('users', 'pemverifikasi_srs.id_user_pemverifikasi_srs = users.id_user', 'left') // Relasi dengan tabel users untuk pemverifikasi_srs
-            ->join('mutu', 'srs.id_srs = mutu.id_srs', 'left') // Relasi dengan tabel mutu berdasarkan id_srs
-            ->where('srs.status_srs', 'pemverifikasi_srs') // Filter berdasarkan status_srs 'pemverifikasi_srs'
+            ->join('srs', 'pemverifikasi_srs.id_srs = srs.id_srs', 'left')
+            ->join('patient', 'srs.id_pasien = patient.id_pasien', 'left')
+            ->join('users', 'pemverifikasi_srs.id_user_pemverifikasi_srs = users.id_user', 'left')
+            ->join('mutu_srs', 'srs.id_srs = mutu_srs.id_srs', 'left')
+            ->join('penerimaan_srs', 'srs.id_srs = penerimaan_srs.id_srs', 'left')
+            ->join('pembacaan_srs', 'srs.id_srs = pembacaan_srs.id_srs', 'left')
+            ->join('authorized_srs', 'srs.id_srs = authorized_srs.id_srs', 'left')
+            ->join('pencetakan_srs', 'srs.id_srs = pencetakan_srs.id_srs', 'left')
+            ->whereIn('srs.status_srs', ['Pemverifikasi'])
             ->orderBy('srs.kode_srs', 'ASC')
             ->findAll();
     }

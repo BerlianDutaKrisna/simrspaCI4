@@ -35,8 +35,7 @@ class Pencetakan_srs extends Model // Update nama model
         return $this->db->affectedRows() > 0;
     }
 
-    // Mengambil data pencetakan_srs dengan relasi
-    public function getpencetakan_srsWithRelations() // Update nama fungsi
+    public function getpencetakan_srs()
     {
         return $this->select(
             '
@@ -44,13 +43,23 @@ class Pencetakan_srs extends Model // Update nama model
         srs.*, 
         patient.*, 
         users.nama_user AS nama_user_pencetakan_srs,
-        mutu.total_nilai_mutu'
+        mutu_srs.id_mutu_srs,
+        mutu_srs.total_nilai_mutu_srs,
+        penerimaan_srs.id_penerimaan_srs,
+        pembacaan_srs.id_pembacaan_srs, 
+        pemverifikasi_srs.id_pemverifikasi_srs,
+        authorized_srs.id_authorized_srs
+        '
         )
-            ->join('srs', 'pencetakan_srs.id_srs = srs.id_srs', 'left') // Relasi dengan tabel srs
-            ->join('patient', 'srs.id_pasien = patient.id_pasien', 'left') // Relasi dengan tabel patient
-            ->join('users', 'pencetakan_srs.id_user_pencetakan_srs = users.id_user', 'left') // Relasi dengan tabel users untuk pencetakan_srs
-            ->join('mutu', 'srs.id_srs = mutu.id_srs', 'left') // Relasi dengan tabel mutu berdasarkan id_srs
-            ->where('srs.status_srs', 'pencetakan_srs') // Filter berdasarkan status_srs 'pencetakan_srs'
+            ->join('srs', 'pencetakan_srs.id_srs = srs.id_srs', 'left')
+            ->join('patient', 'srs.id_pasien = patient.id_pasien', 'left')
+            ->join('users', 'pencetakan_srs.id_user_pencetakan_srs = users.id_user', 'left')
+            ->join('mutu_srs', 'srs.id_srs = mutu_srs.id_srs', 'left')
+            ->join('penerimaan_srs', 'srs.id_srs = penerimaan_srs.id_srs', 'left')
+            ->join('pembacaan_srs', 'srs.id_srs = pembacaan_srs.id_srs', 'left')
+            ->join('pemverifikasi_srs', 'srs.id_srs = pemverifikasi_srs.id_srs', 'left')
+            ->join('authorized_srs', 'srs.id_srs = authorized_srs.id_srs', 'left')
+            ->where('srs.status_srs', 'Pencetakan') // Sesuaikan jika ada kondisi lain
             ->orderBy('srs.kode_srs', 'ASC')
             ->findAll();
     }

@@ -13,10 +13,11 @@ class Authorized_frs extends Model // Update nama model
     // Kolom-kolom yang dapat diisi melalui mass-assignment
     protected $allowedFields = [
         'id_frs',
-        'id_user_authorized_frs', // Update nama kolom
-        'status_authorized_frs', // Update nama kolom
-        'mulai_authorized_frs', // Update nama kolom
-        'selesai_authorized_frs', // Update nama kolom
+        'id_user_authorized_frs',
+        'status_authorized_frs',
+        'mulai_authorized_frs',
+        'selesai_authorized_frs',
+        'id_user_dokter_authorized_frs',
         'created_at',
         'updated_at'
     ];

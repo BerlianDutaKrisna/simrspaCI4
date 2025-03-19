@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Models\Ihc;
+namespace App\Models\ihc;
 
 use CodeIgniter\Model;
 
-class IhcModel extends Model
+class ihcModel extends Model
 {
     protected $table = 'ihc';
     protected $primaryKey = 'id_ihc';
@@ -21,7 +21,9 @@ class IhcModel extends Model
         'diagnosa_klinik',
         'status_ihc',
         'makroskopis_ihc',
+        'foto_makroskopis_ihc',
         'mikroskopis_ihc',
+        'foto_mikroskopis_ihc',
         'jumlah_slide',
         'hasil_ihc',
         'print_ihc',
@@ -85,7 +87,7 @@ class IhcModel extends Model
     }
     public function countAuthorizedihc()
     {
-        return $this->where('status_ihc =', 'Autorized')->countAllResults() ?? 0;
+        return $this->where('status_ihc =', 'Authorized')->countAllResults() ?? 0;
     }
     public function countPencetakanihc()
     {
@@ -101,19 +103,24 @@ class IhcModel extends Model
             ->findAll();
     }
 
-    public function insertihc(array $data): bool
-    {
-        if ($this->where('kode_ihc', $data['kode_ihc'])->first()) {
-            return false;
-        }
-
-        return $this->insertihc($data) > 0;
-    }
-
-    public function getihcWitihctient($id_ihc)
+    public function getihcWithPatient()
     {
         return $this->select('ihc.*, patient.*')
             ->join('patient', 'patient.id_pasien = ihc.id_pasien')
+            ->findAll();
+    }
+
+    public function getihcWithRelationsProses($id_ihc)
+    {
+        return $this->select('ihc.*, patient.*, penerimaan_ihc.*, pembacaan_ihc.*, penulisan_ihc.*, pemverifikasi_ihc.*, authorized_ihc.*, pencetakan_ihc.*, mutu_ihc.*')
+            ->join('patient', 'patient.id_pasien = ihc.id_pasien', 'left')
+            ->join('penerimaan_ihc', 'penerimaan_ihc.id_ihc = ihc.id_ihc', 'left')
+            ->join('pembacaan_ihc', 'pembacaan_ihc.id_ihc = ihc.id_ihc', 'left')
+            ->join('penulisan_ihc', 'penulisan_ihc.id_ihc = ihc.id_ihc', 'left')
+            ->join('pemverifikasi_ihc', 'pemverifikasi_ihc.id_ihc = ihc.id_ihc', 'left')
+            ->join('authorized_ihc', 'authorized_ihc.id_ihc = ihc.id_ihc', 'left')
+            ->join('pencetakan_ihc', 'pencetakan_ihc.id_ihc = ihc.id_ihc', 'left')
+            ->join('mutu_ihc', 'mutu_ihc.id_ihc = ihc.id_ihc', 'left')
             ->where('ihc.id_ihc', $id_ihc)
             ->first();
     }

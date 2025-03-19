@@ -8,7 +8,7 @@
             <h6 class="m-0 font-weight-bold text-primary">Data Pemeriksaan</h6>
         </div>
         <div class="card-body">
-            <h1>Daftar Pemeriksaan</h1>
+            <h1>Daftar Pemeriksaan Histopatologi</h1>
 
             <!-- Tombol Kembali ke Dashboard -->
             <a href="<?= base_url('/dashboard') ?>" class="btn btn-primary mb-3">Kembali</a>
@@ -19,10 +19,9 @@
                     <thead>
                         <tr>
                             <th>No</th>
+                            <th>Norm Pasien</th>
                             <th>Kode HPA</th>
                             <th>Nama Pasien</th>
-                            <th>Norm Pasien</th>
-                            <th>Status Hpa</th>
                             <th>Aksi</th>
                         </tr>
                     </thead>
@@ -32,19 +31,9 @@
                             <?php foreach ($hpaData as $row) : ?>
                                 <tr>
                                     <td><?= $i ?></td>
+                                    <td><?= esc($row['norm_pasien']) ?></td>
                                     <td><?= esc($row['kode_hpa']) ?></td>
                                     <td><?= esc($row['nama_pasien']) ?></td>
-                                    <td><?= esc($row['norm_pasien']) ?></td>
-                                    <td>
-                                        <a href="#"
-                                            class="btn btn-info btn-sm"
-                                            data-toggle="modal"
-                                            data-target="#statusHpaModal"
-                                            data-id_hpa="<?= esc($row['id_hpa']) ?>"
-                                            data-status_hpa="<?= esc($row['status_hpa']) ?>">
-                                            <?= esc($row['status_hpa']) ?>
-                                        </a>
-                                    </td>
                                     <td>
                                         <div class="d-flex justify-content-around">
                                             <!-- Tombol Edit -->
@@ -77,7 +66,7 @@
     </div>
 </div>
 
-<?= $this->include('templates/exam/modal_exam') ?>
+<?= $this->include('templates/hpa/modal') ?>
 <?= $this->include('templates/notifikasi') ?>
 <?= $this->include('templates/dashboard/footer_dashboard') ?>
-<?= $this->include('templates/exam/script_exam') ?>
+<?= $this->include('templates/hpa/script') ?>

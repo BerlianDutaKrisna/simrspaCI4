@@ -1,4 +1,4 @@
-<?= $this->include('templates/exam/header_edit_exam'); ?>
+<?= $this->include('templates/hpa/header_edit'); ?>
 <?= $this->include('templates/dashboard/navbar_dashboard'); ?>
 
 <div class="container-fluid">
@@ -7,7 +7,7 @@
             <h6 class="m-0 font-weight-bold text-primary">Edit Mikroskopis</h6>
         </div>
         <div class="card-body">
-            <h1>Edit Data Mikroskopis</h1>
+            <h1>Edit Data Mikroskopis Histopatologi</h1>
             <a href="<?= base_url('pembacaan_hpa/index') ?>" class="btn btn-primary mb-3">Kembali</a>
 
             <!-- Form -->
@@ -153,7 +153,7 @@
                         </textarea>
                     </div>
                 </div>
-                
+
                 <div class="form-group row">
                     <label class="col-sm-2 col-form-label" for="jumlah_slide">Dokter yang membaca</label>
                     <div class="col-sm-4">
@@ -323,5 +323,5 @@
     </div>
 </div>
 <?= $this->include('templates/notifikasi') ?>
-<?= $this->include('templates/exam/footer_edit_exam'); ?>
-<?= $this->include('templates/proses/cetak_proses'); ?>
+<?= $this->include('templates/hpa/footer_edit'); ?>
+<?= $this->include('templates/hpa/cetak_proses'); ?>

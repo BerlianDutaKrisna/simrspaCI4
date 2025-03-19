@@ -57,6 +57,21 @@ class FrsController extends BaseController
         return view('frs/index', $data);
     }
 
+    public function index_buku_penerima()
+    {
+        // Mengambil data frs menggunakan properti yang sudah ada
+        $frsData = $this->frsModel->getfrsWithPatient() ?? [];
+
+        // Kirimkan data ke view
+        $data = [
+            'id_user'    => session()->get('id_user'),
+            'nama_user'  => session()->get('nama_user'),
+            'frsData' => $frsData,
+        ];
+        
+        return view('frs/index_buku_penerima', $data);
+    }
+
     public function register()
     {
         $lastfrs = $this->frsModel->getLastKodefrs();
@@ -174,35 +189,6 @@ class FrsController extends BaseController
         }
     }
     
-    public function index_buku_penerima()
-    {
-        // Mengambil data dari session
-        $session = session();
-        $id_user = $session->get('id_user');
-        $nama_user = $session->get('nama_user');
-
-        // Memastikan session terisi dengan benar
-        if (!$id_user || !$nama_user) {
-            return redirect()->to('login'); // Redirect ke halaman login jika session tidak ada
-        }
-
-        // Memanggil model frsModel untuk mengambil data
-        $frsModel = new frsModel();
-        $frsData = $frsModel->getfrsWithAllPatient();
-
-        // Pastikan $frsData berisi array
-        if (!$frsData) {
-            $frsData = []; // Jika tidak ada data, set menjadi array kosong
-        }
-
-        // Kirimkan data ke view
-        return view('frs/index_buku_penerima', [
-            'frsData' => $frsData,
-            'id_user' => $id_user,
-            'nama_user' => $nama_user
-        ]);
-    }
-
     // Menampilkan form edit frs
     public function edit($id_frs)
     {
@@ -329,11 +315,13 @@ class FrsController extends BaseController
     {
         date_default_timezone_set('Asia/Jakarta');
         $id_user = session()->get('id_user');
+        
         $frs = $this->frsModel->getfrsWithRelationsProses($id_frs);
         if (!$frs) {
             return redirect()->back()->with('message', ['error' => 'frs tidak ditemukan.']);
         }
         $id_pembacaan_frs = $frs['id_pembacaan_frs'];
+
         // Validasi form input
         $validation = \Config\Services::validation();
         $validation->setRules([
@@ -360,19 +348,26 @@ class FrsController extends BaseController
         }
         // Proses update tabel frs
         if ($this->frsModel->update($id_frs, $data)) {
+            // Update data pembacaan jika id_user_dokter_pembacaan_frs ada
+            if (!empty($data['id_user_dokter_pembacaan_frs'])) {
+                $pembacaan = $this->pembacaan_frs->where('id_pembacaan_frs', $id_pembacaan_frs)->first();
+
+                if ($pembacaan) {
+                    $this->pembacaan_frs->update($pembacaan['id_pembacaan_frs'], [
+                        'id_user_dokter_pembacaan_frs' => $data['id_user_dokter_pembacaan_frs'],
+                    ]);
+                }
+            }
             switch ($page_source) {
                 case 'edit_mikroskopis':
                     $id_pembacaan_frs = $this->request->getPost('id_pembacaan_frs');
-                    $id_user_dokter_pembacaan_frs = (int) $this->request->getPost('id_user_dokter_pembacaan_frs');
                     $this->pembacaan_frs->update($id_pembacaan_frs, [
                         'id_user_pembacaan_frs' => $id_user,
-                        'id_user_dokter_pembacaan_frs' => $id_user_dokter_pembacaan_frs,
                         'status_pembacaan_frs' => 'Selesai Pembacaan',
                         'selesai_pembacaan_frs' => date('Y-m-d H:i:s'),
                     ]);
                     return redirect()->to('frs/edit_mikroskopis/' . $id_frs)->with('success', 'Data mikroskopis berhasil diperbarui.');
                 case 'edit_penulisan':
-                    $id_pembacaan_frs = $this->request->getPost('id_pembacaan_frs');
                     $id_penulisan_frs = $this->request->getPost('id_penulisan_frs');
                     $this->penulisan_frs->update($id_penulisan_frs, [
                         'id_user_penulisan_frs' => $id_user,
@@ -677,24 +672,18 @@ class FrsController extends BaseController
         }
     }
 
-    public function update_status_frs()
+    public function update_status()
     {
         $id_frs = $this->request->getPost('id_frs');
-        // Inisialisasi model
-        $frsModel = new frsModel();
-
-        // Mengambil data dari form
         $status_frs = $this->request->getPost('status_frs');
-
-        // Data yang akan diupdate
+        if (!$id_frs) {
+            return redirect()->back()->with('error', 'ID frs tidak ditemukan.');
+        }
         $data = [
             'status_frs' => $status_frs,
         ];
+        $this->frsModel->update($id_frs, $data);
 
-        // Update data status_frs berdasarkan id_frs
-        $frsModel->updateStatusfrs($id_frs, $data);
-
-        // Redirect setelah berhasil mengupdate data
-        return redirect()->to('frs/index_frs')->with('success', 'Status frs berhasil disimpan.');
+        return redirect()->to('frs/index')->with('success', 'Status frs berhasil disimpan.');
     }
 }

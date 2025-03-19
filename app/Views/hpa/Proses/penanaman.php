@@ -6,7 +6,7 @@
         <h6 class="m-0 font-weight-bold text-primary">Table Penanaman</h6>
     </div>
     <div class="card-body">
-        <h1>Daftar Penanaman</h1>
+        <h1>Daftar Penanaman Histopatologi</h1>
         <a href="<?= base_url('/dashboard') ?>" class="btn btn-primary mb-3">Kembali</a>
 
         <!-- Form -->

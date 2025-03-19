@@ -6,7 +6,7 @@
         <h6 class="m-0 font-weight-bold text-primary">Table Penerimaan</h6>
     </div>
     <div class="card-body">
-        <h1>Daftar Penerimaan IHC</h1>
+        <h1>Daftar Penerimaan Imunohistokimia</h1>
         <a href="<?= base_url('/dashboard') ?>" class="btn btn-primary mb-3">Kembali</a>
         <?= $this->include('templates/proses/button_penerimaan'); ?>
         <!-- Form -->
@@ -21,7 +21,7 @@
                             <th>No</th>
                             <th>Aksi</th>
                             <th>Kelengkapan Form</th>
-                            <th>Kode ihc</th>
+                            <th>Kode Ihc</th>
                             <th>Nama Pasien</th>
                             <th>Analis</th>
                             <th>Mulai Penerimaan</th>

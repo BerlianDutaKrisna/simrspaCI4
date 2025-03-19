@@ -16,7 +16,7 @@
     <div class="row">
         <!-- Histopatologi RESUME -->
         <div class="col-xl-3 col-md-6 mb-4">
-            <a href="<?= base_url('exam/index_buku_penerima') ?>" class="stretched-link" style="text-decoration: none;">
+            <a href="<?= base_url('hpa/index_buku_penerima') ?>" class="stretched-link" style="text-decoration: none;">
                 <div class="card border-left-danger shadow h-100 py-2">
                     <div class="card-body">
                         <div class="row no-gutters align-items-center">
@@ -38,62 +38,68 @@
 
         <!-- FINE NEEDLE ASPIRATION BIOPSY RESUME -->
         <div class="col-xl-3 col-md-6 mb-4">
-            <div class="card border-left-info shadow h-100 py-2">
-                <div class="card-body">
-                    <div class="row no-gutters align-items-center">
-                        <div class="col mr-2">
-                            <div class="text-s font-weight-bold text-info text-uppercase mb-1">
-                                Fine Needle Aspiration Biopsy (FNAB)
+            <a href="<?= base_url('frs/index_buku_penerima') ?>" class="stretched-link" style="text-decoration: none;">
+                <div class="card border-left-info shadow h-100 py-2">
+                    <div class="card-body">
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
+                                <div class="text-s font-weight-bold text-info text-uppercase mb-1">
+                                    Fine Needle Aspiration Biopsy (FNAB)
+                                </div>
+                                <!-- Menampilkan jumlah sampel FNAB -->
+                                <div class="h2 mb-0 font-weight-bold text-gray-800"><?= esc($counts['countProsesfrs'] ?? 0); ?></div>
                             </div>
-                            <!-- Menampilkan jumlah sampel FNAB -->
-                            <div class="h2 mb-0 font-weight-bold text-gray-800"><?= esc($counts['countProsesfrs'] ?? 0); ?></div>
-                        </div>
-                        <div class="col-auto">
-                            <i class="fas fa-syringe fa-2x text-gray-500"></i> <!-- Ikon FNAB -->
+                            <div class="col-auto">
+                                <i class="fas fa-syringe fa-2x text-gray-500"></i> <!-- Ikon FNAB -->
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
+            </a>
         </div>
 
         <!-- SITOLOGI RESUME -->
         <div class="col-xl-3 col-md-6 mb-4">
-            <div class="card border-left-success shadow h-100 py-2">
-                <div class="card-body">
-                    <div class="row no-gutters align-items-center">
-                        <div class="col mr-2">
-                            <div class="text-s font-weight-bold text-success text-uppercase mb-1">
-                                SITOLOGI (SRS)
+            <a href="<?= base_url('srs/index_buku_penerima') ?>" class="stretched-link" style="text-decoration: none;">
+                <div class="card border-left-success shadow h-100 py-2">
+                    <div class="card-body">
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
+                                <div class="text-s font-weight-bold text-success text-uppercase mb-1">
+                                    SITOLOGI (SRS)
+                                </div>
+                                <!-- Menampilkan jumlah sampel Sitologi -->
+                                <div class="h2 mb-0 font-weight-bold text-gray-800"><?= esc($counts['countProsessrs'] ?? 0); ?></div>
                             </div>
-                            <!-- Menampilkan jumlah sampel Sitologi -->
-                            <div class="h2 mb-0 font-weight-bold text-gray-800"><?= esc($counts['countProsessrs'] ?? 0); ?></div>
-                        </div>
-                        <div class="col-auto">
-                            <i class="fas fa-prescription-bottle fa-2x text-gray-500"></i> <!-- Ikon Sitologi -->
+                            <div class="col-auto">
+                                <i class="fas fa-prescription-bottle fa-2x text-gray-500"></i> <!-- Ikon Sitologi -->
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
+            </a>
         </div>
 
         <!-- IMUNOHISTOKIMIA RESUME -->
         <div class="col-xl-3 col-md-6 mb-4">
-            <div class="card border-left-warning shadow h-100 py-2">
-                <div class="card-body">
-                    <div class="row no-gutters align-items-center">
-                        <div class="col mr-2">
-                            <div class="text-s font-weight-bold text-warning text-uppercase mb-1">
-                                Imunohistokimia (IHC)
+            <a href="<?= base_url('ihc/index_buku_penerima') ?>" class="stretched-link" style="text-decoration: none;">
+                <div class="card border-left-warning shadow h-100 py-2">
+                    <div class="card-body">
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
+                                <div class="text-s font-weight-bold text-warning text-uppercase mb-1">
+                                    Imunohistokimia (IHC)
+                                </div>
+                                <!-- Menampilkan jumlah sampel Imunohistokimia -->
+                                <div class="h2 mb-0 font-weight-bold text-gray-800"><?= esc($counts['countProsesihc'] ?? 0); ?></div>
                             </div>
-                            <!-- Menampilkan jumlah sampel Imunohistokimia -->
-                            <div class="h2 mb-0 font-weight-bold text-gray-800"><?= esc($counts['countProsesihc'] ?? 0); ?></div>
-                        </div>
-                        <div class="col-auto">
-                            <i class="fas fa-vials fa-2x text-gray-500"></i> <!-- Ikon Imunohistokimia -->
+                            <div class="col-auto">
+                                <i class="fas fa-vials fa-2x text-gray-500"></i> <!-- Ikon Imunohistokimia -->
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
+            </a>
         </div>
     </div>
 </div>

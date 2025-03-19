@@ -1,4 +1,4 @@
-<?= $this->include('templates/exam/header_edit_exam'); ?>
+<?= $this->include('templates/hpa/header_edit'); ?>
 <?= $this->include('templates/dashboard/navbar_dashboard'); ?>
 
 <div class="container-fluid">
@@ -6,7 +6,7 @@
         <h6 class="m-0 font-weight-bold text-primary">Edit Makroskopis</h6>
     </div>
     <div class="card-body">
-        <h1>Edit Data Makroskopis</h1>
+        <h1>Edit Data Makroskopis Histopatologi</h1>
         <a href="<?= base_url('pemotongan_hpa/index') ?>" class="btn btn-primary mb-3">Kembali</a>
 
         <!-- Form -->
@@ -96,19 +96,19 @@
                         data-target="#fotoModal">
 
                     <!-- Form Upload -->
-                        <input type="file" name="foto_makroskopis_hpa" id="foto_makroskopis_hpa" class="form-control form-control-user mt-2">
+                    <input type="file" name="foto_makroskopis_hpa" id="foto_makroskopis_hpa" class="form-control form-control-user mt-2">
 
-                        <!-- Overlay Loading -->
-                        <div id="loading-overlay" class="d-none">
-                            <div class="spinner"></div>
-                            <p class="loading-text">Mengunggah, harap tunggu...</p>
-                        </div>
+                    <!-- Overlay Loading -->
+                    <div id="loading-overlay" class="d-none">
+                        <div class="spinner"></div>
+                        <p class="loading-text">Mengunggah, harap tunggu...</p>
+                    </div>
 
-                        <!-- Tombol Upload -->
-                        <button type="submit" class="btn btn-primary mt-2" id="uploadButton"
-                            formaction="<?= base_url('hpa/uploadFotoMakroskopis/' . $hpa['id_hpa']) ?>">
-                            <i class="fas fa-cloud-upload-alt"></i> Upload
-                        </button>
+                    <!-- Tombol Upload -->
+                    <button type="submit" class="btn btn-primary mt-2" id="uploadButton"
+                        formaction="<?= base_url('hpa/uploadFotoMakroskopis/' . $hpa['id_hpa']) ?>">
+                        <i class="fas fa-cloud-upload-alt"></i> Upload
+                    </button>
                 </div>
             </div>
 
@@ -252,5 +252,5 @@
 </div>
 
 <?= $this->include('templates/notifikasi') ?>
-<?= $this->include('templates/exam/footer_edit_exam'); ?>
-<?= $this->include('templates/proses/cetak_proses'); ?>
+<?= $this->include('templates/hpa/footer_edit'); ?>
+<?= $this->include('templates/hpa/cetak_proses'); ?>

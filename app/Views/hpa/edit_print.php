@@ -1,4 +1,4 @@
-<?= $this->include('templates/cetak/header_cetak'); ?>
+<?= $this->include('templates/hpa/header_cetak'); ?>
 <?= $this->include('templates/dashboard/navbar_dashboard'); ?>
 
 <div class="container-fluid">
@@ -69,5 +69,6 @@
 </div>
 
 <?= $this->include('templates/notifikasi') ?>
-<?= $this->include('templates/cetak/footer_cetak'); ?>
-<?= $this->include('templates/exam/cetak_print'); ?>
+<?= $this->include('templates/hpa/footer_cetak'); ?>
+<?= $this->include('templates/proses/cetak_proses'); ?>
+<?= $this->include('templates/hpa/cetak_print'); ?>

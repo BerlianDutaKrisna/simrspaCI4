@@ -24,7 +24,7 @@
                             <th>No</th>
                             <th>Aksi</th>
                             <th>Detail</th>
-                            <th>Kode frs</th>
+                            <th>Kode Frs</th>
                             <th>Nama Pasien</th>
                             <th>Status pencetakan</th>
                             <th>Admin</th>

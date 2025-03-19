@@ -1,231 +1,157 @@
 <?php
 
-namespace App\Controllers\Frs\Proses;
+namespace App\Controllers\Ihc\Proses;
 
 use App\Controllers\BaseController;
-use App\Models\Frs\ProsesModel\PembacaanModel;
-use App\Models\Frs\ProsesModel\PenulisanModel;
-use App\Models\HpaModel;
+use App\Models\Ihc\ihcModel;
 use App\Models\UsersModel;
-use App\Models\MutuModel;
+use App\Models\PatientModel;
+use App\Models\Ihc\Proses\Pembacaan_ihc;
+use App\Models\Ihc\Proses\Penulisan_ihc;
+use App\Models\Ihc\Mutu_ihc;
 use Exception;
 
 class Pembacaan extends BaseController
 {
-    protected $pembacaanModel;
-    protected $penulisanModel;
+    protected $ihcModel;
     protected $userModel;
-    protected $hpaModel;
-    protected $mutuModel;
-    protected $session;
+    protected $patientModel;
+    protected $pembacaan_ihc;
+    protected $penulisan_ihc;
+    protected $mutu_ihc;
+    protected $validation;
 
     public function __construct()
     {
-        $this->session = session();
+        $this->ihcModel = new ihcModel();
+        $this->userModel = new UsersModel();
+        $this->patientModel = new PatientModel();
+        $this->pembacaan_ihc = new Pembacaan_ihc();
+        $this->penulisan_ihc = new Penulisan_ihc();
+        $this->mutu_ihc = new Mutu_ihc();
+        $this->validation =  \Config\Services::validation();
+        $this->session = \Config\Services::session();
     }
 
-    public function index_pembacaan()
+    public function index()
     {
-        $pembacaanData = $this->pembacaanModel->getPembacaanWithRelations();
-
+        $pembacaanData_ihc = $this->pembacaan_ihc->getpembacaan_ihc();
         $data = [
-            'pembacaanData' => $pembacaanData,
-            'countPenerimaan' => $this->hpaModel->countPenerimaan(),
-            'countPengirisan' => $this->hpaModel->countPengirisan(),
-            'countPemotongan' => $this->hpaModel->countPemotongan(),
-            'countPemprosesan' => $this->hpaModel->countPemprosesan(),
-            'countPenanaman' => $this->hpaModel->countPenanaman(),
-            'countPemotonganTipis' => $this->hpaModel->countPemotonganTipis(),
-            'countPewarnaan' => $this->hpaModel->countPewarnaan(),
-            'countPembacaan' => $this->hpaModel->countPembacaan(),
-            'countPenulisan' => $this->hpaModel->countPenulisan(),
-            'countPemverifikasi' => $this->hpaModel->countPemverifikasi(),
-            'countAutorized' => $this->hpaModel->countAutorized(),
-            'countPencetakan' => $this->hpaModel->countPencetakan(),
-            'id_user' => $this->session->get('id_user'),
             'nama_user' => $this->session->get('nama_user'),
+            'counts' => $this->getCounts(),
+            'pembacaanDataihc' => $pembacaanData_ihc,
         ];
 
-        return view('proses/pembacaan', $data); // Update view
+        return view('ihc/Proses/pembacaan', $data);
     }
 
-    public function proses_pembacaan() // Update method
+    public function proses_pembacaan()
     {
-        // Get user ID from session
-        $id_user = session()->get('id_user');
-
-        // Form validation rules
-        $validation = \Config\Services::validation();
-        $validation->setRules([
-            'id_proses' => [
-                'rules' => 'required',
-                'errors' => ['required' => 'Pilih data terlebih dahulu.'],
-            ],
-            'action' => [
-                'rules' => 'required',
-                'errors' => ['required' => 'Tombol aksi harus diklik.'],
-            ],
-        ]);
-
-        // Check validation
-        if (!$validation->run($this->request->getPost())) {
-            return redirect()->back()->withInput()->with('errors', $validation->getErrors());
-        }
+        $id_user = $this->session->get('id_user');
 
         try {
-            // Get the selected IDs and action
             $selectedIds = $this->request->getPost('id_proses');
             $action = $this->request->getPost('action');
-
-            // Check if selected IDs are provided
             if (!is_array($selectedIds)) {
                 $selectedIds = [$selectedIds];
             }
 
-            // Process the action for each selected item
-            if (!empty($selectedIds)) {
-                foreach ($selectedIds as $id) {
-                    list($id_pembacaan, $id_hpa, $id_mutu) = explode(':', $id);
-                    $indikator_4 = (string) ($this->request->getPost('indikator_4') ?? '0');
-                    $indikator_5 = (string) ($this->request->getPost('indikator_5') ?? '0');
-                    $indikator_6 = (string) ($this->request->getPost('indikator_6') ?? '0');
-                    $indikator_7 = (string) ($this->request->getPost('indikator_7') ?? '0');
-                    $indikator_8 = (string) ($this->request->getPost('indikator_8') ?? '0');
-                    $total_nilai_mutu = $this->request->getPost('total_nilai_mutu');
-                    $this->processAction($action, $id_pembacaan, $id_hpa, $id_user, $id_mutu, $indikator_4, $indikator_5, $indikator_6, $indikator_7, $indikator_8, $total_nilai_mutu); // Update method call
-                }
-
-                return redirect()->to('/pembacaan/index_pembacaan');
+            foreach ($selectedIds as $id) {
+                list($id_pembacaan_ihc, $id_ihc, $id_mutu_ihc) = explode(':', $id);
+                // $indikator_4 = (string) ($this->request->getPost('indikator_4') ?? '0');
+                // $indikator_5 = (string) ($this->request->getPost('indikator_5') ?? '0');
+                // $indikator_6 = (string) ($this->request->getPost('indikator_6') ?? '0');
+                // $indikator_7 = (string) ($this->request->getPost('indikator_7') ?? '0');
+                // $indikator_8 = (string) ($this->request->getPost('indikator_8') ?? '0');
+                // $total_nilai_mutu_ihc = (string) ($this->request->getPost('total_nilai_mutu_ihc') ?? '0');
+                $this->processAction($action, $id_pembacaan_ihc, $id_ihc, $id_user, $id_mutu_ihc);
             }
-        } catch (\Exception $e) {
+
+            return redirect()->to('pembacaan_ihc/index');
+        } catch (Exception $e) {
             return redirect()->back()->with('error', $e->getMessage());
         }
     }
 
-    // Process action based on the action value
-    private function processAction($action, $id_pembacaan, $id_hpa, $id_user, $id_mutu, $indikator_4, $indikator_5, $indikator_6, $indikator_7, $indikator_8, $total_nilai_mutu) // Update parameter
+    private function processAction($action, $id_pembacaan_ihc, $id_ihc, $id_user, $id_mutu_ihc)
     {
-        // Set zona waktu Indonesia/Jakarta
         date_default_timezone_set('Asia/Jakarta');
-
-        $hpaModel = new HpaModel();
-        $pembacaanModel = new PembacaanModel();
-        $penulisanModel = new PenulisanModel();
-        $mutuModel = new MutuModel();
 
         try {
             switch ($action) {
                 case 'mulai':
-                    $pembacaanModel->updatePembacaan($id_pembacaan, [
-                        'id_user_pembacaan' => $id_user,
-                        'status_pembacaan' => 'Proses Pembacaan',
-                        'mulai_pembacaan' => date('Y-m-d H:i:s'),
+                    $this->pembacaan_ihc->update($id_pembacaan_ihc, [
+                        'id_user_pembacaan_ihc' => $id_user,
+                        'status_pembacaan_ihc' => 'Proses Pembacaan',
+                        'mulai_pembacaan_ihc' => date('Y-m-d H:i:s'),
                     ]);
                     break;
-
                 case 'selesai':
-                    // Update data pembacaan ketika selesai
-                    $pembacaanModel->updatePembacaan($id_pembacaan, [
-                        'id_user_pembacaan' => $id_user,
-                        'status_pembacaan' => 'Selesai Pembacaan',
-                        'selesai_pembacaan' => date('Y-m-d H:i:s'),
-                    ]);
-                    // update data mutu
-                    $keseluruhan_nilai_mutu = $total_nilai_mutu + $indikator_5 + $indikator_6 + $indikator_7 + $indikator_8;
-                    $mutuModel->updateMutu($id_mutu, [
-                        'indikator_4' => $indikator_4,
-                        'indikator_5' => $indikator_5,  
-                        'indikator_6' => $indikator_6,
-                        'indikator_7' => $indikator_7,
-                        'indikator_8' => $indikator_8,                        
-                        'total_nilai_mutu' => $keseluruhan_nilai_mutu,
+                    $this->pembacaan_ihc->update($id_pembacaan_ihc, [
+                        'id_user_pembacaan_ihc' => $id_user,
+                        'status_pembacaan_ihc' => 'Selesai Pembacaan',
+                        'selesai_pembacaan_ihc' => date('Y-m-d H:i:s'),
                     ]);
                     break;
-
                 case 'reset':
-                    $pembacaanModel->updatePembacaan($id_pembacaan, [
-                        'id_user_pembacaan' => null,
-                        'status_pembacaan' => 'Belum Pembacaan',
-                        'mulai_pembacaan' => null,
-                        'selesai_pembacaan' => null,
+                    $this->pembacaan_ihc->update($id_pembacaan_ihc, [
+                        'id_user_pembacaan_ihc' => null,
+                        'status_pembacaan_ihc' => 'Belum Pembacaan',
+                        'mulai_pembacaan_ihc' => null,
+                        'selesai_pembacaan_ihc' => null,
                     ]);
-                    // Konversi VARCHAR ke INTEGER
-                    $mutuModel->updateMutu($id_mutu, [
+                    $this->mutu_ihc->update($id_mutu_ihc, [
                         'indikator_4' => '0',
                         'indikator_5' => '0',
                         'indikator_6' => '0',
                         'indikator_7' => '0',
                         'indikator_8' => '0',
-                        'total_nilai_mutu' => '30',
+                        'total_nilai_mutu_ihc' => '30',
                     ]);
                     break;
-
-                    // TOMBOL KEMBALI
-                case 'kembalikan':
-                    $pembacaanModel->deletePembacaan($id_pembacaan);
-                    $hpaModel->updateHpa($id_hpa, [
-                        'status_hpa' => 'Pewarnaan',
-                        'id_pembacaan' => null,
-                    ]);
-                    break; 
-
                 case 'lanjut':
-                    // Update status_hpa menjadi 'penulisan' pada tabel hpa
-                    $hpaModel->updateHpa($id_hpa, ['status_hpa' => 'Penulisan']);
-
-                    // Data untuk tabel penulisan
+                    $this->ihcModel->update($id_ihc, ['status_ihc' => 'Penulisan']);
                     $penulisanData = [
-                        'id_hpa'                   => $id_hpa,
-                        'status_penulisan'         => 'Belum Penulisan',
+                        'id_ihc'            => $id_ihc,
+                        'status_penulisan_ihc' => 'Belum Penulisan',
                     ];
-
-                    // Simpan data ke tabel penulisan
-                    if (!$penulisanModel->insert($penulisanData)) {
+                    if (!$this->penulisan_ihc->insert($penulisanData)) {
                         throw new Exception('Gagal menyimpan data penulisan.');
                     }
-
-                    // Ambil id_penulisan yang baru saja disimpan
-                    $id_penulisan = $penulisanModel->getInsertID();
-
-                    // Update id_penulisan pada tabel hpa
-                    $hpaModel->update($id_hpa, ['id_penulisan' => $id_penulisan]);
+                    break;
+                case 'kembalikan':
+                    $this->pembacaan_ihc->delete($id_pembacaan_ihc);
+                    $this->ihcModel->update($id_ihc, [
+                        'status_ihc' => 'Penerimaan',
+                    ]);
                     break;
             }
-        } catch (\Exception $e) {
-            // Tangani error yang terjadi selama proses action
+        } catch (Exception $e) {
             log_message('error', 'Error in processAction: ' . $e->getMessage());
-            throw new \Exception('Terjadi kesalahan saat memproses aksi: ' . $e->getMessage());
+            throw new Exception('Terjadi kesalahan saat memproses aksi: ' . $e->getMessage());
         }
     }
 
     public function pembacaan_details()
     {
-        // Ambil id_pembacaan dari parameter GET
-        $id_pembacaan = $this->request->getGet('id_pembacaan');
+        // Ambil id_pembacaan_ihc dari parameter GET
+        $id_pembacaan_ihc = $this->request->getGet('id_pembacaan_ihc');
 
-        if ($id_pembacaan) {
-            // Muat model pembacaan
-            $model = new PembacaanModel();
-
-            // Ambil data pembacaan berdasarkan id_pembacaan dan relasi yang ada
-            $data = $model->select(
+        if ($id_pembacaan_ihc) {
+            // Gunakan model yang sudah diinisialisasi di constructor
+            $data = $this->pembacaan_ihc->select(
                 'pembacaan.*, 
-                hpa.*, 
-                patient.*, 
-                users.nama_user AS nama_user_pembacaan'
+            ihc.*, 
+            patient.*, 
+            users.nama_user AS nama_user_pembacaan'
             )
-                ->join(
-                    'hpa',
-                    'pembacaan.id_hpa = hpa.id_hpa',
-                    'left'
-                ) // Relasi dengan tabel hpa
-                ->join('patient', 'hpa.id_pasien = patient.id_pasien', 'left')
-                ->join('users', 'pembacaan.id_user_pembacaan = users.id_user', 'left')
-                ->where('pembacaan.id_pembacaan', $id_pembacaan)
+                ->join('ihc', 'pembacaan.id_ihc = ihc.id_ihc', 'left')
+                ->join('patient', 'ihc.id_pasien = patient.id_pasien', 'left')
+                ->join('users', 'pembacaan.id_user_pembacaan_ihc = users.id_user', 'left')
+                ->where('pembacaan.id_pembacaan_ihc', $id_pembacaan_ihc)
                 ->first();
 
             if ($data) {
-                // Kirimkan data dalam format JSON
                 return $this->response->setJSON($data);
             } else {
                 return $this->response->setJSON(['error' => 'Data tidak ditemukan.']);
@@ -235,74 +161,27 @@ class Pembacaan extends BaseController
         }
     }
 
-    public function delete()
-    {
-        // Mendapatkan data dari request
-        $id_pembacaan = $this->request->getPost('id_pembacaan');
-        $id_hpa = $this->request->getPost('id_hpa');
-
-        if ($id_pembacaan && $id_hpa) {
-            // Load model
-            $pembacaanModel = new PembacaanModel();
-            $hpaModel = new HpaModel();
-
-            // Ambil instance dari database service
-            $db = \Config\Database::connect();
-
-            // Mulai transaksi untuk memastikan kedua operasi berjalan atomik
-            $db->transStart();
-
-            // Hapus data dari tabel pembacaan
-            $deleteResult = $pembacaanModel->deletePembacaan($id_pembacaan);
-
-            // Cek apakah delete berhasil
-            if ($deleteResult) {
-                $hpaModel->updateHpa($id_hpa, [
-                    'status_hpa' => 'Pewarnaan',
-                    'id_pembacaan' => null,
-                ]);
-
-                // Selesaikan transaksi
-                $db->transComplete();
-
-                // Cek apakah transaksi berhasil
-                if ($db->transStatus() === FALSE) {
-                    return $this->response->setJSON(['success' => false, 'message' => 'Gagal menghapus atau memperbarui data.']);
-                }
-
-                return $this->response->setJSON(['success' => true]);
-            } else {
-                // Jika delete gagal, rollback transaksi
-                $db->transRollback();
-                return $this->response->setJSON(['success' => false, 'message' => 'Gagal menghapus data pembacaan.']);
-            }
-        } else {
-            return $this->response->setJSON(['success' => false, 'message' => 'ID tidak valid.']);
-        }
-    }
-
     public function edit_pembacaan()
     {
-        $id_pembacaan = $this->request->getGet('id_pembacaan');
+        $id_pembacaan_ihc = $this->request->getGet('id_pembacaan_ihc');
 
-        if (!$id_pembacaan) {
+        if (!$id_pembacaan_ihc) {
             throw new \CodeIgniter\Exceptions\PageNotFoundException('ID pembacaan tidak ditemukan.');
         }
 
-        // Ambil data pembacaan berdasarkan ID
-        $pembacaanData = $this->pembacaanModel->find($id_pembacaan);
+        // Ambil data pembacaan
+        $pembacaanData = $this->pembacaan_ihc->find($id_pembacaan_ihc);
 
         if (!$pembacaanData) {
             throw new \CodeIgniter\Exceptions\PageNotFoundException('Data pembacaan tidak ditemukan.');
         }
 
         // Ambil data users dengan status_user = 'Analis'
-        // Pastikan nama model benar
         $users = $this->userModel->where('status_user', 'Analis')->findAll();
 
         $data = [
             'pembacaanData' => $pembacaanData,
-            'users' => $users, // Tambahkan data users ke view
+            'users' => $users,
             'id_user' => session()->get('id_user'),
             'nama_user' => session()->get('nama_user'),
         ];
@@ -312,29 +191,24 @@ class Pembacaan extends BaseController
 
     public function update_pembacaan()
     {
-        $id_pembacaan = $this->request->getPost('id_pembacaan');
-        // Get individual date and time inputs
-        $mulai_date = $this->request->getPost('mulai_pembacaan_date');
-        $mulai_time = $this->request->getPost('mulai_pembacaan_time');
-        $selesai_date = $this->request->getPost('selesai_pembacaan_date');
-        $selesai_time = $this->request->getPost('selesai_pembacaan_time');
+        $id_pembacaan_ihc = $this->request->getPost('id_pembacaan_ihc');
 
-        // Combine date and time into one value
-        $mulai_pembacaan = $mulai_date . ' ' . $mulai_time;  // Format: YYYY-MM-DD HH:MM
-        $selesai_pembacaan = $selesai_date . ' ' . $selesai_time;  // Format: YYYY-MM-DD HH:MM
+        // Gabungkan input tanggal dan waktu
+        $mulai_pembacaan_ihc = $this->request->getPost('mulai_pembacaan_ihc_date') . ' ' . $this->request->getPost('mulai_pembacaan_ihc_time');
+        $selesai_pembacaan_ihc = $this->request->getPost('selesai_pembacaan_ihc_date') . ' ' . $this->request->getPost('selesai_pembacaan_ihc_time');
 
         $data = [
-            'id_user_pembacaan' => $this->request->getPost('id_user_pembacaan'),
-            'status_pembacaan'  => $this->request->getPost('status_pembacaan'),
-            'mulai_pembacaan'   => $mulai_pembacaan,
-            'selesai_pembacaan' => $selesai_pembacaan,
+            'id_user_pembacaan_ihc' => $this->request->getPost('id_user_pembacaan_ihc'),
+            'status_pembacaan_ihc'  => $this->request->getPost('status_pembacaan_ihc'),
+            'mulai_pembacaan_ihc'   => $mulai_pembacaan_ihc,
+            'selesai_pembacaan_ihc' => $selesai_pembacaan_ihc,
             'updated_at'         => date('Y-m-d H:i:s'),
         ];
 
-        if (!$this->pembacaanModel->update($id_pembacaan, $data)) {
+        if (!$this->pembacaan_ihc->update($id_pembacaan_ihc, $data)) {
             return redirect()->back()->with('error', 'Gagal mengupdate data.')->withInput();
         }
 
-        return redirect()->to(base_url('exam/index_exam'))->with('success', 'Data berhasil diperbarui.');
+        return redirect()->to(base_url('pembacaan/index_pembacaan'))->with('success', 'Data berhasil diperbarui.');
     }
 }

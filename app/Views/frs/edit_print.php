@@ -1,4 +1,4 @@
-<?= $this->include('templates/cetak/header_cetak'); ?>
+<?= $this->include('templates/hpa/header_cetak'); ?>
 <?= $this->include('templates/dashboard/navbar_dashboard'); ?>
 
 <div class="container-fluid">
@@ -7,7 +7,7 @@
             <h6 class="m-0 font-weight-bold text-primary">Print frs</h6>
         </div>
         <div class="card-body">
-            <h1 class="h3 mb-4">Form Print frs</h1>
+            <h1 class="h3 mb-4">Form Print Fine Needle Aspiration Biopsy</h1>
 
             <!-- Form -->
             <form id="form-frs" method="POST" enctype="multipart/form-data">
@@ -69,5 +69,5 @@
 </div>
 
 <?= $this->include('templates/notifikasi') ?>
-<?= $this->include('templates/cetak/footer_cetak'); ?>
-<?= $this->include('templates/exam/cetak_print_frs'); ?>
+<?= $this->include('templates/frs/footer_cetak'); ?>
+<?= $this->include('templates/frs/cetak_print'); ?>

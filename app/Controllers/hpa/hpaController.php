@@ -52,7 +52,7 @@ class HpaController extends BaseController
 
     public function index()
     {
-        $hpaData = $this->hpaModel->getHpaWithPatient();
+        $hpaData = $this->hpaModel->gethpaWithPatient();
         $data = [
             'id_user' => session()->get('id_user'),
             'nama_user' => session()->get('nama_user'),
@@ -61,6 +61,21 @@ class HpaController extends BaseController
         return view('Hpa/index', $data);
     }
 
+    public function index_buku_penerima()
+    {
+        // Mengambil data HPA menggunakan properti yang sudah ada
+        $hpaData = $this->hpaModel->gethpaWithPatient() ?? [];
+
+        // Kirimkan data ke view
+        $data = [
+            'id_user'    => session()->get('id_user'),
+            'nama_user'  => session()->get('nama_user'),
+            'hpaData' => $hpaData,
+        ];
+        
+        return view('hpa/index_buku_penerima', $data);
+    }
+    
     public function register()
     {
         $lastHPA = $this->hpaModel->getLastKodeHPA();
@@ -178,36 +193,6 @@ class HpaController extends BaseController
         }
     }
 
-
-    public function index_buku_penerima()
-    {
-        // Mengambil data dari session
-        $session = session();
-        $id_user = $session->get('id_user');
-        $nama_user = $session->get('nama_user');
-
-        // Memastikan session terisi dengan benar
-        if (!$id_user || !$nama_user) {
-            return redirect()->to('login'); // Redirect ke halaman login jika session tidak ada
-        }
-
-        // Memanggil model HpaModel untuk mengambil data
-        $hpaModel = new HpaModel();
-        $hpaData = $hpaModel->getHpaWithAllPatient();
-
-        // Pastikan $hpaData berisi array
-        if (!$hpaData) {
-            $hpaData = []; // Jika tidak ada data, set menjadi array kosong
-        }
-
-        // Kirimkan data ke view
-        return view('hpa/index_buku_penerima', [
-            'hpaData' => $hpaData,
-            'id_user' => $id_user,
-            'nama_user' => $nama_user
-        ]);
-    }
-
     public function update_buku_penerima()
     {
         // Set zona waktu Indonesia/Jakarta (opsional jika sudah diatur dalam konfigurasi)
@@ -216,19 +201,15 @@ class HpaController extends BaseController
         $id_hpa = $this->request->getPost('id_hpa');
         // Inisialisasi model
         $hpaModel = new HpaModel();
-
         // Mengambil data dari form
         $penerima_hpa = $this->request->getPost('penerima_hpa');
-
         // Data yang akan diupdate
         $data = [
             'penerima_hpa' => $penerima_hpa,
             'tanggal_penerima' => date('Y-m-d H:i:s'),
         ];
-
         // Update data penerima_hpa berdasarkan id_hpa
-        $hpaModel->updatePenerima($id_hpa, $data);
-
+        $hpaModel->update($id_hpa, $data);
         // Redirect setelah berhasil mengupdate data
         return redirect()->to('hpa/index_buku_penerima')->with('success', 'Penerima berhasil disimpan.');
     }
@@ -519,10 +500,8 @@ class HpaController extends BaseController
                     return redirect()->to('hpa/edit_makroskopis/' . $id_hpa)->with('success', 'Data makroskopis berhasil diperbarui.');
                 case 'edit_mikroskopis':
                     $id_pembacaan_hpa = $this->request->getPost('id_pembacaan_hpa');
-                    $id_user_dokter_pembacaan_hpa = (int) $this->request->getPost('id_user_dokter_pembacaan_hpa');
                     $this->pembacaan_hpa->update($id_pembacaan_hpa, [
                         'id_user_pembacaan_hpa' => $id_user,
-                        'id_user_dokter_pembacaan_hpa' => $id_user_dokter_pembacaan_hpa,
                         'status_pembacaan_hpa' => 'Selesai Pembacaan',
                         'selesai_pembacaan_hpa' => date('Y-m-d H:i:s'),
                     ]);
@@ -545,7 +524,6 @@ class HpaController extends BaseController
                     return redirect()->to('hpa/edit_mikroskopis/' . $id_hpa)->with('success', 'Data mikroskopis berhasil diperbarui.');
 
                 case 'edit_penulisan':
-                    $id_pembacaan_hpa = $this->request->getPost('id_pembacaan_hpa');
                     $id_penulisan_hpa = $this->request->getPost('id_penulisan_hpa');
                     $this->penulisan_hpa->update($id_penulisan_hpa, [
                         'id_user_penulisan_hpa' => $id_user,
@@ -841,7 +819,7 @@ class HpaController extends BaseController
         }
     }
 
-    public function update_status_hpa()
+    public function update_status()
     {
         $id_hpa = $this->request->getPost('id_hpa');
         $status_hpa = $this->request->getPost('status_hpa');

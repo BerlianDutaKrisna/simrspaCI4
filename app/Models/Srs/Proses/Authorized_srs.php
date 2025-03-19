@@ -13,10 +13,11 @@ class Authorized_srs extends Model // Update nama model
     // Kolom-kolom yang dapat diisi melalui mass-assignment
     protected $allowedFields = [
         'id_srs',
-        'id_user_authorized_srs', // Update nama kolom
-        'status_authorized_srs', // Update nama kolom
-        'mulai_authorized_srs', // Update nama kolom
-        'selesai_authorized_srs', // Update nama kolom
+        'id_user_authorized_srs',
+        'status_authorized_srs',
+        'mulai_authorized_srs',
+        'selesai_authorized_srs',
+        'id_user_dokter_authorized_srs',
         'created_at',
         'updated_at'
     ];
@@ -35,25 +36,31 @@ class Authorized_srs extends Model // Update nama model
         return $this->db->affectedRows() > 0;
     }
 
-    // Mengambil data authorized_srs dengan relasi
-    public function getauthorized_srsWithRelations()
+    public function getauthorized_srs()
     {
         return $this->select(
             '
         authorized_srs.*, 
         srs.*, 
         patient.*, 
-        dokter_pemotongan.nama_user AS nama_user_dokter_pemotongan, 
-        users.nama_user AS nama_user_authorized_srs, 
-        mutu.total_nilai_mutu'
+        users.nama_user AS nama_user_authorized_srs,
+        mutu_srs.id_mutu_srs,
+        mutu_srs.total_nilai_mutu_srs,
+        penerimaan_srs.id_penerimaan_srs,
+        pembacaan_srs.id_pembacaan_srs, 
+        pemverifikasi_srs.id_pemverifikasi_srs,
+        pencetakan_srs.id_pencetakan_srs
+        '
         )
             ->join('srs', 'authorized_srs.id_srs = srs.id_srs', 'left')
             ->join('patient', 'srs.id_pasien = patient.id_pasien', 'left')
-            ->join('pemotongan', 'srs.id_pemotongan = pemotongan.id_pemotongan', 'left')
-            ->join('users AS dokter_pemotongan', 'pemotongan.id_user_dokter_pemotongan = dokter_pemotongan.id_user', 'left') // Benar-benar mengambil nama dokter pemotongan
-            ->join('users', 'authorized_srs.id_user_authorized_srs = users.id_user', 'left') // Mengambil nama user untuk authorized_srs
-            ->join('mutu', 'srs.id_srs = mutu.id_srs', 'left')
-            ->where('srs.status_srs', 'authorized_srs')
+            ->join('users', 'authorized_srs.id_user_authorized_srs = users.id_user', 'left')
+            ->join('mutu_srs', 'srs.id_srs = mutu_srs.id_srs', 'left')
+            ->join('penerimaan_srs', 'srs.id_srs = penerimaan_srs.id_srs', 'left')
+            ->join('pembacaan_srs', 'srs.id_srs = pembacaan_srs.id_srs', 'left')
+            ->join('pemverifikasi_srs', 'srs.id_srs = pemverifikasi_srs.id_srs', 'left')
+            ->join('pencetakan_srs', 'srs.id_srs = pencetakan_srs.id_srs', 'left')
+            ->where('srs.status_srs', 'Authorized')
             ->orderBy('srs.kode_srs', 'ASC')
             ->findAll();
     }
@@ -71,5 +78,4 @@ class Authorized_srs extends Model // Update nama model
     {
         return $this->delete($id_authorized_srs);
     }
-
 }

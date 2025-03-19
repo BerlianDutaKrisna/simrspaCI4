@@ -3,7 +3,7 @@
 namespace App\Controllers\Srs\Proses;
 
 use App\Controllers\BaseController;
-use App\Models\Srs\SrsModel;
+use App\Models\Srs\srsModel;
 use App\Models\UsersModel;
 use App\Models\PatientModel;
 use App\Models\Srs\Proses\Penerimaan_srs;
@@ -55,7 +55,7 @@ class Penerimaan extends BaseController
             'penerimaanDatasrs' => $penerimaanData_srs,
         ];
 
-        return view('Srs/Proses/penerimaan', $data);
+        return view('srs/Proses/penerimaan', $data);
     }
 
     public function proses_penerimaan()
@@ -71,9 +71,10 @@ class Penerimaan extends BaseController
 
             foreach ($selectedIds as $id) {
                 list($id_penerimaan_srs, $id_srs, $id_mutu_srs) = explode(':', $id);
-                $indikator_1 = (string) ($this->request->getPost('indikator_1') ?? '0');
-                $total_nilai_mutu_srs = (string) ($this->request->getPost('total_nilai_mutu_srs') ?? '0');
-                $this->processAction($action, $id_penerimaan_srs, $id_srs, $id_user, $id_mutu_srs, $indikator_1, $total_nilai_mutu_srs);
+                // $indikator_1 = (string) ($this->request->getPost('indikator_1') ?? '0');
+                // $indikator_2 = (string) ($this->request->getPost('indikator_2') ?? '0');
+                // $total_nilai_mutu_srs = $this->request->getPost('total_nilai_mutu_srs');
+                $this->processAction($action, $id_penerimaan_srs, $id_srs, $id_user, $id_mutu_srs);
             }
 
             return redirect()->to('penerimaan_srs/index');
@@ -82,7 +83,7 @@ class Penerimaan extends BaseController
         }
     }
 
-    private function processAction($action, $id_penerimaan_srs, $id_srs, $id_user, $id_mutu_srs, $indikator_1, $total_nilai_mutu_srs)
+    private function processAction($action, $id_penerimaan_srs, $id_srs, $id_user, $id_mutu_srs)
     {
         date_default_timezone_set('Asia/Jakarta');
 
@@ -102,10 +103,6 @@ class Penerimaan extends BaseController
                         'status_penerimaan_srs' => 'Selesai Penerimaan',
                         'selesai_penerimaan_srs' => date('Y-m-d H:i:s'),
                     ]);
-                    $this->Mutu_srs->update($id_mutu_srs, [
-                        'indikator_1' => $indikator_1,
-                        'total_nilai_mutu_srs' => $total_nilai_mutu_srs + $indikator_1,
-                    ]);
                     break;
                 case 'reset':
                     $this->Penerimaan_srs->update($id_penerimaan_srs, [
@@ -113,11 +110,6 @@ class Penerimaan extends BaseController
                         'status_penerimaan_srs' => 'Belum Penerimaan',
                         'mulai_penerimaan_srs' => null,
                         'selesai_penerimaan_srs' => null,
-                    ]);
-                    break;
-                    $this->Mutu_srs->update($id_mutu, [
-                        'indikator_1' => '0',
-                        'total_nilai_mutu_srs' => '0',
                     ]);
                     break;
                 case 'lanjut':

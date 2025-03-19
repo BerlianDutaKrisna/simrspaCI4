@@ -47,13 +47,13 @@
                                     </td>
                                     <?php if (in_array($row['status_penerimaan_srs'], ["Proses Penerimaan"])): ?>
                                         <td>
-                                            <a href="<?= base_url('exam/edit_mikroskopis/' . esc($row['id_srs'])) ?>" class="btn btn-warning btn-sm">
+                                            <a href="<?= base_url('srs/edit_makroskopis/' . esc($row['id_srs'])) ?>" class="btn btn-warning btn-sm">
                                                 <i class="fas fa-pen"></i> Detail
                                             </a>
                                         </td>
                                     <?php elseif (in_array($row['status_penerimaan_srs'], ["Selesai Penerimaan"])): ?>
                                         <td>
-                                            <a href="<?= base_url('exam/edit_mikroskopis/' . esc($row['id_srs'])) ?>" class="btn btn-success btn-sm mx-1">
+                                            <a href="<?= base_url('srs/edit_makroskopis/' . esc($row['id_srs'])) ?>" class="btn btn-success btn-sm mx-1">
                                                 <i class="fas fa-pen"></i> Detail
                                             </a>
                                         </td>

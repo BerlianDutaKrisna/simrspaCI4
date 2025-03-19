@@ -28,13 +28,6 @@ class Penulisan_frs extends Model // Update nama model
     protected $createdField  = 'created_at';
     protected $updatedField  = 'updated_at';
 
-    // Fungsi untuk insert data penulisan_frs
-    public function insertpenulisan_frs(array $data): bool // Update nama fungsi
-    {
-        $this->insert($data);
-        return $this->db->affectedRows() > 0;
-    }
-
     // Mengambil data pembacaan_frs dengan relasi
     public function getpenulisan_frs()
     {
