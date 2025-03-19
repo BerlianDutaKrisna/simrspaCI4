@@ -14,9 +14,9 @@
                 <thead>
                     <tr>
                         <th>No</th>
+                        <th>Norm Pasien</th>
                         <th>Kode Hpa</th>
                         <th>Nama Pasien</th>
-                        <th>Norm Pasien</th>
                         <th>Jenis Kelamin Pasien</th>
                         <th>Tanggal Lahir Pasien</th>
                         <th>Alamat Pasien</th>
@@ -25,8 +25,8 @@
                         <th>Status Pasien</th>
                         <th>Diagnosa Klinik</th>
                         <th>Tanggal Hasil</th>
-                        <th>Status Hpa</th>
                         <th>Hasil Hpa</th>
+                        <th>Status Hpa</th>
                         <th class="text-center" style="width: 150px;">Penerima</th>
                         <th>Nama Penerima / Hubungan</th>
                         <th>Tanggal Penerima</th>
@@ -38,9 +38,9 @@
                         <?php foreach ($hpaData as $row) : ?>
                             <tr>
                                 <td><?= $i ?></td>
+                                <td><?= esc($row['norm_pasien'] ?? 'Belum Diisi') ?></td>
                                 <td><?= esc($row['kode_hpa'] ?? 'Belum Diisi') ?></td>
                                 <td><?= esc($row['nama_pasien'] ?? 'Belum Diisi') ?></td>
-                                <td><?= esc($row['norm_pasien'] ?? 'Belum Diisi') ?></td>
                                 <td>
                                     <?php
                                     $jenis_kelamin = $row['jenis_kelamin_pasien'] ?? 'Belum Diisi';
@@ -56,7 +56,7 @@
                                     ?>
                                 </td>
                                 <td>
-                                    <?= empty($row['tanggal_lahir_pasien']) ? 'Belum diisi' : esc(date('d-m-Y', strtotime($row['tanggal_lahir_pasien']))); ?>
+                                    <?= empty($row['tanggal_lahir_pasien']) ? 'Belum Diisi' : esc(date('d-m-Y', strtotime($row['tanggal_lahir_pasien']))); ?>
                                 </td>
                                 <td><?= esc($row['alamat_pasien'] ?? 'Belum Diisi') ?></td>
                                 <td><?= esc($row['dokter_pengirim'] ?? 'Belum Diisi') ?></td>
