@@ -19,10 +19,9 @@
                     <thead>
                         <tr>
                             <th>No</th>
+                            <th>Norm Pasien</th>
                             <th>Kode ihc</th>
                             <th>Nama Pasien</th>
-                            <th>Norm Pasien</th>
-                            <th>Status ihc</th>
                             <th>Aksi</th>
                         </tr>
                     </thead>
@@ -32,19 +31,9 @@
                             <?php foreach ($ihcData as $row) : ?>
                                 <tr>
                                     <td><?= $i ?></td>
+                                    <td><?= esc($row['norm_pasien']) ?></td>
                                     <td><?= esc($row['kode_ihc']) ?></td>
                                     <td><?= esc($row['nama_pasien']) ?></td>
-                                    <td><?= esc($row['norm_pasien']) ?></td>
-                                    <td>
-                                        <a href="#"
-                                            class="btn btn-info btn-sm"
-                                            data-toggle="modal"
-                                            data-target="#statusihcModal"
-                                            data-id_ihc="<?= esc($row['id_ihc']) ?>"
-                                            data-status_ihc="<?= esc($row['status_ihc']) ?>">
-                                            <?= esc($row['status_ihc']) ?>
-                                        </a>
-                                    </td>
                                     <td>
                                         <div class="d-flex justify-content-around">
                                             <!-- Tombol Edit -->

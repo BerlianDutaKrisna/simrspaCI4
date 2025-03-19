@@ -98,7 +98,7 @@
                                     data-target="#fotoModal">
                                 <input type="file" name="foto_makroskopis_frs" id="foto_makroskopis_frs" class="form-control form-control-user mt-2">
                                 <button type="submit" class="btn btn-primary mt-2"
-                                    formaction="<?= base_url('exam/uploadFotoMakroskopis/' . $frs['id_frs']); ?>">
+                                    formaction="<?= base_url('frs/uploadFotoMakroskopis/' . $frs['id_frs']); ?>">
                                     <i class="fas fa-cloud-upload-alt"></i> Upload
                                 </button>
                             </div>
@@ -121,7 +121,7 @@
                                     data-target="#fotoModal">
                                 <input type="file" name="foto_mikroskopis_frs" id="foto_mikroskopis_frs" class="form-control form-control-user mt-2">
                                 <button type="submit" class="btn btn-primary mt-2"
-                                    formaction="<?= base_url('exam/uploadFotoMikroskopis/' . $frs['id_frs']); ?>">
+                                    formaction="<?= base_url('frs/uploadFotoMikroskopis/' . $frs['id_frs']); ?>">
                                     <i class="fas fa-cloud-upload-alt"></i> Upload
                                 </button>
                             </div>

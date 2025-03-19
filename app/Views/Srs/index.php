@@ -8,7 +8,7 @@
             <h6 class="m-0 font-weight-bold text-primary">Data Pemeriksaan</h6>
         </div>
         <div class="card-body">
-            <h1>Daftar Pemeriksaan Fine Needle Aspiration Biopsy</h1>
+            <h1>Daftar Pemeriksaan Sitologi</h1>
 
             <!-- Tombol Kembali ke Dashboard -->
             <a href="<?= base_url('/dashboard') ?>" class="btn btn-primary mb-3">Kembali</a>
@@ -19,10 +19,9 @@
                     <thead>
                         <tr>
                             <th>No</th>
+                            <th>Norm Pasien</th>
                             <th>Kode srs</th>
                             <th>Nama Pasien</th>
-                            <th>Norm Pasien</th>
-                            <th>Status srs</th>
                             <th>Aksi</th>
                         </tr>
                     </thead>
@@ -32,19 +31,9 @@
                             <?php foreach ($srsData as $row) : ?>
                                 <tr>
                                     <td><?= $i ?></td>
+                                    <td><?= esc($row['norm_pasien']) ?></td>
                                     <td><?= esc($row['kode_srs']) ?></td>
                                     <td><?= esc($row['nama_pasien']) ?></td>
-                                    <td><?= esc($row['norm_pasien']) ?></td>
-                                    <td>
-                                        <a href="#"
-                                            class="btn btn-info btn-sm"
-                                            data-toggle="modal"
-                                            data-target="#statussrsModal"
-                                            data-id_srs="<?= esc($row['id_srs']) ?>"
-                                            data-status_srs="<?= esc($row['status_srs']) ?>">
-                                            <?= esc($row['status_srs']) ?>
-                                        </a>
-                                    </td>
                                     <td>
                                         <div class="d-flex justify-content-around">
                                             <!-- Tombol Edit -->

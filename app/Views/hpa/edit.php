@@ -98,7 +98,7 @@
                                     data-target="#fotoModal">
                                 <input type="file" name="foto_makroskopis_hpa" id="foto_makroskopis_hpa" class="form-control form-control-user mt-2">
                                 <button type="submit" class="btn btn-primary mt-2"
-                                    formaction="<?= base_url('exam/uploadFotoMakroskopis/' . $hpa['id_hpa']); ?>">
+                                    formaction="<?= base_url('hpa/uploadFotoMakroskopis/' . $hpa['id_hpa']); ?>">
                                     <i class="fas fa-cloud-upload-alt"></i> Upload
                                 </button>
                             </div>
@@ -121,7 +121,7 @@
                                     data-target="#fotoModal">
                                 <input type="file" name="foto_mikroskopis_hpa" id="foto_mikroskopis_hpa" class="form-control form-control-user mt-2">
                                 <button type="submit" class="btn btn-primary mt-2"
-                                    formaction="<?= base_url('exam/uploadFotoMikroskopis/' . $hpa['id_hpa']); ?>">
+                                    formaction="<?= base_url('hpa/uploadFotoMikroskopis/' . $hpa['id_hpa']); ?>">
                                     <i class="fas fa-cloud-upload-alt"></i> Upload
                                 </button>
                             </div>

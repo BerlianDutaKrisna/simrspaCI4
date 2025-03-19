@@ -83,54 +83,6 @@
                 <div class="form-group row">
                     <!-- Kolom Kiri -->
                     <div class="col-sm-6">
-                        <!-- Kolom Foto Makroskopis -->
-                        <div class="form-group row">
-                            <label class="col-sm-2 col-form-label">Foto Makroskopis</label>
-                            <div class="col-sm-6">
-                                <img src="<?= $ihc['foto_makroskopis_ihc'] !== null
-                                                ? base_url('uploads/ihc/makroskopis/' . $ihc['foto_makroskopis_ihc'])
-                                                : base_url('img/no_photo.jpg') ?>"
-                                    width="200"
-                                    alt="Foto Makroskopis"
-                                    class="img-thumbnail"
-                                    id="fotoMakroskopis"
-                                    data-toggle="modal"
-                                    data-target="#fotoModal">
-                                <input type="file" name="foto_makroskopis_ihc" id="foto_makroskopis_ihc" class="form-control form-control-user mt-2">
-                                <button type="submit" class="btn btn-primary mt-2"
-                                    formaction="<?= base_url('ihc/uploadFotoMakroskopis/' . $ihc['id_ihc']); ?>">
-                                    <i class="fas fa-cloud-upload-alt"></i> Upload
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- Kolom Kanan -->
-                    <div class="col-sm-6">
-                        <!-- Kolom Foto Mikroskopis -->
-                        <div class="form-group row">
-                            <label class="col-sm-2 col-form-label">Foto Mikroskopis</label>
-                            <div class="col-sm-6">
-                                <img src="<?= $ihc['foto_mikroskopis_ihc'] !== null
-                                                ? base_url('uploads/ihc/mikroskopis/' . $ihc['foto_mikroskopis_ihc'])
-                                                : base_url('img/no_photo.jpg') ?>"
-                                    width="200"
-                                    alt="Foto Mikroskopis"
-                                    class="img-thumbnail"
-                                    id="fotoMikroskopis"
-                                    data-toggle="modal"
-                                    data-target="#fotoModal">
-                                <input type="file" name="foto_mikroskopis_ihc" id="foto_mikroskopis_ihc" class="form-control form-control-user mt-2">
-                                <button type="submit" class="btn btn-primary mt-2"
-                                    formaction="<?= base_url('ihc/uploadFotoMikroskopis/' . $ihc['id_ihc']); ?>">
-                                    <i class="fas fa-cloud-upload-alt"></i> Upload
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="form-group row">
-                    <!-- Kolom Kiri -->
-                    <div class="col-sm-6">
                         <!-- Kolom Makroskopis -->
                         <div class="form-group row">
                             <label class="col-sm-2 col-form-label">Makroskopis</label>
@@ -216,7 +168,7 @@
                         </button>
                     </div>
                     <div class="col-sm-4 text-center">
-                        <button type="button" class="btn btn-primary btn-user w-100 w-md-auto" onclick="cetakPrintHpa()">
+                        <button type="button" class="btn btn-primary btn-user w-100 w-md-auto" onclick="cetakPrintihc()">
                             <i class="fas fa-print"></i> Cetak Hasil
                         </button>
                     </div>
@@ -226,42 +178,7 @@
     </div>
 </div>
 
-<!-- Modal untuk Menampilkan Gambar yang Diperbesar -->
-<div class="modal fade" id="fotoModal" tabindex="-1" aria-labelledby="fotoModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="fotoModalLabel">Foto Makroskopis</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <!-- Gambar yang akan ditampilkan lebih besar di modal -->
-                <img src="<?= base_url('uploads/ihc/makroskopis/' . $ihc['foto_makroskopis_ihc']); ?>" class="img-fluid" alt="Foto Makroskopis" id="fotoZoom">
-            </div>
-        </div>
-    </div>
-</div>
-<!-- Modal untuk Menampilkan Gambar yang Diperbesar -->
-<div class="modal fade" id="fotoModalMikroskopis" tabindex="-1" aria-labelledby="fotoModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="fotoModalLabel">Foto Mikroskopis</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <!-- Gambar yang akan ditampilkan lebih besar di modal -->
-                <img src="<?= base_url('uploads/ihc/mikroskopis/' . $ihc['foto_mikroskopis_ihc']); ?>" class="img-fluid" alt="Foto Mikroskopis" id="fotoZoom">
-            </div>
-        </div>
-    </div>
-</div>
-
 <?= $this->include('templates/notifikasi') ?>
 <?= $this->include('templates/ihc/footer_edit'); ?>
-<?= $this->include('templates/proses/cetak_proses'); ?>
-<?= $this->include('templates/hpa/cetak_print'); ?>
+<?= $this->include('templates/ihc/cetak_proses'); ?>
+<?= $this->include('templates/ihc/cetak_print'); ?>
