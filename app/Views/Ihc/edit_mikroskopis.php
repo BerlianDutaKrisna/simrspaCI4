@@ -153,3 +153,4 @@
 
 <?= $this->include('templates/notifikasi') ?>
 <?= $this->include('templates/ihc/footer_edit'); ?>
+<?= $this->include('templates/ihc/cetak_proses'); ?>

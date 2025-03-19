@@ -94,19 +94,6 @@
             $('.summernote_print').summernote('disable');
         }
     });
-
-    $(document).ready(function() {
-        // Inisialisasi Summernote
-        $('.summernote_makroskopis_ihc').summernote();
-
-        // Cek apakah isi kosong, lalu isi dengan default value
-        var currentContent = $('#makroskopis_ihc').summernote('code').trim();
-        if (!currentContent || currentContent === '<p><br></p>') {
-            $('#makroskopis_ihc').summernote('code',
-                '<font size="5" face="verdana">Dilakukan potong ulang blok parafin <?= $ihc['kode_block_ihc'] ?? '' ?> dan pengecatan imunohistokimia dengan antibodi ER, PR, Her2 Neu, serta Ki-67.</font>'
-            );
-        }
-    });
 </script>
 </body>
 

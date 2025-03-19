@@ -48,9 +48,8 @@
         // ==========================
         // Hapus DATA
         // ==========================
-        $(document).on("click", ".delete-frs, .delete-frs, .delete-pengirisan, .delete-pemotongan, .delete-pemprosesan, .delete-penanaman, .delete-pemotongan_tipis, .delete-pewarnaan, .delete-pembacaan, .delete-penulisan, .delete-pemverifikasi, .delete-autorized, .delete-pencetakan", function() {
+        $(document).on("click", ".delete-frs, .delete-pengirisan, .delete-pemotongan, .delete-pemprosesan, .delete-penanaman, .delete-pemotongan_tipis, .delete-pewarnaan, .delete-pembacaan, .delete-penulisan, .delete-pemverifikasi, .delete-autorized, .delete-pencetakan", function() {
             var action = $(this).data("action"); // Menyimpan data action (frs atau pengirisan)
-            var id_frs = $(this).data("id_frs");
             var id_frs = $(this).data("id_frs");
             var id_pengirisan = $(this).data("id_pengirisan");
             var id_pemotongan = $(this).data("id_pemotongan");
@@ -66,7 +65,6 @@
 
             // Menyimpan data ID yang dibutuhkan untuk operasi delete
             $("#confirmDelete").data("action", action);
-            $("#confirmDelete").data("id_frs", id_frs);
             $("#confirmDelete").data("id_frs", id_frs);
             $("#confirmDelete").data("id_pengirisan", id_pengirisan);
             $("#confirmDelete").data("id_pemotongan", id_pemotongan);
@@ -88,7 +86,6 @@
         $("#confirmDelete").on("click", function() {
             var action = $(this).data("action");
             var id_frs = $(this).data("id_frs");
-            var id_frs = $(this).data("id_frs");
             var id_pengirisan = $(this).data("id_pengirisan");
             var id_pemotongan = $(this).data("id_pemotongan");
             var id_pemprosesan = $(this).data("id_pemprosesan");
@@ -105,11 +102,6 @@
             var data = {};
 
             if (action === "frs") {
-                url = "<?= base_url('frs/delete'); ?>"; // URL penghapusan frs
-                data = {
-                    id_frs: id_frs
-                };
-            } else if (action === "frs") {
                 url = "<?= base_url('frs/delete'); ?>"; // URL penghapusan frs
                 data = {
                     id_frs: id_frs

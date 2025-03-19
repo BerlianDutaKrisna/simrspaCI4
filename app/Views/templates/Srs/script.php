@@ -48,10 +48,9 @@
         // ==========================
         // Hapus DATA
         // ==========================
-        $(document).on("click", ".delete-srs, .delete-frs, .delete-pengirisan, .delete-pemotongan, .delete-pemprosesan, .delete-penanaman, .delete-pemotongan_tipis, .delete-pewarnaan, .delete-pembacaan, .delete-penulisan, .delete-pemverifikasi, .delete-autorized, .delete-pencetakan", function() {
+        $(document).on("click", ".delete-srs, .delete-pengirisan, .delete-pemotongan, .delete-pemprosesan, .delete-penanaman, .delete-pemotongan_tipis, .delete-pewarnaan, .delete-pembacaan, .delete-penulisan, .delete-pemverifikasi, .delete-autorized, .delete-pencetakan", function() {
             var action = $(this).data("action"); // Menyimpan data action (srs atau pengirisan)
             var id_srs = $(this).data("id_srs");
-            var id_frs = $(this).data("id_frs");
             var id_pengirisan = $(this).data("id_pengirisan");
             var id_pemotongan = $(this).data("id_pemotongan");
             var id_pemprosesan = $(this).data("id_pemprosesan");
@@ -67,7 +66,6 @@
             // Menyimpan data ID yang dibutuhkan untuk operasi delete
             $("#confirmDelete").data("action", action);
             $("#confirmDelete").data("id_srs", id_srs);
-            $("#confirmDelete").data("id_frs", id_frs);
             $("#confirmDelete").data("id_pengirisan", id_pengirisan);
             $("#confirmDelete").data("id_pemotongan", id_pemotongan);
             $("#confirmDelete").data("id_pemprosesan", id_pemprosesan);
@@ -88,7 +86,6 @@
         $("#confirmDelete").on("click", function() {
             var action = $(this).data("action");
             var id_srs = $(this).data("id_srs");
-            var id_frs = $(this).data("id_frs");
             var id_pengirisan = $(this).data("id_pengirisan");
             var id_pemotongan = $(this).data("id_pemotongan");
             var id_pemprosesan = $(this).data("id_pemprosesan");
@@ -108,11 +105,6 @@
                 url = "<?= base_url('srs/delete'); ?>"; // URL penghapusan srs
                 data = {
                     id_srs: id_srs
-                };
-            } else if (action === "frs") {
-                url = "<?= base_url('frs/delete'); ?>"; // URL penghapusan frs
-                data = {
-                    id_frs: id_frs
                 };
             } else if (action === "pengirisan") {
                 url = "<?= base_url('pengirisan/delete'); ?>"; // URL penghapusan pengirisan

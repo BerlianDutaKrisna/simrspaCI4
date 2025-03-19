@@ -35,19 +35,13 @@
                     <span aria-hidden="true">×</span>
                 </button>
             </div>
-            <form action="<?= base_url('ihc/update_status_ihc') ?>" method="POST">
+            <form action="<?= base_url('ihc/update_status') ?>" method="POST">
                 <div class="modal-body">
                     <input type="hidden" id="id_ihc" name="id_ihc" value="">
                     <div class="form-group">
                         <label for="status_ihc">Status ihc</label>
                         <select class="form-control" id="status_ihc" name="status_ihc">
                             <option value="Penerimaan" <?= old('status_ihc') == 'Penerimaan' ? 'selected' : '' ?>>Penerimaan</option>
-                            <option value="Pengirisan" <?= old('status_ihc') == 'Pengirisan' ? 'selected' : '' ?>>Pengirisan</option>
-                            <option value="Pemotongan" <?= old('status_ihc') == 'Pemotongan' ? 'selected' : '' ?>>Pemotongan</option>
-                            <option value="Pemprosesan" <?= old('status_ihc') == 'Pemprosesan' ? 'selected' : '' ?>>Pemprosesan</option>
-                            <option value="Penanaman" <?= old('status_ihc') == 'Penanaman' ? 'selected' : '' ?>>Penanaman</option>
-                            <option value="Pemotongan Tipis" <?= old('status_ihc') == 'Pemotongan Tipis' ? 'selected' : '' ?>>Pemotongan Tipis</option>
-                            <option value="Pewarnaan" <?= old('status_ihc') == 'Pewarnaan' ? 'selected' : '' ?>>Pewarnaan</option>
                             <option value="Pembacaan" <?= old('status_ihc') == 'Pembacaan' ? 'selected' : '' ?>>Pembacaan</option>
                             <option value="Penulisan" <?= old('status_ihc') == 'Penulisan' ? 'selected' : '' ?>>Penulisan</option>
                             <option value="Pemverifikasi" <?= old('status_ihc') == 'Pemverifikasi' ? 'selected' : '' ?>>Pemverifikasi</option>

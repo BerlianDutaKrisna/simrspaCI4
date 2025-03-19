@@ -220,11 +220,21 @@
 
                 <!-- Tombol Simpan -->
                 <div class="form-group row">
-                    <div class="col-sm-12 text-center">
+                    <div class="col-sm-4 text-center">
                         <button type="submit"
                             class="btn btn-success btn-user w-100"
                             formaction="<?= base_url('hpa/update/' . $hpa['id_hpa']); ?>">
                             Simpan
+                        </button>
+                    </div>
+                    <div class="col-sm-4 text-center">
+                        <button type="button" class="btn btn-info btn-user w-100 w-md-auto" onclick="cetakProses()">
+                            <i class="fas fa-print"></i> Cetak Proses
+                        </button>
+                    </div>
+                    <div class="col-sm-4 text-center">
+                        <button type="button" class="btn btn-primary btn-user w-100 w-md-auto" onclick="cetakPrintHpa()">
+                            <i class="fas fa-print"></i> Cetak Hasil
                         </button>
                     </div>
                 </div>
@@ -270,3 +280,5 @@
 
 <?= $this->include('templates/notifikasi') ?>
 <?= $this->include('templates/hpa/footer_edit'); ?>
+<?= $this->include('templates/hpa/cetak_proses'); ?>
+<?= $this->include('templates/hpa/cetak_print'); ?>

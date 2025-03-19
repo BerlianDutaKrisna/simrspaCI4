@@ -218,3 +218,4 @@
 </div>
 <?= $this->include('templates/notifikasi') ?>
 <?= $this->include('templates/frs/footer_edit'); ?>
+<?= $this->include('templates/frs/cetak_proses'); ?>

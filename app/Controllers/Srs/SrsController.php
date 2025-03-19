@@ -231,6 +231,30 @@ class srsController extends BaseController
         return view('srs/edit', $data);
     }
 
+    public function edit_makroskopis($id_srs)
+    {
+        // Ambil data srs berdasarkan ID
+        $srs = $this->srsModel->getsrsWithRelationsProses($id_srs);
+        if (!$srs) {
+            return redirect()->back()->with('message', ['error' => 'srs tidak ditemukan.']);
+        }
+        $id_penerimaan_srs = $srs['id_penerimaan_srs'];
+        // Ambil data penerimaan berdasarkan id_penerimaan_srs
+        $penerimaan = $this->penerimaan_srs->find($id_penerimaan_srs);
+        // Ambil data pengguna dengan status "Dokter"
+        $users = $this->usersModel->where('status_user', 'Dokter')->findAll();
+        // Persiapkan data yang akan dikirim ke view
+        $data = [
+            'srs'        => $srs,
+            'penerimaan' => $penerimaan,
+            'users'      => $users,
+            'id_user'    => $this->session->get('id_user'),
+            'nama_user'  => $this->session->get('nama_user'),
+        ];
+
+        return view('srs/edit_makroskopis', $data);
+    }
+
     // Menampilkan form edit srs mikroskopis
     public function edit_mikroskopis($id_srs)
     {
@@ -672,24 +696,18 @@ class srsController extends BaseController
         }
     }
 
-    public function update_status_srs()
+    public function update_status()
     {
         $id_srs = $this->request->getPost('id_srs');
-        // Inisialisasi model
-        $srsModel = new srsModel();
-
-        // Mengambil data dari form
         $status_srs = $this->request->getPost('status_srs');
-
-        // Data yang akan diupdate
+        if (!$id_srs) {
+            return redirect()->back()->with('error', 'ID srs tidak ditemukan.');
+        }
         $data = [
             'status_srs' => $status_srs,
         ];
+        $this->srsModel->update($id_srs, $data);
 
-        // Update data status_srs berdasarkan id_srs
-        $srsModel->updateStatussrs($id_srs, $data);
-
-        // Redirect setelah berhasil mengupdate data
-        return redirect()->to('srs/index_srs')->with('success', 'Status srs berhasil disimpan.');
+        return redirect()->to('srs/index')->with('success', 'Status srs berhasil disimpan.');
     }
 }

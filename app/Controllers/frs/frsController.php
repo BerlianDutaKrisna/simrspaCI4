@@ -672,24 +672,18 @@ class FrsController extends BaseController
         }
     }
 
-    public function update_status_frs()
+    public function update_status()
     {
         $id_frs = $this->request->getPost('id_frs');
-        // Inisialisasi model
-        $frsModel = new frsModel();
-
-        // Mengambil data dari form
         $status_frs = $this->request->getPost('status_frs');
-
-        // Data yang akan diupdate
+        if (!$id_frs) {
+            return redirect()->back()->with('error', 'ID frs tidak ditemukan.');
+        }
         $data = [
             'status_frs' => $status_frs,
         ];
+        $this->frsModel->update($id_frs, $data);
 
-        // Update data status_frs berdasarkan id_frs
-        $frsModel->updateStatusfrs($id_frs, $data);
-
-        // Redirect setelah berhasil mengupdate data
-        return redirect()->to('frs/index_frs')->with('success', 'Status frs berhasil disimpan.');
+        return redirect()->to('frs/index')->with('success', 'Status frs berhasil disimpan.');
     }
 }

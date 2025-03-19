@@ -1,6 +1,6 @@
 <script>
-    function cetakPrintHpa() {
-        var detailPrintHpa = document.getElementById('print_hpa') ? document.getElementById('print_hpa').value : '';
+    function cetakPrintihc() {
+        var detailPrintihc = document.getElementById('print_ihc') ? document.getElementById('print_ihc').value : '';
         var printWindow = window.open('', '', 'height=500,width=900');
         printWindow.document.write(`
 <!DOCTYPE html>
@@ -42,14 +42,14 @@
         <tr>
             <td>
                 <table width="500">
-                    <tr><td width="100" nowrap>No RM</td><td>:</td><td nowrap>&nbsp;&nbsp;<?= esc($hpa['norm_pasien'] ?? '') ?></td></tr>
-                    <tr><td nowrap>No Register</td><td>:</td><td nowrap>&nbsp;&nbsp;<?= esc($hpa['kode_hpa'] ?? '') ?></td></tr>
-                    <tr><td nowrap>Nama</td><td>:</td><td>&nbsp; <?= esc($hpa['nama_pasien'] ?? '') ?></td></tr>
-                    <tr><td>Alamat</td><td>:</td><td>&nbsp; <?= esc($hpa['alamat_pasien'] ?? '') ?>&nbsp;</td></tr>
-                    <tr><td nowrap>Jenis & Tgl Lahir</td><td>:</td><td nowrap>&nbsp; <?= esc($hpa['jenis_kelamin_pasien'] ?? '') ?> / <?= esc($hpa['tanggal_lahir_pasien'] ?? '') ?></td></tr>
-                    <tr><td nowrap>Permintaan</td><td>:</td><td nowrap>&nbsp; <?= esc($hpa['tindakan_spesimen'] ?? '') ?></td></tr>
-                    <tr><td nowrap>Unit Asal</td><td>:</td><td nowrap>&nbsp; <?= esc($hpa['unit_asal'] ?? '') ?></td></tr>
-                    <tr><td nowrap>Dokter Pengirim</td><td>:</td><td nowrap>&nbsp; <?= esc($hpa['dokter_pengirim'] ?? '') ?></td></tr>
+                    <tr><td width="100" nowrap>No RM</td><td>:</td><td nowrap>&nbsp;&nbsp;<?= esc($ihc['norm_pasien'] ?? '') ?></td></tr>
+                    <tr><td nowrap>No Register</td><td>:</td><td nowrap>&nbsp;&nbsp;<?= esc($ihc['kode_ihc'] ?? '') ?></td></tr>
+                    <tr><td nowrap>Nama</td><td>:</td><td>&nbsp; <?= esc($ihc['nama_pasien'] ?? '') ?></td></tr>
+                    <tr><td>Alamat</td><td>:</td><td>&nbsp; <?= esc($ihc['alamat_pasien'] ?? '') ?>&nbsp;</td></tr>
+                    <tr><td nowrap>Jenis & Tgl Lahir</td><td>:</td><td nowrap>&nbsp; <?= esc($ihc['jenis_kelamin_pasien'] ?? '') ?> / <?= esc($ihc['tanggal_lahir_pasien'] ?? '') ?></td></tr>
+                    <tr><td nowrap>Permintaan</td><td>:</td><td nowrap>&nbsp; <?= esc($ihc['tindakan_spesimen'] ?? '') ?></td></tr>
+                    <tr><td nowrap>Unit Asal</td><td>:</td><td nowrap>&nbsp; <?= esc($ihc['unit_asal'] ?? '') ?></td></tr>
+                    <tr><td nowrap>Dokter Pengirim</td><td>:</td><td nowrap>&nbsp; <?= esc($ihc['dokter_pengirim'] ?? '') ?></td></tr>
                 </table>
             </td>
             <td>
@@ -59,7 +59,7 @@
                     </tr>
                     <tr><td align="center" width="500" colspan="3">&nbsp;</td></tr>
                     <tr><td nowrap>Tanggal Terima</td><td>:</td><td>&nbsp; <?= isset($penerimaan['mulai_penerimaan']) ? date('d-m-Y H:i:s', strtotime($penerimaan['mulai_penerimaan'])) : '' ?></td></tr>
-                    <tr><td nowrap>Tanggal Hasil</td><td>:</td><td>&nbsp; <?= isset($hpa['tanggal_hasil']) ? date('d-m-Y H:i:s', strtotime($hpa['tanggal_hasil'])) : '' ?></td></tr>
+                    <tr><td nowrap>Tanggal Hasil</td><td>:</td><td>&nbsp; <?= isset($ihc['tanggal_hasil']) ? date('d-m-Y H:i:s', strtotime($ihc['tanggal_hasil'])) : '' ?></td></tr>
                 </table>
             </td>
         </tr>
@@ -68,7 +68,7 @@
         </tr>
         <tr height="500">
             <td colspan="2" height="400" valign="top">
-                ${detailPrintHpa}
+                ${detailPrintihc}
             </td>
         </tr>
         <tr>

@@ -35,19 +35,13 @@
                     <span aria-hidden="true">×</span>
                 </button>
             </div>
-            <form action="<?= base_url('srs/update_status_srs') ?>" method="POST">
+            <form action="<?= base_url('srs/update_status') ?>" method="POST">
                 <div class="modal-body">
                     <input type="hidden" id="id_srs" name="id_srs" value="">
                     <div class="form-group">
                         <label for="status_srs">Status srs</label>
                         <select class="form-control" id="status_srs" name="status_srs">
                             <option value="Penerimaan" <?= old('status_srs') == 'Penerimaan' ? 'selected' : '' ?>>Penerimaan</option>
-                            <option value="Pengirisan" <?= old('status_srs') == 'Pengirisan' ? 'selected' : '' ?>>Pengirisan</option>
-                            <option value="Pemotongan" <?= old('status_srs') == 'Pemotongan' ? 'selected' : '' ?>>Pemotongan</option>
-                            <option value="Pemprosesan" <?= old('status_srs') == 'Pemprosesan' ? 'selected' : '' ?>>Pemprosesan</option>
-                            <option value="Penanaman" <?= old('status_srs') == 'Penanaman' ? 'selected' : '' ?>>Penanaman</option>
-                            <option value="Pemotongan Tipis" <?= old('status_srs') == 'Pemotongan Tipis' ? 'selected' : '' ?>>Pemotongan Tipis</option>
-                            <option value="Pewarnaan" <?= old('status_srs') == 'Pewarnaan' ? 'selected' : '' ?>>Pewarnaan</option>
                             <option value="Pembacaan" <?= old('status_srs') == 'Pembacaan' ? 'selected' : '' ?>>Pembacaan</option>
                             <option value="Penulisan" <?= old('status_srs') == 'Penulisan' ? 'selected' : '' ?>>Penulisan</option>
                             <option value="Pemverifikasi" <?= old('status_srs') == 'Pemverifikasi' ? 'selected' : '' ?>>Pemverifikasi</option>

@@ -64,7 +64,7 @@ class HpaController extends BaseController
     public function index_buku_penerima()
     {
         // Mengambil data HPA menggunakan properti yang sudah ada
-        $hpaData = $this->hpaModel->gethpapaWithPatient() ?? [];
+        $hpaData = $this->hpaModel->gethpaWithPatient() ?? [];
 
         // Kirimkan data ke view
         $data = [
@@ -819,7 +819,7 @@ class HpaController extends BaseController
         }
     }
 
-    public function update_status_hpa()
+    public function update_status()
     {
         $id_hpa = $this->request->getPost('id_hpa');
         $status_hpa = $this->request->getPost('status_hpa');

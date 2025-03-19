@@ -671,24 +671,18 @@ class ihcController extends BaseController
         }
     }
 
-    public function update_status_ihc()
+    public function update_status()
     {
         $id_ihc = $this->request->getPost('id_ihc');
-        // Inisialisasi model
-        $ihcModel = new ihcModel();
-
-        // Mengambil data dari form
         $status_ihc = $this->request->getPost('status_ihc');
-
-        // Data yang akan diupdate
+        if (!$id_ihc) {
+            return redirect()->back()->with('error', 'ID ihc tidak ditemukan.');
+        }
         $data = [
             'status_ihc' => $status_ihc,
         ];
+        $this->ihcModel->update($id_ihc, $data);
 
-        // Update data status_ihc berdasarkan id_ihc
-        $ihcModel->updateStatusihc($id_ihc, $data);
-
-        // Redirect setelah berhasil mengupdate data
-        return redirect()->to('ihc/index_ihc')->with('success', 'Status ihc berhasil disimpan.');
+        return redirect()->to('ihc/index')->with('success', 'Status ihc berhasil disimpan.');
     }
 }

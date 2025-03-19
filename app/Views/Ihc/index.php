@@ -19,45 +19,45 @@
                     <thead>
                         <tr>
                             <th>No</th>
-                            <th>Kode frs</th>
+                            <th>Kode ihc</th>
                             <th>Nama Pasien</th>
                             <th>Norm Pasien</th>
-                            <th>Status frs</th>
+                            <th>Status ihc</th>
                             <th>Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <?php if (!empty($frsData)) : ?>
+                        <?php if (!empty($ihcData)) : ?>
                             <?php $i = 1; ?>
-                            <?php foreach ($frsData as $row) : ?>
+                            <?php foreach ($ihcData as $row) : ?>
                                 <tr>
                                     <td><?= $i ?></td>
-                                    <td><?= esc($row['kode_frs']) ?></td>
+                                    <td><?= esc($row['kode_ihc']) ?></td>
                                     <td><?= esc($row['nama_pasien']) ?></td>
                                     <td><?= esc($row['norm_pasien']) ?></td>
                                     <td>
                                         <a href="#"
                                             class="btn btn-info btn-sm"
                                             data-toggle="modal"
-                                            data-target="#statusfrsModal"
-                                            data-id_frs="<?= esc($row['id_frs']) ?>"
-                                            data-status_frs="<?= esc($row['status_frs']) ?>">
-                                            <?= esc($row['status_frs']) ?>
+                                            data-target="#statusihcModal"
+                                            data-id_ihc="<?= esc($row['id_ihc']) ?>"
+                                            data-status_ihc="<?= esc($row['status_ihc']) ?>">
+                                            <?= esc($row['status_ihc']) ?>
                                         </a>
                                     </td>
                                     <td>
                                         <div class="d-flex justify-content-around">
                                             <!-- Tombol Edit -->
-                                            <a href="<?= base_url('frs/edit/' . esc($row['id_frs'])) ?>" class="btn btn-sm btn-warning mx-1">
+                                            <a href="<?= base_url('ihc/edit/' . esc($row['id_ihc'])) ?>" class="btn btn-sm btn-warning mx-1">
                                                 <i class="fas fa-edit"></i> Edit
                                             </a>
-                                            <!-- Tombol Hapus frs -->
-                                            <button class="btn btn-sm btn-danger mx-1 delete-frs"
+                                            <!-- Tombol Hapus ihc -->
+                                            <button class="btn btn-sm btn-danger mx-1 delete-ihc"
                                                 data-toggle="modal"
                                                 data-target="#deleteModal"
-                                                data-id_frs="<?= htmlspecialchars($row['id_frs'], ENT_QUOTES, 'UTF-8') ?>"
-                                                data-action="frs"
-                                                aria-label="Hapus frs">
+                                                data-id_ihc="<?= htmlspecialchars($row['id_ihc'], ENT_QUOTES, 'UTF-8') ?>"
+                                                data-action="ihc"
+                                                aria-label="Hapus ihc">
                                                 <i class="fas fa-trash-alt"></i> Hapus
                                             </button>
                                         </div>

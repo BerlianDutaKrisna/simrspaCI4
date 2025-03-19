@@ -253,4 +253,4 @@
 
 <?= $this->include('templates/notifikasi') ?>
 <?= $this->include('templates/hpa/footer_edit'); ?>
-<?= $this->include('templates/proses/cetak_proses'); ?>
+<?= $this->include('templates/hpa/cetak_proses'); ?>
