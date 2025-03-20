@@ -106,6 +106,7 @@ class srsModel extends Model
     {
         return $this->select('srs.*, patient.*')
             ->join('patient', 'patient.id_pasien = srs.id_pasien')
+            ->orderBy('srs.kode_srs', 'ASC')
             ->findAll();
     }
 

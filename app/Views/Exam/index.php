@@ -15,66 +15,83 @@
                     <tr>
                         <th>No</th>
                         <th>No RM</th>
-                        <th>Kode FRS</th>
-                        <th>Kode HPA</th>
-                        <th>Kode SRS</th>
-                        <th>Kode IHC</th>
+                        <th>Kode Pemeriksaan</th>
+                        <th>Jenis Pemeriksaan</th>
                         <th>Nama Pasien</th>
-                        <th>Jenis Kelamin Pasien</th>
-                        <th>Tanggal Lahir Pasien</th>
-                        <th>Alamat Pasien</th>
+                        <th>Jenis Kelamin / Usia</th>
+                        <th>Tanggal Lahir</th>
+                        <th>Alamat</th>
                         <th>Dokter Pengirim</th>
                         <th>Unit Asal</th>
-                        <th>Status Pasien</th>
                         <th>Diagnosa Klinik</th>
-                        <th>Tanggal Hasil</th>
                         <th>Hasil</th>
-                        <th>Status</th>
-                        <th>Nama Penerima / Hubungan</th>
+                        <th>Penerima</th>
                         <th>Tanggal Penerima</th>
                     </tr>
                 </thead>
                 <tbody>
                     <?php if (!empty($Data)) : ?>
                         <?php
-                        $lastDate = null; // Menyimpan tanggal sebelumnya
+                        $lastDate = null; // Variabel untuk menyimpan tanggal sebelumnya
+                        $i = 1; // Nomor urut dalam satu tanggal
+
+                        function formatTanggalIndonesia($tanggal)
+                        {
+                            $hari = [
+                                'Sunday' => 'Minggu',
+                                'Monday' => 'Senin',
+                                'Tuesday' => 'Selasa',
+                                'Wednesday' => 'Rabu',
+                                'Thursday' => 'Kamis',
+                                'Friday' => 'Jumat',
+                                'Saturday' => 'Sabtu'
+                            ];
+
+                            $bulan = [
+                                '01' => 'Januari',
+                                '02' => 'Februari',
+                                '03' => 'Maret',
+                                '04' => 'April',
+                                '05' => 'Mei',
+                                '06' => 'Juni',
+                                '07' => 'Juli',
+                                '08' => 'Agustus',
+                                '09' => 'September',
+                                '10' => 'Oktober',
+                                '11' => 'November',
+                                '12' => 'Desember'
+                            ];
+
+                            $timestamp = strtotime($tanggal);
+                            $hariIndo = $hari[date('l', $timestamp)];
+                            $tgl = date('d', $timestamp);
+                            $bln = $bulan[date('m', $timestamp)];
+                            $thn = date('Y', $timestamp);
+
+                            return "$hariIndo, $tgl $bln $thn";
+                        }
                         ?>
                         <?php foreach ($Data as $row) : ?>
                             <?php
                             $tanggal_permintaan = $row['tanggal_permintaan'] ?? null;
-                            $formattedDate = '-';
+                            $formattedDate = empty($tanggal_permintaan) ? '-' : formatTanggalIndonesia($tanggal_permintaan);
 
-                            if (!empty($tanggal_permintaan)) {
-                                $tanggal = new DateTime($tanggal_permintaan);
-                                $formatter = new IntlDateFormatter(
-                                    'id_ID',
-                                    IntlDateFormatter::FULL,
-                                    IntlDateFormatter::NONE,
-                                    'Asia/Jakarta',
-                                    IntlDateFormatter::GREGORIAN,
-                                    'EEEE, dd MMMM yyyy'
-                                );
-                                $formattedDate = $formatter->format($tanggal);
-                            }
-
-                            // Jika tanggal berbeda dari sebelumnya, tampilkan header baru & reset nomor urut
+                            // Jika tanggal berubah, tampilkan header tanggal baru & reset nomor urut
                             if ($formattedDate !== $lastDate) :
-                                $i = 1; // Reset nomor urut
+                                $i = 1;
                             ?>
                                 <tr class="bg-light">
-                                    <td colspan="19" class="font-weight-bold text-center"><?= esc($formattedDate) ?></td>
+                                    <td colspan="16" class="font-weight-bold text-center"><?= esc($formattedDate) ?></td>
                                 </tr>
                                 <?php $lastDate = $formattedDate; ?>
                             <?php endif; ?>
 
-                            <!-- Data Pasien -->
+                            <!-- Baris Data Pasien -->
                             <tr>
-                                <td><?= $i ?></td> <!-- Nomor urut yang di-reset setiap tanggal baru -->
+                                <td><?= $i ?></td> <!-- Nomor urut dalam satu tanggal -->
                                 <td><?= esc($row['norm_pasien'] ?? 'Belum Diisi') ?></td>
-                                <td><?= esc($row['kode_frs'] ?? '') ?></td>
-                                <td><?= esc($row['kode_hpa'] ?? '') ?></td>
-                                <td><?= esc($row['kode_srs'] ?? '') ?></td>
-                                <td><?= esc($row['kode_ihc'] ?? '') ?></td>
+                                <td><?= esc($row['kode_pemeriksaan'] ?? '-') ?></td>
+                                <td><?= esc($row['jenis_pemeriksaan'] ?? '-') ?></td>
                                 <td><?= esc($row['nama_pasien'] ?? 'Belum Diisi') ?></td>
                                 <td>
                                     <?php
@@ -96,33 +113,18 @@
                                 <td><?= esc($row['alamat_pasien'] ?? 'Belum Diisi') ?></td>
                                 <td><?= esc($row['dokter_pengirim'] ?? 'Belum Diisi') ?></td>
                                 <td><?= esc($row['unit_asal'] ?? 'Belum Diisi') ?></td>
-                                <td><?= esc($row['status_pasien'] ?? 'Belum Diisi') ?></td>
                                 <td><?= esc($row['diagnosa_klinik'] ?? 'Belum Diisi') ?></td>
-                                <td>
-                                    <?php
-                                    $tanggal_hasil = $row['tanggal_hasil'] ?? "";
-                                    if ($tanggal_hasil === "") {
-                                        echo '';
-                                    } else {
-                                        $tanggal = new DateTime($tanggal_hasil);
-                                        echo esc($tanggal->format('d-m-Y'));
-                                    }
-                                    ?>
-                                </td>
-                                <td><?= esc(strip_tags($row['hasil_hpa'] ?? 'Belum Ada Hasil')) ?></td>
-                                <td><?= esc($row['status_hpa'] ?? 'Belum Diisi') ?></td>
-                                <td>
-                                    <?= esc($row['penerima_hpa'] ?? $row['penerima_frs'] ?? $row['penerima_srs'] ?? $row['penerima_ihc'] ?? 'Belum Diterima') ?>
-                                </td>
+                                <td><?= esc(strip_tags($row['hasil'] ?? 'Belum Ada Hasil')) ?></td>
+                                <td><?= esc($row['penerima'] ?? 'Belum Diterima') ?></td>
                                 <td>
                                     <?= empty($row['tanggal_penerima']) ? '-' : esc(date('H:i , d-m-Y', strtotime($row['tanggal_penerima']))); ?>
                                 </td>
                             </tr>
-                            <?php $i++; ?> <!-- Nomor urut bertambah dalam hari yang sama -->
+                            <?php $i++; ?> <!-- Nomor urut bertambah dalam satu tanggal -->
                         <?php endforeach; ?>
                     <?php else : ?>
                         <tr>
-                            <td colspan="19" class="text-center">Tidak ada data yang tersedia</td>
+                            <td colspan="16" class="text-center">Tidak ada data yang tersedia</td>
                         </tr>
                     <?php endif; ?>
                 </tbody>

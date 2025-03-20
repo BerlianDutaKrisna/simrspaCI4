@@ -48,29 +48,34 @@ class PatientModel extends Model
 
     public function getPatientWithRelations()
     {
-        $builder = $this->db->table('patient')
-            ->select('
-            patient.*, 
-            hpa.*, 
-            frs.*, 
-            srs.*, 
-            ihc.*
-        ')
-            ->join('hpa', 'hpa.id_pasien = patient.id_pasien', 'left')
-            ->join('frs', 'frs.id_pasien = patient.id_pasien', 'left')
-            ->join('srs', 'srs.id_pasien = patient.id_pasien', 'left')
-            ->join('ihc', 'ihc.id_pasien = patient.id_pasien', 'left')
-            ->where('(hpa.id_hpa IS NOT NULL OR frs.id_frs IS NOT NULL OR srs.id_srs IS NOT NULL OR ihc.id_ihc IS NOT NULL)')
-            ->orderBy('hpa.tanggal_permintaan', 'ASC')
-            ->orderBy('frs.tanggal_permintaan', 'ASC')
-            ->orderBy('srs.tanggal_permintaan', 'ASC')
-            ->orderBy('ihc.tanggal_permintaan', 'ASC')
-            ->orderBy('hpa.kode_hpa', 'ASC')
-            ->orderBy('frs.kode_frs', 'ASC')
-            ->orderBy('srs.kode_srs', 'ASC')
-            ->orderBy('ihc.kode_ihc', 'ASC')
-            ->get();
+        $query = "
+        SELECT patient.*, 
+                hpa.kode_hpa AS kode_pemeriksaan, hpa.tanggal_permintaan, 'HPA' AS jenis_pemeriksaan,
+                hpa.hasil_hpa AS hasil, hpa.status_hpa AS status, hpa.penerima_hpa AS penerima, hpa.tanggal_penerima
+        FROM patient
+        JOIN hpa ON hpa.id_pasien = patient.id_pasien
+        UNION ALL
+        SELECT patient.*, 
+                frs.kode_frs AS kode_pemeriksaan, frs.tanggal_permintaan, 'FRS' AS jenis_pemeriksaan,
+                NULL AS hasil, NULL AS status, frs.penerima_frs AS penerima, NULL AS tanggal_penerima
+        FROM patient
+        JOIN frs ON frs.id_pasien = patient.id_pasien
+        UNION ALL
+        SELECT patient.*, 
+                srs.kode_srs AS kode_pemeriksaan, srs.tanggal_permintaan, 'SRS' AS jenis_pemeriksaan,
+                NULL AS hasil, NULL AS status, srs.penerima_srs AS penerima, NULL AS tanggal_penerima
+        FROM patient
+        JOIN srs ON srs.id_pasien = patient.id_pasien
+        UNION ALL
+        SELECT patient.*, 
+                ihc.kode_ihc AS kode_pemeriksaan, ihc.tanggal_permintaan, 'IHC' AS jenis_pemeriksaan,
+                NULL AS hasil, NULL AS status, ihc.penerima_ihc AS penerima, NULL AS tanggal_penerima
+        FROM patient
+        JOIN ihc ON ihc.id_pasien = patient.id_pasien
+        ORDER BY tanggal_permintaan ASC, kode_pemeriksaan ASC
+    ";
 
+        $builder = $this->db->query($query);
         return $builder->getResultArray();
     }
 }

@@ -107,6 +107,7 @@ class ihcModel extends Model
     {
         return $this->select('ihc.*, patient.*')
             ->join('patient', 'patient.id_pasien = ihc.id_pasien')
+            ->orderBy('ihc.kode_ihc', 'ASC')
             ->findAll();
     }
 

@@ -51,22 +51,51 @@
             height: 200,
             emptyPara: '',
             toolbar: [
-                ['style', ['bold', 'italic', 'underline', 'clear']], // tombol gaya teks
-                ['font', ['fontsize', 'fontname']], // font dan ukuran font
-                ['para', ['ul', 'ol', 'paragraph']], // format paragraf
-                ['color', ['color']], // pilihan warna
-                ['view', ['codeview', 'help']] // menampilkan kode HTML dan bantuan
+                ['style', ['bold', 'italic', 'underline', 'clear']], // Gaya teks
+                ['font', ['fontsize', 'fontname']], // Font dan ukuran font
+                ['para', ['ul', 'ol', 'paragraph']], // Format paragraf
+                ['color', ['color']], // Pilihan warna
+                ['view', ['codeview', 'help']] // Menampilkan kode HTML dan bantuan
             ],
         });
 
-        var contentMakroskopis = $('#makroskopis_srs').summernote('code').trim();
-        if (!contentMakroskopis || contentMakroskopis === '<p><br></p>') {
-            $('#makroskopis_srs').summernote('code',
-                `<font size="5" face="verdana">Diterima bahan cairan _ berwarna _ dengan volume _ ml <br>
-            Dibuat sediaan sebanyak _ slide dan _ cell block.</font>`
-            );
+        // Ambil nilai tindakan_spesimen dari elemen input
+        var tindakanSpesimen = $('input[name="tindakan_spesimen"]').val().trim();
+
+        // Cek apakah textarea kosong atau hanya berisi tag default kosong dari Summernote
+        var currentContent = $('#makroskopis_srs').summernote('code').trim();
+
+        if (!currentContent || currentContent === '<p><br></p>') {
+            if (tindakanSpesimen === "Pap Smear") {
+                // Jika tindakan spesimen adalah "Pap Smear"
+                $('#makroskopis_srs').summernote('code', `
+                <b>I. BAHAN PEMERIKSAAN :</b><br>&nbsp;&nbsp;&nbsp; Cervical Smear.<br>
+                <b>II. KETERANGAN KLINIS :</b><br>
+                &nbsp; a. Keluhan : -.<br>
+                &nbsp; b. Pemeriksaan Fisik : -.<br>
+                <b>III. HASIL PEMERIKSAAN :</b><br>
+                &nbsp;&nbsp; a. Makroskopis : Diterima 1 smear dari cervix.<br>
+                &nbsp;&nbsp; b. Mikroskopis : <br>
+                &nbsp;&nbsp;&nbsp;&nbsp; - Sel Epitel: Sel Superfisial, Intermediate, Parabasal, dan Metaplastik.<br>
+                &nbsp;&nbsp;&nbsp;&nbsp; - Sel Inflamasi: Sel radang PMN dan Monokuler.<br>
+                &nbsp;&nbsp;&nbsp;&nbsp; - Mikroorganisme: Tidak ditemukan.<br>
+                &nbsp;&nbsp;&nbsp;&nbsp; - Perubahan Seluler: Tidak ada perubahan.<br>
+                <b>IV. KESIMPULAN :</b><br>
+                &nbsp; a. Spesimen: Adekuat.<br>
+                &nbsp; b. Hasil: <b>RADANG NON SPESIFIK / NILM / PAPANICOLOU CLASS II</b><br>
+            `);
+            } else {
+                // Default untuk kondisi lain
+                $('#makroskopis_srs').summernote('code', `
+                <font size="5" face="verdana">
+                    Diterima bahan cairan _ berwarna _ dengan volume _ ml.<br>
+                    Dibuat sediaan sebanyak _ slide dan _ cell block.
+                </font>
+            `);
+            }
         }
     });
+
 
 
     $(document).ready(function() {
@@ -101,19 +130,6 @@
 
         if (statusPenulisan !== "Selesai Penulisan") {
             $('.summernote_print').summernote('disable');
-        }
-    });
-
-    $(document).ready(function() {
-        // Inisialisasi Summernote
-        $('.summernote_makroskopis_ihc').summernote();
-
-        // Cek apakah isi kosong, lalu isi dengan default value
-        var currentContent = $('#makroskopis_ihc').summernote('code').trim();
-        if (!currentContent || currentContent === '<p><br></p>') {
-            $('#makroskopis_ihc').summernote('code',
-                '<font size="5" face="verdana">Dilakukan potong ulang blok parafin <?= $ihc['kode_block_ihc'] ?? '' ?> dan pengecatan imunohistokimia dengan antibodi ER, PR, Her2 Neu, serta Ki-67.</font>'
-            );
         }
     });
 </script>

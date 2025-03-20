@@ -105,6 +105,7 @@ class HpaModel extends Model
     {
         return $this->select('hpa.*, patient.*')
             ->join('patient', 'patient.id_pasien = hpa.id_pasien')
+            ->orderBy('hpa.kode_hpa', 'ASC')
             ->findAll();
     }
 

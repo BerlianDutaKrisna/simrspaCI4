@@ -90,7 +90,7 @@ class srsController extends BaseController
         } else {
             $nextNumber = 1;
         }
-        $kodesrs = 'srs.' . str_pad($nextNumber, 2, '0', STR_PAD_LEFT) . '/' . $currentYear;
+        $kodesrs = 'SRS.' . str_pad($nextNumber, 2, '0', STR_PAD_LEFT) . '/' . $currentYear;
         $data = [
             'id_user' => session()->get('id_user'),
             'nama_user' => session()->get('nama_user'),

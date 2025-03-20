@@ -106,6 +106,7 @@ class FrsModel extends Model
     {
         return $this->select('frs.*, patient.*')
             ->join('patient', 'patient.id_pasien = frs.id_pasien')
+            ->orderBy('frs.kode_frs', 'ASC')
             ->findAll();
     }
 

@@ -120,6 +120,11 @@
                     <input type="text" class="form-control" id="lokasi_spesimen" name="lokasi_spesimen" placeholder="Masukkan Lokasi Spesimen" value="<?= old('lokasi_spesimen'); ?>">
                 </div>
 
+                
+                <div class="form-group col-md-3">
+                    <label for="diagnosa_klinik">Diagnosa Klinik</label>
+                    <input type="text" class="form-control" id="diagnosa_klinik" name="diagnosa_klinik" placeholder="Masukkan Diagnosa Klinik" value="<?= old('diagnosa_klinik'); ?>">
+                </div>
                 <!-- Form group untuk Tindakan Spesimen -->
                 <div class="form-group col-md-3">
                     <label for="tindakan_spesimen">Tindakan Spesimen</label>
@@ -142,10 +147,6 @@
                         <option value="lainnya">Lainnya</option>
                     </select>
                     <input type="text" class="form-control mt-2 d-none" id="tindakan_spesimen_custom" name="tindakan_spesimen_custom" placeholder="Masukkan Tindakan Spesimen Lainnya">
-                </div>
-                <div class="form-group col-md-3">
-                    <label for="diagnosa_klinik">Diagnosa Klinik</label>
-                    <input type="text" class="form-control" id="diagnosa_klinik" name="diagnosa_klinik" placeholder="Masukkan Diagnosa Klinik" value="<?= old('diagnosa_klinik'); ?>">
                 </div>
             </div>
 
