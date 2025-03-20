@@ -47,13 +47,13 @@
                                     </td>
                                     <?php if (in_array($row['status_penerimaan_frs'], ["Proses Penerimaan"])): ?>
                                         <td>
-                                            <a href="<?= base_url('exam/edit_makroskopis/' . esc($row['id_frs'])) ?>" class="btn btn-warning btn-sm disabled">
+                                            <a href="<?= base_url('frs/edit_makroskopis/' . esc($row['id_frs'])) ?>" class="btn btn-warning btn-sm">
                                                 <i class="fas fa-pen"></i> Informed Consent
                                             </a>
                                         </td>
                                     <?php elseif (in_array($row['status_penerimaan_frs'], ["Selesai Penerimaan"])): ?>
                                         <td>
-                                            <a href="<?= base_url('exam/edit_makroskopis/' . esc($row['id_frs'])) ?>" class="btn btn-success btn-sm disabled">
+                                            <a href="<?= base_url('frs/edit_makroskopis/' . esc($row['id_frs'])) ?>" class="btn btn-success btn-sm">
                                                 <i class="fas fa-pen"></i> Informed Consent
                                             </a>
                                         </td>

@@ -231,6 +231,30 @@ class FrsController extends BaseController
         return view('frs/edit', $data);
     }
 
+    public function edit_makroskopis($id_frs)
+    {
+        // Ambil data frs berdasarkan ID
+        $frs = $this->frsModel->getfrsWithRelationsProses($id_frs);
+        if (!$frs) {
+            return redirect()->back()->with('message', ['error' => 'frs tidak ditemukan.']);
+        }
+        $id_penerimaan_frs = $frs['id_penerimaan_frs'];
+        // Ambil data penerimaan berdasarkan id_penerimaan_frs
+        $penerimaan = $this->penerimaan_frs->find($id_penerimaan_frs);
+        // Ambil data pengguna dengan status "Dokter"
+        $users = $this->usersModel->where('status_user', 'Dokter')->findAll();
+        // Persiapkan data yang akan dikirim ke view
+        $data = [
+            'frs'        => $frs,
+            'penerimaan' => $penerimaan,
+            'users'      => $users,
+            'id_user'    => $this->session->get('id_user'),
+            'nama_user'  => $this->session->get('nama_user'),
+        ];
+
+        return view('frs/edit_makroskopis', $data);
+    }
+
     // Menampilkan form edit frs mikroskopis
     public function edit_mikroskopis($id_frs)
     {

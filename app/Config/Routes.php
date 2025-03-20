@@ -73,6 +73,7 @@ $routes->group('frs', ['namespace' => 'App\Controllers\Frs'], function ($routes)
     $routes->post('insert', 'FrsController::insert');
     $routes->post('delete', 'FrsController::delete');
     $routes->get('edit/(:segment)', 'FrsController::edit/$1');
+    $routes->get('edit_makroskopis/(:segment)', 'FrsController::edit_makroskopis/$1');
     $routes->get('edit_mikroskopis/(:segment)', 'FrsController::edit_mikroskopis/$1');
     $routes->get('edit_penulisan/(:segment)', 'FrsController::edit_penulisan/$1');
     $routes->get('edit_print/(:segment)', 'FrsController::edit_print/$1');
