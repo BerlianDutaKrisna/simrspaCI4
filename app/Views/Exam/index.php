@@ -25,8 +25,6 @@
                         <th>Unit Asal</th>
                         <th>Diagnosa Klinik</th>
                         <th>Hasil</th>
-                        <th>Penerima</th>
-                        <th>Tanggal Penerima</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -115,10 +113,6 @@
                                 <td><?= esc($row['unit_asal'] ?? 'Belum Diisi') ?></td>
                                 <td><?= esc($row['diagnosa_klinik'] ?? 'Belum Diisi') ?></td>
                                 <td><?= esc(strip_tags($row['hasil'] ?? 'Belum Ada Hasil')) ?></td>
-                                <td><?= esc($row['penerima'] ?? 'Belum Diterima') ?></td>
-                                <td>
-                                    <?= empty($row['tanggal_penerima']) ? '-' : esc(date('H:i , d-m-Y', strtotime($row['tanggal_penerima']))); ?>
-                                </td>
                             </tr>
                             <?php $i++; ?> <!-- Nomor urut bertambah dalam satu tanggal -->
                         <?php endforeach; ?>
