@@ -1,7 +1,10 @@
 <script>
     function cetakProses() {
-        var detailMakroskopis = document.getElementById('makroskopis_frs') ? document.getElementById('makroskopis_frs').value : '';
-        var detailMikroskopis = document.getElementById('mikroskopis_frs') ? document.getElementById('mikroskopis_frs').value : '';
+        var dokter_pemeriksa = document.getElementById('dokter_pemeriksa') ? document.getElementById('dokter_pemeriksa').value : '';
+        var nama_hubungan_pasien = document.getElementById('nama_hubungan_pasien') ? document.getElementById('nama_hubungan_pasien').value : '';
+        var hubungan_dengan_pasien = document.getElementById('hubungan_dengan_pasien') ? document.getElementById('hubungan_dengan_pasien').value : '';
+        var jenis_kelamin_hubugan_pasien = document.getElementById('jenis_kelamin_hubugan_pasien') ? document.getElementById('jenis_kelamin_hubugan_pasien').value : '';
+        var usia_hubungan_pasien = document.getElementById('usia_hubungan_pasien') ? document.getElementById('usia_hubungan_pasien').value : '';
         var printWindow = window.open('', '', 'height=500,width=800');
         printWindow.document.write(`
     <!DOCTYPE html>
@@ -67,10 +70,10 @@
                     <b>INFORMED CONSENT TINDAKAN FNAB</b>
                 </td>
                 <td style="width: 30%;">
-                    Nama (L/P): _______________________<br>
-                    No. RM: _______________________<br>
-                    Tgl. Lahir: _______________________<br>
-                    Alamat: _______________________<br>
+                    Nama (<?= esc($frs['jenis_kelamin_pasien'] ?? '') ?>): <?= esc($frs['nama_pasien'] ?? '') ?><br>
+                    No. RM: <?= esc($frs['norm_pasien'] ?? '') ?><br>
+                    Tgl. Lahir: <?= isset($frs['tanggal_lahir_pasien']) ? date('d-m-Y', strtotime($frs['tanggal_lahir_pasien'])) : '' ?><br>
+                    Alamat: <?= esc($frs['alamat_pasien'] ?? '') ?><br>
                 </td>
             </tr>
         </table>
@@ -81,15 +84,15 @@
             </tr>
             <tr>
                 <td>Dokter Pelaksana Tindakan</td>
-                <td>dr. Vinna Chrisdianti, Sp.PA / dr. Ayu Tyasmara P, Sp.PA</td>
+                <td>${dokter_pemeriksa}</td>
             </tr>
             <tr>
                 <td>Pemberi Informasi</td>
-                <td>dr. Vinna Chrisdianti, Sp.PA / dr. Ayu Tyasmara P, Sp.PA</td>
+                <td>${dokter_pemeriksa}</td>
             </tr>
             <tr>
                 <td>Penerima Informasi/Pemberi Persetujuan</td>
-                <td>Nama: _______________ Hubungan: _______________</td>
+                <td>Nama: ${nama_hubungan_pasien} Hubungan: ${hubungan_dengan_pasien}</td>
             </tr>
         </table>
         
@@ -97,7 +100,7 @@
             <tr>
                 <td>1</td>
                 <td>Diagnosis Kerja</td>
-                <td>1. ____________<br>2. ____________<br>3. ____________</td>
+                <td>1. <?= esc($frs['diagnosa_klinik'] ?? '') ?><br>2. ____________<br>3. ____________</td>
             </tr>
             <tr>
                 <td>2</td>
@@ -145,6 +148,7 @@
                 <br>
                 <br>
                 <br>
+                ${dokter_pemeriksa}
                 </td>
             </tr>
             <tr>
@@ -155,6 +159,7 @@
                 <br>
                 <br>
                 <br>
+                ${nama_hubungan_pasien}
                 </td>
             </tr>
         </table>
@@ -164,37 +169,57 @@
                 <th colspan="2" style="text-align: center;">PERSETUJUAN TINDAKAN KEDOKTERAN</th>
             </tr>
             <tr>
-                <td colspan="2">Yang bertanda tangan di bawah ini, saya, nama _______________</td>
+                <td colspan="2">Yang bertanda tangan di bawah ini, saya, nama ${nama_hubungan_pasien}</td>
             </tr>
             <tr>
                 <td>Hubungan dengan pasien</td>
-                <td>□ Pasien sendiri □ Orang tua □ Anak □ Istri □ Suami □ Saudara □ Pengantar</td>
+                <td>${hubungan_dengan_pasien}</td>
             </tr>
             <tr>
                 <td>Umur</td>
-                <td>________ tahun, □ Laki-laki □ Perempuan</td>
+                <td>${usia_hubungan_pasien} tahun, ${jenis_kelamin_hubugan_pasien}</td>
             </tr>
             <tr>
                 <td>Alamat</td>
-                <td>__________________________</td>
+                <td><?= esc($frs['alamat_pasien'] ?? '') ?></td>
             </tr>
             <tr>
-                <td colspan="2">Dengan ini menyatakan setuju untuk dilakukan tindakan _______________ terhadap saya/ _______________ saya*</td>
+                <td colspan="2">Dengan ini menyatakan setuju untuk dilakukan tindakan <?= esc($frs['tindakan_spesimen'] ?? '') ?> terhadap saya/ _______________ saya*</td>
             </tr>
             <tr>
                 <td>Nama</td>
-                <td>__________________________, Umur ______ tahun, □ Laki-laki □ Perempuan</td>
+                <td>
+                    <?php
+
+                    use CodeIgniter\I18n\Time;
+                    // Ambil nama pasien
+                    $nama_pasien = esc($frs['nama_pasien'] ?? 'Nama tidak tersedia');
+                    // Hitung usia pasien jika tanggal lahir tersedia
+                    $usia = '___'; // Default jika tanggal lahir kosong
+                    if (!empty($frs['tanggal_lahir_pasien'])) {
+                        $tgl_lahir = Time::parse($frs['tanggal_lahir_pasien']);
+                        $usia = $tgl_lahir->difference(Time::now())->getYears();
+                    }
+                    // Tentukan jenis kelamin
+                    $jk = $frs['jenis_kelamin_pasien'] ?? '';
+                    $jk_laki = ($jk == 'L') ? '☑' : '☐';
+                    $jk_perempuan = ($jk == 'P') ? '☑' : '☐';
+                    echo "$nama_pasien, Umur $usia tahun, $jk_laki Laki-laki $jk_perempuan Perempuan";
+                    ?>
+                </td>
             </tr>
             <tr>
                 <td>Alamat</td>
-                <td>__________________________</td>
+                <td><?= esc($frs['alamat_pasien'] ?? '') ?></td>
             </tr>
             <tr>
                 <td colspan="2">Komplikasi yang mungkin timbul apabila tindakan tersebut tidak dilakukan. <br>
                 Saya bertanggung jawab atas segala akibat yang mungkin timbul sebagai akibat dilakukan tindakan kedokteran tersebut.</td>
             </tr>
             <tr>
-                <td colspan="2" style="text-align: center;">Surabaya, Tanggal _______________, Jam _______________</td>
+                <td colspan="2" style="text-align: center;">
+                    Surabaya, Tanggal <?= date('d-m-Y') ?>, Jam <?= date('H:i') ?>
+                </td>
             </tr>
         </table>
 
@@ -203,19 +228,19 @@
                 <p>Yang menyatakan</p>
                 <br>
                 <br>
-                <p>(________________)</p>
+                <p>(${nama_hubungan_pasien})</p>
             </div>
             <div>
                 <p>Saksi I (Dokter)</p>
                 <br>
                 <br>
-                <p>(________________)</p>
+                <p>(${dokter_pemeriksa})</p>
             </div>
             <div>
                 <p>Saksi II (Analis)</p>
                 <br>
                 <br>
-                <p>(________________)</p>
+                <p>(<?= esc($nama_user) ?? ""; ?>)</p>
             </div>
         </div>
     </div>

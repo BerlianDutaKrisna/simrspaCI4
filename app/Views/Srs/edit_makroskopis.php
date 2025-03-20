@@ -178,9 +178,9 @@
 
             <!-- Kolom Dokter dan Jumlah Slide -->
             <div class="form-group row">
-            <label class="col-sm-2 col-form-label" for="jumlah_slide">Jumlah Slide</label>
+                <label class="col-sm-2 col-form-label" for="jumlah_slide">Jumlah Slide</label>
                 <div class="col-sm-4">
-                <select class="form-control" id="jumlah_slide" name="jumlah_slide" onchange="handleJumlahSlideChange(this)">
+                    <select class="form-control" id="jumlah_slide" name="jumlah_slide" onchange="handleJumlahSlideChange(this)">
                         <option value="0" <?= ($srs['jumlah_slide'] == '0') ? 'selected' : '' ?>>0</option>
                         <option value="1" <?= ($srs['jumlah_slide'] == '1') ? 'selected' : '' ?>>1</option>
                         <option value="2" <?= ($srs['jumlah_slide'] == '2') ? 'selected' : '' ?>>2</option>
@@ -198,7 +198,7 @@
 
                 <label class="col-sm-2 col-form-label" for=""></label>
                 <div class="col-sm-4">
-                    
+
                 </div>
             </div>
 
@@ -208,7 +208,7 @@
                     <button type="submit"
                         class="btn btn-success btn-user w-100"
                         formaction="<?= base_url('srs/update/' . $srs['id_srs']); ?>">
-                        Simpan
+                        <i class="fas fa-save"></i> Simpan
                     </button>
                 </div>
                 <div class="col-sm-6 text-center">

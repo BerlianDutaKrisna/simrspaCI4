@@ -15,6 +15,7 @@ use App\Models\Frs\Proses\Pencetakan_frs;
 use App\Models\Frs\Mutu_frs;
 use Exception;
 
+
 class FrsController extends BaseController
 {
     protected $frsModel;
@@ -251,7 +252,7 @@ class FrsController extends BaseController
             'id_user'    => $this->session->get('id_user'),
             'nama_user'  => $this->session->get('nama_user'),
         ];
-
+        
         return view('frs/edit_makroskopis', $data);
     }
 
@@ -513,7 +514,6 @@ class FrsController extends BaseController
         return redirect()->to('frs/index_buku_penerima')->with('success', 'Penerima berhasil disimpan.');
     }
 
-
     public function update_print($id_frs)
     {
         date_default_timezone_set('Asia/Jakarta');
@@ -528,6 +528,16 @@ class FrsController extends BaseController
         $redirect = $this->request->getPost('redirect');
         if (!$redirect) {
             return redirect()->back()->with('error', 'Terjadi kesalahan: Halaman asal tidak ditemukan.');
+        }
+        // Cek ke halaman mana harus diarahkan setelah update
+        if ($redirect === 'edit_makroskopis' && isset($_POST['id_penerimaan_frs'])) {
+            $id_penerimaan_frs = $this->request->getPost('id_penerimaan_frs');
+            $this->penerimaan_frs->update($id_penerimaan_frs, [
+                'id_user_penerimaan_frs' => $id_user,
+                'status_penerimaan_frs' => 'Selesai Penerimaan',
+                'selesai_penerimaan_frs' => date('Y-m-d H:i:s'),
+            ]);
+            return redirect()->to('penerimaan_frs/index')->with('success', 'Data berhasil disimpan.');
         }
         // Cek ke halaman mana harus diarahkan setelah update
         if ($redirect === 'index_pemverifikasi_frs' && isset($_POST['id_pemverifikasi_frs'])) {
