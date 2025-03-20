@@ -15,7 +15,7 @@
                     <tr>
                         <th>No</th>
                         <th>Norm Pasien</th>
-                        <th>Kode Hpa</th>
+                        <th>Kode HPA</th>
                         <th>Nama Pasien</th>
                         <th>Jenis Kelamin Pasien</th>
                         <th>Tanggal Lahir Pasien</th>
@@ -25,8 +25,8 @@
                         <th>Status Pasien</th>
                         <th>Diagnosa Klinik</th>
                         <th>Tanggal Hasil</th>
-                        <th>Hasil Hpa</th>
-                        <th>Status Hpa</th>
+                        <th>Hasil HPA</th>
+                        <th>Status HPA</th>
                         <th class="text-center" style="width: 150px;">Penerima</th>
                         <th>Nama Penerima / Hubungan</th>
                         <th>Tanggal Penerima</th>
@@ -45,13 +45,11 @@
                                     <?php
                                     $jenis_kelamin = $row['jenis_kelamin_pasien'] ?? 'Belum Diisi';
                                     $usia = '';
-
                                     if (!empty($row['tanggal_lahir_pasien'])) {
                                         $tanggal_lahir = new DateTime($row['tanggal_lahir_pasien']);
                                         $hari_ini = new DateTime();
                                         $usia = $hari_ini->diff($tanggal_lahir)->y;
                                     }
-
                                     echo esc($jenis_kelamin) . ($usia !== '' ? " / {$usia}" : '');
                                     ?>
                                 </td>

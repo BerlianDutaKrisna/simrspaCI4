@@ -14,9 +14,9 @@
                 <thead>
                     <tr>
                         <th>No</th>
-                        <th>Kode srs</th>
-                        <th>Nama Pasien</th>
+                        <th>Kode SRS</th>
                         <th>Norm Pasien</th>
+                        <th>Nama Pasien</th>
                         <th>Jenis Kelamin Pasien</th>
                         <th>Tanggal Lahir Pasien</th>
                         <th>Alamat Pasien</th>
@@ -25,8 +25,8 @@
                         <th>Status Pasien</th>
                         <th>Diagnosa Klinik</th>
                         <th>Tanggal Hasil</th>
-                        <th>Status srs</th>
-                        <th>Hasil srs</th>
+                        <th>Hasil SRS</th>
+                        <th>Status SRS</th>
                         <th class="text-center" style="width: 150px;">Penerima</th>
                         <th>Nama Penerima / Hubungan</th>
                         <th>Tanggal Penerima</th>
@@ -38,20 +38,18 @@
                         <?php foreach ($srsData as $row) : ?>
                             <tr>
                                 <td><?= $i ?></td>
+                                <td><?= esc($row['norm_pasien'] ?? 'Belum Diisi') ?></td>
                                 <td><?= esc($row['kode_srs'] ?? 'Belum Diisi') ?></td>
                                 <td><?= esc($row['nama_pasien'] ?? 'Belum Diisi') ?></td>
-                                <td><?= esc($row['norm_pasien'] ?? 'Belum Diisi') ?></td>
                                 <td>
                                     <?php
                                     $jenis_kelamin = $row['jenis_kelamin_pasien'] ?? 'Belum Diisi';
                                     $usia = '';
-
                                     if (!empty($row['tanggal_lahir_pasien'])) {
                                         $tanggal_lahir = new DateTime($row['tanggal_lahir_pasien']);
                                         $hari_ini = new DateTime();
                                         $usia = $hari_ini->diff($tanggal_lahir)->y;
                                     }
-
                                     echo esc($jenis_kelamin) . ($usia !== '' ? " / {$usia}" : '');
                                     ?>
                                 </td>
@@ -82,8 +80,8 @@
                                     }
                                     ?>
                                 </td>
-                                <td><?= esc($row['status_srs'] ?? 'Belum Diisi') ?></td>
                                 <td><?= esc(strip_tags($row['hasil_srs'] ?? 'Belum Ada Hasil')) ?></td>
+                                <td><?= esc($row['status_srs'] ?? 'Belum Diisi') ?></td>
                                 <td class="text-center">
                                     <a href="#"
                                         class="btn btn-info btn-sm penerima-btn"

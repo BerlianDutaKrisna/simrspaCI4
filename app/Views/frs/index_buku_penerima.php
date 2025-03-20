@@ -14,9 +14,9 @@
                 <thead>
                     <tr>
                         <th>No</th>
-                        <th>Kode frs</th>
-                        <th>Nama Pasien</th>
                         <th>Norm Pasien</th>
+                        <th>Kode FRS</th>
+                        <th>Nama Pasien</th>
                         <th>Jenis Kelamin Pasien</th>
                         <th>Tanggal Lahir Pasien</th>
                         <th>Alamat Pasien</th>
@@ -25,8 +25,8 @@
                         <th>Status Pasien</th>
                         <th>Diagnosa Klinik</th>
                         <th>Tanggal Hasil</th>
-                        <th>Status frs</th>
-                        <th>Hasil frs</th>
+                        <th>Hasil FRS</th>
+                        <th>Status FRS</th>
                         <th class="text-center" style="width: 150px;">Penerima</th>
                         <th>Nama Penerima / Hubungan</th>
                         <th>Tanggal Penerima</th>
@@ -38,9 +38,9 @@
                         <?php foreach ($frsData as $row) : ?>
                             <tr>
                                 <td><?= $i ?></td>
+                                <td><?= esc($row['norm_pasien'] ?? 'Belum Diisi') ?></td>
                                 <td><?= esc($row['kode_frs'] ?? 'Belum Diisi') ?></td>
                                 <td><?= esc($row['nama_pasien'] ?? 'Belum Diisi') ?></td>
-                                <td><?= esc($row['norm_pasien'] ?? 'Belum Diisi') ?></td>
                                 <td>
                                     <?php
                                     $jenis_kelamin = $row['jenis_kelamin_pasien'] ?? 'Belum Diisi';
@@ -82,8 +82,8 @@
                                     }
                                     ?>
                                 </td>
-                                <td><?= esc($row['status_frs'] ?? 'Belum Diisi') ?></td>
                                 <td><?= esc(strip_tags($row['hasil_frs'] ?? 'Belum Ada Hasil')) ?></td>
+                                <td><?= esc($row['status_frs'] ?? 'Belum Diisi') ?></td>
                                 <td class="text-center">
                                     <a href="#"
                                         class="btn btn-info btn-sm penerima-btn"

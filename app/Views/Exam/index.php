@@ -3,10 +3,10 @@
 
 <div class="card shadow mb-4">
     <div class="card-header py-3">
-        <h6 class="m-0 font-weight-bold text-primary">Buku Penerimaan Hasil</h6>
+        <h6 class="m-0 font-weight-bold text-primary">Buku Registrasi</h6>
     </div>
     <div class="card-body">
-        <h1>Buku Penerimaan Hasil Histopatologi</h1>
+        <h1>Buku Registrasi Laboratorrium Patologi Anatomi</h1>
         <a href="<?= base_url('/dashboard') ?>" class="btn btn-primary mb-3">Kembali</a>
 
         <div class="table-responsive">
@@ -36,10 +36,40 @@
                 </thead>
                 <tbody>
                     <?php if (!empty($Data)) : ?>
-                        <?php $i = 1; ?>
+                        <?php
+                        $lastDate = null; // Menyimpan tanggal sebelumnya
+                        ?>
                         <?php foreach ($Data as $row) : ?>
+                            <?php
+                            $tanggal_permintaan = $row['tanggal_permintaan'] ?? null;
+                            $formattedDate = '-';
+
+                            if (!empty($tanggal_permintaan)) {
+                                $tanggal = new DateTime($tanggal_permintaan);
+                                $formatter = new IntlDateFormatter(
+                                    'id_ID',
+                                    IntlDateFormatter::FULL,
+                                    IntlDateFormatter::NONE,
+                                    'Asia/Jakarta',
+                                    IntlDateFormatter::GREGORIAN,
+                                    'EEEE, dd MMMM yyyy'
+                                );
+                                $formattedDate = $formatter->format($tanggal);
+                            }
+
+                            // Jika tanggal berbeda dari sebelumnya, tampilkan header baru & reset nomor urut
+                            if ($formattedDate !== $lastDate) :
+                                $i = 1; // Reset nomor urut
+                            ?>
+                                <tr class="bg-light">
+                                    <td colspan="19" class="font-weight-bold text-center"><?= esc($formattedDate) ?></td>
+                                </tr>
+                                <?php $lastDate = $formattedDate; ?>
+                            <?php endif; ?>
+
+                            <!-- Data Pasien -->
                             <tr>
-                                <td><?= $i ?></td>
+                                <td><?= $i ?></td> <!-- Nomor urut yang di-reset setiap tanggal baru -->
                                 <td><?= esc($row['norm_pasien'] ?? 'Belum Diisi') ?></td>
                                 <td><?= esc($row['kode_frs'] ?? '') ?></td>
                                 <td><?= esc($row['kode_hpa'] ?? '') ?></td>
@@ -71,25 +101,28 @@
                                 <td>
                                     <?php
                                     $tanggal_hasil = $row['tanggal_hasil'] ?? "";
-                                    if (empty($tanggal_hasil)) {
-                                        echo 'Belum Ada Tanggal';
+                                    if ($tanggal_hasil === "") {
+                                        echo '';
                                     } else {
-                                        echo esc(date('d-m-Y', strtotime($tanggal_hasil)));
+                                        $tanggal = new DateTime($tanggal_hasil);
+                                        echo esc($tanggal->format('d-m-Y'));
                                     }
                                     ?>
                                 </td>
-                                <td><?= esc(strip_tags($row['hasil'] ?? 'Belum Ada Hasil')) ?></td>
-                                <td><?= esc($row['status'] ?? 'Belum Diisi') ?></td>
-                                <td><?= esc($row['penerima_hpa'] ?? $row['penerima_frs'] ?? $row['penerima_srs'] ?? $row['penerima_ihc'] ?? 'Belum Diterima') ?></td>
+                                <td><?= esc(strip_tags($row['hasil_hpa'] ?? 'Belum Ada Hasil')) ?></td>
+                                <td><?= esc($row['status_hpa'] ?? 'Belum Diisi') ?></td>
+                                <td>
+                                    <?= esc($row['penerima_hpa'] ?? $row['penerima_frs'] ?? $row['penerima_srs'] ?? $row['penerima_ihc'] ?? 'Belum Diterima') ?>
+                                </td>
                                 <td>
                                     <?= empty($row['tanggal_penerima']) ? '-' : esc(date('H:i , d-m-Y', strtotime($row['tanggal_penerima']))); ?>
                                 </td>
                             </tr>
-                            <?php $i++; ?>
+                            <?php $i++; ?> <!-- Nomor urut bertambah dalam hari yang sama -->
                         <?php endforeach; ?>
                     <?php else : ?>
                         <tr>
-                            <td colspan="20" class="text-center">Tidak ada data yang tersedia</td>
+                            <td colspan="19" class="text-center">Tidak ada data yang tersedia</td>
                         </tr>
                     <?php endif; ?>
                 </tbody>
