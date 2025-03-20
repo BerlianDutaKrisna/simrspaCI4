@@ -40,6 +40,11 @@ $routes->group('patient', function ($routes) {
     $routes->post('modal_search', 'Patient::modal_search'); // Pencarian dengan NoRM
 });
 
+// Route untuk exam
+$routes->group('exam', ['namespace' => 'App\Controllers\Exam'], function ($routes) {
+    $routes->get('index', 'ExamController::index');
+});
+
 // Route untuk hpa
 $routes->group('hpa', ['namespace' => 'App\Controllers\Hpa'], function ($routes) {
     $routes->get('index', 'HpaController::index');
