@@ -118,14 +118,13 @@
                     <label for="lokasi_spesimen">Lokasi Spesimen</label>
                     <input type="text" class="form-control" id="lokasi_spesimen" name="lokasi_spesimen" placeholder="Masukkan Lokasi Spesimen" value="<?= old('lokasi_spesimen'); ?>">
                 </div>
-                <div class="form-group col-md-2">
-                    <label for="kode_block_ihc">Blok Parafin No</label>
-                    <input type="text" class="form-control" id="kode_block_ihc" name="kode_block_ihc" placeholder="Masukkan Blok Parafin No" value="<?= old('kode_block_ihc'); ?>">
-                </div>
-                
                 <div class="form-group col-md-3">
                     <label for="diagnosa_klinik">Diagnosa Klinik</label>
                     <input type="text" class="form-control" id="diagnosa_klinik" name="diagnosa_klinik" placeholder="Masukkan Diagnosa Klinik" value="<?= old('diagnosa_klinik'); ?>">
+                </div>
+                <div class="form-group col-md-2">
+                    <label for="kode_block_ihc">Blok Parafin No</label>
+                    <input type="text" class="form-control" id="kode_block_ihc" name="kode_block_ihc" placeholder="Masukkan Blok Parafin No" value="<?= old('kode_block_ihc'); ?>">
                 </div>
                 <!-- Form group untuk Tindakan Spesimen -->
                 <div class="form-group col-md-3">
