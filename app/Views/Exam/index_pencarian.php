@@ -31,16 +31,29 @@
                 <div class="row mt-3">
                     <div class="col-md-6">
                         <label for="searchDate">Tanggal Pencarian</label>
-                        <input type="date" class="form-control" id="searchDate" name="searchDate" value="<?= old('searchDate') ?: date('Y-m-d'); ?>">
+                        <input type="date" class="form-control" id="searchDate" name="searchDate"
+                            value="<?= old('searchDate') ?: date('Y-m-d', strtotime('-7 days')); ?>">
                     </div>
                     <div class="col-md-6">
                         <label for="searchDate2">Sampai Tanggal</label>
-                        <input type="date" class="form-control" id="searchDate2" name="searchDate2" value="<?= old('searchDate2') ?: date('Y-m-d'); ?>">
+                        <input type="date" class="form-control" id="searchDate2" name="searchDate2"
+                            value="<?= old('searchDate2') ?: date('Y-m-d'); ?>">
                     </div>
                 </div>
                 <div class="row mt-3">
                     <div class="col-12 text-center">
-                        <button type="submit" class="btn btn-primary btn-block">Cari</button>
+                        <button type="submit" class="btn btn-primary btn-block">
+                            <i class="fas fa-search"></i> Cari
+                        </button>
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-12 text-center">
+                        <button type="button"
+                            class="btn btn-info btn-user w-100 w-md-auto"
+                            onclick="cetakPencarian()">
+                            <i class="fas fa-print"></i> Cetak
+                        </button>
                     </div>
                 </div>
             </div>
@@ -179,13 +192,6 @@
     </div>
 </div>
 
-<?= $this->include('templates/hpa/modal') ?>
-<?= $this->include('templates/frs/modal') ?>
-<?= $this->include('templates/srs/modal') ?>
-<?= $this->include('templates/ihc/modal') ?>
 <?= $this->include('templates/notifikasi') ?>
 <?= $this->include('templates/dashboard/footer_dashboard') ?>
-<?= $this->include('templates/hpa/script') ?>
-<?= $this->include('templates/frs/script') ?>
-<?= $this->include('templates/srs/script') ?>
-<?= $this->include('templates/ihc/script') ?>
+<?= $this->include('templates/exam/cetak_pencarian'); ?>

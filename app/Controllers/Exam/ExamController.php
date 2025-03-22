@@ -66,22 +66,20 @@ class ExamController extends BaseController
         $searchValue = $this->request->getGet('searchValue');  // Nilai yang dicari
         $startDate = $this->request->getGet('searchDate');     // Tanggal awal
         $endDate = $this->request->getGet('searchDate2');      // Tanggal akhir
-
         // Jika tidak ada input pencarian, tampilkan semua data
         if (empty($searchField) || empty($searchValue)) {
-            $results = $this->patientModel->getAllPatientsWithRelations();
+            $results = $this->patientModel->getPatientWithRelations();
         } else {
             // Gunakan pencarian spesifik
             $results = $this->patientModel->searchPatientsWithRelations($searchField, $searchValue, $startDate, $endDate);
         }
-
         // Kirim data ke view
         $data = [
             'id_user' => session()->get('id_user'),
             'nama_user' => session()->get('nama_user'),
             'Data' => $results
         ];
-
+        
         return view('Exam/index_pencarian', $data);
     }
 }
