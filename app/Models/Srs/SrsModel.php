@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Models\srs;
+namespace App\Models\Srs;
 
 use CodeIgniter\Model;
 
-class srsModel extends Model
+class SrsModel extends Model
 {
     protected $table = 'srs';
     protected $primaryKey = 'id_srs';

@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Models\ihc;
+namespace App\Models\Ihc;
 
 use CodeIgniter\Model;
 
-class ihcModel extends Model
+class IhcModel extends Model
 {
     protected $table = 'ihc';
     protected $primaryKey = 'id_ihc';

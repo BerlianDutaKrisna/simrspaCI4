@@ -6,7 +6,7 @@ use CodeIgniter\Model;
 
 class PatientModel extends Model
 {
-    protected $table = 'patient'; // Nama tabel di database
+    protected $table = 'patient';
     protected $primaryKey = 'id_pasien';
     protected $returnType = 'array';
     protected $allowedFields = [
@@ -15,12 +15,11 @@ class PatientModel extends Model
         'alamat_pasien',
         'tanggal_lahir_pasien',
         'jenis_kelamin_pasien',
-        'status_pasien'
+        'status_pasien',
+        'created_at',
+        'updated_at'
     ];
-    // Mengaktifkan timestamps otomatis
     protected $useTimestamps = true;
-
-    // Nama kolom untuk waktu dibuat dan diperbarui
     protected $createdField  = 'created_at';
     protected $updatedField  = 'updated_at';
 
@@ -49,33 +48,78 @@ class PatientModel extends Model
     public function getPatientWithRelations()
     {
         $query = "
-        SELECT patient.*, 
-                hpa.kode_hpa AS kode_pemeriksaan, hpa.tanggal_permintaan, 'HPA' AS jenis_pemeriksaan,
-                hpa.hasil_hpa AS hasil, hpa.status_hpa AS status, hpa.penerima_hpa AS penerima, hpa.tanggal_penerima
-        FROM patient
-        JOIN hpa ON hpa.id_pasien = patient.id_pasien
-        UNION ALL
-        SELECT patient.*, 
-                frs.kode_frs AS kode_pemeriksaan, frs.tanggal_permintaan, 'FRS' AS jenis_pemeriksaan,
-                NULL AS hasil, NULL AS status, frs.penerima_frs AS penerima, NULL AS tanggal_penerima
-        FROM patient
-        JOIN frs ON frs.id_pasien = patient.id_pasien
-        UNION ALL
-        SELECT patient.*, 
-                srs.kode_srs AS kode_pemeriksaan, srs.tanggal_permintaan, 'SRS' AS jenis_pemeriksaan,
-                NULL AS hasil, NULL AS status, srs.penerima_srs AS penerima, NULL AS tanggal_penerima
-        FROM patient
-        JOIN srs ON srs.id_pasien = patient.id_pasien
-        UNION ALL
-        SELECT patient.*, 
-                ihc.kode_ihc AS kode_pemeriksaan, ihc.tanggal_permintaan, 'IHC' AS jenis_pemeriksaan,
-                NULL AS hasil, NULL AS status, ihc.penerima_ihc AS penerima, NULL AS tanggal_penerima
-        FROM patient
-        JOIN ihc ON ihc.id_pasien = patient.id_pasien
-        ORDER BY tanggal_permintaan ASC, kode_pemeriksaan ASC
+    SELECT patient.*, 
+        hpa.kode_hpa AS kode_pemeriksaan, hpa.tanggal_permintaan, 'HPA' AS jenis_pemeriksaan,
+        hpa.hasil_hpa AS hasil, hpa.status_hpa AS status, hpa.penerima_hpa AS penerima, hpa.tanggal_penerima
+    FROM patient
+    LEFT JOIN hpa ON hpa.id_pasien = patient.id_pasien
+    UNION ALL
+    SELECT patient.*, 
+        frs.kode_frs AS kode_pemeriksaan, frs.tanggal_permintaan, 'FRS' AS jenis_pemeriksaan,
+        frs.hasil_frs AS hasil, frs.status_frs AS status, frs.penerima_frs AS penerima, frs.tanggal_penerima
+    FROM patient
+    LEFT JOIN frs ON frs.id_pasien = patient.id_pasien
+    UNION ALL
+    SELECT patient.*, 
+        srs.kode_srs AS kode_pemeriksaan, srs.tanggal_permintaan, 'SRS' AS jenis_pemeriksaan,
+        srs.hasil_srs AS hasil, srs.status_srs AS status, srs.penerima_srs AS penerima, srs.tanggal_penerima
+    FROM patient
+    LEFT JOIN srs ON srs.id_pasien = patient.id_pasien
+    UNION ALL
+    SELECT patient.*, 
+        ihc.kode_ihc AS kode_pemeriksaan, ihc.tanggal_permintaan, 'IHC' AS jenis_pemeriksaan,
+        ihc.hasil_ihc AS hasil, ihc.status_ihc AS status, ihc.penerima_ihc AS penerima, ihc.tanggal_penerima
+    FROM patient
+    LEFT JOIN ihc ON ihc.id_pasien = patient.id_pasien
+    ORDER BY tanggal_permintaan DESC, kode_pemeriksaan ASC
     ";
-
         $builder = $this->db->query($query);
         return $builder->getResultArray();
+    }
+
+    public function searchPatientsWithRelations($searchField, $searchValue, $startDate, $endDate)
+    {
+        $searchValue = $this->db->escape($searchValue);
+        $startDate = $this->db->escape($startDate);
+        $endDate = $this->db->escape($endDate);
+
+        $query = "
+    SELECT patient.*, 
+        hpa.kode_hpa AS kode_pemeriksaan, hpa.tanggal_permintaan, 'HPA' AS jenis_pemeriksaan,
+        hpa.hasil_hpa AS hasil, hpa.status_hpa AS status, hpa.penerima_hpa AS penerima, hpa.tanggal_penerima
+    FROM patient
+    LEFT JOIN hpa ON hpa.id_pasien = patient.id_pasien
+    WHERE 1=1 ";
+
+        // Jika ada filter berdasarkan kriteria pencarian, gunakan "=" (tanpa LIKE)
+        if (!empty($searchField) && !empty($searchValue)) {
+            $query .= " AND $searchField = $searchValue";
+        }
+
+        // Filter berdasarkan rentang tanggal
+        if (!empty($startDate) && !empty($endDate)) {
+            $query .= " AND tanggal_permintaan BETWEEN $startDate AND $endDate";
+        }
+
+        $query .= " 
+    UNION ALL
+    SELECT patient.*, 
+        frs.kode_frs AS kode_pemeriksaan, frs.tanggal_permintaan, 'FRS' AS jenis_pemeriksaan,
+        frs.hasil_frs AS hasil, frs.status_frs AS status, frs.penerima_frs AS penerima, frs.tanggal_penerima
+    FROM patient
+    LEFT JOIN frs ON frs.id_pasien = patient.id_pasien
+    WHERE 1=1 ";
+
+        if (!empty($searchField) && !empty($searchValue)) {
+            $query .= " AND $searchField = $searchValue";
+        }
+
+        if (!empty($startDate) && !empty($endDate)) {
+            $query .= " AND tanggal_permintaan BETWEEN $startDate AND $endDate";
+        }
+
+        $query .= " ORDER BY tanggal_permintaan DESC, kode_pemeriksaan ASC";
+
+        return $this->db->query($query)->getResultArray();
     }
 }

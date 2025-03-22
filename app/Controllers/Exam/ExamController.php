@@ -17,7 +17,6 @@ use App\Models\Hpa\Mutu_hpa;
 use CodeIgniter\Exceptions\PageNotFoundException;
 use Exception;
 
-
 class ExamController extends BaseController
 {
     protected $hpaModel;
@@ -35,8 +34,7 @@ class ExamController extends BaseController
 
     public function __construct()
     {
-        // Inisialisasi model HPA
-        $this->hpaModel = new hpaModel();
+        $this->hpaModel = new HpaModel();
         $this->usersModel = new UsersModel();
         $this->patientModel = new PatientModel();
         $this->penerimaan_hpa = new Penerimaan_hpa();
@@ -58,7 +56,32 @@ class ExamController extends BaseController
             'nama_user' => session()->get('nama_user'),
             'Data' => $Data
         ];
-        
+
         return view('Exam/index', $data);
+    }
+
+    public function search()
+    {
+        $searchField = $this->request->getGet('searchInput');  // Kolom yang dicari
+        $searchValue = $this->request->getGet('searchValue');  // Nilai yang dicari
+        $startDate = $this->request->getGet('searchDate');     // Tanggal awal
+        $endDate = $this->request->getGet('searchDate2');      // Tanggal akhir
+
+        // Jika tidak ada input pencarian, tampilkan semua data
+        if (empty($searchField) || empty($searchValue)) {
+            $results = $this->patientModel->getAllPatientsWithRelations();
+        } else {
+            // Gunakan pencarian spesifik
+            $results = $this->patientModel->searchPatientsWithRelations($searchField, $searchValue, $startDate, $endDate);
+        }
+
+        // Kirim data ke view
+        $data = [
+            'id_user' => session()->get('id_user'),
+            'nama_user' => session()->get('nama_user'),
+            'Data' => $results
+        ];
+
+        return view('Exam/index_pencarian', $data);
     }
 }

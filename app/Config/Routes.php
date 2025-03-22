@@ -43,6 +43,7 @@ $routes->group('patient', function ($routes) {
 // Route untuk exam
 $routes->group('exam', ['namespace' => 'App\Controllers\Exam'], function ($routes) {
     $routes->get('index', 'ExamController::index');
+    $routes->get('search', 'ExamController::search');
 });
 
 // Route untuk hpa
