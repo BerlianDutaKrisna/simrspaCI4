@@ -575,7 +575,7 @@ class srsController extends BaseController
 
         // Ambil kode_srs dan ekstrak nomor dari format "H.nomor/25"
         $kode_srs = $srs['kode_srs'];
-        preg_match('/H\.(\d+)\/\d+/', $kode_srs, $matches);
+        preg_match('/SRS\.(\d+)\/\d+/', $kode_srs, $matches);
         $kode_srs = isset($matches[1]) ? $matches[1] : '000';
 
         // Validasi input file

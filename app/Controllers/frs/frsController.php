@@ -585,7 +585,7 @@ class FrsController extends BaseController
 
         // Ambil kode_frs dan ekstrak nomor dari format "H.nomor/25"
         $kode_frs = $frs['kode_frs'];
-        preg_match('/H\.(\d+)\/\d+/', $kode_frs, $matches);
+        preg_match('/FRS\.(\d+)\/\d+/', $kode_frs, $matches);
         $kode_frs = isset($matches[1]) ? $matches[1] : '000';
 
         // Validasi input file
