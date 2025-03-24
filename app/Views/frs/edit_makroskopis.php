@@ -76,7 +76,12 @@
 
                         <div class="form-group col-md-3">
                             <label for="nama_hubungan_pasien">Nama Hubungan Pasien</label>
-                            <input type="text" class="form-control" id="nama_hubungan_pasien" name="nama_hubungan_pasien">
+                            <select class="form-control" id="nama_hubungan_pasien" name="nama_hubungan_pasien" onchange="toggleSearchValue()">
+                                <option value="">-- Pilih Penandatangan --</option>
+                                <option value="<?= esc($frs['nama_pasien'] ?? '') ?>">Pasien Sendiri</option>
+                                <option value="lainnya">Lainnya</option>
+                            </select>
+                            <input type="text" class="form-control mt-2 d-none" id="nama_lainnya" name="nama_lainnya" placeholder="Masukkan Nama Lainnya">
                         </div>
 
                         <div class="form-group col-md-3">
@@ -104,11 +109,45 @@
 
                         <div class="form-group col-md-3">
                             <label for="usia_hubungan_pasien">Usia Hubungan Pasien</label>
-                            <input type="number" class="form-control" id="usia_hubungan_pasien" name="usia_hubungan_pasien">
+                            <input type="number" class="form-control" id="usia_hubungan_pasien" name="usia_hubungan_pasien" value="">
                         </div>
                     </div>
                 </div>
             </div>
+
+            <script>
+                function toggleSearchValue() {
+                    let namaHubungan = document.getElementById("nama_hubungan_pasien").value;
+                    let inputNamaLainnya = document.getElementById("nama_lainnya");
+                    let hubunganPasien = document.getElementById("hubungan_dengan_pasien");
+                    let jenisKelamin = document.getElementById("jenis_kelamin_hubungan_pasien");
+                    let usiaPasien = document.getElementById("usia_hubungan_pasien");
+
+                    if (namaHubungan === "<?= esc($frs['nama_pasien'] ?? '') ?>") {
+                        hubunganPasien.value = "Pasien Sendiri";
+                        jenisKelamin.value = "<?= esc($frs['jenis_kelamin_pasien'] ?? '') ?>";
+                        usiaPasien.value = hitungUsia("<?= esc($frs['tanggal_lahir_pasien'] ?? '') ?>");
+                    } else {
+                        hubunganPasien.value = "";
+                        jenisKelamin.value = "";
+                        usiaPasien.value = "";
+                    }
+
+                    inputNamaLainnya.classList.toggle("d-none", namaHubungan !== "lainnya");
+                }
+
+                function hitungUsia(tanggalLahir) {
+                    if (!tanggalLahir) return "";
+                    let birthDate = new Date(tanggalLahir);
+                    let today = new Date();
+                    let age = today.getFullYear() - birthDate.getFullYear();
+                    let monthDiff = today.getMonth() - birthDate.getMonth();
+                    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+                        age--;
+                    }
+                    return age;
+                }
+            </script>
 
             <!-- Tombol Simpan -->
             <div class="form-group row">
