@@ -133,7 +133,14 @@
                         usiaPasien.value = "";
                     }
 
-                    inputNamaLainnya.classList.toggle("d-none", namaHubungan !== "lainnya");
+                    // Tampilkan atau sembunyikan input nama lainnya
+                    if (namaHubungan === "lainnya") {
+                        inputNamaLainnya.classList.remove("d-none");
+                        inputNamaLainnya.focus();
+                    } else {
+                        inputNamaLainnya.classList.add("d-none");
+                        inputNamaLainnya.value = ""; // Reset nilai input jika tidak dipilih "Lainnya"
+                    }
                 }
 
                 function hitungUsia(tanggalLahir) {
@@ -147,6 +154,23 @@
                     }
                     return age;
                 }
+
+                function getNamaHubunganPasien() {
+                    let selectElement = document.getElementById("nama_hubungan_pasien").value;
+                    let inputNamaLainnya = document.getElementById("nama_lainnya").value;
+
+                    // Jika "Lainnya" dipilih, gunakan nilai input, jika tidak, gunakan nilai dropdown
+                    return selectElement === "lainnya" ? inputNamaLainnya : selectElement;
+                }
+
+                // Event listener untuk menangkap perubahan nilai
+                document.getElementById("nama_hubungan_pasien").addEventListener("change", function() {
+                    console.log("Nama Hubungan Pasien:", getNamaHubunganPasien());
+                });
+
+                document.getElementById("nama_lainnya").addEventListener("input", function() {
+                    console.log("Nama Hubungan Pasien (input lainnya):", getNamaHubunganPasien());
+                });
             </script>
 
             <!-- Tombol Simpan -->

@@ -1,9 +1,13 @@
 <script>
     function cetakProses() {
         var dokter_pemeriksa = document.getElementById('dokter_pemeriksa') ? document.getElementById('dokter_pemeriksa').value : '';
-        var nama_hubungan_pasien = document.getElementById('nama_hubungan_pasien') ? document.getElementById('nama_hubungan_pasien').value : '';
+        var nama_hubungan_pasien = document.getElementById('nama_hubungan_pasien') ?
+            (document.getElementById('nama_hubungan_pasien').value === 'lainnya' ?
+                document.getElementById('nama_lainnya').value :
+                document.getElementById('nama_hubungan_pasien').value) :
+            '';
         var hubungan_dengan_pasien = document.getElementById('hubungan_dengan_pasien') ? document.getElementById('hubungan_dengan_pasien').value : '';
-        var jenis_kelamin_hubugan_pasien = document.getElementById('jenis_kelamin_hubugan_pasien') ? document.getElementById('jenis_kelamin_hubugan_pasien').value : '';
+        var jenis_kelamin_hubungann_pasien = document.getElementById('jenis_kelamin_hubungann_pasien') ? document.getElementById('jenis_kelamin_hubungann_pasien').value : '';
         var usia_hubungan_pasien = document.getElementById('usia_hubungan_pasien') ? document.getElementById('usia_hubungan_pasien').value : '';
         var printWindow = window.open('', '', 'height=500,width=800');
         printWindow.document.write(`
@@ -23,7 +27,6 @@
             width: 850px;
             margin: 20px auto;
             padding: 20px;
-            border: 2px solid black;
         }
         table {
             width: 100%;
@@ -31,7 +34,7 @@
         }
         th, td {
             border: 1px solid black;
-            padding: 8px;
+            padding: 5px;
             text-align: left;
         }
         .header td {
@@ -41,21 +44,36 @@
         .signature {
             display: flex;
             justify-content: space-between;
-            margin-top: 20px;
+            margin-top: 10px;
         }
         .signature div {
             width: 30%;
             text-align: center;
         }
         .logo-img {
-            width: 100px;
+            width: 60px;
             height: auto;
+        }
+        .header-table {
+            width: 100%;
+            font-size: 12px;
+            margin: auto;
+        }
+        .header-table td {
+            padding: 3px;
+        }
+        .rm-label {
+            font-size: 14px;
+            font-weight: bold;
+            text-align: right;
+            margin-bottom: 10px;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <table>
+        <p class="rm-label">RM 09 PA</p>
+        <table class="header-table">
             <tr class="header">
                 <td style="width: 20%; text-align: center; border-right: none;">
                     <img src="<?= base_url('img/LogoPemkot.png') ?>" class="logo-img">
@@ -65,11 +83,10 @@
                     RUMAH SAKIT UMUM DAERAH<br>
                     dr. MOHAMAD SOEWANDHIE SURABAYA<br>
                     Jl. Tambakrejo No. 45 - 47, KOTA SURABAYA<br>
-                    TELP. 0313717141, 3725905<br>
-                    <br>
+                    TELP. 0313717141, 3725905<br><br>
                     <b>INFORMED CONSENT TINDAKAN FNAB</b>
                 </td>
-                <td style="width: 30%;">
+                <td style="width: 50%; font-size: 16px; text-align: left;">
                     Nama (<?= esc($frs['jenis_kelamin_pasien'] ?? '') ?>): <?= esc($frs['nama_pasien'] ?? '') ?><br>
                     No. RM: <?= esc($frs['norm_pasien'] ?? '') ?><br>
                     Tgl. Lahir: <?= isset($frs['tanggal_lahir_pasien']) ? date('d-m-Y', strtotime($frs['tanggal_lahir_pasien'])) : '' ?><br>
@@ -77,7 +94,7 @@
                 </td>
             </tr>
         </table>
-        
+                
         <table>
             <tr>
                 <th colspan="2" style="text-align: center;">PEMBERIAN INFORMASI</th>
@@ -92,7 +109,7 @@
             </tr>
             <tr>
                 <td>Penerima Informasi/Pemberi Persetujuan</td>
-                <td>Nama: ${nama_hubungan_pasien} Hubungan: ${hubungan_dengan_pasien}</td>
+                <td>Nama: ${nama_hubungan_pasien} | Hubungan: ${hubungan_dengan_pasien}</td>
             </tr>
         </table>
         
@@ -177,7 +194,7 @@
             </tr>
             <tr>
                 <td>Umur</td>
-                <td>${usia_hubungan_pasien} tahun, ${jenis_kelamin_hubugan_pasien}</td>
+                <td>${usia_hubungan_pasien} tahun, ${jenis_kelamin_hubungann_pasien}</td>
             </tr>
             <tr>
                 <td>Alamat</td>
