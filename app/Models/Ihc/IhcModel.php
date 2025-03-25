@@ -29,6 +29,9 @@ class IhcModel extends Model
         'print_ihc',
         'penerima_ihc',
         'tanggal_penerima',
+        'no_tlp_ihc',
+        'no_bpjs_ihc',
+        'no_ktp_ihc',
         'created_at',
         'updated_at',
     ];
