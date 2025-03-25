@@ -19,9 +19,20 @@ class Dashboard extends BaseController
         $data = [
             'nama_user' => $this->session->get('nama_user'),
             'counts' => $this->getCounts(),
-            'chartData' => json_encode($this->hpaModel->getHpaChartData(), JSON_NUMERIC_CHECK)
+            'chartData' => json_encode([
+                'hpa' => $this->hpaModel->getHpaChartData(),
+                'frs' => $this->frsModel->getfrsChartData(),
+                'srs' => $this->srsModel->getsrsChartData(),
+                'ihc' => $this->ihcModel->getihcChartData()
+            ], JSON_NUMERIC_CHECK),
+            'pieChartData' => json_encode([
+                'hpa' => $this->hpaModel->getTotalHpa(),
+                'frs' => $this->frsModel->getTotalFrs(),
+                'srs' => $this->srsModel->getTotalSrs(),
+                'ihc' => $this->ihcModel->getTotalIhc()
+            ], JSON_NUMERIC_CHECK)
         ];
-        
+
         return view('dashboard/dashboard', $data);
     }
 }

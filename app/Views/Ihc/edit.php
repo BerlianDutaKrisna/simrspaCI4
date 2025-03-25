@@ -80,6 +80,30 @@
                         <input type="date" name="tanggal_hasil" value="<?= $ihc['tanggal_hasil'] ?? '' ?>" class="form-control form-control-user">
                     </div>
                 </div>
+                <!-- Kolom no tlp dan bpjs-->
+                <div class="form-group row">
+                    <label class="col-sm-2 col-form-label">No Telfon Pasien</label>
+                    <div class="col-sm-4">
+                        <input type="text" name="no_tlp_ihc" value="<?= $ihc['no_tlp_ihc'] ?? '' ?>" class="form-control form-control-user">
+                    </div>
+
+                    <label class="col-sm-2 col-form-label">Nomor BPJS Pasien</label>
+                    <div class="col-sm-4">
+                        <input type="text" name="no_bpjs_ihc" value="<?= $ihc['no_bpjs_ihc'] ?? '' ?>" class="form-control form-control-user">
+                    </div>
+                </div>
+                <!-- Kolom no ktp -->
+                <div class="form-group row">
+                    <label class="col-sm-2 col-form-label">No KTP Pasien</label>
+                    <div class="col-sm-4">
+                        <input type="text" name="no_ktp_ihc" value="<?= $ihc['no_ktp_ihc'] ?? '' ?>" class="form-control form-control-user">
+                    </div>
+
+                    <label class="col-sm-2 col-form-label">Kode Block IHC</label>
+                    <div class="col-sm-4">
+                    <input type="text" name="kode_block_ihc" value="<?= $ihc['kode_block_ihc'] ?? '' ?>" class="form-control form-control-user">
+                    </div>
+                </div>
                 <div class="form-group row">
                     <!-- Kolom Kiri -->
                     <div class="col-sm-6">
@@ -91,25 +115,6 @@
                             </div>
                         </div>
 
-                        <div class="form-group row">
-                            <label class="col-sm-2 col-form-label" for="jumlah_slide">Jumlah Slide</label>
-                            <div class="col-sm-4">
-                                <select class="form-control" id="jumlah_slide" name="jumlah_slide" onchange="handleJumlahSlideChange(this)">
-                                    <option value="0" <?= ($ihc['jumlah_slide'] == '0') ? 'selected' : '' ?>>0</option>
-                                    <option value="1" <?= ($ihc['jumlah_slide'] == '1') ? 'selected' : '' ?>>1</option>
-                                    <option value="2" <?= ($ihc['jumlah_slide'] == '2') ? 'selected' : '' ?>>2</option>
-                                    <option value="3" <?= ($ihc['jumlah_slide'] == '3') ? 'selected' : '' ?>>3</option>
-                                    <option value="lainnya" <?= (!in_array($ihc['jumlah_slide'], ['0', '1', '2', '3']) ? 'selected' : '') ?>>Lainnya</option>
-                                </select>
-                                <input
-                                    type="text"
-                                    class="form-control mt-2 <?= (!in_array($ihc['jumlah_slide'], ['0', '1', '2', '3'])) ? '' : 'd-none' ?>"
-                                    id="jumlah_slide_custom"
-                                    name="jumlah_slide_custom"
-                                    placeholder="Masukkan Jumlah Slide Lainnya"
-                                    value="<?= (!in_array($ihc['jumlah_slide'], ['0', '1', '2', '3'])) ? $ihc['jumlah_slide'] : '' ?>">
-                            </div>
-                        </div>
                         <!-- Kolom Mikroskopis -->
                         <div class="form-group row">
                             <label class="col-sm-2 col-form-label">Mikroskopis</label>

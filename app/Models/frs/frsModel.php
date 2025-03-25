@@ -101,6 +101,10 @@ class FrsModel extends Model
             ->orderBy("MIN(tanggal_permintaan)", "ASC")
             ->findAll();
     }
+    
+    public function getTotalFrs() {
+        return $this->db->table('frs')->countAllResults();
+    }
 
     public function getfrsWithPatient()
     {

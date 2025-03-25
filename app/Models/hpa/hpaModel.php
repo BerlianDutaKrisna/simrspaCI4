@@ -100,6 +100,10 @@ class HpaModel extends Model
             ->orderBy("MIN(tanggal_permintaan)", "ASC")
             ->findAll();
     }
+    
+    public function getTotalHpa() {
+        return $this->db->table('hpa')->countAllResults();
+    }
 
     public function gethpaWithPatient()
     {

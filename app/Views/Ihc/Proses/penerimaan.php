@@ -75,6 +75,16 @@
                                                     id="indikator_3_<?= esc($row['id_mutu_ihc']); ?>"
                                                     class="form-check-input">
                                                 <label class="form-check-label" for="indikator_3_<?= esc($row['id_mutu_ihc']); ?>">
+                                                    No Telfon Pasien
+                                                </label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input type="checkbox"
+                                                    name="indikator_4"
+                                                    value="10"
+                                                    id="indikator_4_<?= esc($row['id_mutu_ihc']); ?>"
+                                                    class="form-check-input">
+                                                <label class="form-check-label" for="indikator_4_<?= esc($row['id_mutu_ihc']); ?>">
                                                     Hasil Lab Sebelumnya
                                                 </label>
                                             </div>

@@ -144,6 +144,9 @@ class ihcController extends BaseController
                 'kode_block_ihc' => $data['kode_block_ihc'],
                 'tindakan_spesimen' => $tindakan_spesimen,
                 'diagnosa_klinik' => $data['diagnosa_klinik'],
+                'no_tlp_ihc' => $data['no_tlp_ihc'],
+                'no_bpjs_ihc' => $data['no_bpjs_ihc'],
+                'no_ktp_ihc' => $data['no_ktp_ihc'],
                 'status_ihc' => 'Penerimaan',
             ];
             // Simpan data ihc

@@ -106,6 +106,10 @@ class IhcModel extends Model
             ->findAll();
     }
 
+    public function getTotalIhc() {
+        return $this->db->table('ihc')->countAllResults();
+    }
+
     public function getihcWithPatient()
     {
         return $this->select('ihc.*, patient.*')

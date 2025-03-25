@@ -102,6 +102,10 @@ class SrsModel extends Model
             ->findAll();
     }
 
+    public function getTotalSrs() {
+        return $this->db->table('srs')->countAllResults();
+    }
+
     public function getsrsWithPatient()
     {
         return $this->select('srs.*, patient.*')

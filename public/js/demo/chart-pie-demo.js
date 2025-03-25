@@ -2,34 +2,54 @@
 Chart.defaults.global.defaultFontFamily = 'Nunito', '-apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif';
 Chart.defaults.global.defaultFontColor = '#858796';
 
-// Pie Chart Example
+// Pastikan data sesuai dengan yang diinginkan
+console.log("Pie Chart Data:", pieChartData); // Debugging
+
 var ctx = document.getElementById("myPieChart");
 var myPieChart = new Chart(ctx, {
   type: 'doughnut',
   data: {
-    labels: ["Direct", "Referral", "Social"],
+    labels: ["HPA", "FRS", "SRS", "IHC"], // Ganti label
     datasets: [{
-      data: [55, 30, 15],
-      backgroundColor: ['#4e73df', '#1cc88a', '#36b9cc'],
-      hoverBackgroundColor: ['#2e59d9', '#17a673', '#2c9faf'],
+      data: [
+        pieChartData.hpa || 0,
+        pieChartData.frs || 0,
+        pieChartData.srs || 0,
+        pieChartData.ihc || 0
+      ],
+      backgroundColor: [
+        "rgba(231, 74, 59, 1)", // Merah untuk HPA
+        "rgba(78, 115, 223, 1)", // Biru untuk FRS
+        "rgba(28, 200, 138, 1)", // Hijau untuk SRS
+        "rgba(255, 193, 7, 1)"  // Kuning untuk IHC
+      ],
+      hoverBackgroundColor: [
+        "rgba(231, 74, 59, 0.8)",
+        "rgba(78, 115, 223, 0.8)",
+        "rgba(28, 200, 138, 0.8)",
+        "rgba(255, 193, 7, 0.8)"
+      ],
       hoverBorderColor: "rgba(234, 236, 244, 1)",
     }],
   },
   options: {
     maintainAspectRatio: false,
-    tooltips: {
-      backgroundColor: "rgb(255,255,255)",
-      bodyFontColor: "#858796",
-      borderColor: '#dddfeb',
-      borderWidth: 1,
-      xPadding: 15,
-      yPadding: 15,
-      displayColors: false,
-      caretPadding: 10,
-    },
-    legend: {
-      display: false
-    },
-    cutoutPercentage: 80,
-  },
+    responsive: true,
+    plugins: {
+      legend: {
+        position: 'bottom'
+      },
+      tooltip: { 
+        callbacks: {
+          label: function(tooltipItem) {
+            var dataset = tooltipItem.dataset;
+            var index = tooltipItem.dataIndex;
+            var label = dataset.labels ? dataset.labels[index] : '';
+            var value = dataset.data[index] || 0;
+            return label + ": " + value;
+          }
+        }
+      }
+    }
+  }
 });

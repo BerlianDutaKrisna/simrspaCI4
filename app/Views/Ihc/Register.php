@@ -137,6 +137,21 @@
                 </div>
             </div>
 
+            <div class="form-row">
+                <div class="form-group col-md-4">
+                    <label for="no_tlp_ihc">No Telfon Pasien</label>
+                    <input type="text" class="form-control" id="no_tlp_ihc" name="no_tlp_ihc" value="<?= old('no_tlp_ihc'); ?>">
+                </div>
+                <div class="form-group col-md-4">
+                    <label for="no_bpjs_ihc">No BPJS Pasien</label>
+                    <input type="text" class="form-control" id="no_bpjs_ihc" name="no_bpjs_ihc" value="<?= old('no_bpjs_ihc'); ?>">
+                </div>
+                <div class="form-group col-md-4">
+                    <label for="no_ktp_ihc">No KTP Pasien</label>
+                    <input type="text" class="form-control" id="no_ktp_ihc" name="no_ktp_ihc" value="<?= old('no_ktp_ihc'); ?>">
+                </div>
+            </div>
+
             <!-- Tombol untuk submit form -->
             <div class="d-flex justify-content-end">
                 <button type="submit" class="btn btn-primary">Simpan</button>

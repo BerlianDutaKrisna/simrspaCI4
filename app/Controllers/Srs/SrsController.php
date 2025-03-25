@@ -251,7 +251,7 @@ class srsController extends BaseController
             'id_user'    => $this->session->get('id_user'),
             'nama_user'  => $this->session->get('nama_user'),
         ];
-
+        
         return view('srs/edit_makroskopis', $data);
     }
 

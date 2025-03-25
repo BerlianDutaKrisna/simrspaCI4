@@ -32,45 +32,80 @@
 
     <script>
         document.addEventListener("DOMContentLoaded", function() {
-            var chartData = <?= $chartData; ?>; // Data dari PHP (sudah dalam JSON)
+            var chartData = <?= $chartData; ?>; // Data dari PHP dalam JSON
+            console.log("Chart Data:", chartData); // Debugging
 
-            console.log("Chart Data:", chartData); // Cek data di Console Browser
-
-            if (!Array.isArray(chartData)) {
+            if (!chartData || typeof chartData !== "object") {
                 console.error("Data chart tidak valid:", chartData);
                 return;
             }
 
-            // Mapping data ke dalam labels dan values
-            var labels = chartData.map(data => {
-                return data.bulan + " " + data.tahun; // Contoh: "Feb 2025"
-            });
+            // Gabungkan semua bulan & tahun dari semua dataset agar menjadi satu sumbu X
+            var allLabels = [...new Set([
+                ...chartData.hpa.map(data => data.bulan + " " + data.tahun),
+                ...chartData.frs.map(data => data.bulan + " " + data.tahun),
+                ...chartData.srs.map(data => data.bulan + " " + data.tahun),
+                ...chartData.ihc.map(data => data.bulan + " " + data.tahun)
+            ])].sort(); // Sortir agar urut
 
-            var values = chartData.map(data => parseInt(data.total));
+            // Fungsi untuk mencocokkan data dengan label (jika tidak ada, set 0)
+            function mapDataToLabels(dataset, labels) {
+                return labels.map(label => {
+                    var found = dataset.find(data => (data.bulan + " " + data.tahun) === label);
+                    return found ? parseInt(found.total) : 0;
+                });
+            }
+
+            // Mapping data ke dalam sumbu Y
+            var hpaValues = mapDataToLabels(chartData.hpa, allLabels);
+            var frsValues = mapDataToLabels(chartData.frs, allLabels);
+            var srsValues = mapDataToLabels(chartData.srs, allLabels);
+            var ihcValues = mapDataToLabels(chartData.ihc, allLabels);
 
             // Inisialisasi Chart.js
             var ctx = document.getElementById("myAreaChart").getContext("2d");
             var myChart = new Chart(ctx, {
                 type: 'line',
                 data: {
-                    labels: labels,
+                    labels: allLabels, // Sumbu X (Bulan & Tahun)
                     datasets: [{
-                        label: "Jumlah Sample HPA",
-                        data: values,
-                        backgroundColor: "rgba(78, 115, 223, 0.05)",
-                        borderColor: "rgba(78, 115, 223, 1)",
-                        pointRadius: 3,
-                        pointBackgroundColor: "rgba(78, 115, 223, 1)",
-                        pointBorderColor: "rgba(78, 115, 223, 1)",
-                        pointHoverRadius: 3,
-                        pointHoverBackgroundColor: "rgba(78, 115, 223, 1)",
-                        pointHoverBorderColor: "rgba(78, 115, 223, 1)",
-                        pointHitRadius: 10,
-                        pointBorderWidth: 2
-                    }]
+                            label: "Jumlah Sample HPA",
+                            data: hpaValues,
+                            backgroundColor: "rgba(231, 74, 59, 0.1)",
+                            borderColor: "rgba(231, 74, 59, 1)",
+                            pointBackgroundColor: "rgba(231, 74, 59, 1)",
+                            pointBorderColor: "rgba(231, 74, 59, 1)",
+                        },
+                        {
+                            label: "Jumlah Sample FRS",
+                            data: frsValues,
+                            backgroundColor: "rgba(78, 115, 223, 0.1)",
+                            borderColor: "rgba(78, 115, 223, 1)",
+                            pointBackgroundColor: "rgba(78, 115, 223, 1)",
+                            pointBorderColor: "rgba(78, 115, 223, 1)",
+                        },
+                        {
+                            label: "Jumlah Sample SRS",
+                            data: srsValues,
+                            backgroundColor: "rgba(28, 200, 138, 0.1)",
+                            borderColor: "rgba(28, 200, 138, 1)",
+                            pointBackgroundColor: "rgba(28, 200, 138, 1)",
+                            pointBorderColor: "rgba(28, 200, 138, 1)",
+
+                        },
+                        {
+                            label: "Jumlah Sample IHC",
+                            data: ihcValues,
+                            backgroundColor: "rgba(255, 193, 7, 0.1)",
+                            borderColor: "rgba(255, 193, 7, 1)",
+                            pointBackgroundColor: "rgba(255, 193, 7, 1)",
+                            pointBorderColor: "rgba(255, 193, 7, 1)",
+                        }
+                    ]
                 },
                 options: {
                     maintainAspectRatio: false,
+                    responsive: true,
                     scales: {
                         x: {
                             grid: {
@@ -80,7 +115,7 @@
                         y: {
                             beginAtZero: true,
                             ticks: {
-                                stepSize: 10, // Jarak nilai sumbu Y
+                                stepSize: 10,
                                 suggestedMin: 0,
                                 suggestedMax: 100
                             }
@@ -91,23 +126,24 @@
         });
     </script>
 
+
     <!-- Pie Chart -->
     <div class="col-xl-4 col-lg-5">
         <div class="card shadow mb-4">
             <!-- Card Header - Dropdown -->
             <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                <h6 class="m-0 font-weight-bold text-primary">Jumlah keseluruhan jenis pemeriksaan</h6> <!-- Judul grafik pie -->
+                <h6 class="m-0 font-weight-bold text-primary">Jumlah keseluruhan jenis pemeriksaan</h6>
                 <div class="dropdown no-arrow">
                     <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
                         data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i> <!-- Ikon untuk dropdown -->
+                        <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
                     </a>
                     <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
                         aria-labelledby="dropdownMenuLink">
-                        <div class="dropdown-header">Cetak Laporan Pemeriksaan:</div> <!-- Header dropdown -->
+                        <div class="dropdown-header">Cetak Laporan Pemeriksaan:</div>
                         <a class="dropdown-item" href="#">Laporan pemeriksaan HPA</a>
                         <a class="dropdown-item" href="#">Buku Penerimaan</a>
-                        <div class="dropdown-divider"></div> <!-- Pemisah dalam dropdown -->
+                        <div class="dropdown-divider"></div>
                         <a class="dropdown-item" href="#">Something else here</a>
                     </div>
                 </div>
@@ -115,23 +151,78 @@
             <!-- Card Body -->
             <div class="card-body">
                 <div class="chart-pie pt-4 pb-2">
-                    <canvas id="myPieChart"></canvas> <!-- Pie chart untuk menampilkan jenis pemeriksaan -->
+                    <canvas id="myPieChart"></canvas>
                 </div>
                 <div class="mt-4 text-center small">
                     <span class="mr-2">
-                        <i class="fas fa-circle text-primary"></i> HPA <!-- Label untuk HPA -->
+                        <i class="fas fa-circle text-danger"></i> HPA <!-- Merah -->
                     </span>
                     <span class="mr-2">
-                        <i class="fas fa-circle text-success"></i> FNAB <!-- Label untuk FNAB -->
+                        <i class="fas fa-circle text-primary"></i> FRS <!-- Biru -->
                     </span>
                     <span class="mr-2">
-                        <i class="fas fa-circle text-info"></i> Sitologi <!-- Label untuk Sitologi -->
+                        <i class="fas fa-circle text-success"></i> SRS <!-- Hijau -->
+                    </span>
+                    <span class="mr-2">
+                        <i class="fas fa-circle text-warning"></i> IHC <!-- Kuning -->
                     </span>
                 </div>
             </div>
         </div>
     </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            var pieChartData = <?= $pieChartData; ?>; // Data dari PHP dalam JSON
+            console.log("Pie Chart Data:", pieChartData); // Debugging
+
+            if (!pieChartData || typeof pieChartData !== "object") {
+                console.error("Data chart tidak valid:", pieChartData);
+                return;
+            }
+
+            var ctx = document.getElementById("myPieChart").getContext("2d");
+            var myPieChart = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ["HPA", "FRS", "SRS", "IHC"],
+                    datasets: [{
+                        data: [
+                            pieChartData.hpa || 0,
+                            pieChartData.frs || 0,
+                            pieChartData.srs || 0,
+                            pieChartData.ihc || 0
+                        ],
+                        backgroundColor: [
+                            "rgba(231, 74, 59, 1)", // Merah untuk HPA
+                            "rgba(78, 115, 223, 1)", // Biru untuk FRS
+                            "rgba(28, 200, 138, 1)", // Hijau untuk SRS
+                            "rgba(255, 193, 7, 1)" // Kuning untuk IHC
+                        ],
+                        borderColor: "rgba(234, 236, 244, 1)",
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    maintainAspectRatio: false,
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'bottom'
+                        },
+                        tooltip: {
+                            enabled: false // Menonaktifkan tooltip
+                        }
+                    },
+                    hover: {
+                        mode: null // Menonaktifkan efek hover
+                    }
+                }
+            });
+        });
+    </script>
 </div>
+
 <div>
     <div class="card shadow mb-4">
         <div class="card-header py-3">

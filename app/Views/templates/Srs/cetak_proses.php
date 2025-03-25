@@ -81,7 +81,7 @@
                 vertical-align: top;
             }
             .mikroskopis-content-table td[colspan="2"] {
-                height: 400px;
+                height: 500px;
                 font-size: 16pt;
                 border: 1px solid black;
                 padding: 10px;
@@ -140,7 +140,7 @@
         <table class="makroskopis-content-table">
             <tr>
                 <td>Makroskopis</td>
-                <td>Analis PA: <?= $pemotongan['analis_nama'] ?? '' ?> | Waktu Pemotongan: <?= isset($pemotongan['mulai_pemotongan_srs']) ? date('H:i d-m-Y', strtotime($pemotongan['mulai_pemotongan_srs'])) : ''; ?></td>
+                <td>Analis PA: <?= esc($nama_user) ?? ""; ?> | Waktu Penerimaan: <?= isset($penerimaan['mulai_penerimaan_srs']) ? date('H:i d-m-Y', strtotime($penerimaan['mulai_penerimaan_srs'])) : ''; ?></td>
             </tr>
             <tr>
                 <td colspan="2">${detailMakroskopis}</td>
@@ -165,36 +165,13 @@
         <table class="mikroskopis-content-table">
             <tr>
                 <td>Mikroskopis</td>
-                <td>Dokter PA: <?= $pemotongan['dokter_nama'] ?? '' ?> | Waktu pembacaan: <?= isset($pembacaan['mulai_pembacaan_srs']) ? date('H:i d-m-Y', strtotime($pembacaan['mulai_pembacaan_srs'])) : ''; ?></td>
+                <td>Dokter PA: <?= $penerimaan['dokter_nama'] ?? '' ?> | Waktu pembacaan: <?= isset($pembacaan['mulai_pembacaan_srs']) ? date('H:i d-m-Y', strtotime($pembacaan['mulai_pembacaan_srs'])) : ''; ?></td>
             </tr>
             <tr>
                 <td colspan="2">${detailMikroskopis}</td>
             </tr>
         </table>
 
-        <table class="gambar-table">
-            <tr>
-                <th colspan="8">Gambar</th>
-            </tr>
-            <?php
-            $jumlah_slide = $srs['jumlah_slide'];
-            $kolom_per_baris = 8;
-            $max_kolom = 16;
-            $angka_romawi = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI", "XII", "XIII", "XIV", "XV", "XVI"];
-            for ($baris = 0; $baris < ceil($max_kolom / $kolom_per_baris); $baris++) {
-                echo '<tr>';
-                for ($kolom = 0; $kolom < $kolom_per_baris; $kolom++) {
-                    $indeks = ($baris * $kolom_per_baris) + $kolom;
-                    if ($indeks < $jumlah_slide && $indeks < $max_kolom) {
-                        echo '<td><span class="romawi">' . $angka_romawi[$indeks] . '</span></td>';
-                    } else {
-                        echo '<td><span class="romawi"></span></td>';
-                    }
-                }
-                echo '</tr>';
-            }
-            ?>
-        </table>
     </body>
     </html>
     `);
