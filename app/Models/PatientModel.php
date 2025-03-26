@@ -107,48 +107,101 @@ class PatientModel extends Model
     INNER JOIN ihc ON ihc.id_pasien = p.id_pasien 
     WHERE ihc.tanggal_permintaan BETWEEN CURDATE() - INTERVAL 14 DAY AND CURDATE()
 
-    ORDER BY tanggal_permintaan DESC, kode_pemeriksaan ASC;
+    ORDER BY tanggal_permintaan ASC, kode_pemeriksaan ASC;
         ";
         $builder = $this->db->query($query);
         return $builder->getResultArray();
     }
 
-    // Mencari pasien berdasarkan kriteria tertentu
     public function searchPatientsWithRelations($searchField, $searchValue, $startDate, $endDate)
     {
-        $searchValue = $this->db->escape($searchValue);
-        $startDate = $this->db->escape($startDate);
-        $endDate = $this->db->escape($endDate);
-        $query = "
-        SELECT patient.*, 
-            hpa.kode_hpa AS kode_pemeriksaan, hpa.tanggal_permintaan, 'HPA' AS jenis_pemeriksaan,
-            hpa.hasil_hpa AS hasil, hpa.status_hpa AS status, hpa.penerima_hpa AS penerima, hpa.tanggal_penerima
-        FROM patient
-        LEFT JOIN hpa ON hpa.id_pasien = patient.id_pasien
-        WHERE 1=1 ";
-        // Jika ada kriteria pencarian, gunakan "=" (tanpa LIKE)
+        // Validasi kolom yang boleh dicari untuk mencegah SQL Injection
+        $allowedFields = [
+            'patient.id_pasien',
+            'patient.nama_pasien',
+            'patient.norm_pasien',
+            'hpa.kode_hpa',
+            'frs.kode_frs',
+            'srs.kode_srs',
+            'ihc.kode_ihc'
+        ];
+
+        if (!empty($searchField) && !in_array($searchField, $allowedFields)) {
+            return []; // Return array kosong jika kolom tidak valid
+        }
+
+        // Query untuk HPA
+        $builder1 = $this->db->table('patient')
+            ->select("patient.id_pasien, patient.norm_pasien, patient.nama_pasien, 
+                    patient.alamat_pasien, patient.tanggal_lahir_pasien, patient.jenis_kelamin_pasien, 
+                    hpa.unit_asal, hpa.dokter_pengirim, hpa.diagnosa_klinik, 
+                    hpa.kode_hpa AS kode_pemeriksaan, hpa.tanggal_permintaan, 'HPA' AS jenis_pemeriksaan, 
+                    hpa.hasil_hpa AS hasil, hpa.status_hpa AS status, hpa.penerima_hpa AS penerima, 
+                    hpa.tanggal_penerima")
+            ->join('hpa', 'hpa.id_pasien = patient.id_pasien', 'inner')
+            ->where("hpa.tanggal_permintaan >=", $startDate)
+            ->where("hpa.tanggal_permintaan <=", $endDate);
+
         if (!empty($searchField) && !empty($searchValue)) {
-            $query .= " AND $searchField = $searchValue";
+            $builder1->where($searchField, $searchValue);
         }
-        // Filter berdasarkan rentang tanggal (tetap diterapkan meskipun pencarian field kosong)
-        if (!empty($startDate) && !empty($endDate)) {
-            $query .= " AND hpa.tanggal_permintaan BETWEEN $startDate AND $endDate";
-        }
-        $query .= " 
-        UNION ALL
-        SELECT patient.*, 
-            frs.kode_frs AS kode_pemeriksaan, frs.tanggal_permintaan, 'FRS' AS jenis_pemeriksaan,
-            frs.hasil_frs AS hasil, frs.status_frs AS status, frs.penerima_frs AS penerima, frs.tanggal_penerima
-        FROM patient
-        LEFT JOIN frs ON frs.id_pasien = patient.id_pasien
-        WHERE 1=1 ";
+        $subQuery1 = $builder1->getCompiledSelect();
+
+        // Query untuk FRS
+        $builder2 = $this->db->table('patient')
+            ->select("patient.id_pasien, patient.norm_pasien, patient.nama_pasien, 
+                    patient.alamat_pasien, patient.tanggal_lahir_pasien, patient.jenis_kelamin_pasien, 
+                    frs.unit_asal, frs.dokter_pengirim, frs.diagnosa_klinik, 
+                    frs.kode_frs AS kode_pemeriksaan, frs.tanggal_permintaan, 'FRS' AS jenis_pemeriksaan, 
+                    frs.hasil_frs AS hasil, frs.status_frs AS status, frs.penerima_frs AS penerima, 
+                    frs.tanggal_penerima")
+                ->join('frs', 'frs.id_pasien = patient.id_pasien', 'inner')
+            ->where("frs.tanggal_permintaan >=", $startDate)
+            ->where("frs.tanggal_permintaan <=", $endDate);
+
         if (!empty($searchField) && !empty($searchValue)) {
-            $query .= " AND $searchField = $searchValue";
+            $builder2->where($searchField, $searchValue);
         }
-        if (!empty($startDate) && !empty($endDate)) {
-            $query .= " AND frs.tanggal_permintaan BETWEEN $startDate AND $endDate";
+        $subQuery2 = $builder2->getCompiledSelect();
+
+        // Query untuk SRS
+        $builder3 = $this->db->table('patient')
+            ->select("patient.id_pasien, patient.norm_pasien, patient.nama_pasien, 
+                    patient.alamat_pasien, patient.tanggal_lahir_pasien, patient.jenis_kelamin_pasien, 
+                    srs.unit_asal, srs.dokter_pengirim, srs.diagnosa_klinik, 
+                    srs.kode_srs AS kode_pemeriksaan, srs.tanggal_permintaan, 'SRS' AS jenis_pemeriksaan, 
+                    srs.hasil_srs AS hasil, srs.status_srs AS status, srs.penerima_srs AS penerima, 
+                    srs.tanggal_penerima")
+            ->join('srs', 'srs.id_pasien = patient.id_pasien', 'inner')
+            ->where("srs.tanggal_permintaan >=", $startDate)
+            ->where("srs.tanggal_permintaan <=", $endDate);
+
+        if (!empty($searchField) && !empty($searchValue)) {
+            $builder3->where($searchField, $searchValue);
         }
-        $query .= " ORDER BY tanggal_permintaan DESC, kode_pemeriksaan ASC";
-        return $this->db->query($query)->getResultArray();
+        $subQuery3 = $builder3->getCompiledSelect();
+
+        // Query untuk IHC
+        $builder4 = $this->db->table('patient')
+            ->select("patient.id_pasien, patient.norm_pasien, patient.nama_pasien, 
+                    patient.alamat_pasien, patient.tanggal_lahir_pasien, patient.jenis_kelamin_pasien, 
+                    ihc.unit_asal, ihc.dokter_pengirim, ihc.diagnosa_klinik, 
+                    ihc.kode_ihc AS kode_pemeriksaan, ihc.tanggal_permintaan, 'IHC' AS jenis_pemeriksaan, 
+                    ihc.hasil_ihc AS hasil, ihc.status_ihc AS status, ihc.penerima_ihc AS penerima, 
+                    ihc.tanggal_penerima")
+            ->join('ihc', 'ihc.id_pasien = patient.id_pasien', 'inner')
+            ->where("ihc.tanggal_permintaan >=", $startDate)
+            ->where("ihc.tanggal_permintaan <=", $endDate);
+
+        if (!empty($searchField) && !empty($searchValue)) {
+            $builder4->where($searchField, $searchValue);
+        }
+        $subQuery4 = $builder4->getCompiledSelect();
+
+        // Gabungkan semua query dengan UNION ALL
+        $finalQuery = "($subQuery1) UNION ALL ($subQuery2) UNION ALL ($subQuery3) UNION ALL ($subQuery4) 
+                ORDER BY tanggal_permintaan ASC, kode_pemeriksaan ASC";
+
+        return $this->db->query($finalQuery)->getResultArray();
     }
 }

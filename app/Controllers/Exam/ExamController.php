@@ -61,25 +61,26 @@ class ExamController extends BaseController
     }
 
     public function search()
-    {
-        $searchField = $this->request->getGet('searchInput');  // Kolom yang dicari
-        $searchValue = $this->request->getGet('searchValue');  // Nilai yang dicari
-        $startDate = $this->request->getGet('searchDate');     // Tanggal awal
-        $endDate = $this->request->getGet('searchDate2');      // Tanggal akhir
-        // Jika tidak ada input pencarian, tampilkan semua data
-        if (empty($searchField) || empty($searchValue)) {
-            $results = $this->patientModel->getPatientWithRelations();
-        } else {
-            // Gunakan pencarian spesifik
-            $results = $this->patientModel->searchPatientsWithRelations($searchField, $searchValue, $startDate, $endDate);
-        }
-        // Kirim data ke view
-        $data = [
-            'id_user' => session()->get('id_user'),
-            'nama_user' => session()->get('nama_user'),
-            'Data' => $results
-        ];
-        
-        return view('Exam/index_pencarian', $data);
+{
+    $searchField = $this->request->getGet('searchInput');  
+    $searchValue = $this->request->getGet('searchValue');
+    $startDate = $this->request->getGet('searchDate');
+    $endDate = $this->request->getGet('searchDate2');
+
+    if (!empty($searchField) && !empty($searchValue)) {
+        // Pencarian berdasarkan input spesifik
+        $results = $this->patientModel->searchPatientsWithRelations($searchField, $searchValue, $startDate, $endDate);
+    } else {
+        // Jika tidak ada input pencarian, ambil semua data berdasarkan rentang tanggal
+        $results = $this->patientModel->searchPatientsWithRelations(null, null, $startDate, $endDate);
     }
+
+    $data = [
+        'id_user' => session()->get('id_user'),
+        'nama_user' => session()->get('nama_user'),
+        'Data' => $results
+    ];
+
+    return view('Exam/index_pencarian', $data);
+}
 }

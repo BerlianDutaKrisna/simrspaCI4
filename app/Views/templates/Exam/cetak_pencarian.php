@@ -1,15 +1,16 @@
 <script>
     function cetakPencarian() {
-        var printWindow = window.open('', '', 'height=700,width=1000');
+        var tableContent = document.getElementById('dataTableButtons').outerHTML; // Ambil tabel dari halaman
+        
+        var printWindow = window.open('', '', 'height=400,width=1000');
         printWindow.document.write(`
             <html>
             <head>
-                <title>Cetak Data Pencarian</title>
+                <title>Cetak Laporan</title>
                 <style>
                     body {
                         font-family: Arial, sans-serif;
-                        margin: 20px;
-                        text-align: center;
+                        margin: 35px;
                     }
                     table {
                         width: 100%;
@@ -19,31 +20,34 @@
                     th, td {
                         border: 1px solid black;
                         padding: 8px;
-                        text-align: center;
+                        text-align: left;
+                        font-size: 14px; /* Pastikan ukuran font tetap */
                     }
                     th {
                         background-color: #f2f2f2;
-                    }
-                    .header {
-                        font-size: 18px;
                         font-weight: bold;
-                        margin-bottom: 10px;
+                    }
+                    .bg-light {
+                        background-color: #f8f9fa !important; /* Pastikan tetap terlihat saat dicetak */
+                    }
+                    .font-weight-bold {
+                        font-weight: bold !important; /* Pastikan tetap bold saat dicetak */
+                    }
+                    .text-center {
+                        text-align: center !important;
+                    }
+                    @media print {
+                        body {
+                            font-size: 14px;
+                        }
+                        .bg-light {
+                            background-color: #ddd !important; /* Warna lebih jelas untuk cetak */
+                        }
                     }
                 </style>
             </head>
             <body>
-                <div class="header">Laporan Data Pencarian</div>
-                <table>
-                    
-                    <tbody>
-        `);
-
-        var tableContent = document.getElementById('dataTableButtons').innerHTML; // Ambil tabel dari halaman
-        printWindow.document.write(tableContent);
-
-        printWindow.document.write(`
-                    </tbody>
-                </table>
+                ${tableContent}
             </body>
             </html>
         `);
