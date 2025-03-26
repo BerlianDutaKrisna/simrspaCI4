@@ -68,7 +68,7 @@
                         <div class="form-group col-md-3">
                             <label for="dokter_pemeriksa">Dokter Pemeriksa</label>
                             <select class="form-control" id="dokter_pemeriksa" name="dokter_pemeriksa">
-                                <option value="">-- Pilih Dokter --</option>
+                                <option value="____________________">-- Pilih Dokter --</option>
                                 <option value="dr. Vinna Chrisdianti, Sp.PA">dr. Vinna Chrisdianti, Sp.PA</option>
                                 <option value="dr. Ayu Tyasmara Pratiwi, Sp.PA">dr. Ayu Tyasmara Pratiwi, Sp.PA</option>
                             </select>
@@ -77,7 +77,7 @@
                         <div class="form-group col-md-3">
                             <label for="nama_hubungan_pasien">Nama Hubungan Pasien</label>
                             <select class="form-control" id="nama_hubungan_pasien" name="nama_hubungan_pasien" onchange="toggleSearchValue()">
-                                <option value="">-- Pilih Penandatangan --</option>
+                                <option value="____________________">-- Pilih Penandatangan --</option>
                                 <option value="<?= esc($frs['nama_pasien'] ?? '') ?>">Pasien Sendiri</option>
                                 <option value="lainnya">Lainnya</option>
                             </select>
@@ -87,7 +87,7 @@
                         <div class="form-group col-md-3">
                             <label for="hubungan_dengan_pasien">Hubungan dengan Pasien</label>
                             <select class="form-control" id="hubungan_dengan_pasien" name="hubungan_dengan_pasien">
-                                <option value="">-- Pilih Hubungan --</option>
+                                <option value="____________________">-- Pilih Hubungan --</option>
                                 <option value="Pasien Sendiri">Pasien Sendiri</option>
                                 <option value="Orang tua">Orang tua</option>
                                 <option value="Anak">Anak</option>
@@ -101,7 +101,7 @@
                         <div class="form-group col-md-3">
                             <label for="jenis_kelamin_hubungan_pasien">Jenis Kelamin</label>
                             <select class="form-control" id="jenis_kelamin_hubungan_pasien" name="jenis_kelamin_hubungan_pasien">
-                                <option value="">-- Pilih Jenis Kelamin --</option>
+                                <option value="____________________">-- Pilih Jenis Kelamin --</option>
                                 <option value="L">Laki-laki</option>
                                 <option value="P">Perempuan</option>
                             </select>
@@ -173,11 +173,11 @@
                 });
             </script>
 
-            <!-- Tombol Simpan -->
+            <!-- Tombol Tutup -->
             <div class="form-group row">
                 <div class="col-sm-6 text-center mb-3">
                     <button type="submit" class="btn btn-success btn-user w-100 mb-3" formaction="<?= base_url('frs/update_print/' . ($frs['id_frs'] ?? '')); ?>">
-                        <i class="fas fa-save"></i> Simpan
+                        <i class="fas fa-window-close"></i> Tutup
                     </button>
                 </div>
                 <div class="col-sm-6 text-center">

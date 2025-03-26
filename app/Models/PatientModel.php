@@ -115,21 +115,7 @@ class PatientModel extends Model
 
     public function searchPatientsWithRelations($searchField, $searchValue, $startDate, $endDate)
     {
-        // Validasi kolom yang boleh dicari untuk mencegah SQL Injection
-        $allowedFields = [
-            'patient.id_pasien',
-            'patient.nama_pasien',
-            'patient.norm_pasien',
-            'hpa.kode_hpa',
-            'frs.kode_frs',
-            'srs.kode_srs',
-            'ihc.kode_ihc'
-        ];
-
-        if (!empty($searchField) && !in_array($searchField, $allowedFields)) {
-            return []; // Return array kosong jika kolom tidak valid
-        }
-
+        
         // Query untuk HPA
         $builder1 = $this->db->table('patient')
             ->select("patient.id_pasien, patient.norm_pasien, patient.nama_pasien, 
@@ -146,6 +132,7 @@ class PatientModel extends Model
             $builder1->where($searchField, $searchValue);
         }
         $subQuery1 = $builder1->getCompiledSelect();
+        
 
         // Query untuk FRS
         $builder2 = $this->db->table('patient')

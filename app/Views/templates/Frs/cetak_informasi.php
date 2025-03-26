@@ -1,12 +1,12 @@
 <script>
     function cetakProses() {
-        var dokter_pemeriksa = document.getElementById('dokter_pemeriksa') ? document.getElementById('dokter_pemeriksa').value : '';
+        var dokter_pemeriksa = document.getElementById('dokter_pemeriksa') ? document.getElementById('dokter_pemeriksa').value : '____________________';
         var nama_hubungan_pasien = document.getElementById('nama_hubungan_pasien') ?
             (document.getElementById('nama_hubungan_pasien').value === 'lainnya' ?
-                document.getElementById('nama_lainnya').value :
+                document.getElementById('nama_lainnya').value || "____________________" :
                 document.getElementById('nama_hubungan_pasien').value) :
-            '';
-        var hubungan_dengan_pasien = document.getElementById('hubungan_dengan_pasien') ? document.getElementById('hubungan_dengan_pasien').value : '';
+            "____________________";
+        var hubungan_dengan_pasien = document.getElementById('hubungan_dengan_pasien') ? document.getElementById('hubungan_dengan_pasien').value : '____________________';
         var jenis_kelamin_hubungann_pasien = document.getElementById('jenis_kelamin_hubungann_pasien') ? document.getElementById('jenis_kelamin_hubungann_pasien').value : '';
         var usia_hubungan_pasien = document.getElementById('usia_hubungan_pasien') ? document.getElementById('usia_hubungan_pasien').value : '';
         var printWindow = window.open('', '', 'height=500,width=800');
@@ -62,17 +62,27 @@
         .header-table td {
             padding: 3px;
         }
-        .rm-label {
-            font-size: 14px;
-            font-weight: bold;
+        .rm-paragraph {
+        display: flex;
+        justify-content: space-between;
+        font-size: 14px;
+        font-weight: bold;
+        margin-bottom: 10px;
+        }
+        .left-text {
+            text-align: left;
+        }
+        .right-text {
             text-align: right;
-            margin-bottom: 10px;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <p class="rm-label">RM 09 PA</p>
+        <p class="rm-paragraph">
+            <span class="left-text"><?= esc($frs['kode_frs'] ?? '') ?></span>
+            <span class="right-text">RM 09 PA</span>
+        </p>
         <table class="header-table">
             <tr class="header">
                 <td style="width: 20%; text-align: center; border-right: none;">

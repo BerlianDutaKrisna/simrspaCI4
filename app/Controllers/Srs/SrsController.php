@@ -383,6 +383,14 @@ class srsController extends BaseController
                 }
             }
             switch ($page_source) {
+                case 'edit_makroskopis':
+                    $id_penerimaan_srs = $this->request->getPost('id_penerimaan_srs');
+                    $this->penerimaan_srs->update($id_penerimaan_srs, [
+                        'id_user_penerimaan_srs' => $id_user,
+                        'status_penerimaan_srs' => 'Selesai Penerimaan',
+                        'selesai_penerimaan_srs' => date('Y-m-d H:i:s'),
+                    ]);
+                    return redirect()->to('srs/edit_makroskopis/' . $id_srs)->with('success', 'Data mikroskopis berhasil diperbarui.');
                 case 'edit_mikroskopis':
                     $id_pembacaan_srs = $this->request->getPost('id_pembacaan_srs');
                     $this->pembacaan_srs->update($id_pembacaan_srs, [
