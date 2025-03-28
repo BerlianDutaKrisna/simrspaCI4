@@ -3,7 +3,9 @@
 namespace App\Controllers\Hpa;
 
 use App\Controllers\BaseController;
+use App\Database\Migrations\Frs;
 use App\Models\Hpa\HpaModel;
+use App\Models\Frs\FrsModel;
 use App\Models\UsersModel;
 use App\Models\PatientModel;
 use App\Models\Hpa\Proses\Penerimaan_hpa;
@@ -21,6 +23,7 @@ use Exception;
 class HpaController extends BaseController
 {
     protected $hpaModel;
+    protected $frsModel;
     protected $usersModel;
     protected $patientModel;
     protected $penerimaan_hpa;
@@ -37,6 +40,7 @@ class HpaController extends BaseController
     {
         // Inisialisasi model HPA
         $this->hpaModel = new hpaModel();
+        $this->frsModel = new frsModel();
         $this->usersModel = new UsersModel();
         $this->patientModel = new PatientModel();
         $this->penerimaan_hpa = new Penerimaan_hpa();
@@ -277,6 +281,8 @@ class HpaController extends BaseController
     {
         // Ambil data HPA berdasarkan ID
         $hpa = $this->hpaModel->getHpaWithRelationsProses($id_hpa);
+        $id_pasien = $hpa['id_pasien'];
+        $frs = $this->frsModel->riwayatPemeriksaanfrs($id_pasien);
         if (!$hpa) {
             return redirect()->back()->with('message', ['error' => 'HPA tidak ditemukan.']);
         }
@@ -301,12 +307,13 @@ class HpaController extends BaseController
         // Persiapkan data yang akan dikirim ke view
         $data = [
             'hpa'        => $hpa,
+            'frs'        => $frs,
             'pemotongan' => $pemotongan,
             'users'      => $users,
             'id_user'    => $this->session->get('id_user'),
             'nama_user'  => $this->session->get('nama_user'),
         ];
-
+        
         return view('hpa/edit_makroskopis', $data);
     }
 
@@ -363,7 +370,7 @@ class HpaController extends BaseController
             'hpa'             => $hpa,
             'pemotongan_hpa'  => $pemotongan_hpa,
             'pembacaan_hpa'   => $pembacaan_hpa,
-            'mutu_hpa'            => $mutu_hpa,
+            'mutu_hpa'        => $mutu_hpa,
             'users'           => $users,
             'id_user'         => session()->get('id_user'),
             'nama_user'       => session()->get('nama_user'),

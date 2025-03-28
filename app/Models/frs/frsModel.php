@@ -129,29 +129,26 @@ class FrsModel extends Model
             ->first();
     }
 
-    public function updatefrs($id_frs, $data)
+    public function riwayatPemeriksaanfrs($id_pasien)
     {
-        $builder = $this->db->table('frs');
-        $builder->where('id_frs', $id_frs);
-        $builder->update($data);
-        return $this->db->affectedRows();
+        return $this->select('frs.*, pembacaan_frs.id_user_dokter_pembacaan_frs, users.nama_user AS dokter_nama')
+            ->join('pembacaan_frs', 'pembacaan_frs.id_frs = frs.id_frs', 'left')
+            ->join('users', 'users.id_user = pembacaan_frs.id_user_dokter_pembacaan_frs', 'left')
+            ->where('frs.id_pasien', $id_pasien)
+            ->where('frs.hasil_frs IS NOT NULL', null, false)
+            ->findAll();
     }
 
     public function updatePenerima($id_frs, $data)
     {
-        // Validasi parameter
         if (
             empty($id_frs) || empty($data) || !is_array($data)
         ) {
             throw new \InvalidArgumentException('Parameter ID frs atau data tidak valid.');
         }
-        // Mengambil table 'frs'
         $builder = $this->db->table('frs');
-        // Menambahkan kondisi WHERE
         $builder->where('id_frs', $id_frs);
-        // Melakukan update data
         $updateResult = $builder->update($data);
-        // Mengecek apakah update berhasil
         if ($updateResult) {
             return $this->db->affectedRows();
         } else {
@@ -161,23 +158,18 @@ class FrsModel extends Model
 
     public function updateStatusfrs($id_frs, $data)
     {
-        // Validasi parameter
         if (
             empty($id_frs) || empty($data) || !is_array($data)
         ) {
             throw new \InvalidArgumentException('Parameter ID frs atau data tidak valid.');
         }
-        // Mengambil table 'frs'
         $builder = $this->db->table('frs');
-        // Menambahkan kondisi WHERE
         $builder->where('id_frs', $id_frs);
-        // Melakukan update data
         $updateResult = $builder->update($data);
-        // Mengecek apakah update berhasil
         if ($updateResult) {
-            return $this->db->affectedRows(); // Mengembalikan jumlah baris yang terpengaruh
+            return $this->db->affectedRows();
         } else {
-            throw new \RuntimeException('Update data gagal.'); // Menangani error
+            throw new \RuntimeException('Update data gagal.');
         }
     }
 }

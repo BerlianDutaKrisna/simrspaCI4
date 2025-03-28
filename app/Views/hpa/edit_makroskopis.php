@@ -81,31 +81,52 @@
                 </div>
             </div>
 
-            <!-- Kolom Foto Makroskopis -->
             <div class="form-group row">
-                <label class="col-sm-2 col-form-label">Foto Makroskopis</label>
-                <div class="col-sm-6">
-                    <img src="<?= esc($hpa['foto_makroskopis_hpa'] !== null
-                                    ? base_url('uploads/hpa/makroskopis/' . $hpa['foto_makroskopis_hpa'])
-                                    : base_url('img/no_photo.jpg')) ?>"
-                        width="200"
-                        alt="Foto Makroskopis"
-                        class="img-thumbnail"
-                        id="fotoMakroskopis"
-                        data-toggle="modal"
-                        data-target="#fotoModal">
+                <!-- Kolom Riwayat Pemeriksaan -->
+                <div class="col-md-6">
+                    <label class="col-form-label">Riwayat Pemeriksaan</label>
+                    <?php if (!empty($frs)) : ?>
+                        <?php foreach ($frs as $row) : ?>
+                            <div class="border p-2 mb-2">
+                                <strong>Tanggal Permintaan:</strong> <?= isset($row['tanggal_permintaan']) ? date('d-m-Y', strtotime($row['tanggal_permintaan'])) : '-' ?><br>
+                                <strong>Kode FRS:</strong> <?= esc($row['kode_frs'] ?? '-') ?><br>
+                                <strong>Lokasi Spesimen:</strong> <?= esc($row['lokasi_spesimen'] ?? '-') ?><br>
+                                <strong>Hasil FRS:</strong> <?= esc($row['hasil_frs'] ?? '-') ?><br>
+                                <strong>Dokter Pembaca:</strong> <?= esc($row['dokter_nama'] ?? 'Belum Dibaca') ?><br>
+                                <a href="<?= base_url('frs/edit/' . esc($row['id_frs'])) ?>" class="btn btn-sm btn-info mx-1">
+                                    <i class="fas fa-detail"></i> Detail
+                                </a>
+                            </div>
+                        <?php endforeach; ?>
+                    <?php else : ?>
+                        <p>Tidak ada riwayat pemeriksaan FRS.</p>
+                    <?php endif; ?>
+                </div>
 
+                <!-- Kolom Foto Makroskopis -->
+                <div class="col-md-6">
+                    <label class="col-form-label">Foto Makroskopis</label>
+                    <div class="text-center">
+                        <img src="<?= esc($hpa['foto_makroskopis_hpa'] !== null
+                                        ? base_url('uploads/hpa/makroskopis/' . $hpa['foto_makroskopis_hpa'])
+                                        : base_url('img/no_photo.jpg')) ?>"
+                            width="200"
+                            alt="Foto Makroskopis"
+                            class="img-thumbnail"
+                            id="fotoMakroskopis"
+                            data-toggle="modal"
+                            data-target="#fotoModal">
+                    </div>
                     <!-- Form Upload -->
-                    <input type="file" name="foto_makroskopis_hpa" id="foto_makroskopis_hpa" class="form-control form-control-user mt-2">
-
+                    <input type="file" name="foto_makroskopis_hpa" id="foto_makroskopis_hpa"
+                        class="form-control form-control-user mt-2">
                     <!-- Overlay Loading -->
                     <div id="loading-overlay" class="d-none">
                         <div class="spinner"></div>
                         <p class="loading-text">Mengunggah, harap tunggu...</p>
                     </div>
-
                     <!-- Tombol Upload -->
-                    <button type="submit" class="btn btn-primary mt-2" id="uploadButton"
+                    <button type="submit" class="btn btn-primary mt-2 w-100" id="uploadButton"
                         formaction="<?= base_url('hpa/uploadFotoMakroskopis/' . $hpa['id_hpa']) ?>">
                         <i class="fas fa-cloud-upload-alt"></i> Upload
                     </button>
