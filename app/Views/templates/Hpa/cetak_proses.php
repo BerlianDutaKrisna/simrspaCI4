@@ -141,7 +141,7 @@
             <thead>
                 <tr>
                     <th>Riwayat Pemeriksaan</th>
-                    <th style="text-align: right;">Foto Makroskopis</th>
+                    <th>Foto Makroskopis</th>
                 </tr>
             </thead>
             <tbody>
@@ -153,45 +153,62 @@
                     ['data' => $riwayat_ihc ?? []]
                 ];
 
-                $totalRiwayat = 0; // Hitung jumlah total riwayat pemeriksaan
+                $totalRiwayat = 0;
                 foreach ($riwayat_pemeriksaan as $pemeriksaan) {
                     $totalRiwayat += count($pemeriksaan['data']);
                 }
 
-                $firstRow = true; // Pastikan foto hanya muncul di baris pertama
+                $firstRow = true;
 
-                foreach ($riwayat_pemeriksaan as $pemeriksaan) :
-                    foreach ($pemeriksaan['data'] as $row) : ?>
-                        <tr>
-                            <!-- Kolom kiri: Riwayat Pemeriksaan dalam 1 baris -->
-                            <td class="no-border" style="white-space: nowrap;">
-                                <strong><?= isset($row['tanggal_permintaan']) ? date('d-m-Y', strtotime($row['tanggal_permintaan'])) : '-' ?></strong>
-                                &nbsp;,&nbsp;<?= esc($row['kode_hpa'] ?? $row['kode_frs'] ?? $row['kode_srs'] ?? $row['kode_ihc'] ?? '-') ?>
-                                &nbsp;,&nbsp;Lokasi: <?= esc($row['lokasi_spesimen'] ?? '-') ?>
-                                &nbsp;,&nbsp;Hasil: <?= esc($row['hasil_hpa'] ?? $row['hasil_frs'] ?? $row['hasil_srs'] ?? $row['hasil_ihc'] ?? '-') ?>
-                            </td>
-
-                            <!-- Kolom kanan: Foto Makroskopis (hanya di baris pertama dengan rowspan) -->
-                            <?php if ($firstRow) : ?>
-                                <td class="foto-makroskopis" rowspan="<?= $totalRiwayat ?>">
-                                    <img src="<?= isset($hpa['foto_makroskopis_hpa']) && $hpa['foto_makroskopis_hpa'] !== null
-                                                    ? base_url('uploads/hpa/makroskopis/' . $hpa['foto_makroskopis_hpa'])
-                                                    : base_url('img/no_photo.jpg') ?>"
-                                        width="200"
-                                        alt="Foto Makroskopis"
-                                        class="img-thumbnail"
-                                        id="fotoMakroskopis"
-                                        data-toggle="modal"
-                                        data-target="#fotoModal"
-                                        style="object-fit: cover; aspect-ratio: 16 / 9; max-width: 100%; height: auto;">
+                if ($totalRiwayat > 0) :
+                    foreach ($riwayat_pemeriksaan as $pemeriksaan) :
+                        foreach ($pemeriksaan['data'] as $row) : ?>
+                            <tr>
+                                <td class="no-border" style="white-space: nowrap;">
+                                    <strong><?= isset($row['tanggal_permintaan']) ? date('d-m-Y', strtotime($row['tanggal_permintaan'])) : '-' ?></strong>
+                                    &nbsp;,&nbsp;<?= esc($row['kode_hpa'] ?? $row['kode_frs'] ?? $row['kode_srs'] ?? $row['kode_ihc'] ?? '-') ?>
+                                    &nbsp;,&nbsp;Lokasi: <?= esc($row['lokasi_spesimen'] ?? '-') ?>
+                                    &nbsp;,&nbsp;Hasil: <?= esc($row['hasil_hpa'] ?? $row['hasil_frs'] ?? $row['hasil_srs'] ?? $row['hasil_ihc'] ?? '-') ?>
                                 </td>
-                                <?php $firstRow = false; ?>
-                            <?php endif; ?>
-                        </tr>
-                <?php
+
+                                <?php if ($firstRow) : ?>
+                                    <td class="foto-makroskopis" rowspan="<?= $totalRiwayat ?>">
+                                        <img src="<?= isset($hpa['foto_makroskopis_hpa']) && $hpa['foto_makroskopis_hpa'] !== null
+                                                        ? base_url('uploads/hpa/makroskopis/' . $hpa['foto_makroskopis_hpa'])
+                                                        : base_url('img/no_photo.jpg') ?>"
+                                            width="200"
+                                            alt="Foto Makroskopis"
+                                            class="img-thumbnail"
+                                            id="fotoMakroskopis"
+                                            data-toggle="modal"
+                                            data-target="#fotoModal"
+                                            style="object-fit: cover; aspect-ratio: 16 / 9; max-width: 100%; height: auto;">
+                                    </td>
+                                    <?php $firstRow = false; ?>
+                                <?php endif; ?>
+                            </tr>
+                    <?php
+                        endforeach;
                     endforeach;
-                endforeach;
-                ?>
+                else : ?>
+                    <!-- Jika tidak ada riwayat, tetap tampilkan foto -->
+                    <tr>
+                        <td class="no-border">Tidak ada riwayat pemeriksaan.</td>
+                        <td class="foto-makroskopis">
+                            <img src="<?= isset($hpa['foto_makroskopis_hpa']) && $hpa['foto_makroskopis_hpa'] !== null
+                                            ? base_url('uploads/hpa/makroskopis/' . $hpa['foto_makroskopis_hpa'])
+                                            : base_url('img/no_photo.jpg') ?>"
+                                width="200"
+                                alt="Foto Makroskopis"
+                                class="img-thumbnail"
+                                id="fotoMakroskopis"
+                                data-toggle="modal"
+                                data-target="#fotoModal"
+                                style="object-fit: cover; aspect-ratio: 16 / 9; max-width: 100%; height: auto;">
+                        </td>
+                    </tr>
+                <?php endif; ?>
+
                 <tr>
                     <td><strong>Makroskopis</strong></td>
                     <td>Analis PA: <?= $pemotongan['analis_nama'] ?? '' ?> | Waktu Pemotongan: <?= isset($pemotongan['mulai_pemotongan_hpa']) ? date('H:i d-m-Y', strtotime($pemotongan['mulai_pemotongan_hpa'])) : ''; ?></td>
