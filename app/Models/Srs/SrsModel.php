@@ -129,12 +129,14 @@ class SrsModel extends Model
             ->first();
     }
 
-    public function updatesrs($id_srs, $data)
+    public function riwayatPemeriksaansrs($id_pasien)
     {
-        $builder = $this->db->table('srs');
-        $builder->where('id_srs', $id_srs);
-        $builder->update($data);
-        return $this->db->affectedRows();
+        return $this->select('srs.*, pembacaan_srs.id_user_dokter_pembacaan_srs, users.nama_user AS dokter_nama')
+            ->join('pembacaan_srs', 'pembacaan_srs.id_srs = srs.id_srs', 'left')
+            ->join('users', 'users.id_user = pembacaan_srs.id_user_dokter_pembacaan_srs', 'left')
+            ->where('srs.id_pasien', $id_pasien)
+            ->where('srs.hasil_srs IS NOT NULL', null, false)
+            ->findAll();
     }
 
     public function updatePenerima($id_srs, $data)

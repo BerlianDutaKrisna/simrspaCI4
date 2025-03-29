@@ -133,12 +133,14 @@ class IhcModel extends Model
             ->first();
     }
 
-    public function updateihc($id_ihc, $data)
+    public function riwayatPemeriksaanihc($id_pasien)
     {
-        $builder = $this->db->table('ihc');
-        $builder->where('id_ihc', $id_ihc);
-        $builder->update($data);
-        return $this->db->affectedRows();
+        return $this->select('ihc.*, pembacaan_ihc.id_user_dokter_pembacaan_ihc, users.nama_user AS dokter_nama')
+            ->join('pembacaan_ihc', 'pembacaan_ihc.id_ihc = ihc.id_ihc', 'left')
+            ->join('users', 'users.id_user = pembacaan_ihc.id_user_dokter_pembacaan_ihc', 'left')
+            ->where('ihc.id_pasien', $id_pasien)
+            ->where('ihc.hasil_ihc IS NOT NULL', null, false)
+            ->findAll();
     }
 
     public function updatePenerima($id_ihc, $data)

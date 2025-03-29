@@ -138,28 +138,68 @@
         </table>
 
         <table class="makroskopis-content-table">
-            <tr>
-                <td>Makroskopis</td>
-                <td>Analis PA: <?= $pemotongan['analis_nama'] ?? '' ?> | Waktu Pemotongan: <?= isset($pemotongan['mulai_pemotongan_hpa']) ? date('H:i d-m-Y', strtotime($pemotongan['mulai_pemotongan_hpa'])) : ''; ?></td>
-            </tr>
-            <tr>
-                <td colspan="2">${detailMakroskopis}</td>
-            </tr>
-            <tr>
-            <td class="no-border"></td>
-            <td class="foto-makroskopis">
-                <img src="<?= $hpa['foto_makroskopis_hpa'] !== null
-                                ? base_url('uploads/hpa/makroskopis/' . $hpa['foto_makroskopis_hpa'])
-                                : base_url('img/no_photo.jpg') ?>"
-                    width="200"
-                    alt="Foto Makroskopis"
-                    class="img-thumbnail"
-                    id="fotoMakroskopis"
-                    data-toggle="modal"
-                    data-target="#fotoModal"
-                    style="object-fit: cover; aspect-ratio: 16 / 9; max-width: 100%; height: auto;">
-            </td>
-            </tr>
+            <thead>
+                <tr>
+                    <th>Riwayat Pemeriksaan</th>
+                    <th style="text-align: right;">Foto Makroskopis</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php
+                $riwayat_pemeriksaan = [
+                    ['data' => $riwayat_hpa ?? []],
+                    ['data' => $riwayat_frs ?? []],
+                    ['data' => $riwayat_srs ?? []],
+                    ['data' => $riwayat_ihc ?? []]
+                ];
+
+                $totalRiwayat = 0; // Hitung jumlah total riwayat pemeriksaan
+                foreach ($riwayat_pemeriksaan as $pemeriksaan) {
+                    $totalRiwayat += count($pemeriksaan['data']);
+                }
+
+                $firstRow = true; // Pastikan foto hanya muncul di baris pertama
+
+                foreach ($riwayat_pemeriksaan as $pemeriksaan) :
+                    foreach ($pemeriksaan['data'] as $row) : ?>
+                        <tr>
+                            <!-- Kolom kiri: Riwayat Pemeriksaan dalam 1 baris -->
+                            <td class="no-border" style="white-space: nowrap;">
+                                <strong><?= isset($row['tanggal_permintaan']) ? date('d-m-Y', strtotime($row['tanggal_permintaan'])) : '-' ?></strong>
+                                &nbsp;,&nbsp;<?= esc($row['kode_hpa'] ?? $row['kode_frs'] ?? $row['kode_srs'] ?? $row['kode_ihc'] ?? '-') ?>
+                                &nbsp;,&nbsp;Lokasi: <?= esc($row['lokasi_spesimen'] ?? '-') ?>
+                                &nbsp;,&nbsp;Hasil: <?= esc($row['hasil_hpa'] ?? $row['hasil_frs'] ?? $row['hasil_srs'] ?? $row['hasil_ihc'] ?? '-') ?>
+                            </td>
+
+                            <!-- Kolom kanan: Foto Makroskopis (hanya di baris pertama dengan rowspan) -->
+                            <?php if ($firstRow) : ?>
+                                <td class="foto-makroskopis" rowspan="<?= $totalRiwayat ?>">
+                                    <img src="<?= isset($hpa['foto_makroskopis_hpa']) && $hpa['foto_makroskopis_hpa'] !== null
+                                                    ? base_url('uploads/hpa/makroskopis/' . $hpa['foto_makroskopis_hpa'])
+                                                    : base_url('img/no_photo.jpg') ?>"
+                                        width="200"
+                                        alt="Foto Makroskopis"
+                                        class="img-thumbnail"
+                                        id="fotoMakroskopis"
+                                        data-toggle="modal"
+                                        data-target="#fotoModal"
+                                        style="object-fit: cover; aspect-ratio: 16 / 9; max-width: 100%; height: auto;">
+                                </td>
+                                <?php $firstRow = false; ?>
+                            <?php endif; ?>
+                        </tr>
+                <?php
+                    endforeach;
+                endforeach;
+                ?>
+                <tr>
+                    <td><strong>Makroskopis</strong></td>
+                    <td>Analis PA: <?= $pemotongan['analis_nama'] ?? '' ?> | Waktu Pemotongan: <?= isset($pemotongan['mulai_pemotongan_hpa']) ? date('H:i d-m-Y', strtotime($pemotongan['mulai_pemotongan_hpa'])) : ''; ?></td>
+                </tr>
+                <tr>
+                    <td colspan="2">${detailMakroskopis}</td>
+                </tr>
+            </tbody>
         </table>
 
         <table class="mikroskopis-content-table">

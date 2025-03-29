@@ -3,9 +3,10 @@
 namespace App\Controllers\Hpa;
 
 use App\Controllers\BaseController;
-use App\Database\Migrations\Frs;
 use App\Models\Hpa\HpaModel;
 use App\Models\Frs\FrsModel;
+use App\Models\Srs\SrsModel;
+use App\Models\Ihc\IhcModel;
 use App\Models\UsersModel;
 use App\Models\PatientModel;
 use App\Models\Hpa\Proses\Penerimaan_hpa;
@@ -24,6 +25,8 @@ class HpaController extends BaseController
 {
     protected $hpaModel;
     protected $frsModel;
+    protected $srsModel;
+    protected $ihcModel;
     protected $usersModel;
     protected $patientModel;
     protected $penerimaan_hpa;
@@ -41,6 +44,8 @@ class HpaController extends BaseController
         // Inisialisasi model HPA
         $this->hpaModel = new hpaModel();
         $this->frsModel = new frsModel();
+        $this->srsModel = new srsModel();
+        $this->ihcModel = new ihcModel();
         $this->usersModel = new UsersModel();
         $this->patientModel = new PatientModel();
         $this->penerimaan_hpa = new Penerimaan_hpa();
@@ -282,7 +287,10 @@ class HpaController extends BaseController
         // Ambil data HPA berdasarkan ID
         $hpa = $this->hpaModel->getHpaWithRelationsProses($id_hpa);
         $id_pasien = $hpa['id_pasien'];
-        $frs = $this->frsModel->riwayatPemeriksaanfrs($id_pasien);
+        $riwayat_hpa = $this->hpaModel->riwayatPemeriksaanhpa($id_pasien);
+        $riwayat_frs = $this->frsModel->riwayatPemeriksaanfrs($id_pasien);
+        $riwayat_srs = $this->srsModel->riwayatPemeriksaansrs($id_pasien);
+        $riwayat_ihc = $this->ihcModel->riwayatPemeriksaanihc($id_pasien);
         if (!$hpa) {
             return redirect()->back()->with('message', ['error' => 'HPA tidak ditemukan.']);
         }
@@ -307,7 +315,10 @@ class HpaController extends BaseController
         // Persiapkan data yang akan dikirim ke view
         $data = [
             'hpa'        => $hpa,
-            'frs'        => $frs,
+            'riwatah_hpa'        => $riwayat_hpa,
+            'riwayat_frs'        => $riwayat_frs,
+            'riwayat_srs'        => $riwayat_srs,
+            'riwayat_ihc'        => $riwayat_ihc,
             'pemotongan' => $pemotongan,
             'users'      => $users,
             'id_user'    => $this->session->get('id_user'),

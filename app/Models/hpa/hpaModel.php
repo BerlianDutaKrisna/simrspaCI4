@@ -129,12 +129,14 @@ class HpaModel extends Model
             ->first();
     }
 
-    public function updateHpa($id_hpa, $data)
+    public function riwayatPemeriksaanhpa($id_pasien)
     {
-        $builder = $this->db->table('hpa');
-        $builder->where('id_hpa', $id_hpa);
-        $builder->update($data);
-        return $this->db->affectedRows();
+        return $this->select('hpa.*, pembacaan_hpa.id_user_dokter_pembacaan_hpa, users.nama_user AS dokter_nama')
+            ->join('pembacaan_hpa', 'pembacaan_hpa.id_hpa = hpa.id_hpa', 'left')
+            ->join('users', 'users.id_user = pembacaan_hpa.id_user_dokter_pembacaan_hpa', 'left')
+            ->where('hpa.id_pasien', $id_pasien)
+            ->where('hpa.hasil_hpa IS NOT NULL', null, false)
+            ->findAll();
     }
 
     public function updatePenerima($id_hpa, $data)

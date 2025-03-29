@@ -118,17 +118,14 @@
                     const form = document.getElementById("form-srs");
                     const uploadButton = document.getElementById("uploadButton");
                     const loadingOverlay = document.getElementById("loading-overlay");
-
                     uploadButton.addEventListener("click", function() {
                         // Tampilkan overlay loading
                         loadingOverlay.classList.remove("d-none");
-
                         // Kirim form secara langsung
                         form.action = this.getAttribute("formaction");
                         form.submit();
                     });
                 });
-
                 // Tambahkan CSS untuk overlay dan spinner
                 const style = document.createElement("style");
                 style.innerHTML = `
@@ -167,7 +164,6 @@
                 document.head.appendChild(style);
             </script>
 
-
             <!-- Kolom Makroskopis -->
             <div class="form-group row">
                 <label class="col-sm-2 col-form-label">Makroskopis</label>
@@ -195,10 +191,8 @@
                         placeholder="Masukkan Jumlah Slide Lainnya"
                         value="<?= (!in_array($srs['jumlah_slide'], ['0', '1', '2', '3'])) ? $srs['jumlah_slide'] : '' ?>">
                 </div>
-
                 <label class="col-sm-2 col-form-label" for=""></label>
                 <div class="col-sm-4">
-
                 </div>
             </div>
 
