@@ -77,12 +77,12 @@ class ihcController extends BaseController
 
     public function register()
     {
-        $lastIhc = $this->ihcModel->getLastKodeihc();
+        $lastihc = $this->ihcModel->getLastKodeihc();
         $currentYear = date('y');
         $nextNumber = 1;
 
-        if ($lastIhc) {
-            $lastKode = $lastIhc['kode_ihc'];
+        if ($lastihc) {
+            $lastKode = $lastihc['kode_ihc'];
             $lastParts = explode('/', $lastKode);
             $lastYear = $lastParts[1];
 
@@ -91,7 +91,6 @@ class ihcController extends BaseController
                 $nextNumber = $lastNumber + 1;
             }
         }
-
         $kodeIhc = sprintf('IHC.%02d/%s', $nextNumber, $currentYear);
 
         // Proses norm_pasien sebelum data dibuat
@@ -99,12 +98,18 @@ class ihcController extends BaseController
         $patient = $normPasien ? $this->patientModel->where('norm_pasien', $normPasien)->first() : null;
         $id_pasien = $patient['id_pasien'];
         $riwayat_hpa = $this->hpaModel->riwayatPemeriksaanhpa($id_pasien);
+        $riwayat_frs = $this->frsModel->riwayatPemeriksaanfrs($id_pasien);
+        $riwayat_srs = $this->srsModel->riwayatPemeriksaansrs($id_pasien);
+        $riwayat_ihc = $this->ihcModel->riwayatPemeriksaanihc($id_pasien);
         $data = [
             'id_user'   => session()->get('id_user'),
             'nama_user' => session()->get('nama_user'),
             'kode_ihc'  => $kodeIhc,
             'patient'   => $patient,
             'riwayat_hpa' => $riwayat_hpa,
+            'riwayat_frs' => $riwayat_frs,
+            'riwayat_srs' => $riwayat_srs,
+            'riwayat_ihc' => $riwayat_ihc,
         ];
         
         return view('ihc/Register', $data);
@@ -447,8 +452,9 @@ class ihcController extends BaseController
                             </div>
                             <br>
                             <div>
-                                <font size="5" face="verdana"><b>MIKROSKOPIK :</b></font>
-                                <font size="5" face="verdana">' . nl2br(htmlspecialchars(str_replace(['<p>', '</p>', '<br>'], '', $mikroskopis_ihc))) . '</font>
+                                <font size="5" face="verdana"><b>MIKROSKOPIK :</b>
+                                ' . nl2br(htmlspecialchars(str_replace(['<p>', '</p>', '<br>'], '', $mikroskopis_ihc))) . '
+                                </font>
                             </div>
                             <br>
                             <div>

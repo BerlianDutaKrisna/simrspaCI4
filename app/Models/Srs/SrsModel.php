@@ -131,11 +131,15 @@ class SrsModel extends Model
 
     public function riwayatPemeriksaansrs($id_pasien)
     {
-        return $this->select('srs.*, pembacaan_srs.id_user_dokter_pembacaan_srs, users.nama_user AS dokter_nama')
+        return $this
+            ->select('srs.*, pembacaan_srs.id_user_dokter_pembacaan_srs, users.nama_user AS dokter_nama')
             ->join('pembacaan_srs', 'pembacaan_srs.id_srs = srs.id_srs', 'left')
             ->join('users', 'users.id_user = pembacaan_srs.id_user_dokter_pembacaan_srs', 'left')
             ->where('srs.id_pasien', $id_pasien)
-            ->where('srs.hasil_srs IS NOT NULL', [null, ''])
+            ->groupStart()
+            ->where('srs.hasil_srs IS NOT NULL', null, false)
+            ->where('srs.hasil_srs !=', '')
+            ->groupEnd()
             ->findAll();
     }
 

@@ -131,11 +131,15 @@ class HpaModel extends Model
 
     public function riwayatPemeriksaanhpa($id_pasien)
     {
-        return $this->select('hpa.*, pembacaan_hpa.id_user_dokter_pembacaan_hpa, users.nama_user AS dokter_nama')
+        return $this
+            ->select('hpa.*, pembacaan_hpa.id_user_dokter_pembacaan_hpa, users.nama_user AS dokter_nama')
             ->join('pembacaan_hpa', 'pembacaan_hpa.id_hpa = hpa.id_hpa', 'left')
             ->join('users', 'users.id_user = pembacaan_hpa.id_user_dokter_pembacaan_hpa', 'left')
             ->where('hpa.id_pasien', $id_pasien)
-            ->whereIn('hpa.hasil_hpa', [null, ''])
+            ->groupStart()
+            ->where('hpa.hasil_hpa IS NOT NULL', null, false)
+            ->where('hpa.hasil_hpa !=', '')
+            ->groupEnd()
             ->findAll();
     }
 

@@ -135,11 +135,15 @@ class IhcModel extends Model
 
     public function riwayatPemeriksaanihc($id_pasien)
     {
-        return $this->select('ihc.*, pembacaan_ihc.id_user_dokter_pembacaan_ihc, users.nama_user AS dokter_nama')
+        return $this
+            ->select('ihc.*, pembacaan_ihc.id_user_dokter_pembacaan_ihc, users.nama_user AS dokter_nama')
             ->join('pembacaan_ihc', 'pembacaan_ihc.id_ihc = ihc.id_ihc', 'left')
             ->join('users', 'users.id_user = pembacaan_ihc.id_user_dokter_pembacaan_ihc', 'left')
             ->where('ihc.id_pasien', $id_pasien)
-            ->where('ihc.hasil_ihc IS NOT NULL', [null, ''])
+            ->groupStart()
+            ->where('ihc.hasil_ihc IS NOT NULL', null, false)
+            ->where('ihc.hasil_ihc !=', '')
+            ->groupEnd()
             ->findAll();
     }
 
