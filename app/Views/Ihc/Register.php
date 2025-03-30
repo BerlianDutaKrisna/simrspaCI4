@@ -43,6 +43,31 @@
                 <p class="form-control-plaintext"><?= isset($patient['status_pasien']) ? esc($patient['status_pasien']) : ''; ?></p>
             </div>
         </div>
+        <div class="form-group row">
+            <!-- Riwayat Pemeriksaan Histopatologi (HPA) -->
+            <div class="col-md-6">
+                <label class="col-form-label">Riwayat Pemeriksaan <b>Histopatologi</b></label>
+                <?php if (!empty($riwayat_hpa)) : ?>
+                    <?php foreach ($riwayat_hpa as $row) : ?>
+                        <div class="border p-2 mb-2">
+                            <strong>Tanggal Permintaan:</strong> <?= isset($row['tanggal_permintaan']) ? date('d-m-Y', strtotime($row['tanggal_permintaan'])) : '-' ?><br>
+                            <strong>Kode HPA:</strong> <?= esc($row['kode_hpa'] ?? '-') ?><br>
+                            <strong>Jumlah Slide:</strong> <?= esc($row['jumlah_slide'] ?? '-') ?><br>
+                            <strong>Tindakan Spesimen:</strong> <?= esc($row['tindakan_spesimen'] ?? '-') ?><br>
+                            <strong>Lokasi Spesimen:</strong> <?= esc($row['lokasi_spesimen'] ?? '-') ?><br>
+                            <strong>Hasil HPA:</strong> <?= esc($row['hasil_hpa'] ?? '-') ?><br>
+                            <strong>Dokter Pembaca:</strong> <?= esc($row['dokter_nama'] ?? 'Belum Dibaca') ?><br>
+                            <button type="button" class="btn btn-info btn-sm"
+                                onclick="tampilkanModal('<?= nl2br(esc($row['print_hpa'] ?? 'Tidak ada hasil', 'js')) ?>')">
+                                Lihat Detail
+                            </button>
+                        </div>
+                    <?php endforeach; ?>
+                <?php else : ?>
+                    <p>Tidak ada riwayat pemeriksaan HPA.</p>
+                <?php endif; ?>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -159,6 +184,37 @@
         </form>
     </div>
 </div>
+
+<!-- Modal Riweyat -->
+<div class="modal fade" id="modalDetail" tabindex="-1" aria-labelledby="modalDetailLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalDetailLabel">Detail Pemeriksaan</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="modal-body-content">
+                <!-- Isi modal akan dimasukkan melalui JavaScript -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- javascript untuk menampilkan modal -->
+<script>
+    function tampilkanModal(isi) {
+        // Masukkan isi ke dalam modal
+        document.getElementById("modal-body-content").innerHTML = isi;
+        // Tampilkan modal
+        var myModal = new bootstrap.Modal(document.getElementById("modalDetail"));
+        myModal.show();
+    }
+</script>
 
 <script>
     // Function to set Tanggal Hasil based on Tanggal Permintaan

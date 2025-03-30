@@ -70,5 +70,4 @@
 
 <?= $this->include('templates/notifikasi') ?>
 <?= $this->include('templates/hpa/footer_cetak'); ?>
-<?= $this->include('templates/proses/cetak_proses'); ?>
 <?= $this->include('templates/hpa/cetak_print'); ?>

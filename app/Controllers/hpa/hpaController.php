@@ -315,7 +315,7 @@ class HpaController extends BaseController
         // Persiapkan data yang akan dikirim ke view
         $data = [
             'hpa'        => $hpa,
-            'riwatah_hpa'        => $riwayat_hpa,
+            'riwayat_hpa'        => $riwayat_hpa,
             'riwayat_frs'        => $riwayat_frs,
             'riwayat_srs'        => $riwayat_srs,
             'riwayat_ihc'        => $riwayat_ihc,

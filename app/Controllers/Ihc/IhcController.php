@@ -4,6 +4,7 @@ namespace App\Controllers\Ihc;
 
 use App\Controllers\BaseController;
 use App\Models\Ihc\ihcModel;
+use App\Models\Hpa\HpaModel;
 use App\Models\UsersModel;
 use App\Models\PatientModel;
 use App\Models\Ihc\Proses\Penerimaan_ihc;
@@ -18,6 +19,7 @@ use Exception;
 class ihcController extends BaseController
 {
     protected $ihcModel;
+    protected $hpaModel;
     protected $usersModel;
     protected $patientModel;
     protected $penerimaan_ihc;
@@ -33,6 +35,7 @@ class ihcController extends BaseController
     public function __construct()
     {
         $this->ihcModel = new ihcModel();
+        $this->hpaModel = new HpaModel();
         $this->usersModel = new UsersModel();
         $this->patientModel = new PatientModel();
         $this->penerimaan_ihc = new Penerimaan_ihc();;
@@ -74,35 +77,36 @@ class ihcController extends BaseController
 
     public function register()
     {
-        $lastihc = $this->ihcModel->getLastKodeihc();
+        $lastIhc = $this->ihcModel->getLastKodeihc();
         $currentYear = date('y');
         $nextNumber = 1;
-        if ($lastihc) {
-            $lastKode = $lastihc['kode_ihc'];
+
+        if ($lastIhc) {
+            $lastKode = $lastIhc['kode_ihc'];
             $lastParts = explode('/', $lastKode);
             $lastYear = $lastParts[1];
+
             if ($lastYear == $currentYear) {
                 $lastNumber = (int) explode('.', $lastParts[0])[1];
                 $nextNumber = $lastNumber + 1;
-            } else {
-                $nextNumber = 1;
             }
-        } else {
-            $nextNumber = 1;
         }
-        $kodeihc = 'IHC.' . str_pad($nextNumber, 2, '0', STR_PAD_LEFT) . '/' . $currentYear;
+
+        $kodeIhc = sprintf('IHC.%02d/%s', $nextNumber, $currentYear);
+
+        // Proses norm_pasien sebelum data dibuat
+        $normPasien = $this->request->getGet('norm_pasien');
+        $patient = $normPasien ? $this->patientModel->where('norm_pasien', $normPasien)->first() : null;
+        $id_pasien = $patient['id_pasien'];
+        $riwayat_hpa = $this->hpaModel->riwayatPemeriksaanhpa($id_pasien);
         $data = [
-            'id_user' => session()->get('id_user'),
+            'id_user'   => session()->get('id_user'),
             'nama_user' => session()->get('nama_user'),
-            'kode_ihc' => $kodeihc,
-            'patient' => null,
+            'kode_ihc'  => $kodeIhc,
+            'patient'   => $patient,
+            'riwayat_hpa' => $riwayat_hpa,
         ];
-        $norm_pasien = $this->request->getGet('norm_pasien');
-        if ($norm_pasien) {
-            $patientModel = new PatientModel();
-            $patient = $patientModel->where('norm_pasien', $norm_pasien)->first();
-            $data['patient'] = $patient ?: null;
-        }
+        
         return view('ihc/Register', $data);
     }
 
