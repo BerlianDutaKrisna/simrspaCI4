@@ -135,7 +135,7 @@ class FrsModel extends Model
             ->join('pembacaan_frs', 'pembacaan_frs.id_frs = frs.id_frs', 'left')
             ->join('users', 'users.id_user = pembacaan_frs.id_user_dokter_pembacaan_frs', 'left')
             ->where('frs.id_pasien', $id_pasien)
-            ->where('frs.hasil_frs IS NOT NULL', null, false)
+            ->where('frs.hasil_frs IS NOT NULL', [null, ''])
             ->findAll();
     }
 

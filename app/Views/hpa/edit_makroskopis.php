@@ -339,7 +339,7 @@
     </div>
 </div>
 
-<!-- Modal Riweyat -->
+<!-- Modal Riwayat -->
 <div class="modal fade" id="modalDetail" tabindex="-1" aria-labelledby="modalDetailLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">

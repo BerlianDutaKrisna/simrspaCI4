@@ -233,6 +233,11 @@ class HpaController extends BaseController
         }
         $id_pemotongan_hpa = $hpa['id_pemotongan_hpa'];
         $id_pembacaan_hpa = $hpa['id_pembacaan_hpa'];
+        $id_pasien = $hpa['id_pasien'];
+        $riwayat_hpa = $this->hpaModel->riwayatPemeriksaanhpa($id_pasien);
+        $riwayat_frs = $this->frsModel->riwayatPemeriksaanfrs($id_pasien);
+        $riwayat_srs = $this->srsModel->riwayatPemeriksaansrs($id_pasien);
+        $riwayat_ihc = $this->ihcModel->riwayatPemeriksaanihc($id_pasien);
         // Ambil data pengguna dengan status "Dokter"
         $users = $this->usersModel->where('status_user', 'Dokter')->findAll();
         // Ambil data pemotongan berdasarkan ID
@@ -275,6 +280,10 @@ class HpaController extends BaseController
             'id_user'    => session()->get('id_user'),
             'nama_user'  => session()->get('nama_user'),
             'hpa'        => $hpa,
+            'riwayat_hpa'        => $riwayat_hpa,
+            'riwayat_frs'        => $riwayat_frs,
+            'riwayat_srs'        => $riwayat_srs,
+            'riwayat_ihc'        => $riwayat_ihc,
             'pemotongan_hpa' => $pemotongan_hpa,
             'pembacaan_hpa' => $pembacaan_hpa,
             'users'      => $users,
@@ -340,6 +349,11 @@ class HpaController extends BaseController
         $id_pemotongan_hpa = $hpa['id_pemotongan_hpa'];
         $id_pembacaan_hpa = $hpa['id_pembacaan_hpa'];
         $id_mutu_hpa = $hpa['id_mutu_hpa'];
+        $id_pasien = $hpa['id_pasien'];
+        $riwayat_hpa = $this->hpaModel->riwayatPemeriksaanhpa($id_pasien);
+        $riwayat_frs = $this->frsModel->riwayatPemeriksaanfrs($id_pasien);
+        $riwayat_srs = $this->srsModel->riwayatPemeriksaansrs($id_pasien);
+        $riwayat_ihc = $this->ihcModel->riwayatPemeriksaanihc($id_pasien);
         // Inisialisasi dokter dan analis
         $dokter_nama = null;
         $analis_nama = null;
@@ -379,6 +393,10 @@ class HpaController extends BaseController
         // Persiapkan data yang akan dikirim ke view
         $data = [
             'hpa'             => $hpa,
+            'riwayat_hpa'        => $riwayat_hpa,
+            'riwayat_frs'        => $riwayat_frs,
+            'riwayat_srs'        => $riwayat_srs,
+            'riwayat_ihc'        => $riwayat_ihc,
             'pemotongan_hpa'  => $pemotongan_hpa,
             'pembacaan_hpa'   => $pembacaan_hpa,
             'mutu_hpa'        => $mutu_hpa,

@@ -27,7 +27,7 @@
 
     <style>
         .note-editor {
-            width: 190mm;
+            width: 150mm;
             padding: 0px;
         }
 

@@ -87,10 +87,8 @@
             } else {
                 // Default untuk kondisi lain
                 $('#makroskopis_srs').summernote('code', `
-                <font size="5" face="verdana">
                     Diterima bahan cairan _ berwarna _ dengan volume _ ml.<br>
                     Dibuat sediaan sebanyak _ slide dan _ cell block.
-                </font>
             `);
             }
         }

@@ -135,7 +135,7 @@ class HpaModel extends Model
             ->join('pembacaan_hpa', 'pembacaan_hpa.id_hpa = hpa.id_hpa', 'left')
             ->join('users', 'users.id_user = pembacaan_hpa.id_user_dokter_pembacaan_hpa', 'left')
             ->where('hpa.id_pasien', $id_pasien)
-            ->where('hpa.hasil_hpa IS NOT NULL', null, false)
+            ->whereIn('hpa.hasil_hpa', [null, ''])
             ->findAll();
     }
 

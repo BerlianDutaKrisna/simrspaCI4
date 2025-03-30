@@ -168,9 +168,8 @@
                                     <strong><?= isset($row['tanggal_permintaan']) ? date('d-m-Y', strtotime($row['tanggal_permintaan'])) : '-' ?></strong>
                                     &nbsp;,&nbsp;<?= esc($row['kode_hpa'] ?? $row['kode_frs'] ?? $row['kode_srs'] ?? $row['kode_ihc'] ?? '-') ?>
                                     &nbsp;,&nbsp;Lokasi: <?= esc($row['lokasi_spesimen'] ?? '-') ?>
-                                    &nbsp;,&nbsp;Hasil: <?= esc($row['hasil_hpa'] ?? $row['hasil_frs'] ?? $row['hasil_srs'] ?? $row['hasil_ihc'] ?? '-') ?>
+                                    &nbsp;,&nbsp;Hasil: <?= $row['hasil_hpa'] ?? $row['hasil_frs'] ?? $row['hasil_srs'] ?? esc(strip_tags($row['hasil_ihc']) ?? '-') ?>
                                 </td>
-
                                 <?php if ($firstRow) : ?>
                                     <td class="foto-makroskopis" rowspan="<?= $totalRiwayat ?>">
                                         <img src="<?= isset($hpa['foto_makroskopis_hpa']) && $hpa['foto_makroskopis_hpa'] !== null
