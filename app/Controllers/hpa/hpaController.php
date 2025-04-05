@@ -41,7 +41,6 @@ class HpaController extends BaseController
 
     public function __construct()
     {
-        // Inisialisasi model HPA
         $this->hpaModel = new hpaModel();
         $this->frsModel = new frsModel();
         $this->srsModel = new srsModel();

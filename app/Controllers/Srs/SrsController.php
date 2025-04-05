@@ -3,7 +3,10 @@
 namespace App\Controllers\srs;
 
 use App\Controllers\BaseController;
-use App\Models\srs\srsModel;
+use App\Models\Hpa\HpaModel;
+use App\Models\Frs\FrsModel;
+use App\Models\Srs\SrsModel;
+use App\Models\Ihc\IhcModel;
 use App\Models\UsersModel;
 use App\Models\PatientModel;
 use App\Models\srs\Proses\Penerimaan_srs;
@@ -17,7 +20,10 @@ use Exception;
 
 class srsController extends BaseController
 {
+    protected $hpaModel;
+    protected $frsModel;
     protected $srsModel;
+    protected $ihcModel;
     protected $usersModel;
     protected $patientModel;
     protected $penerimaan_srs;
@@ -32,7 +38,10 @@ class srsController extends BaseController
 
     public function __construct()
     {
+        $this->hpaModel = new hpaModel();
+        $this->frsModel = new frsModel();
         $this->srsModel = new srsModel();
+        $this->ihcModel = new ihcModel();
         $this->usersModel = new UsersModel();
         $this->patientModel = new PatientModel();
         $this->penerimaan_srs = new Penerimaan_srs();;
@@ -204,6 +213,11 @@ class srsController extends BaseController
             return redirect()->back()->with('message', ['error' => 'srs tidak ditemukan.']);
         }
         $id_pembacaan_srs = $srs['id_pembacaan_srs'];
+        $id_pasien = $srs['id_pasien'];
+        $riwayat_hpa = $this->hpaModel->riwayatPemeriksaanhpa($id_pasien);
+        $riwayat_frs = $this->frsModel->riwayatPemeriksaanfrs($id_pasien);
+        $riwayat_srs = $this->srsModel->riwayatPemeriksaansrs($id_pasien);
+        $riwayat_ihc = $this->ihcModel->riwayatPemeriksaanihc($id_pasien);
         // Ambil data pengguna dengan status "Dokter"
         $users = $this->usersModel->where('status_user', 'Dokter')->findAll();
         // Ambil data pemotongan berdasarkan ID
@@ -230,6 +244,10 @@ class srsController extends BaseController
             'id_user'    => session()->get('id_user'),
             'nama_user'  => session()->get('nama_user'),
             'srs'        => $srs,
+            'riwayat_hpa'        => $riwayat_hpa,
+            'riwayat_frs'        => $riwayat_frs,
+            'riwayat_srs'        => $riwayat_srs,
+            'riwayat_ihc'        => $riwayat_ihc,
             'pembacaan_srs' => $pembacaan_srs,
             'users'      => $users,
         ];
@@ -241,6 +259,11 @@ class srsController extends BaseController
     {
         // Ambil data srs berdasarkan ID
         $srs = $this->srsModel->getsrsWithRelationsProses($id_srs);
+        $id_pasien = $srs['id_pasien'];
+        $riwayat_hpa = $this->hpaModel->riwayatPemeriksaanhpa($id_pasien);
+        $riwayat_frs = $this->frsModel->riwayatPemeriksaanfrs($id_pasien);
+        $riwayat_srs = $this->srsModel->riwayatPemeriksaansrs($id_pasien);
+        $riwayat_ihc = $this->ihcModel->riwayatPemeriksaanihc($id_pasien);
         if (!$srs) {
             return redirect()->back()->with('message', ['error' => 'srs tidak ditemukan.']);
         }
@@ -252,6 +275,10 @@ class srsController extends BaseController
         // Persiapkan data yang akan dikirim ke view
         $data = [
             'srs'        => $srs,
+            'riwayat_hpa'        => $riwayat_hpa,
+            'riwayat_frs'        => $riwayat_frs,
+            'riwayat_srs'        => $riwayat_srs,
+            'riwayat_ihc'        => $riwayat_ihc,
             'penerimaan' => $penerimaan,
             'users'      => $users,
             'id_user'    => $this->session->get('id_user'),
@@ -266,6 +293,11 @@ class srsController extends BaseController
     {
         // Ambil data srs berdasarkan ID
         $srs = $this->srsModel->getsrsWithRelationsProses($id_srs);
+        $id_pasien = $srs['id_pasien'];
+        $riwayat_hpa = $this->hpaModel->riwayatPemeriksaanhpa($id_pasien);
+        $riwayat_frs = $this->frsModel->riwayatPemeriksaanfrs($id_pasien);
+        $riwayat_srs = $this->srsModel->riwayatPemeriksaansrs($id_pasien);
+        $riwayat_ihc = $this->ihcModel->riwayatPemeriksaanihc($id_pasien);
         if (!$srs) {
             return redirect()->back()->with('message', ['error' => 'srs tidak ditemukan.']);
         }
@@ -278,6 +310,10 @@ class srsController extends BaseController
         // Persiapkan data yang akan dikirim ke view
         $data = [
             'srs'             => $srs,
+            'riwayat_hpa'        => $riwayat_hpa,
+            'riwayat_frs'        => $riwayat_frs,
+            'riwayat_srs'        => $riwayat_srs,
+            'riwayat_ihc'        => $riwayat_ihc,
             'pembacaan_srs'   => $pembacaan_srs,
             'users'           => $users,
             'id_user'         => session()->get('id_user'),

@@ -21,7 +21,7 @@
 
                 <!-- Kolom Kode frs dan Diagnosa -->
                 <div class="form-group row">
-                    <label class="col-sm-2 col-form-label">Kode frs</label>
+                    <label class="col-sm-2 col-form-label">Kode FRS</label>
                     <div class="col-sm-4">
                         <input type="text" name="kode_frs" value="<?= $frs['kode_frs'] ?? '' ?>" class="form-control">
                     </div>
@@ -104,7 +104,7 @@
                             </textarea>
                         </div>
                         <div class="form-group">
-                            <label class="col-sm-2 col-form-label">Hasil frs</label>
+                            <label class="col-sm-2 col-form-label">Hasil Kesimpulan</label>
                         </div>
                         <div class="col-sm-10">
                             <textarea class="form-control summernote" name="hasil_frs" id="hasil_frs">

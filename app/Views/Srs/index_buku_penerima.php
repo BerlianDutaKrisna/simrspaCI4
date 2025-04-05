@@ -14,8 +14,8 @@
                 <thead>
                     <tr>
                         <th>No</th>
-                        <th>Kode SRS</th>
                         <th>Norm Pasien</th>
+                        <th>Kode SRS</th>
                         <th>Nama Pasien</th>
                         <th>Jenis Kelamin Pasien</th>
                         <th>Tanggal Lahir Pasien</th>

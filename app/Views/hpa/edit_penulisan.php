@@ -124,7 +124,7 @@
                             </textarea>
                         </div>
                         <div class="form-group">
-                            <label class="col-sm-2 col-form-label">Hasil Hpa</label>
+                            <label class="col-sm-2 col-form-label">Hasil Kesimpulan</label>
                         </div>
                         <div class="col-sm-10">
                             <textarea class="form-control summernote" name="hasil_hpa" id="hasil_hpa">

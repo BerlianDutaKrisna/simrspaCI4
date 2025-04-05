@@ -21,7 +21,7 @@
 
                 <!-- Kolom Kode srs dan Diagnosa -->
                 <div class="form-group row">
-                    <label class="col-sm-2 col-form-label">Kode srs</label>
+                    <label class="col-sm-2 col-form-label">Kode SRS</label>
                     <div class="col-sm-4">
                         <input type="text" name="kode_srs" value="<?= $srs['kode_srs'] ?? '' ?>" class="form-control">
                     </div>
@@ -104,7 +104,7 @@
                             </textarea>
                         </div>
                         <div class="form-group">
-                            <label class="col-sm-2 col-form-label">Hasil srs</label>
+                            <label class="col-sm-2 col-form-label">Hasil Kesimpulan</label>
                         </div>
                         <div class="col-sm-10">
                             <textarea class="form-control summernote" name="hasil_srs" id="hasil_srs">

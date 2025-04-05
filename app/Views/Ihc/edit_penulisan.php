@@ -21,7 +21,7 @@
 
                 <!-- Kolom Kode ihc dan Diagnosa -->
                 <div class="form-group row">
-                    <label class="col-sm-2 col-form-label">Kode ihc</label>
+                    <label class="col-sm-2 col-form-label">Kode IHC</label>
                     <div class="col-sm-4">
                         <input type="text" name="kode_ihc" value="<?= $ihc['kode_ihc'] ?? '' ?>" class="form-control">
                     </div>
@@ -110,7 +110,7 @@
                             </textarea>
                         </div>
                         <div class="form-group">
-                            <label class="col-sm-2 col-form-label">Hasil ihc</label>
+                            <label class="col-sm-2 col-form-label">Hasil Kesimpulan</label>
                         </div>
                         <div class="col-sm-10">
                             <textarea class="form-control summernote" name="hasil_ihc" id="hasil_ihc">
