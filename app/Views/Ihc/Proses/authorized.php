@@ -24,7 +24,7 @@
                             <th>No</th>
                             <th>Aksi</th>
                             <th>Detail</th>
-                            <th>Kode Ihc</th>
+                            <th>Kode IHC</th>
                             <th>Nama Pasien</th>
                             <th>Status Authorized</th>
                             <th>Dokter</th>

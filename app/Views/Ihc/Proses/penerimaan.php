@@ -21,7 +21,7 @@
                             <th>No</th>
                             <th>Aksi</th>
                             <th>Kelengkapan Form</th>
-                            <th>Kode Ihc</th>
+                            <th>Kode IHC</th>
                             <th>Nama Pasien</th>
                             <th>Analis</th>
                             <th>Mulai Penerimaan</th>

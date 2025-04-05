@@ -304,7 +304,7 @@
                         <button type="submit"
                             class="btn btn-success btn-user w-100"
                             formaction="<?= base_url('srs/update/' . $srs['id_srs']); ?>">
-                            Simpan
+                            <i class="fas fa-save"></i> Simpan
                         </button>
                     </div>
                     <div class="col-sm-4 text-center">
