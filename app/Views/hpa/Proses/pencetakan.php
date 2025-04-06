@@ -8,7 +8,7 @@
     </div>
     <div class="card-body">
         <h1>Daftar Pencetakan Histopatologi</h1>
-        <a href="<?= base_url('/dashboard') ?>" class="btn btn-primary mb-3">Kembali</a>
+        <a href="<?= base_url('/dashboard') ?>" class="btn btn-primary mb-3"><i class="fas fa-reply"></i> Kembali</a>
         <?= $this->include('templates/proses/button_pencetakan'); ?>
 
         <!-- Form -->
@@ -59,7 +59,7 @@
                                         </td>
                                     <?php elseif (in_array($row['status_pencetakan_hpa'], ["Selesai Pencetakan"])): ?>
                                         <td>
-                                        <a href="<?= base_url('hpa/edit_print/' .
+                                            <a href="<?= base_url('hpa/edit_print/' .
                                                             esc($row['id_hpa']) .
                                                             '?redirect=index_pencetakan_hpa') ?>" class="btn btn-success btn-sm">
                                                 <i class="fas fa-print"></i> Cetak Hasil

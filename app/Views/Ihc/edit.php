@@ -9,7 +9,7 @@
 
         <div class="card-body">
             <h1>Edit Data Imunohistokimia</h1>
-            <a href="<?= base_url('ihc/index') ?>" class="btn btn-primary mb-3">Kembali</a>
+            <a href="<?= base_url('ihc/index') ?>" class="btn btn-primary mb-3"><i class="fas fa-reply"></i> Kembali</a>
 
             <!-- Form -->
             <form id="form-ihc" method="POST" enctype="multipart/form-data">

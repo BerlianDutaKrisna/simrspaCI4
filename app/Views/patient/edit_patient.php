@@ -8,7 +8,7 @@
     <div class="card-body">
         <h1>Edit Data Pasien</h1>
         <!-- Tombol Kembali ke Daftar Pasien -->
-        <a href="<?= base_url('/patient/index_patient') ?>" class="btn btn-primary mb-3">Kembali</a>
+        <a href="<?= base_url('/patient/index_patient') ?>" class="btn btn-primary mb-3"><i class="fas fa-reply"></i> Kembali</a>
 
         <!-- Form Edit Pasien -->
         <form action="<?= base_url('/patient/update/' . $pasien['id_pasien']) ?>" method="POST">
@@ -18,14 +18,14 @@
                 <!-- Form group untuk Nomor Rekam Medis -->
                 <div class="form-group col-md-3">
                     <label for="norm_pasien">Nomor Rekam Medis</label>
-                    <input type="text" class="form-control <?= session('errors.norm_pasien') ? 'is-invalid' : '' ?>" 
+                    <input type="text" class="form-control <?= session('errors.norm_pasien') ? 'is-invalid' : '' ?>"
                         id="norm_pasien" name="norm_pasien" value="<?= old('norm_pasien', $pasien['norm_pasien']) ?>" required>
                 </div>
 
                 <!-- Form group untuk Nama Pasien -->
                 <div class="form-group col-md-9">
                     <label for="nama_pasien">Nama Pasien</label>
-                    <input type="text" class="form-control <?= session('errors.nama_pasien') ? 'is-invalid' : '' ?>" 
+                    <input type="text" class="form-control <?= session('errors.nama_pasien') ? 'is-invalid' : '' ?>"
                         id="nama_pasien" name="nama_pasien" value="<?= old('nama_pasien', $pasien['nama_pasien']) ?>" required>
                 </div>
             </div>
@@ -33,7 +33,7 @@
             <!-- Form group untuk Alamat Pasien -->
             <div class="form-group">
                 <label for="alamat_pasien">Alamat Pasien</label>
-                <textarea class="form-control <?= session('errors.alamat_pasien') ? 'is-invalid' : '' ?>" 
+                <textarea class="form-control <?= session('errors.alamat_pasien') ? 'is-invalid' : '' ?>"
                     id="alamat_pasien" name="alamat_pasien"><?= old('alamat_pasien', $pasien['alamat_pasien']) ?></textarea>
             </div>
 
@@ -42,14 +42,14 @@
                 <!-- Form group untuk Tanggal Lahir Pasien -->
                 <div class="form-group col-md-4">
                     <label for="tanggal_lahir_pasien">Tanggal Lahir</label>
-                    <input type="date" class="form-control <?= session('errors.tanggal_lahir_pasien') ? 'is-invalid' : '' ?>" 
+                    <input type="date" class="form-control <?= session('errors.tanggal_lahir_pasien') ? 'is-invalid' : '' ?>"
                         id="tanggal_lahir_pasien" name="tanggal_lahir_pasien" value="<?= old('tanggal_lahir_pasien', $pasien['tanggal_lahir_pasien']) ?>">
                 </div>
 
                 <!-- Form group untuk Jenis Kelamin Pasien -->
                 <div class="form-group col-md-4">
                     <label for="jenis_kelamin_pasien">Jenis Kelamin</label>
-                    <select class="form-control <?= session('errors.jenis_kelamin_pasien') ? 'is-invalid' : '' ?>" 
+                    <select class="form-control <?= session('errors.jenis_kelamin_pasien') ? 'is-invalid' : '' ?>"
                         id="jenis_kelamin_pasien" name="jenis_kelamin_pasien">
                         <option value="Belum Dipilih" <?= old('jenis_kelamin_pasien', $pasien['jenis_kelamin_pasien']) == 'Belum Dipilih' ? 'selected' : '' ?>>Belum Dipilih</option>
                         <option value="L" <?= old('jenis_kelamin_pasien', $pasien['jenis_kelamin_pasien']) == 'L' ? 'selected' : '' ?>>Laki-laki</option>
@@ -60,7 +60,7 @@
                 <!-- Form group untuk Status Pasien -->
                 <div class="form-group col-md-4">
                     <label for="status_pasien">Status Pasien</label>
-                    <select class="form-control <?= session('errors.status_pasien') ? 'is-invalid' : '' ?>" 
+                    <select class="form-control <?= session('errors.status_pasien') ? 'is-invalid' : '' ?>"
                         id="status_pasien" name="status_pasien">
                         <option value="Belum Dipilih" <?= old('status_pasien', $pasien['status_pasien']) == 'Belum Dipilih' ? 'selected' : '' ?>>Belum Dipilih</option>
                         <option value="PBI" <?= old('status_pasien', $pasien['status_pasien']) == 'PBI' ? 'selected' : '' ?>>PBI</option>

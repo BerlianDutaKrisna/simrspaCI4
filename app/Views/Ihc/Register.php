@@ -8,7 +8,7 @@
     <div class="card-body">
         <h1>Data Pasien Imunohistokimia</h1>
         <!-- Tombol Kembali ke Dashboard -->
-        <a href="<?= base_url('/dashboard') ?>" class="btn btn-primary mb-3">Kembali</a>
+        <a href="<?= base_url('/dashboard') ?>" class="btn btn-primary mb-3"><i class="fas fa-reply"></i> Kembali</a>
 
         <!-- Menampilkan Data Pasien dalam 3 kolom 2 baris -->
         <div class="row">

@@ -9,7 +9,7 @@
 
         <div class="card-body">
             <h1>Edit Data Histopatologi</h1>
-            <a href="<?= base_url('frs/index') ?>" class="btn btn-primary mb-3">Kembali</a>
+            <a href="<?= base_url('frs/index') ?>" class="btn btn-primary mb-3"><i class="fas fa-reply"></i> Kembali</a>
 
             <!-- Form -->
             <form id="form-frs" method="POST" enctype="multipart/form-data">

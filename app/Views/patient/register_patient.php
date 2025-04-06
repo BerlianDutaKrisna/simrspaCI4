@@ -8,7 +8,7 @@
     <div class="card-body">
         <h1>Data Pasien</h1>
         <!-- Tombol Kembali ke Dashboard -->
-        <a href="<?= base_url('/dashboard') ?>" class="btn btn-primary mb-3">Kembali</a>
+        <a href="<?= base_url('/dashboard') ?>" class="btn btn-primary mb-3"><i class="fas fa-reply"></i> Kembali</a>
         <!-- Form untuk input data pasien -->
         <form action="<?= base_url('patient/insert') ?>" method="POST">
             <?= csrf_field(); ?> <!-- CSRF token untuk keamanan -->

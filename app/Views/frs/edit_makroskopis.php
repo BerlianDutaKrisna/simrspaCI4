@@ -7,7 +7,7 @@
     </div>
     <div class="card-body">
         <h1>Edit Data Makroskopis Fine Needle Aspiration Biopsy</h1>
-        <a href="<?= base_url('penerimaan_frs/index') ?>" class="btn btn-primary mb-3">Kembali</a>
+        <a href="<?= base_url('penerimaan_frs/index') ?>" class="btn btn-primary mb-3"><i class="fas fa-reply"></i> Kembali</a>
 
         <!-- Form Utama -->
         <form id="form-frs" method="POST" enctype="multipart/form-data">

@@ -8,7 +8,7 @@
     </div>
     <div class="card-body">
         <h1>Daftar Pencetakan Imunohistokimia</h1>
-        <a href="<?= base_url('/dashboard') ?>" class="btn btn-primary mb-3">Kembali</a>
+        <a href="<?= base_url('/dashboard') ?>" class="btn btn-primary mb-3"><i class="fas fa-reply"></i> Kembali</a>
         <?= $this->include('templates/proses/button_pencetakan'); ?>
 
         <!-- Form -->

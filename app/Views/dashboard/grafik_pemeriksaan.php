@@ -5,7 +5,7 @@
         <div class="card shadow mb-4">
             <!-- Card Header - Dropdown -->
             <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                <h6 class="m-0 font-weight-bold text-primary">Jumlah keseluruhan Sample HPA</h6> <!-- Judul grafik -->
+                <h6 class="m-0 font-weight-bold text-primary">Jumlah Perbulan keseluruhan Setiap Jenis Pemeriksaan</h6> <!-- Judul grafik -->
                 <div class="dropdown no-arrow">
                     <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
                         data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -13,11 +13,11 @@
                     </a>
                     <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
                         aria-labelledby="dropdownMenuLink">
-                        <div class="dropdown-header">Cetak Laporan HPA:</div> <!-- Header dropdown -->
-                        <a class="dropdown-item" href="<?= base_url('laporan_jumlah_pasien') ?>">Jumlah Pasien</a>
-                        <a class="dropdown-item" href="#">Evaluasi Pelayanan</a>
-                        <div class="dropdown-divider"></div> <!-- Pemisah dalam dropdown -->
-                        <a class="dropdown-item" href="#">Lainya</a>
+                        <div class="dropdown-header">Cetak Laporan:</div> <!-- Header dropdown -->
+                        <a class="dropdown-item" href="#"><i class="fas fa-drumstick-bite fa-sm fa-fw mr-2 text-gray-600"></i> Sample Histopatologi</a>
+                        <a class="dropdown-item" href="#"><i class="fas fa-syringe fa-sm fa-fw mr-2 text-gray-600"></i> Sample Fine Neadle</a>
+                        <a class="dropdown-item" href="#"><i class="fas fa-prescription-bottle fa-sm fa-fw mr-2 text-gray-600"></i> Sample Sitologi</a>
+                        <a class="dropdown-item" href="#"><i class="fas fa-vials fa-sm fa-fw mr-2 text-gray-600"></i> Sample Imunohistokimia</a>
                     </div>
                 </div>
             </div>
@@ -132,7 +132,7 @@
         <div class="card shadow mb-4">
             <!-- Card Header - Dropdown -->
             <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                <h6 class="m-0 font-weight-bold text-primary">Jumlah keseluruhan jenis pemeriksaan</h6>
+                <h6 class="m-0 font-weight-bold text-primary">Jumlah Total Keseluruhan Setiap Jenis Pemeriksaan</h6>
                 <div class="dropdown no-arrow">
                     <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
                         data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -141,10 +141,7 @@
                     <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
                         aria-labelledby="dropdownMenuLink">
                         <div class="dropdown-header">Cetak Laporan Pemeriksaan:</div>
-                        <a class="dropdown-item" href="#">Laporan pemeriksaan HPA</a>
-                        <a class="dropdown-item" href="#">Buku Penerimaan</a>
-                        <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="#">Something else here</a>
+                        <a class="dropdown-item" href="#"> <i class="fas fa-vials fa-sm fa-fw mr-2 text-gray-600"></i>Laporan Seluruh Jenis Pemeriksaan</a>
                     </div>
                 </div>
             </div>
