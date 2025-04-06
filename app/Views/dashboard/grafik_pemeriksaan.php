@@ -15,7 +15,7 @@
                         aria-labelledby="dropdownMenuLink">
                         <div class="dropdown-header">Cetak Laporan:</div> <!-- Header dropdown -->
                         <a class="dropdown-item" href="#"><i class="fas fa-drumstick-bite fa-sm fa-fw mr-2 text-gray-600"></i> Sample Histopatologi</a>
-                        <a class="dropdown-item" href="#"><i class="fas fa-syringe fa-sm fa-fw mr-2 text-gray-600"></i> Sample Fine Neadle</a>
+                        <a class="dropdown-item" href="#"><i class="fas fa-syringe fa-sm fa-fw mr-2 text-gray-600"></i> Sample Fine Needle Aspiration Biopsy</a>
                         <a class="dropdown-item" href="#"><i class="fas fa-prescription-bottle fa-sm fa-fw mr-2 text-gray-600"></i> Sample Sitologi</a>
                         <a class="dropdown-item" href="#"><i class="fas fa-vials fa-sm fa-fw mr-2 text-gray-600"></i> Sample Imunohistokimia</a>
                     </div>
@@ -141,7 +141,7 @@
                     <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
                         aria-labelledby="dropdownMenuLink">
                         <div class="dropdown-header">Cetak Laporan Pemeriksaan:</div>
-                        <a class="dropdown-item" href="#"> <i class="fas fa-vials fa-sm fa-fw mr-2 text-gray-600"></i>Laporan Seluruh Jenis Pemeriksaan</a>
+                        <a class="dropdown-item" href="#"> <i class="fas fa-poll fa-sm fa-fw mr-2 text-gray-600"></i>Laporan Seluruh Jenis Pemeriksaan</a>
                     </div>
                 </div>
             </div>
