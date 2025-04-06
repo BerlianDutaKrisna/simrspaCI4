@@ -83,7 +83,7 @@
                                     ?>
                                 </td>
                                 <td><?= esc(strip_tags($row['hasil_frs'] ?? 'Belum Ada Hasil')) ?></td>
-                                <td><?= esc($row['status_frs'] ?? 'Belum Diisi') ?></td>
+                                <td><strong class="<?= in_array($row['status_frs'] ?? '', ['Authorized', 'Selesai']) ? 'text-success' : '' ?>"><?= esc($row['status_frs'] ?? 'Belum Diisi') ?></strong></td>
                                 <td class="text-center">
                                     <a href="#"
                                         class="btn btn-info btn-sm penerima-btn"

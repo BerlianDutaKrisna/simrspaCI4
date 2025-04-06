@@ -80,8 +80,8 @@
                                     }
                                     ?>
                                 </td>
-                                <td><?= esc($row['status_hpa'] ?? 'Belum Diisi') ?></td>
                                 <td><?= esc(strip_tags($row['hasil_hpa'] ?? 'Belum Ada Hasil')) ?></td>
+                                <td><strong class="<?= in_array($row['status_hpa'] ?? '', ['Authorized', 'Selesai']) ? 'text-success' : '' ?>"><?= esc($row['status_hpa'] ?? 'Belum Diisi') ?></strong></td>
                                 <td class="text-center">
                                     <a href="#"
                                         class="btn btn-info btn-sm penerima-btn"

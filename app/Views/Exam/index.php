@@ -81,7 +81,6 @@
                         <th>No</th>
                         <th>No RM</th>
                         <th>Kode Pemeriksaan</th>
-                        <th>Jenis Pemeriksaan</th>
                         <th>Nama Pasien</th>
                         <th>Jenis Kelamin / Usia</th>
                         <th>Tanggal Lahir</th>
@@ -154,7 +153,6 @@
                                 <td><?= $i ?></td> <!-- Nomor urut dalam satu tanggal -->
                                 <td><?= esc($row['norm_pasien'] ?? 'Belum Diisi') ?></td>
                                 <td><?= esc($row['kode_pemeriksaan'] ?? '-') ?></td>
-                                <td><?= esc($row['jenis_pemeriksaan'] ?? '-') ?></td>
                                 <td><?= esc($row['nama_pasien'] ?? 'Belum Diisi') ?></td>
                                 <td>
                                     <?php
