@@ -18,8 +18,8 @@
                         <th>Norm Pasien</th>
                         <th>Diagnosa</th>
                         <th>Tindakan Spesimen</th>
-                        <th>Status Hpa</th>
                         <th>Status Proses</th>
+                        <th>Proses Status</th>
                         <th>Dikerjakan Oleh</th>
                         <th>Mulai Pengerjaan</th>
                         <th>Selesai Pengerjaan</th>

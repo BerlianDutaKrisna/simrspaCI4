@@ -91,7 +91,7 @@
                         <th>DIAGNOSA KLINIK</th>
                         <th>DIAGNOSA PATOLOGI</TH>
                         <th>MUTU SEDIAAN</th>
-                        <th>7 HARI</th>
+                        <th>1 HARI</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -138,7 +138,7 @@
                                         $start = new DateTime($row['mulai_penerimaan_frs']);
                                         $end = new DateTime($row['selesai_pemverifikasi_frs']);
                                         $interval = $start->diff($end);
-                                        if ($interval->days <= 7) {
+                                        if ($interval->days <= 1) {
                                             echo '<span class="text-success">Tepat Waktu</span>';
                                         } else {
                                             echo '<span class="text-danger">Terlambat</span>';

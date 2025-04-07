@@ -21,23 +21,25 @@ $routes->get('dashboard', 'Dashboard::index'); // Rute untuk dashboard
 
 // Route untuk Users
 $routes->group('users', function ($routes) {
-    $routes->get('index_users', 'Users::index_users'); // Menampilkan halaman index users
-    $routes->get('register_users', 'Users::register_users'); // Menampilkan halaman form register users
-    $routes->post('insert', 'Users::insert'); // Menangani form POST dari register user
-    $routes->get('delete/(:segment)', 'Users::delete/$1'); // Menghapus user
-    $routes->get('edit_user/(:segment)', 'Users::edit_users/$1'); // Rute untuk menampilkan form edit
-    $routes->post('update/(:segment)', 'Users::update/$1'); // Rute untuk menangani update data
+    $routes->get('index_users', 'Users::index_users');
+    $routes->get('register_users', 'Users::register_users'); 
+    $routes->post('insert', 'Users::insert'); 
+    $routes->get('delete/(:segment)', 'Users::delete/$1'); 
+    $routes->get('edit_user/(:segment)', 'Users::edit_users/$1');
+    $routes->post('update/(:segment)', 'Users::update/$1');
+    $routes->get('laporan', 'Users::laporan');
+    $routes->get('filter', 'Users::filter');
 });
 
 // Route untuk Patient
 $routes->group('patient', function ($routes) {
-    $routes->get('index_patient', 'Patient::index_patient'); // Menampilkan halaman index patient
-    $routes->get('register_patient', 'Patient::register_patient'); // Menampilkan halaman form register patient
-    $routes->post('insert', 'Patient::insert'); // Menangani form POST dari register patient
-    $routes->get('delete/(:segment)', 'Patient::delete/$1'); // Menghapus patient
-    $routes->get('edit_patient/(:segment)', 'Patient::edit_patient/$1'); // Rute untuk menampilkan form edit
-    $routes->post('update/(:segment)', 'Patient::update/$1'); // Rute untuk menangani update data
-    $routes->post('modal_search', 'Patient::modal_search'); // Pencarian dengan NoRM
+    $routes->get('index_patient', 'Patient::index_patient'); 
+    $routes->get('register_patient', 'Patient::register_patient'); 
+    $routes->post('insert', 'Patient::insert'); 
+    $routes->get('delete/(:segment)', 'Patient::delete/$1');
+    $routes->get('edit_patient/(:segment)', 'Patient::edit_patient/$1'); 
+    $routes->post('update/(:segment)', 'Patient::update/$1');
+    $routes->post('modal_search', 'Patient::modal_search'); 
 });
 
 // Route untuk exam

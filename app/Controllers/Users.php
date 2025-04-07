@@ -194,4 +194,41 @@ class Users extends BaseController
             'success' => 'Data pengguna berhasil diperbarui.'
         ]);
     }
+
+    public function laporan()
+    {
+        $usersData = $this->UsersModel->getTotalPekerjaanPerUser() ?? [];
+
+        $data = [
+            'id_user'    => session()->get('id_user'),
+            'nama_user'  => session()->get('nama_user'),
+            'analis'     => array_filter($usersData, fn($row) => strtolower($row['status_user']) === 'analis'),
+            'dokter'     => array_filter($usersData, fn($row) => strtolower($row['status_user']) === 'dokter'),
+        ];
+
+        return view('users/laporan', $data);
+    }
+
+    public function filter()
+    {
+        $filterField = $this->request->getGet('filterInput');
+        $filterValue = $this->request->getGet('filterValue');
+        $startDate   = $this->request->getGet('filterDate');
+        $endDate     = $this->request->getGet('filterDate2');
+
+        $filteredData = $this->hpaModel->filterhpaWithRelations(
+            $filterField ?: null,
+            $filterValue ?: null,
+            $startDate,
+            $endDate
+        );
+
+        $data = [
+            'id_user'    => session()->get('id_user'),
+            'nama_user'  => session()->get('nama_user'),
+            'hpaData'       => $filteredData,
+        ];
+
+        return view('hpa/laporan', $data);
+    }
 }

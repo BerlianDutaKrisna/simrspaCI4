@@ -57,6 +57,62 @@ class UsersModel extends Model
         }
     }
 
+    public function getTotalPekerjaanPerUser()
+    {
+        $builder = $this->db->table('users');
+        $builder->select('users.id_user, users.nama_user, users.status_user');
+
+        // Tabel yang menggunakan FK format id_user_namatabel
+        $userTabels = [
+            'penerimaan_hpa',
+            'penerimaan_frs',
+            'penerimaan_srs',
+            'penerimaan_ihc',
+            'pemotongan_hpa',
+            'pemprosesan_hpa',
+            'penanaman_hpa',
+            'pemotongan_tipis_hpa',
+            'pewarnaan_hpa',
+            'penulisan_hpa',
+            'penulisan_frs',
+            'penulisan_srs',
+            'penulisan_ihc',
+            'pemverifikasi_hpa',
+            'pemverifikasi_frs',
+            'pemverifikasi_srs',
+            'pemverifikasi_ihc'
+        ];
+
+        // Tabel yang menggunakan FK format id_user_dokter_namatabel
+        $dokterTabels = [
+            'pembacaan_hpa',
+            'pembacaan_frs',
+            'pembacaan_srs',
+            'pembacaan_ihc',
+            'authorized_hpa',
+            'authorized_frs',
+            'authorized_srs',
+            'authorized_ihc'
+        ];
+
+        foreach ($userTabels as $table) {
+            $fk = "id_user_$table";
+            $alias = $table;
+            $subquery = "(SELECT COUNT(*) FROM $table WHERE $fk = users.id_user)";
+            $builder->select("($subquery) AS `$alias`");
+        }
+
+        foreach ($dokterTabels as $table) {
+            $fk = "id_user_dokter_$table";
+            $alias = $table;
+            $subquery = "(SELECT COUNT(*) FROM $table WHERE $fk = users.id_user)";
+            $builder->select("($subquery) AS `$alias`");
+        }
+
+        return $builder->get()->getResultArray();
+    }
+
+
     public function getTotalByUserName($nama)
     {
         $user = $this->where('nama_user', $nama)->first();
