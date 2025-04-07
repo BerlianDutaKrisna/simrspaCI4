@@ -56,4 +56,55 @@ class UsersModel extends Model
             return false;
         }
     }
+
+    public function getTotalByUserName($nama)
+    {
+        $user = $this->where('nama_user', $nama)->first();
+        if (!$user) {
+            return 0; // Jika user tidak ditemukan, langsung kembalikan 0
+        }
+
+        $userId = $user['id_user'];
+        $db = \Config\Database::connect();
+
+        // Mapping tabel dan foreign key
+        $tables = [
+            'penerimaan_hpa' => 'id_user_penerimaan_hpa',
+            'penerimaan_frs' => 'id_user_penerimaan_frs',
+            'penerimaan_srs' => 'id_user_penerimaan_srs',
+            'penerimaan_ihc' => 'id_user_penerimaan_ihc',
+            'pemotongan_hpa' => 'id_user_pemotongan_hpa',
+            'pemprosesan_hpa' => 'id_user_pemprosesan_hpa',
+            'penanaman_hpa' => 'id_user_penanaman_hpa',
+            'pemotongan_tipis_hpa' => 'id_user_pemotongan_tipis_hpa',
+            'pewarnaan_hpa' => 'id_user_pewarnaan_hpa',
+            'pembacaan_hpa' => 'id_user_dokter_pembacaan_hpa',
+            'pembacaan_frs' => 'id_user_dokter_pembacaan_frs',
+            'pembacaan_srs' => 'id_user_dokter_pembacaan_srs',
+            'pembacaan_ihc' => 'id_user_dokter_pembacaan_ihc',
+            'pemverifikasi_hpa' => 'id_user_pemverifikasi_hpa',
+            'pemverifikasi_frs' => 'id_user_pemverifikasi_frs',
+            'pemverifikasi_srs' => 'id_user_pemverifikasi_srs',
+            'pemverifikasi_ihc' => 'id_user_pemverifikasi_ihc',
+            'authorized_hpa' => 'id_user_dokter_authorized_hpa',
+            'authorized_frs' => 'id_user_dokter_authorized_frs',
+            'authorized_srs' => 'id_user_dokter_authorized_srs',
+            'authorized_ihc' => 'id_user_dokter_authorized_ihc'
+        ];
+
+        $total = 0;
+
+        foreach ($tables as $table => $foreignKey) {
+            try {
+                $builder = $db->table($table);
+                $builder->where($foreignKey, $userId);
+                $total += $builder->countAllResults(false); // false untuk mencegah reset query builder
+            } catch (\Exception $e) {
+                // Optional: log jika ada error pada salah satu tabel
+                log_message('error', "Error counting table $table: " . $e->getMessage());
+            }
+        }
+
+        return $total;
+    }
 }

@@ -2,15 +2,31 @@
 
 namespace App\Controllers;
 
-use App\Models\Hpa\hpaModel;
+use App\Controllers\BaseController;
+use App\Models\Hpa\HpaModel;
+use App\Models\Frs\FrsModel;
+use App\Models\Srs\SrsModel;
+use App\Models\Ihc\IhcModel;
+use App\Models\UsersModel;
+use App\Models\PatientModel;
 
 class Dashboard extends BaseController
 {
     protected $hpaModel;
+    protected $frsModel;
+    protected $srsModel;
+    protected $ihcModel;
+    protected $usersModel;
+    protected $patientModel;
 
     public function __construct()
     {
         $this->hpaModel = new hpaModel();
+        $this->frsModel = new frsModel();
+        $this->srsModel = new srsModel();
+        $this->ihcModel = new ihcModel();
+        $this->usersModel = new UsersModel();
+        $this->patientModel = new PatientModel();
         $this->session = \Config\Services::session();
     }
 
@@ -36,16 +52,18 @@ class Dashboard extends BaseController
             ],
 
             'pieChartUserData' => [
-                'labels' => ['Endar', 'Arlina', 'Ilham', 'Berlian'],
-                'data' => [10, 7, 5, 8]
+                'endar' => $this->usersModel->getTotalByUserName("Endar Pratiwi, S.Si"),
+                'arlina' => $this->usersModel->getTotalByUserName("Arlina Kartika, A.Md.AK"),
+                'ilham' => $this->usersModel->getTotalByUserName("Ilham Tyas Ismadi, A.Md.Kes"),
+                'berlian' => $this->usersModel->getTotalByUserName("Berlian Duta Krisna, S.Tr.Kes"),
             ],
 
             'pieChartDokterData' => [
-                'labels' => ['dr. Lisa', 'dr. Seno', 'dr. Ria'],
-                'data' => [12, 9, 4]
+                'vinna' => $this->usersModel->getTotalByUserName("dr. Vinna Chrisdianti, Sp.PA"),
+                'ayu' => $this->usersModel->getTotalByUserName("dr. Ayu Tyasmara Pratiwi, Sp.PA"),
             ]
         ];
-
+        
         return view('dashboard/dashboard', $data);
     }
 }

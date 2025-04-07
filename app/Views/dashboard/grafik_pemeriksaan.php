@@ -181,57 +181,9 @@
     </div>
 
     <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            const pieChartData = <?= json_encode($pieChartData); ?>;
-            const pieChartUserData = <?= json_encode($pieChartUserData); ?>;
-            const pieChartDokterData = <?= json_encode($pieChartDokterData); ?>;
-
-            const renderPieChart = (ctxId, labels, data, colors) => {
-                const ctx = document.getElementById(ctxId);
-                if (!ctx) return;
-
-                new Chart(ctx, {
-                    type: 'doughnut',
-                    data: {
-                        labels: labels,
-                        datasets: [{
-                            data: data,
-                            backgroundColor: colors,
-                            borderColor: "rgba(234, 236, 244, 1)",
-                            borderWidth: 1
-                        }]
-                    },
-                    options: {
-                        maintainAspectRatio: false,
-                        responsive: true,
-                        plugins: {
-                            legend: {
-                                position: 'bottom'
-                            },
-                            tooltip: {
-                                enabled: false
-                            }
-                        },
-                        hover: {
-                            mode: null
-                        }
-                    }
-                });
-            };
-
-            renderPieChart("pieChart1", ["HPA", "FRS", "SRS", "IHC"], [
-                pieChartData.hpa || 0,
-                pieChartData.frs || 0,
-                pieChartData.srs || 0,
-                pieChartData.ihc || 0
-            ], ["#e74a3b", "#4e73df", "#1cc88a", "#f6c23e"]);
-
-            renderPieChart("pieChart2", pieChartUserData.labels, pieChartUserData.data,
-                ["#4e73df", "#1cc88a", "#36b9cc", "#f6c23e"]);
-
-            renderPieChart("pieChart3", pieChartDokterData.labels, pieChartDokterData.data,
-                ["#e74a3b", "#858796", "#20c9a6", "#5a5c69"]);
-        });
+        window.pieChartData = <?= json_encode($pieChartData); ?>;
+        window.pieChartUserData = <?= json_encode($pieChartUserData); ?>;
+        window.pieChartDokterData = <?= json_encode($pieChartDokterData); ?>;
     </script>
 
 </div>
