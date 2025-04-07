@@ -871,4 +871,41 @@ class HpaController extends BaseController
 
         return redirect()->to('hpa/index')->with('success', 'Status HPA berhasil disimpan.');
     }
+
+    public function laporan()
+    {
+        $hpaData = $this->hpaModel->gethpaWithRelations() ?? [];
+
+        // Kirimkan data ke view
+        $data = [
+            'id_user'    => session()->get('id_user'),
+            'nama_user'  => session()->get('nama_user'),
+            'hpaData' => $hpaData,
+        ];
+        
+        return view('hpa/laporan', $data);
+    }
+
+    public function filter()
+    {
+        $filterField = $this->request->getGet('filterInput');
+        $filterValue = $this->request->getGet('filterValue');
+        $startDate   = $this->request->getGet('filterDate');
+        $endDate     = $this->request->getGet('filterDate2');
+        
+        $filteredData = $this->hpaModel->filterhpaWithRelations(
+            $filterField ?: null,
+            $filterValue ?: null,
+            $startDate,
+            $endDate
+        );
+
+        $data = [
+            'id_user'    => session()->get('id_user'),
+            'nama_user'  => session()->get('nama_user'),
+            'hpaData'       => $filteredData,
+        ];
+
+        return view('hpa/laporan', $data);
+    }
 }

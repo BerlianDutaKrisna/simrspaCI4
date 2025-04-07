@@ -64,6 +64,8 @@ $routes->group('hpa', ['namespace' => 'App\Controllers\Hpa'], function ($routes)
     $routes->post('update_status', 'HpaController::update_status');
     $routes->post('uploadFotoMakroskopis/(:segment)', 'HpaController::uploadFotoMakroskopis/$1');
     $routes->post('uploadFotoMikroskopis/(:segment)', 'HpaController::uploadFotoMikroskopis/$1');
+    $routes->get('laporan', 'HpaController::laporan');
+    $routes->get('filter', 'HpaController::filter');
 });
 
 // Route untuk frs

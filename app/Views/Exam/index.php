@@ -10,6 +10,7 @@
         <a href="<?= base_url('/dashboard') ?>" class="btn btn-primary mb-3"><i class="fas fa-reply"></i> Kembali</a>
 
         <form method="GET" action="<?= base_url('exam/search') ?>">
+            <?= csrf_field(); ?>
             <div class="form-group">
                 <div class="row">
                     <div class="col-md-6">

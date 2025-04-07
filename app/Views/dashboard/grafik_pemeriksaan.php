@@ -14,10 +14,10 @@
                     <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
                         aria-labelledby="dropdownMenuLink">
                         <div class="dropdown-header">Cetak Laporan:</div> <!-- Header dropdown -->
-                        <a class="dropdown-item" href="#"><i class="fas fa-drumstick-bite fa-sm fa-fw mr-2 text-gray-600"></i> Sample Histopatologi</a>
-                        <a class="dropdown-item" href="#"><i class="fas fa-syringe fa-sm fa-fw mr-2 text-gray-600"></i> Sample Fine Needle Aspiration Biopsy</a>
-                        <a class="dropdown-item" href="#"><i class="fas fa-prescription-bottle fa-sm fa-fw mr-2 text-gray-600"></i> Sample Sitologi</a>
-                        <a class="dropdown-item" href="#"><i class="fas fa-vials fa-sm fa-fw mr-2 text-gray-600"></i> Sample Imunohistokimia</a>
+                        <a class="dropdown-item" href="<?= base_url('hpa/laporan'); ?>"><i class="fas fa-drumstick-bite fa-sm fa-fw mr-2 text-gray-600"></i> Sample Histopatologi</a>
+                        <a class="dropdown-item" href="<?= base_url('frs/laporan'); ?>"><i class="fas fa-syringe fa-sm fa-fw mr-2 text-gray-600"></i> Sample Fine Needle Aspiration Biopsy</a>
+                        <a class="dropdown-item" href="<?= base_url('srs/laporan'); ?>"><i class="fas fa-prescription-bottle fa-sm fa-fw mr-2 text-gray-600"></i> Sample Sitologi</a>
+                        <a class="dropdown-item" href="<?= base_url('ihc/laporan'); ?>"><i class="fas fa-vials fa-sm fa-fw mr-2 text-gray-600"></i> Sample Imunohistokimia</a>
                     </div>
                 </div>
             </div>
@@ -140,8 +140,10 @@
                     </a>
                     <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
                         aria-labelledby="dropdownMenuLink">
-                        <div class="dropdown-header">Cetak Laporan Pemeriksaan:</div>
+                        <div class="dropdown-header">Cetak Laporan:</div>
                         <a class="dropdown-item" href="#"> <i class="fas fa-poll fa-sm fa-fw mr-2 text-gray-600"></i>Laporan Seluruh Jenis Pemeriksaan</a>
+                        <a class="dropdown-item" href="#"> <i class="fas fa-procedures fa-sm fa-fw mr-2 text-gray-600"></i>Laporan Seluruh Jumlah Pasien</a>
+                        <a class="dropdown-item" href="#"> <i class="fas fa-users fa-sm fa-fw mr-2 text-gray-600"></i>Laporan Seluruh Kinerja Users</a>
                     </div>
                 </div>
             </div>
@@ -222,8 +224,22 @@
 
 <div>
     <div class="card shadow mb-4">
-        <div class="card-header py-3">
-            <h6 class="m-0 font-weight-bold text-primary">Stok Barang Habis Pakai</h6>
+        <!-- Card Header - Dropdown -->
+        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+            <h6 class="m-0 font-weight-bold text-primary">Jumlah Total Keseluruhan Barang Habis Pakai</h6>
+            <div class="dropdown no-arrow">
+                <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
+                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
+                </a>
+                <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
+                    aria-labelledby="dropdownMenuLink">
+                    <div class="dropdown-header">Cetak Laporan:</div>
+                    <a class="dropdown-item" href="#"> <i class="fas fa-boxes fa-sm fa-fw mr-2 text-gray-600"></i>Laporan Seluruh Stock Barang</a>
+                    <a class="dropdown-item" href="#"> <i class="fas fa-box fa-sm fa-fw mr-2 text-gray-600"></i>Laporan Seluruh Barang Masuk</a>
+                    <a class="dropdown-item" href="#"> <i class="fas fa-box-open fa-sm fa-fw mr-2 text-gray-600"></i>Laporan Seluruh Barang Keluar</a>
+                </div>
+            </div>
         </div>
         <div class="card-body">
             <div class="chart-bar">

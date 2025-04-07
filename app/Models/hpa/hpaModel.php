@@ -186,4 +186,59 @@ class HpaModel extends Model
             throw new \RuntimeException('Update data gagal.'); // Menangani error
         }
     }
+
+    public function gethpaWithRelations()
+    {
+        $previousMonthStart = date('Y-m-01', strtotime('-1 month'));
+
+        return $this->select('
+            hpa.*, 
+            patient.*, 
+            users.nama_user AS dokter_pembaca,
+            penerimaan_hpa.mulai_penerimaan_hpa,
+            pemverifikasi_hpa.selesai_pemverifikasi_hpa,
+            mutu_hpa.total_nilai_mutu_hpa
+        ')
+            ->join('patient', 'patient.id_pasien = hpa.id_pasien')
+            ->join('pembacaan_hpa', 'pembacaan_hpa.id_hpa = hpa.id_hpa')
+            ->join('users', 'users.id_user = pembacaan_hpa.id_user_dokter_pembacaan_hpa')
+            ->join('penerimaan_hpa', 'penerimaan_hpa.id_hpa = hpa.id_hpa', 'left')
+            ->join('pemverifikasi_hpa', 'pemverifikasi_hpa.id_hpa = hpa.id_hpa', 'left')
+            ->join('mutu_hpa', 'mutu_hpa.id_hpa = hpa.id_hpa', 'left')
+            ->where('hpa.tanggal_permintaan >=', $previousMonthStart)
+            ->where('hpa.tanggal_permintaan <=', date('Y-m-t'))
+            ->orderBy('hpa.kode_hpa', 'ASC')
+            ->findAll();
+    }
+
+    public function filterhpaWithRelations($filterField, $filterValue, $startDate, $endDate)
+    {
+        $builder = $this->db->table('hpa')
+            ->select("
+            hpa.*,
+            patient.*,
+            users.nama_user AS dokter_pembaca,
+            penerimaan_hpa.mulai_penerimaan_hpa,
+            pemverifikasi_hpa.selesai_pemverifikasi_hpa,
+            mutu_hpa.total_nilai_mutu_hpa
+        ")
+            ->join('patient', 'patient.id_pasien = hpa.id_pasien')
+            ->join('pembacaan_hpa', 'pembacaan_hpa.id_hpa = hpa.id_hpa')
+            ->join('users', 'users.id_user = pembacaan_hpa.id_user_dokter_pembacaan_hpa')
+            ->join('penerimaan_hpa', 'penerimaan_hpa.id_hpa = hpa.id_hpa', 'left')
+            ->join('pemverifikasi_hpa', 'pemverifikasi_hpa.id_hpa = hpa.id_hpa', 'left')
+            ->join('mutu_hpa', 'mutu_hpa.id_hpa = hpa.id_hpa', 'left')
+            ->where('hpa.tanggal_permintaan >=', $startDate)
+            ->where('hpa.tanggal_permintaan <=', $endDate);
+
+        // Jika ada filter tambahan dari user (nama pasien, norm, dll)
+        if (!empty($filterField) && !empty($filterValue)) {
+            $builder->like($filterField, $filterValue);
+        }
+
+        $builder->orderBy('hpa.tanggal_permintaan', 'ASC')
+            ->orderBy('hpa.kode_hpa', 'ASC');
+
+        return $builder->get()->getResultArray();
+    }
 }

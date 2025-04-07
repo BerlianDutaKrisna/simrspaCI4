@@ -56,31 +56,31 @@ class ExamController extends BaseController
             'nama_user' => session()->get('nama_user'),
             'Data' => $Data
         ];
-        
+
         return view('Exam/index', $data);
     }
 
     public function search()
-{
-    $searchField = $this->request->getGet('searchInput');  
-    $searchValue = $this->request->getGet('searchValue');
-    $startDate = $this->request->getGet('searchDate');
-    $endDate = $this->request->getGet('searchDate2');
+    {
+        $searchField = $this->request->getGet('searchInput');
+        $searchValue = $this->request->getGet('searchValue');
+        $startDate = $this->request->getGet('searchDate');
+        $endDate = $this->request->getGet('searchDate2');
 
-    if (!empty($searchField) && !empty($searchValue)) {
-        // Pencarian berdasarkan input spesifik
-        $results = $this->patientModel->searchPatientsWithRelations($searchField, $searchValue, $startDate, $endDate);
-    } else {
-        // Jika tidak ada input pencarian, ambil semua data berdasarkan rentang tanggal
-        $results = $this->patientModel->searchPatientsWithRelations(null, null, $startDate, $endDate);
+        if (!empty($searchField) && !empty($searchValue)) {
+            // Pencarian berdasarkan input spesifik
+            $results = $this->patientModel->searchPatientsWithRelations($searchField, $searchValue, $startDate, $endDate);
+        } else {
+            // Jika tidak ada input pencarian, ambil semua data berdasarkan rentang tanggal
+            $results = $this->patientModel->searchPatientsWithRelations(null, null, $startDate, $endDate);
+        }
+
+        $data = [
+            'id_user' => session()->get('id_user'),
+            'nama_user' => session()->get('nama_user'),
+            'Data' => $results
+        ];
+
+        return view('Exam/index_pencarian', $data);
     }
-
-    $data = [
-        'id_user' => session()->get('id_user'),
-        'nama_user' => session()->get('nama_user'),
-        'Data' => $results
-    ];
-
-    return view('Exam/index_pencarian', $data);
-}
 }
