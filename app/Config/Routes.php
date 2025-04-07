@@ -86,6 +86,8 @@ $routes->group('frs', ['namespace' => 'App\Controllers\Frs'], function ($routes)
     $routes->post('update_status', 'FrsController::update_status');
     $routes->post('uploadFotoMakroskopis/(:segment)', 'FrsController::uploadFotoMakroskopis/$1');
     $routes->post('uploadFotoMikroskopis/(:segment)', 'FrsController::uploadFotoMikroskopis/$1');
+    $routes->get('laporan', 'FrsController::laporan');
+    $routes->get('filter', 'FrsController::filter');
 });
 
 // Route untuk srs
@@ -106,6 +108,8 @@ $routes->group('srs', ['namespace' => 'App\Controllers\Srs'], function ($routes)
     $routes->post('update_status', 'SrsController::update_status');
     $routes->post('uploadFotoMakroskopis/(:segment)', 'SrsController::uploadFotoMakroskopis/$1');
     $routes->post('uploadFotoMikroskopis/(:segment)', 'SrsController::uploadFotoMikroskopis/$1');
+    $routes->get('laporan', 'SrsController::laporan');
+    $routes->get('filter', 'SrsController::filter');
 });
 
 // Route untuk ihc
@@ -121,10 +125,12 @@ $routes->group('ihc', ['namespace' => 'App\Controllers\Ihc'], function ($routes)
     $routes->get('edit_print/(:segment)', 'IhcController::edit_print/$1');
     $routes->post('update/(:segment)', 'IhcController::update/$1');
     $routes->post('update_print/(:segment)', 'IhcController::update_print/$1');
-    $routes->post('update_buku_penerima', 'ihcController::update_buku_penerima');
-    $routes->post('update_status', 'ihcController::update_status');
-    $routes->post('uploadFotoMakroskopis/(:segment)', 'ihcController::uploadFotoMakroskopis/$1');
-    $routes->post('uploadFotoMikroskopis/(:segment)', 'ihcController::uploadFotoMikroskopis/$1');
+    $routes->post('update_buku_penerima', 'IhcController::update_buku_penerima');
+    $routes->post('update_status', 'IhcController::update_status');
+    $routes->post('uploadFotoMakroskopis/(:segment)', 'IhcController::uploadFotoMakroskopis/$1');
+    $routes->post('uploadFotoMikroskopis/(:segment)', 'IhcController::uploadFotoMikroskopis/$1');
+    $routes->get('laporan', 'IhcController::laporan');
+    $routes->get('filter', 'IhcController::filter');
 });
 
 // Route untuk Penerimaan hpa

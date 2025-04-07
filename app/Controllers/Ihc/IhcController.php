@@ -708,18 +708,39 @@ class ihcController extends BaseController
         }
     }
 
-    public function update_status()
+    public function laporan()
     {
-        $id_ihc = $this->request->getPost('id_ihc');
-        $status_ihc = $this->request->getPost('status_ihc');
-        if (!$id_ihc) {
-            return redirect()->back()->with('error', 'ID ihc tidak ditemukan.');
-        }
-        $data = [
-            'status_ihc' => $status_ihc,
-        ];
-        $this->ihcModel->update($id_ihc, $data);
+        $ihcData = $this->ihcModel->getihcWithRelations() ?? [];
 
-        return redirect()->to('ihc/index')->with('success', 'Status ihc berhasil disimpan.');
+        $data = [
+            'id_user'    => session()->get('id_user'),
+            'nama_user'  => session()->get('nama_user'),
+            'ihcData' => $ihcData,
+        ];
+
+        return view('ihc/laporan', $data);
+    }
+
+    public function filter()
+    {
+        $filterField = $this->request->getGet('filterInput');
+        $filterValue = $this->request->getGet('filterValue');
+        $startDate   = $this->request->getGet('filterDate');
+        $endDate     = $this->request->getGet('filterDate2');
+
+        $filteredData = $this->ihcModel->filterihcWithRelations(
+            $filterField ?: null,
+            $filterValue ?: null,
+            $startDate,
+            $endDate
+        );
+
+        $data = [
+            'id_user'    => session()->get('id_user'),
+            'nama_user'  => session()->get('nama_user'),
+            'ihcData'       => $filteredData,
+        ];
+
+        return view('ihc/laporan', $data);
     }
 }

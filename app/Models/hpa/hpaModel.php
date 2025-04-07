@@ -165,28 +165,6 @@ class HpaModel extends Model
         }
     }
 
-    public function updateStatusHpa($id_hpa, $data)
-    {
-        // Validasi parameter
-        if (
-            empty($id_hpa) || empty($data) || !is_array($data)
-        ) {
-            throw new \InvalidArgumentException('Parameter ID HPA atau data tidak valid.');
-        }
-        // Mengambil table 'hpa'
-        $builder = $this->db->table('hpa');
-        // Menambahkan kondisi WHERE
-        $builder->where('id_hpa', $id_hpa);
-        // Melakukan update data
-        $updateResult = $builder->update($data);
-        // Mengecek apakah update berhasil
-        if ($updateResult) {
-            return $this->db->affectedRows(); // Mengembalikan jumlah baris yang terpengaruh
-        } else {
-            throw new \RuntimeException('Update data gagal.'); // Menangani error
-        }
-    }
-
     public function gethpaWithRelations()
     {
         $previousMonthStart = date('Y-m-01', strtotime('-1 month'));

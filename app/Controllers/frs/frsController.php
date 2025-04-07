@@ -748,18 +748,39 @@ class FrsController extends BaseController
         }
     }
 
-    public function update_status()
+    public function laporan()
     {
-        $id_frs = $this->request->getPost('id_frs');
-        $status_frs = $this->request->getPost('status_frs');
-        if (!$id_frs) {
-            return redirect()->back()->with('error', 'ID frs tidak ditemukan.');
-        }
-        $data = [
-            'status_frs' => $status_frs,
-        ];
-        $this->frsModel->update($id_frs, $data);
+        $frsData = $this->frsModel->getfrsWithRelations() ?? [];
 
-        return redirect()->to('frs/index')->with('success', 'Status frs berhasil disimpan.');
+        $data = [
+            'id_user'    => session()->get('id_user'),
+            'nama_user'  => session()->get('nama_user'),
+            'frsData' => $frsData,
+        ];
+
+        return view('frs/laporan', $data);
+    }
+
+    public function filter()
+    {
+        $filterField = $this->request->getGet('filterInput');
+        $filterValue = $this->request->getGet('filterValue');
+        $startDate   = $this->request->getGet('filterDate');
+        $endDate     = $this->request->getGet('filterDate2');
+
+        $filteredData = $this->frsModel->filterfrsWithRelations(
+            $filterField ?: null,
+            $filterValue ?: null,
+            $startDate,
+            $endDate
+        );
+
+        $data = [
+            'id_user'    => session()->get('id_user'),
+            'nama_user'  => session()->get('nama_user'),
+            'frsData'       => $filteredData,
+        ];
+
+        return view('frs/laporan', $data);
     }
 }

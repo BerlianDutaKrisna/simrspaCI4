@@ -6,10 +6,10 @@
         <h6 class="m-0 font-weight-bold text-primary">Buku Laporan</h6>
     </div>
     <div class="card-body">
-        <h1>Buku Laporan Histopatologi</h1>
+        <h1>Buku Laporan Sitologi</h1>
         <a href="<?= base_url('/dashboard') ?>" class="btn btn-primary mb-3"><i class="fas fa-reply"></i> Kembali</a>
 
-        <form method="GET" action="<?= base_url('hpa/filter'); ?>">
+        <form method="GET" action="<?= base_url('srs/filter'); ?>">
             <?= csrf_field(); ?>
             <div class="form-group">
                 <div class="row">
@@ -95,9 +95,9 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <?php if (!empty($hpaData)) : ?>
+                    <?php if (!empty($srsData)) : ?>
                         <?php $i = 1; ?>
-                        <?php foreach ($hpaData as $row) : ?>
+                        <?php foreach ($srsData as $row) : ?>
                             <tr>
                                 <td><?= $i ?></td>
                                 <td>
@@ -114,13 +114,13 @@
                                 <td><?= esc($row['dokter_pengirim'] ?? 'Belum Diisi') ?></td>
                                 <td><?= esc($row['dokter_pembaca'] ?? 'Belum Diisi') ?></td>
                                 <td><?= esc($row['unit_asal'] ?? 'Belum Diisi') ?></td>
-                                <td><?= esc($row['kode_hpa'] ?? 'Belum Diisi') ?></td>
+                                <td><?= esc($row['kode_srs'] ?? 'Belum Diisi') ?></td>
                                 <td><?= esc($row['tindakan_spesimen'] ?? 'Belum Diisi') ?></td>
                                 <td>
                                     <?php
-                                    if (!empty($row['mulai_penerimaan_hpa']) && !empty($row['selesai_pemverifikasi_hpa'])) {
-                                        $start = new DateTime($row['mulai_penerimaan_hpa']);
-                                        $end = new DateTime($row['selesai_pemverifikasi_hpa']);
+                                    if (!empty($row['mulai_penerimaan_srs']) && !empty($row['selesai_pemverifikasi_srs'])) {
+                                        $start = new DateTime($row['mulai_penerimaan_srs']);
+                                        $end = new DateTime($row['selesai_pemverifikasi_srs']);
                                         $interval = $start->diff($end);
                                         echo $interval->format('%a hari %h jam %i menit %s detik');
                                     } else {
@@ -130,13 +130,13 @@
                                 </td>
                                 <td><?= esc($row['lokasi_spesimen'] ?? 'Belum Diisi') ?></td>
                                 <td><?= esc($row['diagnosa_klinik'] ?? 'Belum Diisi') ?></td>
-                                <td><?= esc(strip_tags($row['hasil_hpa'] ?? 'Belum Ada Hasil')) ?></td>
-                                <td><?= esc($row['total_nilai_mutu_hpa'] ?? 'Belum Diisi') ?>%</td>
+                                <td><?= esc(strip_tags($row['hasil_srs'] ?? 'Belum Ada Hasil')) ?></td>
+                                <td><?= esc($row['total_nilai_mutu_srs'] ?? 'Belum Diisi') ?>%</td>
                                 <td>
                                     <?php
-                                    if (!empty($row['mulai_penerimaan_hpa']) && !empty($row['selesai_pemverifikasi_hpa'])) {
-                                        $start = new DateTime($row['mulai_penerimaan_hpa']);
-                                        $end = new DateTime($row['selesai_pemverifikasi_hpa']);
+                                    if (!empty($row['mulai_penerimaan_srs']) && !empty($row['selesai_pemverifikasi_srs'])) {
+                                        $start = new DateTime($row['mulai_penerimaan_srs']);
+                                        $end = new DateTime($row['selesai_pemverifikasi_srs']);
                                         $interval = $start->diff($end);
                                         if ($interval->days <= 7) {
                                             echo '<span class="text-success">Tepat Waktu</span>';

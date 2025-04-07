@@ -857,26 +857,10 @@ class HpaController extends BaseController
         }
     }
 
-    public function update_status()
-    {
-        $id_hpa = $this->request->getPost('id_hpa');
-        $status_hpa = $this->request->getPost('status_hpa');
-        if (!$id_hpa) {
-            return redirect()->back()->with('error', 'ID HPA tidak ditemukan.');
-        }
-        $data = [
-            'status_hpa' => $status_hpa,
-        ];
-        $this->hpaModel->update($id_hpa, $data);
-
-        return redirect()->to('hpa/index')->with('success', 'Status HPA berhasil disimpan.');
-    }
-
     public function laporan()
     {
         $hpaData = $this->hpaModel->gethpaWithRelations() ?? [];
 
-        // Kirimkan data ke view
         $data = [
             'id_user'    => session()->get('id_user'),
             'nama_user'  => session()->get('nama_user'),

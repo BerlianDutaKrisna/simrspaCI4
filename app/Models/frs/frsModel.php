@@ -160,20 +160,58 @@ class FrsModel extends Model
         }
     }
 
-    public function updateStatusfrs($id_frs, $data)
+    public function getfrsWithRelations()
     {
-        if (
-            empty($id_frs) || empty($data) || !is_array($data)
-        ) {
-            throw new \InvalidArgumentException('Parameter ID frs atau data tidak valid.');
+        $previousMonthStart = date('Y-m-01', strtotime('-1 month'));
+
+        return $this->select('
+            frs.*, 
+            patient.*, 
+            users.nama_user AS dokter_pembaca,
+            penerimaan_frs.mulai_penerimaan_frs,
+            pemverifikasi_frs.selesai_pemverifikasi_frs,
+            mutu_frs.total_nilai_mutu_frs
+        ')
+            ->join('patient', 'patient.id_pasien = frs.id_pasien')
+            ->join('pembacaan_frs', 'pembacaan_frs.id_frs = frs.id_frs')
+            ->join('users', 'users.id_user = pembacaan_frs.id_user_dokter_pembacaan_frs')
+            ->join('penerimaan_frs', 'penerimaan_frs.id_frs = frs.id_frs', 'left')
+            ->join('pemverifikasi_frs', 'pemverifikasi_frs.id_frs = frs.id_frs', 'left')
+            ->join('mutu_frs', 'mutu_frs.id_frs = frs.id_frs', 'left')
+            ->where('frs.tanggal_permintaan >=', $previousMonthStart)
+            ->where('frs.tanggal_permintaan <=', date('Y-m-t'))
+            ->orderBy('frs.kode_frs', 'ASC')
+            ->findAll();
+    }
+
+    public function filterfrsWithRelations($filterField, $filterValue, $startDate, $endDate)
+    {
+        $builder = $this->db->table('frs')
+            ->select("
+            frs.*,
+            patient.*,
+            users.nama_user AS dokter_pembaca,
+            penerimaan_frs.mulai_penerimaan_frs,
+            pemverifikasi_frs.selesai_pemverifikasi_frs,
+            mutu_frs.total_nilai_mutu_frs
+        ")
+            ->join('patient', 'patient.id_pasien = frs.id_pasien')
+            ->join('pembacaan_frs', 'pembacaan_frs.id_frs = frs.id_frs')
+            ->join('users', 'users.id_user = pembacaan_frs.id_user_dokter_pembacaan_frs')
+            ->join('penerimaan_frs', 'penerimaan_frs.id_frs = frs.id_frs', 'left')
+            ->join('pemverifikasi_frs', 'pemverifikasi_frs.id_frs = frs.id_frs', 'left')
+            ->join('mutu_frs', 'mutu_frs.id_frs = frs.id_frs', 'left')
+            ->where('frs.tanggal_permintaan >=', $startDate)
+            ->where('frs.tanggal_permintaan <=', $endDate);
+
+        // Jika ada filter tambahan dari user (nama pasien, norm, dll)
+        if (!empty($filterField) && !empty($filterValue)) {
+            $builder->like($filterField, $filterValue);
         }
-        $builder = $this->db->table('frs');
-        $builder->where('id_frs', $id_frs);
-        $updateResult = $builder->update($data);
-        if ($updateResult) {
-            return $this->db->affectedRows();
-        } else {
-            throw new \RuntimeException('Update data gagal.');
-        }
+
+        $builder->orderBy('frs.tanggal_permintaan', 'ASC')
+            ->orderBy('frs.kode_frs', 'ASC');
+
+        return $builder->get()->getResultArray();
     }
 }

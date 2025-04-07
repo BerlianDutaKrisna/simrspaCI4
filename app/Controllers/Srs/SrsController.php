@@ -745,18 +745,39 @@ class srsController extends BaseController
         }
     }
 
-    public function update_status()
+    public function laporan()
     {
-        $id_srs = $this->request->getPost('id_srs');
-        $status_srs = $this->request->getPost('status_srs');
-        if (!$id_srs) {
-            return redirect()->back()->with('error', 'ID srs tidak ditemukan.');
-        }
-        $data = [
-            'status_srs' => $status_srs,
-        ];
-        $this->srsModel->update($id_srs, $data);
+        $srsData = $this->srsModel->getsrsWithRelations() ?? [];
 
-        return redirect()->to('srs/index')->with('success', 'Status srs berhasil disimpan.');
+        $data = [
+            'id_user'    => session()->get('id_user'),
+            'nama_user'  => session()->get('nama_user'),
+            'srsData' => $srsData,
+        ];
+
+        return view('srs/laporan', $data);
+    }
+
+    public function filter()
+    {
+        $filterField = $this->request->getGet('filterInput');
+        $filterValue = $this->request->getGet('filterValue');
+        $startDate   = $this->request->getGet('filterDate');
+        $endDate     = $this->request->getGet('filterDate2');
+
+        $filteredData = $this->srsModel->filtersrsWithRelations(
+            $filterField ?: null,
+            $filterValue ?: null,
+            $startDate,
+            $endDate
+        );
+
+        $data = [
+            'id_user'    => session()->get('id_user'),
+            'nama_user'  => session()->get('nama_user'),
+            'srsData'       => $filteredData,
+        ];
+
+        return view('srs/laporan', $data);
     }
 }

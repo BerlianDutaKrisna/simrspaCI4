@@ -106,7 +106,7 @@ class SrsModel extends Model
         return $this->db->table('srs')->countAllResults();
     }
 
-    public function getsrsWithPatient()
+    public function getsrsWitsrstient()
     {
         return $this->select('srs.*, patient.*')
             ->join('patient', 'patient.id_pasien = srs.id_pasien')
@@ -165,25 +165,58 @@ class SrsModel extends Model
         }
     }
 
-    public function updateStatussrs($id_srs, $data)
+    public function getsrsWithRelations()
     {
-        // Validasi parameter
-        if (
-            empty($id_srs) || empty($data) || !is_array($data)
-        ) {
-            throw new \InvalidArgumentException('Parameter ID srs atau data tidak valid.');
+        $previousMonthStart = date('Y-m-01', strtotime('-1 month'));
+
+        return $this->select('
+            srs.*, 
+            patient.*, 
+            users.nama_user AS dokter_pembaca,
+            penerimaan_srs.mulai_penerimaan_srs,
+            pemverifikasi_srs.selesai_pemverifikasi_srs,
+            mutu_srs.total_nilai_mutu_srs
+        ')
+            ->join('patient', 'patient.id_pasien = srs.id_pasien')
+            ->join('pembacaan_srs', 'pembacaan_srs.id_srs = srs.id_srs')
+            ->join('users', 'users.id_user = pembacaan_srs.id_user_dokter_pembacaan_srs')
+            ->join('penerimaan_srs', 'penerimaan_srs.id_srs = srs.id_srs', 'left')
+            ->join('pemverifikasi_srs', 'pemverifikasi_srs.id_srs = srs.id_srs', 'left')
+            ->join('mutu_srs', 'mutu_srs.id_srs = srs.id_srs', 'left')
+            ->where('srs.tanggal_permintaan >=', $previousMonthStart)
+            ->where('srs.tanggal_permintaan <=', date('Y-m-t'))
+            ->orderBy('srs.kode_srs', 'ASC')
+            ->findAll();
+    }
+
+    public function filtersrsWithRelations($filterField, $filterValue, $startDate, $endDate)
+    {
+        $builder = $this->db->table('srs')
+            ->select("
+            srs.*,
+            patient.*,
+            users.nama_user AS dokter_pembaca,
+            penerimaan_srs.mulai_penerimaan_srs,
+            pemverifikasi_srs.selesai_pemverifikasi_srs,
+            mutu_srs.total_nilai_mutu_srs
+        ")
+            ->join('patient', 'patient.id_pasien = srs.id_pasien')
+            ->join('pembacaan_srs', 'pembacaan_srs.id_srs = srs.id_srs')
+            ->join('users', 'users.id_user = pembacaan_srs.id_user_dokter_pembacaan_srs')
+            ->join('penerimaan_srs', 'penerimaan_srs.id_srs = srs.id_srs', 'left')
+            ->join('pemverifikasi_srs', 'pemverifikasi_srs.id_srs = srs.id_srs', 'left')
+            ->join('mutu_srs', 'mutu_srs.id_srs = srs.id_srs', 'left')
+            ->where('srs.tanggal_permintaan >=', $startDate)
+            ->where('srs.tanggal_permintaan <=', $endDate);
+
+        // Jika ada filter tambahan dari user (nama pasien, norm, dll)
+        if (!empty($filterField) && !empty($filterValue)) {
+            $builder->like($filterField, $filterValue);
         }
-        // Mengambil table 'srs'
-        $builder = $this->db->table('srs');
-        // Menambahkan kondisi WHERE
-        $builder->where('id_srs', $id_srs);
-        // Melakukan update data
-        $updateResult = $builder->update($data);
-        // Mengecek apakah update berhasil
-        if ($updateResult) {
-            return $this->db->affectedRows(); // Mengembalikan jumlah baris yang terpengaruh
-        } else {
-            throw new \RuntimeException('Update data gagal.'); // Menangani error
-        }
+
+        $builder->orderBy('srs.tanggal_permintaan', 'ASC')
+            ->orderBy('srs.kode_srs', 'ASC');
+
+        return $builder->get()->getResultArray();
     }
 }
