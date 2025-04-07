@@ -126,7 +126,6 @@
         });
     </script>
 
-
     <!-- Pie Chart -->
     <div class="col-xl-4 col-lg-5">
         <div class="card shadow mb-4">
@@ -141,29 +140,40 @@
                     <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
                         aria-labelledby="dropdownMenuLink">
                         <div class="dropdown-header">Cetak Laporan:</div>
-                        <a class="dropdown-item" href="#"> <i class="fas fa-poll fa-sm fa-fw mr-2 text-gray-600"></i>Laporan Seluruh Jenis Pemeriksaan</a>
-                        <a class="dropdown-item" href="#"> <i class="fas fa-procedures fa-sm fa-fw mr-2 text-gray-600"></i>Laporan Seluruh Jumlah Pasien</a>
-                        <a class="dropdown-item" href="#"> <i class="fas fa-users fa-sm fa-fw mr-2 text-gray-600"></i>Laporan Seluruh Kinerja Users</a>
+                        <a class="dropdown-item" href="#"><i class="fas fa-poll fa-sm fa-fw mr-2 text-gray-600"></i>Laporan Seluruh Jenis Pemeriksaan</a>
+                        <a class="dropdown-item" href="#"><i class="fas fa-procedures fa-sm fa-fw mr-2 text-gray-600"></i>Laporan Seluruh Jumlah Pasien</a>
+                        <a class="dropdown-item" href="#"><i class="fas fa-users fa-sm fa-fw mr-2 text-gray-600"></i>Laporan Seluruh Kinerja Users</a>
                     </div>
                 </div>
             </div>
+
             <!-- Card Body -->
             <div class="card-body">
-                <div class="chart-pie pt-4 pb-2">
-                    <canvas id="myPieChart"></canvas>
+                <div id="pieChartCarousel" class="carousel slide" data-ride="carousel">
+                    <div class="carousel-inner">
+                        <div class="carousel-item active">
+                            <canvas id="pieChart1" class="w-100" width="400" height="275"></canvas>
+                        </div>
+                        <div class="carousel-item">
+                            <canvas id="pieChart2" class="w-100" width="400" height="275"></canvas>
+                        </div>
+                        <div class="carousel-item">
+                            <canvas id="pieChart3" class="w-100" width="400" height="275"></canvas>
+                        </div>
+                    </div>
+                    <a class="carousel-control-prev" href="#pieChartCarousel" role="button" data-slide="prev">
+                        <span class="carousel-control-prev-icon bg-dark rounded-circle" aria-hidden="true"></span>
+                        <span class="sr-only">Sebelumnya</span>
+                    </a>
+                    <a class="carousel-control-next" href="#pieChartCarousel" role="button" data-slide="next">
+                        <span class="carousel-control-next-icon bg-dark rounded-circle" aria-hidden="true"></span>
+                        <span class="sr-only">Berikutnya</span>
+                    </a>
                 </div>
+
                 <div class="mt-4 text-center small">
                     <span class="mr-2">
-                        <i class="fas fa-circle text-danger"></i> HPA <!-- Merah -->
-                    </span>
-                    <span class="mr-2">
-                        <i class="fas fa-circle text-primary"></i> FRS <!-- Biru -->
-                    </span>
-                    <span class="mr-2">
-                        <i class="fas fa-circle text-success"></i> SRS <!-- Hijau -->
-                    </span>
-                    <span class="mr-2">
-                        <i class="fas fa-circle text-warning"></i> IHC <!-- Kuning -->
+                        <i class="fas fa-chart-pie"></i> Total Keseluruhan Data
                     </span>
                 </div>
             </div>
@@ -172,54 +182,58 @@
 
     <script>
         document.addEventListener("DOMContentLoaded", function() {
-            var pieChartData = <?= $pieChartData; ?>; // Data dari PHP dalam JSON
-            console.log("Pie Chart Data:", pieChartData); // Debugging
+            const pieChartData = <?= json_encode($pieChartData); ?>;
+            const pieChartUserData = <?= json_encode($pieChartUserData); ?>;
+            const pieChartDokterData = <?= json_encode($pieChartDokterData); ?>;
 
-            if (!pieChartData || typeof pieChartData !== "object") {
-                console.error("Data chart tidak valid:", pieChartData);
-                return;
-            }
+            const renderPieChart = (ctxId, labels, data, colors) => {
+                const ctx = document.getElementById(ctxId);
+                if (!ctx) return;
 
-            var ctx = document.getElementById("myPieChart").getContext("2d");
-            var myPieChart = new Chart(ctx, {
-                type: 'doughnut',
-                data: {
-                    labels: ["HPA", "FRS", "SRS", "IHC"],
-                    datasets: [{
-                        data: [
-                            pieChartData.hpa || 0,
-                            pieChartData.frs || 0,
-                            pieChartData.srs || 0,
-                            pieChartData.ihc || 0
-                        ],
-                        backgroundColor: [
-                            "rgba(231, 74, 59, 1)", // Merah untuk HPA
-                            "rgba(78, 115, 223, 1)", // Biru untuk FRS
-                            "rgba(28, 200, 138, 1)", // Hijau untuk SRS
-                            "rgba(255, 193, 7, 1)" // Kuning untuk IHC
-                        ],
-                        borderColor: "rgba(234, 236, 244, 1)",
-                        borderWidth: 1
-                    }]
-                },
-                options: {
-                    maintainAspectRatio: false,
-                    responsive: true,
-                    plugins: {
-                        legend: {
-                            position: 'bottom'
-                        },
-                        tooltip: {
-                            enabled: false // Menonaktifkan tooltip
-                        }
+                new Chart(ctx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            data: data,
+                            backgroundColor: colors,
+                            borderColor: "rgba(234, 236, 244, 1)",
+                            borderWidth: 1
+                        }]
                     },
-                    hover: {
-                        mode: null // Menonaktifkan efek hover
+                    options: {
+                        maintainAspectRatio: false,
+                        responsive: true,
+                        plugins: {
+                            legend: {
+                                position: 'bottom'
+                            },
+                            tooltip: {
+                                enabled: false
+                            }
+                        },
+                        hover: {
+                            mode: null
+                        }
                     }
-                }
-            });
+                });
+            };
+
+            renderPieChart("pieChart1", ["HPA", "FRS", "SRS", "IHC"], [
+                pieChartData.hpa || 0,
+                pieChartData.frs || 0,
+                pieChartData.srs || 0,
+                pieChartData.ihc || 0
+            ], ["#e74a3b", "#4e73df", "#1cc88a", "#f6c23e"]);
+
+            renderPieChart("pieChart2", pieChartUserData.labels, pieChartUserData.data,
+                ["#4e73df", "#1cc88a", "#36b9cc", "#f6c23e"]);
+
+            renderPieChart("pieChart3", pieChartDokterData.labels, pieChartDokterData.data,
+                ["#e74a3b", "#858796", "#20c9a6", "#5a5c69"]);
         });
     </script>
+
 </div>
 
 <div>
