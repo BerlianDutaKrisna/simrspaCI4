@@ -178,8 +178,8 @@ class SrsModel extends Model
             mutu_srs.total_nilai_mutu_srs
         ')
             ->join('patient', 'patient.id_pasien = srs.id_pasien')
-            ->join('pembacaan_srs', 'pembacaan_srs.id_srs = srs.id_srs')
-            ->join('users', 'users.id_user = pembacaan_srs.id_user_dokter_pembacaan_srs')
+            ->join('pembacaan_srs', 'pembacaan_srs.id_srs = srs.id_srs', 'left')
+            ->join('users', 'users.id_user = pembacaan_srs.id_user_dokter_pembacaan_srs', 'left')
             ->join('penerimaan_srs', 'penerimaan_srs.id_srs = srs.id_srs', 'left')
             ->join('pemverifikasi_srs', 'pemverifikasi_srs.id_srs = srs.id_srs', 'left')
             ->join('mutu_srs', 'mutu_srs.id_srs = srs.id_srs', 'left')
@@ -201,8 +201,8 @@ class SrsModel extends Model
             mutu_srs.total_nilai_mutu_srs
         ")
             ->join('patient', 'patient.id_pasien = srs.id_pasien')
-            ->join('pembacaan_srs', 'pembacaan_srs.id_srs = srs.id_srs')
-            ->join('users', 'users.id_user = pembacaan_srs.id_user_dokter_pembacaan_srs')
+            ->join('pembacaan_srs', 'pembacaan_srs.id_srs = srs.id_srs', 'left')
+            ->join('users', 'users.id_user = pembacaan_srs.id_user_dokter_pembacaan_srs', 'left')
             ->join('penerimaan_srs', 'penerimaan_srs.id_srs = srs.id_srs', 'left')
             ->join('pemverifikasi_srs', 'pemverifikasi_srs.id_srs = srs.id_srs', 'left')
             ->join('mutu_srs', 'mutu_srs.id_srs = srs.id_srs', 'left')

@@ -173,8 +173,8 @@ class FrsModel extends Model
             mutu_frs.total_nilai_mutu_frs
         ')
             ->join('patient', 'patient.id_pasien = frs.id_pasien')
-            ->join('pembacaan_frs', 'pembacaan_frs.id_frs = frs.id_frs')
-            ->join('users', 'users.id_user = pembacaan_frs.id_user_dokter_pembacaan_frs')
+            ->join('pembacaan_frs', 'pembacaan_frs.id_frs = frs.id_frs', 'left')
+            ->join('users', 'users.id_user = pembacaan_frs.id_user_dokter_pembacaan_frs', 'left')
             ->join('penerimaan_frs', 'penerimaan_frs.id_frs = frs.id_frs', 'left')
             ->join('pemverifikasi_frs', 'pemverifikasi_frs.id_frs = frs.id_frs', 'left')
             ->join('mutu_frs', 'mutu_frs.id_frs = frs.id_frs', 'left')
@@ -196,8 +196,8 @@ class FrsModel extends Model
             mutu_frs.total_nilai_mutu_frs
         ")
             ->join('patient', 'patient.id_pasien = frs.id_pasien')
-            ->join('pembacaan_frs', 'pembacaan_frs.id_frs = frs.id_frs')
-            ->join('users', 'users.id_user = pembacaan_frs.id_user_dokter_pembacaan_frs')
+            ->join('pembacaan_frs', 'pembacaan_frs.id_frs = frs.id_frs', 'left')
+            ->join('users', 'users.id_user = pembacaan_frs.id_user_dokter_pembacaan_frs', 'left')
             ->join('penerimaan_frs', 'penerimaan_frs.id_frs = frs.id_frs', 'left')
             ->join('pemverifikasi_frs', 'pemverifikasi_frs.id_frs = frs.id_frs', 'left')
             ->join('mutu_frs', 'mutu_frs.id_frs = frs.id_frs', 'left')
