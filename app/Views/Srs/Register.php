@@ -164,11 +164,19 @@
                 <div class="form-group col-md-3">
                     <label for="unit_asal">Unit Asal</label>
                     <select class="form-control" id="unit_asal" name="unit_asal" onchange="handleUnitAsalChange(this)">
-                        <option value="" selected>Belum Dipilih</option>
+                    <option value="" selected>Belum Dipilih</option>
+                        <option value="Ruangan Aster">Ruangan Aster</option>
+                        <option value="Ruangan Anggrek">Ruangan Anggrek</option>
+                        <option value="Ruangan Bougenvil">Ruangan Bougenvil</option>
+                        <option value="Ruangan Dahlia">Ruangan Dahlia</option>
+                        <option value="Ruangan Edelweis">Ruangan Edelweis</option>
+                        <option value="Ruangan Safir">Ruangan Safir</option>
+                        <option value="Ruangan Teratai">Ruangan Teratai</option>
+                        <option value="Ruangan Tulip">Ruangan Tulip</option>
                         <option value="OK Elektif">OK ELEKTIF</option>
                         <option value="OK Emergency">OK EMERGENCY</option>
-                        <option value="Klinik">Poli/Klinik</option>
-                        <option value="Ruangan">Ruangan</option>
+                        <option value="Klinik">Poli/Klinik lainya</option>
+                        <option value="Ruangan">Ruangan Lainya</option>
                         <option value="lainnya">Lainnya</option>
                     </select>
                     <input type="text" class="form-control mt-2 d-none" id="unit_asal_detail" name="unit_asal_detail" placeholder="Masukkan Unit Asal Lainnya">
@@ -185,15 +193,19 @@
                         <option value="dr. Fransiscus Arifin, Sp.">dr. Fransiscus Arifin, Sp.B</option>
                         <option value="dr. I Putu Agus Suarta, Sp.OG K.Onk">dr. I Putu Agus Suarta, Sp.OG K.Onk</option>
                         <option value="dr. Dharma Putra Perjuangan Banjarnahor, Sp.OG K. FM">dr. Dharma Putra Perjuangan Banjarnahor, Sp.OG K. FM</option>
-                        <option value="dr. Unggul Karyo Nugroho, Sp.Og">dr. Unggul Karyo Nugroho, Sp.Og</option>
+                        <option value="dr. Nur Aisah Wardani, Sp.P">dr. Nur Aisah Wardani, Sp.P</option>
+                        <option value="dr. Susaniwati, Sp.P.">dr. Susaniwati, Sp.P.</option>
+                        <option value="dr. Pramanindyah Bekti Anjani, Sp.P">dr. Pramanindyah Bekti Anjani, Sp.P.</option>
                         <option value="dr. Nurlaella Iswan Nusi, Sp.OG">dr. Nurlaella Iswan Nusi, Sp.OG.</option>
                         <option value="drg. Okky Prasetyo, Sp.BM">drg. Okky Prasetyo, Sp.BM</option>
-                        <option value="dr. Taufik Indrawan, Sp.U">dr. Taufik Indrawan, Sp.U</option>
-                        <option value="dr. dr. Chairani Fitri Saphira, Sp.BP-RE (K)">dr. dr. Chairani Fitri Saphira, Sp.BP-RE (K)</option>
-                        <option value="dr. Billy Daniel Messakh, Sp.B">dr. Billy Daniel Messakh, Sp.B</option>
-                        <option value="dr. Khamim Thohari, Sp.BS">dr. Khamim Thohari, Sp.BS</option>
-                        <option value="dr. Danang Irsayanto, Sp. U.,M.Ked.Klin">dr. Danang Irsayanto, Sp. U.,M.Ked.Klin</option>
-                        <option value="dr. Haykal Hermatyar Fatahajjad, Sp. U">dr. Haykal Hermatyar Fatahajjad, Sp. U</option>
+                        <option value="dr. Hendarti Praharaningsih Eddy Saputra, Sp. A">dr. Hendarti Praharaningsih Eddy Saputra, Sp. A</option>
+                        <option value="dr. Intani Dewi Syahti Fauzi, Sp.A.">dr. Intani Dewi Syahti Fauzi, Sp.A.</option>
+                        <option value="dr. Retna Hastuti, Sp.A">dr. Retna Hastuti, Sp.A</option>
+                        <option value="dr. Ita Puspita Dewi, Sp.KK, FINSDV, FAADV">dr. Ita Puspita Dewi, Sp.KK, FINSDV, FAADV</option>
+                        <option value="dr. Desy Hinda Pramita, Sp.KK">dr. Desy Hinda Pramita, Sp.KK</option>
+                        <option value="dr. Eri Chusairi Yulianto, Sp.THT">dr. Eri Chusairi Yulianto, Sp.THT</option>
+                        <option value="dr. Yahya Haryo Nugroho, Sp.PD">dr. Yahya Haryo Nugroho, Sp.PD</option>
+                        <option value="dr. Purwakaning Purnomo Agung, M.Kes., Sp.PD">dr. Purwakaning Purnomo Agung, M.Kes., Sp.PD</option>
                         <option value="lainnya">Lainnya</option>
                     </select>
                     <input type="text" class="form-control mt-2 d-none" id="dokter_pengirim_custom" name="dokter_pengirim_custom" placeholder="Masukkan Dokter Pengirim Lainnya">

@@ -165,7 +165,9 @@
                     <label for="unit_asal">Unit Asal</label>
                     <select class="form-control" id="unit_asal" name="unit_asal" onchange="handleUnitAsalChange(this)">
                         <option value="" selected>Belum Dipilih</option>
-                        <option value="Klinik">Poli/Klinik</option>
+                        <option value="Klinik Bedah">Klinik Bedah</option>
+                        <option value="Klinik Bedah Onkologi">Klinik Bedah Onkologi</option>
+                        <option value="Klinik">Poli/Klinik lainya</option>
                         <option value="Ruangan">Ruangan</option>
                         <option value="lainnya">Lainnya</option>
                     </select>

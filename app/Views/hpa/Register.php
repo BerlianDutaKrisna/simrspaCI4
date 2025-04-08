@@ -167,8 +167,9 @@
                         <option value="" selected>Belum Dipilih</option>
                         <option value="OK Elektif">OK ELEKTIF</option>
                         <option value="OK Emergency">OK EMERGENCY</option>
-                        <option value="Klinik">Poli/Klinik</option>
-                        <option value="Ruangan">Ruangan</option>
+                        <option value="RSUD. EC">RSUD. EC</option>
+                        <option value="Klinik">Poli/Klinik lainya</option>
+                        <option value="Ruangan">Ruangan lainya</option>
                         <option value="lainnya">Lainnya</option>
                     </select>
                     <input type="text" class="form-control mt-2 d-none" id="unit_asal_detail" name="unit_asal_detail" placeholder="Masukkan Unit Asal Lainnya">

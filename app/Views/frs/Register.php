@@ -172,6 +172,8 @@
                         <option value="Klinik Paru">Klinik Paru</option>
                         <option value="Klinik THT">Klinik THT</option>
                         <option value="Klinik Kulit dan Kelamin">Klinik Kulit dan Kelamin</option>
+                        <option value="OK Elektif">OK ELEKTIF</option>
+                        <option value="OK Emergency">OK EMERGENCY</option>
                         <option value="Klinik">Poli/Klinik lainya</option>
                         <option value="Ruangan">Ruangan</option>
                         <option value="lainnya">Lainnya</option>
@@ -188,8 +190,11 @@
                         <option value="dr. Andy Achmad Suanda, Sp.B">dr. Andy Achmad Suanda, Sp.B</option>
                         <option value="dr. Agus Maulana,Sp.B,FinaCs,M.Ked.Klin">dr. Agus Maulana,Sp.B,FinaCs,M.Ked.Klin</option>
                         <option value="dr. Fransiscus Arifin, Sp.">dr. Fransiscus Arifin, Sp.B</option>
+                        <option value="dr. I Putu Agus Suarta, Sp.OG K.Onk">dr. I Putu Agus Suarta, Sp.OG K.Onk</option>
+                        <option value="dr. Dharma Putra Perjuangan Banjarnahor, Sp.OG K. FM">dr. Dharma Putra Perjuangan Banjarnahor, Sp.OG K. FM</option>
                         <option value="dr. Nur Aisah Wardani, Sp.P">dr. Nur Aisah Wardani, Sp.P</option>
                         <option value="dr. Susaniwati, Sp.P.">dr. Susaniwati, Sp.P.</option>
+                        <option value="dr. Pramanindyah Bekti Anjani, Sp.P">dr. Pramanindyah Bekti Anjani, Sp.P.</option>
                         <option value="dr. Nurlaella Iswan Nusi, Sp.OG">dr. Nurlaella Iswan Nusi, Sp.OG.</option>
                         <option value="drg. Okky Prasetyo, Sp.BM">drg. Okky Prasetyo, Sp.BM</option>
                         <option value="dr. Hendarti Praharaningsih Eddy Saputra, Sp. A">dr. Hendarti Praharaningsih Eddy Saputra, Sp. A</option>
