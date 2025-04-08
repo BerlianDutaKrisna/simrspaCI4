@@ -178,8 +178,8 @@ class HpaModel extends Model
             mutu_hpa.total_nilai_mutu_hpa
         ')
             ->join('patient', 'patient.id_pasien = hpa.id_pasien')
-            ->join('pembacaan_hpa', 'pembacaan_hpa.id_hpa = hpa.id_hpa')
-            ->join('users', 'users.id_user = pembacaan_hpa.id_user_dokter_pembacaan_hpa')
+            ->join('pembacaan_hpa', 'pembacaan_hpa.id_hpa = hpa.id_hpa', 'left')
+            ->join('users', 'users.id_user = pembacaan_hpa.id_user_dokter_pembacaan_hpa', 'left')
             ->join('penerimaan_hpa', 'penerimaan_hpa.id_hpa = hpa.id_hpa', 'left')
             ->join('pemverifikasi_hpa', 'pemverifikasi_hpa.id_hpa = hpa.id_hpa', 'left')
             ->join('mutu_hpa', 'mutu_hpa.id_hpa = hpa.id_hpa', 'left')
@@ -201,8 +201,8 @@ class HpaModel extends Model
             mutu_hpa.total_nilai_mutu_hpa
         ")
             ->join('patient', 'patient.id_pasien = hpa.id_pasien')
-            ->join('pembacaan_hpa', 'pembacaan_hpa.id_hpa = hpa.id_hpa')
-            ->join('users', 'users.id_user = pembacaan_hpa.id_user_dokter_pembacaan_hpa')
+            ->join('pembacaan_hpa', 'pembacaan_hpa.id_hpa = hpa.id_hpa', 'left')
+            ->join('users', 'users.id_user = pembacaan_hpa.id_user_dokter_pembacaan_hpa', 'left')
             ->join('penerimaan_hpa', 'penerimaan_hpa.id_hpa = hpa.id_hpa', 'left')
             ->join('pemverifikasi_hpa', 'pemverifikasi_hpa.id_hpa = hpa.id_hpa', 'left')
             ->join('mutu_hpa', 'mutu_hpa.id_hpa = hpa.id_hpa', 'left')
