@@ -9,6 +9,38 @@
         <h1>Buku Laporan Kinerja Users</h1>
         <a href="<?= base_url('/dashboard') ?>" class="btn btn-primary mb-3"><i class="fas fa-reply"></i> Kembali</a>
 
+        <form class="form-inline mb-4" method="get" action="<?= base_url('users/laporan') ?>">
+            <div class="form-group mr-2">
+                <label for="bulan" class="mr-2">Bulan:</label>
+                <select name="bulan" id="bulan" class="form-control">
+                    <option value="" <?= $bulan === null || $bulan === '' ? 'selected' : '' ?>>Semua Bulan</option>
+                    <?php
+                    for ($i = 1; $i <= 12; $i++) :
+                        $selected = (string)$i === (string)$bulan ? 'selected' : '';
+                    ?>
+                        <option value="<?= $i ?>" <?= $selected ?>>
+                            <?= date("F", mktime(0, 0, 0, $i, 1)) ?>
+                        </option>
+                    <?php endfor; ?>
+                </select>
+            </div>
+
+            <div class="form-group mr-2">
+                <label for="tahun" class="mr-2">Tahun:</label>
+                <select name="tahun" id="tahun" class="form-control">
+                    <option value="" <?= $tahun === null || $tahun === '' ? 'selected' : '' ?>>Semua Tahun</option>
+                    <?php
+                    for ($y = 2022; $y <= date('Y'); $y++) :
+                        $selected = (string)$y === (string)$tahun ? 'selected' : '';
+                    ?>
+                        <option value="<?= $y ?>" <?= $selected ?>><?= $y ?></option>
+                    <?php endfor; ?>
+                </select>
+            </div>
+
+            <button type="submit" class="btn btn-primary"><i class="fas fa-filter"></i> Filter</button>
+        </form>
+
         <div class="table-responsive mb-5">
             <h5 class="text-primary font-weight-bold">Data Dokter</h5>
             <table class="table table-bordered text-center" id="dataTableDokter" width="100%" cellspacing="0">

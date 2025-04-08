@@ -13,7 +13,8 @@ class UsersModel extends Model
         'username',
         'password_user',
         'nama_user',
-        'status_user'];
+        'status_user'
+    ];
     // Mengaktifkan timestamps otomatis
     protected $useTimestamps = true;
 
@@ -57,12 +58,11 @@ class UsersModel extends Model
         }
     }
 
-    public function getTotalPekerjaanPerUser()
+    public function getTotalPekerjaanPerUser(?int $bulan = null, ?int $tahun = null)
     {
         $builder = $this->db->table('users');
         $builder->select('users.id_user, users.nama_user, users.status_user');
 
-        // Tabel yang menggunakan FK format id_user_namatabel
         $userTabels = [
             'penerimaan_hpa',
             'penerimaan_frs',
@@ -83,7 +83,6 @@ class UsersModel extends Model
             'pemverifikasi_ihc'
         ];
 
-        // Tabel yang menggunakan FK format id_user_dokter_namatabel
         $dokterTabels = [
             'pembacaan_hpa',
             'pembacaan_frs',
@@ -98,20 +97,29 @@ class UsersModel extends Model
         foreach ($userTabels as $table) {
             $fk = "id_user_$table";
             $alias = $table;
-            $subquery = "(SELECT COUNT(*) FROM $table WHERE $fk = users.id_user)";
+            $where = "$fk = users.id_user";
+
+            if ($bulan) $where .= " AND MONTH(created_at) = $bulan";
+            if ($tahun) $where .= " AND YEAR(created_at) = $tahun";
+
+            $subquery = "(SELECT COUNT(*) FROM $table WHERE $where)";
             $builder->select("($subquery) AS `$alias`");
         }
 
         foreach ($dokterTabels as $table) {
             $fk = "id_user_dokter_$table";
             $alias = $table;
-            $subquery = "(SELECT COUNT(*) FROM $table WHERE $fk = users.id_user)";
+            $where = "$fk = users.id_user";
+
+            if ($bulan) $where .= " AND MONTH(created_at) = $bulan";
+            if ($tahun) $where .= " AND YEAR(created_at) = $tahun";
+
+            $subquery = "(SELECT COUNT(*) FROM $table WHERE $where)";
             $builder->select("($subquery) AS `$alias`");
         }
 
         return $builder->get()->getResultArray();
     }
-
 
     public function getTotalByUserName($nama)
     {
