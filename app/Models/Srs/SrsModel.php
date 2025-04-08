@@ -106,7 +106,7 @@ class SrsModel extends Model
         return $this->db->table('srs')->countAllResults();
     }
 
-    public function getsrsWitsrstient()
+    public function getsrsWithPatient()
     {
         return $this->select('srs.*, patient.*')
             ->join('patient', 'patient.id_pasien = srs.id_pasien')

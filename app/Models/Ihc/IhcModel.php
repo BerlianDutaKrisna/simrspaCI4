@@ -110,7 +110,7 @@ class IhcModel extends Model
         return $this->db->table('ihc')->countAllResults();
     }
 
-    public function getihcWitihctient()
+    public function getihcWithPatient()
     {
         return $this->select('ihc.*, patient.*')
             ->join('patient', 'patient.id_pasien = ihc.id_pasien')
