@@ -592,6 +592,7 @@ class srsController extends BaseController
             $id_authorized_srs = $this->request->getPost('id_authorized_srs');
             $this->authorized_srs->update($id_authorized_srs, [
                 'id_user_authorized_srs' => $id_user,
+                'id_user_dokter_authorized_srs' => $id_user,
                 'status_authorized_srs' => 'Selesai Authorized',
                 'selesai_authorized_srs' => date('Y-m-d H:i:s'),
             ]);

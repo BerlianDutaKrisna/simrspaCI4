@@ -92,6 +92,7 @@
                         <th>DIAGNOSA PATOLOGI</TH>
                         <th>MUTU SEDIAAN</th>
                         <th>7 HARI</th>
+                        <th>KODE BLOCK HPA</th>
                         <th>NO KTP</th>
                         <th>NO BPJS</th>
                         <th>NO TELP</th>
@@ -151,6 +152,7 @@
                                     }
                                     ?>
                                 </td>
+                                <td><?= esc($row['kode_block_ihc'] ?? 'Belum Diisi') ?></td>
                                 <td><?= esc($row['no_ktp_ihc'] ?? 'Belum Diisi') ?></td>
                                 <td><?= esc($row['no_bpjs_ihc'] ?? 'Belum Diisi') ?></td>
                                 <td><?= esc($row['no_tlp_ihc'] ?? 'Belum Diisi') ?></td>

@@ -707,6 +707,7 @@ class HpaController extends BaseController
             $id_authorized_hpa = $this->request->getPost('id_authorized_hpa');
             $this->authorized_hpa->update($id_authorized_hpa, [
                 'id_user_authorized_hpa' => $id_user,
+                'id_user_dokter_authorized_hpa' => $id_user,
                 'status_authorized_hpa' => 'Selesai Authorized',
                 'selesai_authorized_hpa' => date('Y-m-d H:i:s'),
             ]);

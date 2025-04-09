@@ -555,6 +555,7 @@ class ihcController extends BaseController
             $id_authorized_ihc = $this->request->getPost('id_authorized_ihc');
             $this->authorized_ihc->update($id_authorized_ihc, [
                 'id_user_authorized_ihc' => $id_user,
+                'id_user_dokter_authorized_ihc' => $id_user,
                 'status_authorized_ihc' => 'Selesai Authorized',
                 'selesai_authorized_ihc' => date('Y-m-d H:i:s'),
             ]);
@@ -717,7 +718,7 @@ class ihcController extends BaseController
             'nama_user'  => session()->get('nama_user'),
             'ihcData' => $ihcData,
         ];
-
+        
         return view('ihc/laporan', $data);
     }
 

@@ -595,6 +595,7 @@ class FrsController extends BaseController
             $id_authorized_frs = $this->request->getPost('id_authorized_frs');
             $this->authorized_frs->update($id_authorized_frs, [
                 'id_user_authorized_frs' => $id_user,
+                'id_user_dokter_authorized_frs' => $id_user,
                 'status_authorized_frs' => 'Selesai Authorized',
                 'selesai_authorized_frs' => date('Y-m-d H:i:s'),
             ]);
