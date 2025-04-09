@@ -290,6 +290,7 @@ class HpaController extends BaseController
             'pembacaan_hpa' => $pembacaan_hpa,
             'users'      => $users,
         ];
+
         return view('hpa/edit', $data);
     }
 
@@ -472,7 +473,7 @@ class HpaController extends BaseController
             'hpa' => $hpa,
             'pembacaan_hpa' => $pembacaan_hpa,
         ];
-        dd($data);
+        
         return view('hpa/edit_print', $data);
     }
 
