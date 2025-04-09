@@ -20,11 +20,11 @@
                     <thead>
                         <tr>
                             <th>No</th>
+                            <th>Aksi</th>
                             <th>Kode HPA</th>
                             <th>Nama Pasien</th>
                             <th>Status Pemotongan Tipis</th>
-                            <th>Aksi</th>
-                            <th>Jumlah Slide</th>
+                            <th>Diagnosa Klinik</th>
                             <th>Analis</th>
                             <th>Mulai Pemotongan Tipis</th>
                             <th>Selesai Pemotongan Tipis</th>
@@ -51,7 +51,7 @@
                                     <td><?= $row['nama_pasien']; ?></td>
                                     <td><?= $row['status_pemotongan_tipis_hpa']; ?></td>
 
-                                    <td><?= $row['jumlah_slide']; ?></td>
+                                    <td><?= $row['diagnosa_klinik']; ?></td>
                                     <td><?= $row['nama_user_pemotongan_tipis_hpa']; ?></td>
                                     <td>
                                         <?= empty($row['mulai_pemotongan_tipis_hpa']) ? '-' : esc(date('H:i , d-m-Y', strtotime($row['mulai_pemotongan_tipis_hpa']))); ?>

@@ -115,7 +115,7 @@ class PatientModel extends Model
 
     public function searchPatientsWithRelations($searchField, $searchValue, $startDate, $endDate)
     {
-        
+
         // Query untuk HPA
         $builder1 = $this->db->table('patient')
             ->select("patient.id_pasien, patient.norm_pasien, patient.nama_pasien, 
@@ -132,7 +132,7 @@ class PatientModel extends Model
             $builder1->where($searchField, $searchValue);
         }
         $subQuery1 = $builder1->getCompiledSelect();
-        
+
 
         // Query untuk FRS
         $builder2 = $this->db->table('patient')
@@ -142,7 +142,7 @@ class PatientModel extends Model
                     frs.kode_frs AS kode_pemeriksaan, frs.tanggal_permintaan, 'FRS' AS jenis_pemeriksaan, 
                     frs.hasil_frs AS hasil, frs.status_frs AS status, frs.penerima_frs AS penerima, 
                     frs.tanggal_penerima")
-                ->join('frs', 'frs.id_pasien = patient.id_pasien', 'inner')
+            ->join('frs', 'frs.id_pasien = patient.id_pasien', 'inner')
             ->where("frs.tanggal_permintaan >=", $startDate)
             ->where("frs.tanggal_permintaan <=", $endDate);
 
@@ -190,5 +190,28 @@ class PatientModel extends Model
                 ORDER BY tanggal_permintaan ASC, kode_pemeriksaan ASC";
 
         return $this->db->query($finalQuery)->getResultArray();
+    }
+
+    public function filterPatients($keyword = null, $jenisKelamin = null, $statusPasien = null)
+    {
+        $builder = $this->table($this->table);
+
+        if ($keyword) {
+            $builder->groupStart()
+                ->like('norm_pasien', $keyword)
+                ->orLike('nama_pasien', $keyword)
+                ->orLike('alamat_pasien', $keyword)
+                ->groupEnd();
+        }
+
+        if ($jenisKelamin) {
+            $builder->where('jenis_kelamin_pasien', $jenisKelamin);
+        }
+
+        if ($statusPasien) {
+            $builder->where('status_pasien', $statusPasien);
+        }
+
+        return $builder->get()->getResultArray();
     }
 }

@@ -39,7 +39,9 @@ $routes->group('patient', function ($routes) {
     $routes->get('delete/(:segment)', 'Patient::delete/$1');
     $routes->get('edit_patient/(:segment)', 'Patient::edit_patient/$1'); 
     $routes->post('update/(:segment)', 'Patient::update/$1');
-    $routes->post('modal_search', 'Patient::modal_search'); 
+    $routes->post('modal_search', 'Patient::modal_search');
+    $routes->get('laporan', 'Patient::laporan');
+    $routes->get('filter', 'Patient::filter');
 });
 
 // Route untuk exam

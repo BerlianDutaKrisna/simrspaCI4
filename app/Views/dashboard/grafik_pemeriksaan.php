@@ -141,7 +141,7 @@
                         aria-labelledby="dropdownMenuLink">
                         <div class="dropdown-header">Cetak Laporan:</div>
                         <a class="dropdown-item" href="#"><i class="fas fa-poll fa-sm fa-fw mr-2 text-gray-600"></i>Laporan Seluruh Jenis Pemeriksaan</a>
-                        <a class="dropdown-item" href="#"><i class="fas fa-procedures fa-sm fa-fw mr-2 text-gray-600"></i>Laporan Seluruh Jumlah Pasien</a>
+                        <a class="dropdown-item" href="<?= base_url('patient/laporan'); ?>"><i class="fas fa-procedures fa-sm fa-fw mr-2 text-gray-600"></i>Laporan Seluruh Jumlah Pasien</a>
                         <a class="dropdown-item" href="<?= base_url('users/laporan'); ?>"><i class="fas fa-users fa-sm fa-fw mr-2 text-gray-600"></i>Laporan Seluruh Kinerja Users</a>
                     </div>
                 </div>

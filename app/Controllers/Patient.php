@@ -224,4 +224,45 @@ class Patient extends BaseController
             ]);
         }
     }
+
+    public function laporan()
+    {
+        $keyword              = $this->request->getGet('keyword');
+        $jenis_kelamin_pasien = '';
+        $status_pasien        = '';
+
+        $patientData = $this->PatientModel->findAll();
+
+        $data = [
+            'id_user'             => session()->get('id_user'),
+            'nama_user'           => session()->get('nama_user'),
+            'keyword'             => $keyword,
+            'jenis_kelamin_pasien' => $jenis_kelamin_pasien,
+            'status_pasien'       => $status_pasien,
+            'patientData'         => $patientData,
+        ];
+
+        return view('patient/laporan', $data);
+    }
+
+
+    public function filter()
+    {
+        $keyword              = $this->request->getGet('keyword');
+        $jenis_kelamin_pasien = $this->request->getGet('jenis_kelamin_pasien');
+        $status_pasien        = $this->request->getGet('status_pasien');
+
+        $patientData = $this->PatientModel->filterPatients($keyword, $jenis_kelamin_pasien, $status_pasien);
+
+        $data = [
+            'id_user'             => session()->get('id_user'),
+            'nama_user'           => session()->get('nama_user'),
+            'keyword'             => $keyword,
+            'jenis_kelamin_pasien' => $jenis_kelamin_pasien,
+            'status_pasien'       => $status_pasien,
+            'patientData'         => $patientData,
+        ];
+        
+        return view('patient/laporan', $data);
+    }
 }
