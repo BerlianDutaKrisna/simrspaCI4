@@ -368,11 +368,22 @@ class FrsController extends BaseController
     {
         // Ambil data frs berdasarkan ID
         $frs = $this->frsModel->getfrsWithRelationsProses($id_frs);
-        // Persiapkan data yang akan dikirim ke view
+        // Ambil data pembacaan FRS jika tersedia
+        if (!empty($frs['id_pembacaan_frs'])) {
+            $pembacaan_frs = $this->pembacaan_frs->find($frs['id_pembacaan_frs']) ?? [];
+            // Ambil nama dokter dari pembacaan jika tersedia
+            if (!empty($pembacaan_frs['id_user_dokter_pembacaan_frs'])) {
+                $dokter = $this->usersModel->find($pembacaan_frs['id_user_dokter_pembacaan_frs']);
+                $pembacaan_frs['dokter_nama'] = $dokter ? $dokter['nama_user'] : null;
+            } else {
+                $pembacaan_frs['dokter_nama'] = null;
+            }
+        }
         $data = [
             'id_user' => session()->get('id_user'),
             'nama_user' => session()->get('nama_user'),
             'frs' => $frs,
+            'pembacaan_frs' => $pembacaan_frs,
         ];
         
         return view('frs/edit_print', $data);

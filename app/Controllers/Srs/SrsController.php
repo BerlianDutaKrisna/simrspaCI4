@@ -367,11 +367,22 @@ class srsController extends BaseController
     {
         // Ambil data srs berdasarkan ID
         $srs = $this->srsModel->getsrsWithRelationsProses($id_srs);
-        // Persiapkan data yang akan dikirim ke view
+        // Ambil data pembacaan SRS jika tersedia
+        if (!empty($srs['id_pembacaan_srs'])) {
+            $pembacaan_srs = $this->pembacaan_srs->find($srs['id_pembacaan_srs']) ?? [];
+            // Ambil nama dokter dari pembacaan jika tersedia
+            if (!empty($pembacaan_srs['id_user_dokter_pembacaan_srs'])) {
+                $dokter = $this->usersModel->find($pembacaan_srs['id_user_dokter_pembacaan_srs']);
+                $pembacaan_srs['dokter_nama'] = $dokter ? $dokter['nama_user'] : null;
+            } else {
+                $pembacaan_srs['dokter_nama'] = null;
+            }
+        }
         $data = [
             'id_user' => session()->get('id_user'),
             'nama_user' => session()->get('nama_user'),
             'srs' => $srs,
+            'pembacaan_srs' => $pembacaan_srs,
         ];
         
         return view('srs/edit_print', $data);

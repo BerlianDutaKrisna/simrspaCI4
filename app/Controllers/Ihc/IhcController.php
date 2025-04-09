@@ -338,11 +338,22 @@ class ihcController extends BaseController
     {
         // Ambil data ihc berdasarkan ID
         $ihc = $this->ihcModel->getihcWithRelationsProses($id_ihc);
-        // Persiapkan data yang akan dikirim ke view
+        // Ambil data pembacaan IHC jika tersedia
+        if (!empty($ihc['id_pembacaan_ihc'])) {
+            $pembacaan_ihc = $this->pembacaan_ihc->find($ihc['id_pembacaan_ihc']) ?? [];
+            // Ambil nama dokter dari pembacaan jika tersedia
+            if (!empty($pembacaan_ihc['id_user_dokter_pembacaan_ihc'])) {
+                $dokter = $this->usersModel->find($pembacaan_ihc['id_user_dokter_pembacaan_ihc']);
+                $pembacaan_ihc['dokter_nama'] = $dokter ? $dokter['nama_user'] : null;
+            } else {
+                $pembacaan_ihc['dokter_nama'] = null;
+            }
+        }
         $data = [
             'id_user' => session()->get('id_user'),
             'nama_user' => session()->get('nama_user'),
             'ihc' => $ihc,
+            'pembacaan_ihc' => $pembacaan_ihc,
         ];
         
         return view('ihc/edit_print', $data);

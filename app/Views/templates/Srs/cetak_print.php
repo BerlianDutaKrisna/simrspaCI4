@@ -1,3 +1,18 @@
+<?php
+$src = '';
+$pangkat = '-';
+$nip = '-';
+
+if ($pembacaan_srs['dokter_nama'] === "dr. Ayu Tyasmara Pratiwi, Sp.PA") {
+    $src = base_url('img/ttd_dr_ayu.png');
+    $pangkat = 'Penata';
+    $nip = '198407022009022014';
+} elseif ($pembacaan_srs['dokter_nama'] === "dr. Vinna Chrisdianti, Sp.PA") {
+    $src = base_url('img/ttd_dr_vinna.png');
+    $pangkat = '-';
+    $nip = '-';
+}
+?>
 <script>
     function cetakPrintsrs() {
         var detailPrintsrs = document.getElementById('print_srs') ? document.getElementById('print_srs').value : '';
@@ -103,7 +118,7 @@
             <tr>
                 <!-- Kolom gambar -->
                 <td width="170" align="center" style="padding-right: 10px;">
-                    <img src="<?= base_url('img/ttd_dr_ayu.png') ?>" alt="Tanda Tangan" style="width: 200px;">
+                    <img src="<?= $src ?>" alt="Tanda Tangan" style="width: 200px;">
                 </td>
                 <!-- Kolom teks -->
                 <td style="vertical-align: middle;">
@@ -111,9 +126,9 @@
                     <p style="margin: 0; font-size: 20px;">Dokter Spesialis Patologi Anatomi,</p>
                     <br>
                     <br>
-                    <p style="margin: 0; font-size: 20px; font-weight: bold;">dr. AYU TYASMARA PRATIWI, Sp.PA</p>
-                    <p style="margin: 5px 0 0;">Penata</p>
-                    <p style="margin: 0;">NIP. 198407022009022014</p>
+                    <p style="margin: 0; font-size: 20px; font-weight: bold;"><?= esc($pembacaan_srs['dokter_nama'] ?? '____________________') ?></p>
+                    <p style="margin: 5px 0 0;"><?= $pangkat ?></p>
+                    <p style="margin: 0;">NIP. <?= $nip ?></p>
                 </td>
             </tr>
         </table>

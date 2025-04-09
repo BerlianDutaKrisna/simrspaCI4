@@ -455,13 +455,24 @@ class HpaController extends BaseController
     {
         // Ambil data hpa berdasarkan ID
         $hpa = $this->hpaModel->getHpaWithRelationsProses($id_hpa);
-        // Persiapkan data yang akan dikirim ke view
+        // Ambil data pembacaan HPA jika tersedia
+        if (!empty($hpa['id_pembacaan_hpa'])) {
+            $pembacaan_hpa = $this->pembacaan_hpa->find($hpa['id_pembacaan_hpa']) ?? [];
+            // Ambil nama dokter dari pembacaan jika tersedia
+            if (!empty($pembacaan_hpa['id_user_dokter_pembacaan_hpa'])) {
+                $dokter = $this->usersModel->find($pembacaan_hpa['id_user_dokter_pembacaan_hpa']);
+                $pembacaan_hpa['dokter_nama'] = $dokter ? $dokter['nama_user'] : null;
+            } else {
+                $pembacaan_hpa['dokter_nama'] = null;
+            }
+        }
         $data = [
             'id_user' => session()->get('id_user'),
             'nama_user' => session()->get('nama_user'),
             'hpa' => $hpa,
+            'pembacaan_hpa' => $pembacaan_hpa,
         ];
-
+        dd($data);
         return view('hpa/edit_print', $data);
     }
 
