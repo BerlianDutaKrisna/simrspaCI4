@@ -33,7 +33,7 @@
                     <div class="col-md-6">
                         <label for="searchDate">Tanggal Pencarian</label>
                         <input type="date" class="form-control" id="searchDate" name="searchDate"
-                        value="<?= old('searchDate') ?: date('Y-m-d', strtotime('last monday -7 days')); ?>">
+                            value="<?= old('searchDate') ?: date('Y-m-d', strtotime('last monday -7 days')); ?>">
                     </div>
                     <div class="col-md-6">
                         <label for="searchDate2">Sampai Tanggal</label>
@@ -153,7 +153,21 @@
                             <tr>
                                 <td><?= $i ?></td> <!-- Nomor urut dalam satu tanggal -->
                                 <td><?= esc($row['norm_pasien'] ?? 'Belum Diisi') ?></td>
-                                <td><?= esc($row['kode_pemeriksaan'] ?? '-') ?></td>
+                                <?php
+                                $kode = $row['kode_pemeriksaan'] ?? '-';
+                                $class = 'text-dark'; // default
+
+                                if (strpos($kode, 'H.') === 0) {
+                                    $class = 'text-danger';
+                                } elseif (strpos($kode, 'FRS.') === 0) {
+                                    $class = 'text-primary';
+                                } elseif (strpos($kode, 'SRS.') === 0) {
+                                    $class = 'text-success';
+                                } elseif (strpos($kode, 'IHC.') === 0) {
+                                    $class = 'text-warning';
+                                }
+                                ?>
+                                <td class="<?= $class ?>"><strong><?= esc($kode) ?></strong></td>
                                 <td><?= esc($row['nama_pasien'] ?? 'Belum Diisi') ?></td>
                                 <td>
                                     <?php
