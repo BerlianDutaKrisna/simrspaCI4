@@ -19,10 +19,11 @@
                     <thead>
                         <tr>
                             <th>No</th>
-                            <th>Norm Pasien</th>
+                            <th>No. RM</th>
                             <th>Kode HPA</th>
                             <th>Nama Pasien</th>
                             <th>Aksi</th>
+                            <th>Proses</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -36,11 +37,9 @@
                                     <td><?= esc($row['nama_pasien']) ?></td>
                                     <td>
                                         <div class="d-flex justify-content-around">
-                                            <!-- Tombol Edit -->
                                             <a href="<?= base_url('hpa/edit/' . esc($row['id_hpa'])) ?>" class="btn btn-sm btn-warning mx-1">
                                                 <i class="fas fa-edit"></i> Edit
                                             </a>
-                                            <!-- Tombol Hapus HPA -->
                                             <button class="btn btn-sm btn-danger mx-1 delete-hpa"
                                                 data-toggle="modal"
                                                 data-target="#deleteModal"
@@ -51,12 +50,64 @@
                                             </button>
                                         </div>
                                     </td>
+                                    <td>
+                                        <div class="d-flex flex-wrap gap-2 justify-content-start">
+                                            <?php
+                                            $prosesList = [
+                                                'mutu' => $row['id_mutu'] ?? null,
+                                                'penerimaan' => $row['id_penerimaan'] ?? null,
+                                                'pemotongan' => $row['id_pemotongan'] ?? null,
+                                                'pemprosesan' => $row['id_pemprosesan'] ?? null,
+                                                'penanaman' => $row['id_penanaman'] ?? null,
+                                                'pemotongan_tipis' => $row['id_pemotongan_tipis'] ?? null,
+                                                'pewarnaan' => $row['id_pewarnaan'] ?? null,
+                                                'pembacaan' => $row['id_pembacaan'] ?? null,
+                                                'penulisan' => $row['id_penulisan'] ?? null,
+                                                'verifikasi' => $row['id_pemverifikasi'] ?? null,
+                                                'authorized' => $row['id_authorized'] ?? null,
+                                                'cetak' => $row['id_pencetakan'] ?? null,
+                                            ];
+
+                                            foreach ($prosesList as $nama => $id) :
+                                                if ($id) :
+                                                    $isPrimary = in_array($nama, ['mutu', 'penerimaan']);
+                                                    $btnClass = $isPrimary ? 'btn-outline-primary' : 'btn-outline-warning';
+                                            ?>
+                                                    <div class="btn-group btn-group-sm mx-1 mb-1">
+                                                        <!-- Tombol Proses ke Modal -->
+                                                        <button type="button"
+                                                            class="btn <?= $btnClass ?> btn-view-proses"
+                                                            data-toggle="modal"
+                                                            data-target="#viewModal"
+                                                            data-id="<?= htmlspecialchars($id, ENT_QUOTES, 'UTF-8') ?>"
+                                                            data-proses="<?= $nama ?>">
+                                                            <?= ucfirst($nama) ?>
+                                                        </button>
+                                                        <?php if (!$isPrimary) : ?>
+                                                            <!-- Tombol Delete -->
+                                                            <button type="button"
+                                                                class="btn btn-outline-danger delete-hpa"
+                                                                data-toggle="modal"
+                                                                data-target="#deleteModal"
+                                                                data-id_hpa="<?= htmlspecialchars($id, ENT_QUOTES, 'UTF-8') ?>"
+                                                                data-action="<?= $nama ?>"
+                                                                aria-label="Hapus <?= $nama ?>">
+                                                                <i class="fas fa-trash-alt"></i>
+                                                            </button>
+                                                        <?php endif; ?>
+                                                    </div>
+                                            <?php
+                                                endif;
+                                            endforeach;
+                                            ?>
+                                        </div>
+                                    </td>
                                 </tr>
                                 <?php $i++; ?>
                             <?php endforeach; ?>
                         <?php else : ?>
                             <tr>
-                                <td colspan="33">Tidak ada data yang tersedia.</td>
+                                <td colspan="6">Tidak ada data yang tersedia.</td>
                             </tr>
                         <?php endif; ?>
                     </tbody>

@@ -41,7 +41,7 @@ class Penerimaan extends BaseController
             'counts' => $this->getCounts(),
             'penerimaanDatahpa' => $penerimaanData_hpa,
         ];
-        
+
         return view('Hpa/Proses/penerimaan', $data);
     }
 
@@ -132,17 +132,16 @@ class Penerimaan extends BaseController
         $id_penerimaan_hpa = $this->request->getGet('id_penerimaan_hpa');
 
         if ($id_penerimaan_hpa) {
-            // Gunakan model yang sudah diinisialisasi di constructor
             $data = $this->penerimaan_hpa->select(
-                'penerimaan.*, 
-            hpa.*, 
-            patient.*, 
-            users.nama_user AS nama_user_penerimaan'
+                'penerimaan_hpa.*, 
+                hpa.*, 
+                patient.*, 
+                users.nama_user AS nama_user_penerimaan_hpa'
             )
-                ->join('hpa', 'penerimaan.id_hpa = hpa.id_hpa', 'left')
+                ->join('hpa', 'penerimaan_hpa.id_hpa = hpa.id_hpa', 'left')
                 ->join('patient', 'hpa.id_pasien = patient.id_pasien', 'left')
-                ->join('users', 'penerimaan.id_user_penerimaan_hpa = users.id_user', 'left')
-                ->where('penerimaan.id_penerimaan_hpa', $id_penerimaan_hpa)
+                ->join('users', 'penerimaan_hpa.id_user_penerimaan_hpa = users.id_user', 'left')
+                ->where('penerimaan_hpa.id_penerimaan_hpa', $id_penerimaan_hpa)
                 ->first();
 
             if ($data) {
@@ -154,6 +153,7 @@ class Penerimaan extends BaseController
             return $this->response->setJSON(['error' => 'ID Penerimaan tidak ditemukan.']);
         }
     }
+
 
     public function edit_penerimaan()
     {
