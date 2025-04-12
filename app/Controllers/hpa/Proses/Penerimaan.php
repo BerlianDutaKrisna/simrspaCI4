@@ -128,8 +128,7 @@ class Penerimaan extends BaseController
 
     public function penerimaan_details()
     {
-        $proses = 'penerimaan'; // atau ambil dari URL segmen
-        $id_penerimaan_hpa = $this->request->getGet("id_{$proses}_hpa");
+        $id_penerimaan_hpa = $this->request->getGet('id_penerimaan_hpa');
 
         if ($id_penerimaan_hpa) {
             $data = $this->penerimaan_hpa->detailspenerimaan_hpa($id_penerimaan_hpa);
@@ -140,12 +139,12 @@ class Penerimaan extends BaseController
                 return $this->response->setJSON(['error' => 'Data tidak ditemukan.']);
             }
         } else {
-            return $this->response->setJSON(['error' => 'ID Penerimaan tidak ditemukan.']);
+            return $this->response->setJSON(['error' => 'Coba ulangi kembali..']);
         }
     }
 
 
-    public function edit_penerimaan()
+    public function edit()
     {
         $id_penerimaan_hpa = $this->request->getGet('id_penerimaan_hpa');
 
@@ -169,13 +168,17 @@ class Penerimaan extends BaseController
             'id_user' => session()->get('id_user'),
             'nama_user' => session()->get('nama_user'),
         ];
-
-        return view('edit_proses/edit_penerimaan', $data);
+        
+        return view('Hpa/edit_proses/edit_penerimaan', $data);
     }
 
-    public function update_penerimaan()
+    public function update()
     {
         $id_penerimaan_hpa = $this->request->getPost('id_penerimaan_hpa');
+
+        if (!$id_penerimaan_hpa) {
+            return redirect()->back()->with('error', 'ID tidak ditemukan.')->withInput();
+        }
 
         // Gabungkan input tanggal dan waktu
         $mulai_penerimaan_hpa = $this->request->getPost('mulai_penerimaan_hpa_date') . ' ' . $this->request->getPost('mulai_penerimaan_hpa_time');
@@ -186,13 +189,14 @@ class Penerimaan extends BaseController
             'status_penerimaan_hpa'  => $this->request->getPost('status_penerimaan_hpa'),
             'mulai_penerimaan_hpa'   => $mulai_penerimaan_hpa,
             'selesai_penerimaan_hpa' => $selesai_penerimaan_hpa,
-            'updated_at'         => date('Y-m-d H:i:s'),
+            'updated_at'             => date('Y-m-d H:i:s'),
         ];
 
         if (!$this->penerimaan_hpa->update($id_penerimaan_hpa, $data)) {
             return redirect()->back()->with('error', 'Gagal mengupdate data.')->withInput();
         }
 
-        return redirect()->to(base_url('penerimaan/index_penerimaan'))->with('success', 'Data berhasil diperbarui.');
+        return redirect()->to(base_url('penerimaan_hpa/edit?id_penerimaan_hpa=' . $id_penerimaan_hpa))
+            ->with('success', 'Data berhasil diperbarui.');
     }
 }

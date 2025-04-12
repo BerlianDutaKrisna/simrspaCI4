@@ -142,8 +142,8 @@ $routes->group('penerimaan_hpa', ['namespace' => 'App\Controllers\Hpa\Proses'], 
     $routes->get('index', 'Penerimaan::index');
     $routes->post('proses_penerimaan', 'Penerimaan::proses_penerimaan');
     $routes->get('penerimaan_details', 'Penerimaan::penerimaan_details');
-    $routes->get('edit_penerimaan', 'Penerimaan::edit_penerimaan');
-    $routes->post('update_penerimaan', 'Penerimaan::update_penerimaan');
+    $routes->get('edit', 'Penerimaan::edit');
+    $routes->post('update', 'Penerimaan::update');
 });
 
 // Route untuk Penerimaan frs

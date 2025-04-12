@@ -59,17 +59,19 @@ class Pemotongan_hpa extends Model
 
     public function detailspemotongan_hpa($id_pemotongan_hpa)
     {
-        return $this->select(
+        $data = $this->select(
             'pemotongan_hpa.*, 
-            hpa.*, 
-            patient.*, 
-            users.nama_user AS nama_user_pemotongan_hpa'
+        hpa.*, 
+        patient.*, 
+        users.nama_user AS nama_user_pemotongan_hpa'
         )
             ->join('hpa', 'pemotongan_hpa.id_hpa = hpa.id_hpa', 'left')
             ->join('patient', 'hpa.id_pasien = patient.id_pasien', 'left')
             ->join('users', 'pemotongan_hpa.id_user_pemotongan_hpa = users.id_user', 'left')
             ->where('pemotongan_hpa.id_pemotongan_hpa', $id_pemotongan_hpa)
             ->first();
+
+        return $data;
     }
 
     public function deletepemotongan_hpa($id_pemotongan_hpa)

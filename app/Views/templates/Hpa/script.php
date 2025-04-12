@@ -173,9 +173,8 @@
                     }
                 });
             });
-        }); // ==========================
-        // Detail Proses 
-        // ==========================
+        });
+
         $(document).ready(function() {
             const baseUrl = "<?= base_url() ?>";
 
@@ -185,15 +184,17 @@
 
                 const url = `${baseUrl}${proses}_hpa/${proses}_details?id_${proses}_hpa=${id}`;
 
+                // Bersihkan konten modal terlebih dahulu
+                const body = $('#viewModalBody');
+                const footer = $('#viewModalFooter');
+                body.html('<div class="spinner-border" role="status"><span class="sr-only">Loading...</span></div>');
+                footer.html('<button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>');
+
                 $.ajax({
                     url: url,
                     method: 'GET',
                     dataType: 'json',
                     success: function(data) {
-                        
-                        const body = $('#viewModalBody');
-                        const footer = $('#viewModalFooter');
-
                         if (data.error) {
                             body.html(`<div class="alert alert-danger">${data.error}</div>`);
                         } else {
@@ -203,26 +204,28 @@
                             let user = data[`nama_user_${proses}_hpa`];
 
                             body.html(`
-                            <ul class="list-group">
-                                <p><strong>No. RM:</strong> ${data.norm_pasien}</p>
-                                <p><strong>Nama Pasien:</strong> ${data.nama_pasien}</p>
-                                <p><strong>Kode HPA:</strong> ${data.kode_hpa}</p>
-                                <p><strong>Mulai ${proses}:</strong> ${mulai}</p>
-                                <p><strong>Selesai ${proses}:</strong> ${selesai}</p>
-                                <p><strong>User ${proses}:</strong> ${user}</p>
-                            </ul>
+                        <ul class="list-group">
+                            <p><strong>No. RM:</strong> ${data.norm_pasien}</p>
+                            <p><strong>Nama Pasien:</strong> ${data.nama_pasien}</p>
+                            <p><strong>Kode HPA:</strong> ${data.kode_hpa}</p>
+                            <p><strong>Mulai ${proses}:</strong> ${mulai}</p>
+                            <p><strong>Selesai ${proses}:</strong> ${selesai}</p>
+                            <p><strong>User ${proses}:</strong> ${user}</p>
+                        </ul>
                     `);
                         }
+
                         $('#viewModalLabel').text('Detail Proses ' + proses.replace('_', ' '));
                         footer.html(`
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
+                        <a href="${baseUrl}${proses}_hpa/edit?id_${proses}_hpa=${id}" class="btn btn-warning"><i class="fas fa-pen"></i> Edit</a>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fas fa-times"></i> Tutup</button>
                 `);
                         $('#viewModal').modal('show');
                     },
                     error: function(xhr, status, error) {
-                        $('#viewModalBody').html(`<div class="alert alert-danger">Terjadi kesalahan saat mengambil data.</div>`);
-                        $('#viewModalFooter').html(`
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
+                        body.html(`<div class="alert alert-danger">Terjadi kesalahan saat mengambil data.</div>`);
+                        footer.html(`
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fas fa-times"></i> Tutup</button>
                 `);
                         $('#viewModalLabel').text('Kesalahan');
                         $('#viewModal').modal('show');
@@ -231,6 +234,7 @@
                 });
             });
         });
+
 
     });
 </script>

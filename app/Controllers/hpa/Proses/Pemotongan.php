@@ -120,11 +120,10 @@ class Pemotongan extends BaseController
 
     public function pemotongan_details()
     {
-        // Ambil id_pemotongan_hpa dari parameter GET
-        $id_pemotongan_hpa = $this->request->getGet('id_pemotongan_hpa');
+        $proses = 'pemotongan'; // atau ambil dari URL segmen
+        $id_pemotongan_hpa = $this->request->getGet("id_{$proses}_hpa");
 
         if ($id_pemotongan_hpa) {
-            // Menggunakan model untuk mengambil data
             $data = $this->pemotongan_hpa->detailspemotongan_hpa($id_pemotongan_hpa);
 
             if ($data) {
@@ -133,7 +132,7 @@ class Pemotongan extends BaseController
                 return $this->response->setJSON(['error' => 'Data tidak ditemukan.']);
             }
         } else {
-            return $this->response->setJSON(['error' => 'ID pemotongan tidak ditemukan.']);
+            return $this->response->setJSON(['error' => 'Coba ulangi kembali..']);
         }
     }
 
