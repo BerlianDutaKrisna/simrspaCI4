@@ -137,15 +137,15 @@ class Penanaman extends BaseController
         if ($id_penanaman_hpa) {
             // Gunakan model yang sudah diinisialisasi di constructor
             $data = $this->penanaman_hpa->select(
-                'penanaman.*, 
+                'penanaman_hpa.*, 
             hpa.*, 
             patient.*, 
-            users.nama_user AS nama_user_penanaman'
+            users.nama_user AS nama_user_penanaman_hpa'
             )
-                ->join('hpa', 'penanaman.id_hpa = hpa.id_hpa', 'left')
+                ->join('hpa', 'penanaman_hpa.id_hpa = hpa.id_hpa', 'left')
                 ->join('patient', 'hpa.id_pasien = patient.id_pasien', 'left')
-                ->join('users', 'penanaman.id_user_penanaman_hpa = users.id_user', 'left')
-                ->where('penanaman.id_penanaman_hpa', $id_penanaman_hpa)
+                ->join('users', 'penanaman_hpa.id_user_penanaman_hpa= users.id_user', 'left')
+                ->where('penanaman_hpa.id_penanaman_hpa', $id_penanaman_hpa)
                 ->first();
 
             if ($data) {

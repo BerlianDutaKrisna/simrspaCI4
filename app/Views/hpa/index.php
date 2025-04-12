@@ -73,25 +73,25 @@
                                                     $isPrimary = in_array($nama, ['mutu', 'penerimaan']);
                                                     $btnClass = $isPrimary ? 'btn-outline-primary' : 'btn-outline-warning';
                                             ?>
-                                                    <div class="btn-group btn-group-sm mx-1 mb-1">
-                                                        <!-- Tombol Proses ke Modal -->
+                                                    <div class="btn-group btn-group-sm mb-1">
+                                                        <!-- Tombol Lihat Proses -->
                                                         <button type="button"
                                                             class="btn <?= $btnClass ?> btn-view-proses"
                                                             data-toggle="modal"
                                                             data-target="#viewModal"
-                                                            data-id="<?= htmlspecialchars($id, ENT_QUOTES, 'UTF-8') ?>"
-                                                            data-proses="<?= $nama ?>">
+                                                            data-id="<?= esc($id) ?>"
+                                                            data-proses="<?= esc($nama) ?>">
                                                             <?= ucfirst($nama) ?>
                                                         </button>
                                                         <?php if (!$isPrimary) : ?>
-                                                            <!-- Tombol Delete -->
+                                                            <!-- Tombol Hapus -->
                                                             <button type="button"
                                                                 class="btn btn-outline-danger delete-hpa"
                                                                 data-toggle="modal"
                                                                 data-target="#deleteModal"
-                                                                data-id_hpa="<?= htmlspecialchars($id, ENT_QUOTES, 'UTF-8') ?>"
-                                                                data-action="<?= $nama ?>"
-                                                                aria-label="Hapus <?= $nama ?>">
+                                                                data-id_hpa="<?= esc($id) ?>"
+                                                                data-action="<?= esc($nama) ?>"
+                                                                aria-label="Hapus <?= esc($nama) ?>">
                                                                 <i class="fas fa-trash-alt"></i>
                                                             </button>
                                                         <?php endif; ?>

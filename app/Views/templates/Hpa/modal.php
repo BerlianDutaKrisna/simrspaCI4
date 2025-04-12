@@ -67,26 +67,23 @@
 </div>
 
 <!-- Modal untuk menampilkan detail -->
-<div class="modal fade" id="viewModal" tabindex="-1" role="dialog" aria-labelledby="viewModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
+<div class="modal fade" id="viewModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="viewModalLabel">Detail Proses</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
             </div>
-            <div class="modal-body">
-                <div id="modalBody">
-                    <!-- Data akan dimuat di sini melalui AJAX -->
-                </div>
+            <div class="modal-body" id="viewModalBody">
+                <!-- data akan ditampilkan di sini -->
             </div>
-            <div class="modal-footer" id="modalFooter">
-                <!-- Footer content dynamically inserted -->
+            <div class="modal-footer" id="viewModalFooter">
+                <!-- tombol tutup -->
             </div>
         </div>
     </div>
 </div>
+
 
 <!-- Modal Konfirmasi Hapus -->
 <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">

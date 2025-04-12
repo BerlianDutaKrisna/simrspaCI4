@@ -126,15 +126,15 @@ class PemotonganTipis extends BaseController
         if ($id_pemotongan_tipis_hpa) {
             // Gunakan model yang sudah diinisialisasi di constructor
             $data = $this->pemotongan_tipis_hpa->select(
-                'pemotongan_tipis.*, 
+                'pemotongan_tipis_hpa.*, 
             hpa.*, 
             patient.*, 
-            users.nama_user AS nama_user_pemotongan_tipis'
+            users.nama_user AS nama_user_pemotongan_tipis_hpa'
             )
-                ->join('hpa', 'pemotongan_tipis.id_hpa = hpa.id_hpa', 'left')
+                ->join('hpa', 'pemotongan_tipis_hpa.id_hpa = hpa.id_hpa', 'left')
                 ->join('patient', 'hpa.id_pasien = patient.id_pasien', 'left')
-                ->join('users', 'pemotongan_tipis.id_user_pemotongan_tipis_hpa = users.id_user', 'left')
-                ->where('pemotongan_tipis.id_pemotongan_tipis_hpa', $id_pemotongan_tipis_hpa)
+                ->join('users', 'pemotongan_tipis_hpa.id_user_pemotongan_tipis_hpa = users.id_user', 'left')
+                ->where('pemotongan_tipis_hpa.id_pemotongan_tipis_hpa', $id_pemotongan_tipis_hpa)
                 ->first();
 
             if ($data) {

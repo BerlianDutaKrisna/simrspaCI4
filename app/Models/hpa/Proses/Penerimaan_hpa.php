@@ -48,13 +48,21 @@ class Penerimaan_hpa extends Model
             ->findAll();
     }
 
-    // Fungsi untuk mengupdate data penerimaan_hpa
-    public function updatepenerimaan_hpa($id_penerimaan_hpa, $data)
+    public function detailspenerimaan_hpa($id_penerimaan_hpa)
     {
-        $builder = $this->db->table($this->table);  // Mengambil table penerimaan_hpa
-        $builder->where('id_penerimaan_hpa', $id_penerimaan_hpa);  // Menentukan baris yang akan diupdate berdasarkan id_penerimaan_hpa
-        $builder->update($data);  // Melakukan update dengan data yang dikirimkan
-        return $this->db->affectedRows();  // Mengembalikan jumlah baris yang terpengaruh
+        $data = $this->select(
+            'penerimaan_hpa.*, 
+        hpa.*, 
+        patient.*, 
+        users.nama_user AS nama_user_penerimaan_hpa'
+        )
+            ->join('hpa', 'penerimaan_hpa.id_hpa = hpa.id_hpa', 'left')
+            ->join('patient', 'hpa.id_pasien = patient.id_pasien', 'left')
+            ->join('users', 'penerimaan_hpa.id_user_penerimaan_hpa = users.id_user', 'left')
+            ->where('penerimaan_hpa.id_penerimaan_hpa', $id_penerimaan_hpa)
+            ->first();
+
+        return $data;
     }
 
     public function deletepenerimaan_hpa($id_penerimaan_hpa)

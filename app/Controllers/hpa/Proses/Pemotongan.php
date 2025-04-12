@@ -124,18 +124,8 @@ class Pemotongan extends BaseController
         $id_pemotongan_hpa = $this->request->getGet('id_pemotongan_hpa');
 
         if ($id_pemotongan_hpa) {
-            // Gunakan model yang sudah diinisialisasi di constructor
-            $data = $this->pemotongan_hpa->select(
-                'pemotongan.*, 
-            hpa.*, 
-            patient.*, 
-            users.nama_user AS nama_user_pemotongan'
-            )
-                ->join('hpa', 'pemotongan.id_hpa = hpa.id_hpa', 'left')
-                ->join('patient', 'hpa.id_pasien = patient.id_pasien', 'left')
-                ->join('users', 'pemotongan.id_user_pemotongan_hpa = users.id_user', 'left')
-                ->where('pemotongan.id_pemotongan_hpa', $id_pemotongan_hpa)
-                ->first();
+            // Menggunakan model untuk mengambil data
+            $data = $this->pemotongan_hpa->detailspemotongan_hpa($id_pemotongan_hpa);
 
             if ($data) {
                 return $this->response->setJSON($data);

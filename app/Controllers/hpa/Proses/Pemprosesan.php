@@ -126,15 +126,15 @@ class Pemprosesan extends BaseController
         if ($id_pemprosesan_hpa) {
             // Gunakan model yang sudah diinisialisasi di constructor
             $data = $this->pemprosesan_hpa->select(
-                'pemprosesan.*, 
+                'pemprosesan_hpa.*, 
             hpa.*, 
             patient.*, 
-            users.nama_user AS nama_user_pemprosesan'
+            users.nama_user AS nama_user_pemprosesan_hpa'
             )
-                ->join('hpa', 'pemprosesan.id_hpa = hpa.id_hpa', 'left')
+                ->join('hpa', 'pemprosesan_hpa.id_hpa = hpa.id_hpa', 'left')
                 ->join('patient', 'hpa.id_pasien = patient.id_pasien', 'left')
-                ->join('users', 'pemprosesan.id_user_pemprosesan_hpa = users.id_user', 'left')
-                ->where('pemprosesan.id_pemprosesan_hpa', $id_pemprosesan_hpa)
+                ->join('users', 'pemprosesan_hpa.id_user_pemprosesan_hpa = users.id_user', 'left')
+                ->where('pemprosesan_hpa.id_pemprosesan_hpa', $id_pemprosesan_hpa)
                 ->first();
 
             if ($data) {

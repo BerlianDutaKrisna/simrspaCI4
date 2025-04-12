@@ -128,21 +128,11 @@ class Penerimaan extends BaseController
 
     public function penerimaan_details()
     {
-        // Ambil id_penerimaan_hpa dari parameter GET
-        $id_penerimaan_hpa = $this->request->getGet('id_penerimaan_hpa');
+        $proses = 'penerimaan'; // atau ambil dari URL segmen
+        $id_penerimaan_hpa = $this->request->getGet("id_{$proses}_hpa");
 
         if ($id_penerimaan_hpa) {
-            $data = $this->penerimaan_hpa->select(
-                'penerimaan_hpa.*, 
-                hpa.*, 
-                patient.*, 
-                users.nama_user AS nama_user_penerimaan_hpa'
-            )
-                ->join('hpa', 'penerimaan_hpa.id_hpa = hpa.id_hpa', 'left')
-                ->join('patient', 'hpa.id_pasien = patient.id_pasien', 'left')
-                ->join('users', 'penerimaan_hpa.id_user_penerimaan_hpa = users.id_user', 'left')
-                ->where('penerimaan_hpa.id_penerimaan_hpa', $id_penerimaan_hpa)
-                ->first();
+            $data = $this->penerimaan_hpa->detailspenerimaan_hpa($id_penerimaan_hpa);
 
             if ($data) {
                 return $this->response->setJSON($data);

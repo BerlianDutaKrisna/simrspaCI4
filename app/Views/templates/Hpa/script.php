@@ -7,11 +7,16 @@
         function formatDateTime(dateString) {
             if (!dateString || isNaN(Date.parse(dateString))) return "-";
             const date = new Date(dateString);
-            const time = date.toLocaleTimeString('id-ID', {
-                hour: '2-digit',
-                minute: '2-digit'
-            });
-            const formattedDate = date.toLocaleDateString('id-ID');
+
+            const hours = String(date.getHours()).padStart(2, '0');
+            const minutes = String(date.getMinutes()).padStart(2, '0');
+            const time = `${hours}:${minutes}`;
+
+            const day = String(date.getDate()).padStart(2, '0');
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const year = date.getFullYear();
+            const formattedDate = `${day}/${month}/${year}`;
+
             return `${time}, ${formattedDate}`;
         }
 
@@ -112,48 +117,120 @@
         });
 
         // ==========================
-        // Detail Proses Penerimaan
+        // Detail Proses 
         // ==========================
-        $(document).on('click', '.btn-view-proses', function() {
-            const proses = $(this).data('proses');
-            const id = $(this).data('id');
-            const modal = $('#viewModal');
-            const body = modal.find('#modalBody');
-            const footer = modal.find('#modalFooter');
+        $(document).ready(function() {
+            const baseUrl = "<?= base_url() ?>"; // Ambil base URL dari PHP
 
-            body.html('<div class="text-center">Memuat data...</div>');
-            footer.html('');
+            $('.btn-view-proses').on('click', function() {
+                const id = $(this).data('id');
+                const proses = $(this).data('proses');
 
-            if (proses === 'penerimaan') {
-                const url = `/penerimaan_hpa/penerimaan_details?id_penerimaan_hpa=${id}`;
+                const url = `${baseUrl}${proses}_hpa/${proses}_details?id=${id}`;
 
-                $.getJSON(url)
-                    .done(function(data) {
+                $.ajax({
+                    url: url,
+                    method: 'GET',
+                    dataType: 'json',
+                    success: function(data) {
+                        const body = $('#viewModalBody');
+                        const footer = $('#viewModalFooter');
+
                         if (data.error) {
                             body.html(`<div class="alert alert-danger">${data.error}</div>`);
                         } else {
+                            // Contoh format tanggal
+                            let mulai = formatDateTime(data[`mulai_${proses}_hpa`]);
+                            let selesai = formatDateTime(data[`selesai_${proses}_hpa`]);
+                            let user = data[`nama_user_${proses}_hpa`];
+
                             body.html(`
                         <ul class="list-group">
-                            <p><strong>Nama Pasien:</strong> ${data.nama_pasien}</p>
                             <p><strong>No. RM:</strong> ${data.norm_pasien}</p>
-                            <p><strong>Waktu Penerimaan:</strong> ${data.mulai_penerimaan_hpa}</p>
-                            <p><strong>User Penerima:</strong> ${data.nama_user_penerimaan_hpa}</p>
-                            <p><strong>Status Penerimaan:</strong> ${data.status_penerimaan_hpa}</p>
+                            <p><strong>Nama Pasien:</strong> ${data.nama_pasien}</p>
+                            <p><strong>Kode HPA:</strong> ${data.kode_hpa}</p>
+                            <p><strong>Mulai ${proses}:</strong> ${mulai}</p>
+                            <p><strong>Selesai ${proses}:</strong> ${selesai}</p>
+                            <p><strong>User ${proses}:</strong> ${user}</p>
                         </ul>
                     `);
-                            footer.html(`
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
-                    `);
-                            modal.modal('show');
                         }
-                    })
-                    .fail(function(jqxhr, textStatus, error) {
-                        body.html(`<div class="alert alert-danger">Terjadi kesalahan saat mengambil data.</div>`);
-                        console.error("AJAX Error:", textStatus, error);
-                    });
-            }
-        });
 
+                        $('#viewModalLabel').text('Detail Proses: ' + proses.replace('_', ' ').toUpperCase());
+                        footer.html(`
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
+                `);
+                        $('#viewModal').modal('show');
+                    },
+                    error: function(xhr, status, error) {
+                        $('#viewModalBody').html(`<div class="alert alert-danger">Terjadi kesalahan saat mengambil data.</div>`);
+                        $('#viewModalFooter').html(`
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
+                `);
+                        $('#viewModalLabel').text('Kesalahan');
+                        $('#viewModal').modal('show');
+                        console.error("AJAX Error:", status, error);
+                    }
+                });
+            });
+        }); // ==========================
+        // Detail Proses 
+        // ==========================
+        $(document).ready(function() {
+            const baseUrl = "<?= base_url() ?>";
+
+            $('.btn-view-proses').on('click', function() {
+                const id = $(this).data('id');
+                const proses = $(this).data('proses');
+
+                const url = `${baseUrl}${proses}_hpa/${proses}_details?id_${proses}_hpa=${id}`;
+
+                $.ajax({
+                    url: url,
+                    method: 'GET',
+                    dataType: 'json',
+                    success: function(data) {
+                        
+                        const body = $('#viewModalBody');
+                        const footer = $('#viewModalFooter');
+
+                        if (data.error) {
+                            body.html(`<div class="alert alert-danger">${data.error}</div>`);
+                        } else {
+                            // Contoh format tanggal
+                            let mulai = formatDateTime(data[`mulai_${proses}_hpa`]);
+                            let selesai = formatDateTime(data[`selesai_${proses}_hpa`]);
+                            let user = data[`nama_user_${proses}_hpa`];
+
+                            body.html(`
+                            <ul class="list-group">
+                                <p><strong>No. RM:</strong> ${data.norm_pasien}</p>
+                                <p><strong>Nama Pasien:</strong> ${data.nama_pasien}</p>
+                                <p><strong>Kode HPA:</strong> ${data.kode_hpa}</p>
+                                <p><strong>Mulai ${proses}:</strong> ${mulai}</p>
+                                <p><strong>Selesai ${proses}:</strong> ${selesai}</p>
+                                <p><strong>User ${proses}:</strong> ${user}</p>
+                            </ul>
+                    `);
+                        }
+                        $('#viewModalLabel').text('Detail Proses ' + proses.replace('_', ' '));
+                        footer.html(`
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
+                `);
+                        $('#viewModal').modal('show');
+                    },
+                    error: function(xhr, status, error) {
+                        $('#viewModalBody').html(`<div class="alert alert-danger">Terjadi kesalahan saat mengambil data.</div>`);
+                        $('#viewModalFooter').html(`
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
+                `);
+                        $('#viewModalLabel').text('Kesalahan');
+                        $('#viewModal').modal('show');
+                        console.error("AJAX Error:", status, error);
+                    }
+                });
+            });
+        });
 
     });
 </script>
