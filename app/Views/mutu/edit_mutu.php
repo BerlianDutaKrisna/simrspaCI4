@@ -7,10 +7,10 @@
     <div class="card-body">
         <h1 class="h4 text-gray-900 mb-4">Edit Data Mutu</h1>
 
-        <a href="<?= base_url('exam/index_exam') ?>" class="btn btn-primary mb-3"><i class="fas fa-reply"></i> Kembali</a>
+        <a href="<?= base_url('hpa/index') ?>" class="btn btn-primary mb-3"><i class="fas fa-reply"></i> Kembali</a>
 
-        <form action="<?= base_url('mutu/update_mutu') ?>" method="POST">
-            <input type="hidden" name="id_mutu" value="<?= $mutuData['id_mutu'] ?>">
+        <form action="<?= base_url('mutu_hpa/update') ?>" method="POST">
+            <input type="hidden" name="id_mutu_hpa" value="<?= $mutuData['id_mutu_hpa'] ?>">
 
             <div class="row mb-3">
                 <!-- Kode HPA -->
@@ -110,12 +110,12 @@
             <div class="row mb-3">
                 <!-- Total Nilai Mutu -->
                 <div class="col-md-6">
-                    <label for="total_nilai_mutu">Total Nilai Mutu:</label>
-                    <input type="text" class="form-control" id="total_nilai_mutu" name="total_nilai_mutu" value="<?= $mutuData['total_nilai_mutu'] ?>">
+                    <label for="total_nilai_mutu_hpa">Total Nilai Mutu:</label>
+                    <input type="text" class="form-control" id="total_nilai_mutu_hpa" name="total_nilai_mutu_hpa" value="<?= $mutuData['total_nilai_mutu_hpa'] ?>" readonly>
                 </div>
             </div>
 
-            <button type="submit" class="btn btn-success">Update</button>
+            <button type="submit" class="btn btn-success"><i class="fas fa-save"></i> Update</button>
         </form>
     </div>
 </div>

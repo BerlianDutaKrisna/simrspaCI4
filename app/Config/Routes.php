@@ -433,20 +433,11 @@ $routes->group('pencetakan_ihc', ['namespace' => 'App\Controllers\Ihc\Proses'], 
     $routes->post('update_pencetakan', 'Pencetakan::update_pencetakan');
 });
 
-// Router untuk Mutu
-$routes->group('mutu', function ($routes) {
-    $routes->get('mutu_details', 'Mutu::mutu_details');
-    $routes->get('edit_mutu', 'Mutu::edit_mutu');
-    $routes->post('update_mutu', 'Mutu::update_mutu');
+// Router untuk Mutu Hpa
+$routes->group('mutu_hpa', ['namespace' => 'App\Controllers\Hpa'], function ($routes) {
+    $routes->get('index', 'mutu::index');
+    $routes->post('proses_mutu', 'mutu::proses_mutu');
+    $routes->get('mutu_details', 'mutu::mutu_details');
+    $routes->get('edit', 'mutu::edit');
+    $routes->post('update', 'mutu::update');
 });
-
-// Router untuk Cetak
-$routes->group('cetak', function ($routes) {
-    $routes->get('form_hpa', 'Cetak::cetak_form_hpa');
-    $routes->get('cetak_proses/(:num)', 'Cetak::cetak_proses/$1');
-    $routes->get('autorized/(:num)', 'Cetak::autorized/$1');
-    $routes->get('cetak_hpa/(:num)', 'Cetak::cetak_hpa/$1');
-});
-
-// Laporan
-$routes->get('laporan_jumlah_pasien', 'Laporan\Laporan::index_laporan');

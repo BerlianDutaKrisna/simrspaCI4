@@ -19,10 +19,10 @@
                     <thead>
                         <tr>
                             <th>No</th>
+                            <th>Aksi</th>
                             <th>No. RM</th>
                             <th>Kode HPA</th>
                             <th>Nama Pasien</th>
-                            <th>Aksi</th>
                             <th>Proses</th>
                         </tr>
                     </thead>
@@ -32,9 +32,6 @@
                             <?php foreach ($hpaData as $row) : ?>
                                 <tr>
                                     <td><?= $i ?></td>
-                                    <td><?= esc($row['norm_pasien']) ?></td>
-                                    <td><?= esc($row['kode_hpa']) ?></td>
-                                    <td><?= esc($row['nama_pasien']) ?></td>
                                     <td>
                                         <div class="d-flex justify-content-around">
                                             <a href="<?= base_url('hpa/edit/' . esc($row['id_hpa'])) ?>" class="btn btn-sm btn-warning mx-1">
@@ -50,6 +47,9 @@
                                             </button>
                                         </div>
                                     </td>
+                                    <td><?= esc($row['norm_pasien']) ?></td>
+                                    <td><?= esc($row['kode_hpa']) ?></td>
+                                    <td><?= esc($row['nama_pasien']) ?></td>
                                     <td>
                                         <div class="d-flex flex-wrap gap-2 justify-content-start">
                                             <?php

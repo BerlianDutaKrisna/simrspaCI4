@@ -59,7 +59,7 @@
                                                     id="indikator_3_<?= $row['id_mutu_hpa']; ?>"
                                                     class="form-check-input">
                                                 <label class="form-check-label" for="indikator_3_<?= $row['id_mutu_hpa']; ?>">
-                                                    Blok parafin tidak ada fragmentasi
+                                                    Blok parafin tidak ada fragmentasi?
                                                 </label>
                                             </div>
                                         <?php else: ?>

@@ -65,7 +65,7 @@
                                                     id="indikator_2_<?= esc($row['id_mutu_hpa']); ?>"
                                                     class="form-check-input">
                                                 <label class="form-check-label" for="indikator_2_<?= esc($row['id_mutu_hpa']); ?>">
-                                                    jaringan terfiksasi merata?
+                                                    Jaringan terfiksasi merata?
                                                 </label>
                                             </div>
                                         <?php else: ?>

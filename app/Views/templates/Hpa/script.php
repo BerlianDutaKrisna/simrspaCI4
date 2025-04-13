@@ -120,68 +120,11 @@
         // Detail Proses 
         // ==========================
         $(document).ready(function() {
-            const baseUrl = "<?= base_url() ?>"; // Ambil base URL dari PHP
-
-            $('.btn-view-proses').on('click', function() {
-                const id = $(this).data('id');
-                const proses = $(this).data('proses');
-
-                const url = `${baseUrl}${proses}_hpa/${proses}_details?id=${id}`;
-
-                $.ajax({
-                    url: url,
-                    method: 'GET',
-                    dataType: 'json',
-                    success: function(data) {
-                        const body = $('#viewModalBody');
-                        const footer = $('#viewModalFooter');
-
-                        if (data.error) {
-                            body.html(`<div class="alert alert-danger">${data.error}</div>`);
-                        } else {
-                            // Contoh format tanggal
-                            let mulai = formatDateTime(data[`mulai_${proses}_hpa`]);
-                            let selesai = formatDateTime(data[`selesai_${proses}_hpa`]);
-                            let user = data[`nama_user_${proses}_hpa`];
-
-                            body.html(`
-                        <ul class="list-group">
-                            <p><strong>No. RM:</strong> ${data.norm_pasien}</p>
-                            <p><strong>Nama Pasien:</strong> ${data.nama_pasien}</p>
-                            <p><strong>Kode HPA:</strong> ${data.kode_hpa}</p>
-                            <p><strong>Mulai ${proses}:</strong> ${mulai}</p>
-                            <p><strong>Selesai ${proses}:</strong> ${selesai}</p>
-                            <p><strong>User ${proses}:</strong> ${user}</p>
-                        </ul>
-                    `);
-                        }
-
-                        $('#viewModalLabel').text('Detail Proses: ' + proses.replace('_', ' ').toUpperCase());
-                        footer.html(`
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
-                `);
-                        $('#viewModal').modal('show');
-                    },
-                    error: function(xhr, status, error) {
-                        $('#viewModalBody').html(`<div class="alert alert-danger">Terjadi kesalahan saat mengambil data.</div>`);
-                        $('#viewModalFooter').html(`
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
-                `);
-                        $('#viewModalLabel').text('Kesalahan');
-                        $('#viewModal').modal('show');
-                        console.error("AJAX Error:", status, error);
-                    }
-                });
-            });
-        });
-
-        $(document).ready(function() {
             const baseUrl = "<?= base_url() ?>";
 
             $('.btn-view-proses').on('click', function() {
                 const id = $(this).data('id');
                 const proses = $(this).data('proses');
-
                 const url = `${baseUrl}${proses}_hpa/${proses}_details?id_${proses}_hpa=${id}`;
 
                 // Bersihkan konten modal terlebih dahulu
@@ -195,37 +138,75 @@
                     method: 'GET',
                     dataType: 'json',
                     success: function(data) {
+                        console.log(data);
+
                         if (data.error) {
                             body.html(`<div class="alert alert-danger">${data.error}</div>`);
                         } else {
-                            // Contoh format tanggal
-                            let mulai = formatDateTime(data[`mulai_${proses}_hpa`]);
-                            let selesai = formatDateTime(data[`selesai_${proses}_hpa`]);
-                            let user = data[`nama_user_${proses}_hpa`];
-
-                            body.html(`
-                        <ul class="list-group">
+                            if (proses === 'mutu') {
+                                // Informasi utama pasien
+                                const patientInfo = `
                             <p><strong>No. RM:</strong> ${data.norm_pasien}</p>
                             <p><strong>Nama Pasien:</strong> ${data.nama_pasien}</p>
                             <p><strong>Kode HPA:</strong> ${data.kode_hpa}</p>
-                            <p><strong>Mulai ${proses}:</strong> ${mulai}</p>
-                            <p><strong>Selesai ${proses}:</strong> ${selesai}</p>
-                            <p><strong>User ${proses}:</strong> ${user}</p>
-                        </ul>
-                    `);
-                        }
+                        `;
 
-                        $('#viewModalLabel').text('Detail Proses ' + proses.replace('_', ' '));
-                        footer.html(`
-                        <a href="${baseUrl}${proses}_hpa/edit?id_${proses}_hpa=${id}" class="btn btn-warning"><i class="fas fa-pen"></i> Edit</a>
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fas fa-times"></i> Tutup</button>
-                `);
-                        $('#viewModal').modal('show');
+                                // Daftar indikator mutu – silakan ubah nama indikator sesuai kebutuhan
+                                let indikatorList = '';
+                                indikatorList += `<li class="list-group-item"><strong>Vol cairan fiksasi sesuai?</strong>: ${data.indikator_1}</li>`;
+                                indikatorList += `<li class="list-group-item"><strong>Jaringan terfiksasi merata?</strong>: ${data.indikator_2}</li>`;
+                                indikatorList += `<li class="list-group-item"><strong>Blok parafin tidak ada fragmentasi?</strong>: ${data.indikator_3}</li>`;
+                                indikatorList += `<li class="list-group-item"><strong>Sediaan tanpa lipatan?</strong>: ${data.indikator_4}</li>`;
+                                indikatorList += `<li class="list-group-item"><strong>Sediaan tanpa goresan mata pisau?</strong>: ${data.indikator_5}</li>`;
+                                indikatorList += `<li class="list-group-item"><strong>Kontras warna sediaan cukup jelas?</strong>: ${data.indikator_6}</li>`;
+                                indikatorList += `<li class="list-group-item"><strong>Sediaan tanpa gelembung udara?</strong>: ${data.indikator_7}</li>`;
+                                indikatorList += `<li class="list-group-item"><strong>Sediaan tanpa bercak / sidik jari?</strong>: ${data.indikator_8}</li>`;
+                                indikatorList += `<li class="list-group-item"><strong>Kosong</strong>: ${data.indikator_9}</li>`;
+                                indikatorList += `<li class="list-group-item"><strong>Kosong</strong>: ${data.indikator_10}</li>`;
+                                indikatorList += `<li class="list-group-item"><strong><b></b>Total Nilai Mutu: ${data.total_nilai_mutu_hpa}</b></strong></li>`;
+
+                                body.html(`
+                            ${patientInfo}
+                            <ul class="list-group mt-3">
+                                ${indikatorList}
+                            </ul>
+                        `);
+                            } else {
+                                // Format tanggal
+                                let mulai = formatDateTime(data[`mulai_${proses}_hpa`]);
+                                let selesai = formatDateTime(data[`selesai_${proses}_hpa`]);
+                                let user = data[`nama_user_${proses}_hpa`];
+
+                                body.html(`
+                            <ul class="list-group">
+                                <p><strong>No. RM:</strong> ${data.norm_pasien}</p>
+                                <p><strong>Nama Pasien:</strong> ${data.nama_pasien}</p>
+                                <p><strong>Kode HPA:</strong> ${data.kode_hpa}</p>
+                                <p><strong>Mulai ${proses}:</strong> ${mulai}</p>
+                                <p><strong>Selesai ${proses}:</strong> ${selesai}</p>
+                                <p><strong>User ${proses}:</strong> ${user}</p>
+                            </ul>
+                        `);
+                            }
+
+                            $('#viewModalLabel').text('Detail Proses ' + proses.replace('_', ' '));
+                            footer.html(`
+                        <a href="${baseUrl}${proses}_hpa/edit?id_${proses}_hpa=${id}" class="btn btn-warning">
+                            <i class="fas fa-pen"></i> Edit
+                        </a>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                            <i class="fas fa-times"></i> Tutup
+                        </button>
+                    `);
+                            $('#viewModal').modal('show');
+                        }
                     },
                     error: function(xhr, status, error) {
                         body.html(`<div class="alert alert-danger">Terjadi kesalahan saat mengambil data.</div>`);
                         footer.html(`
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fas fa-times"></i> Tutup</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                        <i class="fas fa-times"></i> Tutup
+                    </button>
                 `);
                         $('#viewModalLabel').text('Kesalahan');
                         $('#viewModal').modal('show');
@@ -234,7 +215,6 @@
                 });
             });
         });
-
 
     });
 </script>
