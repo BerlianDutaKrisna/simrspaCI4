@@ -7,17 +7,17 @@
     <div class="card-body">
         <h1 class="h4 text-gray-900 mb-4">Edit Data Pemverifikasi</h1>
 
-        <a href="<?= base_url('exam/index_exam') ?>" class="btn btn-primary mb-3">Kembali</a>
-        <form action="<?= base_url('pemverifikasi/update_pemverifikasi') ?>" method="POST">
-            <input type="hidden" name="id_pemverifikasi" value="<?= $pemverifikasiData['id_pemverifikasi'] ?>">
+        <a href="<?= base_url('hpa/index') ?>" class="btn btn-primary mb-3"><i class="fas fa-reply"></i> Kembali</a>
+        <form action="<?= base_url('pemverifikasi_hpa/update') ?>" method="POST">
+            <input type="hidden" name="id_pemverifikasi_hpa" value="<?= $pemverifikasiData['id_pemverifikasi_hpa'] ?>">
 
             <div class="form-row">
                 <div class="form-group col-md-6">
-                    <label for="id_user_pemverifikasi">User pemverifikasi:</label>
-                    <select class="form-control" id="id_user_pemverifikasi" name="id_user_pemverifikasi">
+                    <label for="id_user_pemverifikasi_hpa">User Pemverifikasi:</label>
+                    <select class="form-control" id="id_user_pemverifikasi_hpa" name="id_user_pemverifikasi_hpa">
                         <?php foreach ($users as $user): ?>
                             <?php if ($user['status_user'] === 'Analis'): ?>
-                                <option value="<?= $user['id_user'] ?>" <?= $user['id_user'] == $pemverifikasiData['id_user_pemverifikasi'] ? 'selected' : '' ?>>
+                                <option value="<?= $user['id_user'] ?>" <?= $user['id_user'] == $pemverifikasiData['id_user_pemverifikasi_hpa'] ? 'selected' : '' ?>>
                                     <?= $user['nama_user'] ?>
                                 </option>
                             <?php endif; ?>
@@ -25,37 +25,37 @@
                     </select>
                 </div>
                 <div class="form-group col-md-6">
-                    <label for="status_pemverifikasi">Status pemverifikasi:</label>
-                    <!-- Dropdown for status_pemverifikasi -->
-                    <select name="status_pemverifikasi" id="status_pemverifikasi" class="form-control">
-                        <option value="Belum Pemverifikasi" <?= old('status_pemverifikasi', esc($pemverifikasiData['status_pemverifikasi'])) == 'Belum Pemverifikasi' ? 'selected' : '' ?>>Belum Pemverifikasi</option>
-                        <option value="Proses Pemverifikasi" <?= old('status_pemverifikasi', esc($pemverifikasiData['status_pemverifikasi'])) == 'Proses Pemverifikasi' ? 'selected' : '' ?>>Proses Pemverifikasi</option>
-                        <option value="Selesai Pemverifikasi" <?= old('status_pemverifikasi', esc($pemverifikasiData['status_pemverifikasi'])) == 'Selesai Pemverifikasi' ? 'selected' : '' ?>>Selesai Pemverifikasi</option>
+                    <label for="status_pemverifikasi_hpa">Status Pemverifikasi:</label>
+                    <!-- Dropdown for status_pemverifikasi_hpa -->
+                    <select name="status_pemverifikasi_hpa" id="status_pemverifikasi_hpa" class="form-control">
+                        <option value="Belum Pemverifikasi" <?= old('status_pemverifikasi_hpa', esc($pemverifikasiData['status_pemverifikasi_hpa'])) == 'Belum Pemverifikasi' ? 'selected' : '' ?>>Belum Pemverifikasi</option>
+                        <option value="Proses Pemverifikasi" <?= old('status_pemverifikasi_hpa', esc($pemverifikasiData['status_pemverifikasi_hpa'])) == 'Proses Pemverifikasi' ? 'selected' : '' ?>>Proses Pemverifikasi</option>
+                        <option value="Selesai Pemverifikasi" <?= old('status_pemverifikasi_hpa', esc($pemverifikasiData['status_pemverifikasi_hpa'])) == 'Selesai Pemverifikasi' ? 'selected' : '' ?>>Selesai Pemverifikasi</option>
                     </select>
                 </div>
             </div>
 
             <div class="form-row">
                 <div class="form-group col-md-6">
-                    <label for="mulai_pemverifikasi">Mulai pemverifikasi:</label>
+                    <label for="mulai_pemverifikasi_hpa">Mulai Pemverifikasi:</label>
                     <!-- Separate date and time inputs -->
                     <div class="input-group">
-                        <input type="time" class="form-control" id="mulai_pemverifikasi_time" name="mulai_pemverifikasi_time" value="<?= date('H:i', strtotime($pemverifikasiData['mulai_pemverifikasi'])) ?>">
-                        <input type="date" class="form-control" id="mulai_pemverifikasi_date" name="mulai_pemverifikasi_date" value="<?= date('Y-m-d', strtotime($pemverifikasiData['mulai_pemverifikasi'])) ?>">
+                        <input type="time" class="form-control" id="mulai_pemverifikasi_hpa_time" name="mulai_pemverifikasi_hpa_time" value="<?= date('H:i', strtotime($pemverifikasiData['mulai_pemverifikasi_hpa'])) ?>">
+                        <input type="date" class="form-control" id="mulai_pemverifikasi_hpa_date" name="mulai_pemverifikasi_hpa_date" value="<?= date('Y-m-d', strtotime($pemverifikasiData['mulai_pemverifikasi_hpa'])) ?>">
                     </div>
                 </div>
 
                 <div class="form-group col-md-6">
-                    <label for="selesai_pemverifikasi">Selesai pemverifikasi:</label>
+                    <label for="selesai_pemverifikasi_hpa">Selesai Pemverifikasi:</label>
                     <!-- Separate date and time inputs -->
                     <div class="input-group">
-                        <input type="time" class="form-control" id="selesai_pemverifikasi_time" name="selesai_pemverifikasi_time" value="<?= date('H:i', strtotime($pemverifikasiData['selesai_pemverifikasi'])) ?>">
-                        <input type="date" class="form-control" id="selesai_pemverifikasi_date" name="selesai_pemverifikasi_date" value="<?= date('Y-m-d', strtotime($pemverifikasiData['selesai_pemverifikasi'])) ?>">
+                        <input type="time" class="form-control" id="selesai_pemverifikasi_hpa_time" name="selesai_pemverifikasi_hpa_time" value="<?= date('H:i', strtotime($pemverifikasiData['selesai_pemverifikasi_hpa'])) ?>">
+                        <input type="date" class="form-control" id="selesai_pemverifikasi_hpa_date" name="selesai_pemverifikasi_hpa_date" value="<?= date('Y-m-d', strtotime($pemverifikasiData['selesai_pemverifikasi_hpa'])) ?>">
                     </div>
                 </div>
             </div>
 
-            <button type="submit" class="btn btn-success">Update</button>
+            <button type="submit" class="btn btn-success"><i class="fas fa-save"></i> Update</button>
         </form>
     </div>
 </div>

@@ -7,17 +7,17 @@
     <div class="card-body">
         <h1 class="h4 text-gray-900 mb-4">Edit Data Pencetakan</h1>
 
-        <a href="<?= base_url('exam/index_exam') ?>" class="btn btn-primary mb-3">Kembali</a>
-        <form action="<?= base_url('pencetakan/update_pencetakan') ?>" method="POST">
-            <input type="hidden" name="id_pencetakan" value="<?= $pencetakanData['id_pencetakan'] ?>">
+        <a href="<?= base_url('hpa/index') ?>" class="btn btn-primary mb-3"><i class="fas fa-reply"></i> Kembali</a>
+        <form action="<?= base_url('pencetakan_hpa/update') ?>" method="POST">
+            <input type="hidden" name="id_pencetakan_hpa" value="<?= $pencetakanData['id_pencetakan_hpa'] ?>">
 
             <div class="form-row">
                 <div class="form-group col-md-6">
-                    <label for="id_user_pencetakan">User pencetakan:</label>
-                    <select class="form-control" id="id_user_pencetakan" name="id_user_pencetakan">
+                    <label for="id_user_pencetakan_hpa">User Pencetakan:</label>
+                    <select class="form-control" id="id_user_pencetakan_hpa" name="id_user_pencetakan_hpa">
                         <?php foreach ($users as $user): ?>
                             <?php if ($user['status_user'] === 'Analis'): ?>
-                                <option value="<?= $user['id_user'] ?>" <?= $user['id_user'] == $pencetakanData['id_user_pencetakan'] ? 'selected' : '' ?>>
+                                <option value="<?= $user['id_user'] ?>" <?= $user['id_user'] == $pencetakanData['id_user_pencetakan_hpa'] ? 'selected' : '' ?>>
                                     <?= $user['nama_user'] ?>
                                 </option>
                             <?php endif; ?>
@@ -25,37 +25,37 @@
                     </select>
                 </div>
                 <div class="form-group col-md-6">
-                    <label for="status_pencetakan">Status pencetakan:</label>
-                    <!-- Dropdown for status_pencetakan -->
-                    <select name="status_pencetakan" id="status_pencetakan" class="form-control">
-                        <option value="Belum Pencetakan" <?= old('status_pencetakan', esc($pencetakanData['status_pencetakan'])) == 'Belum Pencetakan' ? 'selected' : '' ?>>Belum Pencetakan</option>
-                        <option value="Proses Pencetakan" <?= old('status_pencetakan', esc($pencetakanData['status_pencetakan'])) == 'Proses Pencetakan' ? 'selected' : '' ?>>Proses Pencetakan</option>
-                        <option value="Selesai Pencetakan" <?= old('status_pencetakan', esc($pencetakanData['status_pencetakan'])) == 'Selesai Pencetakan' ? 'selected' : '' ?>>Selesai Pencetakan</option>
+                    <label for="status_pencetakan_hpa">Status Pencetakan:</label>
+                    <!-- Dropdown for status_pencetakan_hpa -->
+                    <select name="status_pencetakan_hpa" id="status_pencetakan_hpa" class="form-control">
+                        <option value="Belum Pencetakan" <?= old('status_pencetakan_hpa', esc($pencetakanData['status_pencetakan_hpa'])) == 'Belum Pencetakan' ? 'selected' : '' ?>>Belum Pencetakan</option>
+                        <option value="Proses Pencetakan" <?= old('status_pencetakan_hpa', esc($pencetakanData['status_pencetakan_hpa'])) == 'Proses Pencetakan' ? 'selected' : '' ?>>Proses Pencetakan</option>
+                        <option value="Selesai Pencetakan" <?= old('status_pencetakan_hpa', esc($pencetakanData['status_pencetakan_hpa'])) == 'Selesai Pencetakan' ? 'selected' : '' ?>>Selesai Pencetakan</option>
                     </select>
                 </div>
             </div>
 
             <div class="form-row">
                 <div class="form-group col-md-6">
-                    <label for="mulai_pencetakan">Mulai pencetakan:</label>
+                    <label for="mulai_pencetakan_hpa">Mulai Pencetakan:</label>
                     <!-- Separate date and time inputs -->
                     <div class="input-group">
-                        <input type="time" class="form-control" id="mulai_pencetakan_time" name="mulai_pencetakan_time" value="<?= date('H:i', strtotime($pencetakanData['mulai_pencetakan'])) ?>">
-                        <input type="date" class="form-control" id="mulai_pencetakan_date" name="mulai_pencetakan_date" value="<?= date('Y-m-d', strtotime($pencetakanData['mulai_pencetakan'])) ?>">
+                        <input type="time" class="form-control" id="mulai_pencetakan_hpa_time" name="mulai_pencetakan_hpa_time" value="<?= date('H:i', strtotime($pencetakanData['mulai_pencetakan_hpa'])) ?>">
+                        <input type="date" class="form-control" id="mulai_pencetakan_hpa_date" name="mulai_pencetakan_hpa_date" value="<?= date('Y-m-d', strtotime($pencetakanData['mulai_pencetakan_hpa'])) ?>">
                     </div>
                 </div>
 
                 <div class="form-group col-md-6">
-                    <label for="selesai_pencetakan">Selesai pencetakan:</label>
+                    <label for="selesai_pencetakan_hpa">Selesai Pencetakan:</label>
                     <!-- Separate date and time inputs -->
                     <div class="input-group">
-                        <input type="time" class="form-control" id="selesai_pencetakan_time" name="selesai_pencetakan_time" value="<?= date('H:i', strtotime($pencetakanData['selesai_pencetakan'])) ?>">
-                        <input type="date" class="form-control" id="selesai_pencetakan_date" name="selesai_pencetakan_date" value="<?= date('Y-m-d', strtotime($pencetakanData['selesai_pencetakan'])) ?>">
+                        <input type="time" class="form-control" id="selesai_pencetakan_hpa_time" name="selesai_pencetakan_hpa_time" value="<?= date('H:i', strtotime($pencetakanData['selesai_pencetakan_hpa'])) ?>">
+                        <input type="date" class="form-control" id="selesai_pencetakan_hpa_date" name="selesai_pencetakan_hpa_date" value="<?= date('Y-m-d', strtotime($pencetakanData['selesai_pencetakan_hpa'])) ?>">
                     </div>
                 </div>
             </div>
 
-            <button type="submit" class="btn btn-success">Update</button>
+            <button type="submit" class="btn btn-success"><i class="fas fa-save"></i> Update</button>
         </form>
     </div>
 </div>
