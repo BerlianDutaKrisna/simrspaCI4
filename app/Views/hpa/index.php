@@ -63,9 +63,9 @@
                                                 'pewarnaan' => $row['id_pewarnaan'] ?? null,
                                                 'pembacaan' => $row['id_pembacaan'] ?? null,
                                                 'penulisan' => $row['id_penulisan'] ?? null,
-                                                'verifikasi' => $row['id_pemverifikasi'] ?? null,
+                                                'pemverifikasi' => $row['id_pemverifikasi'] ?? null,
                                                 'authorized' => $row['id_authorized'] ?? null,
-                                                'cetak' => $row['id_pencetakan'] ?? null,
+                                                'pencetakan' => $row['id_pencetakan'] ?? null,
                                             ];
 
                                             foreach ($prosesList as $nama => $id) :

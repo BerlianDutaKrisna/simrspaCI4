@@ -125,6 +125,7 @@
             $('.btn-view-proses').on('click', function() {
                 const id = $(this).data('id');
                 const proses = $(this).data('proses');
+                console.log(id, proses);
                 const url = `${baseUrl}${proses}_hpa/${proses}_details?id_${proses}_hpa=${id}`;
 
                 // Bersihkan konten modal terlebih dahulu
@@ -138,8 +139,6 @@
                     method: 'GET',
                     dataType: 'json',
                     success: function(data) {
-                        console.log(data);
-
                         if (data.error) {
                             body.html(`<div class="alert alert-danger">${data.error}</div>`);
                         } else {

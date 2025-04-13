@@ -15,6 +15,7 @@
                 <div class="form-group col-md-6">
                     <label for="id_user_penerimaan_hpa">User penerimaan:</label>
                     <select class="form-control" id="id_user_penerimaan_hpa" name="id_user_penerimaan_hpa">
+                        <option value="" <?= empty($penerimaanData['id_user_penerimaan_hpa']) ? 'selected' : '' ?>>-</option>
                         <?php foreach ($users as $user): ?>
                             <?php if ($user['status_user'] === 'Analis'): ?>
                                 <option value="<?= $user['id_user'] ?>" <?= $user['id_user'] == $penerimaanData['id_user_penerimaan_hpa'] ? 'selected' : '' ?>>

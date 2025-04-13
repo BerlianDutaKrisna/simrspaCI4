@@ -150,8 +150,8 @@ class Penulisan extends BaseController
             throw new \CodeIgniter\Exceptions\PageNotFoundException('Data penulisan tidak ditemukan.');
         }
 
-        // Ambil data users dengan status_user = 'Analis'
-        $users = $this->userModel->where('status_user', 'Analis')->findAll();
+        // Ambil data user
+        $users = $this->userModel->findAll();
 
         $data = [
             'penulisanData' => $penulisanData,

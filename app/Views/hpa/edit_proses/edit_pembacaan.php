@@ -13,11 +13,12 @@
 
             <div class="form-row">
                 <div class="form-group col-md-6">
-                    <label for="id_user_pembacaan_hpa">User Pembacaan:</label>
-                    <select class="form-control" id="id_user_pembacaan_hpa" name="id_user_pembacaan_hpa">
+                    <label for="id_user_dokter_pembacaan_hpa">User Pembacaan:</label>
+                    <select class="form-control" id="id_user_dokter_pembacaan_hpa" name="id_user_dokter_pembacaan_hpa">
+                        <option value="" <?= empty($pembacaanData['id_user_dokter_pembacaan_hpa']) ? 'selected' : '' ?>>-</option>
                         <?php foreach ($users as $user): ?>
-                            <?php if ($user['status_user'] === 'Analis'): ?>
-                                <option value="<?= $user['id_user'] ?>" <?= $user['id_user'] == $pembacaanData['id_user_pembacaan_hpa'] ? 'selected' : '' ?>>
+                            <?php if ($user['status_user'] === 'Dokter'): ?>
+                                <option value="<?= $user['id_user'] ?>" <?= $user['id_user'] == $pembacaanData['id_user_dokter_pembacaan_hpa'] ? 'selected' : '' ?>>
                                     <?= $user['nama_user'] ?>
                                 </option>
                             <?php endif; ?>

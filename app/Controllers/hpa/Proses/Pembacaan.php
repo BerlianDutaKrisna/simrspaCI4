@@ -172,8 +172,8 @@ class Pembacaan extends BaseController
             throw new \CodeIgniter\Exceptions\PageNotFoundException('Data pembacaan tidak ditemukan.');
         }
 
-        // Ambil data users dengan status_user = 'Analis'
-        $users = $this->userModel->where('status_user', 'Analis')->findAll();
+        // Ambil data user
+        $users = $this->userModel->findAll();
 
         $data = [
             'pembacaanData' => $pembacaanData,
