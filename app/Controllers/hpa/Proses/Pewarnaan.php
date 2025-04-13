@@ -135,7 +135,7 @@ class Pewarnaan extends BaseController
         }
     }
 
-    public function edit_pewarnaan()
+    public function edit()
     {
         $id_pewarnaan_hpa = $this->request->getGet('id_pewarnaan_hpa');
 
@@ -160,12 +160,16 @@ class Pewarnaan extends BaseController
             'nama_user' => session()->get('nama_user'),
         ];
 
-        return view('edit_proses/edit_pewarnaan', $data);
+        return view('Hpa/edit_proses/edit_pewarnaan', $data);
     }
 
-    public function update_pewarnaan()
+    public function update()
     {
         $id_pewarnaan_hpa = $this->request->getPost('id_pewarnaan_hpa');
+
+        if (!$id_pewarnaan_hpa) {
+            return redirect()->back()->with('error', 'ID tidak ditemukan.')->withInput();
+        }
 
         // Gabungkan input tanggal dan waktu
         $mulai_pewarnaan_hpa = $this->request->getPost('mulai_pewarnaan_hpa_date') . ' ' . $this->request->getPost('mulai_pewarnaan_hpa_time');
@@ -176,13 +180,14 @@ class Pewarnaan extends BaseController
             'status_pewarnaan_hpa'  => $this->request->getPost('status_pewarnaan_hpa'),
             'mulai_pewarnaan_hpa'   => $mulai_pewarnaan_hpa,
             'selesai_pewarnaan_hpa' => $selesai_pewarnaan_hpa,
-            'updated_at'         => date('Y-m-d H:i:s'),
+            'updated_at'             => date('Y-m-d H:i:s'),
         ];
 
         if (!$this->pewarnaan_hpa->update($id_pewarnaan_hpa, $data)) {
             return redirect()->back()->with('error', 'Gagal mengupdate data.')->withInput();
         }
 
-        return redirect()->to(base_url('pewarnaan/index_pewarnaan'))->with('success', 'Data berhasil diperbarui.');
+        return redirect()->to(base_url('pewarnaan_hpa/edit?id_pewarnaan_hpa=' . $id_pewarnaan_hpa))
+            ->with('success', 'Data berhasil diperbarui.');
     }
 }

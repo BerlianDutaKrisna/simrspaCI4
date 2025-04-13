@@ -135,7 +135,7 @@ class PemotonganTipis extends BaseController
         }
     }
 
-    public function edit_pemotongan_tipis()
+    public function edit()
     {
         $id_pemotongan_tipis_hpa = $this->request->getGet('id_pemotongan_tipis_hpa');
 
@@ -160,12 +160,16 @@ class PemotonganTipis extends BaseController
             'nama_user' => session()->get('nama_user'),
         ];
 
-        return view('edit_proses/edit_pemotongan_tipis', $data);
+        return view('Hpa/edit_proses/edit_pemotongan_tipis', $data);
     }
 
-    public function update_pemotongan_tipis()
+    public function update()
     {
         $id_pemotongan_tipis_hpa = $this->request->getPost('id_pemotongan_tipis_hpa');
+
+        if (!$id_pemotongan_tipis_hpa) {
+            return redirect()->back()->with('error', 'ID tidak ditemukan.')->withInput();
+        }
 
         // Gabungkan input tanggal dan waktu
         $mulai_pemotongan_tipis_hpa = $this->request->getPost('mulai_pemotongan_tipis_hpa_date') . ' ' . $this->request->getPost('mulai_pemotongan_tipis_hpa_time');
@@ -176,13 +180,14 @@ class PemotonganTipis extends BaseController
             'status_pemotongan_tipis_hpa'  => $this->request->getPost('status_pemotongan_tipis_hpa'),
             'mulai_pemotongan_tipis_hpa'   => $mulai_pemotongan_tipis_hpa,
             'selesai_pemotongan_tipis_hpa' => $selesai_pemotongan_tipis_hpa,
-            'updated_at'         => date('Y-m-d H:i:s'),
+            'updated_at'             => date('Y-m-d H:i:s'),
         ];
 
         if (!$this->pemotongan_tipis_hpa->update($id_pemotongan_tipis_hpa, $data)) {
             return redirect()->back()->with('error', 'Gagal mengupdate data.')->withInput();
         }
 
-        return redirect()->to(base_url('pemotongan_tipis/index_pemotongan_tipis'))->with('success', 'Data berhasil diperbarui.');
+        return redirect()->to(base_url('pemotongan_tipis_hpa/edit?id_pemotongan_tipis_hpa=' . $id_pemotongan_tipis_hpa))
+            ->with('success', 'Data berhasil diperbarui.');
     }
 }

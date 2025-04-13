@@ -135,7 +135,7 @@ class Penulisan extends BaseController
         }
     }
 
-    public function edit_penulisan()
+    public function edit()
     {
         $id_penulisan_hpa = $this->request->getGet('id_penulisan_hpa');
 
@@ -160,12 +160,16 @@ class Penulisan extends BaseController
             'nama_user' => session()->get('nama_user'),
         ];
 
-        return view('edit_proses/edit_penulisan', $data);
+        return view('Hpa/edit_proses/edit_penulisan', $data);
     }
 
-    public function update_penulisan()
+    public function update()
     {
         $id_penulisan_hpa = $this->request->getPost('id_penulisan_hpa');
+
+        if (!$id_penulisan_hpa) {
+            return redirect()->back()->with('error', 'ID tidak ditemukan.')->withInput();
+        }
 
         // Gabungkan input tanggal dan waktu
         $mulai_penulisan_hpa = $this->request->getPost('mulai_penulisan_hpa_date') . ' ' . $this->request->getPost('mulai_penulisan_hpa_time');
@@ -176,13 +180,14 @@ class Penulisan extends BaseController
             'status_penulisan_hpa'  => $this->request->getPost('status_penulisan_hpa'),
             'mulai_penulisan_hpa'   => $mulai_penulisan_hpa,
             'selesai_penulisan_hpa' => $selesai_penulisan_hpa,
-            'updated_at'         => date('Y-m-d H:i:s'),
+            'updated_at'             => date('Y-m-d H:i:s'),
         ];
 
         if (!$this->penulisan_hpa->update($id_penulisan_hpa, $data)) {
             return redirect()->back()->with('error', 'Gagal mengupdate data.')->withInput();
         }
 
-        return redirect()->to(base_url('penulisan/index_penulisan'))->with('success', 'Data berhasil diperbarui.');
+        return redirect()->to(base_url('penulisan_hpa/edit?id_penulisan_hpa=' . $id_penulisan_hpa))
+            ->with('success', 'Data berhasil diperbarui.');
     }
 }

@@ -138,7 +138,7 @@ class Authorized extends BaseController
         }
     }
 
-    public function edit_authorized()
+    public function edit()
     {
         $id_authorized_hpa = $this->request->getGet('id_authorized_hpa');
 
@@ -163,12 +163,16 @@ class Authorized extends BaseController
             'nama_user' => session()->get('nama_user'),
         ];
 
-        return view('edit_proses/edit_authorized', $data);
+        return view('Hpa/edit_proses/edit_authorized', $data);
     }
 
-    public function update_authorized()
+    public function update()
     {
         $id_authorized_hpa = $this->request->getPost('id_authorized_hpa');
+
+        if (!$id_authorized_hpa) {
+            return redirect()->back()->with('error', 'ID tidak ditemukan.')->withInput();
+        }
 
         // Gabungkan input tanggal dan waktu
         $mulai_authorized_hpa = $this->request->getPost('mulai_authorized_hpa_date') . ' ' . $this->request->getPost('mulai_authorized_hpa_time');
@@ -179,13 +183,14 @@ class Authorized extends BaseController
             'status_authorized_hpa'  => $this->request->getPost('status_authorized_hpa'),
             'mulai_authorized_hpa'   => $mulai_authorized_hpa,
             'selesai_authorized_hpa' => $selesai_authorized_hpa,
-            'updated_at'         => date('Y-m-d H:i:s'),
+            'updated_at'             => date('Y-m-d H:i:s'),
         ];
 
         if (!$this->authorized_hpa->update($id_authorized_hpa, $data)) {
             return redirect()->back()->with('error', 'Gagal mengupdate data.')->withInput();
         }
 
-        return redirect()->to(base_url('authorized/index_authorized'))->with('success', 'Data berhasil diperbarui.');
+        return redirect()->to(base_url('authorized_hpa/edit?id_authorized_hpa=' . $id_authorized_hpa))
+            ->with('success', 'Data berhasil diperbarui.');
     }
 }

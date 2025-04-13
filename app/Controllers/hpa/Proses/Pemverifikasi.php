@@ -135,7 +135,7 @@ class Pemverifikasi extends BaseController
         }
     }
 
-    public function edit_pemverifikasi()
+    public function edit()
     {
         $id_pemverifikasi_hpa = $this->request->getGet('id_pemverifikasi_hpa');
 
@@ -160,12 +160,16 @@ class Pemverifikasi extends BaseController
             'nama_user' => session()->get('nama_user'),
         ];
 
-        return view('edit_proses/edit_pemverifikasi', $data);
+        return view('Hpa/edit_proses/edit_pemverifikasi', $data);
     }
 
-    public function update_pemverifikasi()
+    public function update()
     {
         $id_pemverifikasi_hpa = $this->request->getPost('id_pemverifikasi_hpa');
+
+        if (!$id_pemverifikasi_hpa) {
+            return redirect()->back()->with('error', 'ID tidak ditemukan.')->withInput();
+        }
 
         // Gabungkan input tanggal dan waktu
         $mulai_pemverifikasi_hpa = $this->request->getPost('mulai_pemverifikasi_hpa_date') . ' ' . $this->request->getPost('mulai_pemverifikasi_hpa_time');
@@ -176,13 +180,14 @@ class Pemverifikasi extends BaseController
             'status_pemverifikasi_hpa'  => $this->request->getPost('status_pemverifikasi_hpa'),
             'mulai_pemverifikasi_hpa'   => $mulai_pemverifikasi_hpa,
             'selesai_pemverifikasi_hpa' => $selesai_pemverifikasi_hpa,
-            'updated_at'         => date('Y-m-d H:i:s'),
+            'updated_at'             => date('Y-m-d H:i:s'),
         ];
 
         if (!$this->pemverifikasi_hpa->update($id_pemverifikasi_hpa, $data)) {
             return redirect()->back()->with('error', 'Gagal mengupdate data.')->withInput();
         }
 
-        return redirect()->to(base_url('pemverifikasi/index_pemverifikasi'))->with('success', 'Data berhasil diperbarui.');
+        return redirect()->to(base_url('pemverifikasi_hpa/edit?id_pemverifikasi_hpa=' . $id_pemverifikasi_hpa))
+            ->with('success', 'Data berhasil diperbarui.');
     }
 }

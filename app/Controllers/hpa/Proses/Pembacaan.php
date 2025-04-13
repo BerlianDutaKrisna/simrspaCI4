@@ -157,7 +157,7 @@ class Pembacaan extends BaseController
         }
     }
 
-    public function edit_pembacaan()
+    public function edit()
     {
         $id_pembacaan_hpa = $this->request->getGet('id_pembacaan_hpa');
 
@@ -182,12 +182,16 @@ class Pembacaan extends BaseController
             'nama_user' => session()->get('nama_user'),
         ];
 
-        return view('edit_proses/edit_pembacaan', $data);
+        return view('Hpa/edit_proses/edit_pembacaan', $data);
     }
 
-    public function update_pembacaan()
+    public function update()
     {
         $id_pembacaan_hpa = $this->request->getPost('id_pembacaan_hpa');
+
+        if (!$id_pembacaan_hpa) {
+            return redirect()->back()->with('error', 'ID tidak ditemukan.')->withInput();
+        }
 
         // Gabungkan input tanggal dan waktu
         $mulai_pembacaan_hpa = $this->request->getPost('mulai_pembacaan_hpa_date') . ' ' . $this->request->getPost('mulai_pembacaan_hpa_time');
@@ -198,13 +202,14 @@ class Pembacaan extends BaseController
             'status_pembacaan_hpa'  => $this->request->getPost('status_pembacaan_hpa'),
             'mulai_pembacaan_hpa'   => $mulai_pembacaan_hpa,
             'selesai_pembacaan_hpa' => $selesai_pembacaan_hpa,
-            'updated_at'         => date('Y-m-d H:i:s'),
+            'updated_at'             => date('Y-m-d H:i:s'),
         ];
 
         if (!$this->pembacaan_hpa->update($id_pembacaan_hpa, $data)) {
             return redirect()->back()->with('error', 'Gagal mengupdate data.')->withInput();
         }
 
-        return redirect()->to(base_url('pembacaan/index_pembacaan'))->with('success', 'Data berhasil diperbarui.');
+        return redirect()->to(base_url('pembacaan_hpa/edit?id_pembacaan_hpa=' . $id_pembacaan_hpa))
+            ->with('success', 'Data berhasil diperbarui.');
     }
 }

@@ -135,7 +135,7 @@ class Pemotongan extends BaseController
         }
     }
 
-    public function edit_pemotongan()
+    public function edit()
     {
         $id_pemotongan_hpa = $this->request->getGet('id_pemotongan_hpa');
 
@@ -160,12 +160,16 @@ class Pemotongan extends BaseController
             'nama_user' => session()->get('nama_user'),
         ];
 
-        return view('edit_proses/edit_pemotongan', $data);
+        return view('Hpa/edit_proses/edit_pemotongan', $data);
     }
 
-    public function update_pemotongan()
+    public function update()
     {
         $id_pemotongan_hpa = $this->request->getPost('id_pemotongan_hpa');
+
+        if (!$id_pemotongan_hpa) {
+            return redirect()->back()->with('error', 'ID tidak ditemukan.')->withInput();
+        }
 
         // Gabungkan input tanggal dan waktu
         $mulai_pemotongan_hpa = $this->request->getPost('mulai_pemotongan_hpa_date') . ' ' . $this->request->getPost('mulai_pemotongan_hpa_time');
@@ -176,13 +180,14 @@ class Pemotongan extends BaseController
             'status_pemotongan_hpa'  => $this->request->getPost('status_pemotongan_hpa'),
             'mulai_pemotongan_hpa'   => $mulai_pemotongan_hpa,
             'selesai_pemotongan_hpa' => $selesai_pemotongan_hpa,
-            'updated_at'         => date('Y-m-d H:i:s'),
+            'updated_at'             => date('Y-m-d H:i:s'),
         ];
 
         if (!$this->pemotongan_hpa->update($id_pemotongan_hpa, $data)) {
             return redirect()->back()->with('error', 'Gagal mengupdate data.')->withInput();
         }
 
-        return redirect()->to(base_url('pemotongan/index_pemotongan'))->with('success', 'Data berhasil diperbarui.');
+        return redirect()->to(base_url('pemotongan_hpa/edit?id_pemotongan_hpa=' . $id_pemotongan_hpa))
+            ->with('success', 'Data berhasil diperbarui.');
     }
 }

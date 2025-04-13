@@ -146,7 +146,7 @@ class Penanaman extends BaseController
         }
     }
 
-    public function edit_penanaman()
+    public function edit()
     {
         $id_penanaman_hpa = $this->request->getGet('id_penanaman_hpa');
 
@@ -171,12 +171,16 @@ class Penanaman extends BaseController
             'nama_user' => session()->get('nama_user'),
         ];
 
-        return view('edit_proses/edit_penanaman', $data);
+        return view('Hpa/edit_proses/edit_penanaman', $data);
     }
 
-    public function update_penanaman()
+    public function update()
     {
         $id_penanaman_hpa = $this->request->getPost('id_penanaman_hpa');
+
+        if (!$id_penanaman_hpa) {
+            return redirect()->back()->with('error', 'ID tidak ditemukan.')->withInput();
+        }
 
         // Gabungkan input tanggal dan waktu
         $mulai_penanaman_hpa = $this->request->getPost('mulai_penanaman_hpa_date') . ' ' . $this->request->getPost('mulai_penanaman_hpa_time');
@@ -187,13 +191,14 @@ class Penanaman extends BaseController
             'status_penanaman_hpa'  => $this->request->getPost('status_penanaman_hpa'),
             'mulai_penanaman_hpa'   => $mulai_penanaman_hpa,
             'selesai_penanaman_hpa' => $selesai_penanaman_hpa,
-            'updated_at'         => date('Y-m-d H:i:s'),
+            'updated_at'             => date('Y-m-d H:i:s'),
         ];
 
         if (!$this->penanaman_hpa->update($id_penanaman_hpa, $data)) {
             return redirect()->back()->with('error', 'Gagal mengupdate data.')->withInput();
         }
 
-        return redirect()->to(base_url('penanaman/index_penanaman'))->with('success', 'Data berhasil diperbarui.');
+        return redirect()->to(base_url('penanaman_hpa/edit?id_penanaman_hpa=' . $id_penanaman_hpa))
+            ->with('success', 'Data berhasil diperbarui.');
     }
 }
