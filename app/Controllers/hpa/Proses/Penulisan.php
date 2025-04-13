@@ -120,22 +120,10 @@ class Penulisan extends BaseController
 
     public function penulisan_details()
     {
-        // Ambil id_penulisan_hpa dari parameter GET
         $id_penulisan_hpa = $this->request->getGet('id_penulisan_hpa');
 
         if ($id_penulisan_hpa) {
-            // Gunakan model yang sudah diinisialisasi di constructor
-            $data = $this->penulisan_hpa->select(
-                'penulisan.*, 
-            hpa.*, 
-            patient.*, 
-            users.nama_user AS nama_user_penulisan'
-            )
-                ->join('hpa', 'penulisan.id_hpa = hpa.id_hpa', 'left')
-                ->join('patient', 'hpa.id_pasien = patient.id_pasien', 'left')
-                ->join('users', 'penulisan.id_user_penulisan_hpa = users.id_user', 'left')
-                ->where('penulisan.id_penulisan_hpa', $id_penulisan_hpa)
-                ->first();
+            $data = $this->penulisan_hpa->detailspenulisan_hpa($id_penulisan_hpa);
 
             if ($data) {
                 return $this->response->setJSON($data);
@@ -143,7 +131,7 @@ class Penulisan extends BaseController
                 return $this->response->setJSON(['error' => 'Data tidak ditemukan.']);
             }
         } else {
-            return $this->response->setJSON(['error' => 'ID penulisan tidak ditemukan.']);
+            return $this->response->setJSON(['error' => 'Coba ulangi kembali..']);
         }
     }
 

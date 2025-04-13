@@ -120,8 +120,7 @@ class Pemotongan extends BaseController
 
     public function pemotongan_details()
     {
-        $proses = 'pemotongan'; // atau ambil dari URL segmen
-        $id_pemotongan_hpa = $this->request->getGet("id_{$proses}_hpa");
+        $id_pemotongan_hpa = $this->request->getGet('id_pemotongan_hpa');
 
         if ($id_pemotongan_hpa) {
             $data = $this->pemotongan_hpa->detailspemotongan_hpa($id_pemotongan_hpa);

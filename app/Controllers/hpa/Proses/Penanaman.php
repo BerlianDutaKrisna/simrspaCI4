@@ -131,22 +131,10 @@ class Penanaman extends BaseController
 
     public function penanaman_details()
     {
-        // Ambil id_penanaman_hpa dari parameter GET
         $id_penanaman_hpa = $this->request->getGet('id_penanaman_hpa');
 
         if ($id_penanaman_hpa) {
-            // Gunakan model yang sudah diinisialisasi di constructor
-            $data = $this->penanaman_hpa->select(
-                'penanaman_hpa.*, 
-            hpa.*, 
-            patient.*, 
-            users.nama_user AS nama_user_penanaman_hpa'
-            )
-                ->join('hpa', 'penanaman_hpa.id_hpa = hpa.id_hpa', 'left')
-                ->join('patient', 'hpa.id_pasien = patient.id_pasien', 'left')
-                ->join('users', 'penanaman_hpa.id_user_penanaman_hpa= users.id_user', 'left')
-                ->where('penanaman_hpa.id_penanaman_hpa', $id_penanaman_hpa)
-                ->first();
+            $data = $this->penanaman_hpa->detailspenanaman_hpa($id_penanaman_hpa);
 
             if ($data) {
                 return $this->response->setJSON($data);
@@ -154,7 +142,7 @@ class Penanaman extends BaseController
                 return $this->response->setJSON(['error' => 'Data tidak ditemukan.']);
             }
         } else {
-            return $this->response->setJSON(['error' => 'ID penanaman tidak ditemukan.']);
+            return $this->response->setJSON(['error' => 'Coba ulangi kembali..']);
         }
     }
 

@@ -120,22 +120,10 @@ class Pemprosesan extends BaseController
 
     public function pemprosesan_details()
     {
-        // Ambil id_pemprosesan_hpa dari parameter GET
         $id_pemprosesan_hpa = $this->request->getGet('id_pemprosesan_hpa');
 
         if ($id_pemprosesan_hpa) {
-            // Gunakan model yang sudah diinisialisasi di constructor
-            $data = $this->pemprosesan_hpa->select(
-                'pemprosesan_hpa.*, 
-            hpa.*, 
-            patient.*, 
-            users.nama_user AS nama_user_pemprosesan_hpa'
-            )
-                ->join('hpa', 'pemprosesan_hpa.id_hpa = hpa.id_hpa', 'left')
-                ->join('patient', 'hpa.id_pasien = patient.id_pasien', 'left')
-                ->join('users', 'pemprosesan_hpa.id_user_pemprosesan_hpa = users.id_user', 'left')
-                ->where('pemprosesan_hpa.id_pemprosesan_hpa', $id_pemprosesan_hpa)
-                ->first();
+            $data = $this->pemprosesan_hpa->detailspemprosesan_hpa($id_pemprosesan_hpa);
 
             if ($data) {
                 return $this->response->setJSON($data);
@@ -143,7 +131,7 @@ class Pemprosesan extends BaseController
                 return $this->response->setJSON(['error' => 'Data tidak ditemukan.']);
             }
         } else {
-            return $this->response->setJSON(['error' => 'ID pemprosesan tidak ditemukan.']);
+            return $this->response->setJSON(['error' => 'Coba ulangi kembali..']);
         }
     }
 

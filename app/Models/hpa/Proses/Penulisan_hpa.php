@@ -61,13 +61,21 @@ class Penulisan_hpa extends Model // Update nama model
             ->findAll();
     }
 
-    // Fungsi untuk mengupdate data penulisan_hpa
-    public function updatepenulisan_hpa($id_penulisan_hpa, $data) // Update nama fungsi dan parameter
+    public function detailspenulisan_hpa($id_penulisan_hpa)
     {
-        $builder = $this->db->table($this->table);  // Mengambil tabel penulisan_hpa
-        $builder->where('id_penulisan_hpa', $id_penulisan_hpa);  // Menentukan baris yang akan diupdate berdasarkan id_penulisan_hpa
-        $builder->update($data);  // Melakukan update dengan data yang dikirimkan
-        return $this->db->affectedRows();  // Mengembalikan jumlah baris yang terpengaruh
+        $data = $this->select(
+            'penulisan_hpa.*, 
+        hpa.*, 
+        patient.*, 
+        users.nama_user AS nama_user_penulisan_hpa'
+        )
+            ->join('hpa', 'penulisan_hpa.id_hpa = hpa.id_hpa', 'left')
+            ->join('patient', 'hpa.id_pasien = patient.id_pasien', 'left')
+            ->join('users', 'penulisan_hpa.id_user_penulisan_hpa = users.id_user', 'left')
+            ->where('penulisan_hpa.id_penulisan_hpa', $id_penulisan_hpa)
+            ->first();
+
+        return $data;
     }
 
     public function deletepenulisan_hpa($id_penulisan_hpa)

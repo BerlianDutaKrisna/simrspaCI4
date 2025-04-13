@@ -143,7 +143,6 @@ class Penerimaan extends BaseController
         }
     }
 
-
     public function edit()
     {
         $id_penerimaan_hpa = $this->request->getGet('id_penerimaan_hpa');

@@ -120,22 +120,10 @@ class PemotonganTipis extends BaseController
 
     public function pemotongan_tipis_details()
     {
-        // Ambil id_pemotongan_tipis_hpa dari parameter GET
         $id_pemotongan_tipis_hpa = $this->request->getGet('id_pemotongan_tipis_hpa');
 
         if ($id_pemotongan_tipis_hpa) {
-            // Gunakan model yang sudah diinisialisasi di constructor
-            $data = $this->pemotongan_tipis_hpa->select(
-                'pemotongan_tipis_hpa.*, 
-            hpa.*, 
-            patient.*, 
-            users.nama_user AS nama_user_pemotongan_tipis_hpa'
-            )
-                ->join('hpa', 'pemotongan_tipis_hpa.id_hpa = hpa.id_hpa', 'left')
-                ->join('patient', 'hpa.id_pasien = patient.id_pasien', 'left')
-                ->join('users', 'pemotongan_tipis_hpa.id_user_pemotongan_tipis_hpa = users.id_user', 'left')
-                ->where('pemotongan_tipis_hpa.id_pemotongan_tipis_hpa', $id_pemotongan_tipis_hpa)
-                ->first();
+            $data = $this->pemotongan_tipis_hpa->detailspemotongan_tipis_hpa($id_pemotongan_tipis_hpa);
 
             if ($data) {
                 return $this->response->setJSON($data);
@@ -143,7 +131,7 @@ class PemotonganTipis extends BaseController
                 return $this->response->setJSON(['error' => 'Data tidak ditemukan.']);
             }
         } else {
-            return $this->response->setJSON(['error' => 'ID pemotongan_tipis tidak ditemukan.']);
+            return $this->response->setJSON(['error' => 'Coba ulangi kembali..']);
         }
     }
 

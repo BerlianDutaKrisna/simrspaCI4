@@ -142,22 +142,10 @@ class Pembacaan extends BaseController
 
     public function pembacaan_details()
     {
-        // Ambil id_pembacaan_hpa dari parameter GET
         $id_pembacaan_hpa = $this->request->getGet('id_pembacaan_hpa');
 
         if ($id_pembacaan_hpa) {
-            // Gunakan model yang sudah diinisialisasi di constructor
-            $data = $this->pembacaan_hpa->select(
-                'pembacaan.*, 
-            hpa.*, 
-            patient.*, 
-            users.nama_user AS nama_user_pembacaan'
-            )
-                ->join('hpa', 'pembacaan.id_hpa = hpa.id_hpa', 'left')
-                ->join('patient', 'hpa.id_pasien = patient.id_pasien', 'left')
-                ->join('users', 'pembacaan.id_user_pembacaan_hpa = users.id_user', 'left')
-                ->where('pembacaan.id_pembacaan_hpa', $id_pembacaan_hpa)
-                ->first();
+            $data = $this->pembacaan_hpa->detailspembacaan_hpa($id_pembacaan_hpa);
 
             if ($data) {
                 return $this->response->setJSON($data);
@@ -165,7 +153,7 @@ class Pembacaan extends BaseController
                 return $this->response->setJSON(['error' => 'Data tidak ditemukan.']);
             }
         } else {
-            return $this->response->setJSON(['error' => 'ID pembacaan tidak ditemukan.']);
+            return $this->response->setJSON(['error' => 'Coba ulangi kembali..']);
         }
     }
 

@@ -123,22 +123,10 @@ class Authorized extends BaseController
 
     public function authorized_details()
     {
-        // Ambil id_authorized_hpa dari parameter GET
         $id_authorized_hpa = $this->request->getGet('id_authorized_hpa');
 
         if ($id_authorized_hpa) {
-            // Gunakan model yang sudah diinisialisasi di constructor
-            $data = $this->authorized_hpa->select(
-                'authorized.*, 
-            hpa.*, 
-            patient.*, 
-            users.nama_user AS nama_user_authorized'
-            )
-                ->join('hpa', 'authorized.id_hpa = hpa.id_hpa', 'left')
-                ->join('patient', 'hpa.id_pasien = patient.id_pasien', 'left')
-                ->join('users', 'authorized.id_user_authorized_hpa = users.id_user', 'left')
-                ->where('authorized.id_authorized_hpa', $id_authorized_hpa)
-                ->first();
+            $data = $this->authorized_hpa->detailsauthorized_hpa($id_authorized_hpa);
 
             if ($data) {
                 return $this->response->setJSON($data);
@@ -146,7 +134,7 @@ class Authorized extends BaseController
                 return $this->response->setJSON(['error' => 'Data tidak ditemukan.']);
             }
         } else {
-            return $this->response->setJSON(['error' => 'ID authorized tidak ditemukan.']);
+            return $this->response->setJSON(['error' => 'Coba ulangi kembali..']);
         }
     }
 

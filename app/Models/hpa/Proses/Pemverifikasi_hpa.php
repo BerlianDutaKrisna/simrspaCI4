@@ -64,13 +64,21 @@ class Pemverifikasi_hpa extends Model // Update nama model
             ->findAll();
     }
 
-    // Fungsi untuk mengupdate data pemverifikasi_hpa
-    public function updatepemverifikasi_hpa($id_pemverifikasi_hpa, $data) // Update nama fungsi dan parameter
+    public function detailspemverifikasi_hpa($id_pemverifikasi_hpa)
     {
-        $builder = $this->db->table($this->table);  // Mengambil tabel pemverifikasi_hpa
-        $builder->where('id_pemverifikasi_hpa', $id_pemverifikasi_hpa);  // Menentukan baris yang akan diupdate berdasarkan id_pemverifikasi_hpa
-        $builder->update($data);  // Melakukan update dengan data yang dikirimkan
-        return $this->db->affectedRows();  // Mengembalikan jumlah baris yang terpengaruh
+        $data = $this->select(
+            'pemverifikasi_hpa.*, 
+        hpa.*, 
+        patient.*, 
+        users.nama_user AS nama_user_pemverifikasi_hpa'
+        )
+            ->join('hpa', 'pemverifikasi_hpa.id_hpa = hpa.id_hpa', 'left')
+            ->join('patient', 'hpa.id_pasien = patient.id_pasien', 'left')
+            ->join('users', 'pemverifikasi_hpa.id_user_pemverifikasi_hpa = users.id_user', 'left')
+            ->where('pemverifikasi_hpa.id_pemverifikasi_hpa', $id_pemverifikasi_hpa)
+            ->first();
+
+        return $data;
     }
 
     public function deletepemverifikasi_hpa($id_pemverifikasi_hpa)

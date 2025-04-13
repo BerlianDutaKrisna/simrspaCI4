@@ -120,22 +120,10 @@ class Pewarnaan extends BaseController
 
     public function pewarnaan_details()
     {
-        // Ambil id_pewarnaan_hpa dari parameter GET
         $id_pewarnaan_hpa = $this->request->getGet('id_pewarnaan_hpa');
 
         if ($id_pewarnaan_hpa) {
-            // Gunakan model yang sudah diinisialisasi di constructor
-            $data = $this->pewarnaan_hpa->select(
-                'pewarnaan.*, 
-            hpa.*, 
-            patient.*, 
-            users.nama_user AS nama_user_pewarnaan'
-            )
-                ->join('hpa', 'pewarnaan.id_hpa = hpa.id_hpa', 'left')
-                ->join('patient', 'hpa.id_pasien = patient.id_pasien', 'left')
-                ->join('users', 'pewarnaan.id_user_pewarnaan_hpa = users.id_user', 'left')
-                ->where('pewarnaan.id_pewarnaan_hpa', $id_pewarnaan_hpa)
-                ->first();
+            $data = $this->pewarnaan_hpa->detailspewarnaan_hpa($id_pewarnaan_hpa);
 
             if ($data) {
                 return $this->response->setJSON($data);
@@ -143,7 +131,7 @@ class Pewarnaan extends BaseController
                 return $this->response->setJSON(['error' => 'Data tidak ditemukan.']);
             }
         } else {
-            return $this->response->setJSON(['error' => 'ID pewarnaan tidak ditemukan.']);
+            return $this->response->setJSON(['error' => 'Coba ulangi kembali..']);
         }
     }
 

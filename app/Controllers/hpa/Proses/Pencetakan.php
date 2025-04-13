@@ -110,22 +110,10 @@ class Pencetakan extends BaseController
 
     public function pencetakan_details()
     {
-        // Ambil id_pencetakan_hpa dari parameter GET
         $id_pencetakan_hpa = $this->request->getGet('id_pencetakan_hpa');
 
         if ($id_pencetakan_hpa) {
-            // Gunakan model yang sudah diinisialisasi di constructor
-            $data = $this->pencetakan_hpa->select(
-                'pencetakan.*, 
-            hpa.*, 
-            patient.*, 
-            users.nama_user AS nama_user_pencetakan'
-            )
-                ->join('hpa', 'pencetakan.id_hpa = hpa.id_hpa', 'left')
-                ->join('patient', 'hpa.id_pasien = patient.id_pasien', 'left')
-                ->join('users', 'pencetakan.id_user_pencetakan_hpa = users.id_user', 'left')
-                ->where('pencetakan.id_pencetakan_hpa', $id_pencetakan_hpa)
-                ->first();
+            $data = $this->pencetakan_hpa->detailspencetakan_hpa($id_pencetakan_hpa);
 
             if ($data) {
                 return $this->response->setJSON($data);
@@ -133,7 +121,7 @@ class Pencetakan extends BaseController
                 return $this->response->setJSON(['error' => 'Data tidak ditemukan.']);
             }
         } else {
-            return $this->response->setJSON(['error' => 'ID pencetakan tidak ditemukan.']);
+            return $this->response->setJSON(['error' => 'Coba ulangi kembali..']);
         }
     }
 

@@ -120,22 +120,10 @@ class Pemverifikasi extends BaseController
 
     public function pemverifikasi_details()
     {
-        // Ambil id_pemverifikasi_hpa dari parameter GET
         $id_pemverifikasi_hpa = $this->request->getGet('id_pemverifikasi_hpa');
 
         if ($id_pemverifikasi_hpa) {
-            // Gunakan model yang sudah diinisialisasi di constructor
-            $data = $this->pemverifikasi_hpa->select(
-                'pemverifikasi.*, 
-            hpa.*, 
-            patient.*, 
-            users.nama_user AS nama_user_pemverifikasi'
-            )
-                ->join('hpa', 'pemverifikasi.id_hpa = hpa.id_hpa', 'left')
-                ->join('patient', 'hpa.id_pasien = patient.id_pasien', 'left')
-                ->join('users', 'pemverifikasi.id_user_pemverifikasi_hpa = users.id_user', 'left')
-                ->where('pemverifikasi.id_pemverifikasi_hpa', $id_pemverifikasi_hpa)
-                ->first();
+            $data = $this->pemverifikasi_hpa->detailspemverifikasi_hpa($id_pemverifikasi_hpa);
 
             if ($data) {
                 return $this->response->setJSON($data);
@@ -143,7 +131,7 @@ class Pemverifikasi extends BaseController
                 return $this->response->setJSON(['error' => 'Data tidak ditemukan.']);
             }
         } else {
-            return $this->response->setJSON(['error' => 'ID pemverifikasi tidak ditemukan.']);
+            return $this->response->setJSON(['error' => 'Coba ulangi kembali..']);
         }
     }
 
