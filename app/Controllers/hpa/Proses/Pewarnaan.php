@@ -175,8 +175,10 @@ class Pewarnaan extends BaseController
         $mulai_pewarnaan_hpa = $this->request->getPost('mulai_pewarnaan_hpa_date') . ' ' . $this->request->getPost('mulai_pewarnaan_hpa_time');
         $selesai_pewarnaan_hpa = $this->request->getPost('selesai_pewarnaan_hpa_date') . ' ' . $this->request->getPost('selesai_pewarnaan_hpa_time');
 
+        $id_user = $this->request->getPost('id_user_pewarnaan_hpa');
+
         $data = [
-            'id_user_pewarnaan_hpa' => $this->request->getPost('id_user_pewarnaan_hpa'),
+            'id_user_pewarnaan_hpa' => $id_user === '' ? null : $id_user,
             'status_pewarnaan_hpa'  => $this->request->getPost('status_pewarnaan_hpa'),
             'mulai_pewarnaan_hpa'   => $mulai_pewarnaan_hpa,
             'selesai_pewarnaan_hpa' => $selesai_pewarnaan_hpa,

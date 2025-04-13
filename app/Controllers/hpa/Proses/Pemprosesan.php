@@ -175,8 +175,10 @@ class Pemprosesan extends BaseController
         $mulai_pemprosesan_hpa = $this->request->getPost('mulai_pemprosesan_hpa_date') . ' ' . $this->request->getPost('mulai_pemprosesan_hpa_time');
         $selesai_pemprosesan_hpa = $this->request->getPost('selesai_pemprosesan_hpa_date') . ' ' . $this->request->getPost('selesai_pemprosesan_hpa_time');
 
+        $id_user = $this->request->getPost('id_user_pemprosesan_hpa');
+
         $data = [
-            'id_user_pemprosesan_hpa' => $this->request->getPost('id_user_pemprosesan_hpa'),
+            'id_user_pemprosesan_hpa' => $id_user === '' ? null : $id_user,
             'status_pemprosesan_hpa'  => $this->request->getPost('status_pemprosesan_hpa'),
             'mulai_pemprosesan_hpa'   => $mulai_pemprosesan_hpa,
             'selesai_pemprosesan_hpa' => $selesai_pemprosesan_hpa,

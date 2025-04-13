@@ -175,8 +175,10 @@ class Pemverifikasi extends BaseController
         $mulai_pemverifikasi_hpa = $this->request->getPost('mulai_pemverifikasi_hpa_date') . ' ' . $this->request->getPost('mulai_pemverifikasi_hpa_time');
         $selesai_pemverifikasi_hpa = $this->request->getPost('selesai_pemverifikasi_hpa_date') . ' ' . $this->request->getPost('selesai_pemverifikasi_hpa_time');
 
+        $id_user = $this->request->getPost('id_user_pemverifikasi_hpa');
+
         $data = [
-            'id_user_pemverifikasi_hpa' => $this->request->getPost('id_user_pemverifikasi_hpa'),
+            'id_user_pemverifikasi_hpa' => $id_user === '' ? null : $id_user,
             'status_pemverifikasi_hpa'  => $this->request->getPost('status_pemverifikasi_hpa'),
             'mulai_pemverifikasi_hpa'   => $mulai_pemverifikasi_hpa,
             'selesai_pemverifikasi_hpa' => $selesai_pemverifikasi_hpa,

@@ -175,8 +175,10 @@ class Pemotongan extends BaseController
         $mulai_pemotongan_hpa = $this->request->getPost('mulai_pemotongan_hpa_date') . ' ' . $this->request->getPost('mulai_pemotongan_hpa_time');
         $selesai_pemotongan_hpa = $this->request->getPost('selesai_pemotongan_hpa_date') . ' ' . $this->request->getPost('selesai_pemotongan_hpa_time');
 
+        $id_user = $this->request->getPost('id_user_pemotongan_hpa');
+
         $data = [
-            'id_user_pemotongan_hpa' => $this->request->getPost('id_user_pemotongan_hpa'),
+            'id_user_pemotongan_hpa' => $id_user === '' ? null : $id_user,
             'status_pemotongan_hpa'  => $this->request->getPost('status_pemotongan_hpa'),
             'mulai_pemotongan_hpa'   => $mulai_pemotongan_hpa,
             'selesai_pemotongan_hpa' => $selesai_pemotongan_hpa,

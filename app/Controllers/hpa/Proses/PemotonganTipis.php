@@ -175,8 +175,10 @@ class PemotonganTipis extends BaseController
         $mulai_pemotongan_tipis_hpa = $this->request->getPost('mulai_pemotongan_tipis_hpa_date') . ' ' . $this->request->getPost('mulai_pemotongan_tipis_hpa_time');
         $selesai_pemotongan_tipis_hpa = $this->request->getPost('selesai_pemotongan_tipis_hpa_date') . ' ' . $this->request->getPost('selesai_pemotongan_tipis_hpa_time');
 
+        $id_user = $this->request->getPost('id_user_pemotongan_tipis_hpa');
+
         $data = [
-            'id_user_pemotongan_tipis_hpa' => $this->request->getPost('id_user_pemotongan_tipis_hpa'),
+            'id_user_pemotongan_tipis_hpa' => $id_user === '' ? null : $id_user,
             'status_pemotongan_tipis_hpa'  => $this->request->getPost('status_pemotongan_tipis_hpa'),
             'mulai_pemotongan_tipis_hpa'   => $mulai_pemotongan_tipis_hpa,
             'selesai_pemotongan_tipis_hpa' => $selesai_pemotongan_tipis_hpa,

@@ -197,8 +197,10 @@ class Pembacaan extends BaseController
         $mulai_pembacaan_hpa = $this->request->getPost('mulai_pembacaan_hpa_date') . ' ' . $this->request->getPost('mulai_pembacaan_hpa_time');
         $selesai_pembacaan_hpa = $this->request->getPost('selesai_pembacaan_hpa_date') . ' ' . $this->request->getPost('selesai_pembacaan_hpa_time');
 
+        $id_user = $this->request->getPost('id_user_pembacaan_hpa');
+
         $data = [
-            'id_user_pembacaan_hpa' => $this->request->getPost('id_user_pembacaan_hpa'),
+            'id_user_pembacaan_hpa' => $id_user === '' ? null : $id_user,
             'status_pembacaan_hpa'  => $this->request->getPost('status_pembacaan_hpa'),
             'mulai_pembacaan_hpa'   => $mulai_pembacaan_hpa,
             'selesai_pembacaan_hpa' => $selesai_pembacaan_hpa,

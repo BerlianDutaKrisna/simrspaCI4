@@ -178,8 +178,10 @@ class Authorized extends BaseController
         $mulai_authorized_hpa = $this->request->getPost('mulai_authorized_hpa_date') . ' ' . $this->request->getPost('mulai_authorized_hpa_time');
         $selesai_authorized_hpa = $this->request->getPost('selesai_authorized_hpa_date') . ' ' . $this->request->getPost('selesai_authorized_hpa_time');
 
+        $id_user = $this->request->getPost('id_user_authorized_hpa');
+
         $data = [
-            'id_user_authorized_hpa' => $this->request->getPost('id_user_authorized_hpa'),
+            'id_user_authorized_hpa' => $id_user === '' ? null : $id_user,
             'status_authorized_hpa'  => $this->request->getPost('status_authorized_hpa'),
             'mulai_authorized_hpa'   => $mulai_authorized_hpa,
             'selesai_authorized_hpa' => $selesai_authorized_hpa,

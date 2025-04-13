@@ -175,8 +175,10 @@ class Penulisan extends BaseController
         $mulai_penulisan_hpa = $this->request->getPost('mulai_penulisan_hpa_date') . ' ' . $this->request->getPost('mulai_penulisan_hpa_time');
         $selesai_penulisan_hpa = $this->request->getPost('selesai_penulisan_hpa_date') . ' ' . $this->request->getPost('selesai_penulisan_hpa_time');
 
+        $id_user = $this->request->getPost('id_user_penulisan_hpa');
+
         $data = [
-            'id_user_penulisan_hpa' => $this->request->getPost('id_user_penulisan_hpa'),
+            'id_user_penulisan_hpa' => $id_user === '' ? null : $id_user,
             'status_penulisan_hpa'  => $this->request->getPost('status_penulisan_hpa'),
             'mulai_penulisan_hpa'   => $mulai_penulisan_hpa,
             'selesai_penulisan_hpa' => $selesai_penulisan_hpa,

@@ -186,8 +186,10 @@ class Penanaman extends BaseController
         $mulai_penanaman_hpa = $this->request->getPost('mulai_penanaman_hpa_date') . ' ' . $this->request->getPost('mulai_penanaman_hpa_time');
         $selesai_penanaman_hpa = $this->request->getPost('selesai_penanaman_hpa_date') . ' ' . $this->request->getPost('selesai_penanaman_hpa_time');
 
+        $id_user = $this->request->getPost('id_user_penanaman_hpa');
+
         $data = [
-            'id_user_penanaman_hpa' => $this->request->getPost('id_user_penanaman_hpa'),
+            'id_user_penanaman_hpa' => $id_user === '' ? null : $id_user,
             'status_penanaman_hpa'  => $this->request->getPost('status_penanaman_hpa'),
             'mulai_penanaman_hpa'   => $mulai_penanaman_hpa,
             'selesai_penanaman_hpa' => $selesai_penanaman_hpa,

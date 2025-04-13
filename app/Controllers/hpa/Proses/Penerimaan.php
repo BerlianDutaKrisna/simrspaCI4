@@ -183,8 +183,10 @@ class Penerimaan extends BaseController
         $mulai_penerimaan_hpa = $this->request->getPost('mulai_penerimaan_hpa_date') . ' ' . $this->request->getPost('mulai_penerimaan_hpa_time');
         $selesai_penerimaan_hpa = $this->request->getPost('selesai_penerimaan_hpa_date') . ' ' . $this->request->getPost('selesai_penerimaan_hpa_time');
 
+        $id_user = $this->request->getPost('id_user_penerimaan_hpa');
+
         $data = [
-            'id_user_penerimaan_hpa' => $this->request->getPost('id_user_penerimaan_hpa'),
+            'id_user_penerimaan_hpa' => $id_user === '' ? null : $id_user,
             'status_penerimaan_hpa'  => $this->request->getPost('status_penerimaan_hpa'),
             'mulai_penerimaan_hpa'   => $mulai_penerimaan_hpa,
             'selesai_penerimaan_hpa' => $selesai_penerimaan_hpa,

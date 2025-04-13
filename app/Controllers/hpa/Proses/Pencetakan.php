@@ -165,8 +165,10 @@ class Pencetakan extends BaseController
         $mulai_pencetakan_hpa = $this->request->getPost('mulai_pencetakan_hpa_date') . ' ' . $this->request->getPost('mulai_pencetakan_hpa_time');
         $selesai_pencetakan_hpa = $this->request->getPost('selesai_pencetakan_hpa_date') . ' ' . $this->request->getPost('selesai_pencetakan_hpa_time');
 
+        $id_user = $this->request->getPost('id_user_pencetakan_hpa');
+
         $data = [
-            'id_user_pencetakan_hpa' => $this->request->getPost('id_user_pencetakan_hpa'),
+            'id_user_pencetakan_hpa' => $id_user === '' ? null : $id_user,
             'status_pencetakan_hpa'  => $this->request->getPost('status_pencetakan_hpa'),
             'mulai_pencetakan_hpa'   => $mulai_pencetakan_hpa,
             'selesai_pencetakan_hpa' => $selesai_pencetakan_hpa,
