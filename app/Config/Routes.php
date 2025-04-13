@@ -7,17 +7,17 @@ use CodeIgniter\Router\RouteCollection;
  */
 
 // Tampilan awal
-$routes->get('/', 'Auth::index'); // Menampilkan form login
+$routes->get('/', 'Auth::index');
 
 // Route untuk Auth
 $routes->group('auth', function ($routes) {
-    $routes->get('login', 'Auth::index'); // Menampilkan form login
-    $routes->post('login', 'Auth::login'); // Menangani form POST dari Auth
-    $routes->get('logout', 'Auth::logout'); // Menangani logout dan menghapus session
+    $routes->get('login', 'Auth::index');
+    $routes->post('login', 'Auth::login'); 
+    $routes->get('logout', 'Auth::logout'); 
 });
 
-$routes->get('dashboard', 'Dashboard::index'); // Rute untuk dashboard
-
+// Route untuk Dashboard
+$routes->get('dashboard', 'Dashboard::index'); 
 
 // Route untuk Users
 $routes->group('users', function ($routes) {
@@ -175,8 +175,8 @@ $routes->group('penerimaan_ihc', ['namespace' => 'App\Controllers\Ihc\Proses'], 
 
 // Route untuk Pemotongan
 $routes->group('pemotongan_hpa', ['namespace' => 'App\Controllers\Hpa\Proses'], function ($routes) {
-    $routes->get('index', 'Pemotongan::index'); // Menampilkan halaman pemotongan
-    $routes->post('proses_pemotongan', 'Pemotongan::proses_pemotongan'); // Proses pemotongan
+    $routes->get('index', 'Pemotongan::index'); 
+    $routes->post('proses_pemotongan', 'Pemotongan::proses_pemotongan'); 
     $routes->get('pemotongan_details', 'Pemotongan::pemotongan_details');
     $routes->post('delete', 'Pemotongan::delete');
     $routes->get('edit', 'Pemotongan::edit');
@@ -185,8 +185,8 @@ $routes->group('pemotongan_hpa', ['namespace' => 'App\Controllers\Hpa\Proses'], 
 
 // Route untuk Pemprosesan
 $routes->group('pemprosesan_hpa', ['namespace' => 'App\Controllers\Hpa\Proses'], function ($routes) {
-    $routes->get('index', 'Pemprosesan::index'); // Menampilkan halaman pemprosesan
-    $routes->post('proses_pemprosesan', 'Pemprosesan::proses_pemprosesan'); // Proses pemprosesan
+    $routes->get('index', 'Pemprosesan::index'); 
+    $routes->post('proses_pemprosesan', 'Pemprosesan::proses_pemprosesan'); 
     $routes->get('pemprosesan_details', 'Pemprosesan::pemprosesan_details');
     $routes->post('delete', 'Pemprosesan::delete');
     $routes->get('edit', 'Pemprosesan::edit');
@@ -195,8 +195,8 @@ $routes->group('pemprosesan_hpa', ['namespace' => 'App\Controllers\Hpa\Proses'],
 
 // Route untuk Penanaman
 $routes->group('penanaman_hpa', ['namespace' => 'App\Controllers\Hpa\Proses'], function ($routes) {
-    $routes->get('index', 'Penanaman::index'); // Menampilkan halaman penanaman
-    $routes->post('proses_penanaman', 'Penanaman::proses_penanaman'); // Proses penanaman
+    $routes->get('index', 'Penanaman::index'); 
+    $routes->post('proses_penanaman', 'Penanaman::proses_penanaman'); 
     $routes->get('penanaman_details', 'Penanaman::penanaman_details');
     $routes->post('delete', 'Penanaman::delete');
     $routes->get('edit', 'Penanaman::edit');
@@ -205,8 +205,8 @@ $routes->group('penanaman_hpa', ['namespace' => 'App\Controllers\Hpa\Proses'], f
 
 // Route untuk Pemotongan Tipis
 $routes->group('pemotongan_tipis_hpa', ['namespace' => 'App\Controllers\Hpa\Proses'], function ($routes) {
-    $routes->get('index', 'PemotonganTipis::index'); // Menampilkan halaman pemotongan tipis
-    $routes->post('proses_pemotongan_tipis', 'PemotonganTipis::proses_pemotongan_tipis'); // Proses pemotongan tipis
+    $routes->get('index', 'PemotonganTipis::index'); 
+    $routes->post('proses_pemotongan_tipis', 'PemotonganTipis::proses_pemotongan_tipis'); 
     $routes->get('pemotongan_tipis_details', 'PemotonganTipis::pemotongan_tipis_details');
     $routes->post('delete', 'PemotonganTipis::delete');
     $routes->get('edit', 'PemotonganTipis::edit');
@@ -215,8 +215,8 @@ $routes->group('pemotongan_tipis_hpa', ['namespace' => 'App\Controllers\Hpa\Pros
 
 // Route untuk Pewarnaan
 $routes->group('pewarnaan_hpa', ['namespace' => 'App\Controllers\Hpa\Proses'], function ($routes) {
-    $routes->get('index', 'Pewarnaan::index'); // Menampilkan halaman pewarnaan
-    $routes->post('proses_pewarnaan', 'Pewarnaan::proses_pewarnaan'); // Proses pewarnaan
+    $routes->get('index', 'Pewarnaan::index'); 
+    $routes->post('proses_pewarnaan', 'Pewarnaan::proses_pewarnaan'); 
     $routes->get('pewarnaan_details', 'Pewarnaan::pewarnaan_details');
     $routes->post('delete', 'Pewarnaan::delete');
     $routes->get('edit', 'Pewarnaan::edit');
@@ -225,8 +225,8 @@ $routes->group('pewarnaan_hpa', ['namespace' => 'App\Controllers\Hpa\Proses'], f
 
 // Route untuk Pembacaan hpa
 $routes->group('pembacaan_hpa', ['namespace' => 'App\Controllers\Hpa\Proses'], function ($routes) {
-    $routes->get('index', 'Pembacaan::index'); // Menampilkan halaman pembacaan
-    $routes->post('proses_pembacaan', 'Pembacaan::proses_pembacaan'); // Proses pembacaan
+    $routes->get('index', 'Pembacaan::index'); 
+    $routes->post('proses_pembacaan', 'Pembacaan::proses_pembacaan'); 
     $routes->get('pembacaan_details', 'Pembacaan::pembacaan_details');
     $routes->post('delete', 'Pembacaan::delete');
     $routes->get('edit', 'Pembacaan::edit');
@@ -235,8 +235,8 @@ $routes->group('pembacaan_hpa', ['namespace' => 'App\Controllers\Hpa\Proses'], f
 
 // Route untuk Pembacaan frs
 $routes->group('pembacaan_frs', ['namespace' => 'App\Controllers\Frs\Proses'], function ($routes) {
-    $routes->get('index', 'Pembacaan::index'); // Menampilkan halaman pembacaan
-    $routes->post('proses_pembacaan', 'Pembacaan::proses_pembacaan'); // Proses pembacaan
+    $routes->get('index', 'Pembacaan::index'); 
+    $routes->post('proses_pembacaan', 'Pembacaan::proses_pembacaan'); 
     $routes->get('pembacaan_details', 'Pembacaan::pembacaan_details');
     $routes->post('delete', 'Pembacaan::delete');
     $routes->get('edit', 'Pembacaan::edit');
@@ -245,8 +245,8 @@ $routes->group('pembacaan_frs', ['namespace' => 'App\Controllers\Frs\Proses'], f
 
 // Route untuk Pembacaan srs
 $routes->group('pembacaan_srs', ['namespace' => 'App\Controllers\Srs\Proses'], function ($routes) {
-    $routes->get('index', 'Pembacaan::index'); // Menampilkan halaman pembacaan
-    $routes->post('proses_pembacaan', 'Pembacaan::proses_pembacaan'); // Proses pembacaan
+    $routes->get('index', 'Pembacaan::index'); 
+    $routes->post('proses_pembacaan', 'Pembacaan::proses_pembacaan'); 
     $routes->get('pembacaan_details', 'Pembacaan::pembacaan_details');
     $routes->post('delete', 'Pembacaan::delete');
     $routes->get('edit', 'Pembacaan::edit');
@@ -255,8 +255,8 @@ $routes->group('pembacaan_srs', ['namespace' => 'App\Controllers\Srs\Proses'], f
 
 // Route untuk Pembacaan ihc
 $routes->group('pembacaan_ihc', ['namespace' => 'App\Controllers\Ihc\Proses'], function ($routes) {
-    $routes->get('index', 'Pembacaan::index'); // Menampilkan halaman pembacaan
-    $routes->post('proses_pembacaan', 'Pembacaan::proses_pembacaan'); // Proses pembacaan
+    $routes->get('index', 'Pembacaan::index'); 
+    $routes->post('proses_pembacaan', 'Pembacaan::proses_pembacaan'); 
     $routes->get('pembacaan_details', 'Pembacaan::pembacaan_details');
     $routes->post('delete', 'Pembacaan::delete');
     $routes->get('edit', 'Pembacaan::edit');
@@ -265,8 +265,8 @@ $routes->group('pembacaan_ihc', ['namespace' => 'App\Controllers\Ihc\Proses'], f
 
 // Route untuk Penulisan hpa
 $routes->group('penulisan_hpa', ['namespace' => 'App\Controllers\Hpa\Proses'], function ($routes) {
-    $routes->get('index', 'Penulisan::index'); // Menampilkan halaman penulisan
-    $routes->post('proses_penulisan', 'Penulisan::proses_penulisan'); // Proses penulisan
+    $routes->get('index', 'Penulisan::index'); 
+    $routes->post('proses_penulisan', 'Penulisan::proses_penulisan'); 
     $routes->get('penulisan_details', 'Penulisan::penulisan_details');
     $routes->post('delete', 'Penulisan::delete');
     $routes->get('edit', 'Penulisan::edit');
@@ -275,8 +275,8 @@ $routes->group('penulisan_hpa', ['namespace' => 'App\Controllers\Hpa\Proses'], f
 
 // Route untuk Penulisan frs
 $routes->group('penulisan_frs', ['namespace' => 'App\Controllers\Frs\Proses'], function ($routes) {
-    $routes->get('index', 'Penulisan::index'); // Menampilkan halaman penulisan
-    $routes->post('proses_penulisan', 'Penulisan::proses_penulisan'); // Proses penulisan
+    $routes->get('index', 'Penulisan::index'); 
+    $routes->post('proses_penulisan', 'Penulisan::proses_penulisan'); 
     $routes->get('penulisan_details', 'Penulisan::penulisan_details');
     $routes->post('delete', 'Penulisan::delete');
     $routes->get('edit', 'Penulisan::edit');
@@ -285,8 +285,8 @@ $routes->group('penulisan_frs', ['namespace' => 'App\Controllers\Frs\Proses'], f
 
 // Route untuk Penulisan srs
 $routes->group('penulisan_srs', ['namespace' => 'App\Controllers\Srs\Proses'], function ($routes) {
-    $routes->get('index', 'Penulisan::index'); // Menampilkan halaman penulisan
-    $routes->post('proses_penulisan', 'Penulisan::proses_penulisan'); // Proses penulisan
+    $routes->get('index', 'Penulisan::index'); 
+    $routes->post('proses_penulisan', 'Penulisan::proses_penulisan'); 
     $routes->get('penulisan_details', 'Penulisan::penulisan_details');
     $routes->post('delete', 'Penulisan::delete');
     $routes->get('edit', 'Penulisan::edit');
@@ -295,8 +295,8 @@ $routes->group('penulisan_srs', ['namespace' => 'App\Controllers\Srs\Proses'], f
 
 // Route untuk Penulisan ihc
 $routes->group('penulisan_ihc', ['namespace' => 'App\Controllers\Ihc\Proses'], function ($routes) {
-    $routes->get('index', 'Penulisan::index'); // Menampilkan halaman penulisan
-    $routes->post('proses_penulisan', 'Penulisan::proses_penulisan'); // Proses penulisan
+    $routes->get('index', 'Penulisan::index'); 
+    $routes->post('proses_penulisan', 'Penulisan::proses_penulisan'); 
     $routes->get('penulisan_details', 'Penulisan::penulisan_details');
     $routes->post('delete', 'Penulisan::delete');
     $routes->get('edit', 'Penulisan::edit');
@@ -305,8 +305,8 @@ $routes->group('penulisan_ihc', ['namespace' => 'App\Controllers\Ihc\Proses'], f
 
 // Route untuk Pemverifikasi hpa
 $routes->group('pemverifikasi_hpa', ['namespace' => 'App\Controllers\Hpa\Proses'], function ($routes) {
-    $routes->get('index', 'Pemverifikasi::index'); // Menampilkan halaman pemverifikasi
-    $routes->post('proses_pemverifikasi', 'Pemverifikasi::proses_pemverifikasi'); // Proses pemverifikasi
+    $routes->get('index', 'Pemverifikasi::index'); 
+    $routes->post('proses_pemverifikasi', 'Pemverifikasi::proses_pemverifikasi'); 
     $routes->get('pemverifikasi_details', 'Pemverifikasi::pemverifikasi_details');
     $routes->post('delete', 'Pemverifikasi::delete');
     $routes->get('edit', 'Pemverifikasi::edit');
@@ -315,8 +315,8 @@ $routes->group('pemverifikasi_hpa', ['namespace' => 'App\Controllers\Hpa\Proses'
 
 // Route untuk Pemverifikasi frs
 $routes->group('pemverifikasi_frs', ['namespace' => 'App\Controllers\Frs\Proses'], function ($routes) {
-    $routes->get('index', 'Pemverifikasi::index'); // Menampilkan halaman pemverifikasi
-    $routes->post('proses_pemverifikasi', 'Pemverifikasi::proses_pemverifikasi'); // Proses pemverifikasi
+    $routes->get('index', 'Pemverifikasi::index'); 
+    $routes->post('proses_pemverifikasi', 'Pemverifikasi::proses_pemverifikasi'); 
     $routes->get('pemverifikasi_details', 'Pemverifikasi::pemverifikasi_details');
     $routes->post('delete', 'Pemverifikasi::delete');
     $routes->get('edit', 'Pemverifikasi::edit');
@@ -325,8 +325,8 @@ $routes->group('pemverifikasi_frs', ['namespace' => 'App\Controllers\Frs\Proses'
 
 // Route untuk Pemverifikasi srs
 $routes->group('pemverifikasi_srs', ['namespace' => 'App\Controllers\Srs\Proses'], function ($routes) {
-    $routes->get('index', 'Pemverifikasi::index'); // Menampilkan halaman pemverifikasi
-    $routes->post('proses_pemverifikasi', 'Pemverifikasi::proses_pemverifikasi'); // Proses pemverifikasi
+    $routes->get('index', 'Pemverifikasi::index'); 
+    $routes->post('proses_pemverifikasi', 'Pemverifikasi::proses_pemverifikasi'); 
     $routes->get('pemverifikasi_details', 'Pemverifikasi::pemverifikasi_details');
     $routes->post('delete', 'Pemverifikasi::delete');
     $routes->get('edit', 'Pemverifikasi::edit');
@@ -335,8 +335,8 @@ $routes->group('pemverifikasi_srs', ['namespace' => 'App\Controllers\Srs\Proses'
 
 // Route untuk Pemverifikasi ihc
 $routes->group('pemverifikasi_ihc', ['namespace' => 'App\Controllers\Ihc\Proses'], function ($routes) {
-    $routes->get('index', 'Pemverifikasi::index'); // Menampilkan halaman pemverifikasi
-    $routes->post('proses_pemverifikasi', 'Pemverifikasi::proses_pemverifikasi'); // Proses pemverifikasi
+    $routes->get('index', 'Pemverifikasi::index'); 
+    $routes->post('proses_pemverifikasi', 'Pemverifikasi::proses_pemverifikasi'); 
     $routes->get('pemverifikasi_details', 'Pemverifikasi::pemverifikasi_details');
     $routes->post('delete', 'Pemverifikasi::delete');
     $routes->get('edit', 'Pemverifikasi::edit');
@@ -385,8 +385,8 @@ $routes->group('authorized_ihc', ['namespace' => 'App\Controllers\ihc\Proses'], 
 
 // Route untuk Pencetakan hpa
 $routes->group('pencetakan_hpa', ['namespace' => 'App\Controllers\Hpa\Proses'], function ($routes) {
-    $routes->get('index', 'Pencetakan::index'); // Menampilkan halaman pencetakan
-    $routes->post('proses_pencetakan', 'Pencetakan::proses_pencetakan'); // Proses pencetakan
+    $routes->get('index', 'Pencetakan::index'); 
+    $routes->post('proses_pencetakan', 'Pencetakan::proses_pencetakan'); 
     $routes->get('pencetakan_details', 'Pencetakan::pencetakan_details');
     $routes->post('delete', 'Pencetakan::delete');
     $routes->get('edit', 'Pencetakan::edit');
@@ -395,8 +395,8 @@ $routes->group('pencetakan_hpa', ['namespace' => 'App\Controllers\Hpa\Proses'], 
 
 // Route untuk Pencetakan frs
 $routes->group('pencetakan_frs', ['namespace' => 'App\Controllers\Frs\Proses'], function ($routes) {
-    $routes->get('index', 'Pencetakan::index'); // Menampilkan halaman pencetakan
-    $routes->post('proses_pencetakan', 'Pencetakan::proses_pencetakan'); // Proses pencetakan
+    $routes->get('index', 'Pencetakan::index'); 
+    $routes->post('proses_pencetakan', 'Pencetakan::proses_pencetakan'); 
     $routes->get('pencetakan_details', 'Pencetakan::pencetakan_details');
     $routes->post('delete', 'Pencetakan::delete');
     $routes->get('edit', 'Pencetakan::edit');
@@ -405,8 +405,8 @@ $routes->group('pencetakan_frs', ['namespace' => 'App\Controllers\Frs\Proses'], 
 
 // Route untuk Pencetakan srs
 $routes->group('pencetakan_srs', ['namespace' => 'App\Controllers\Srs\Proses'], function ($routes) {
-    $routes->get('index', 'Pencetakan::index'); // Menampilkan halaman pencetakan
-    $routes->post('proses_pencetakan', 'Pencetakan::proses_pencetakan'); // Proses pencetakan
+    $routes->get('index', 'Pencetakan::index'); 
+    $routes->post('proses_pencetakan', 'Pencetakan::proses_pencetakan'); 
     $routes->get('pencetakan_details', 'Pencetakan::pencetakan_details');
     $routes->post('delete', 'Pencetakan::delete');
     $routes->get('edit', 'Pencetakan::edit');
@@ -415,8 +415,8 @@ $routes->group('pencetakan_srs', ['namespace' => 'App\Controllers\Srs\Proses'], 
 
 // Route untuk Pencetakan ihc
 $routes->group('pencetakan_ihc', ['namespace' => 'App\Controllers\Ihc\Proses'], function ($routes) {
-    $routes->get('index', 'Pencetakan::index'); // Menampilkan halaman pencetakan
-    $routes->post('proses_pencetakan', 'Pencetakan::proses_pencetakan'); // Proses pencetakan
+    $routes->get('index', 'Pencetakan::index'); 
+    $routes->post('proses_pencetakan', 'Pencetakan::proses_pencetakan'); 
     $routes->get('pencetakan_details', 'Pencetakan::pencetakan_details');
     $routes->post('delete', 'Pencetakan::delete');
     $routes->get('edit', 'Pencetakan::edit');
