@@ -19,7 +19,7 @@
                 <input type="hidden" name="redirect" value="<?= $_GET['redirect'] ?? '' ?>">
 
                 <!-- Tombol Kembali  -->
-                <a href="javascript:history.back()" class="btn btn-primary mb-3">Kembali</a>
+                <a href="javascript:history.back()" class="btn btn-primary mb-3"><i class="fas fa-reply"></i> Kembali</a>
 
                 <!-- Kolom print -->
                 <div class="form-group row">
@@ -70,5 +70,4 @@
 
 <?= $this->include('templates/notifikasi') ?>
 <?= $this->include('templates/hpa/footer_cetak'); ?>
-<?= $this->include('templates/proses/cetak_proses'); ?>
 <?= $this->include('templates/hpa/cetak_print'); ?>

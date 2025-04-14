@@ -3,7 +3,10 @@
 namespace App\Controllers\Ihc;
 
 use App\Controllers\BaseController;
-use App\Models\Ihc\ihcModel;
+use App\Models\Hpa\HpaModel;
+use App\Models\Frs\FrsModel;
+use App\Models\Srs\SrsModel;
+use App\Models\Ihc\IhcModel;
 use App\Models\UsersModel;
 use App\Models\PatientModel;
 use App\Models\Ihc\Proses\Penerimaan_ihc;
@@ -17,6 +20,9 @@ use Exception;
 
 class ihcController extends BaseController
 {
+    protected $hpaModel;
+    protected $frsModel;
+    protected $srsModel;
     protected $ihcModel;
     protected $usersModel;
     protected $patientModel;
@@ -32,6 +38,9 @@ class ihcController extends BaseController
 
     public function __construct()
     {
+        $this->hpaModel = new hpaModel();
+        $this->frsModel = new frsModel();
+        $this->srsModel = new srsModel();
         $this->ihcModel = new ihcModel();
         $this->usersModel = new UsersModel();
         $this->patientModel = new PatientModel();
@@ -77,32 +86,38 @@ class ihcController extends BaseController
         $lastihc = $this->ihcModel->getLastKodeihc();
         $currentYear = date('y');
         $nextNumber = 1;
+
         if ($lastihc) {
             $lastKode = $lastihc['kode_ihc'];
             $lastParts = explode('/', $lastKode);
             $lastYear = $lastParts[1];
+
             if ($lastYear == $currentYear) {
                 $lastNumber = (int) explode('.', $lastParts[0])[1];
                 $nextNumber = $lastNumber + 1;
-            } else {
-                $nextNumber = 1;
             }
-        } else {
-            $nextNumber = 1;
         }
-        $kodeihc = 'IHC.' . str_pad($nextNumber, 2, '0', STR_PAD_LEFT) . '/' . $currentYear;
+        $kodeIhc = sprintf('IHC.%02d/%s', $nextNumber, $currentYear);
+
+        // Proses norm_pasien sebelum data dibuat
+        $normPasien = $this->request->getGet('norm_pasien');
+        $patient = $normPasien ? $this->patientModel->where('norm_pasien', $normPasien)->first() : null;
+        $id_pasien = $patient['id_pasien'];
+        $riwayat_hpa = $this->hpaModel->riwayatPemeriksaanhpa($id_pasien);
+        $riwayat_frs = $this->frsModel->riwayatPemeriksaanfrs($id_pasien);
+        $riwayat_srs = $this->srsModel->riwayatPemeriksaansrs($id_pasien);
+        $riwayat_ihc = $this->ihcModel->riwayatPemeriksaanihc($id_pasien);
         $data = [
-            'id_user' => session()->get('id_user'),
+            'id_user'   => session()->get('id_user'),
             'nama_user' => session()->get('nama_user'),
-            'kode_ihc' => $kodeihc,
-            'patient' => null,
+            'kode_ihc'  => $kodeIhc,
+            'patient'   => $patient,
+            'riwayat_hpa' => $riwayat_hpa,
+            'riwayat_frs' => $riwayat_frs,
+            'riwayat_srs' => $riwayat_srs,
+            'riwayat_ihc' => $riwayat_ihc,
         ];
-        $norm_pasien = $this->request->getGet('norm_pasien');
-        if ($norm_pasien) {
-            $patientModel = new PatientModel();
-            $patient = $patientModel->where('norm_pasien', $norm_pasien)->first();
-            $data['patient'] = $patient ?: null;
-        }
+        
         return view('ihc/Register', $data);
     }
 
@@ -144,6 +159,9 @@ class ihcController extends BaseController
                 'kode_block_ihc' => $data['kode_block_ihc'],
                 'tindakan_spesimen' => $tindakan_spesimen,
                 'diagnosa_klinik' => $data['diagnosa_klinik'],
+                'no_tlp_ihc' => $data['no_tlp_ihc'],
+                'no_bpjs_ihc' => $data['no_bpjs_ihc'],
+                'no_ktp_ihc' => $data['no_ktp_ihc'],
                 'status_ihc' => 'Penerimaan',
             ];
             // Simpan data ihc
@@ -199,6 +217,11 @@ class ihcController extends BaseController
             return redirect()->back()->with('message', ['error' => 'ihc tidak ditemukan.']);
         }
         $id_pembacaan_ihc = $ihc['id_pembacaan_ihc'];
+        $id_pasien = $ihc['id_pasien'];
+        $riwayat_hpa = $this->hpaModel->riwayatPemeriksaanhpa($id_pasien);
+        $riwayat_frs = $this->frsModel->riwayatPemeriksaanfrs($id_pasien);
+        $riwayat_srs = $this->srsModel->riwayatPemeriksaansrs($id_pasien);
+        $riwayat_ihc = $this->ihcModel->riwayatPemeriksaanihc($id_pasien);
         // Ambil data pengguna dengan status "Dokter"
         $users = $this->usersModel->where('status_user', 'Dokter')->findAll();
         // Ambil data pemotongan berdasarkan ID
@@ -225,6 +248,10 @@ class ihcController extends BaseController
             'id_user'    => session()->get('id_user'),
             'nama_user'  => session()->get('nama_user'),
             'ihc'        => $ihc,
+            'riwayat_hpa'        => $riwayat_hpa,
+            'riwayat_frs'        => $riwayat_frs,
+            'riwayat_srs'        => $riwayat_srs,
+            'riwayat_ihc'        => $riwayat_ihc,
             'pembacaan_ihc' => $pembacaan_ihc,
             'users'      => $users,
         ];
@@ -237,6 +264,11 @@ class ihcController extends BaseController
     {
         // Ambil data ihc berdasarkan ID
         $ihc = $this->ihcModel->getihcWithRelationsProses($id_ihc);
+        $id_pasien = $ihc['id_pasien'];
+        $riwayat_hpa = $this->hpaModel->riwayatPemeriksaanhpa($id_pasien);
+        $riwayat_frs = $this->frsModel->riwayatPemeriksaanfrs($id_pasien);
+        $riwayat_srs = $this->srsModel->riwayatPemeriksaansrs($id_pasien);
+        $riwayat_ihc = $this->ihcModel->riwayatPemeriksaanihc($id_pasien);
         if (!$ihc) {
             return redirect()->back()->with('message', ['error' => 'ihc tidak ditemukan.']);
         }
@@ -249,6 +281,10 @@ class ihcController extends BaseController
         // Persiapkan data yang akan dikirim ke view
         $data = [
             'ihc'             => $ihc,
+            'riwayat_hpa'        => $riwayat_hpa,
+            'riwayat_frs'        => $riwayat_frs,
+            'riwayat_srs'        => $riwayat_srs,
+            'riwayat_ihc'        => $riwayat_ihc,
             'pembacaan_ihc'   => $pembacaan_ihc,
             'users'           => $users,
             'id_user'         => session()->get('id_user'),
@@ -302,11 +338,22 @@ class ihcController extends BaseController
     {
         // Ambil data ihc berdasarkan ID
         $ihc = $this->ihcModel->getihcWithRelationsProses($id_ihc);
-        // Persiapkan data yang akan dikirim ke view
+        // Ambil data pembacaan IHC jika tersedia
+        if (!empty($ihc['id_pembacaan_ihc'])) {
+            $pembacaan_ihc = $this->pembacaan_ihc->find($ihc['id_pembacaan_ihc']) ?? [];
+            // Ambil nama dokter dari pembacaan jika tersedia
+            if (!empty($pembacaan_ihc['id_user_dokter_pembacaan_ihc'])) {
+                $dokter = $this->usersModel->find($pembacaan_ihc['id_user_dokter_pembacaan_ihc']);
+                $pembacaan_ihc['dokter_nama'] = $dokter ? $dokter['nama_user'] : null;
+            } else {
+                $pembacaan_ihc['dokter_nama'] = null;
+            }
+        }
         $data = [
             'id_user' => session()->get('id_user'),
             'nama_user' => session()->get('nama_user'),
             'ihc' => $ihc,
+            'pembacaan_ihc' => $pembacaan_ihc,
         ];
         
         return view('ihc/edit_print', $data);
@@ -440,8 +487,9 @@ class ihcController extends BaseController
                             </div>
                             <br>
                             <div>
-                                <font size="5" face="verdana"><b>MIKROSKOPIK :</b></font>
-                                <font size="5" face="verdana">' . nl2br(htmlspecialchars(str_replace(['<p>', '</p>', '<br>'], '', $mikroskopis_ihc))) . '</font>
+                                <font size="5" face="verdana"><b>MIKROSKOPIK :</b>
+                                ' . nl2br(htmlspecialchars(str_replace(['<p>', '</p>', '<br>'], '', $mikroskopis_ihc))) . '
+                                </font>
                             </div>
                             <br>
                             <div>
@@ -518,6 +566,7 @@ class ihcController extends BaseController
             $id_authorized_ihc = $this->request->getPost('id_authorized_ihc');
             $this->authorized_ihc->update($id_authorized_ihc, [
                 'id_user_authorized_ihc' => $id_user,
+                'id_user_dokter_authorized_ihc' => $id_user,
                 'status_authorized_ihc' => 'Selesai Authorized',
                 'selesai_authorized_ihc' => date('Y-m-d H:i:s'),
             ]);
@@ -671,18 +720,39 @@ class ihcController extends BaseController
         }
     }
 
-    public function update_status()
+    public function laporan()
     {
-        $id_ihc = $this->request->getPost('id_ihc');
-        $status_ihc = $this->request->getPost('status_ihc');
-        if (!$id_ihc) {
-            return redirect()->back()->with('error', 'ID ihc tidak ditemukan.');
-        }
-        $data = [
-            'status_ihc' => $status_ihc,
-        ];
-        $this->ihcModel->update($id_ihc, $data);
+        $ihcData = $this->ihcModel->getihcWithRelations() ?? [];
 
-        return redirect()->to('ihc/index')->with('success', 'Status ihc berhasil disimpan.');
+        $data = [
+            'id_user'    => session()->get('id_user'),
+            'nama_user'  => session()->get('nama_user'),
+            'ihcData' => $ihcData,
+        ];
+        
+        return view('ihc/laporan', $data);
+    }
+
+    public function filter()
+    {
+        $filterField = $this->request->getGet('filterInput');
+        $filterValue = $this->request->getGet('filterValue');
+        $startDate   = $this->request->getGet('filterDate');
+        $endDate     = $this->request->getGet('filterDate2');
+
+        $filteredData = $this->ihcModel->filterihcWithRelations(
+            $filterField ?: null,
+            $filterValue ?: null,
+            $startDate,
+            $endDate
+        );
+
+        $data = [
+            'id_user'    => session()->get('id_user'),
+            'nama_user'  => session()->get('nama_user'),
+            'ihcData'       => $filteredData,
+        ];
+
+        return view('ihc/laporan', $data);
     }
 }

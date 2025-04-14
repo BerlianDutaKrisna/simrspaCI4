@@ -76,6 +76,7 @@ class Authorized extends BaseController
                 case 'mulai':
                     $this->authorized_hpa->update($id_authorized_hpa, [
                         'id_user_authorized_hpa' => $id_user,
+                        'id_user_dokter_authorized_hpa' => $id_user,
                         'status_authorized_hpa' => 'Proses Authorized',
                         'mulai_authorized_hpa' => date('Y-m-d H:i:s'),
                     ]);
@@ -83,6 +84,7 @@ class Authorized extends BaseController
                 case 'selesai':
                     $this->authorized_hpa->update($id_authorized_hpa, [
                         'id_user_authorized_hpa' => $id_user,
+                        'id_user_dokter_authorized_hpa' => $id_user,
                         'status_authorized_hpa' => 'Selesai Authorized',
                         'selesai_authorized_hpa' => date('Y-m-d H:i:s'),
                     ]);
@@ -90,6 +92,7 @@ class Authorized extends BaseController
                 case 'reset':
                     $this->authorized_hpa->update($id_authorized_hpa, [
                         'id_user_authorized_hpa' => null,
+                        'id_user_dokter_authorized_hpa' => null,
                         'status_authorized_hpa' => 'Belum Authorized',
                         'mulai_authorized_hpa' => null,
                         'selesai_authorized_hpa' => null,

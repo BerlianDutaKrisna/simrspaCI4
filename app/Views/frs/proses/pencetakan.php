@@ -8,7 +8,7 @@
     </div>
     <div class="card-body">
         <h1>Daftar Pencetakan Fine Needle Aspiration Biopsy</h1>
-        <a href="<?= base_url('/dashboard') ?>" class="btn btn-primary mb-3">Kembali</a>
+        <a href="<?= base_url('/dashboard') ?>" class="btn btn-primary mb-3"><i class="fas fa-reply"></i> Kembali</a>
         <?= $this->include('templates/proses/button_pencetakan'); ?>
 
         <!-- Form -->
@@ -24,7 +24,7 @@
                             <th>No</th>
                             <th>Aksi</th>
                             <th>Detail</th>
-                            <th>Kode Frs</th>
+                            <th>Kode FRS</th>
                             <th>Nama Pasien</th>
                             <th>Status pencetakan</th>
                             <th>Admin</th>
@@ -59,7 +59,7 @@
                                         </td>
                                     <?php elseif (in_array($row['status_pencetakan_frs'], ["Selesai Pencetakan"])): ?>
                                         <td>
-                                        <a href="<?= base_url('frs/edit_print/' .
+                                            <a href="<?= base_url('frs/edit_print/' .
                                                             esc($row['id_frs']) .
                                                             '?redirect=index_pencetakan_frs') ?>" class="btn btn-success btn-sm">
                                                 <i class="fas fa-print"></i> Cetak Hasil

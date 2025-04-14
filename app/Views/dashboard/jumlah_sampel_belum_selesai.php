@@ -12,6 +12,45 @@
     <!-- Deskripsi Halaman -->
     <p class="mb-3 text-gray-500">A goal is a dream with a deadline - Napoleon Hill</p>
 
+    <div class="row">
+        <!-- Histopatologi RESUME -->
+        <div class="col-6 col-md-6 mb-4">
+            <a href="<?= base_url('exam/index') ?>" class="stretched-link" style="text-decoration: none;" disabled>
+                <div class="card border-left-secondary shadow h-100 py-2">
+                    <div class="card-body">
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
+                                <div class="text-s font-weight-bold text-secondary text-uppercase mb-1">
+                                    Buku Registrasi Laboratorrium Patologi Anatomi
+                                </div>
+                            </div>
+                            <div class="col-auto">
+                                <i class="fas fa-book fa-4x text-gray-500"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </div>
+        <div class="col-6 col-md-6 mb-4">
+            <a href="#" class="stretched-link" style="text-decoration: none;" disabled>
+                <div class="card border-left-secondary shadow h-100 py-2">
+                    <div class="card-body">
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
+                                <div class="text-s font-weight-bold text-secondary text-uppercase mb-1">
+                                    Buku Peminjaman Blok dan Slides
+                                </div>
+                            </div>
+                            <div class="col-auto">
+                                <i class="fab fa-hive fa-4x text-gray-500"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </div>
+    </div>
     <!-- Content Row -->
     <div class="row">
         <!-- Histopatologi RESUME -->

@@ -56,6 +56,7 @@
 
 
 <!-- Page level custom scripts -->
+<script src="<?= base_url('assets/chart/Chart.min.js') ?>"></script>
 <script src="<?= base_url('assets/analisisdata/chart-pie-demo.js') ?>"></script>
 <!-- Table Search plugins -->
 <script src="<?= base_url('assets/datatables/js/jquery.dataTables.min.js') ?>"></script>

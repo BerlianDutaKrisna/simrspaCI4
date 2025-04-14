@@ -7,7 +7,7 @@
     </div>
     <div class="card-body">
         <h1>Daftar Penerimaan Imunohistokimia</h1>
-        <a href="<?= base_url('/dashboard') ?>" class="btn btn-primary mb-3">Kembali</a>
+        <a href="<?= base_url('/dashboard') ?>" class="btn btn-primary mb-3"><i class="fas fa-reply"></i> Kembali</a>
         <?= $this->include('templates/proses/button_penerimaan'); ?>
         <!-- Form -->
         <form id="mainForm" method="POST" action="<?= base_url('penerimaan_ihc/proses_penerimaan') ?>">
@@ -21,7 +21,7 @@
                             <th>No</th>
                             <th>Aksi</th>
                             <th>Kelengkapan Form</th>
-                            <th>Kode Ihc</th>
+                            <th>Kode IHC</th>
                             <th>Nama Pasien</th>
                             <th>Analis</th>
                             <th>Mulai Penerimaan</th>
@@ -75,6 +75,16 @@
                                                     id="indikator_3_<?= esc($row['id_mutu_ihc']); ?>"
                                                     class="form-check-input">
                                                 <label class="form-check-label" for="indikator_3_<?= esc($row['id_mutu_ihc']); ?>">
+                                                    No Telfon Pasien
+                                                </label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input type="checkbox"
+                                                    name="indikator_4"
+                                                    value="10"
+                                                    id="indikator_4_<?= esc($row['id_mutu_ihc']); ?>"
+                                                    class="form-check-input">
+                                                <label class="form-check-label" for="indikator_4_<?= esc($row['id_mutu_ihc']); ?>">
                                                     Hasil Lab Sebelumnya
                                                 </label>
                                             </div>

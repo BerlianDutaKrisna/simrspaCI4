@@ -19,12 +19,12 @@ class Users extends BaseController
     public function index_users()
     {
         // Ambil semua data users dari tabel 'users'
-        $data['users'] = $this->UsersModel->findAll(); 
+        $data['users'] = $this->UsersModel->findAll();
 
         // Ambil id_user dan nama_user dari session yang sedang aktif
         $data['id_user'] = session()->get('id_user');
         $data['nama_user'] = session()->get('nama_user');
-        
+
         // Kirim data ke view untuk ditampilkan
         return view('users/index_users', $data);
     }
@@ -133,34 +133,34 @@ class Users extends BaseController
     // Menampilkan form edit pengguna
     public function edit_users($id_users)
     {
-    $UsersModel = new UsersModel();
-    
-    // Ambil id_user dan nama_user dari session yang sedang aktif
-    $data['id_user'] = session()->get('id_user');
-    $data['nama_user'] = session()->get('nama_user');
-    
-    // Ambil data user berdasarkan ID
-    $user = $UsersModel->find($id_users);
+        $UsersModel = new UsersModel();
 
-    // Jika user ditemukan, tampilkan form edit
-    if ($user) {
-        // Menggabungkan data user dengan session data
-        $data['user'] = $user;
-        
-        // Kirimkan data ke view
-        return view('users/edit_users', $data);
-    } else {
-        // Jika tidak ditemukan, tampilkan pesan error
-        return redirect()->to('/users/index_users')->with('message', [
-            'error' => 'User tidak ditemukan.'
-        ]);
-    }
+        // Ambil id_user dan nama_user dari session yang sedang aktif
+        $data['id_user'] = session()->get('id_user');
+        $data['nama_user'] = session()->get('nama_user');
+
+        // Ambil data user berdasarkan ID
+        $user = $UsersModel->find($id_users);
+
+        // Jika user ditemukan, tampilkan form edit
+        if ($user) {
+            // Menggabungkan data user dengan session data
+            $data['user'] = $user;
+
+            // Kirimkan data ke view
+            return view('users/edit_users', $data);
+        } else {
+            // Jika tidak ditemukan, tampilkan pesan error
+            return redirect()->to('/users/index_users')->with('message', [
+                'error' => 'User tidak ditemukan.'
+            ]);
+        }
     }
     // Menangani update data pengguna
     public function update($id_user)
     {
         $UsersModel = new UsersModel();
-        
+
         // Validasi input
         $validation = \Config\Services::validation();
         $validation->setRules([
@@ -193,5 +193,27 @@ class Users extends BaseController
         return redirect()->to('/users/index_users')->with('message', [
             'success' => 'Data pengguna berhasil diperbarui.'
         ]);
+    }
+
+    public function laporan()
+    {
+        $bulan = $this->request->getGet('bulan');
+        $tahun = $this->request->getGet('tahun');
+
+        $bulan = is_numeric($bulan) ? (int)$bulan : null;
+        $tahun = is_numeric($tahun) ? (int)$tahun : null;
+
+        $usersData = $this->UsersModel->getTotalPekerjaanPerUser($bulan, $tahun);
+
+        $data = [
+            'id_user'    => session()->get('id_user'),
+            'nama_user'  => session()->get('nama_user'),
+            'bulan'      => $bulan,
+            'tahun'      => $tahun,
+            'analis'     => array_filter($usersData, fn($row) => strtolower($row['status_user']) === 'analis'),
+            'dokter'     => array_filter($usersData, fn($row) => strtolower($row['status_user']) === 'dokter'),
+        ];
+
+        return view('users/laporan', $data);
     }
 }

@@ -8,7 +8,7 @@
         </div>
         <div class="card-body">
             <h1 class="h3 mb-4">Form Penulisan Sitologi</h1>
-            <a href="<?= base_url('penulisan_srs/index') ?>" class="btn btn-primary mb-3">Kembali</a>
+            <a href="<?= base_url('penulisan_srs/index') ?>" class="btn btn-primary mb-3"><i class="fas fa-reply"></i> Kembali</a>
 
             <!-- Form -->
             <form id="form-srs" method="POST">
@@ -21,7 +21,7 @@
 
                 <!-- Kolom Kode srs dan Diagnosa -->
                 <div class="form-group row">
-                    <label class="col-sm-2 col-form-label">Kode srs</label>
+                    <label class="col-sm-2 col-form-label">Kode SRS</label>
                     <div class="col-sm-4">
                         <input type="text" name="kode_srs" value="<?= $srs['kode_srs'] ?? '' ?>" class="form-control">
                     </div>
@@ -104,7 +104,7 @@
                             </textarea>
                         </div>
                         <div class="form-group">
-                            <label class="col-sm-2 col-form-label">Hasil srs</label>
+                            <label class="col-sm-2 col-form-label">Hasil Kesimpulan</label>
                         </div>
                         <div class="col-sm-10">
                             <textarea class="form-control summernote" name="hasil_srs" id="hasil_srs">

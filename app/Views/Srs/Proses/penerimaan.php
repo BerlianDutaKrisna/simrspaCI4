@@ -7,7 +7,7 @@
     </div>
     <div class="card-body">
         <h1>Daftar Penerimaan SRS</h1>
-        <a href="<?= base_url('/dashboard') ?>" class="btn btn-primary mb-3">Kembali</a>
+        <a href="<?= base_url('/dashboard') ?>" class="btn btn-primary mb-3"><i class="fas fa-reply"></i> Kembali</a>
         <?= $this->include('templates/proses/button_penerimaan'); ?>
         <!-- Form -->
         <form id="mainForm" method="POST" action="<?= base_url('penerimaan_srs/proses_penerimaan') ?>">
@@ -21,7 +21,7 @@
                             <th>No</th>
                             <th>Aksi</th>
                             <th>Detail</th>
-                            <th>Kode srs</th>
+                            <th>Kode SRS</th>
                             <th>Nama Pasien</th>
                             <th>Analis</th>
                             <th>Mulai Penerimaan</th>

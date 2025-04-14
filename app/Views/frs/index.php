@@ -11,7 +11,7 @@
             <h1>Daftar Pemeriksaan Fine Needle Aspiration Biopsy</h1>
 
             <!-- Tombol Kembali ke Dashboard -->
-            <a href="<?= base_url('/dashboard') ?>" class="btn btn-primary mb-3">Kembali</a>
+            <a href="<?= base_url('/dashboard') ?>" class="btn btn-primary mb-3"><i class="fas fa-reply"></i> Kembali</a>
 
             <!-- Tabel Data Pemeriksaan -->
             <div class="table-responsive">

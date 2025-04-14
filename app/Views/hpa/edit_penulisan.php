@@ -8,7 +8,7 @@
         </div>
         <div class="card-body">
             <h1 class="h3 mb-4">Form Penulisan Histopatologi</h1>
-            <a href="<?= base_url('penulisan_hpa/index') ?>" class="btn btn-primary mb-3">Kembali</a>
+            <a href="<?= base_url('penulisan_hpa/index') ?>" class="btn btn-primary mb-3"><i class="fas fa-reply"></i> Kembali</a>
 
             <!-- Form -->
             <form id="form-hpa" method="POST">
@@ -124,7 +124,7 @@
                             </textarea>
                         </div>
                         <div class="form-group">
-                            <label class="col-sm-2 col-form-label">Hasil Hpa</label>
+                            <label class="col-sm-2 col-form-label">Hasil Kesimpulan</label>
                         </div>
                         <div class="col-sm-10">
                             <textarea class="form-control summernote" name="hasil_hpa" id="hasil_hpa">

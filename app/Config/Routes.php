@@ -21,23 +21,33 @@ $routes->get('dashboard', 'Dashboard::index'); // Rute untuk dashboard
 
 // Route untuk Users
 $routes->group('users', function ($routes) {
-    $routes->get('index_users', 'Users::index_users'); // Menampilkan halaman index users
-    $routes->get('register_users', 'Users::register_users'); // Menampilkan halaman form register users
-    $routes->post('insert', 'Users::insert'); // Menangani form POST dari register user
-    $routes->get('delete/(:segment)', 'Users::delete/$1'); // Menghapus user
-    $routes->get('edit_user/(:segment)', 'Users::edit_users/$1'); // Rute untuk menampilkan form edit
-    $routes->post('update/(:segment)', 'Users::update/$1'); // Rute untuk menangani update data
+    $routes->get('index_users', 'Users::index_users');
+    $routes->get('register_users', 'Users::register_users'); 
+    $routes->post('insert', 'Users::insert'); 
+    $routes->get('delete/(:segment)', 'Users::delete/$1'); 
+    $routes->get('edit_user/(:segment)', 'Users::edit_users/$1');
+    $routes->post('update/(:segment)', 'Users::update/$1');
+    $routes->get('laporan', 'Users::laporan');
+    $routes->get('filter', 'Users::filter');
 });
 
 // Route untuk Patient
 $routes->group('patient', function ($routes) {
-    $routes->get('index_patient', 'Patient::index_patient'); // Menampilkan halaman index patient
-    $routes->get('register_patient', 'Patient::register_patient'); // Menampilkan halaman form register patient
-    $routes->post('insert', 'Patient::insert'); // Menangani form POST dari register patient
-    $routes->get('delete/(:segment)', 'Patient::delete/$1'); // Menghapus patient
-    $routes->get('edit_patient/(:segment)', 'Patient::edit_patient/$1'); // Rute untuk menampilkan form edit
-    $routes->post('update/(:segment)', 'Patient::update/$1'); // Rute untuk menangani update data
-    $routes->post('modal_search', 'Patient::modal_search'); // Pencarian dengan NoRM
+    $routes->get('index_patient', 'Patient::index_patient'); 
+    $routes->get('register_patient', 'Patient::register_patient'); 
+    $routes->post('insert', 'Patient::insert'); 
+    $routes->get('delete/(:segment)', 'Patient::delete/$1');
+    $routes->get('edit_patient/(:segment)', 'Patient::edit_patient/$1'); 
+    $routes->post('update/(:segment)', 'Patient::update/$1');
+    $routes->post('modal_search', 'Patient::modal_search');
+    $routes->get('laporan', 'Patient::laporan');
+    $routes->get('filter', 'Patient::filter');
+});
+
+// Route untuk exam
+$routes->group('exam', ['namespace' => 'App\Controllers\Exam'], function ($routes) {
+    $routes->get('index', 'ExamController::index');
+    $routes->get('search', 'ExamController::search');
 });
 
 // Route untuk hpa
@@ -58,6 +68,8 @@ $routes->group('hpa', ['namespace' => 'App\Controllers\Hpa'], function ($routes)
     $routes->post('update_status', 'HpaController::update_status');
     $routes->post('uploadFotoMakroskopis/(:segment)', 'HpaController::uploadFotoMakroskopis/$1');
     $routes->post('uploadFotoMikroskopis/(:segment)', 'HpaController::uploadFotoMikroskopis/$1');
+    $routes->get('laporan', 'HpaController::laporan');
+    $routes->get('filter', 'HpaController::filter');
 });
 
 // Route untuk frs
@@ -68,6 +80,7 @@ $routes->group('frs', ['namespace' => 'App\Controllers\Frs'], function ($routes)
     $routes->post('insert', 'FrsController::insert');
     $routes->post('delete', 'FrsController::delete');
     $routes->get('edit/(:segment)', 'FrsController::edit/$1');
+    $routes->get('edit_makroskopis/(:segment)', 'FrsController::edit_makroskopis/$1');
     $routes->get('edit_mikroskopis/(:segment)', 'FrsController::edit_mikroskopis/$1');
     $routes->get('edit_penulisan/(:segment)', 'FrsController::edit_penulisan/$1');
     $routes->get('edit_print/(:segment)', 'FrsController::edit_print/$1');
@@ -77,6 +90,8 @@ $routes->group('frs', ['namespace' => 'App\Controllers\Frs'], function ($routes)
     $routes->post('update_status', 'FrsController::update_status');
     $routes->post('uploadFotoMakroskopis/(:segment)', 'FrsController::uploadFotoMakroskopis/$1');
     $routes->post('uploadFotoMikroskopis/(:segment)', 'FrsController::uploadFotoMikroskopis/$1');
+    $routes->get('laporan', 'FrsController::laporan');
+    $routes->get('filter', 'FrsController::filter');
 });
 
 // Route untuk srs
@@ -97,6 +112,8 @@ $routes->group('srs', ['namespace' => 'App\Controllers\Srs'], function ($routes)
     $routes->post('update_status', 'SrsController::update_status');
     $routes->post('uploadFotoMakroskopis/(:segment)', 'SrsController::uploadFotoMakroskopis/$1');
     $routes->post('uploadFotoMikroskopis/(:segment)', 'SrsController::uploadFotoMikroskopis/$1');
+    $routes->get('laporan', 'SrsController::laporan');
+    $routes->get('filter', 'SrsController::filter');
 });
 
 // Route untuk ihc
@@ -112,10 +129,12 @@ $routes->group('ihc', ['namespace' => 'App\Controllers\Ihc'], function ($routes)
     $routes->get('edit_print/(:segment)', 'IhcController::edit_print/$1');
     $routes->post('update/(:segment)', 'IhcController::update/$1');
     $routes->post('update_print/(:segment)', 'IhcController::update_print/$1');
-    $routes->post('update_buku_penerima', 'ihcController::update_buku_penerima');
-    $routes->post('update_status', 'ihcController::update_status');
-    $routes->post('uploadFotoMakroskopis/(:segment)', 'ihcController::uploadFotoMakroskopis/$1');
-    $routes->post('uploadFotoMikroskopis/(:segment)', 'ihcController::uploadFotoMikroskopis/$1');
+    $routes->post('update_buku_penerima', 'IhcController::update_buku_penerima');
+    $routes->post('update_status', 'IhcController::update_status');
+    $routes->post('uploadFotoMakroskopis/(:segment)', 'IhcController::uploadFotoMakroskopis/$1');
+    $routes->post('uploadFotoMikroskopis/(:segment)', 'IhcController::uploadFotoMikroskopis/$1');
+    $routes->get('laporan', 'IhcController::laporan');
+    $routes->get('filter', 'IhcController::filter');
 });
 
 // Route untuk Penerimaan hpa

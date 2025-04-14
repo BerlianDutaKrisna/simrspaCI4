@@ -8,7 +8,7 @@
         </div>
         <div class="card-body">
             <h1>Edit Data Mikroskopis Histopatologi</h1>
-            <a href="<?= base_url('pembacaan_hpa/index') ?>" class="btn btn-primary mb-3">Kembali</a>
+            <a href="<?= base_url('pembacaan_hpa/index') ?>" class="btn btn-primary mb-3"><i class="fas fa-reply"></i> Kembali</a>
 
             <!-- Form -->
             <form id="form-hpa" method="POST" enctype="multipart/form-data">
@@ -86,6 +86,102 @@
                     </div>
                 </div>
 
+                <button class="btn btn-outline-info mb-3" type="button" data-toggle="collapse" data-target="#riwayatCollapse" aria-expanded="false" aria-controls="riwayatCollapse">
+                    <i class="fas fa-book-medical"></i> Riwayat Pemeriksaan
+                </button>
+
+                <div class="collapse" id="riwayatCollapse">
+                    <div class="form-group row">
+                        <!-- Riwayat Pemeriksaan Histopatologi (HPA) -->
+                        <div class="col-md-3">
+                            <label class="col-form-label">Riwayat Pemeriksaan <b>Histopatologi</b></label>
+                            <?php if (!empty($riwayat_hpa)) : ?>
+                                <?php foreach ($riwayat_hpa as $row) : ?>
+                                    <div class="border p-2 mb-2">
+                                        <strong>Tanggal Permintaan:</strong> <?= isset($row['tanggal_permintaan']) ? date('d-m-Y', strtotime($row['tanggal_permintaan'])) : '-' ?><br>
+                                        <strong>Kode HPA:</strong> <?= esc($row['kode_hpa'] ?? '-') ?><br>
+                                        <strong>Lokasi Spesimen:</strong> <?= esc($row['lokasi_spesimen'] ?? '-') ?><br>
+                                        <strong>Hasil HPA:</strong> <?= esc(strip_tags($row['hasil_hpa'])) ?? '-' ?><br>
+                                        <strong>Dokter Pembaca:</strong> <?= esc($row['dokter_nama'] ?? 'Belum Dibaca') ?><br>
+                                        <button type="button" class="btn btn-info btn-sm"
+                                            onclick="tampilkanModal('<?= nl2br(esc($row['print_hpa'] ?? 'Tidak ada hasil', 'js')) ?>')">
+                                            Lihat Detail
+                                        </button>
+                                    </div>
+                                <?php endforeach; ?>
+                            <?php else : ?>
+                                <p>Tidak ada riwayat pemeriksaan HPA.</p>
+                            <?php endif; ?>
+                        </div>
+
+                        <!-- Riwayat Pemeriksaan FRS -->
+                        <div class="col-md-3">
+                            <label class="col-form-label">Riwayat Pemeriksaan <b>Fine Needle Aspiration Biopsy</b></label>
+                            <?php if (!empty($riwayat_frs)) : ?>
+                                <?php foreach ($riwayat_frs as $row) : ?>
+                                    <div class="border p-2 mb-2">
+                                        <strong>Tanggal Permintaan:</strong> <?= isset($row['tanggal_permintaan']) ? date('d-m-Y', strtotime($row['tanggal_permintaan'])) : '-' ?><br>
+                                        <strong>Kode FRS:</strong> <?= esc($row['kode_frs'] ?? '-') ?><br>
+                                        <strong>Lokasi Spesimen:</strong> <?= esc($row['lokasi_spesimen'] ?? '-') ?><br>
+                                        <strong>Hasil FRS:</strong> <?= esc(strip_tags($row['hasil_frs'])) ?? '-' ?><br>
+                                        <strong>Dokter Pembaca:</strong> <?= esc($row['dokter_nama'] ?? 'Belum Dibaca') ?><br>
+                                        <button type="button" class="btn btn-info btn-sm"
+                                            onclick="tampilkanModal('<?= nl2br(esc($row['print_frs'] ?? 'Tidak ada hasil', 'js')) ?>')">
+                                            Lihat Detail
+                                        </button>
+                                    </div>
+                                <?php endforeach; ?>
+                            <?php else : ?>
+                                <p>Tidak ada riwayat pemeriksaan FRS.</p>
+                            <?php endif; ?>
+                        </div>
+
+                        <!-- Riwayat Pemeriksaan SRS -->
+                        <div class="col-md-3">
+                            <label class="col-form-label">Riwayat Pemeriksaan <b>Sitologi</b></label>
+                            <?php if (!empty($riwayat_srs)) : ?>
+                                <?php foreach ($riwayat_srs as $row) : ?>
+                                    <div class="border p-2 mb-2">
+                                        <strong>Tanggal Permintaan:</strong> <?= isset($row['tanggal_permintaan']) ? date('d-m-Y', strtotime($row['tanggal_permintaan'])) : '-' ?><br>
+                                        <strong>Kode SRS:</strong> <?= esc($row['kode_srs'] ?? '-') ?><br>
+                                        <strong>Lokasi Spesimen:</strong> <?= esc($row['lokasi_spesimen'] ?? '-') ?><br>
+                                        <strong>Hasil SRS:</strong> <?= esc(strip_tags($row['hasil_srs'])) ?? '-' ?><br>
+                                        <strong>Dokter Pembaca:</strong> <?= esc($row['dokter_nama'] ?? 'Belum Dibaca') ?><br>
+                                        <button type="button" class="btn btn-info btn-sm"
+                                            onclick="tampilkanModal('<?= nl2br(esc($row['print_srs'] ?? 'Tidak ada hasil', 'js')) ?>')">
+                                            Lihat Detail
+                                        </button>
+                                    </div>
+                                <?php endforeach; ?>
+                            <?php else : ?>
+                                <p>Tidak ada riwayat pemeriksaan SRS.</p>
+                            <?php endif; ?>
+                        </div>
+
+                        <!-- Riwayat Pemeriksaan IHC -->
+                        <div class="col-md-3">
+                            <label class="col-form-label">Riwayat Pemeriksaan <b>Imunohistokimia</b></label>
+                            <?php if (!empty($riwayat_ihc)) : ?>
+                                <?php foreach ($riwayat_ihc as $row) : ?>
+                                    <div class="border p-2 mb-2">
+                                        <strong>Tanggal Permintaan:</strong> <?= isset($row['tanggal_permintaan']) ? date('d-m-Y', strtotime($row['tanggal_permintaan'])) : '-' ?><br>
+                                        <strong>Kode IHC:</strong> <?= esc($row['kode_ihc'] ?? '-') ?><br>
+                                        <strong>Lokasi Spesimen:</strong> <?= esc($row['lokasi_spesimen'] ?? '-') ?><br>
+                                        <strong>Hasil IHC:</strong> <?= esc(strip_tags($row['hasil_ihc'])) ?? '-' ?><br>
+                                        <strong>Dokter Pembaca:</strong> <?= esc($row['dokter_nama'] ?? 'Belum Dibaca') ?><br>
+                                        <button type="button" class="btn btn-info btn-sm"
+                                            onclick="tampilkanModal('<?= nl2br(esc($row['print_ihc'] ?? 'Tidak ada hasil', 'js')) ?>')">
+                                            Lihat Detail
+                                        </button>
+                                    </div>
+                                <?php endforeach; ?>
+                            <?php else : ?>
+                                <p>Tidak ada riwayat pemeriksaan IHC.</p>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- Kolom Foto Makroskopis -->
                 <div class="form-group row">
                     <label class="col-sm-2 col-form-label">Foto Makroskopis</label>
@@ -146,7 +242,7 @@
 
                 <!-- Kolom Hasil HPA dan Dokter -->
                 <div class="form-group row">
-                    <label class="col-sm-2 col-form-label">Hasil HPA</label>
+                    <label class="col-sm-2 col-form-label">Hasil Kesimpulan</label>
                     <div class="col-sm-4">
                         <textarea class="form-control summernote" name="hasil_hpa" id="hasil_hpa">
                             <?= $hpa['hasil_hpa'] ?? '' ?>
@@ -305,6 +401,7 @@
         </div>
     </div>
 </div>
+
 <!-- Modal untuk Menampilkan Gambar yang Diperbesar -->
 <div class="modal fade" id="fotoModalMikroskopis" tabindex="-1" aria-labelledby="fotoModalLabel" aria-hidden="true">
     <div class="modal-dialog">
@@ -322,6 +419,38 @@
         </div>
     </div>
 </div>
+
+<!-- Modal Riwayat -->
+<div class="modal fade" id="modalDetail" tabindex="-1" aria-labelledby="modalDetailLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalDetailLabel">Detail Pemeriksaan</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="modal-body-content">
+                <!-- Isi modal akan dimasukkan melalui JavaScript -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- javascript untuk menampilkan modal -->
+<script>
+    function tampilkanModal(isi) {
+        // Masukkan isi ke dalam modal
+        document.getElementById("modal-body-content").innerHTML = isi;
+        // Tampilkan modal
+        var myModal = new bootstrap.Modal(document.getElementById("modalDetail"));
+        myModal.show();
+    }
+</script>
+
 <?= $this->include('templates/notifikasi') ?>
 <?= $this->include('templates/hpa/footer_edit'); ?>
 <?= $this->include('templates/hpa/cetak_proses'); ?>

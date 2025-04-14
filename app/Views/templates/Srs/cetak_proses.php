@@ -81,7 +81,7 @@
                 vertical-align: top;
             }
             .mikroskopis-content-table td[colspan="2"] {
-                height: 400px;
+                height: 500px;
                 font-size: 16pt;
                 border: 1px solid black;
                 padding: 10px;
@@ -138,63 +138,96 @@
         </table>
 
         <table class="makroskopis-content-table">
-            <tr>
-                <td>Makroskopis</td>
-                <td>Analis PA: <?= $pemotongan['analis_nama'] ?? '' ?> | Waktu Pemotongan: <?= isset($pemotongan['mulai_pemotongan_srs']) ? date('H:i d-m-Y', strtotime($pemotongan['mulai_pemotongan_srs'])) : ''; ?></td>
-            </tr>
-            <tr>
-                <td colspan="2">${detailMakroskopis}</td>
-            </tr>
-            <tr>
-            <td class="no-border"></td>
-            <td class="foto-makroskopis">
-                <img src="<?= $srs['foto_makroskopis_srs'] !== null
-                                ? base_url('uploads/srs/makroskopis/' . $srs['foto_makroskopis_srs'])
-                                : base_url('img/no_photo.jpg') ?>"
-                    width="200"
-                    alt="Foto Makroskopis"
-                    class="img-thumbnail"
-                    id="fotoMakroskopis"
-                    data-toggle="modal"
-                    data-target="#fotoModal"
-                    style="object-fit: cover; aspect-ratio: 16 / 9; max-width: 100%; height: auto;">
-            </td>
-            </tr>
+            <thead>
+                <tr>
+                    <th>Riwayat Pemeriksaan</th>
+                    <th>Foto Makroskopis</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php
+                $riwayat_pemeriksaan = [
+                    ['data' => $riwayat_hpa ?? []],
+                    ['data' => $riwayat_frs ?? []],
+                    ['data' => $riwayat_srs ?? []],
+                    ['data' => $riwayat_ihc ?? []]
+                ];
+
+                $totalRiwayat = 0;
+                foreach ($riwayat_pemeriksaan as $pemeriksaan) {
+                    $totalRiwayat += count($pemeriksaan['data']);
+                }
+
+                $firstRow = true;
+
+                if ($totalRiwayat > 0) :
+                    foreach ($riwayat_pemeriksaan as $pemeriksaan) :
+                        foreach ($pemeriksaan['data'] as $row) : ?>
+                            <tr>
+                                <td class="no-border" style="white-space: nowrap;">
+                                    <strong><?= isset($row['tanggal_permintaan']) ? date('d-m-Y', strtotime($row['tanggal_permintaan'])) : '-' ?></strong>
+                                    &nbsp;,&nbsp;<?= esc($row['kode_hpa'] ?? $row['kode_frs'] ?? $row['kode_srs'] ?? $row['kode_ihc'] ?? '-') ?>
+                                    &nbsp;,&nbsp;Lokasi: <?= esc($row['lokasi_spesimen'] ?? '-') ?>
+                                    &nbsp;,&nbsp;Hasil: <?= esc(strip_tags($row['hasil_hpa'] ?? $row['hasil_frs'] ?? $row['hasil_srs'] ?? $row['hasil_ihc'] ?? '-')) ?>
+                                </td>
+                                <?php if ($firstRow) : ?>
+                                    <td class="foto-makroskopis" rowspan="<?= $totalRiwayat ?>">
+                                        <img src="<?= isset($srs['foto_makroskopis_srs']) && $srs['foto_makroskopis_srs'] !== null
+                                                        ? base_url('uploads/srs/makroskopis/' . $srs['foto_makroskopis_srs'])
+                                                        : base_url('img/no_photo.jpg') ?>"
+                                            width="200"
+                                            alt="Foto Makroskopis"
+                                            class="img-thumbnail"
+                                            id="fotoMakroskopis"
+                                            data-toggle="modal"
+                                            data-target="#fotoModal"
+                                            style="object-fit: cover; aspect-ratio: 16 / 9; max-width: 100%; height: auto;">
+                                    </td>
+                                    <?php $firstRow = false; ?>
+                                <?php endif; ?>
+                            </tr>
+                    <?php
+                        endforeach;
+                    endforeach;
+                else : ?>
+                    <!-- Jika tidak ada riwayat, tetap tampilkan foto -->
+                    <tr>
+                        <td class="no-border">Tidak ada riwayat pemeriksaan.</td>
+                        <td class="foto-makroskopis">
+                            <img src="<?= isset($srs['foto_makroskopis_srs']) && $srs['foto_makroskopis_srs'] !== null
+                                            ? base_url('uploads/srs/makroskopis/' . $srs['foto_makroskopis_srs'])
+                                            : base_url('img/no_photo.jpg') ?>"
+                                width="200"
+                                alt="Foto Makroskopis"
+                                class="img-thumbnail"
+                                id="fotoMakroskopis"
+                                data-toggle="modal"
+                                data-target="#fotoModal"
+                                style="object-fit: cover; aspect-ratio: 16 / 9; max-width: 100%; height: auto;">
+                        </td>
+                    </tr>
+                <?php endif; ?>
+
+                <tr>
+                    <td><strong>Makroskopis</strong></td>
+                    <td>Analis PA: <?= esc($nama_user) ?? ""; ?> | Waktu Penerimaan: <?= isset($penerimaan['mulai_penerimaan_srs']) ? date('H:i d-m-Y', strtotime($penerimaan['mulai_penerimaan_srs'])) : ''; ?></td>
+                </tr>
+                <tr>
+                    <td colspan="2">${detailMakroskopis}</td>
+                </tr>
+            </tbody>
         </table>
 
         <table class="mikroskopis-content-table">
             <tr>
                 <td>Mikroskopis</td>
-                <td>Dokter PA: <?= $pemotongan['dokter_nama'] ?? '' ?> | Waktu pembacaan: <?= isset($pembacaan['mulai_pembacaan_srs']) ? date('H:i d-m-Y', strtotime($pembacaan['mulai_pembacaan_srs'])) : ''; ?></td>
+                <td>Dokter PA: <?= $penerimaan['dokter_nama'] ?? '' ?> | Waktu pembacaan: <?= isset($pembacaan['mulai_pembacaan_srs']) ? date('H:i d-m-Y', strtotime($pembacaan['mulai_pembacaan_srs'])) : ''; ?></td>
             </tr>
             <tr>
                 <td colspan="2">${detailMikroskopis}</td>
             </tr>
         </table>
 
-        <table class="gambar-table">
-            <tr>
-                <th colspan="8">Gambar</th>
-            </tr>
-            <?php
-            $jumlah_slide = $srs['jumlah_slide'];
-            $kolom_per_baris = 8;
-            $max_kolom = 16;
-            $angka_romawi = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI", "XII", "XIII", "XIV", "XV", "XVI"];
-            for ($baris = 0; $baris < ceil($max_kolom / $kolom_per_baris); $baris++) {
-                echo '<tr>';
-                for ($kolom = 0; $kolom < $kolom_per_baris; $kolom++) {
-                    $indeks = ($baris * $kolom_per_baris) + $kolom;
-                    if ($indeks < $jumlah_slide && $indeks < $max_kolom) {
-                        echo '<td><span class="romawi">' . $angka_romawi[$indeks] . '</span></td>';
-                    } else {
-                        echo '<td><span class="romawi"></span></td>';
-                    }
-                }
-                echo '</tr>';
-            }
-            ?>
-        </table>
     </body>
     </html>
     `);

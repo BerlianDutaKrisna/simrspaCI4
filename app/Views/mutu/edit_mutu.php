@@ -7,7 +7,7 @@
     <div class="card-body">
         <h1 class="h4 text-gray-900 mb-4">Edit Data Mutu</h1>
 
-        <a href="<?= base_url('exam/index_exam') ?>" class="btn btn-primary mb-3">Kembali</a>
+        <a href="<?= base_url('exam/index_exam') ?>" class="btn btn-primary mb-3"><i class="fas fa-reply"></i> Kembali</a>
 
         <form action="<?= base_url('mutu/update_mutu') ?>" method="POST">
             <input type="hidden" name="id_mutu" value="<?= $mutuData['id_mutu'] ?>">

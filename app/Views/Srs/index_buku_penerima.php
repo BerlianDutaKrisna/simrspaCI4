@@ -7,16 +7,16 @@
     </div>
     <div class="card-body">
         <h1>Buku Penerimaan Hasil Sitologi</h1>
-        <a href="<?= base_url('/dashboard') ?>" class="btn btn-primary mb-3">Kembali</a>
+        <a href="<?= base_url('/dashboard') ?>" class="btn btn-primary mb-3"><i class="fas fa-reply"></i> Kembali</a>
 
         <div class="table-responsive">
             <table class="table table-bordered text-center" id="dataTable" width="100%" cellspacing="0">
                 <thead>
                     <tr>
                         <th>No</th>
-                        <th>Kode srs</th>
-                        <th>Nama Pasien</th>
                         <th>Norm Pasien</th>
+                        <th>Kode SRS</th>
+                        <th>Nama Pasien</th>
                         <th>Jenis Kelamin Pasien</th>
                         <th>Tanggal Lahir Pasien</th>
                         <th>Alamat Pasien</th>
@@ -25,8 +25,8 @@
                         <th>Status Pasien</th>
                         <th>Diagnosa Klinik</th>
                         <th>Tanggal Hasil</th>
-                        <th>Status srs</th>
-                        <th>Hasil srs</th>
+                        <th>Hasil SRS</th>
+                        <th>Status SRS</th>
                         <th class="text-center" style="width: 150px;">Penerima</th>
                         <th>Nama Penerima / Hubungan</th>
                         <th>Tanggal Penerima</th>
@@ -38,20 +38,18 @@
                         <?php foreach ($srsData as $row) : ?>
                             <tr>
                                 <td><?= $i ?></td>
+                                <td><?= esc($row['norm_pasien'] ?? 'Belum Diisi') ?></td>
                                 <td><?= esc($row['kode_srs'] ?? 'Belum Diisi') ?></td>
                                 <td><?= esc($row['nama_pasien'] ?? 'Belum Diisi') ?></td>
-                                <td><?= esc($row['norm_pasien'] ?? 'Belum Diisi') ?></td>
                                 <td>
                                     <?php
                                     $jenis_kelamin = $row['jenis_kelamin_pasien'] ?? 'Belum Diisi';
                                     $usia = '';
-
                                     if (!empty($row['tanggal_lahir_pasien'])) {
                                         $tanggal_lahir = new DateTime($row['tanggal_lahir_pasien']);
                                         $hari_ini = new DateTime();
                                         $usia = $hari_ini->diff($tanggal_lahir)->y;
                                     }
-
                                     echo esc($jenis_kelamin) . ($usia !== '' ? " / {$usia}" : '');
                                     ?>
                                 </td>
@@ -82,8 +80,8 @@
                                     }
                                     ?>
                                 </td>
-                                <td><?= esc($row['status_srs'] ?? 'Belum Diisi') ?></td>
                                 <td><?= esc(strip_tags($row['hasil_srs'] ?? 'Belum Ada Hasil')) ?></td>
+                                <td><strong class="<?= in_array($row['status_srs'] ?? '', ['Authorized', 'Selesai']) ? 'text-success' : '' ?>"><?= esc($row['status_srs'] ?? 'Belum Diisi') ?></strong></td>
                                 <td class="text-center">
                                     <a href="#"
                                         class="btn btn-info btn-sm penerima-btn"

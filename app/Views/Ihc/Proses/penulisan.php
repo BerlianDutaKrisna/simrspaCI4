@@ -7,7 +7,7 @@
     </div>
     <div class="card-body">
         <h1>Daftar Penulisan Imunohistokimia</h1>
-        <a href="<?= base_url('/dashboard') ?>" class="btn btn-primary mb-3">Kembali</a>
+        <a href="<?= base_url('/dashboard') ?>" class="btn btn-primary mb-3"><i class="fas fa-reply"></i> Kembali</a>
         <?= $this->include('templates/proses/button_penulisan'); ?>
 
         <!-- Form -->
@@ -23,7 +23,7 @@
                             <th>No</th>
                             <th>Aksi</th>
                             <th>Detail</th>
-                            <th>Kode Ihc</th>
+                            <th>Kode IHC</th>
                             <th>Nama Pasien</th>
                             <th>Status Penulisan</th>
                             <th>Admin</th>
@@ -51,13 +51,13 @@
                                     <?php if (in_array($row['status_penulisan_ihc'], ["Proses Penulisan"])): ?>
                                         <td>
                                             <a href="<?= base_url('ihc/edit_penulisan/' . esc($row['id_ihc'])) ?>" class="btn btn-warning btn-sm">
-                                                <i class="fas fa-pen"></i> penulisan
+                                                <i class="fas fa-pen"></i> Penulisan
                                             </a>
                                         </td>
                                     <?php elseif (in_array($row['status_penulisan_ihc'], ["Selesai Penulisan"])): ?>
                                         <td>
                                             <a href="<?= base_url('ihc/edit_penulisan/' . esc($row['id_ihc'])) ?>" class="btn btn-success btn-sm mx-1">
-                                                <i class="fas fa-pen"></i> penulisan
+                                                <i class="fas fa-pen"></i> Penulisan
                                             </a>
                                         </td>
                                     <?php else: ?>

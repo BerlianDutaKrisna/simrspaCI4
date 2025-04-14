@@ -8,7 +8,7 @@
     </div>
     <div class="card-body">
         <h1>Daftar Pemverifikasi Imunohistokimia</h1>
-        <a href="<?= base_url('/dashboard') ?>" class="btn btn-primary mb-3">Kembali</a>
+        <a href="<?= base_url('/dashboard') ?>" class="btn btn-primary mb-3"><i class="fas fa-reply"></i> Kembali</a>
         <?= $this->include('templates/proses/button_pemverifikasi'); ?>
 
         <!-- Form -->
@@ -24,7 +24,7 @@
                             <th>No</th>
                             <th>Aksi</th>
                             <th>Detail</th>
-                            <th>Kode Ihc</th>
+                            <th>Kode IHC</th>
                             <th>Nama Pasien</th>
                             <th>Status pemverifikasi</th>
                             <th>Analis</th>

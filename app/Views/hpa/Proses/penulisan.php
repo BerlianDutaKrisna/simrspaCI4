@@ -7,7 +7,7 @@
     </div>
     <div class="card-body">
         <h1>Daftar Penulisan Histopatologi</h1>
-        <a href="<?= base_url('/dashboard') ?>" class="btn btn-primary mb-3">Kembali</a>
+        <a href="<?= base_url('/dashboard') ?>" class="btn btn-primary mb-3"><i class="fas fa-reply"></i> Kembali</a>
         <?= $this->include('templates/proses/button_penulisan'); ?>
 
         <!-- Form -->
@@ -51,13 +51,13 @@
                                     <?php if (in_array($row['status_penulisan_hpa'], ["Proses Penulisan"])): ?>
                                         <td>
                                             <a href="<?= base_url('hpa/edit_penulisan/' . esc($row['id_hpa'])) ?>" class="btn btn-warning btn-sm">
-                                                <i class="fas fa-pen"></i> penulisan
+                                                <i class="fas fa-pen"></i> Penulisan
                                             </a>
                                         </td>
                                     <?php elseif (in_array($row['status_penulisan_hpa'], ["Selesai Penulisan"])): ?>
                                         <td>
                                             <a href="<?= base_url('hpa/edit_penulisan/' . esc($row['id_hpa'])) ?>" class="btn btn-success btn-sm mx-1">
-                                                <i class="fas fa-pen"></i> penulisan
+                                                <i class="fas fa-pen"></i> Penulisan
                                             </a>
                                         </td>
                                     <?php else: ?>

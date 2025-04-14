@@ -8,7 +8,7 @@
     </div>
     <div class="card-body">
         <h1>Daftar Authorized Histopatologi</h1>
-        <a href="<?= base_url('/dashboard') ?>" class="btn btn-primary mb-3">Kembali</a>
+        <a href="<?= base_url('/dashboard') ?>" class="btn btn-primary mb-3"><i class="fas fa-reply"></i> Kembali</a>
         <?= $this->include('templates/proses/button_authorized'); ?>
 
         <!-- Form -->
@@ -40,34 +40,34 @@
                                 <tr>
                                     <td><?= $i ?></td>
                                     <td>
-                                <input type="checkbox"
-                                    name="id_proses[]"
-                                    value="<?= $row['id_authorized_hpa']; ?>:<?= $row['id_hpa']; ?>:<?= $row['id_mutu_hpa']; ?>"
-                                    class="form-control form-control-user checkbox-item"
-                                    data-status='<?= json_encode([
-                                                        'status_authorized_hpa' => $row['status_authorized_hpa'] ?? ""
-                                                    ]) ?>'
-                                    autocomplete="off">
-                            </td>
-                            <?php if (in_array($row['status_authorized_hpa'], ["Proses Authorized"])): ?>
-                                <td>
-                                    <a href="<?= base_url('hpa/edit_print/' .
-                                                    esc($row['id_hpa']) .
-                                                    '?redirect=index_authorized_hpa') ?>" class="btn btn-warning btn-sm">
-                                        <i class="fas fa-eye"></i> Cek Verifikasi
-                                    </a>
-                                </td>
-                            <?php elseif (in_array($row['status_authorized_hpa'], ["Selesai Authorized"])): ?>
-                                <td>
-                                    <a href="<?= base_url('hpa/edit_print/' .
-                                                    esc($row['id_hpa']) .
-                                                    '?redirect=index_authorized_hpa') ?>" class="btn btn-success btn-sm">
-                                        <i class="fas fa-eye"></i> Cek Verifikasi
-                                    </a>
-                                </td>
-                            <?php else: ?>
-                                <td></td>
-                            <?php endif; ?>
+                                        <input type="checkbox"
+                                            name="id_proses[]"
+                                            value="<?= $row['id_authorized_hpa']; ?>:<?= $row['id_hpa']; ?>:<?= $row['id_mutu_hpa']; ?>"
+                                            class="form-control form-control-user checkbox-item"
+                                            data-status='<?= json_encode([
+                                                                'status_authorized_hpa' => $row['status_authorized_hpa'] ?? ""
+                                                            ]) ?>'
+                                            autocomplete="off">
+                                    </td>
+                                    <?php if (in_array($row['status_authorized_hpa'], ["Proses Authorized"])): ?>
+                                        <td>
+                                            <a href="<?= base_url('hpa/edit_print/' .
+                                                            esc($row['id_hpa']) .
+                                                            '?redirect=index_authorized_hpa') ?>" class="btn btn-warning btn-sm">
+                                                <i class="fas fa-eye"></i> Cek Verifikasi
+                                            </a>
+                                        </td>
+                                    <?php elseif (in_array($row['status_authorized_hpa'], ["Selesai Authorized"])): ?>
+                                        <td>
+                                            <a href="<?= base_url('hpa/edit_print/' .
+                                                            esc($row['id_hpa']) .
+                                                            '?redirect=index_authorized_hpa') ?>" class="btn btn-success btn-sm">
+                                                <i class="fas fa-eye"></i> Cek Verifikasi
+                                            </a>
+                                        </td>
+                                    <?php else: ?>
+                                        <td></td>
+                                    <?php endif; ?>
                                     <td><?= $row['kode_hpa']; ?></td>
                                     <td><?= $row['nama_pasien']; ?></td>
                                     <td><?= $row['status_authorized_hpa']; ?></td>

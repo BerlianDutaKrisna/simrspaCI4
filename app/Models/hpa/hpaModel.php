@@ -100,11 +100,16 @@ class HpaModel extends Model
             ->orderBy("MIN(tanggal_permintaan)", "ASC")
             ->findAll();
     }
+    
+    public function getTotalHpa() {
+        return $this->db->table('hpa')->countAllResults();
+    }
 
     public function gethpaWithPatient()
     {
         return $this->select('hpa.*, patient.*')
             ->join('patient', 'patient.id_pasien = hpa.id_pasien')
+            ->orderBy('hpa.kode_hpa', 'ASC')
             ->findAll();
     }
 
@@ -124,12 +129,18 @@ class HpaModel extends Model
             ->first();
     }
 
-    public function updateHpa($id_hpa, $data)
+    public function riwayatPemeriksaanhpa($id_pasien)
     {
-        $builder = $this->db->table('hpa');
-        $builder->where('id_hpa', $id_hpa);
-        $builder->update($data);
-        return $this->db->affectedRows();
+        return $this
+            ->select('hpa.*, pembacaan_hpa.id_user_dokter_pembacaan_hpa, users.nama_user AS dokter_nama')
+            ->join('pembacaan_hpa', 'pembacaan_hpa.id_hpa = hpa.id_hpa', 'left')
+            ->join('users', 'users.id_user = pembacaan_hpa.id_user_dokter_pembacaan_hpa', 'left')
+            ->where('hpa.id_pasien', $id_pasien)
+            ->groupStart()
+            ->where('hpa.hasil_hpa IS NOT NULL', null, false)
+            ->where('hpa.hasil_hpa !=', '')
+            ->groupEnd()
+            ->findAll();
     }
 
     public function updatePenerima($id_hpa, $data)
@@ -154,25 +165,58 @@ class HpaModel extends Model
         }
     }
 
-    public function updateStatusHpa($id_hpa, $data)
+    public function gethpaWithRelations()
     {
-        // Validasi parameter
-        if (
-            empty($id_hpa) || empty($data) || !is_array($data)
-        ) {
-            throw new \InvalidArgumentException('Parameter ID HPA atau data tidak valid.');
+        $previousMonthStart = date('Y-m-01', strtotime('-1 month'));
+
+        return $this->select('
+            hpa.*, 
+            patient.*, 
+            users.nama_user AS dokter_pembaca,
+            penerimaan_hpa.mulai_penerimaan_hpa,
+            pemverifikasi_hpa.selesai_pemverifikasi_hpa,
+            mutu_hpa.total_nilai_mutu_hpa
+        ')
+            ->join('patient', 'patient.id_pasien = hpa.id_pasien')
+            ->join('pembacaan_hpa', 'pembacaan_hpa.id_hpa = hpa.id_hpa', 'left')
+            ->join('users', 'users.id_user = pembacaan_hpa.id_user_dokter_pembacaan_hpa', 'left')
+            ->join('penerimaan_hpa', 'penerimaan_hpa.id_hpa = hpa.id_hpa', 'left')
+            ->join('pemverifikasi_hpa', 'pemverifikasi_hpa.id_hpa = hpa.id_hpa', 'left')
+            ->join('mutu_hpa', 'mutu_hpa.id_hpa = hpa.id_hpa', 'left')
+            ->where('hpa.tanggal_permintaan >=', $previousMonthStart)
+            ->where('hpa.tanggal_permintaan <=', date('Y-m-t'))
+            ->orderBy('hpa.kode_hpa', 'ASC')
+            ->findAll();
+    }
+
+    public function filterhpaWithRelations($filterField, $filterValue, $startDate, $endDate)
+    {
+        $builder = $this->db->table('hpa')
+            ->select("
+            hpa.*,
+            patient.*,
+            users.nama_user AS dokter_pembaca,
+            penerimaan_hpa.mulai_penerimaan_hpa,
+            pemverifikasi_hpa.selesai_pemverifikasi_hpa,
+            mutu_hpa.total_nilai_mutu_hpa
+        ")
+            ->join('patient', 'patient.id_pasien = hpa.id_pasien')
+            ->join('pembacaan_hpa', 'pembacaan_hpa.id_hpa = hpa.id_hpa', 'left')
+            ->join('users', 'users.id_user = pembacaan_hpa.id_user_dokter_pembacaan_hpa', 'left')
+            ->join('penerimaan_hpa', 'penerimaan_hpa.id_hpa = hpa.id_hpa', 'left')
+            ->join('pemverifikasi_hpa', 'pemverifikasi_hpa.id_hpa = hpa.id_hpa', 'left')
+            ->join('mutu_hpa', 'mutu_hpa.id_hpa = hpa.id_hpa', 'left')
+            ->where('hpa.tanggal_permintaan >=', $startDate)
+            ->where('hpa.tanggal_permintaan <=', $endDate);
+
+        // Jika ada filter tambahan dari user (nama pasien, norm, dll)
+        if (!empty($filterField) && !empty($filterValue)) {
+            $builder->like($filterField, $filterValue);
         }
-        // Mengambil table 'hpa'
-        $builder = $this->db->table('hpa');
-        // Menambahkan kondisi WHERE
-        $builder->where('id_hpa', $id_hpa);
-        // Melakukan update data
-        $updateResult = $builder->update($data);
-        // Mengecek apakah update berhasil
-        if ($updateResult) {
-            return $this->db->affectedRows(); // Mengembalikan jumlah baris yang terpengaruh
-        } else {
-            throw new \RuntimeException('Update data gagal.'); // Menangani error
-        }
+
+        $builder->orderBy('hpa.tanggal_permintaan', 'ASC')
+            ->orderBy('hpa.kode_hpa', 'ASC');
+
+        return $builder->get()->getResultArray();
     }
 }

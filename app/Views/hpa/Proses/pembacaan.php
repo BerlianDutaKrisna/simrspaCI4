@@ -8,7 +8,7 @@
     </div>
     <div class="card-body">
         <h1>Daftar Pembacaan Histopatologi</h1>
-        <a href="<?= base_url('/dashboard') ?>" class="btn btn-primary mb-3">Kembali</a>
+        <a href="<?= base_url('/dashboard') ?>" class="btn btn-primary mb-3"><i class="fas fa-reply"></i> Kembali</a>
         <?= $this->include('templates/proses/button_pembacaan'); ?>
 
         <!-- Form -->
@@ -29,7 +29,6 @@
                             <th>jumlah slide</th>
                             <th>Dokter</th>
                             <th>Status Pembacaan</th>
-                            <th>Kualitas Sediaan</th>
                             <th>Mulai Pembacaan</th>
                             <th>Selesai Pembacaan</th>
                             <th>Deadline Hasil</th>
@@ -71,90 +70,6 @@
                                     <td><?= $row['jumlah_slide']; ?></td>
                                     <td><?= $row['nama_user_dokter_pemotongan_hpa']; ?></td>
                                     <td><?= $row['status_pembacaan_hpa']; ?></td>
-                                    <td>
-                                        <?php if ($row['status_pembacaan_hpa'] === "Proses Pembacaan"): ?>
-                                            <input type="hidden" name="total_nilai_mutu_hpa" value="<?= $row['total_nilai_mutu_hpa']; ?>">
-                                            <!-- Menampilkan form checkbox ketika status pembacaan adalah 'Proses pembacaan' -->
-                                            <div class="form-check">
-                                                <input type="checkbox" id="checkAll_<?= $row['id_mutu_hpa']; ?>" class="form-check-input">
-                                                <label class="form-check-label" for="checkAll_<?= $row['id_mutu_hpa']; ?>">
-                                                    Pilih Semua
-                                                </label>
-                                            </div>
-                                            <div class="form-check">
-                                                <input type="checkbox"
-                                                    name="indikator_4"
-                                                    value="10"
-                                                    id="indikator_4_<?= $row['id_mutu_hpa']; ?>"
-                                                    class="form-check-input child-checkbox">
-                                                <label class="form-check-label" for="indikator_4_<?= $row['id_mutu_hpa']; ?>">
-                                                    Sediaan tanpa lipatan
-                                                </label>
-                                            </div>
-                                            <div class="form-check">
-                                                <input type="checkbox"
-                                                    name="indikator_5"
-                                                    value="10"
-                                                    id="indikator_5_<?= $row['id_mutu_hpa']; ?>"
-                                                    class="form-check-input child-checkbox">
-                                                <label class="form-check-label" for="indikator_5_<?= $row['id_mutu_hpa']; ?>">
-                                                    Sediaan tanpa goresan mata pisau
-                                                </label>
-                                            </div>
-                                            <div class="form-check">
-                                                <input type="checkbox"
-                                                    name="indikator_6"
-                                                    value="10"
-                                                    id="indikator_6_<?= $row['id_mutu_hpa']; ?>"
-                                                    class="form-check-input child-checkbox">
-                                                <label class="form-check-label" for="indikator_6_<?= $row['id_mutu_hpa']; ?>">
-                                                    Kontras warna sediaan cukup jelas
-                                                </label>
-                                            </div>
-                                            <div class="form-check">
-                                                <input type="checkbox"
-                                                    name="indikator_7"
-                                                    value="10"
-                                                    id="indikator_7_<?= $row['id_mutu_hpa']; ?>"
-                                                    class="form-check-input child-checkbox">
-                                                <label class="form-check-label" for="indikator_7_<?= $row['id_mutu_hpa']; ?>">
-                                                    Sediaan tanpa gelembung udara
-                                                </label>
-                                            </div>
-                                            <div class="form-check">
-                                                <input type="checkbox"
-                                                    name="indikator_8"
-                                                    value="10"
-                                                    id="indikator_8_<?= $row['id_mutu_hpa']; ?>"
-                                                    class="form-check-input child-checkbox">
-                                                <label class="form-check-label" for="indikator_8_<?= $row['id_mutu_hpa']; ?>">
-                                                    Sediaan tanpa bercak / sidik jari
-                                                </label>
-                                            </div>
-                                            <script>
-                                                document.addEventListener('DOMContentLoaded', function() {
-                                                    const checkAll = document.getElementById('checkAll_<?= $row['id_mutu_hpa']; ?>');
-                                                    const checkboxes = document.querySelectorAll('.child-checkbox');
-                                                    // Ketika "Pilih Semua" dicentang/ditandai
-                                                    checkAll.addEventListener('change', function() {
-                                                        checkboxes.forEach(checkbox => {
-                                                            checkbox.checked = checkAll.checked; // Semua checkbox mengikuti status "Pilih Semua"
-                                                        });
-                                                    });
-                                                    // Update status "Pilih Semua" berdasarkan checkbox lainnya
-                                                    checkboxes.forEach(checkbox => {
-                                                        checkbox.addEventListener('change', function() {
-                                                            checkAll.checked = Array.from(checkboxes).every(checkbox => checkbox.checked);
-                                                        });
-                                                    });
-                                                });
-                                            </script>
-                                        <?php else: ?>
-                                            <!-- Menampilkan total_nilai_mutu_hpa jika status pembacaan 'Belum Diperiksa' atau 'Sudah Diperiksa' -->
-                                            <?= $row['total_nilai_mutu_hpa']; ?> %
-                                        <?php endif; ?>
-                                    </td>
-
                                     <td>
                                         <?= empty($row['mulai_pembacaan_hpa']) ? '-' : esc(date('H:i , d-m-Y', strtotime($row['mulai_pembacaan_hpa']))); ?>
                                     </td>

@@ -8,7 +8,7 @@
     <div class="card-body">
         <h1>Data Pasien Imunohistokimia</h1>
         <!-- Tombol Kembali ke Dashboard -->
-        <a href="<?= base_url('/dashboard') ?>" class="btn btn-primary mb-3">Kembali</a>
+        <a href="<?= base_url('/dashboard') ?>" class="btn btn-primary mb-3"><i class="fas fa-reply"></i> Kembali</a>
 
         <!-- Menampilkan Data Pasien dalam 3 kolom 2 baris -->
         <div class="row">
@@ -43,6 +43,102 @@
                 <p class="form-control-plaintext"><?= isset($patient['status_pasien']) ? esc($patient['status_pasien']) : ''; ?></p>
             </div>
         </div>
+
+        <button class="btn btn-outline-info mb-3" type="button" data-toggle="collapse" data-target="#riwayatCollapse" aria-expanded="false" aria-controls="riwayatCollapse">
+            <i class="fas fa-book-medical"></i> Riwayat Pemeriksaan
+        </button>
+
+        <div class="collapse" id="riwayatCollapse">
+            <div class="form-group row">
+                <!-- Riwayat Pemeriksaan Histopatologi (HPA) -->
+                <div class="col-md-3">
+                    <label class="col-form-label">Riwayat Pemeriksaan <b>Histopatologi</b></label>
+                    <?php if (!empty($riwayat_hpa)) : ?>
+                        <?php foreach ($riwayat_hpa as $row) : ?>
+                            <div class="border p-2 mb-2">
+                                <strong>Tanggal Permintaan:</strong> <?= isset($row['tanggal_permintaan']) ? date('d-m-Y', strtotime($row['tanggal_permintaan'])) : '-' ?><br>
+                                <strong>Kode HPA:</strong> <?= esc($row['kode_hpa'] ?? '-') ?><br>
+                                <strong>Lokasi Spesimen:</strong> <?= esc($row['lokasi_spesimen'] ?? '-') ?><br>
+                                <strong>Hasil HPA:</strong> <?= esc(strip_tags($row['hasil_hpa'])) ?? '-' ?><br>
+                                <strong>Dokter Pembaca:</strong> <?= esc($row['dokter_nama'] ?? 'Belum Dibaca') ?><br>
+                                <button type="button" class="btn btn-info btn-sm"
+                                    onclick="tampilkanModal('<?= nl2br(esc($row['print_hpa'] ?? 'Tidak ada hasil', 'js')) ?>')">
+                                    Lihat Detail
+                                </button>
+                            </div>
+                        <?php endforeach; ?>
+                    <?php else : ?>
+                        <p>Tidak ada riwayat pemeriksaan HPA.</p>
+                    <?php endif; ?>
+                </div>
+
+                <!-- Riwayat Pemeriksaan FRS -->
+                <div class="col-md-3">
+                    <label class="col-form-label">Riwayat Pemeriksaan <b>Fine Needle Aspiration Biopsy</b></label>
+                    <?php if (!empty($riwayat_frs)) : ?>
+                        <?php foreach ($riwayat_frs as $row) : ?>
+                            <div class="border p-2 mb-2">
+                                <strong>Tanggal Permintaan:</strong> <?= isset($row['tanggal_permintaan']) ? date('d-m-Y', strtotime($row['tanggal_permintaan'])) : '-' ?><br>
+                                <strong>Kode FRS:</strong> <?= esc($row['kode_frs'] ?? '-') ?><br>
+                                <strong>Lokasi Spesimen:</strong> <?= esc($row['lokasi_spesimen'] ?? '-') ?><br>
+                                <strong>Hasil FRS:</strong> <?= esc(strip_tags($row['hasil_frs'])) ?? '-' ?><br>
+                                <strong>Dokter Pembaca:</strong> <?= esc($row['dokter_nama'] ?? 'Belum Dibaca') ?><br>
+                                <button type="button" class="btn btn-info btn-sm"
+                                    onclick="tampilkanModal('<?= nl2br(esc($row['print_frs'] ?? 'Tidak ada hasil', 'js')) ?>')">
+                                    Lihat Detail
+                                </button>
+                            </div>
+                        <?php endforeach; ?>
+                    <?php else : ?>
+                        <p>Tidak ada riwayat pemeriksaan FRS.</p>
+                    <?php endif; ?>
+                </div>
+
+                <!-- Riwayat Pemeriksaan SRS -->
+                <div class="col-md-3">
+                    <label class="col-form-label">Riwayat Pemeriksaan <b>Sitologi</b></label>
+                    <?php if (!empty($riwayat_srs)) : ?>
+                        <?php foreach ($riwayat_srs as $row) : ?>
+                            <div class="border p-2 mb-2">
+                                <strong>Tanggal Permintaan:</strong> <?= isset($row['tanggal_permintaan']) ? date('d-m-Y', strtotime($row['tanggal_permintaan'])) : '-' ?><br>
+                                <strong>Kode SRS:</strong> <?= esc($row['kode_srs'] ?? '-') ?><br>
+                                <strong>Lokasi Spesimen:</strong> <?= esc($row['lokasi_spesimen'] ?? '-') ?><br>
+                                <strong>Hasil SRS:</strong> <?= esc(strip_tags($row['hasil_srs'])) ?? '-' ?><br>
+                                <strong>Dokter Pembaca:</strong> <?= esc($row['dokter_nama'] ?? 'Belum Dibaca') ?><br>
+                                <button type="button" class="btn btn-info btn-sm"
+                                    onclick="tampilkanModal('<?= nl2br(esc($row['print_srs'] ?? 'Tidak ada hasil', 'js')) ?>')">
+                                    Lihat Detail
+                                </button>
+                            </div>
+                        <?php endforeach; ?>
+                    <?php else : ?>
+                        <p>Tidak ada riwayat pemeriksaan SRS.</p>
+                    <?php endif; ?>
+                </div>
+
+                <!-- Riwayat Pemeriksaan IHC -->
+                <div class="col-md-3">
+                    <label class="col-form-label">Riwayat Pemeriksaan <b>Imunohistokimia</b></label>
+                    <?php if (!empty($riwayat_ihc)) : ?>
+                        <?php foreach ($riwayat_ihc as $row) : ?>
+                            <div class="border p-2 mb-2">
+                                <strong>Tanggal Permintaan:</strong> <?= isset($row['tanggal_permintaan']) ? date('d-m-Y', strtotime($row['tanggal_permintaan'])) : '-' ?><br>
+                                <strong>Kode IHC:</strong> <?= esc($row['kode_ihc'] ?? '-') ?><br>
+                                <strong>Lokasi Spesimen:</strong> <?= esc($row['lokasi_spesimen'] ?? '-') ?><br>
+                                <strong>Hasil IHC:</strong> <?= esc(strip_tags($row['hasil_ihc'])) ?? '-' ?><br>
+                                <strong>Dokter Pembaca:</strong> <?= esc($row['dokter_nama'] ?? 'Belum Dibaca') ?><br>
+                                <button type="button" class="btn btn-info btn-sm"
+                                    onclick="tampilkanModal('<?= nl2br(esc($row['print_ihc'] ?? 'Tidak ada hasil', 'js')) ?>')">
+                                    Lihat Detail
+                                </button>
+                            </div>
+                        <?php endforeach; ?>
+                    <?php else : ?>
+                        <p>Tidak ada riwayat pemeriksaan IHC.</p>
+                    <?php endif; ?>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -69,7 +165,9 @@
                     <label for="unit_asal">Unit Asal</label>
                     <select class="form-control" id="unit_asal" name="unit_asal" onchange="handleUnitAsalChange(this)">
                         <option value="" selected>Belum Dipilih</option>
-                        <option value="Klinik">Poli/Klinik</option>
+                        <option value="Klinik Bedah">Klinik Bedah</option>
+                        <option value="Klinik Bedah Onkologi">Klinik Bedah Onkologi</option>
+                        <option value="Klinik">Poli/Klinik lainya</option>
                         <option value="Ruangan">Ruangan</option>
                         <option value="lainnya">Lainnya</option>
                     </select>
@@ -84,12 +182,12 @@
                         <option value="dr. Ihyan Amri, Sp.B">dr. Ihyan Amri, Sp.B</option>
                         <option value="dr. Andy Achmad Suanda, Sp.B">dr. Andy Achmad Suanda, Sp.B</option>
                         <option value="dr. Agus Maulana,Sp.B,FinaCs,M.Ked.Klin">dr. Agus Maulana,Sp.B,FinaCs,M.Ked.Klin</option>
-                        <option value="ddr. Fransiscus Arifin, Sp.">dr. Fransiscus Arifin, Sp.B</option>
+                        <option value="dr. Fransiscus Arifin, Sp.">dr. Fransiscus Arifin, Sp.B</option>
                         <option value="dr. I Putu Agus Suarta, Sp.OG K.Onk">dr. I Putu Agus Suarta, Sp.OG K.Onk</option>
                         <option value="dr. Dharma Putra Perjuangan Banjarnahor, Sp.OG K. FM">dr. Dharma Putra Perjuangan Banjarnahor, Sp.OG K. FM</option>
                         <option value="dr. Unggul Karyo Nugroho, Sp.Og">dr. Unggul Karyo Nugroho, Sp.Og</option>
                         <option value="dr. Nurlaella Iswan Nusi, Sp.OG">dr. Nurlaella Iswan Nusi, Sp.OG.</option>
-                        <option value="dr. Okky Prasetyo, Sp.BM">dr. Okky Prasetyo, Sp.BM</option>
+                        <option value="drg. Okky Prasetyo, Sp.BM">drg. Okky Prasetyo, Sp.BM</option>
                         <option value="dr. Taufik Indrawan, Sp.U">dr. Taufik Indrawan, Sp.U</option>
                         <option value="dr. dr. Heru Cahjono, Sp.PD.KIC">dr. dr. Heru Cahjono, Sp.PD.KIC</option>
                         <option value="dr. dr. Chairani Fitri Saphira, Sp.BP-RE (K)">dr. dr. Chairani Fitri Saphira, Sp.BP-RE (K)</option>
@@ -118,6 +216,10 @@
                     <label for="lokasi_spesimen">Lokasi Spesimen</label>
                     <input type="text" class="form-control" id="lokasi_spesimen" name="lokasi_spesimen" placeholder="Masukkan Lokasi Spesimen" value="<?= old('lokasi_spesimen'); ?>">
                 </div>
+                <div class="form-group col-md-3">
+                    <label for="diagnosa_klinik">Diagnosa Klinik</label>
+                    <input type="text" class="form-control" id="diagnosa_klinik" name="diagnosa_klinik" placeholder="Masukkan Diagnosa Klinik" value="<?= old('diagnosa_klinik'); ?>">
+                </div>
                 <div class="form-group col-md-2">
                     <label for="kode_block_ihc">Blok Parafin No</label>
                     <input type="text" class="form-control" id="kode_block_ihc" name="kode_block_ihc" placeholder="Masukkan Blok Parafin No" value="<?= old('kode_block_ihc'); ?>">
@@ -131,9 +233,20 @@
                     </select>
                     <input type="text" class="form-control mt-2 d-none" id="tindakan_spesimen_custom" name="tindakan_spesimen_custom" placeholder="Masukkan Tindakan Spesimen Lainnya">
                 </div>
-                <div class="form-group col-md-3">
-                    <label for="diagnosa_klinik">Diagnosa Klinik</label>
-                    <input type="text" class="form-control" id="diagnosa_klinik" name="diagnosa_klinik" placeholder="Masukkan Diagnosa Klinik" value="<?= old('diagnosa_klinik'); ?>">
+            </div>
+
+            <div class="form-row">
+                <div class="form-group col-md-4">
+                    <label for="no_tlp_ihc">No Telfon Pasien</label>
+                    <input type="text" class="form-control" id="no_tlp_ihc" name="no_tlp_ihc" value="<?= old('no_tlp_ihc'); ?>">
+                </div>
+                <div class="form-group col-md-4">
+                    <label for="no_bpjs_ihc">No BPJS Pasien</label>
+                    <input type="text" class="form-control" id="no_bpjs_ihc" name="no_bpjs_ihc" value="<?= old('no_bpjs_ihc'); ?>">
+                </div>
+                <div class="form-group col-md-4">
+                    <label for="no_ktp_ihc">No KTP Pasien</label>
+                    <input type="text" class="form-control" id="no_ktp_ihc" name="no_ktp_ihc" value="<?= old('no_ktp_ihc'); ?>">
                 </div>
             </div>
 
@@ -144,6 +257,37 @@
         </form>
     </div>
 </div>
+
+<!-- Modal Riweyat -->
+<div class="modal fade" id="modalDetail" tabindex="-1" aria-labelledby="modalDetailLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalDetailLabel">Detail Pemeriksaan</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="modal-body-content">
+                <!-- Isi modal akan dimasukkan melalui JavaScript -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- javascript untuk menampilkan modal -->
+<script>
+    function tampilkanModal(isi) {
+        // Masukkan isi ke dalam modal
+        document.getElementById("modal-body-content").innerHTML = isi;
+        // Tampilkan modal
+        var myModal = new bootstrap.Modal(document.getElementById("modalDetail"));
+        myModal.show();
+    }
+</script>
 
 <script>
     // Function to set Tanggal Hasil based on Tanggal Permintaan

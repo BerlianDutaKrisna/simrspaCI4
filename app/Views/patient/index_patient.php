@@ -9,7 +9,7 @@
         <h1>Daftar Pasien</h1>
 
         <!-- Tombol Kembali ke Dashboard -->
-        <a href="<?= base_url('/dashboard') ?>" class="btn btn-primary mb-3">Kembali</a>
+        <a href="<?= base_url('/dashboard') ?>" class="btn btn-primary mb-3"><i class="fas fa-reply"></i> Kembali</a>
 
         <!-- Tombol Tambah Pasien -->
         <a href="<?= base_url('patient/register_patient') ?>" class="btn btn-success mb-3">Tambah Pasien</a>
@@ -70,7 +70,7 @@
                                     </a>
                                 </td>
                             </tr>
-                        <?php $i++; ?>
+                            <?php $i++; ?>
                         <?php endforeach; ?>
                     <?php else : ?>
                         <!-- Pesan jika data pasien kosong -->
@@ -84,46 +84,46 @@
     </div>
 </div>
 
-    <!-- Modal untuk konfirmasi penghapusan pasien -->
-    <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Ingin menghapus?</h5>
-                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">×</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    Yakin ingin menghapus pasien ini?
-                </div>
-                <div class="modal-footer">
-                    <!-- Tombol untuk membatalkan -->
-                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Batal</button>
-                    <!-- Tombol konfirmasi penghapusan -->
-                    <a id="confirmDelete" class="btn btn-danger" href="#">Hapus</a>
-                </div>
+<!-- Modal untuk konfirmasi penghapusan pasien -->
+<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Ingin menghapus?</h5>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Yakin ingin menghapus pasien ini?
+            </div>
+            <div class="modal-footer">
+                <!-- Tombol untuk membatalkan -->
+                <button class="btn btn-secondary" type="button" data-dismiss="modal">Batal</button>
+                <!-- Tombol konfirmasi penghapusan -->
+                <a id="confirmDelete" class="btn btn-danger" href="#">Hapus</a>
             </div>
         </div>
     </div>
+</div>
 
-    <?= $this->include('templates/notifikasi') ?>
-    <?= $this->include('templates/dashboard/footer_dashboard') ?>
+<?= $this->include('templates/notifikasi') ?>
+<?= $this->include('templates/dashboard/footer_dashboard') ?>
 
-    <!-- JavaScript untuk menangani pengisian modal -->
-    <script>
-        // Menangani event saat modal tampil
-        $('#deleteModal').on('show.bs.modal', function(event) {
-            var button = $(event.relatedTarget); // Tombol yang memicu modal
-            var id_pasien = button.data('id_pasien'); // Ambil data-id_pasien dari atribut
-            var nama_pasien = button.data('nama_pasien'); // Ambil data-nama_pasien dari atribut
+<!-- JavaScript untuk menangani pengisian modal -->
+<script>
+    // Menangani event saat modal tampil
+    $('#deleteModal').on('show.bs.modal', function(event) {
+        var button = $(event.relatedTarget); // Tombol yang memicu modal
+        var id_pasien = button.data('id_pasien'); // Ambil data-id_pasien dari atribut
+        var nama_pasien = button.data('nama_pasien'); // Ambil data-nama_pasien dari atribut
 
-            var modal = $(this); // Referensi ke modal
-            // Set teks modal untuk menampilkan nama pasien
-            modal.find('.modal-body').text('Anda yakin ingin menghapus pasien ' + nama_pasien + '?');
+        var modal = $(this); // Referensi ke modal
+        // Set teks modal untuk menampilkan nama pasien
+        modal.find('.modal-body').text('Anda yakin ingin menghapus pasien ' + nama_pasien + '?');
 
-            // Atur href tombol konfirmasi dengan ID pasien
-            modal.find('#confirmDelete').attr('href', '<?= base_url("patient/delete/") ?>' + id_pasien);
-        });
-    </script>
+        // Atur href tombol konfirmasi dengan ID pasien
+        modal.find('#confirmDelete').attr('href', '<?= base_url("patient/delete/") ?>' + id_pasien);
+    });
+</script>

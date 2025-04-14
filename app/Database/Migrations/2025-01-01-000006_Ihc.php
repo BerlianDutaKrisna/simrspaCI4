@@ -107,6 +107,21 @@ class Ihc extends Migration
                 'type' => 'DATETIME',
                 'null' => true,
             ],
+            'no_tlp_ihc' => [
+                'type' => 'VARCHAR',
+                'constraint' => 100,
+                'null' => true,
+            ],
+            'no_bpjs_ihc' => [
+                'type' => 'VARCHAR',
+                'constraint' => 100,
+                'null' => true,
+            ],
+            'no_ktp_ihc' => [
+                'type' => 'VARCHAR',
+                'constraint' => 100,
+                'null' => true,
+            ],
             'created_at' => [
                 'type' => 'DATETIME',
                 'null' => true,

@@ -76,6 +76,7 @@ class Authorized extends BaseController
                 case 'mulai':
                     $this->authorized_srs->update($id_authorized_srs, [
                         'id_user_authorized_srs' => $id_user,
+                        'id_user_dokter_authorized_srs' => $id_user,
                         'status_authorized_srs' => 'Proses Authorized',
                         'mulai_authorized_srs' => date('Y-m-d H:i:s'),
                     ]);
@@ -83,6 +84,7 @@ class Authorized extends BaseController
                 case 'selesai':
                     $this->authorized_srs->update($id_authorized_srs, [
                         'id_user_authorized_srs' => $id_user,
+                        'id_user_dokter_authorized_srs' => $id_user,
                         'status_authorized_srs' => 'Selesai Authorized',
                         'selesai_authorized_srs' => date('Y-m-d H:i:s'),
                     ]);
@@ -90,6 +92,7 @@ class Authorized extends BaseController
                 case 'reset':
                     $this->authorized_srs->update($id_authorized_srs, [
                         'id_user_authorized_srs' => null,
+                        'id_user_dokter_authorized_srs' => null,
                         'status_authorized_srs' => 'Belum Authorized',
                         'mulai_authorized_srs' => null,
                         'selesai_authorized_srs' => null,

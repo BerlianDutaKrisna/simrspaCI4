@@ -7,7 +7,7 @@
     </div>
     <div class="card-body">
         <h1>Daftar Pemotongan Tipis Histopatologi</h1>
-        <a href="<?= base_url('/dashboard') ?>" class="btn btn-primary mb-3">Kembali</a>
+        <a href="<?= base_url('/dashboard') ?>" class="btn btn-primary mb-3"><i class="fas fa-reply"></i> Kembali</a>
 
         <!-- Form -->
         <form id="mainForm" action="<?= base_url('pemotongan_tipis_hpa/proses_pemotongan_tipis'); ?>" method="POST">
@@ -20,11 +20,11 @@
                     <thead>
                         <tr>
                             <th>No</th>
+                            <th>Aksi</th>
                             <th>Kode HPA</th>
                             <th>Nama Pasien</th>
                             <th>Status Pemotongan Tipis</th>
-                            <th>Aksi</th>
-                            <th>Jumlah Slide</th>
+                            <th>Diagnosa Klinik</th>
                             <th>Analis</th>
                             <th>Mulai Pemotongan Tipis</th>
                             <th>Selesai Pemotongan Tipis</th>
@@ -51,7 +51,7 @@
                                     <td><?= $row['nama_pasien']; ?></td>
                                     <td><?= $row['status_pemotongan_tipis_hpa']; ?></td>
 
-                                    <td><?= $row['jumlah_slide']; ?></td>
+                                    <td><?= $row['diagnosa_klinik']; ?></td>
                                     <td><?= $row['nama_user_pemotongan_tipis_hpa']; ?></td>
                                     <td>
                                         <?= empty($row['mulai_pemotongan_tipis_hpa']) ? '-' : esc(date('H:i , d-m-Y', strtotime($row['mulai_pemotongan_tipis_hpa']))); ?>
