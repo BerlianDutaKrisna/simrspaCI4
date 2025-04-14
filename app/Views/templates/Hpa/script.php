@@ -47,9 +47,9 @@
         // Hapus Data (Set Modal)
         // ==========================
         const deleteSelectors = [
-            "hpa", "frs", "pengirisan", "pemotongan", "pemprosesan", "penanaman",
+            "hpa", "pengirisan", "pemotongan", "pemprosesan", "penanaman",
             "pemotongan_tipis", "pewarnaan", "pembacaan", "penulisan",
-            "pemverifikasi", "autorized", "pencetakan"
+            "pemverifikasi", "authorized", "pencetakan"
         ];
 
         $(document).on("click", deleteSelectors.map(sel => `.delete-${sel}`).join(", "), function() {
@@ -73,20 +73,21 @@
             const action = $(this).data("action");
             const id_hpa = $(this).data("id_hpa");
 
+            console.log("Action:", action);
+            console.log("ID HPA:", id_hpa);
+
             const urlMap = {
                 hpa: "<?= base_url('hpa/delete'); ?>",
-                frs: "<?= base_url('frs/delete'); ?>",
-                pengirisan: "<?= base_url('pengirisan/delete'); ?>",
-                pemotongan: "<?= base_url('pemotongan/delete'); ?>",
-                pemprosesan: "<?= base_url('pemprosesan/delete'); ?>",
-                penanaman: "<?= base_url('penanaman/delete'); ?>",
-                pemotongan_tipis: "<?= base_url('pemotongan_tipis/delete'); ?>",
-                pewarnaan: "<?= base_url('pewarnaan/delete'); ?>",
-                pembacaan: "<?= base_url('pembacaan/delete'); ?>",
-                penulisan: "<?= base_url('penulisan/delete'); ?>",
-                pemverifikasi: "<?= base_url('pemverifikasi/delete'); ?>",
-                autorized: "<?= base_url('autorized/delete'); ?>",
-                pencetakan: "<?= base_url('pencetakan/delete'); ?>",
+                pemotongan: "<?= base_url('pemotongan_hpa/delete'); ?>",
+                pemprosesan: "<?= base_url('pemprosesan_hpa/delete'); ?>",
+                penanaman: "<?= base_url('penanaman_hpa/delete'); ?>",
+                pemotongan_tipis: "<?= base_url('pemotongan_tipis_hpa/delete'); ?>",
+                pewarnaan: "<?= base_url('pewarnaan_hpa/delete'); ?>",
+                pembacaan: "<?= base_url('pembacaan_hpa/delete'); ?>",
+                penulisan: "<?= base_url('penulisan_hpa/delete'); ?>",
+                pemverifikasi: "<?= base_url('pemverifikasi_hpa/delete'); ?>",
+                authorized: "<?= base_url('authorized_hpa/delete'); ?>",
+                pencetakan: "<?= base_url('pencetakan_hpa/delete'); ?>",
             };
 
             const idName = `id_${action}`;

@@ -84,7 +84,6 @@
     </div>
 </div>
 
-
 <!-- Modal Konfirmasi Hapus -->
 <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
@@ -96,7 +95,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                Apakah Anda yakin ingin menghapus ini?
+                Apakah Anda yakin ingin menghapus data ini?
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>

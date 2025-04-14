@@ -192,4 +192,30 @@ class Penulisan extends BaseController
         return redirect()->to(base_url('penulisan_hpa/edit?id_penulisan_hpa=' . $id_penulisan_hpa))
             ->with('success', 'Data berhasil diperbarui.');
     }
+
+    public function delete()
+    {
+        try {
+            $id_penulisan = $this->request->getPost('id_penulisan');
+            $id_hpa = $this->request->getPost('id_hpa');
+            if (!$id_penulisan || !$id_hpa) {
+                throw new \Exception('ID tidak lengkap. Gagal menghapus data.');
+            }
+            // Hapus data penulisan
+            if ($this->penulisan_hpa->delete($id_penulisan)) {
+                // Update status_hpa ke tahap sebelumnya 
+                $this->hpaModel->update($id_hpa, [
+                    'status_hpa' => 'Pembacaan',
+                ]);
+                return $this->response->setJSON(['success' => true]);
+            } else {
+                throw new \Exception('Gagal menghapus data.');
+            }
+        } catch (\Exception $e) {
+            return $this->response->setJSON([
+                'success' => false,
+                'message' => $e->getMessage()
+            ]);
+        }
+    }
 }

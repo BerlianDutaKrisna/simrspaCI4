@@ -192,4 +192,30 @@ class Pemverifikasi extends BaseController
         return redirect()->to(base_url('pemverifikasi_hpa/edit?id_pemverifikasi_hpa=' . $id_pemverifikasi_hpa))
             ->with('success', 'Data berhasil diperbarui.');
     }
+
+    public function delete()
+    {
+        try {
+            $id_pemverifikasi = $this->request->getPost('id_pemverifikasi');
+            $id_hpa = $this->request->getPost('id_hpa');
+            if (!$id_pemverifikasi || !$id_hpa) {
+                throw new \Exception('ID tidak lengkap. Gagal menghapus data.');
+            }
+            // Hapus data pemverifikasi
+            if ($this->pemverifikasi_hpa->delete($id_pemverifikasi)) {
+                // Update status_hpa ke tahap sebelumnya 
+                $this->hpaModel->update($id_hpa, [
+                    'status_hpa' => 'Penulisan',
+                ]);
+                return $this->response->setJSON(['success' => true]);
+            } else {
+                throw new \Exception('Gagal menghapus data.');
+            }
+        } catch (\Exception $e) {
+            return $this->response->setJSON([
+                'success' => false,
+                'message' => $e->getMessage()
+            ]);
+        }
+    }
 }

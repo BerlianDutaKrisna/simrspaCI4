@@ -182,4 +182,30 @@ class Pencetakan extends BaseController
         return redirect()->to(base_url('pencetakan_hpa/edit?id_pencetakan_hpa=' . $id_pencetakan_hpa))
             ->with('success', 'Data berhasil diperbarui.');
     }
+
+    public function delete()
+    {
+        try {
+            $id_pencetakan = $this->request->getPost('id_pencetakan'); 
+            $id_hpa = $this->request->getPost('id_hpa');
+            if (!$id_pencetakan || !$id_hpa) {
+                throw new \Exception('ID tidak lengkap. Gagal menghapus data.');
+            }
+            // Hapus data pencetakan
+            if ($this->pencetakan_hpa->delete($id_pencetakan)) {
+                // Update status_hpa ke tahap sebelumnya 
+                $this->hpaModel->update($id_hpa, [
+                    'status_hpa' => 'Authorized',
+                ]);
+                return $this->response->setJSON(['success' => true]);
+            } else {
+                throw new \Exception('Gagal menghapus data.');
+            }
+        } catch (\Exception $e) {
+            return $this->response->setJSON([
+                'success' => false,
+                'message' => $e->getMessage()
+            ]);
+        }
+    }
 }

@@ -192,4 +192,30 @@ class Pemprosesan extends BaseController
         return redirect()->to(base_url('pemprosesan_hpa/edit?id_pemprosesan_hpa=' . $id_pemprosesan_hpa))
             ->with('success', 'Data berhasil diperbarui.');
     }
+
+    public function delete()
+    {
+        try {
+            $id_pemprosesan = $this->request->getPost('id_pemprosesan');
+            $id_hpa = $this->request->getPost('id_hpa');
+            if (!$id_pemprosesan || !$id_hpa) {
+                throw new \Exception('ID tidak lengkap. Gagal menghapus data.');
+            }
+            // Hapus data pemprosesan
+            if ($this->pemprosesan_hpa->delete($id_pemprosesan)) {
+                // Update status_hpa ke tahap sebelumnya 
+                $this->hpaModel->update($id_hpa, [
+                    'status_hpa' => 'Pemotongan',
+                ]);
+                return $this->response->setJSON(['success' => true]);
+            } else {
+                throw new \Exception('Gagal menghapus data.');
+            }
+        } catch (\Exception $e) {
+            return $this->response->setJSON([
+                'success' => false,
+                'message' => $e->getMessage()
+            ]);
+        }
+    }
 }

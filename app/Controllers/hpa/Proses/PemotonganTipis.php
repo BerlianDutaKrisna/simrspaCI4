@@ -192,4 +192,30 @@ class PemotonganTipis extends BaseController
         return redirect()->to(base_url('pemotongan_tipis_hpa/edit?id_pemotongan_tipis_hpa=' . $id_pemotongan_tipis_hpa))
             ->with('success', 'Data berhasil diperbarui.');
     }
+
+    public function delete()
+    {
+        try {
+            $id_pemotongan_tipis = $this->request->getPost('id_pemotongan_tipis');
+            $id_hpa = $this->request->getPost('id_hpa');
+            if (!$id_pemotongan_tipis || !$id_hpa) {
+                throw new \Exception('ID tidak lengkap. Gagal menghapus data.');
+            }
+            // Hapus data pemotongan_tipis
+            if ($this->pemotongan_tipis_hpa->delete($id_pemotongan_tipis)) {
+                // Update status_hpa ke tahap sebelumnya 
+                $this->hpaModel->update($id_hpa, [
+                    'status_hpa' => 'Penanaman',
+                ]);
+                return $this->response->setJSON(['success' => true]);
+            } else {
+                throw new \Exception('Gagal menghapus data.');
+            }
+        } catch (\Exception $e) {
+            return $this->response->setJSON([
+                'success' => false,
+                'message' => $e->getMessage()
+            ]);
+        }
+    }
 }

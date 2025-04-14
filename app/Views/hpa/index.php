@@ -86,10 +86,11 @@
                                                         <?php if (!$isPrimary) : ?>
                                                             <!-- Tombol Hapus -->
                                                             <button type="button"
-                                                                class="btn btn-outline-danger delete-hpa"
+                                                                class="btn btn-outline-danger delete-<?= $nama ?>"
                                                                 data-toggle="modal"
                                                                 data-target="#deleteModal"
-                                                                data-id_hpa="<?= esc($id) ?>"
+                                                                data-id_<?= $nama ?>="<?= esc($id) ?>"
+                                                                data-id_hpa="<?= esc($row['id_hpa']) ?>"
                                                                 data-action="<?= esc($nama) ?>"
                                                                 aria-label="Hapus <?= esc($nama) ?>">
                                                                 <i class="fas fa-trash-alt"></i>

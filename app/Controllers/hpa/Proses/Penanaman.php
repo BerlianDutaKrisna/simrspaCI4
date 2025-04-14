@@ -203,4 +203,30 @@ class Penanaman extends BaseController
         return redirect()->to(base_url('penanaman_hpa/edit?id_penanaman_hpa=' . $id_penanaman_hpa))
             ->with('success', 'Data berhasil diperbarui.');
     }
+
+    public function delete()
+    {
+        try {
+            $id_penanaman = $this->request->getPost('id_penanaman');
+            $id_hpa = $this->request->getPost('id_hpa');
+            if (!$id_penanaman || !$id_hpa) {
+                throw new \Exception('ID tidak lengkap. Gagal menghapus data.');
+            }
+            // Hapus data penanaman
+            if ($this->penanaman_hpa->delete($id_penanaman)) {
+                // Update status_hpa ke tahap sebelumnya 
+                $this->hpaModel->update($id_hpa, [
+                    'status_hpa' => 'Pemprosesan',
+                ]);
+                return $this->response->setJSON(['success' => true]);
+            } else {
+                throw new \Exception('Gagal menghapus data.');
+            }
+        } catch (\Exception $e) {
+            return $this->response->setJSON([
+                'success' => false,
+                'message' => $e->getMessage()
+            ]);
+        }
+    }
 }

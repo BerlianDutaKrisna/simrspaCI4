@@ -192,4 +192,30 @@ class Pewarnaan extends BaseController
         return redirect()->to(base_url('pewarnaan_hpa/edit?id_pewarnaan_hpa=' . $id_pewarnaan_hpa))
             ->with('success', 'Data berhasil diperbarui.');
     }
+
+    public function delete()
+    {
+        try {
+            $id_pewarnaan = $this->request->getPost('id_pewarnaan');
+            $id_hpa = $this->request->getPost('id_hpa');
+            if (!$id_pewarnaan || !$id_hpa) {
+                throw new \Exception('ID tidak lengkap. Gagal menghapus data.');
+            }
+            // Hapus data pewarnaan
+            if ($this->pewarnaan_hpa->delete($id_pewarnaan)) {
+                // Update status_hpa ke tahap sebelumnya 
+                $this->hpaModel->update($id_hpa, [
+                    'status_hpa' => 'Pemotongan Tipis',
+                ]);
+                return $this->response->setJSON(['success' => true]);
+            } else {
+                throw new \Exception('Gagal menghapus data.');
+            }
+        } catch (\Exception $e) {
+            return $this->response->setJSON([
+                'success' => false,
+                'message' => $e->getMessage()
+            ]);
+        }
+    }
 }
