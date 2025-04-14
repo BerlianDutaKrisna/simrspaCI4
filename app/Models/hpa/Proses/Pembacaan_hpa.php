@@ -65,7 +65,7 @@ class Pembacaan_hpa extends Model // Update nama model
         )
             ->join('hpa', 'pembacaan_hpa.id_hpa = hpa.id_hpa', 'left')
             ->join('patient', 'hpa.id_pasien = patient.id_pasien', 'left')
-            ->join('users', 'pembacaan_hpa.id_user_pembacaan_hpa = users.id_user', 'left')
+            ->join('users', 'pembacaan_hpa.id_user_dokter_pembacaan_hpa = users.id_user', 'left')
             ->where('pembacaan_hpa.id_pembacaan_hpa', $id_pembacaan_hpa)
             ->first();
 

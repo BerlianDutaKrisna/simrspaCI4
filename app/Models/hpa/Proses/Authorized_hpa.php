@@ -75,7 +75,7 @@ class Authorized_hpa extends Model // Update nama model
         )
             ->join('hpa', 'authorized_hpa.id_hpa = hpa.id_hpa', 'left')
             ->join('patient', 'hpa.id_pasien = patient.id_pasien', 'left')
-            ->join('users', 'authorized_hpa.id_user_authorized_hpa = users.id_user', 'left')
+            ->join('users', 'authorized_hpa.id_user_dokter_authorized_hpa = users.id_user', 'left')
             ->where('authorized_hpa.id_authorized_hpa', $id_authorized_hpa)
             ->first();
 

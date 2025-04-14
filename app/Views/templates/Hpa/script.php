@@ -149,8 +149,6 @@
                             <p><strong>Nama Pasien:</strong> ${data.nama_pasien}</p>
                             <p><strong>Kode HPA:</strong> ${data.kode_hpa}</p>
                         `;
-
-                                // Daftar indikator mutu – silakan ubah nama indikator sesuai kebutuhan
                                 let indikatorList = '';
                                 indikatorList += `<li class="list-group-item"><strong>Vol cairan fiksasi sesuai?</strong>: ${data.indikator_1}</li>`;
                                 indikatorList += `<li class="list-group-item"><strong>Jaringan terfiksasi merata?</strong>: ${data.indikator_2}</li>`;
