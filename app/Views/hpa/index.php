@@ -23,6 +23,7 @@
                             <th>No. RM</th>
                             <th>Kode HPA</th>
                             <th>Nama Pasien</th>
+                            <th>Status HPA</th>
                             <th>Proses</th>
                         </tr>
                     </thead>
@@ -50,6 +51,16 @@
                                     <td><?= esc($row['norm_pasien']) ?></td>
                                     <td><?= esc($row['kode_hpa']) ?></td>
                                     <td><?= esc($row['nama_pasien']) ?></td>
+                                    <td>
+                                        <a href="#"
+                                            class="btn btn-info btn-sm"
+                                            data-toggle="modal"
+                                            data-target="#statusHpaModal"
+                                            data-id_hpa="<?= esc($row['id_hpa']) ?>"
+                                            data-status_hpa="<?= esc($row['status_hpa']) ?>">
+                                            <?= esc($row['status_hpa']) ?>
+                                        </a>
+                                    </td>
                                     <td>
                                         <div class="d-flex flex-wrap gap-2 justify-content-start">
                                             <?php

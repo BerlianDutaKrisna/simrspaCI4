@@ -35,14 +35,13 @@
                     <span aria-hidden="true">×</span>
                 </button>
             </div>
-            <form action="<?= base_url('hpa/update_status_hpa') ?>" method="POST">
+            <form action="<?= base_url('hpa/update_status') ?>" method="POST">
                 <div class="modal-body">
                     <input type="hidden" id="id_hpa" name="id_hpa" value="">
                     <div class="form-group">
                         <label for="status_hpa">Status Hpa</label>
                         <select class="form-control" id="status_hpa" name="status_hpa">
                             <option value="Penerimaan" <?= old('status_hpa') == 'Penerimaan' ? 'selected' : '' ?>>Penerimaan</option>
-                            <option value="Pengirisan" <?= old('status_hpa') == 'Pengirisan' ? 'selected' : '' ?>>Pengirisan</option>
                             <option value="Pemotongan" <?= old('status_hpa') == 'Pemotongan' ? 'selected' : '' ?>>Pemotongan</option>
                             <option value="Pemprosesan" <?= old('status_hpa') == 'Pemprosesan' ? 'selected' : '' ?>>Pemprosesan</option>
                             <option value="Penanaman" <?= old('status_hpa') == 'Penanaman' ? 'selected' : '' ?>>Penanaman</option>

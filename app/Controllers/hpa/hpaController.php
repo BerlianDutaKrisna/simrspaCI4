@@ -739,6 +739,21 @@ class HpaController extends BaseController
         return redirect()->back()->with('error', 'Terjadi kesalahan: Halaman tujuan tidak valid.');
     }
 
+    public function update_status()
+    {
+        // Ambil data dari POST
+        $id_hpa = $this->request->getPost('id_hpa');
+        $status_hpa = $this->request->getPost('status_hpa');
+        // Data yang akan diupdate
+        $data = [
+            'status_hpa' => $status_hpa,
+        ];
+        // Gunakan model yang sudah diinisialisasi di konstruktor
+        $this->hpaModel->update($id_hpa, $data);
+        // Redirect dengan pesan sukses
+        return redirect()->to('hpa/index')->with('success', 'Status HPA berhasil disimpan.');
+    }
+
     public function uploadFotoMakroskopis($id_hpa)
     {
         date_default_timezone_set('Asia/Jakarta');
