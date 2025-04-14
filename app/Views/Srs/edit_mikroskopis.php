@@ -17,7 +17,7 @@
                 <input type="hidden" name="id_pembacaan_srs" value="<?= $pembacaan_srs['id_pembacaan_srs'] ?>">
                 <input type="hidden" name="page_source" value="edit_mikroskopis">
 
-                <!-- Kolom Kode srs dan Diagnosa -->
+                <!-- Kolom Kode SRS dan Diagnosa -->
                 <div class="form-group row">
                     <label class="col-sm-2 col-form-label">Kode SRS</label>
                     <div class="col-sm-4">
@@ -236,7 +236,7 @@
                     </div>
                 </div>
 
-                <!-- Kolom Hasil srs dan Dokter -->
+                <!-- Kolom Hasil SRS dan Dokter -->
                 <div class="form-group row">
                     <label class="col-sm-2 col-form-label">Hasil Kesimpulan</label>
                     <div class="col-sm-4">

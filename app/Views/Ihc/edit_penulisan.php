@@ -4,7 +4,7 @@
 <div class="container-fluid">
     <div class="card shadow mb-4">
         <div class="card-header py-3">
-            <h6 class="m-0 font-weight-bold text-primary">Penulisan</h6>
+            <h6 class="m-0 font-weight-bold text-primary"> Edit Penulisan</h6>
         </div>
         <div class="card-body">
             <h1 class="h3 mb-4">Form Penulisan Imunohistokimia</h1>
@@ -19,7 +19,7 @@
                 <input type="hidden" name="id_penulisan_ihc" value="<?= $penulisan['id_penulisan_ihc'] ?>">
                 <input type="hidden" name="page_source" value="edit_penulisan">
 
-                <!-- Kolom Kode ihc dan Diagnosa -->
+                <!-- Kolom Kode IHC dan Diagnosa -->
                 <div class="form-group row">
                     <label class="col-sm-2 col-form-label">Kode IHC</label>
                     <div class="col-sm-4">
@@ -96,7 +96,7 @@
                             </textarea>
                         </div>
                         <div class="form-group">
-                            <label class="col-sm-3 col-form-label" for="kode_block_ihc">Kode Block Ihc</label>
+                            <label class="col-sm-3 col-form-label" for="kode_block_ihc">Kode Block IHC</label>
                         </div>
                         <div class="col-sm-5">
                             <input type="text" name="kode_block_ihc" value="<?= $ihc['kode_block_ihc'] ?? '' ?>" class="form-control form-control-user">
@@ -188,7 +188,7 @@
                         </textarea>
                     </div>
                 </div>
-                <!-- Kolom Hasil ihc dan Dokter -->
+                <!-- Kolom Hasil IHC dan Dokter -->
                 <div class="form-group row">
                     <label class="col-sm-2 col-form-label"></label>
                     <div class="col-sm-4">

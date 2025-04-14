@@ -20,7 +20,7 @@
                         <tr>
                             <th>No</th>
                             <th>Norm Pasien</th>
-                            <th>Kode srs</th>
+                            <th>Kode SRS</th>
                             <th>Nama Pasien</th>
                             <th>Aksi</th>
                         </tr>
@@ -40,13 +40,13 @@
                                             <a href="<?= base_url('srs/edit/' . esc($row['id_srs'])) ?>" class="btn btn-sm btn-warning mx-1">
                                                 <i class="fas fa-edit"></i> Edit
                                             </a>
-                                            <!-- Tombol Hapus srs -->
+                                            <!-- Tombol Hapus SRS -->
                                             <button class="btn btn-sm btn-danger mx-1 delete-srs"
                                                 data-toggle="modal"
                                                 data-target="#deleteModal"
                                                 data-id_srs="<?= htmlspecialchars($row['id_srs'], ENT_QUOTES, 'UTF-8') ?>"
                                                 data-action="srs"
-                                                aria-label="Hapus srs">
+                                                aria-label="Hapus SRS">
                                                 <i class="fas fa-trash-alt"></i> Hapus
                                             </button>
                                         </div>

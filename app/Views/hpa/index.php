@@ -42,7 +42,7 @@
                                                 data-target="#deleteModal"
                                                 data-id_hpa="<?= htmlspecialchars($row['id_hpa'], ENT_QUOTES, 'UTF-8') ?>"
                                                 data-action="hpa"
-                                                aria-label="Hapus hpa">
+                                                aria-label="Hapus HPA">
                                                 <i class="fas fa-trash-alt"></i> Hapus
                                             </button>
                                         </div>

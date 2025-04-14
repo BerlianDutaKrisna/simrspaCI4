@@ -153,7 +153,7 @@
             <!-- Hidden input untuk id_pasien -->
             <input type="hidden" name="id_pasien" value="<?= isset($patient['id_pasien']) ? esc($patient['id_pasien']) : ''; ?>">
             <div class="form-row">
-                <!-- Form group untuk Kode frs -->
+                <!-- Form group untuk Kode FRS -->
                 <div class="form-group col-md-3">
                     <label for="kode_frs">Kode FRS</label>
                     <input type="text" class="form-control" id="kode_frs" name="kode_frs"

@@ -20,7 +20,7 @@
                         <tr>
                             <th>No</th>
                             <th>Norm Pasien</th>
-                            <th>Kode frs</th>
+                            <th>Kode FRS</th>
                             <th>Nama Pasien</th>
                             <th>Aksi</th>
                         </tr>
@@ -40,13 +40,13 @@
                                             <a href="<?= base_url('frs/edit/' . esc($row['id_frs'])) ?>" class="btn btn-sm btn-warning mx-1">
                                                 <i class="fas fa-edit"></i> Edit
                                             </a>
-                                            <!-- Tombol Hapus frs -->
+                                            <!-- Tombol Hapus FRS -->
                                             <button class="btn btn-sm btn-danger mx-1 delete-frs"
                                                 data-toggle="modal"
                                                 data-target="#deleteModal"
                                                 data-id_frs="<?= htmlspecialchars($row['id_frs'], ENT_QUOTES, 'UTF-8') ?>"
                                                 data-action="frs"
-                                                aria-label="Hapus frs">
+                                                aria-label="Hapus FRS">
                                                 <i class="fas fa-trash-alt"></i> Hapus
                                             </button>
                                         </div>

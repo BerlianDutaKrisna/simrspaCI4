@@ -4,7 +4,7 @@
 <div class="container-fluid">
     <div class="card shadow mb-4">
         <div class="card-header py-3">
-            <h6 class="m-0 font-weight-bold text-primary">Penulisan</h6>
+            <h6 class="m-0 font-weight-bold text-primary">Edit Penulisan</h6>
         </div>
         <div class="card-body">
             <h1 class="h3 mb-4">Form Penulisan Sitologi</h1>
@@ -19,7 +19,7 @@
                 <input type="hidden" name="id_penulisan_srs" value="<?= $penulisan['id_penulisan_srs'] ?>">
                 <input type="hidden" name="page_source" value="edit_penulisan">
 
-                <!-- Kolom Kode srs dan Diagnosa -->
+                <!-- Kolom Kode SRS dan Diagnosa -->
                 <div class="form-group row">
                     <label class="col-sm-2 col-form-label">Kode SRS</label>
                     <div class="col-sm-4">
@@ -183,7 +183,7 @@
                     </div>
                 </div>
 
-                <!-- Kolom Hasil srs dan Dokter -->
+                <!-- Kolom Hasil SRS dan Dokter -->
                 <div class="form-group row">
                     <label class="col-sm-2 col-form-label"></label>
                     <div class="col-sm-4">

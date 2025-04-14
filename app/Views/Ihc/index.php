@@ -20,7 +20,7 @@
                         <tr>
                             <th>No</th>
                             <th>Norm Pasien</th>
-                            <th>Kode ihc</th>
+                            <th>Kode IHC</th>
                             <th>Nama Pasien</th>
                             <th>Aksi</th>
                         </tr>
@@ -40,13 +40,13 @@
                                             <a href="<?= base_url('ihc/edit/' . esc($row['id_ihc'])) ?>" class="btn btn-sm btn-warning mx-1">
                                                 <i class="fas fa-edit"></i> Edit
                                             </a>
-                                            <!-- Tombol Hapus ihc -->
+                                            <!-- Tombol Hapus IHC -->
                                             <button class="btn btn-sm btn-danger mx-1 delete-ihc"
                                                 data-toggle="modal"
                                                 data-target="#deleteModal"
                                                 data-id_ihc="<?= htmlspecialchars($row['id_ihc'], ENT_QUOTES, 'UTF-8') ?>"
                                                 data-action="ihc"
-                                                aria-label="Hapus ihc">
+                                                aria-label="Hapus IHC">
                                                 <i class="fas fa-trash-alt"></i> Hapus
                                             </button>
                                         </div>
