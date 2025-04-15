@@ -6,7 +6,7 @@
         <h6 class="m-0 font-weight-bold text-primary">Buku Registrasi</h6>
     </div>
     <div class="card-body">
-        <h1>Buku Registrasi Laboratorrium Patologi Anatomi</h1>
+        <h1>Buku Registrasi Laboratorium Patologi Anatomi</h1>
         <a href="<?= base_url('/dashboard') ?>" class="btn btn-primary mb-3"><i class="fas fa-reply"></i> Kembali</a>
 
         <form method="GET" action="<?= base_url('exam/search') ?>">

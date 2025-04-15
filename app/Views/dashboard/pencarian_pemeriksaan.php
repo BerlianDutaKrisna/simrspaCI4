@@ -35,7 +35,7 @@
                             <!-- Hasil pencarian akan dimasukkan di sini -->
                         </div>
                         <div class="modal-footer" id="modalFooter">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fas fa-times"></i> Tutup</button>
                             <!-- Tombol akan ditambahkan di sini -->
                         </div>
                     </div>
@@ -111,7 +111,7 @@
                     <a href="<?= base_url('frs/register') ?>?norm_pasien=${norm}" class="btn btn-primary"><i class="fas fa-plus-square"></i> FNAB</a>
                     <a href="<?= base_url('srs/register') ?>?norm_pasien=${norm}" class="btn btn-success"><i class="fas fa-plus-square"></i> SRS</a>
                     <a href="<?= base_url('ihc/register') ?>?norm_pasien=${norm}" class="btn btn-warning"><i class="fas fa-plus-square"></i> IHC</a>
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fas fa-window-close"></i> Tutup</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fas fa-times"></i> Tutup</button>
                 `;
                 } else {
                     // Jika status 'error', tampilkan pesan kesalahan
@@ -119,8 +119,8 @@
 
                     // Tambahkan tombol 'Tambah Pasien'
                     document.getElementById('modalFooter').innerHTML = `
-                    <a href="<?= base_url('patient/register_patient') ?>?norm_pasien=${norm}" class="btn btn-success">Tambah Pasien</a>
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
+                    <a href="<?= base_url('patient/register_patient') ?>?norm_pasien=${norm}" class="btn btn-success"><i class="fas fa-plus-square"></i> Tambah Pasien</a>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fas fa-times"></i> Tutup</button>
                 `;
                 }
 

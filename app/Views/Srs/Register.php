@@ -164,7 +164,7 @@
                 <div class="form-group col-md-3">
                     <label for="unit_asal">Unit Asal</label>
                     <select class="form-control" id="unit_asal" name="unit_asal" onchange="handleUnitAsalChange(this)">
-                    <option value="" selected>Belum Dipilih</option>
+                        <option value="" selected>Belum Dipilih</option>
                         <option value="Ruangan Aster">Ruangan Aster</option>
                         <option value="Ruangan Anggrek">Ruangan Anggrek</option>
                         <option value="Ruangan Bougenvil">Ruangan Bougenvil</option>
@@ -249,7 +249,7 @@
 
             <!-- Tombol untuk submit form -->
             <div class="d-flex justify-content-end">
-                <button type="submit" class="btn btn-primary">Simpan</button>
+                <button type="submit" class="btn btn-success"><i class="fas fa-save"></i> Simpan</button>
             </div>
         </form>
     </div>
