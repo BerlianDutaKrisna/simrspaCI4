@@ -24,8 +24,8 @@
     <!-- Menambahkan CSS untuk styling tabel, khusus untuk penggunaan DataTables menggunakan base_url() -->
     <link href="<?= base_url('assets/datatables/css/buttons.dataTables.min.css') ?>" rel="stylesheet">
     <link href="<?= base_url('assets/datatables/css/dataTables.bootstrap4.min.css') ?>" rel="stylesheet">
-    
-    <script src="<?= base_url('assets/chart.js/Chart.min.js') ?>"></script> <!-- Menambahkan plugin Chart.js untuk grafik -->
+
+    <script src="<?= base_url('assets/chart/Chart.min.js') ?>"></script>
 </head>
 
 <body id="page-top">
