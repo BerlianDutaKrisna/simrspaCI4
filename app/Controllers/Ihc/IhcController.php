@@ -585,6 +585,21 @@ class ihcController extends BaseController
         return redirect()->back()->with('error', 'Terjadi kesalahan: Halaman tujuan tidak valid.');
     }
 
+    public function update_status()
+    {
+        // Ambil data dari POST
+        $id_ihc = $this->request->getPost('id_ihc');
+        $status_ihc = $this->request->getPost('status_ihc');
+        // Data yang akan diupdate
+        $data = [
+            'status_ihc' => $status_ihc,
+        ];
+        // Gunakan model yang sudah diinisialisasi di konstruktor
+        $this->ihcModel->update($id_ihc, $data);
+        // Redirect dengan pesan sukses
+        return redirect()->to('ihc/index')->with('success', 'Status IHC berhasil disimpan.');
+    }
+
     public function uploadFotoMakroskopis($id_ihc)
     {
         date_default_timezone_set('Asia/Jakarta');

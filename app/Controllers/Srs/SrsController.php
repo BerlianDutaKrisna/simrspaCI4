@@ -622,6 +622,21 @@ class srsController extends BaseController
         return redirect()->back()->with('error', 'Terjadi kesalahan: Halaman tujuan tidak valid.');
     }
 
+    public function update_status()
+    {
+        // Ambil data dari POST
+        $id_srs = $this->request->getPost('id_srs');
+        $status_srs = $this->request->getPost('status_srs');
+        // Data yang akan diupdate
+        $data = [
+            'status_srs' => $status_srs,
+        ];
+        // Gunakan model yang sudah diinisialisasi di konstruktor
+        $this->srsModel->update($id_srs, $data);
+        // Redirect dengan pesan sukses
+        return redirect()->to('srs/index')->with('success', 'Status SRS berhasil disimpan.');
+    }
+
     public function uploadFotoMakroskopis($id_srs)
     {
         date_default_timezone_set('Asia/Jakarta');

@@ -63,7 +63,7 @@ class FrsController extends BaseController
             'nama_user' => session()->get('nama_user'),
             'frsData' => $frsData
         ];
-        
+
         return view('Frs/index', $data);
     }
 
@@ -78,7 +78,7 @@ class FrsController extends BaseController
             'nama_user'  => session()->get('nama_user'),
             'frsData' => $frsData,
         ];
-        
+
         return view('frs/index_buku_penerima', $data);
     }
 
@@ -191,7 +191,7 @@ class FrsController extends BaseController
             return redirect()->back()->withInput()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
         }
     }
-    
+
     public function delete()
     {
         $id_frs = $this->request->getPost('id_frs');
@@ -204,7 +204,7 @@ class FrsController extends BaseController
             return $this->response->setJSON(['success' => false, 'message' => 'Gagal menghapus data.']);
         }
     }
-    
+
     // Menampilkan form edit frs
     public function edit($id_frs)
     {
@@ -252,7 +252,7 @@ class FrsController extends BaseController
             'pembacaan_frs' => $pembacaan_frs,
             'users'      => $users,
         ];
-        
+
         return view('frs/edit', $data);
     }
 
@@ -285,7 +285,7 @@ class FrsController extends BaseController
             'id_user'    => $this->session->get('id_user'),
             'nama_user'  => $this->session->get('nama_user'),
         ];
-        
+
         return view('frs/edit_makroskopis', $data);
     }
 
@@ -320,7 +320,7 @@ class FrsController extends BaseController
             'id_user'         => session()->get('id_user'),
             'nama_user'       => session()->get('nama_user'),
         ];
-        
+
         return view('frs/edit_mikroskopis', $data);
     }
 
@@ -360,7 +360,7 @@ class FrsController extends BaseController
             'penulisan' => $penulisan_frs,
             'users' => $users,
         ];
-        
+
         return view('frs/edit_penulisan', $data);
     }
 
@@ -385,7 +385,7 @@ class FrsController extends BaseController
             'frs' => $frs,
             'pembacaan_frs' => $pembacaan_frs,
         ];
-        
+
         return view('frs/edit_print', $data);
     }
 
@@ -393,7 +393,7 @@ class FrsController extends BaseController
     {
         date_default_timezone_set('Asia/Jakarta');
         $id_user = session()->get('id_user');
-        
+
         $frs = $this->frsModel->getfrsWithRelationsProses($id_frs);
         if (!$frs) {
             return redirect()->back()->with('message', ['error' => 'frs tidak ditemukan.']);
@@ -623,6 +623,21 @@ class FrsController extends BaseController
         }
         // Jika redirect tidak sesuai dengan yang diharapkan
         return redirect()->back()->with('error', 'Terjadi kesalahan: Halaman tujuan tidak valid.');
+    }
+
+    public function update_status()
+    {
+        // Ambil data dari POST
+        $id_frs = $this->request->getPost('id_frs');
+        $status_frs = $this->request->getPost('status_frs');
+        // Data yang akan diupdate
+        $data = [
+            'status_frs' => $status_frs,
+        ];
+        // Gunakan model yang sudah diinisialisasi di konstruktor
+        $this->frsModel->update($id_frs, $data);
+        // Redirect dengan pesan sukses
+        return redirect()->to('frs/index')->with('success', 'Status FRS berhasil disimpan.');
     }
 
     public function uploadFotoMakroskopis($id_frs)
