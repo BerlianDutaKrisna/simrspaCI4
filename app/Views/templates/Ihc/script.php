@@ -76,7 +76,7 @@
             console.log("ID IHC:", id_ihc);
 
             const urlMap = {
-                IHC: "<?= base_url('ihc/delete'); ?>",
+                ihc: "<?= base_url('ihc/delete'); ?>",
                 pemotongan: "<?= base_url('pemotongan_ihc/delete'); ?>",
                 pemprosesan: "<?= base_url('pemprosesan_ihc/delete'); ?>",
                 penanaman: "<?= base_url('penanaman_ihc/delete'); ?>",

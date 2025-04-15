@@ -76,7 +76,7 @@
             console.log("ID FRS:", id_frs);
 
             const urlMap = {
-                FRS: "<?= base_url('frs/delete'); ?>",
+                frs: "<?= base_url('frs/delete'); ?>",
                 pemotongan: "<?= base_url('pemotongan_frs/delete'); ?>",
                 pemprosesan: "<?= base_url('pemprosesan_frs/delete'); ?>",
                 penanaman: "<?= base_url('penanaman_frs/delete'); ?>",
