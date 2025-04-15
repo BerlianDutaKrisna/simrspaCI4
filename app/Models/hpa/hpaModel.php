@@ -100,14 +100,15 @@ class HpaModel extends Model
             ->orderBy("MIN(tanggal_permintaan)", "ASC")
             ->findAll();
     }
-    
-    public function getTotalHpa() {
+
+    public function getTotalHpa()
+    {
         return $this->db->table('hpa')->countAllResults();
     }
 
     public function gethpaWithPatient()
-{
-    return $this->select('
+    {
+        return $this->select('
             hpa.*, 
             patient.*, 
             penerimaan_hpa.id_penerimaan_hpa AS id_penerimaan,
@@ -123,22 +124,22 @@ class HpaModel extends Model
             pencetakan_hpa.id_pencetakan_hpa AS id_pencetakan,
             mutu_hpa.id_mutu_hpa AS id_mutu
         ')
-        ->join('patient', 'patient.id_pasien = hpa.id_pasien', 'left')
-        ->join('penerimaan_hpa', 'penerimaan_hpa.id_hpa = hpa.id_hpa', 'left')
-        ->join('pemotongan_hpa', 'pemotongan_hpa.id_hpa = hpa.id_hpa', 'left')
-        ->join('pemprosesan_hpa', 'pemprosesan_hpa.id_hpa = hpa.id_hpa', 'left')
-        ->join('penanaman_hpa', 'penanaman_hpa.id_hpa = hpa.id_hpa', 'left')
-        ->join('pemotongan_tipis_hpa', 'pemotongan_tipis_hpa.id_hpa = hpa.id_hpa', 'left')
-        ->join('pewarnaan_hpa', 'pewarnaan_hpa.id_hpa = hpa.id_hpa', 'left')
-        ->join('pembacaan_hpa', 'pembacaan_hpa.id_hpa = hpa.id_hpa', 'left')
-        ->join('penulisan_hpa', 'penulisan_hpa.id_hpa = hpa.id_hpa', 'left')
-        ->join('pemverifikasi_hpa', 'pemverifikasi_hpa.id_hpa = hpa.id_hpa', 'left')
-        ->join('authorized_hpa', 'authorized_hpa.id_hpa = hpa.id_hpa', 'left')
-        ->join('pencetakan_hpa', 'pencetakan_hpa.id_hpa = hpa.id_hpa', 'left')
-        ->join('mutu_hpa', 'mutu_hpa.id_hpa = hpa.id_hpa', 'left')
-        ->orderBy('hpa.kode_hpa', 'ASC')
-        ->findAll();
-}
+            ->join('patient', 'patient.id_pasien = hpa.id_pasien', 'left')
+            ->join('penerimaan_hpa', 'penerimaan_hpa.id_hpa = hpa.id_hpa', 'left')
+            ->join('pemotongan_hpa', 'pemotongan_hpa.id_hpa = hpa.id_hpa', 'left')
+            ->join('pemprosesan_hpa', 'pemprosesan_hpa.id_hpa = hpa.id_hpa', 'left')
+            ->join('penanaman_hpa', 'penanaman_hpa.id_hpa = hpa.id_hpa', 'left')
+            ->join('pemotongan_tipis_hpa', 'pemotongan_tipis_hpa.id_hpa = hpa.id_hpa', 'left')
+            ->join('pewarnaan_hpa', 'pewarnaan_hpa.id_hpa = hpa.id_hpa', 'left')
+            ->join('pembacaan_hpa', 'pembacaan_hpa.id_hpa = hpa.id_hpa', 'left')
+            ->join('penulisan_hpa', 'penulisan_hpa.id_hpa = hpa.id_hpa', 'left')
+            ->join('pemverifikasi_hpa', 'pemverifikasi_hpa.id_hpa = hpa.id_hpa', 'left')
+            ->join('authorized_hpa', 'authorized_hpa.id_hpa = hpa.id_hpa', 'left')
+            ->join('pencetakan_hpa', 'pencetakan_hpa.id_hpa = hpa.id_hpa', 'left')
+            ->join('mutu_hpa', 'mutu_hpa.id_hpa = hpa.id_hpa', 'left')
+            ->orderBy('hpa.kode_hpa', 'ASC')
+            ->findAll();
+    }
 
 
     public function getHpaWithRelationsProses($id_hpa)

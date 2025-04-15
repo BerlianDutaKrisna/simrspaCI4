@@ -64,7 +64,7 @@ class FrsController extends BaseController
             'frsData' => $frsData
         ];
         
-        return view('frs/index', $data);
+        return view('Frs/index', $data);
     }
 
     public function index_buku_penerima()

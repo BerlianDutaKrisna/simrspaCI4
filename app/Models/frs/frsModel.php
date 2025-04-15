@@ -101,15 +101,33 @@ class FrsModel extends Model
             ->orderBy("MIN(tanggal_permintaan)", "ASC")
             ->findAll();
     }
-    
-    public function getTotalFrs() {
+
+    public function getTotalFrs()
+    {
         return $this->db->table('frs')->countAllResults();
     }
 
     public function getfrsWithPatient()
     {
-        return $this->select('frs.*, patient.*')
-            ->join('patient', 'patient.id_pasien = frs.id_pasien')
+        return $this->select('
+            frs.*, 
+            patient.*, 
+            penerimaan_frs.id_penerimaan_frs AS id_penerimaan,
+            pembacaan_frs.id_pembacaan_frs AS id_pembacaan,
+            penulisan_frs.id_penulisan_frs AS id_penulisan,
+            pemverifikasi_frs.id_pemverifikasi_frs AS id_pemverifikasi,
+            authorized_frs.id_authorized_frs AS id_authorized,
+            pencetakan_frs.id_pencetakan_frs AS id_pencetakan,
+            mutu_frs.id_mutu_frs AS id_mutu
+        ')
+            ->join('patient', 'patient.id_pasien = frs.id_pasien', 'left')
+            ->join('penerimaan_frs', 'penerimaan_frs.id_frs = frs.id_frs', 'left')
+            ->join('pembacaan_frs', 'pembacaan_frs.id_frs = frs.id_frs', 'left')
+            ->join('penulisan_frs', 'penulisan_frs.id_frs = frs.id_frs', 'left')
+            ->join('pemverifikasi_frs', 'pemverifikasi_frs.id_frs = frs.id_frs', 'left')
+            ->join('authorized_frs', 'authorized_frs.id_frs = frs.id_frs', 'left')
+            ->join('pencetakan_frs', 'pencetakan_frs.id_frs = frs.id_frs', 'left')
+            ->join('mutu_frs', 'mutu_frs.id_frs = frs.id_frs', 'left')
             ->orderBy('frs.kode_frs', 'ASC')
             ->findAll();
     }
