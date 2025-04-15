@@ -431,3 +431,30 @@ $routes->group('mutu_hpa', ['namespace' => 'App\Controllers\Hpa'], function ($ro
     $routes->get('edit', 'mutu::edit');
     $routes->post('update', 'mutu::update');
 });
+
+// Router untuk Mutu Frs
+$routes->group('mutu_frs', ['namespace' => 'App\Controllers\Frs'], function ($routes) {
+    $routes->get('index', 'mutu::index');
+    $routes->post('proses_mutu', 'mutu::proses_mutu');
+    $routes->get('mutu_details', 'mutu::mutu_details');
+    $routes->get('edit', 'mutu::edit');
+    $routes->post('update', 'mutu::update');
+});
+
+// Router untuk Mutu Srs
+$routes->group('mutu_srs', ['namespace' => 'App\Controllers\Srs'], function ($routes) {
+    $routes->get('index', 'mutu::index');
+    $routes->post('proses_mutu', 'mutu::proses_mutu');
+    $routes->get('mutu_details', 'mutu::mutu_details');
+    $routes->get('edit', 'mutu::edit');
+    $routes->post('update', 'mutu::update');
+});
+
+// Router untuk Mutu Ihc
+$routes->group('mutu_ihc', ['namespace' => 'App\Controllers\Ihc'], function ($routes) {
+    $routes->get('index', 'mutu::index');
+    $routes->post('proses_mutu', 'mutu::proses_mutu');
+    $routes->get('mutu_details', 'mutu::mutu_details');
+    $routes->get('edit', 'mutu::edit');
+    $routes->post('update', 'mutu::update');
+});

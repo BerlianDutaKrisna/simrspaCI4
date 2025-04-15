@@ -41,25 +41,30 @@ class Mutu_frs extends Model
         return $this->db->affectedRows() > 0;
     }
 
-    public function getmutu_frsWithRelations()
-{
-    return $this->select(
+    public function getmutuWithRelations()
+    {
+        return $this->select(
             'mutu_frs.*, 
             frs.*, 
             patient.*'
         )
-        ->join('frs', 'mutu_frs.id_frs = frs.id_frs', 'left') // Relasi dengan tabel frs
-        ->join('patient', 'frs.id_pasien = patient.id_pasien', 'left') // Relasi dengan tabel patient
-        ->findAll();
-}
+            ->join('frs', 'mutu_frs.id_frs = frs.id_frs', 'left') // Relasi dengan tabel frs
+            ->join('patient', 'frs.id_pasien = patient.id_pasien', 'left') // Relasi dengan tabel patient
+            ->findAll();
+    }
 
-    // Fungsi untuk mengupdate data mutu_frs
-public function updatemutu_frs($id_mutu_frs, $data)
-{
-    // Mengambil table mutu_frs
-    $builder = $this->db->table($this->table);  
-    $builder->where('id_mutu_frs', $id_mutu_frs);  
-    $builder->update($data);  
-    return $this->db->affectedRows();  
-}
+    public function detailsmutu_frs($id_mutu_frs)
+    {
+        $data = $this->select(
+            'mutu_frs.*, 
+        frs.*, 
+        patient.*'
+        )
+            ->join('frs', 'mutu_frs.id_frs = frs.id_frs', 'left')
+            ->join('patient', 'frs.id_pasien = patient.id_pasien', 'left')
+            ->where('mutu_frs.id_mutu_frs', $id_mutu_frs)
+            ->first();
+
+        return $data;
+    }
 }

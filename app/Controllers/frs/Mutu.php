@@ -1,30 +1,30 @@
 <?php
 
-namespace App\Controllers\Hpa;
+namespace App\Controllers\Frs;
 
 use App\Controllers\BaseController;
-use App\Models\Hpa\HpaModel;
-use App\Models\Hpa\Mutu_hpa;
+use App\Models\Frs\FrsModel;
+use App\Models\Frs\Mutu_frs;
 use CodeIgniter\Exceptions\PageNotFoundException;
 
 class mutu extends BaseController
 {
-    protected $hpaModel;
-    protected $mutu_hpa;
+    protected $frsModel;
+    protected $mutu_frs;
 
     public function __construct()
     {
-        $this->hpaModel = new hpaModel();
-        $this->mutu_hpa = new Mutu_hpa();
+        $this->frsModel = new frsModel();
+        $this->mutu_frs = new Mutu_frs();
     }
 
 
     public function mutu_details()
     {
-        $id_mutu_hpa = $this->request->getGet('id_mutu_hpa');
+        $id_mutu_frs = $this->request->getGet('id_mutu_frs');
 
-        if ($id_mutu_hpa) {
-            $data = $this->mutu_hpa->detailsmutu_hpa($id_mutu_hpa);
+        if ($id_mutu_frs) {
+            $data = $this->mutu_frs->detailsmutu_frs($id_mutu_frs);
 
             if ($data) {
                 return $this->response->setJSON($data);
@@ -38,18 +38,18 @@ class mutu extends BaseController
 
     public function edit()
     {
-        $id_mutu_hpa = $this->request->getGet('id_mutu_hpa');
+        $id_mutu_frs = $this->request->getGet('id_mutu_frs');
 
-        if (!$id_mutu_hpa) {
+        if (!$id_mutu_frs) {
             throw new PageNotFoundException('ID mutu tidak ditemukan.');
         }
 
         // Ambil data mutu beserta relasi dari model getmutuWithRelations
-        $mutuData = $this->mutu_hpa->getmutuWithRelations();
+        $mutuData = $this->mutu_frs->getmutuWithRelations();
 
-        // Filter data berdasarkan id_mutu_hpa
-        $mutuData = array_filter($mutuData, function ($mutu) use ($id_mutu_hpa) {
-            return $mutu['id_mutu_hpa'] == $id_mutu_hpa;
+        // Filter data berdasarkan id_mutu_frs
+        $mutuData = array_filter($mutuData, function ($mutu) use ($id_mutu_frs) {
+            return $mutu['id_mutu_frs'] == $id_mutu_frs;
         });
 
         // Jika data tidak ditemukan
@@ -57,7 +57,7 @@ class mutu extends BaseController
             throw new PageNotFoundException('Data mutu tidak ditemukan.');
         }
 
-        // Ambil data pertama (karena kita filter berdasarkan id_mutu_hpa)
+        // Ambil data pertama (karena kita filter berdasarkan id_mutu_frs)
         $mutuData = array_values($mutuData)[0];
 
         // Kirimkan data ke view
@@ -66,12 +66,12 @@ class mutu extends BaseController
             'id_user' => session()->get('id_user'),
             'nama_user' => session()->get('nama_user'),
         ];
-        return view('Hpa/edit_mutu', $data);
+        return view('Frs/edit_mutu', $data);
     }
 
     public function update()
     {
-        $id_mutu_hpa = $this->request->getPost('id_mutu_hpa');
+        $id_mutu_frs = $this->request->getPost('id_mutu_frs');
 
         // Ambil semua nilai indikator dari POST
         $indikator = [];
@@ -84,15 +84,15 @@ class mutu extends BaseController
 
         // Susun array data
         $data = array_merge($indikator, [
-            'total_nilai_mutu_hpa' => $total,
+            'total_nilai_mutu_frs' => $total,
             'updated_at'           => date('Y-m-d H:i:s'),
         ]);
 
-        if (!$this->mutu_hpa->update($id_mutu_hpa, $data)) {
+        if (!$this->mutu_frs->update($id_mutu_frs, $data)) {
             return redirect()->back()->with('error', 'Gagal mengupdate data.')->withInput();
         }
 
-        return redirect()->to(base_url('mutu_hpa/edit?id_mutu_hpa=' . $id_mutu_hpa))
+        return redirect()->to(base_url('mutu_frs/edit?id_mutu_frs=' . $id_mutu_frs))
             ->with('success', 'Data berhasil diperbarui.');
     }
 }

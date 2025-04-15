@@ -8,7 +8,7 @@
             <h6 class="m-0 font-weight-bold text-primary">Data Pemeriksaan</h6>
         </div>
         <div class="card-body">
-            <h1>Daftar Pemeriksaan Histopatologi</h1>
+            <h1>Daftar Pemeriksaan Fine Needle Aspiration Biopsy</h1>
 
             <!-- Tombol Kembali ke Dashboard -->
             <a href="<?= base_url('/dashboard') ?>" class="btn btn-primary mb-3"><i class="fas fa-reply"></i> Kembali</a>
