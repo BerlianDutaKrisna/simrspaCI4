@@ -64,10 +64,4 @@ class Penerimaan_hpa extends Model
 
         return $data;
     }
-
-    public function deletepenerimaan_hpa($id_penerimaan_hpa)
-    {
-        return $this->delete($id_penerimaan_hpa);
-    }
-
 }

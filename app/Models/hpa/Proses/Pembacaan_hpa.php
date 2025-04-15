@@ -71,9 +71,4 @@ class Pembacaan_hpa extends Model // Update nama model
 
         return $data;
     }
-
-    public function deletepembacaan_hpa($id_pembacaan_hpa)
-    {
-        return $this->delete($id_pembacaan_hpa);
-    }
 }

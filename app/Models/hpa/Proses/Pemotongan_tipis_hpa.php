@@ -28,13 +28,6 @@ class Pemotongan_tipis_hpa extends Model // Update nama model
     protected $createdField  = 'created_at';
     protected $updatedField  = 'updated_at';
 
-    // Fungsi untuk insert data PemotonganTipis
-    public function insertPemotonganTipis(array $data): bool // Update nama fungsi
-    {
-        $this->insert($data);
-        return $this->db->affectedRows() > 0;
-    }
-
     // Mengambil data PemotonganTipis dengan relasi
     public function getpemotongan_tipis_hpa()
     {
@@ -72,10 +65,4 @@ class Pemotongan_tipis_hpa extends Model // Update nama model
 
         return $data;
     }
-
-    public function deletePemotonganTipis($id_pemotongan_tipis_hpa)
-    {
-        return $this->delete($id_pemotongan_tipis_hpa);
-    }
-
 }

@@ -29,13 +29,6 @@ class Pemotongan_hpa extends Model
     protected $createdField  = 'created_at';
     protected $updatedField  = 'updated_at';
 
-    // Fungsi untuk insert data pemotongan_hpa
-    public function insertpemotongan_hpa(array $data): bool
-    {
-        $this->insert($data);
-        return $this->db->affectedRows() > 0;
-    }
-
     // Mengambil data pemotongan_hpa dengan relasi
     public function getPemotongan_hpa()
     {
@@ -73,10 +66,4 @@ class Pemotongan_hpa extends Model
 
         return $data;
     }
-
-    public function deletepemotongan_hpa($id_pemotongan_hpa)
-    {
-        return $this->delete($id_pemotongan_hpa);
-    }
-
 }

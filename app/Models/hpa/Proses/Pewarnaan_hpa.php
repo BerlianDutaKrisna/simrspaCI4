@@ -28,13 +28,6 @@ class Pewarnaan_hpa extends Model // Update nama model
     protected $createdField  = 'created_at';
     protected $updatedField  = 'updated_at';
 
-    // Fungsi untuk insert data pewarnaan_hpa
-    public function insertpewarnaan_hpa(array $data): bool // Update nama fungsi
-    {
-        $this->insert($data);
-        return $this->db->affectedRows() > 0;
-    }
-
     // Mengambil data pewarnaan_hpa dengan relasi
     public function getpewarnaan_hpa()
     {
@@ -72,10 +65,4 @@ class Pewarnaan_hpa extends Model // Update nama model
 
         return $data;
     }
-
-    public function deletepewarnaan_hpa($id_pewarnaan_hpa)
-    {
-        return $this->delete($id_pewarnaan_hpa);
-    }
-
 }

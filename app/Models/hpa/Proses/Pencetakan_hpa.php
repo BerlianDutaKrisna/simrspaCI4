@@ -28,13 +28,6 @@ class Pencetakan_hpa extends Model // Update nama model
     protected $createdField  = 'created_at';
     protected $updatedField  = 'updated_at';
 
-    // Fungsi untuk insert data pencetakan_hpa
-    public function insertpencetakan_hpa(array $data): bool // Update nama fungsi
-    {
-        $this->insert($data);
-        return $this->db->affectedRows() > 0;
-    }
-
     public function getpencetakan_hpa()
     {
         return $this->select(
@@ -79,10 +72,5 @@ class Pencetakan_hpa extends Model // Update nama model
             ->first();
 
         return $data;
-    }
-
-    public function deletepencetakan_hpa($id_pencetakan_hpa)
-    {
-        return $this->delete($id_pencetakan_hpa);
     }
 }

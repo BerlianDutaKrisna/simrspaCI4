@@ -28,13 +28,6 @@ class Penulisan_hpa extends Model // Update nama model
     protected $createdField  = 'created_at';
     protected $updatedField  = 'updated_at';
 
-    // Fungsi untuk insert data penulisan_hpa
-    public function insertpenulisan_hpa(array $data): bool // Update nama fungsi
-    {
-        $this->insert($data);
-        return $this->db->affectedRows() > 0;
-    }
-
     // Mengambil data pembacaan_hpa dengan relasi
     public function getpenulisan_hpa()
     {
@@ -77,10 +70,4 @@ class Penulisan_hpa extends Model // Update nama model
 
         return $data;
     }
-
-    public function deletepenulisan_hpa($id_penulisan_hpa)
-    {
-        return $this->delete($id_penulisan_hpa);
-    }
-
 }

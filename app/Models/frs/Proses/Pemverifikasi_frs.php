@@ -57,18 +57,20 @@ class Pemverifikasi_frs extends Model // Update nama model
             ->findAll();
     }
 
-    // Fungsi untuk mengupdate data pemverifikasi_frs
-    public function updatepemverifikasi_frs($id_pemverifikasi_frs, $data) // Update nama fungsi dan parameter
+    public function detailspemverifikasi_frs($id_pemverifikasi_frs)
     {
-        $builder = $this->db->table($this->table);  // Mengambil tabel pemverifikasi_frs
-        $builder->where('id_pemverifikasi_frs', $id_pemverifikasi_frs);  // Menentukan baris yang akan diupdate berdasarkan id_pemverifikasi_frs
-        $builder->update($data);  // Melakukan update dengan data yang dikirimkan
-        return $this->db->affectedRows();  // Mengembalikan jumlah baris yang terpengaruh
-    }
+        $data = $this->select(
+            'pemverifikasi_frs.*, 
+        frs.*, 
+        patient.*, 
+        users.nama_user AS nama_user_pemverifikasi_frs'
+        )
+            ->join('frs', 'pemverifikasi_frs.id_frs = frs.id_frs', 'left')
+            ->join('patient', 'frs.id_pasien = patient.id_pasien', 'left')
+            ->join('users', 'pemverifikasi_frs.id_user_pemverifikasi_frs = users.id_user', 'left')
+            ->where('pemverifikasi_frs.id_pemverifikasi_frs', $id_pemverifikasi_frs)
+            ->first();
 
-    public function deletepemverifikasi_frs($id_pemverifikasi_frs)
-    {
-        return $this->delete($id_pemverifikasi_frs);
+        return $data;
     }
-
 }

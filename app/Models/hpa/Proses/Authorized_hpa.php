@@ -29,13 +29,6 @@ class Authorized_hpa extends Model // Update nama model
     protected $createdField  = 'created_at';
     protected $updatedField  = 'updated_at';
 
-    // Fungsi untuk insert data authorized_hpa
-    public function insertauthorized_hpa(array $data): bool // Update nama fungsi
-    {
-        $this->insert($data);
-        return $this->db->affectedRows() > 0;
-    }
-
     public function getauthorized_hpa()
     {
         return $this->select(
@@ -80,10 +73,5 @@ class Authorized_hpa extends Model // Update nama model
             ->first();
 
         return $data;
-    }
-
-    public function deleteauthorized_hpa($id_authorized_hpa)
-    {
-        return $this->delete($id_authorized_hpa);
     }
 }

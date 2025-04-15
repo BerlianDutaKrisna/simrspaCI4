@@ -54,18 +54,20 @@ class Penulisan_frs extends Model // Update nama model
             ->findAll();
     }
 
-    // Fungsi untuk mengupdate data penulisan_frs
-    public function updatepenulisan_frs($id_penulisan_frs, $data) // Update nama fungsi dan parameter
+    public function detailspenulisan_frs($id_penulisan_frs)
     {
-        $builder = $this->db->table($this->table);  // Mengambil tabel penulisan_frs
-        $builder->where('id_penulisan_frs', $id_penulisan_frs);  // Menentukan baris yang akan diupdate berdasarkan id_penulisan_frs
-        $builder->update($data);  // Melakukan update dengan data yang dikirimkan
-        return $this->db->affectedRows();  // Mengembalikan jumlah baris yang terpengaruh
-    }
+        $data = $this->select(
+            'penulisan_frs.*, 
+        frs.*, 
+        patient.*, 
+        users.nama_user AS nama_user_penulisan_frs'
+        )
+            ->join('frs', 'penulisan_frs.id_frs = frs.id_frs', 'left')
+            ->join('patient', 'frs.id_pasien = patient.id_pasien', 'left')
+            ->join('users', 'penulisan_frs.id_user_penulisan_frs = users.id_user', 'left')
+            ->where('penulisan_frs.id_penulisan_frs', $id_penulisan_frs)
+            ->first();
 
-    public function deletepenulisan_frs($id_penulisan_frs)
-    {
-        return $this->delete($id_penulisan_frs);
+        return $data;
     }
-
 }

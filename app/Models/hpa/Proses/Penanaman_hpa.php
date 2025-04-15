@@ -28,13 +28,6 @@ class Penanaman_hpa extends Model // Update nama model
     protected $createdField  = 'created_at';
     protected $updatedField  = 'updated_at';
 
-    // Fungsi untuk insert data penanaman_hpa
-    public function insertpenanaman_hpa(array $data): bool // Update nama fungsi
-    {
-        $this->insert($data);
-        return $this->db->affectedRows() > 0;
-    }
-
     // Mengambil data penanaman_hpa dengan relasi
     public function getpenanaman_hpa()
     {
@@ -72,10 +65,4 @@ class Penanaman_hpa extends Model // Update nama model
 
         return $data;
     }
-
-    public function deletepenanaman_hpa($id_penanaman_hpa)
-    {
-        return $this->delete($id_penanaman_hpa);
-    }
-
 }

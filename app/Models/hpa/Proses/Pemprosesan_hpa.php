@@ -28,13 +28,6 @@ class Pemprosesan_hpa extends Model // Update nama model
     protected $createdField  = 'created_at';
     protected $updatedField  = 'updated_at';
 
-    // Fungsi untuk insert data pemprosesan_hpa
-    public function insertpemprosesan_hpa(array $data): bool // Update nama fungsi
-    {
-        $this->insert($data);
-        return $this->db->affectedRows() > 0;
-    }
-
     // Mengambil data pemprosesan_hpa dengan relasi
     public function getpemprosesan_hpa()
     {
@@ -71,11 +64,6 @@ class Pemprosesan_hpa extends Model // Update nama model
             ->first();
 
         return $data;
-    }
-
-    public function deletepemprosesan_hpa($id_pemprosesan_hpa)
-    {
-        return $this->delete($id_pemprosesan_hpa);
     }
 
     public function countpemprosesan_hpa()
