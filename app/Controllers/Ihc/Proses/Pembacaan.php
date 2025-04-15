@@ -134,22 +134,10 @@ class Pembacaan extends BaseController
 
     public function pembacaan_details()
     {
-        // Ambil id_pembacaan_ihc dari parameter GET
         $id_pembacaan_ihc = $this->request->getGet('id_pembacaan_ihc');
 
         if ($id_pembacaan_ihc) {
-            // Gunakan model yang sudah diinisialisasi di constructor
-            $data = $this->pembacaan_ihc->select(
-                'pembacaan.*, 
-            ihc.*, 
-            patient.*, 
-            users.nama_user AS nama_user_pembacaan'
-            )
-                ->join('ihc', 'pembacaan.id_ihc = ihc.id_ihc', 'left')
-                ->join('patient', 'ihc.id_pasien = patient.id_pasien', 'left')
-                ->join('users', 'pembacaan.id_user_pembacaan_ihc = users.id_user', 'left')
-                ->where('pembacaan.id_pembacaan_ihc', $id_pembacaan_ihc)
-                ->first();
+            $data = $this->pembacaan_ihc->detailspembacaan_ihc($id_pembacaan_ihc);
 
             if ($data) {
                 return $this->response->setJSON($data);
@@ -157,11 +145,11 @@ class Pembacaan extends BaseController
                 return $this->response->setJSON(['error' => 'Data tidak ditemukan.']);
             }
         } else {
-            return $this->response->setJSON(['error' => 'ID pembacaan tidak ditemukan.']);
+            return $this->response->setJSON(['error' => 'Coba ulangi kembali..']);
         }
     }
 
-    public function edit_pembacaan()
+    public function edit()
     {
         $id_pembacaan_ihc = $this->request->getGet('id_pembacaan_ihc');
 
@@ -176,8 +164,8 @@ class Pembacaan extends BaseController
             throw new \CodeIgniter\Exceptions\PageNotFoundException('Data pembacaan tidak ditemukan.');
         }
 
-        // Ambil data users dengan status_user = 'Analis'
-        $users = $this->userModel->where('status_user', 'Analis')->findAll();
+        // Ambil data user
+        $users = $this->userModel->findAll();
 
         $data = [
             'pembacaanData' => $pembacaanData,
@@ -186,29 +174,61 @@ class Pembacaan extends BaseController
             'nama_user' => session()->get('nama_user'),
         ];
 
-        return view('edit_proses/edit_pembacaan', $data);
+        return view('ihc/edit_proses/edit_pembacaan', $data);
     }
 
-    public function update_pembacaan()
+    public function update()
     {
         $id_pembacaan_ihc = $this->request->getPost('id_pembacaan_ihc');
+
+        if (!$id_pembacaan_ihc) {
+            return redirect()->back()->with('error', 'ID tidak ditemukan.')->withInput();
+        }
 
         // Gabungkan input tanggal dan waktu
         $mulai_pembacaan_ihc = $this->request->getPost('mulai_pembacaan_ihc_date') . ' ' . $this->request->getPost('mulai_pembacaan_ihc_time');
         $selesai_pembacaan_ihc = $this->request->getPost('selesai_pembacaan_ihc_date') . ' ' . $this->request->getPost('selesai_pembacaan_ihc_time');
 
+        $id_user = $this->request->getPost('id_user_dokter_pembacaan_ihc');
         $data = [
-            'id_user_pembacaan_ihc' => $this->request->getPost('id_user_pembacaan_ihc'),
+            'id_user_dokter_pembacaan_ihc' => $id_user === '' ? null : $id_user,
             'status_pembacaan_ihc'  => $this->request->getPost('status_pembacaan_ihc'),
             'mulai_pembacaan_ihc'   => $mulai_pembacaan_ihc,
             'selesai_pembacaan_ihc' => $selesai_pembacaan_ihc,
-            'updated_at'         => date('Y-m-d H:i:s'),
+            'updated_at'             => date('Y-m-d H:i:s'),
         ];
 
         if (!$this->pembacaan_ihc->update($id_pembacaan_ihc, $data)) {
             return redirect()->back()->with('error', 'Gagal mengupdate data.')->withInput();
         }
 
-        return redirect()->to(base_url('pembacaan/index_pembacaan'))->with('success', 'Data berhasil diperbarui.');
+        return redirect()->to(base_url('pembacaan_ihc/edit?id_pembacaan_ihc=' . $id_pembacaan_ihc))
+            ->with('success', 'Data berhasil diperbarui.');
+    }
+
+    public function delete()
+    {
+        try {
+            $id_pembacaan = $this->request->getPost('id_pembacaan');
+            $id_ihc = $this->request->getPost('id_ihc');
+            if (!$id_pembacaan || !$id_ihc) {
+                throw new \Exception('ID tidak lengkap. Gagal menghapus data.');
+            }
+            // Hapus data pembacaan
+            if ($this->pembacaan_ihc->delete($id_pembacaan)) {
+                // Update status_ihc ke tahap sebelumnya 
+                $this->ihcModel->update($id_ihc, [
+                    'status_ihc' => 'Pewarnaan',
+                ]);
+                return $this->response->setJSON(['success' => true]);
+            } else {
+                throw new \Exception('Gagal menghapus data.');
+            }
+        } catch (\Exception $e) {
+            return $this->response->setJSON([
+                'success' => false,
+                'message' => $e->getMessage()
+            ]);
+        }
     }
 }

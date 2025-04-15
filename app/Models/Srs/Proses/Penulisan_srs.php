@@ -54,18 +54,20 @@ class Penulisan_srs extends Model // Update nama model
             ->findAll();
     }
 
-    // Fungsi untuk mengupdate data penulisan_srs
-    public function updatepenulisan_srs($id_penulisan_srs, $data) // Update nama fungsi dan parameter
+    public function detailspenulisan_srs($id_penulisan_srs)
     {
-        $builder = $this->db->table($this->table);  // Mengambil tabel penulisan_srs
-        $builder->where('id_penulisan_srs', $id_penulisan_srs);  // Menentukan baris yang akan diupdate berdasarkan id_penulisan_srs
-        $builder->update($data);  // Melakukan update dengan data yang dikirimkan
-        return $this->db->affectedRows();  // Mengembalikan jumlah baris yang terpengaruh
-    }
+        $data = $this->select(
+            'penulisan_srs.*, 
+        srs.*, 
+        patient.*, 
+        users.nama_user AS nama_user_penulisan_srs'
+        )
+            ->join('srs', 'penulisan_srs.id_srs = srs.id_srs', 'left')
+            ->join('patient', 'srs.id_pasien = patient.id_pasien', 'left')
+            ->join('users', 'penulisan_srs.id_user_penulisan_srs = users.id_user', 'left')
+            ->where('penulisan_srs.id_penulisan_srs', $id_penulisan_srs)
+            ->first();
 
-    public function deletepenulisan_srs($id_penulisan_srs)
-    {
-        return $this->delete($id_penulisan_srs);
+        return $data;
     }
-
 }

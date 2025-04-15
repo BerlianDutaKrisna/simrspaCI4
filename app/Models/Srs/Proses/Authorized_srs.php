@@ -65,17 +65,20 @@ class Authorized_srs extends Model // Update nama model
             ->findAll();
     }
 
-    // Fungsi untuk mengupdate data authorized_srs
-    public function updateauthorized_srs($id_authorized_srs, $data) // Update nama fungsi dan parameter
+    public function detailsauthorized_srs($id_authorized_srs)
     {
-        $builder = $this->db->table($this->table);  // Mengambil tabel authorized_srs
-        $builder->where('id_authorized_srs', $id_authorized_srs);  // Menentukan baris yang akan diupdate berdasarkan id_authorized_srs
-        $builder->update($data);  // Melakukan update dengan data yang dikirimkan
-        return $this->db->affectedRows();  // Mengembalikan jumlah baris yang terpengaruh
-    }
+        $data = $this->select(
+            'authorized_srs.*, 
+        srs.*, 
+        patient.*, 
+        users.nama_user AS nama_user_authorized_srs'
+        )
+            ->join('srs', 'authorized_srs.id_srs = srs.id_srs', 'left')
+            ->join('patient', 'srs.id_pasien = patient.id_pasien', 'left')
+            ->join('users', 'authorized_srs.id_user_dokter_authorized_srs = users.id_user', 'left')
+            ->where('authorized_srs.id_authorized_srs', $id_authorized_srs)
+            ->first();
 
-    public function deleteauthorized_srs($id_authorized_srs)
-    {
-        return $this->delete($id_authorized_srs);
+        return $data;
     }
 }

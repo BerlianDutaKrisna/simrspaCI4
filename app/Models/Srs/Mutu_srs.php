@@ -41,25 +41,30 @@ class Mutu_srs extends Model
         return $this->db->affectedRows() > 0;
     }
 
-    public function getmutu_srsWithRelations()
-{
-    return $this->select(
+    public function getmutuWithRelations()
+    {
+        return $this->select(
             'mutu_srs.*, 
             srs.*, 
             patient.*'
         )
-        ->join('srs', 'mutu_srs.id_srs = srs.id_srs', 'left') // Relasi dengan tabel srs
-        ->join('patient', 'srs.id_pasien = patient.id_pasien', 'left') // Relasi dengan tabel patient
-        ->findAll();
-}
+            ->join('srs', 'mutu_srs.id_srs = srs.id_srs', 'left') // Relasi dengan tabel srs
+            ->join('patient', 'srs.id_pasien = patient.id_pasien', 'left') // Relasi dengan tabel patient
+            ->findAll();
+    }
 
-    // Fungsi untuk mengupdate data mutu_srs
-public function updatemutu_srs($id_mutu_srs, $data)
-{
-    // Mengambil table mutu_srs
-    $builder = $this->db->table($this->table);  
-    $builder->where('id_mutu_srs', $id_mutu_srs);  
-    $builder->update($data);  
-    return $this->db->affectedRows();  
-}
+    public function detailsmutu_srs($id_mutu_srs)
+    {
+        $data = $this->select(
+            'mutu_srs.*, 
+        srs.*, 
+        patient.*'
+        )
+            ->join('srs', 'mutu_srs.id_srs = srs.id_srs', 'left')
+            ->join('patient', 'srs.id_pasien = patient.id_pasien', 'left')
+            ->where('mutu_srs.id_mutu_srs', $id_mutu_srs)
+            ->first();
+
+        return $data;
+    }
 }

@@ -64,18 +64,20 @@ class Pencetakan_srs extends Model // Update nama model
             ->findAll();
     }
 
-    // Fungsi untuk mengupdate data pencetakan_srs
-    public function updatepencetakan_srs($id_pencetakan_srs, $data) // Update nama fungsi dan parameter
+    public function detailspencetakan_srs($id_pencetakan_srs)
     {
-        $builder = $this->db->table($this->table);  // Mengambil tabel pencetakan_srs
-        $builder->where('id_pencetakan_srs', $id_pencetakan_srs);  // Menentukan baris yang akan diupdate berdasarkan id_pencetakan_srs
-        $builder->update($data);  // Melakukan update dengan data yang dikirimkan
-        return $this->db->affectedRows();  // Mengembalikan jumlah baris yang terpengaruh
-    }
+        $data = $this->select(
+            'pencetakan_srs.*, 
+        srs.*, 
+        patient.*, 
+        users.nama_user AS nama_user_pencetakan_srs'
+        )
+            ->join('srs', 'pencetakan_srs.id_srs = srs.id_srs', 'left')
+            ->join('patient', 'srs.id_pasien = patient.id_pasien', 'left')
+            ->join('users', 'pencetakan_srs.id_user_pencetakan_srs = users.id_user', 'left')
+            ->where('pencetakan_srs.id_pencetakan_srs', $id_pencetakan_srs)
+            ->first();
 
-    public function deletepencetakan_srs($id_pencetakan_srs)
-    {
-        return $this->delete($id_pencetakan_srs);
+        return $data;
     }
-
 }

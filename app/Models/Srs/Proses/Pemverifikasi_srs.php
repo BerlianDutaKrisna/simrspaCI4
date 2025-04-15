@@ -57,18 +57,20 @@ class Pemverifikasi_srs extends Model // Update nama model
             ->findAll();
     }
 
-    // Fungsi untuk mengupdate data pemverifikasi_srs
-    public function updatepemverifikasi_srs($id_pemverifikasi_srs, $data) // Update nama fungsi dan parameter
+    public function detailspemverifikasi_srs($id_pemverifikasi_srs)
     {
-        $builder = $this->db->table($this->table);  // Mengambil tabel pemverifikasi_srs
-        $builder->where('id_pemverifikasi_srs', $id_pemverifikasi_srs);  // Menentukan baris yang akan diupdate berdasarkan id_pemverifikasi_srs
-        $builder->update($data);  // Melakukan update dengan data yang dikirimkan
-        return $this->db->affectedRows();  // Mengembalikan jumlah baris yang terpengaruh
-    }
+        $data = $this->select(
+            'pemverifikasi_srs.*, 
+        srs.*, 
+        patient.*, 
+        users.nama_user AS nama_user_pemverifikasi_srs'
+        )
+            ->join('srs', 'pemverifikasi_srs.id_srs = srs.id_srs', 'left')
+            ->join('patient', 'srs.id_pasien = patient.id_pasien', 'left')
+            ->join('users', 'pemverifikasi_srs.id_user_pemverifikasi_srs = users.id_user', 'left')
+            ->where('pemverifikasi_srs.id_pemverifikasi_srs', $id_pemverifikasi_srs)
+            ->first();
 
-    public function deletepemverifikasi_srs($id_pemverifikasi_srs)
-    {
-        return $this->delete($id_pemverifikasi_srs);
+        return $data;
     }
-
 }

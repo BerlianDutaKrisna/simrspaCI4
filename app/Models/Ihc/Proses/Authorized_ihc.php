@@ -65,17 +65,20 @@ class Authorized_ihc extends Model // Update nama model
             ->findAll();
     }
 
-    // Fungsi untuk mengupdate data authorized_ihc
-    public function updateauthorized_ihc($id_authorized_ihc, $data) // Update nama fungsi dan parameter
+    public function detailsauthorized_ihc($id_authorized_ihc)
     {
-        $builder = $this->db->table($this->table);  // Mengambil tabel authorized_ihc
-        $builder->where('id_authorized_ihc', $id_authorized_ihc);  // Menentukan baris yang akan diupdate berdasarkan id_authorized_ihc
-        $builder->update($data);  // Melakukan update dengan data yang dikirimkan
-        return $this->db->affectedRows();  // Mengembalikan jumlah baris yang terpengaruh
-    }
+        $data = $this->select(
+            'authorized_ihc.*, 
+        ihc.*, 
+        patient.*, 
+        users.nama_user AS nama_user_authorized_ihc'
+        )
+            ->join('ihc', 'authorized_ihc.id_ihc = ihc.id_ihc', 'left')
+            ->join('patient', 'ihc.id_pasien = patient.id_pasien', 'left')
+            ->join('users', 'authorized_ihc.id_user_dokter_authorized_ihc = users.id_user', 'left')
+            ->where('authorized_ihc.id_authorized_ihc', $id_authorized_ihc)
+            ->first();
 
-    public function deleteauthorized_ihc($id_authorized_ihc)
-    {
-        return $this->delete($id_authorized_ihc);
+        return $data;
     }
 }

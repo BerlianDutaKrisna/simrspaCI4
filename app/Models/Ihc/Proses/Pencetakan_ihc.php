@@ -64,17 +64,20 @@ class Pencetakan_ihc extends Model // Update nama model
             ->findAll();
     }
 
-    // Fungsi untuk mengupdate data pencetakan_ihc
-    public function updatepencetakan_ihc($id_pencetakan_ihc, $data) // Update nama fungsi dan parameter
+    public function detailspencetakan_ihc($id_pencetakan_ihc)
     {
-        $builder = $this->db->table($this->table);  // Mengambil tabel pencetakan_ihc
-        $builder->where('id_pencetakan_ihc', $id_pencetakan_ihc);  // Menentukan baris yang akan diupdate berdasarkan id_pencetakan_ihc
-        $builder->update($data);  // Melakukan update dengan data yang dikirimkan
-        return $this->db->affectedRows();  // Mengembalikan jumlah baris yang terpengaruh
-    }
+        $data = $this->select(
+            'pencetakan_ihc.*, 
+        ihc.*, 
+        patient.*, 
+        users.nama_user AS nama_user_pencetakan_ihc'
+        )
+            ->join('ihc', 'pencetakan_ihc.id_ihc = ihc.id_ihc', 'left')
+            ->join('patient', 'ihc.id_pasien = patient.id_pasien', 'left')
+            ->join('users', 'pencetakan_ihc.id_user_pencetakan_ihc = users.id_user', 'left')
+            ->where('pencetakan_ihc.id_pencetakan_ihc', $id_pencetakan_ihc)
+            ->first();
 
-    public function deletepencetakan_ihc($id_pencetakan_ihc)
-    {
-        return $this->delete($id_pencetakan_ihc);
+        return $data;
     }
 }
