@@ -62,8 +62,8 @@ class srsController extends BaseController
             'nama_user' => session()->get('nama_user'),
             'srsData' => $srsData
         ];
-        
-        return view('srs/index', $data);
+
+        return view('Srs/index', $data);
     }
 
     public function index_buku_penerima()

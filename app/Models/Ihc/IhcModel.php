@@ -112,8 +112,25 @@ class IhcModel extends Model
 
     public function getihcWithPatient()
     {
-        return $this->select('ihc.*, patient.*')
-            ->join('patient', 'patient.id_pasien = ihc.id_pasien')
+        return $this->select('
+            ihc.*, 
+            patient.*, 
+            penerimaan_ihc.id_penerimaan_ihc AS id_penerimaan,
+            pembacaan_ihc.id_pembacaan_ihc AS id_pembacaan,
+            penulisan_ihc.id_penulisan_ihc AS id_penulisan,
+            pemverifikasi_ihc.id_pemverifikasi_ihc AS id_pemverifikasi,
+            authorized_ihc.id_authorized_ihc AS id_authorized,
+            pencetakan_ihc.id_pencetakan_ihc AS id_pencetakan,
+            mutu_ihc.id_mutu_ihc AS id_mutu
+        ')
+            ->join('patient', 'patient.id_pasien = ihc.id_pasien', 'left')
+            ->join('penerimaan_ihc', 'penerimaan_ihc.id_ihc = ihc.id_ihc', 'left')
+            ->join('pembacaan_ihc', 'pembacaan_ihc.id_ihc = ihc.id_ihc', 'left')
+            ->join('penulisan_ihc', 'penulisan_ihc.id_ihc = ihc.id_ihc', 'left')
+            ->join('pemverifikasi_ihc', 'pemverifikasi_ihc.id_ihc = ihc.id_ihc', 'left')
+            ->join('authorized_ihc', 'authorized_ihc.id_ihc = ihc.id_ihc', 'left')
+            ->join('pencetakan_ihc', 'pencetakan_ihc.id_ihc = ihc.id_ihc', 'left')
+            ->join('mutu_ihc', 'mutu_ihc.id_ihc = ihc.id_ihc', 'left')
             ->orderBy('ihc.kode_ihc', 'ASC')
             ->findAll();
     }

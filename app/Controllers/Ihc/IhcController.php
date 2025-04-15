@@ -62,8 +62,8 @@ class ihcController extends BaseController
             'nama_user' => session()->get('nama_user'),
             'ihcData' => $ihcData
         ];
-        
-        return view('ihc/index', $data);
+
+        return view('Ihc/index', $data);
     }
 
     public function index_buku_penerima()
