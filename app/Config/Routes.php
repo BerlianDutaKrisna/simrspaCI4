@@ -60,7 +60,7 @@ $routes->group('hpa', ['namespace' => 'App\Controllers\Hpa'], function ($routes)
     $routes->get('edit/(:segment)', 'HpaController::edit/$1');
     $routes->get('edit_makroskopis/(:segment)', 'HpaController::edit_makroskopis/$1');
     $routes->get('edit_mikroskopis/(:segment)', 'HpaController::edit_mikroskopis/$1');
-    $routes->get('edit/(:segment)', 'HpaController::edit/$1');
+    $routes->get('edit_penulisan/(:segment)', 'HpaController::edit_penulisan/$1');
     $routes->get('edit_print/(:segment)', 'HpaController::edit_print/$1');
     $routes->post('update/(:segment)', 'HpaController::update/$1');
     $routes->post('update_print/(:segment)', 'HpaController::update_print/$1');
@@ -82,7 +82,7 @@ $routes->group('frs', ['namespace' => 'App\Controllers\Frs'], function ($routes)
     $routes->get('edit/(:segment)', 'FrsController::edit/$1');
     $routes->get('edit_makroskopis/(:segment)', 'FrsController::edit_makroskopis/$1');
     $routes->get('edit_mikroskopis/(:segment)', 'FrsController::edit_mikroskopis/$1');
-    $routes->get('edit/(:segment)', 'FrsController::edit/$1');
+    $routes->get('edit_penulisan/(:segment)', 'FrsController::edit_penulisan/$1');
     $routes->get('edit_print/(:segment)', 'FrsController::edit_print/$1');
     $routes->post('update/(:segment)', 'FrsController::update/$1');
     $routes->post('update_print/(:segment)', 'FrsController::update_print/$1');
@@ -104,7 +104,7 @@ $routes->group('srs', ['namespace' => 'App\Controllers\Srs'], function ($routes)
     $routes->get('edit/(:segment)', 'SrsController::edit/$1');
     $routes->get('edit_makroskopis/(:segment)', 'SrsController::edit_makroskopis/$1');
     $routes->get('edit_mikroskopis/(:segment)', 'SrsController::edit_mikroskopis/$1');
-    $routes->get('edit/(:segment)', 'SrsController::edit/$1');
+    $routes->get('edit_penulisan/(:segment)', 'SrsController::edit_penulisan/$1');
     $routes->get('edit_print/(:segment)', 'SrsController::edit_print/$1');
     $routes->post('update/(:segment)', 'SrsController::update/$1');
     $routes->post('update_print/(:segment)', 'SrsController::update_print/$1');
@@ -125,7 +125,7 @@ $routes->group('ihc', ['namespace' => 'App\Controllers\Ihc'], function ($routes)
     $routes->post('delete', 'IhcController::delete');
     $routes->get('edit/(:segment)', 'IhcController::edit/$1');
     $routes->get('edit_mikroskopis/(:segment)', 'IhcController::edit_mikroskopis/$1');
-    $routes->get('edit/(:segment)', 'IhcController::edit/$1');
+    $routes->get('edit_penulisan/(:segment)', 'IhcController::edit_penulisan/$1');
     $routes->get('edit_print/(:segment)', 'IhcController::edit_print/$1');
     $routes->post('update/(:segment)', 'IhcController::update/$1');
     $routes->post('update_print/(:segment)', 'IhcController::update_print/$1');

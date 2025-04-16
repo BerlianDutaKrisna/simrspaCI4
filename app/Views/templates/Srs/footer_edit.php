@@ -73,21 +73,21 @@
                     &nbsp;&nbsp;&nbsp; Cervical Smear.<br>
 
                     <b>II. KETERANGAN KLINIS :</b><br>
-                    &nbsp; a. Keluhan : - &#x2610; Keputihan &#x2610; Gatatal &#x2610; Lain-lain:.....<br>
-                    &nbsp; b. Pemeriksaan Fisik : - &#x2610; Tenang &#x2610; Erosi &#x2610; Mencurigakan Keganasan.<br>
+                    &nbsp; a. Keluhan : - , Keputihan, Gatatal, Lain-lain:.....<br>
+                    &nbsp; b. Pemeriksaan Fisik : - , Tenang, Erosi, Mencurigakan Keganasan.<br>
 
                     <b>III. HASIL PEMERIKSAAN :</b><br>
                     &nbsp;&nbsp; a. Makroskopis : Diterima ..... smear dari cervix/Vaginal swab.<br>
                     &nbsp;&nbsp; b. Mikroskopis : <br>
-                    &nbsp;&nbsp;&nbsp;&nbsp; - Sel Epitel: &#x2610; Sel Superfisial &#x2610; Intermediate &#x2610; Parabasal/basal &#x2610; Endocervix/metaplastik.<br>
-                    &nbsp;&nbsp;&nbsp;&nbsp; - Sel Inflamasi: &#x2610; Sel radang PMN &#x2610; Monokuler &#x2610; Histocyte.<br>
-                    &nbsp;&nbsp;&nbsp;&nbsp; - Mikroorganisme: &#x2610; Tidak ditemukan &#x2610; Ditemukan .....<br>
-                    &nbsp;&nbsp;&nbsp;&nbsp; - Perubahan Seluler: &#x2610; Tidak ada perubahan &#x2610; Displasia sedang-Berat &#x2610; Perubahan Keradangan &#x2610; Displasia ringan &#x2610; Sel malignancy.<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp; - Sel Epitel: Sel Superfisial, Intermediate, Parabasal/basal, Endocervix/metaplastik.<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp; - Sel Inflamasi: Sel radang PMN, Monokuler, Histocyte.<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp; - Mikroorganisme: Tidak ditemukan, Ditemukan .....<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp; - Perubahan Seluler: Tidak ada perubahan, Displasia sedang-Berat, Perubahan Keradangan, Displasia ringan, Sel malignancy.<br>
 
                     <b>IV. KESIMPULAN :</b><br>
-                    &nbsp; a. Spesimen: &#x2610; Adekuat (Sel silinder + metaplastik) &#x2610; Cukup adekuat &#x2610; kurang adekuat.<br>
+                    &nbsp; a. Spesimen: Adekuat (Sel silinder + metaplastik), Cukup adekuat, kurang adekuat.<br>
                     &nbsp; b. Hasil: 
-                    <b>
+                    <b><br>
                     &#x2610; NORMAL SMEAR / NILM / PAPANICOLAOU CLASS I <br>
                     &#x2610; RADANG NON SPESIFIK / NILM / PAPANICOLOU CLASS II <br>
                     &#x2610; TRICHOMONAS VAGINALIS / NILM / PAPANICOLAU CLASS II <br>
@@ -99,8 +99,8 @@
                     &#x2610; ....  
                     </b>
                     <p style="text-align: right;">Surabaya,...............</p>
-                    <p style="text-align: right;">Dokter Pembaca</p>
                     <br>
+                    <p style="text-align: right;">Dokter Pembaca</p>
                     <br>
             `);
             } else {
