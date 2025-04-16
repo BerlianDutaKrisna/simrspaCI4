@@ -69,20 +69,35 @@
             if (tindakanSpesimen === "Pap Smear") {
                 // Jika tindakan spesimen adalah "Pap Smear"
                 $('#makroskopis_srs').summernote('code', `
-                <b>I. BAHAN PEMERIKSAAN :</b><br>&nbsp;&nbsp;&nbsp; Cervical Smear.<br>
-                <b>II. KETERANGAN KLINIS :</b><br>
-                &nbsp; a. Keluhan : -.<br>
-                &nbsp; b. Pemeriksaan Fisik : -.<br>
-                <b>III. HASIL PEMERIKSAAN :</b><br>
-                &nbsp;&nbsp; a. Makroskopis : Diterima 1 smear dari cervix.<br>
-                &nbsp;&nbsp; b. Mikroskopis : <br>
-                &nbsp;&nbsp;&nbsp;&nbsp; - Sel Epitel: Sel Superfisial, Intermediate, Parabasal, dan Metaplastik.<br>
-                &nbsp;&nbsp;&nbsp;&nbsp; - Sel Inflamasi: Sel radang PMN dan Monokuler.<br>
-                &nbsp;&nbsp;&nbsp;&nbsp; - Mikroorganisme: Tidak ditemukan.<br>
-                &nbsp;&nbsp;&nbsp;&nbsp; - Perubahan Seluler: Tidak ada perubahan.<br>
-                <b>IV. KESIMPULAN :</b><br>
-                &nbsp; a. Spesimen: Adekuat.<br>
-                &nbsp; b. Hasil: <b>RADANG NON SPESIFIK / NILM / PAPANICOLOU CLASS II</b><br>
+                <b>I. BAHAN PEMERIKSAAN :</b><br>
+                    &nbsp;&nbsp;&nbsp; Cervical Smear.<br>
+
+                    <b>II. KETERANGAN KLINIS :</b><br>
+                    &nbsp; a. Keluhan : - &#x2610; Keputihan &#x2610; Gatatal &#x2610; Lain-lain:.....<br>
+                    &nbsp; b. Pemeriksaan Fisik : - &#x2610; Tenang &#x2610; Erosi &#x2610; Mencurigakan Keganasan.<br>
+
+                    <b>III. HASIL PEMERIKSAAN :</b><br>
+                    &nbsp;&nbsp; a. Makroskopis : Diterima ..... smear dari cervix/Vaginal swab.<br>
+                    &nbsp;&nbsp; b. Mikroskopis : <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp; - Sel Epitel: &#x2610; Sel Superfisial &#x2610; Intermediate &#x2610; Parabasal/basal &#x2610; Endocervix/metaplastik.<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp; - Sel Inflamasi: &#x2610; Sel radang PMN &#x2610; Monokuler &#x2610; Histocyte.<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp; - Mikroorganisme: &#x2610; Tidak ditemukan &#x2610; Ditemukan .....<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp; - Perubahan Seluler: &#x2610; Tidak ada perubahan &#x2610; Displasia sedang-Berat &#x2610; Perubahan Keradangan &#x2610; Displasia ringan &#x2610; Sel malignancy.<br>
+
+                    <b>IV. KESIMPULAN :</b><br>
+                    &nbsp; a. Spesimen: &#x2610; Adekuat (Sel silinder + metaplastik) &#x2610; Cukup adekuat &#x2610; kurang adekuat.<br>
+                    &nbsp; b. Hasil: 
+                    <b>
+                    &#x2610; NORMAL SMEAR / NILM / PAPANICOLAOU CLASS I 
+                    &#x2610; RADANG NON SPESIFIK / NILM / PAPANICOLOU CLASS II 
+                    &#x2610; TRICHOMONAS VAGINALIS / NILM / PAPANICOLAU CLASS II 
+                    &#x2610; BACTERIAL BAGINOSIS / NILM / PAPANICOLAOU CLASS II 
+                    &#x2610; MONIALIS / NILM PAPANICOLAOU CLASS II 
+                    &#x2610; DISPLASIA RINGAN / CIN 1 / LSIL / PAPANICOLAOU CLASS III 
+                    &#x2610; DISPLASIA SEDANG-BERAT / CIN 2-3 / HSIL / PAPANICOLAOU CLASS IV 
+                    &#x2610; SEL MALIGNANCY / PAPANICOLAOU CLASS V 
+                    &#x2610; ....  
+                    </b><br>
             `);
             } else {
                 // Default untuk kondisi lain
