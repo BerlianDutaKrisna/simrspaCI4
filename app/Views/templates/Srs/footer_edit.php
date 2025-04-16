@@ -88,16 +88,20 @@
                     &nbsp; a. Spesimen: &#x2610; Adekuat (Sel silinder + metaplastik) &#x2610; Cukup adekuat &#x2610; kurang adekuat.<br>
                     &nbsp; b. Hasil: 
                     <b>
-                    &#x2610; NORMAL SMEAR / NILM / PAPANICOLAOU CLASS I 
-                    &#x2610; RADANG NON SPESIFIK / NILM / PAPANICOLOU CLASS II 
-                    &#x2610; TRICHOMONAS VAGINALIS / NILM / PAPANICOLAU CLASS II 
-                    &#x2610; BACTERIAL BAGINOSIS / NILM / PAPANICOLAOU CLASS II 
-                    &#x2610; MONIALIS / NILM PAPANICOLAOU CLASS II 
-                    &#x2610; DISPLASIA RINGAN / CIN 1 / LSIL / PAPANICOLAOU CLASS III 
-                    &#x2610; DISPLASIA SEDANG-BERAT / CIN 2-3 / HSIL / PAPANICOLAOU CLASS IV 
-                    &#x2610; SEL MALIGNANCY / PAPANICOLAOU CLASS V 
+                    &#x2610; NORMAL SMEAR / NILM / PAPANICOLAOU CLASS I <br>
+                    &#x2610; RADANG NON SPESIFIK / NILM / PAPANICOLOU CLASS II <br>
+                    &#x2610; TRICHOMONAS VAGINALIS / NILM / PAPANICOLAU CLASS II <br>
+                    &#x2610; BACTERIAL BAGINOSIS / NILM / PAPANICOLAOU CLASS II <br>
+                    &#x2610; MONIALIS / NILM PAPANICOLAOU CLASS II <br>
+                    &#x2610; DISPLASIA RINGAN / CIN 1 / LSIL / PAPANICOLAOU CLASS III <br>
+                    &#x2610; DISPLASIA SEDANG-BERAT / CIN 2-3 / HSIL / PAPANICOLAOU CLASS IV <br>
+                    &#x2610; SEL MALIGNANCY / PAPANICOLAOU CLASS V <br>
                     &#x2610; ....  
-                    </b><br>
+                    </b>
+                    <p style="text-align: right;">Surabaya,...............</p>
+                    <p style="text-align: right;">Dokter Pembaca</p>
+                    <br>
+                    <br>
             `);
             } else {
                 // Default untuk kondisi lain
