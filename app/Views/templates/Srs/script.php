@@ -150,16 +150,16 @@
                             <p><strong>Kode SRS:</strong> ${data.kode_srs}</p>
                         `;
                                 let indikatorList = '';
-                                indikatorList += `<li class="list-group-item"><strong>Vol cairan fiksasi sesuai?</strong>: ${data.indikator_1}</li>`;
-                                indikatorList += `<li class="list-group-item"><strong>Jaringan terfiksasi merata?</strong>: ${data.indikator_2}</li>`;
-                                indikatorList += `<li class="list-group-item"><strong>Blok parafin tidak ada fragmentasi?</strong>: ${data.indikator_3}</li>`;
-                                indikatorList += `<li class="list-group-item"><strong>Sediaan tanpa lipatan?</strong>: ${data.indikator_4}</li>`;
-                                indikatorList += `<li class="list-group-item"><strong>Sediaan tanpa goresan mata pisau?</strong>: ${data.indikator_5}</li>`;
-                                indikatorList += `<li class="list-group-item"><strong>Kontras warna sediaan cukup jelas?</strong>: ${data.indikator_6}</li>`;
-                                indikatorList += `<li class="list-group-item"><strong>Sediaan tanpa gelembung udara?</strong>: ${data.indikator_7}</li>`;
-                                indikatorList += `<li class="list-group-item"><strong>Sediaan tanpa bercak / sidik jari?</strong>: ${data.indikator_8}</li>`;
-                                indikatorList += `<li class="list-group-item"><strong>Kosong</strong>: ${data.indikator_9}</li>`;
-                                indikatorList += `<li class="list-group-item"><strong>Kosong</strong>: ${data.indikator_10}</li>`;
+                                indikatorList += `<li class="list-group-item"><strong>Indikator 1?</strong>: ${data.indikator_1}</li>`;
+                                indikatorList += `<li class="list-group-item"><strong>Indikator 2?</strong>: ${data.indikator_2}</li>`;
+                                indikatorList += `<li class="list-group-item"><strong>Indikator 3?</strong>: ${data.indikator_3}</li>`;
+                                indikatorList += `<li class="list-group-item"><strong>Indikator 4?</strong>: ${data.indikator_4}</li>`;
+                                indikatorList += `<li class="list-group-item"><strong>Indikator 5?</strong>: ${data.indikator_5}</li>`;
+                                indikatorList += `<li class="list-group-item"><strong>Indikator 6?</strong>: ${data.indikator_6}</li>`;
+                                indikatorList += `<li class="list-group-item"><strong>Indikator 7?</strong>: ${data.indikator_7}</li>`;
+                                indikatorList += `<li class="list-group-item"><strong>Indikator 8?</strong>: ${data.indikator_8}</li>`;
+                                indikatorList += `<li class="list-group-item"><strong>Indikator 9?</strong>: ${data.indikator_9}</li>`;
+                                indikatorList += `<li class="list-group-item"><strong>Indikator 10?</strong>: ${data.indikator_10}</li>`;
                                 indikatorList += `<li class="list-group-item"><strong><b></b>Total Nilai Mutu: ${data.total_nilai_mutu_srs}</b></strong></li>`;
 
                                 body.html(`
