@@ -38,71 +38,71 @@
             </div>
 
             <div class="row mb-3">
-                <!-- Volume Cairan Sesuai -->
+                <!-- KTP -->
                 <div class="col-md-6">
-                    <label for="indikator_1">Volume Cairan Sesuai:</label>
+                    <label for="indikator_1">KTP:</label>
                     <input type="text" class="form-control" id="indikator_1" name="indikator_1" value="<?= $mutuData['indikator_1'] ?>">
                 </div>
 
-                <!-- Jaringan Terfiksasi Merata -->
+                <!-- BPJS -->
                 <div class="col-md-6">
-                    <label for="indikator_2">Jaringan Terfiksasi Merata:</label>
+                    <label for="indikator_2">BPJS:</label>
                     <input type="text" class="form-control" id="indikator_2" name="indikator_2" value="<?= $mutuData['indikator_2'] ?>">
                 </div>
             </div>
 
             <div class="row mb-3">
-                <!-- Blok Parafin Tidak Ada Fragmentasi -->
+                <!-- No Telfon Pasien -->
                 <div class="col-md-6">
-                    <label for="indikator_3">Blok Parafin Tidak Ada Fragmentasi:</label>
+                    <label for="indikator_3">No Telfon Pasien:</label>
                     <input type="text" class="form-control" id="indikator_3" name="indikator_3" value="<?= $mutuData['indikator_3'] ?>">
                 </div>
 
-                <!-- Sediaan Tanpa Lipatan -->
+                <!-- Hasil Lab sebelumnya -->
                 <div class="col-md-6">
-                    <label for="indikator_4">Sediaan Tanpa Lipatan:</label>
+                    <label for="indikator_4">Hasil Lab sebelumnya:</label>
                     <input type="text" class="form-control" id="indikator_4" name="indikator_4" value="<?= $mutuData['indikator_4'] ?>">
                 </div>
             </div>
 
             <div class="row mb-3">
-                <!-- Sediaan Tanpa Goresan Mata Pisau -->
+                <!-- Indikator Mutu 5 -->
                 <div class="col-md-6">
-                    <label for="indikator_5">Sediaan Tanpa Goresan Mata Pisau:</label>
+                    <label for="indikator_5">Indikator Mutu 5:</label>
                     <input type="text" class="form-control" id="indikator_5" name="indikator_5" value="<?= $mutuData['indikator_5'] ?>">
                 </div>
 
-                <!-- Kontras Warna Sediaan Cukup Jelas -->
+                <!-- Indikator Mutu 6 -->
                 <div class="col-md-6">
-                    <label for="indikator_6">Kontras Warna Sediaan Cukup Jelas:</label>
+                    <label for="indikator_6">Indikator Mutu 6:</label>
                     <input type="text" class="form-control" id="indikator_6" name="indikator_6" value="<?= $mutuData['indikator_6'] ?>">
                 </div>
             </div>
 
             <div class="row mb-3">
-                <!-- Sediaan Tanpa Gelembung Udara -->
+                <!-- Indikator Mutu 7 -->
                 <div class="col-md-6">
-                    <label for="indikator_7">Sediaan Tanpa Gelembung Udara:</label>
+                    <label for="indikator_7">Indikator Mutu 7:</label>
                     <input type="text" class="form-control" id="indikator_7" name="indikator_7" value="<?= $mutuData['indikator_7'] ?>">
                 </div>
 
-                <!-- Sediaan Tanpa Bercak / Sidik Jari -->
+                <!-- Indikator Mutu 8 -->
                 <div class="col-md-6">
-                    <label for="indikator_8">Sediaan Tanpa Bercak / Sidik Jari:</label>
+                    <label for="indikator_8">Indikator Mutu 8:</label>
                     <input type="text" class="form-control" id="indikator_8" name="indikator_8" value="<?= $mutuData['indikator_8'] ?>">
                 </div>
             </div>
 
             <div class="row mb-3">
-                <!-- Indikator 9 -->
+                <!-- Indikator Mutu 9 -->
                 <div class="col-md-6">
-                    <label for="indikator_9">Indikator 9:</label>
+                    <label for="indikator_9">Indikator Mutu 9:</label>
                     <input type="text" class="form-control" id="indikator_9" name="indikator_9" value="<?= $mutuData['indikator_9'] ?>">
                 </div>
 
-                <!-- Indikator 10 -->
+                <!-- Indikator Mutu 10 -->
                 <div class="col-md-6">
-                    <label for="indikator_10">Indikator 10:</label>
+                    <label for="indikator_10">Indikator Mutu 10:</label>
                     <input type="text" class="form-control" id="indikator_10" name="indikator_10" value="<?= $mutuData['indikator_10'] ?>">
                 </div>
             </div>
