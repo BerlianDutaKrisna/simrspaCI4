@@ -265,13 +265,19 @@
 
                 <!-- Tombol Simpan -->
                 <div class="form-group row">
-                    <div class="col-sm-12 text-center mb-3">
+                    <div class="col-sm-6 text-center">
                         <button type="submit"
                             class="btn btn-success btn-user w-100"
                             formaction="<?= base_url('srs/update/' . $srs['id_srs']); ?>">
                             Simpan
                         </button>
                     </div>
+                    <!-- Tombol Cetak -->
+                    <div class="col-sm-6 text-center">
+                    <button type="button" class="btn btn-info btn-user w-100 w-md-auto" onclick="cetakProses()">
+                        <i class="fas fa-print"></i> Cetak
+                    </button>
+                </div>
                 </div>
             </form>
         </div>

@@ -4,10 +4,10 @@
 
 <div class="card shadow mb-4">
     <div class="card-header py-3">
-        <h6 class="m-0 font-weight-bold text-primary">Table Pembacaan</h6>
+        <h6 class="m-0 font-weight-bold text-primary">Table Screening / Pembacaa</h6>
     </div>
     <div class="card-body">
-        <h1>Daftar Pembacaan Sitologi</h1>
+        <h1>Daftar Screening / Pembacaa Sitologi</h1>
         <a href="<?= base_url('/dashboard') ?>" class="btn btn-primary mb-3"><i class="fas fa-reply"></i> Kembali</a>
         <?= $this->include('templates/proses/button_pembacaan'); ?>
 

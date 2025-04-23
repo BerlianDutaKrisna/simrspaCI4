@@ -6,7 +6,7 @@
         printWindow.document.write(`
     <html>
     <head>
-        <title>Cetak srs</title>
+        <title>Cetak Hpa</title>
         <style>
         @page {
             size: 215mm 350mm;
@@ -41,11 +41,16 @@
             }
             .header-table {
                 width: 100%;
-                border: none;
+                border-collapse: collapse;
+                margin: 0;
+                font-size: 11px;
+                font-family: Verdana, Arial, sans-serif;
             }
             .header-table td {
-                padding: 5px;
+                padding: 3px 4px;
                 vertical-align: top;
+                border: 1px solid #000;
+                line-height: 1.2;
             }
             .makroskopis-content-table td,
             .mikroskopis-content-table td {
@@ -81,12 +86,25 @@
                 vertical-align: top;
             }
             .mikroskopis-content-table td[colspan="2"] {
-                height: 500px;
+                height: 400px;
                 font-size: 16pt;
                 border: 1px solid black;
                 padding: 10px;
                 text-align: left;
                 vertical-align: top;
+            }
+            .mutu-table {
+                font-size: 12px;
+                font-family: Verdana, Arial, sans-serif;
+                border-collapse: collapse;
+                width: 100%;
+                margin: 0;
+            }
+            .mutu-table td {
+                border: 1px solid black;
+                padding: 5px;
+                vertical-align: middle;
+                text-align: left;
             }
             /* Styling untuk tabel gambar */
             .gambar-table {
@@ -210,7 +228,7 @@
 
                 <tr>
                     <td><strong>Makroskopis</strong></td>
-                    <td>Analis PA: <?= esc($nama_user) ?? ""; ?> | Waktu Penerimaan: <?= isset($penerimaan['mulai_penerimaan_srs']) ? date('H:i d-m-Y', strtotime($penerimaan['mulai_penerimaan_srs'])) : ''; ?></td>
+                    <td>Analis PA: <?= esc($penerimaan_srs['analis_nama'] ?? '-') ?> | Waktu Penerimaan: <?= isset($penerimaan_srs['mulai_penerimaan_srs']) ? date('H:i d-m-Y', strtotime($penerimaan_srs['mulai_penerimaan_srs'])) : ''; ?></td>
                 </tr>
                 <tr>
                     <td colspan="2">${detailMakroskopis}</td>
@@ -221,10 +239,20 @@
         <table class="mikroskopis-content-table">
             <tr>
                 <td>Mikroskopis</td>
-                <td>Dokter PA: <?= $penerimaan['dokter_nama'] ?? '' ?> | Waktu pembacaan: <?= isset($pembacaan['mulai_pembacaan_srs']) ? date('H:i d-m-Y', strtotime($pembacaan['mulai_pembacaan_srs'])) : ''; ?></td>
+                <td><?= esc($nama_user) ?? ""; ?> | Waktu Screaning/Pembacaan: <?= isset($pembacaan_srs['mulai_pembacaan_srs']) ? date('H:i d-m-Y', strtotime($pembacaan_srs['mulai_pembacaan_srs'])) : ''; ?></td>
             </tr>
             <tr>
                 <td colspan="2">${detailMikroskopis}</td>
+            </tr>
+        </table>
+
+        <table class="mutu-table">
+            <tr>
+                <td>☐ Sediaan tanpa lipatan?</td>
+                <td>☐ Sediaan tanpa goresan mata pisau?</td>
+                <td>☐ Kontras warna sediaan cukup jelas?</td>
+                <td>☐ Sediaan tanpa gelembung udara?</td>
+                <td>☐ Sediaan tanpa bercak / sidik jari?</td>
             </tr>
         </table>
 

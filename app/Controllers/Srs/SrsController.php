@@ -301,10 +301,20 @@ class srsController extends BaseController
         if (!$srs) {
             return redirect()->back()->with('message', ['error' => 'srs tidak ditemukan.']);
         }
-        // Ambil data pemotongan dan pembacaan_srs berdasarkan ID
+        $id_penerimaan_srs = $srs['id_penerimaan_srs'];
         $id_pembacaan_srs = $srs['id_pembacaan_srs'];
-        // Ambil data pembacaan_srs jika tersedia
+        $penerimaan_srs = $id_penerimaan_srs ? $this->penerimaan_srs->find($id_penerimaan_srs) : [];
         $pembacaan_srs = $id_pembacaan_srs ? $this->pembacaan_srs->find($id_pembacaan_srs) : [];
+        if (!empty($srs['id_penerimaan_srs'])) {
+            $penerimaan_srs = $this->penerimaan_srs->find($srs['id_penerimaan_srs']) ?? [];
+            // Ambil nama analis dari penerimaan jika tersedia
+            if (!empty($penerimaan_srs['id_user_penerimaan_srs'])) {
+                $analis = $this->usersModel->find($penerimaan_srs['id_user_penerimaan_srs']);
+                $penerimaan_srs['analis_nama'] = $analis ? $analis['nama_user'] : null;
+            } else {
+                $penerimaan_srs['analis_nama'] = null;
+            }
+        }
         // Ambil data pengguna dengan status "Dokter"
         $users = $this->usersModel->where('status_user', 'Dokter')->findAll();
         // Persiapkan data yang akan dikirim ke view
@@ -314,6 +324,7 @@ class srsController extends BaseController
             'riwayat_frs'        => $riwayat_frs,
             'riwayat_srs'        => $riwayat_srs,
             'riwayat_ihc'        => $riwayat_ihc,
+            'penerimaan_srs' => $penerimaan_srs,
             'pembacaan_srs'   => $pembacaan_srs,
             'users'           => $users,
             'id_user'         => session()->get('id_user'),

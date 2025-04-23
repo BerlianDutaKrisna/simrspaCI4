@@ -41,11 +41,16 @@
             }
             .header-table {
                 width: 100%;
-                border: none;
+                border-collapse: collapse;
+                margin: 0;
+                font-size: 11px;
+                font-family: Verdana, Arial, sans-serif;
             }
             .header-table td {
-                padding: 5px;
+                padding: 3px 4px;
                 vertical-align: top;
+                border: 1px solid #000;
+                line-height: 1.2;
             }
             .makroskopis-content-table td,
             .mikroskopis-content-table td {
@@ -250,7 +255,7 @@
                 <td>☐ Sediaan tanpa bercak / sidik jari?</td>
             </tr>
         </table>
-        
+
         <table class="gambar-table">
             <tr>
                 <th colspan="8">Gambar</th>
