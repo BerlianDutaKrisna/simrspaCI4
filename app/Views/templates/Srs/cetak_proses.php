@@ -2,6 +2,7 @@
     function cetakProses() {
         var detailMakroskopis = document.getElementById('makroskopis_srs') ? document.getElementById('makroskopis_srs').value : '';
         var detailMikroskopis = document.getElementById('mikroskopis_srs') ? document.getElementById('mikroskopis_srs').value : '';
+        var detailHasil = document.getElementById('hasil_srs') ? document.getElementById('hasil_srs').value : '';
         var printWindow = window.open('', '', 'height=500,width=800');
         printWindow.document.write(`
     <html>
@@ -86,7 +87,7 @@
                 vertical-align: top;
             }
             .mikroskopis-content-table td[colspan="2"] {
-                height: 400px;
+                height: 150px;
                 font-size: 16pt;
                 border: 1px solid black;
                 padding: 10px;
@@ -242,7 +243,13 @@
                 <td><?= esc($nama_user) ?? ""; ?> | Waktu Screaning/Pembacaan: <?= isset($pembacaan_srs['mulai_pembacaan_srs']) ? date('H:i d-m-Y', strtotime($pembacaan_srs['mulai_pembacaan_srs'])) : ''; ?></td>
             </tr>
             <tr>
-                <td colspan="2">${detailMikroskopis}</td>
+                <td colspan="2">${detailMikroskopis}
+                <br>
+                <br>
+                <b>Kesimpulan:</b> <?= esc($srs['lokasi_spesimen'] ?? '-') ?>, <?= esc($srs['tindakan_spesimen'] ?? '-') ?>:
+                <br>
+                <strong style="text-transform: uppercase;">${detailHasil}</strong>
+                </td>
             </tr>
         </table>
 
