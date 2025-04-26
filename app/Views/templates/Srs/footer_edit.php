@@ -75,33 +75,31 @@
                     <b>II. KETERANGAN KLINIS :</b><br>
                     &nbsp; a. Keluhan : - , Keputihan, Gatatal, Lain-lain:.....<br>
                     &nbsp; b. Pemeriksaan Fisik : - , Tenang, Erosi, Mencurigakan Keganasan.<br>
-
+            `);
+                $('#mikroskopis_srs').summernote('code', `
                     <b>III. HASIL PEMERIKSAAN :</b><br>
-                    &nbsp;&nbsp; a. Makroskopis : Diterima ..... smear dari cervix/Vaginal swab.<br>
+                    &nbsp;&nbsp; a. Makroskopis : Diterima 1 smear dari cervix/Vaginal swab.<br>
                     &nbsp;&nbsp; b. Mikroskopis : <br>
                     &nbsp;&nbsp;&nbsp;&nbsp; - Sel Epitel: Sel Superfisial, Intermediate, Parabasal/basal, Endocervix/metaplastik.<br>
                     &nbsp;&nbsp;&nbsp;&nbsp; - Sel Inflamasi: Sel radang PMN, Monokuler, Histocyte.<br>
                     &nbsp;&nbsp;&nbsp;&nbsp; - Mikroorganisme: Tidak ditemukan, Ditemukan .....<br>
                     &nbsp;&nbsp;&nbsp;&nbsp; - Perubahan Seluler: Tidak ada perubahan, Displasia sedang-Berat, Perubahan Keradangan, Displasia ringan, Sel malignancy.<br>
-
+            `);
+                $('#hasil_srs').summernote('code', `
                     <b>IV. KESIMPULAN :</b><br>
                     &nbsp; a. Spesimen: Adekuat (Sel silinder + metaplastik), Cukup adekuat, kurang adekuat.<br>
                     &nbsp; b. Hasil: 
                     <b><br>
-                    &#x2610; NORMAL SMEAR / NILM / PAPANICOLAOU CLASS I <br>
-                    &#x2610; RADANG NON SPESIFIK / NILM / PAPANICOLOU CLASS II <br>
-                    &#x2610; TRICHOMONAS VAGINALIS / NILM / PAPANICOLAU CLASS II <br>
-                    &#x2610; BACTERIAL BAGINOSIS / NILM / PAPANICOLAOU CLASS II <br>
-                    &#x2610; MONIALIS / NILM PAPANICOLAOU CLASS II <br>
-                    &#x2610; DISPLASIA RINGAN / CIN 1 / LSIL / PAPANICOLAOU CLASS III <br>
-                    &#x2610; DISPLASIA SEDANG-BERAT / CIN 2-3 / HSIL / PAPANICOLAOU CLASS IV <br>
-                    &#x2610; SEL MALIGNANCY / PAPANICOLAOU CLASS V <br>
-                    &#x2610; ....  
+                    - NORMAL SMEAR / NILM / PAPANICOLAOU CLASS I <br>
+                    - RADANG NON SPESIFIK / NILM / PAPANICOLOU CLASS II <br>
+                    - TRICHOMONAS VAGINALIS / NILM / PAPANICOLAU CLASS II <br>
+                    - BACTERIAL BAGINOSIS / NILM / PAPANICOLAOU CLASS II <br>
+                    - MONIALIS / NILM PAPANICOLAOU CLASS II <br>
+                    - DISPLASIA RINGAN / CIN 1 / LSIL / PAPANICOLAOU CLASS III <br>
+                    - DISPLASIA SEDANG-BERAT / CIN 2-3 / HSIL / PAPANICOLAOU CLASS IV <br>
+                    - SEL MALIGNANCY / PAPANICOLAOU CLASS V <br>
+                    - ....  
                     </b>
-                    <p style="text-align: right;">Surabaya,...............</p>
-                    <br>
-                    <p style="text-align: right;">Dokter Pembaca</p>
-                    <br>
             `);
             } else {
                 // Default untuk kondisi lain
