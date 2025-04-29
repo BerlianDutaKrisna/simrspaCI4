@@ -69,7 +69,7 @@ class ihcController extends BaseController
     public function index_buku_penerima()
     {
         // Mengambil data ihc menggunakan properti yang sudah ada
-        $ihcData = $this->ihcModel->getihcWithPatient() ?? [];
+        $ihcData = $this->ihcModel->getihcWithPatientDESC() ?? [];
 
         // Kirimkan data ke view
         $data = [

@@ -69,7 +69,7 @@ class srsController extends BaseController
     public function index_buku_penerima()
     {
         // Mengambil data srs menggunakan properti yang sudah ada
-        $srsData = $this->srsModel->getsrsWithPatient() ?? [];
+        $srsData = $this->srsModel->getsrsWithPatientDESC() ?? [];
 
         // Kirimkan data ke view
         $data = [

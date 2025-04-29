@@ -131,6 +131,31 @@ class SrsModel extends Model
             ->findAll();
     }
 
+    public function getsrsWithPatientDESC()
+    {
+        return $this->select('
+            srs.*, 
+            patient.*, 
+            penerimaan_srs.id_penerimaan_srs AS id_penerimaan,
+            pembacaan_srs.id_pembacaan_srs AS id_pembacaan,
+            penulisan_srs.id_penulisan_srs AS id_penulisan,
+            pemverifikasi_srs.id_pemverifikasi_srs AS id_pemverifikasi,
+            authorized_srs.id_authorized_srs AS id_authorized,
+            pencetakan_srs.id_pencetakan_srs AS id_pencetakan,
+            mutu_srs.id_mutu_srs AS id_mutu
+        ')
+            ->join('patient', 'patient.id_pasien = srs.id_pasien', 'left')
+            ->join('penerimaan_srs', 'penerimaan_srs.id_srs = srs.id_srs', 'left')
+            ->join('pembacaan_srs', 'pembacaan_srs.id_srs = srs.id_srs', 'left')
+            ->join('penulisan_srs', 'penulisan_srs.id_srs = srs.id_srs', 'left')
+            ->join('pemverifikasi_srs', 'pemverifikasi_srs.id_srs = srs.id_srs', 'left')
+            ->join('authorized_srs', 'authorized_srs.id_srs = srs.id_srs', 'left')
+            ->join('pencetakan_srs', 'pencetakan_srs.id_srs = srs.id_srs', 'left')
+            ->join('mutu_srs', 'mutu_srs.id_srs = srs.id_srs', 'left')
+            ->orderBy('srs.kode_srs', 'DESC')
+            ->findAll();
+    }
+
     public function getsrsWithRelationsProses($id_srs)
     {
         return $this->select('srs.*, patient.*, penerimaan_srs.*, pembacaan_srs.*, penulisan_srs.*, pemverifikasi_srs.*, authorized_srs.*, pencetakan_srs.*, mutu_srs.*')

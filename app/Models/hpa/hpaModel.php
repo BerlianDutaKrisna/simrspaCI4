@@ -141,6 +141,40 @@ class HpaModel extends Model
             ->findAll();
     }
 
+    public function gethpaWithPatientDESC()
+    {
+        return $this->select('
+            hpa.*, 
+            patient.*, 
+            penerimaan_hpa.id_penerimaan_hpa AS id_penerimaan,
+            pemotongan_hpa.id_pemotongan_hpa AS id_pemotongan,
+            pemprosesan_hpa.id_pemprosesan_hpa AS id_pemprosesan,
+            penanaman_hpa.id_penanaman_hpa AS id_penanaman,
+            pemotongan_tipis_hpa.id_pemotongan_tipis_hpa AS id_pemotongan_tipis,
+            pewarnaan_hpa.id_pewarnaan_hpa AS id_pewarnaan,
+            pembacaan_hpa.id_pembacaan_hpa AS id_pembacaan,
+            penulisan_hpa.id_penulisan_hpa AS id_penulisan,
+            pemverifikasi_hpa.id_pemverifikasi_hpa AS id_pemverifikasi,
+            authorized_hpa.id_authorized_hpa AS id_authorized,
+            pencetakan_hpa.id_pencetakan_hpa AS id_pencetakan,
+            mutu_hpa.id_mutu_hpa AS id_mutu
+        ')
+            ->join('patient', 'patient.id_pasien = hpa.id_pasien', 'left')
+            ->join('penerimaan_hpa', 'penerimaan_hpa.id_hpa = hpa.id_hpa', 'left')
+            ->join('pemotongan_hpa', 'pemotongan_hpa.id_hpa = hpa.id_hpa', 'left')
+            ->join('pemprosesan_hpa', 'pemprosesan_hpa.id_hpa = hpa.id_hpa', 'left')
+            ->join('penanaman_hpa', 'penanaman_hpa.id_hpa = hpa.id_hpa', 'left')
+            ->join('pemotongan_tipis_hpa', 'pemotongan_tipis_hpa.id_hpa = hpa.id_hpa', 'left')
+            ->join('pewarnaan_hpa', 'pewarnaan_hpa.id_hpa = hpa.id_hpa', 'left')
+            ->join('pembacaan_hpa', 'pembacaan_hpa.id_hpa = hpa.id_hpa', 'left')
+            ->join('penulisan_hpa', 'penulisan_hpa.id_hpa = hpa.id_hpa', 'left')
+            ->join('pemverifikasi_hpa', 'pemverifikasi_hpa.id_hpa = hpa.id_hpa', 'left')
+            ->join('authorized_hpa', 'authorized_hpa.id_hpa = hpa.id_hpa', 'left')
+            ->join('pencetakan_hpa', 'pencetakan_hpa.id_hpa = hpa.id_hpa', 'left')
+            ->join('mutu_hpa', 'mutu_hpa.id_hpa = hpa.id_hpa', 'left')
+            ->orderBy('hpa.kode_hpa', 'DESC')
+            ->findAll();
+    }
 
     public function getHpaWithRelationsProses($id_hpa)
     {

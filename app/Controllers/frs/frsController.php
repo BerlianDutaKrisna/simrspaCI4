@@ -70,7 +70,7 @@ class FrsController extends BaseController
     public function index_buku_penerima()
     {
         // Mengambil data frs menggunakan properti yang sudah ada
-        $frsData = $this->frsModel->getfrsWithPatient() ?? [];
+        $frsData = $this->frsModel->getfrsWithPatientDESC() ?? [];
 
         // Kirimkan data ke view
         $data = [
