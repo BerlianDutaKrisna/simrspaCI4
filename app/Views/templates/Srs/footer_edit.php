@@ -2,7 +2,13 @@
     <div class="container my-auto">
         <div class="row">
             <div class="col-md-6 text-center text-md-left">
-                <p class="mb-0">© 2025 SIMRSPA - Developed by <strong>Berlian Duta Krisna S.Tr.Kes</strong></p>
+                <p class="mb-0">© 2025 SIMRSPA — Developed by <strong>Berlian Duta Krisna, S.Tr.Kes</strong></p>
+                <p class="mb-0 text-sm">Versi 2.0</p>
+                <p class="text-sm">
+                    <i class="fab fa-php"></i> PHP (CodeIgniter 4),
+                    <i class="fab fa-bootstrap"></i> Bootstrap 4,
+                    <i class="fas fa-database"></i> MySQL (MySQLi)
+                </p>
             </div>
             <div class="col-md-6 text-center text-md-right">
                 <ul class="list-inline mb-0">
