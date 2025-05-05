@@ -157,7 +157,8 @@ class HpaModel extends Model
             pemverifikasi_hpa.id_pemverifikasi_hpa AS id_pemverifikasi,
             authorized_hpa.id_authorized_hpa AS id_authorized,
             pencetakan_hpa.id_pencetakan_hpa AS id_pencetakan,
-            mutu_hpa.id_mutu_hpa AS id_mutu
+            mutu_hpa.id_mutu_hpa AS id_mutu,
+            users.nama_user AS nama_dokter
         ')
             ->join('patient', 'patient.id_pasien = hpa.id_pasien', 'left')
             ->join('penerimaan_hpa', 'penerimaan_hpa.id_hpa = hpa.id_hpa', 'left')
@@ -167,6 +168,7 @@ class HpaModel extends Model
             ->join('pemotongan_tipis_hpa', 'pemotongan_tipis_hpa.id_hpa = hpa.id_hpa', 'left')
             ->join('pewarnaan_hpa', 'pewarnaan_hpa.id_hpa = hpa.id_hpa', 'left')
             ->join('pembacaan_hpa', 'pembacaan_hpa.id_hpa = hpa.id_hpa', 'left')
+            ->join('users', 'users.id_user = pembacaan_hpa.id_user_dokter_pembacaan_hpa', 'left')
             ->join('penulisan_hpa', 'penulisan_hpa.id_hpa = hpa.id_hpa', 'left')
             ->join('pemverifikasi_hpa', 'pemverifikasi_hpa.id_hpa = hpa.id_hpa', 'left')
             ->join('authorized_hpa', 'authorized_hpa.id_hpa = hpa.id_hpa', 'left')

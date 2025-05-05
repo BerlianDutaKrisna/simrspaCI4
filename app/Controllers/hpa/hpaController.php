@@ -81,7 +81,7 @@ class HpaController extends BaseController
             'nama_user'  => session()->get('nama_user'),
             'hpaData' => $hpaData,
         ];
-        
+        dd($data);
         return view('hpa/index_buku_penerima', $data);
     }
     
