@@ -142,7 +142,8 @@ class SrsModel extends Model
             pemverifikasi_srs.id_pemverifikasi_srs AS id_pemverifikasi,
             authorized_srs.id_authorized_srs AS id_authorized,
             pencetakan_srs.id_pencetakan_srs AS id_pencetakan,
-            mutu_srs.id_mutu_srs AS id_mutu
+            mutu_srs.id_mutu_srs AS id_mutu,
+            dokter_pembacaan.nama_user AS nama_dokter_pembacaan
         ')
             ->join('patient', 'patient.id_pasien = srs.id_pasien', 'left')
             ->join('penerimaan_srs', 'penerimaan_srs.id_srs = srs.id_srs', 'left')
@@ -152,6 +153,7 @@ class SrsModel extends Model
             ->join('authorized_srs', 'authorized_srs.id_srs = srs.id_srs', 'left')
             ->join('pencetakan_srs', 'pencetakan_srs.id_srs = srs.id_srs', 'left')
             ->join('mutu_srs', 'mutu_srs.id_srs = srs.id_srs', 'left')
+            ->join('users AS dokter_pembacaan', 'dokter_pembacaan.id_user = pembacaan_srs.id_user_dokter_pembacaan_srs', 'left')
             ->orderBy('srs.kode_srs', 'DESC')
             ->findAll();
     }

@@ -146,7 +146,8 @@ class IhcModel extends Model
             pemverifikasi_ihc.id_pemverifikasi_ihc AS id_pemverifikasi,
             authorized_ihc.id_authorized_ihc AS id_authorized,
             pencetakan_ihc.id_pencetakan_ihc AS id_pencetakan,
-            mutu_ihc.id_mutu_ihc AS id_mutu
+            mutu_ihc.id_mutu_ihc AS id_mutu,
+            dokter_pembacaan.nama_user AS nama_dokter_pembacaan
         ')
             ->join('patient', 'patient.id_pasien = ihc.id_pasien', 'left')
             ->join('penerimaan_ihc', 'penerimaan_ihc.id_ihc = ihc.id_ihc', 'left')
@@ -156,6 +157,7 @@ class IhcModel extends Model
             ->join('authorized_ihc', 'authorized_ihc.id_ihc = ihc.id_ihc', 'left')
             ->join('pencetakan_ihc', 'pencetakan_ihc.id_ihc = ihc.id_ihc', 'left')
             ->join('mutu_ihc', 'mutu_ihc.id_ihc = ihc.id_ihc', 'left')
+            ->join('users AS dokter_pembacaan', 'dokter_pembacaan.id_user = pembacaan_ihc.id_user_dokter_pembacaan_ihc', 'left')
             ->orderBy('ihc.kode_ihc', 'DESC')
             ->findAll();
     }

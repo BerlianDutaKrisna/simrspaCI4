@@ -143,7 +143,8 @@ class FrsModel extends Model
             pemverifikasi_frs.id_pemverifikasi_frs AS id_pemverifikasi,
             authorized_frs.id_authorized_frs AS id_authorized,
             pencetakan_frs.id_pencetakan_frs AS id_pencetakan,
-            mutu_frs.id_mutu_frs AS id_mutu
+            mutu_frs.id_mutu_frs AS id_mutu,
+            dokter_pembacaan.nama_user AS nama_dokter_pembacaan
         ')
             ->join('patient', 'patient.id_pasien = frs.id_pasien', 'left')
             ->join('penerimaan_frs', 'penerimaan_frs.id_frs = frs.id_frs', 'left')
@@ -153,6 +154,7 @@ class FrsModel extends Model
             ->join('authorized_frs', 'authorized_frs.id_frs = frs.id_frs', 'left')
             ->join('pencetakan_frs', 'pencetakan_frs.id_frs = frs.id_frs', 'left')
             ->join('mutu_frs', 'mutu_frs.id_frs = frs.id_frs', 'left')
+            ->join('users AS dokter_pembacaan', 'dokter_pembacaan.id_user = pembacaan_frs.id_user_dokter_pembacaan_frs', 'left')
             ->orderBy('frs.kode_frs', 'DESC')
             ->findAll();
     }

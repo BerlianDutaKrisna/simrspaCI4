@@ -27,6 +27,7 @@
                         <th>Tanggal Hasil</th>
                         <th>Hasil FRS</th>
                         <th>Status FRS</th>
+                        <th>Dokter Pembaca</th>
                         <th class="text-center" style="width: 150px;">Penerima</th>
                         <th>Nama Penerima / Hubungan</th>
                         <th>Tanggal Penerima</th>
@@ -84,6 +85,23 @@
                                 </td>
                                 <td><?= esc(strip_tags($row['hasil_frs'] ?? 'Belum Ada Hasil')) ?></td>
                                 <td><strong class="<?= in_array($row['status_frs'] ?? '', ['Authorized', 'Selesai']) ? 'text-success' : '' ?>"><?= esc($row['status_frs'] ?? 'Belum Diisi') ?></strong></td>
+                                <?php
+                                $nama1 = $row['nama_dokter_pemotongan'] ?? null;
+                                $nama2 = $row['nama_dokter_pembacaan'] ?? null;
+
+                                if ($nama1 && $nama2) {
+                                    if ($nama1 === $nama2) {
+                                        $nama_dokter = $nama1;
+                                    } else {
+                                        $nama_dokter = $nama1 . '/' . $nama2;
+                                    }
+                                } elseif ($nama1 || $nama2) {
+                                    $nama_dokter = $nama1 ?? $nama2;
+                                } else {
+                                    $nama_dokter = 'Belum Dibaca';
+                                }
+                                ?>
+                                <td><?= esc($nama_dokter) ?></td>
                                 <td class="text-center">
                                     <a href="#"
                                         class="btn btn-info btn-sm penerima-btn"

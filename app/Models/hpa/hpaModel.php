@@ -158,7 +158,8 @@ class HpaModel extends Model
             authorized_hpa.id_authorized_hpa AS id_authorized,
             pencetakan_hpa.id_pencetakan_hpa AS id_pencetakan,
             mutu_hpa.id_mutu_hpa AS id_mutu,
-            users.nama_user AS nama_dokter
+            dokter_pemotongan.nama_user AS nama_dokter_pemotongan,
+            dokter_pembacaan.nama_user AS nama_dokter_pembacaan
         ')
             ->join('patient', 'patient.id_pasien = hpa.id_pasien', 'left')
             ->join('penerimaan_hpa', 'penerimaan_hpa.id_hpa = hpa.id_hpa', 'left')
@@ -168,12 +169,13 @@ class HpaModel extends Model
             ->join('pemotongan_tipis_hpa', 'pemotongan_tipis_hpa.id_hpa = hpa.id_hpa', 'left')
             ->join('pewarnaan_hpa', 'pewarnaan_hpa.id_hpa = hpa.id_hpa', 'left')
             ->join('pembacaan_hpa', 'pembacaan_hpa.id_hpa = hpa.id_hpa', 'left')
-            ->join('users', 'users.id_user = pembacaan_hpa.id_user_dokter_pembacaan_hpa', 'left')
             ->join('penulisan_hpa', 'penulisan_hpa.id_hpa = hpa.id_hpa', 'left')
             ->join('pemverifikasi_hpa', 'pemverifikasi_hpa.id_hpa = hpa.id_hpa', 'left')
             ->join('authorized_hpa', 'authorized_hpa.id_hpa = hpa.id_hpa', 'left')
             ->join('pencetakan_hpa', 'pencetakan_hpa.id_hpa = hpa.id_hpa', 'left')
             ->join('mutu_hpa', 'mutu_hpa.id_hpa = hpa.id_hpa', 'left')
+            ->join('users AS dokter_pemotongan', 'dokter_pemotongan.id_user = pemotongan_hpa.id_user_dokter_pemotongan_hpa', 'left')
+            ->join('users AS dokter_pembacaan', 'dokter_pembacaan.id_user = pembacaan_hpa.id_user_dokter_pembacaan_hpa', 'left')
             ->orderBy('hpa.kode_hpa', 'DESC')
             ->findAll();
     }
