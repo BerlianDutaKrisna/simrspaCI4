@@ -56,7 +56,7 @@ class ExamController extends BaseController
             'nama_user' => session()->get('nama_user'),
             'Data' => $Data
         ];
-
+        
         return view('Exam/index', $data);
     }
 

@@ -32,7 +32,7 @@
                     <div class="col-md-6">
                         <label for="searchDate">Tanggal Pencarian</label>
                         <input type="date" class="form-control" id="searchDate" name="searchDate"
-                            value="<?= old('searchDate') ?: date('Y-m-d', strtotime('-7 days')); ?>">
+                            value="<?= old('searchDate') ?: '2025-01-01'; ?>">
                     </div>
                     <div class="col-md-6">
                         <label for="searchDate2">Sampai Tanggal</label>
