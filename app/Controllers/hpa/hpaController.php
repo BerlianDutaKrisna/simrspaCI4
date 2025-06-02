@@ -823,7 +823,7 @@ class HpaController extends BaseController
             // Update nama file baru di database
             $this->hpaModel->update($id_hpa, ['foto_makroskopis_hpa' => $newFileName]);
             // Berhasil, redirect dengan pesan sukses
-            return redirect()->back()->with('success', 'Foto makroskopis berhasil diunggah.');
+            return redirect()->back();
         } else {
             return redirect()->back()->with('error', 'File tidak valid atau tidak diunggah.');
         }
