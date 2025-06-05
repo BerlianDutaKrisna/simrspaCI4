@@ -190,7 +190,7 @@
                         <option value="dr. Nurlaella Iswan Nusi, Sp.OG">dr. Nurlaella Iswan Nusi, Sp.OG.</option>
                         <option value="drg. Okky Prasetyo, Sp.BM">drg. Okky Prasetyo, Sp.BM</option>
                         <option value="dr. Taufik Indrawan, Sp.U">dr. Taufik Indrawan, Sp.U</option>
-                        <option value="dr. dr. Chairani Fitri Saphira, Sp.BP-RE (K)">dr. dr. Chairani Fitri Saphira, Sp.BP-RE (K)</option>
+                        <option value="dr. Chairani Fitri Saphira, Sp.BP-RE (K)">dr. Chairani Fitri Saphira, Sp.BP-RE (K)</option>
                         <option value="dr. Billy Daniel Messakh, Sp.B">dr. Billy Daniel Messakh, Sp.B</option>
                         <option value="dr. Khamim Thohari, Sp.BS">dr. Khamim Thohari, Sp.BS</option>
                         <option value="dr. Danang Irsayanto, Sp. U.,M.Ked.Klin">dr. Danang Irsayanto, Sp. U.,M.Ked.Klin</option>
