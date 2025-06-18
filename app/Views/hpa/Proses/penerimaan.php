@@ -68,6 +68,16 @@
                                                     Jaringan terfiksasi merata?
                                                 </label>
                                             </div>
+                                            <div class="form-check">
+                                                <input type="checkbox"
+                                                    name="indikator_9"
+                                                    value="10"
+                                                    id="indikator_9_<?= esc($row['id_mutu_hpa']); ?>"
+                                                    class="form-check-input">
+                                                <label class="form-check-label" for="indikator_9_<?= esc($row['id_mutu_hpa']); ?>">
+                                                    Cek Kesesuaian ID?
+                                                </label>
+                                            </div>
                                         <?php else: ?>
                                             <?= esc($row['total_nilai_mutu_hpa']); ?> %
                                         <?php endif; ?>
