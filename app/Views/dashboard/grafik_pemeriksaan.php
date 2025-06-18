@@ -40,13 +40,39 @@
                 return;
             }
 
-            // Gabungkan semua bulan & tahun dari semua dataset agar menjadi satu sumbu X
             var allLabels = [...new Set([
                 ...chartData.hpa.map(data => data.bulan + " " + data.tahun),
                 ...chartData.frs.map(data => data.bulan + " " + data.tahun),
                 ...chartData.srs.map(data => data.bulan + " " + data.tahun),
                 ...chartData.ihc.map(data => data.bulan + " " + data.tahun)
-            ])].sort(); // Sortir agar urut
+            ])];
+
+            // Mapping nama bulan Indonesia ke angka 1-12
+            const monthMap = {
+                "Januari": 1,
+                "Februari": 2,
+                "Maret": 3,
+                "April": 4,
+                "Mei": 5,
+                "Juni": 6,
+                "Juli": 7,
+                "Agustus": 8,
+                "September": 9,
+                "Oktober": 10,
+                "November": 11,
+                "Desember": 12
+            };
+
+            allLabels.sort((a, b) => {
+                const [monthA, yearA] = a.split(" ");
+                const [monthB, yearB] = b.split(" ");
+
+                if (parseInt(yearA) !== parseInt(yearB)) {
+                    return parseInt(yearA) - parseInt(yearB);
+                }
+                return monthMap[monthA] - monthMap[monthB];
+            });
+
 
             // Fungsi untuk mencocokkan data dengan label (jika tidak ada, set 0)
             function mapDataToLabels(dataset, labels) {
