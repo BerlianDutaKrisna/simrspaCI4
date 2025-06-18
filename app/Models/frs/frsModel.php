@@ -155,7 +155,7 @@ class FrsModel extends Model
             ->join('pencetakan_frs', 'pencetakan_frs.id_frs = frs.id_frs', 'left')
             ->join('mutu_frs', 'mutu_frs.id_frs = frs.id_frs', 'left')
             ->join('users AS dokter_pembacaan', 'dokter_pembacaan.id_user = pembacaan_frs.id_user_dokter_pembacaan_frs', 'left')
-            ->orderBy('frs.kode_frs', 'DESC')
+            ->orderBy("CAST(SUBSTRING_INDEX(SUBSTRING_INDEX(kode_frs, '/', 1), '.', -1) AS UNSIGNED) DESC")
             ->findAll();
     }
 

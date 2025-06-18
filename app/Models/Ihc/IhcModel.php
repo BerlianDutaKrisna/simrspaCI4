@@ -158,7 +158,7 @@ class IhcModel extends Model
             ->join('pencetakan_ihc', 'pencetakan_ihc.id_ihc = ihc.id_ihc', 'left')
             ->join('mutu_ihc', 'mutu_ihc.id_ihc = ihc.id_ihc', 'left')
             ->join('users AS dokter_pembacaan', 'dokter_pembacaan.id_user = pembacaan_ihc.id_user_dokter_pembacaan_ihc', 'left')
-            ->orderBy('ihc.kode_ihc', 'DESC')
+            ->orderBy("CAST(SUBSTRING_INDEX(SUBSTRING_INDEX(kode_ihc, '/', 1), '.', -1) AS UNSIGNED) DESC")
             ->findAll();
     }
 

@@ -176,7 +176,7 @@ class HpaModel extends Model
             ->join('mutu_hpa', 'mutu_hpa.id_hpa = hpa.id_hpa', 'left')
             ->join('users AS dokter_pemotongan', 'dokter_pemotongan.id_user = pemotongan_hpa.id_user_dokter_pemotongan_hpa', 'left')
             ->join('users AS dokter_pembacaan', 'dokter_pembacaan.id_user = pembacaan_hpa.id_user_dokter_pembacaan_hpa', 'left')
-            ->orderBy('hpa.kode_hpa', 'DESC')
+            ->orderBy("CAST(SUBSTRING_INDEX(SUBSTRING_INDEX(kode_hpa, '/', 1), '.', -1) AS UNSIGNED) DESC")
             ->findAll();
     }
 

@@ -154,7 +154,7 @@ class SrsModel extends Model
             ->join('pencetakan_srs', 'pencetakan_srs.id_srs = srs.id_srs', 'left')
             ->join('mutu_srs', 'mutu_srs.id_srs = srs.id_srs', 'left')
             ->join('users AS dokter_pembacaan', 'dokter_pembacaan.id_user = pembacaan_srs.id_user_dokter_pembacaan_srs', 'left')
-            ->orderBy('srs.kode_srs', 'DESC')
+            ->orderBy("CAST(SUBSTRING_INDEX(SUBSTRING_INDEX(kode_srs, '/', 1), '.', -1) AS UNSIGNED) DESC")
             ->findAll();
     }
 
