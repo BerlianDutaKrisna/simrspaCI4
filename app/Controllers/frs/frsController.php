@@ -834,6 +834,6 @@ class FrsController extends BaseController
             'frsData'       => $filteredData,
         ];
 
-        return view('frs/laporan', $data);
+        return view('frs/laporan_pemeriksaan', $data);
     }
 }

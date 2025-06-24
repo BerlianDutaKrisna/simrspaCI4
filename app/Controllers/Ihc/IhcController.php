@@ -794,6 +794,6 @@ class ihcController extends BaseController
             'ihcData'       => $filteredData,
         ];
 
-        return view('ihc/laporan', $data);
+        return view('ihc/laporan_pemeriksaan', $data);
     }
 }

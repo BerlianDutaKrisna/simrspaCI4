@@ -896,12 +896,12 @@ class HpaController extends BaseController
             'hpaData' => $hpaData,
         ];
         
-        return view('hpa/laporan_pemeriksaan', $data);
+        return view('hpa/laporan/laporan_pemeriksaan', $data);
     }
 
     public function laporan_kerja()
     {
-        $hpaData = $this->hpaModel->gethpaWithRelations() ?? [];
+        $hpaData = $this->hpaModel->gethpaWithTime() ?? [];
 
         $data = [
             'id_user'    => session()->get('id_user'),
@@ -909,7 +909,7 @@ class HpaController extends BaseController
             'hpaData' => $hpaData,
         ];
         
-        return view('hpa/laporan_kerja', $data);
+        return view('hpa/laporan/laporan_kerja', $data);
     }
 
     public function laporan_oprasional()
@@ -922,7 +922,7 @@ class HpaController extends BaseController
             'hpaData' => $hpaData,
         ];
         
-        return view('hpa/laporan_oprasional', $data);
+        return view('hpa/laporan/laporan_oprasional', $data);
     }
 
     public function filter()
@@ -945,6 +945,6 @@ class HpaController extends BaseController
             'hpaData'       => $filteredData,
         ];
 
-        return view('hpa/laporan', $data);
+        return view('hpa/laporan_pemeriksaan', $data);
     }
 }

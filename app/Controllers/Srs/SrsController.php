@@ -842,6 +842,6 @@ class srsController extends BaseController
             'srsData'       => $filteredData,
         ];
 
-        return view('srs/laporan', $data);
+        return view('srs/laporan_pemeriksaan', $data);
     }
 }

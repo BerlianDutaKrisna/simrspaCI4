@@ -198,6 +198,166 @@ class HpaModel extends Model
             ->first();
     }
 
+    public function gethpaWithTime()
+    {
+        return $this->select('
+        hpa.*,
+        patient.*,
+        penerimaan_hpa.mulai_penerimaan_hpa, penerimaan_hpa.selesai_penerimaan_hpa,
+        CONCAT(
+            FLOOR(TIMESTAMPDIFF(MINUTE, penerimaan_hpa.mulai_penerimaan_hpa, penerimaan_hpa.selesai_penerimaan_hpa) / 60), 
+            " Jam ",
+            MOD(TIMESTAMPDIFF(MINUTE, penerimaan_hpa.mulai_penerimaan_hpa, penerimaan_hpa.selesai_penerimaan_hpa), 60), 
+            " Menit"
+        ) AS durasi_penerimaan_hpa,
+
+        pemotongan_hpa.mulai_pemotongan_hpa, pemotongan_hpa.selesai_pemotongan_hpa,
+        CONCAT(
+            FLOOR(TIMESTAMPDIFF(MINUTE, pemotongan_hpa.mulai_pemotongan_hpa, pemotongan_hpa.selesai_pemotongan_hpa) / 60), 
+            " Jam ",
+            MOD(TIMESTAMPDIFF(MINUTE, pemotongan_hpa.mulai_pemotongan_hpa, pemotongan_hpa.selesai_pemotongan_hpa), 60), 
+            " Menit"
+        ) AS durasi_pemotongan_hpa,
+
+        pemprosesan_hpa.mulai_pemprosesan_hpa, pemprosesan_hpa.selesai_pemprosesan_hpa,
+        CONCAT(
+            FLOOR(TIMESTAMPDIFF(MINUTE, pemprosesan_hpa.mulai_pemprosesan_hpa, pemprosesan_hpa.selesai_pemprosesan_hpa) / 60), 
+            " Jam ",
+            MOD(TIMESTAMPDIFF(MINUTE, pemprosesan_hpa.mulai_pemprosesan_hpa, pemprosesan_hpa.selesai_pemprosesan_hpa), 60), 
+            " Menit"
+        ) AS durasi_pemprosesan_hpa,
+
+        penanaman_hpa.mulai_penanaman_hpa, penanaman_hpa.selesai_penanaman_hpa,
+        CONCAT(
+            FLOOR(TIMESTAMPDIFF(MINUTE, penanaman_hpa.mulai_penanaman_hpa, penanaman_hpa.selesai_penanaman_hpa) / 60), 
+            " Jam ",
+            MOD(TIMESTAMPDIFF(MINUTE, penanaman_hpa.mulai_penanaman_hpa, penanaman_hpa.selesai_penanaman_hpa), 60), 
+            " Menit"
+        ) AS durasi_penanaman_hpa,
+
+        pemotongan_tipis_hpa.mulai_pemotongan_tipis_hpa, pemotongan_tipis_hpa.selesai_pemotongan_tipis_hpa,
+        CONCAT(
+            FLOOR(TIMESTAMPDIFF(MINUTE, pemotongan_tipis_hpa.mulai_pemotongan_tipis_hpa, pemotongan_tipis_hpa.selesai_pemotongan_tipis_hpa) / 60), 
+            " Jam ",
+            MOD(TIMESTAMPDIFF(MINUTE, pemotongan_tipis_hpa.mulai_pemotongan_tipis_hpa, pemotongan_tipis_hpa.selesai_pemotongan_tipis_hpa), 60), 
+            " Menit"
+        ) AS durasi_pemotongan_tipis_hpa,
+
+        pewarnaan_hpa.mulai_pewarnaan_hpa, pewarnaan_hpa.selesai_pewarnaan_hpa,
+        CONCAT(
+            FLOOR(TIMESTAMPDIFF(MINUTE, pewarnaan_hpa.mulai_pewarnaan_hpa, pewarnaan_hpa.selesai_pewarnaan_hpa) / 60), 
+            " Jam ",
+            MOD(TIMESTAMPDIFF(MINUTE, pewarnaan_hpa.mulai_pewarnaan_hpa, pewarnaan_hpa.selesai_pewarnaan_hpa), 60), 
+            " Menit"
+        ) AS durasi_pewarnaan_hpa,
+
+        pembacaan_hpa.mulai_pembacaan_hpa, pembacaan_hpa.selesai_pembacaan_hpa,
+        CONCAT(
+            FLOOR(TIMESTAMPDIFF(MINUTE, pembacaan_hpa.mulai_pembacaan_hpa, pembacaan_hpa.selesai_pembacaan_hpa) / 60), 
+            " Jam ",
+            MOD(TIMESTAMPDIFF(MINUTE, pembacaan_hpa.mulai_pembacaan_hpa, pembacaan_hpa.selesai_pembacaan_hpa), 60), 
+            " Menit"
+        ) AS durasi_pembacaan_hpa,
+
+        penulisan_hpa.mulai_penulisan_hpa, penulisan_hpa.selesai_penulisan_hpa,
+        CONCAT(
+            FLOOR(TIMESTAMPDIFF(MINUTE, penulisan_hpa.mulai_penulisan_hpa, penulisan_hpa.selesai_penulisan_hpa) / 60), 
+            " Jam ",
+            MOD(TIMESTAMPDIFF(MINUTE, penulisan_hpa.mulai_penulisan_hpa, penulisan_hpa.selesai_penulisan_hpa), 60), 
+            " Menit"
+        ) AS durasi_penulisan_hpa,
+
+        pemverifikasi_hpa.mulai_pemverifikasi_hpa, pemverifikasi_hpa.selesai_pemverifikasi_hpa,
+        CONCAT(
+            FLOOR(TIMESTAMPDIFF(MINUTE, pemverifikasi_hpa.mulai_pemverifikasi_hpa, pemverifikasi_hpa.selesai_pemverifikasi_hpa) / 60), 
+            " Jam ",
+            MOD(TIMESTAMPDIFF(MINUTE, pemverifikasi_hpa.mulai_pemverifikasi_hpa, pemverifikasi_hpa.selesai_pemverifikasi_hpa), 60), 
+            " Menit"
+        ) AS durasi_pemverifikasi_hpa,
+
+        authorized_hpa.mulai_authorized_hpa, authorized_hpa.selesai_authorized_hpa,
+        CONCAT(
+            FLOOR(TIMESTAMPDIFF(MINUTE, authorized_hpa.mulai_authorized_hpa, authorized_hpa.selesai_authorized_hpa) / 60), 
+            " Jam ",
+            MOD(TIMESTAMPDIFF(MINUTE, authorized_hpa.mulai_authorized_hpa, authorized_hpa.selesai_authorized_hpa), 60), 
+            " Menit"
+        ) AS durasi_authorized_hpa,
+
+        pencetakan_hpa.mulai_pencetakan_hpa, pencetakan_hpa.selesai_pencetakan_hpa,
+        CONCAT(
+            FLOOR(TIMESTAMPDIFF(MINUTE, pencetakan_hpa.mulai_pencetakan_hpa, pencetakan_hpa.selesai_pencetakan_hpa) / 60), 
+            " Jam ",
+            MOD(TIMESTAMPDIFF(MINUTE, pencetakan_hpa.mulai_pencetakan_hpa, pencetakan_hpa.selesai_pencetakan_hpa), 60), 
+            " Menit"
+        ) AS durasi_pencetakan_hpa,
+
+        CONCAT(
+            FLOOR((
+                IFNULL(TIMESTAMPDIFF(MINUTE, penerimaan_hpa.mulai_penerimaan_hpa, penerimaan_hpa.selesai_penerimaan_hpa), 0) +
+                IFNULL(TIMESTAMPDIFF(MINUTE, pemotongan_hpa.mulai_pemotongan_hpa, pemotongan_hpa.selesai_pemotongan_hpa), 0) +
+                IFNULL(TIMESTAMPDIFF(MINUTE, penanaman_hpa.mulai_penanaman_hpa, penanaman_hpa.selesai_penanaman_hpa), 0) +
+                IFNULL(TIMESTAMPDIFF(MINUTE, pemotongan_tipis_hpa.mulai_pemotongan_tipis_hpa, pemotongan_tipis_hpa.selesai_pemotongan_tipis_hpa), 0) +
+                IFNULL(TIMESTAMPDIFF(MINUTE, pembacaan_hpa.mulai_pembacaan_hpa, pembacaan_hpa.selesai_pembacaan_hpa), 0) +
+                IFNULL(TIMESTAMPDIFF(MINUTE, penulisan_hpa.mulai_penulisan_hpa, penulisan_hpa.selesai_penulisan_hpa), 0) +
+                IFNULL(TIMESTAMPDIFF(MINUTE, pemverifikasi_hpa.mulai_pemverifikasi_hpa, pemverifikasi_hpa.selesai_pemverifikasi_hpa), 0) +
+                IFNULL(TIMESTAMPDIFF(MINUTE, authorized_hpa.mulai_authorized_hpa, authorized_hpa.selesai_authorized_hpa), 0) +
+                IFNULL(TIMESTAMPDIFF(MINUTE, pencetakan_hpa.mulai_pencetakan_hpa, pencetakan_hpa.selesai_pencetakan_hpa), 0)
+            ) / 60), 
+            " Jam ",
+            MOD((
+                IFNULL(TIMESTAMPDIFF(MINUTE, penerimaan_hpa.mulai_penerimaan_hpa, penerimaan_hpa.selesai_penerimaan_hpa), 0) +
+                IFNULL(TIMESTAMPDIFF(MINUTE, pemotongan_hpa.mulai_pemotongan_hpa, pemotongan_hpa.selesai_pemotongan_hpa), 0) +
+                IFNULL(TIMESTAMPDIFF(MINUTE, penanaman_hpa.mulai_penanaman_hpa, penanaman_hpa.selesai_penanaman_hpa), 0) +
+                IFNULL(TIMESTAMPDIFF(MINUTE, pemotongan_tipis_hpa.mulai_pemotongan_tipis_hpa, pemotongan_tipis_hpa.selesai_pemotongan_tipis_hpa), 0) +
+                IFNULL(TIMESTAMPDIFF(MINUTE, pembacaan_hpa.mulai_pembacaan_hpa, pembacaan_hpa.selesai_pembacaan_hpa), 0) +
+                IFNULL(TIMESTAMPDIFF(MINUTE, penulisan_hpa.mulai_penulisan_hpa, penulisan_hpa.selesai_penulisan_hpa), 0) +
+                IFNULL(TIMESTAMPDIFF(MINUTE, pemverifikasi_hpa.mulai_pemverifikasi_hpa, pemverifikasi_hpa.selesai_pemverifikasi_hpa), 0) +
+                IFNULL(TIMESTAMPDIFF(MINUTE, authorized_hpa.mulai_authorized_hpa, authorized_hpa.selesai_authorized_hpa), 0) +
+                IFNULL(TIMESTAMPDIFF(MINUTE, pencetakan_hpa.mulai_pencetakan_hpa, pencetakan_hpa.selesai_pencetakan_hpa), 0)
+            ), 60)
+        ) AS total_waktu_kerja,
+
+        CONCAT(
+            FLOOR((
+                IFNULL(TIMESTAMPDIFF(MINUTE, pemotongan_hpa.mulai_pemotongan_hpa, pemotongan_hpa.selesai_pemotongan_hpa), 0) +
+                IFNULL(TIMESTAMPDIFF(MINUTE, pemprosesan_hpa.mulai_pemprosesan_hpa, pemprosesan_hpa.selesai_pemprosesan_hpa), 0) +
+                IFNULL(TIMESTAMPDIFF(MINUTE, penanaman_hpa.mulai_penanaman_hpa, penanaman_hpa.selesai_penanaman_hpa), 0) +
+                IFNULL(TIMESTAMPDIFF(MINUTE, pemotongan_tipis_hpa.mulai_pemotongan_tipis_hpa, pemotongan_tipis_hpa.selesai_pemotongan_tipis_hpa), 0) +
+                IFNULL(TIMESTAMPDIFF(MINUTE, pewarnaan_hpa.mulai_pewarnaan_hpa, pewarnaan_hpa.selesai_pewarnaan_hpa), 0) +
+                IFNULL(TIMESTAMPDIFF(MINUTE, pembacaan_hpa.mulai_pembacaan_hpa, pembacaan_hpa.selesai_pembacaan_hpa), 0) +
+                IFNULL(TIMESTAMPDIFF(MINUTE, penulisan_hpa.mulai_penulisan_hpa, penulisan_hpa.selesai_penulisan_hpa), 0) +
+                IFNULL(TIMESTAMPDIFF(MINUTE, pencetakan_hpa.mulai_pencetakan_hpa, pencetakan_hpa.selesai_pencetakan_hpa), 0)
+            ) / 60), 
+            " Jam ",
+            MOD((
+                IFNULL(TIMESTAMPDIFF(MINUTE, pemotongan_hpa.mulai_pemotongan_hpa, pemotongan_hpa.selesai_pemotongan_hpa), 0) +
+                IFNULL(TIMESTAMPDIFF(MINUTE, pemprosesan_hpa.mulai_pemprosesan_hpa, pemprosesan_hpa.selesai_pemprosesan_hpa), 0) +
+                IFNULL(TIMESTAMPDIFF(MINUTE, penanaman_hpa.mulai_penanaman_hpa, penanaman_hpa.selesai_penanaman_hpa), 0) +
+                IFNULL(TIMESTAMPDIFF(MINUTE, pemotongan_tipis_hpa.mulai_pemotongan_tipis_hpa, pemotongan_tipis_hpa.selesai_pemotongan_tipis_hpa), 0) +
+                IFNULL(TIMESTAMPDIFF(MINUTE, pewarnaan_hpa.mulai_pewarnaan_hpa, pewarnaan_hpa.selesai_pewarnaan_hpa), 0) +
+                IFNULL(TIMESTAMPDIFF(MINUTE, pembacaan_hpa.mulai_pembacaan_hpa, pembacaan_hpa.selesai_pembacaan_hpa), 0) +
+                IFNULL(TIMESTAMPDIFF(MINUTE, penulisan_hpa.mulai_penulisan_hpa, penulisan_hpa.selesai_penulisan_hpa), 0) +
+                IFNULL(TIMESTAMPDIFF(MINUTE, pencetakan_hpa.mulai_pencetakan_hpa, pencetakan_hpa.selesai_pencetakan_hpa), 0)
+            ), 60)
+        ) AS total_waktu_operasional
+    ')
+            ->join('patient', 'patient.id_pasien = hpa.id_pasien', 'left')
+            ->join('penerimaan_hpa', 'penerimaan_hpa.id_hpa = hpa.id_hpa', 'left')
+            ->join('pemotongan_hpa', 'pemotongan_hpa.id_hpa = hpa.id_hpa', 'left')
+            ->join('pemprosesan_hpa', 'pemprosesan_hpa.id_hpa = hpa.id_hpa', 'left')
+            ->join('penanaman_hpa', 'penanaman_hpa.id_hpa = hpa.id_hpa', 'left')
+            ->join('pemotongan_tipis_hpa', 'pemotongan_tipis_hpa.id_hpa = hpa.id_hpa', 'left')
+            ->join('pewarnaan_hpa', 'pewarnaan_hpa.id_hpa = hpa.id_hpa', 'left')
+            ->join('pembacaan_hpa', 'pembacaan_hpa.id_hpa = hpa.id_hpa', 'left')
+            ->join('penulisan_hpa', 'penulisan_hpa.id_hpa = hpa.id_hpa', 'left')
+            ->join('pemverifikasi_hpa', 'pemverifikasi_hpa.id_hpa = hpa.id_hpa', 'left')
+            ->join('authorized_hpa', 'authorized_hpa.id_hpa = hpa.id_hpa', 'left')
+            ->join('pencetakan_hpa', 'pencetakan_hpa.id_hpa = hpa.id_hpa', 'left')
+            ->orderBy("CAST(SUBSTRING_INDEX(SUBSTRING_INDEX(kode_hpa, '/', 1), '.', -1) AS UNSIGNED) ASC")
+            ->orderBy("CAST(SUBSTRING_INDEX(kode_hpa, '/', -1) AS UNSIGNED) ASC")
+            ->findAll();
+    }
+
     public function riwayatPemeriksaanhpa($id_pasien)
     {
         return $this
