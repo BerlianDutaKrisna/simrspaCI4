@@ -735,7 +735,7 @@ class ihcController extends BaseController
         }
     }
 
-    public function laporan()
+    public function laporan_pemeriksaan()
     {
         $ihcData = $this->ihcModel->getihcWithRelations() ?? [];
 
@@ -745,7 +745,33 @@ class ihcController extends BaseController
             'ihcData' => $ihcData,
         ];
         
-        return view('ihc/laporan', $data);
+        return view('ihc/laporan_pemeriksaan', $data);
+    }
+
+    public function laporan_kerja()
+    {
+        $ihcData = $this->ihcModel->getihcWithRelations() ?? [];
+
+        $data = [
+            'id_user'    => session()->get('id_user'),
+            'nama_user'  => session()->get('nama_user'),
+            'ihcData' => $ihcData,
+        ];
+        
+        return view('ihc/laporan_kerja', $data);
+    }
+
+    public function laporan_oprasional()
+    {
+        $ihcData = $this->ihcModel->getihcWithRelations() ?? [];
+
+        $data = [
+            'id_user'    => session()->get('id_user'),
+            'nama_user'  => session()->get('nama_user'),
+            'ihcData' => $ihcData,
+        ];
+        
+        return view('ihc/laporan_oprasional', $data);
     }
 
     public function filter()

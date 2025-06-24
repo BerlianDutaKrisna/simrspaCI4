@@ -775,7 +775,7 @@ class FrsController extends BaseController
         }
     }
 
-    public function laporan()
+    public function laporan_pemeriksaan()
     {
         $frsData = $this->frsModel->getfrsWithRelations() ?? [];
 
@@ -784,8 +784,34 @@ class FrsController extends BaseController
             'nama_user'  => session()->get('nama_user'),
             'frsData' => $frsData,
         ];
+        
+        return view('frs/laporan_pemeriksaan', $data);
+    }
 
-        return view('frs/laporan', $data);
+    public function laporan_kerja()
+    {
+        $frsData = $this->frsModel->getfrsWithRelations() ?? [];
+
+        $data = [
+            'id_user'    => session()->get('id_user'),
+            'nama_user'  => session()->get('nama_user'),
+            'frsData' => $frsData,
+        ];
+        
+        return view('frs/laporan_kerja', $data);
+    }
+
+    public function laporan_oprasional()
+    {
+        $frsData = $this->frsModel->getfrsWithRelations() ?? [];
+
+        $data = [
+            'id_user'    => session()->get('id_user'),
+            'nama_user'  => session()->get('nama_user'),
+            'frsData' => $frsData,
+        ];
+        
+        return view('frs/laporan_oprasional', $data);
     }
 
     public function filter()

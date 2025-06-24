@@ -68,7 +68,10 @@ $routes->group('hpa', ['namespace' => 'App\Controllers\Hpa'], function ($routes)
     $routes->post('update_status', 'HpaController::update_status');
     $routes->post('uploadFotoMakroskopis/(:segment)', 'HpaController::uploadFotoMakroskopis/$1');
     $routes->post('uploadFotoMikroskopis/(:segment)', 'HpaController::uploadFotoMikroskopis/$1');
-    $routes->get('laporan', 'HpaController::laporan');
+    $routes->get('laporan_pemeriksaan', 'HpaController::laporan_pemeriksaan');
+    $routes->get('laporan_kerja', 'HpaController::laporan_kerja');
+    $routes->get('laporan_oprasional', 'HpaController::laporan_oprasional');
+    $routes->get('laporan_BHP', 'HpaController::laporan_BHP');
     $routes->get('filter', 'HpaController::filter');
 });
 
@@ -90,7 +93,10 @@ $routes->group('frs', ['namespace' => 'App\Controllers\Frs'], function ($routes)
     $routes->post('update_status', 'FrsController::update_status');
     $routes->post('uploadFotoMakroskopis/(:segment)', 'FrsController::uploadFotoMakroskopis/$1');
     $routes->post('uploadFotoMikroskopis/(:segment)', 'FrsController::uploadFotoMikroskopis/$1');
-    $routes->get('laporan', 'FrsController::laporan');
+    $routes->get('laporan_pemeriksaan', 'FrsController::laporan_pemeriksaan');
+    $routes->get('laporan_kerja', 'FrsController::laporan_kerja');
+    $routes->get('laporan_oprasional', 'FrsController::laporan_oprasional');
+    $routes->get('laporan_BHP', 'FrsController::laporan_BHP');
     $routes->get('filter', 'FrsController::filter');
 });
 
@@ -112,7 +118,10 @@ $routes->group('srs', ['namespace' => 'App\Controllers\Srs'], function ($routes)
     $routes->post('update_status', 'SrsController::update_status');
     $routes->post('uploadFotoMakroskopis/(:segment)', 'SrsController::uploadFotoMakroskopis/$1');
     $routes->post('uploadFotoMikroskopis/(:segment)', 'SrsController::uploadFotoMikroskopis/$1');
-    $routes->get('laporan', 'SrsController::laporan');
+    $routes->get('laporan_pemeriksaan', 'SrsController::laporan_pemeriksaan');
+    $routes->get('laporan_kerja', 'SrsController::laporan_kerja');
+    $routes->get('laporan_oprasional', 'SrsController::laporan_oprasional');
+    $routes->get('laporan_BHP', 'SrsController::laporan_BHP');
     $routes->get('filter', 'SrsController::filter');
 });
 
@@ -133,7 +142,10 @@ $routes->group('ihc', ['namespace' => 'App\Controllers\Ihc'], function ($routes)
     $routes->post('update_status', 'IhcController::update_status');
     $routes->post('uploadFotoMakroskopis/(:segment)', 'IhcController::uploadFotoMakroskopis/$1');
     $routes->post('uploadFotoMikroskopis/(:segment)', 'IhcController::uploadFotoMikroskopis/$1');
-    $routes->get('laporan', 'IhcController::laporan');
+    $routes->get('laporan_pemeriksaan', 'IhcController::laporan_pemeriksaan');
+    $routes->get('laporan_kerja', 'IhcController::laporan_kerja');
+    $routes->get('laporan_oprasional', 'IhcController::laporan_oprasional');
+    $routes->get('laporan_BHP', 'IhcController::laporan_BHP');
     $routes->get('filter', 'IhcController::filter');
 });
 

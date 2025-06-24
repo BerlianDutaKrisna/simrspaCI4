@@ -783,7 +783,7 @@ class srsController extends BaseController
         }
     }
 
-    public function laporan()
+    public function laporan_pemeriksaan()
     {
         $srsData = $this->srsModel->getsrsWithRelations() ?? [];
 
@@ -792,8 +792,34 @@ class srsController extends BaseController
             'nama_user'  => session()->get('nama_user'),
             'srsData' => $srsData,
         ];
+        
+        return view('srs/laporan_pemeriksaan', $data);
+    }
 
-        return view('srs/laporan', $data);
+    public function laporan_kerja()
+    {
+        $srsData = $this->srsModel->getsrsWithRelations() ?? [];
+
+        $data = [
+            'id_user'    => session()->get('id_user'),
+            'nama_user'  => session()->get('nama_user'),
+            'srsData' => $srsData,
+        ];
+        
+        return view('srs/laporan_kerja', $data);
+    }
+
+    public function laporan_oprasional()
+    {
+        $srsData = $this->srsModel->getsrsWithRelations() ?? [];
+
+        $data = [
+            'id_user'    => session()->get('id_user'),
+            'nama_user'  => session()->get('nama_user'),
+            'srsData' => $srsData,
+        ];
+        
+        return view('srs/laporan_oprasional', $data);
     }
 
     public function filter()

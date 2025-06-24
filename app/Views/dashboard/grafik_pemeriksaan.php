@@ -14,10 +14,10 @@
                     <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
                         aria-labelledby="dropdownMenuLink">
                         <div class="dropdown-header">Cetak Laporan:</div> <!-- Header dropdown -->
-                        <a class="dropdown-item" href="<?= base_url('hpa/laporan'); ?>"><i class="fas fa-drumstick-bite fa-sm fa-fw mr-2 text-gray-600"></i> Sample Histopatologi</a>
-                        <a class="dropdown-item" href="<?= base_url('frs/laporan'); ?>"><i class="fas fa-syringe fa-sm fa-fw mr-2 text-gray-600"></i> Sample Fine Needle Aspiration Biopsy</a>
-                        <a class="dropdown-item" href="<?= base_url('srs/laporan'); ?>"><i class="fas fa-prescription-bottle fa-sm fa-fw mr-2 text-gray-600"></i> Sample Sitologi</a>
-                        <a class="dropdown-item" href="<?= base_url('ihc/laporan'); ?>"><i class="fas fa-vials fa-sm fa-fw mr-2 text-gray-600"></i> Sample Imunohistokimia</a>
+                        <a class="dropdown-item" href="<?= base_url('hpa/laporan_pemeriksaan'); ?>"><i class="fas fa-drumstick-bite fa-sm fa-fw mr-2 text-gray-600"></i> Sample Histopatologi</a>
+                        <a class="dropdown-item" href="<?= base_url('frs/laporan_pemeriksaan'); ?>"><i class="fas fa-syringe fa-sm fa-fw mr-2 text-gray-600"></i> Sample Fine Needle Aspiration Biopsy</a>
+                        <a class="dropdown-item" href="<?= base_url('srs/laporan_pemeriksaan'); ?>"><i class="fas fa-prescription-bottle fa-sm fa-fw mr-2 text-gray-600"></i> Sample Sitologi</a>
+                        <a class="dropdown-item" href="<?= base_url('ihc/laporan_pemeriksaan'); ?>"><i class="fas fa-vials fa-sm fa-fw mr-2 text-gray-600"></i> Sample Imunohistokimia</a>
                     </div>
                 </div>
             </div>

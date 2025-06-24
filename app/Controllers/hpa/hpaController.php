@@ -886,7 +886,7 @@ class HpaController extends BaseController
         }
     }
 
-    public function laporan()
+    public function laporan_pemeriksaan()
     {
         $hpaData = $this->hpaModel->gethpaWithRelations() ?? [];
 
@@ -896,7 +896,33 @@ class HpaController extends BaseController
             'hpaData' => $hpaData,
         ];
         
-        return view('hpa/laporan', $data);
+        return view('hpa/laporan_pemeriksaan', $data);
+    }
+
+    public function laporan_kerja()
+    {
+        $hpaData = $this->hpaModel->gethpaWithRelations() ?? [];
+
+        $data = [
+            'id_user'    => session()->get('id_user'),
+            'nama_user'  => session()->get('nama_user'),
+            'hpaData' => $hpaData,
+        ];
+        
+        return view('hpa/laporan_kerja', $data);
+    }
+
+    public function laporan_oprasional()
+    {
+        $hpaData = $this->hpaModel->gethpaWithRelations() ?? [];
+
+        $data = [
+            'id_user'    => session()->get('id_user'),
+            'nama_user'  => session()->get('nama_user'),
+            'hpaData' => $hpaData,
+        ];
+        
+        return view('hpa/laporan_oprasional', $data);
     }
 
     public function filter()
