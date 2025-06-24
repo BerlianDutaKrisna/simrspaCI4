@@ -17,7 +17,7 @@
         <i class="fas fa-bolt"></i>
         </span>
     </a>
-    <a href="<?= base_url('hpa/laporan_BHP'); ?>" class="btn btn-info btn-icon-split m-3">
+    <a href="#" class="btn btn-info btn-icon-split m-3">
         <span class="text"><b style="color: white"></b>Laporan BHP</span>
         <span class="icon text-white-50">
         <i class="fas fa-warehouse"></i>
@@ -31,19 +31,19 @@
             <i class="fas fa-drumstick-bite"></i>
         </span>
     </a>
-    <a href="<?= base_url('frs/laporan_kerja'); ?>" class="btn btn-primary btn-icon-split m-3">
+    <a href="#" class="btn btn-primary btn-icon-split m-3">
         <span class="text"><b style="color: white"></b> FNAB</span>
         <span class="icon text-white-50">
             <i class="fas fa-syringe"></i>
         </span>
     </a>
-    <a href="<?= base_url('srs/laporan_kerja'); ?>" class="btn btn-success btn-icon-split m-3">
+    <a href="#" class="btn btn-success btn-icon-split m-3">
         <span class="text"><b style="color: white"></b> SRS</span>
         <span class="icon text-white-50">
             <i class="fas fa-prescription-bottle"></i>
         </span>
     </a>
-    <a href="<?= base_url('ihc/laporan_kerja'); ?>" class="btn btn-warning btn-icon-split m-3">
+    <a href="#" class="btn btn-warning btn-icon-split m-3">
         <span class="text"><b style="color: white"></b> IHC</span>
         <span class="icon text-white-50">
             <i class="fas fa-vials"></i>

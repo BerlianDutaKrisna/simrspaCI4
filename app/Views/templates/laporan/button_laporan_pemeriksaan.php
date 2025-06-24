@@ -17,7 +17,7 @@
         <i class="fas fa-bolt"></i>
         </span>
     </a>
-    <a href="<?= base_url('hpa/laporan_BHP'); ?>" class="btn btn-info btn-icon-split m-3">
+    <a href="#" class="btn btn-info btn-icon-split m-3">
         <span class="text"><b style="color: white"></b>Laporan BHP</span>
         <span class="icon text-white-50">
         <i class="fas fa-warehouse"></i>

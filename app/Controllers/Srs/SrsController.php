@@ -793,7 +793,7 @@ class srsController extends BaseController
             'srsData' => $srsData,
         ];
         
-        return view('srs/laporan_pemeriksaan', $data);
+        return view('srs/laporan/laporan_pemeriksaan', $data);
     }
 
     public function laporan_kerja()
@@ -806,7 +806,7 @@ class srsController extends BaseController
             'srsData' => $srsData,
         ];
         
-        return view('srs/laporan_kerja', $data);
+        return view('srs/laporan/laporan_kerja', $data);
     }
 
     public function laporan_oprasional()
@@ -819,7 +819,7 @@ class srsController extends BaseController
             'srsData' => $srsData,
         ];
         
-        return view('srs/laporan_oprasional', $data);
+        return view('srs/laporan/laporan_oprasional', $data);
     }
 
     public function filter()
@@ -842,6 +842,6 @@ class srsController extends BaseController
             'srsData'       => $filteredData,
         ];
 
-        return view('srs/laporan_pemeriksaan', $data);
+        return view('srs/laporan/laporan_pemeriksaan', $data);
     }
 }

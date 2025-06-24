@@ -914,7 +914,7 @@ class HpaController extends BaseController
 
     public function laporan_oprasional()
     {
-        $hpaData = $this->hpaModel->gethpaWithRelations() ?? [];
+        $hpaData = $this->hpaModel->gethpaWithTime() ?? [];
 
         $data = [
             'id_user'    => session()->get('id_user'),
@@ -945,6 +945,6 @@ class HpaController extends BaseController
             'hpaData'       => $filteredData,
         ];
 
-        return view('hpa/laporan_pemeriksaan', $data);
+        return view('hpa/laporan/laporan_pemeriksaan', $data);
     }
 }

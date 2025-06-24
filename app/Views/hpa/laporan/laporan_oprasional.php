@@ -1,12 +1,13 @@
 <?= $this->include('templates/dashboard/header_dashboard'); ?>
 <?= $this->include('templates/dashboard/navbar_dashboard'); ?>
 
+
 <div class="card shadow mb-4">
     <div class="card-header py-3">
         <h6 class="m-0 font-weight-bold text-primary">Buku Laporan</h6>
     </div>
     <div class="card-body">
-        <h1>Buku Laporan Kerja Histopatologi</h1>
+        <h1>Buku Laporan Oprasional Histopatologi</h1>
         <a href="<?= base_url('/dashboard') ?>" class="btn btn-primary mb-3"><i class="fas fa-reply"></i> Kembali</a>
         <?= $this->include('templates/laporan/button_laporan_kerja'); ?>
 
@@ -55,6 +56,35 @@
             </div>
         </form>
 
+        <style>
+            .watt-value {
+                color: red;
+                font-weight: bold;
+            }
+
+            table {
+                width: 100%;
+                border-collapse: collapse;
+                margin: 20px 0;
+                font-family: Arial, sans-serif;
+            }
+
+            th,
+            td {
+                border: 1px solid #ddd;
+                padding: 8px;
+                text-align: center;
+            }
+
+            th {
+                background-color: #f2f2f2;
+            }
+
+            tr:nth-child(even) {
+                background-color: #f9f9f9;
+            }
+        </style>
+
         <script>
             function togglefilterValue() {
                 var filterInput = document.getElementById("filterInput");
@@ -79,16 +109,13 @@
                         <th>NAMA</th>
                         <th>NO RM</th>
                         <th>TANGGAL TRANSAKSI</th>
-                        <th>PENERIMAAN</th>
-                        <th>PEMOTONGAN</th>
-                        <th>PENANAMAN</th>
-                        <th>PEMOTONGAN TIPIS</th>
-                        <th>PENULISAN</th>
-                        <th>PEMBACAAN</th>
-                        <th>PEMVERIFIKASI</th>
-                        <th>AUTHORISED</th>
-                        <th>PENCETAKAN</th>
-                        <th>TOTAL WAKTU</th>
+                        <th>PEMOTONGAN (Pathology Workstation Pro 1200 <span class="watt-value">450 W</span>)</th>
+                        <th>PEMPROSESAN (Sakura Tissue-Tek VIP 5 Jr <span class="watt-value">1380 W</span>)</th>
+                        <th>PENANAMAN (Tissue Embedding Sakura Tissue-Tek TEC <span class="watt-value">1000 W</span> + Cold Plate Sakura Tissue-Tek TEC <span class="watt-value">20 W</span>)</th>
+                        <th>PEMOTONGAN TIPIS (Cold Plate Sakura Tissue-Tek TEC <span class="watt-value">20 W</span> + Leica RM2265 <span class="watt-value">350 W</span> + Waterbath Sakura <span class="watt-value">800 W</span> + Hot plate Sakura <span class="watt-value">600 W</span>)</th>
+                        <th>PENULISAN (Komputer <span class="watt-value">100 W</span>)</th>
+                        <th>PEMBACAAN (Olympus CX31 <span class="watt-value">60 W</span>)</th>
+                        <th>PENCETAKAN (Komputer <span class="watt-value">100 W</span>)</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -103,17 +130,13 @@
                                 <td>
                                     <?= empty($row['tanggal_permintaan']) ? 'Belum Diisi' : esc(date('d-m-Y', strtotime($row['tanggal_permintaan']))); ?>
                                 </td>
-
-                                <td><?= esc($row['durasi_penerimaan_hpa'] ?? 'Data Belum Lengkap') ?></td>
                                 <td><?= esc($row['durasi_pemotongan_hpa'] ?? 'Data Belum Lengkap') ?></td>
+                                <td><?= esc($row['durasi_pemrosesan_hpa'] ?? 'Data Belum Lengkap') ?></td>
                                 <td><?= esc($row['durasi_penanaman_hpa'] ?? 'Data Belum Lengkap') ?></td>
                                 <td><?= esc($row['durasi_pemotongan_tipis_hpa'] ?? 'Data Belum Lengkap') ?></td>
                                 <td><?= esc($row['durasi_penulisan_hpa'] ?? 'Data Belum Lengkap') ?></td>
                                 <td><?= esc($row['durasi_pembacaan_hpa'] ?? 'Data Belum Lengkap') ?></td>
-                                <td><?= esc($row['durasi_pemverifikasi_hpa'] ?? 'Data Belum Lengkap') ?></td>
-                                <td><?= esc($row['durasi_authorized_hpa'] ?? 'Data Belum Lengkap') ?></td>
                                 <td><?= esc($row['durasi_pencetakan_hpa'] ?? 'Data Belum Lengkap') ?></td>
-                                <td><?= esc($row['total_waktu_kerja'] ?? 'Data Belum Lengkap') ?></td>
                             </tr>
                             <?php $i++; ?>
                         <?php endforeach; ?>

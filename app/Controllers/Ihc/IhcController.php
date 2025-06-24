@@ -745,7 +745,7 @@ class ihcController extends BaseController
             'ihcData' => $ihcData,
         ];
         
-        return view('ihc/laporan_pemeriksaan', $data);
+        return view('ihc/laporan/laporan_pemeriksaan', $data);
     }
 
     public function laporan_kerja()
@@ -758,7 +758,7 @@ class ihcController extends BaseController
             'ihcData' => $ihcData,
         ];
         
-        return view('ihc/laporan_kerja', $data);
+        return view('ihc/laporan/laporan_kerja', $data);
     }
 
     public function laporan_oprasional()
@@ -771,7 +771,7 @@ class ihcController extends BaseController
             'ihcData' => $ihcData,
         ];
         
-        return view('ihc/laporan_oprasional', $data);
+        return view('ihc/laporan/laporan_oprasional', $data);
     }
 
     public function filter()
@@ -794,6 +794,6 @@ class ihcController extends BaseController
             'ihcData'       => $filteredData,
         ];
 
-        return view('ihc/laporan_pemeriksaan', $data);
+        return view('ihc/laporan/laporan_pemeriksaan', $data);
     }
 }

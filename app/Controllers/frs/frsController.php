@@ -785,7 +785,7 @@ class FrsController extends BaseController
             'frsData' => $frsData,
         ];
         
-        return view('frs/laporan_pemeriksaan', $data);
+        return view('frs//laporan/laporan_pemeriksaan', $data);
     }
 
     public function laporan_kerja()
@@ -798,7 +798,7 @@ class FrsController extends BaseController
             'frsData' => $frsData,
         ];
         
-        return view('frs/laporan_kerja', $data);
+        return view('frs/laporan/laporan_kerja', $data);
     }
 
     public function laporan_oprasional()
@@ -811,7 +811,7 @@ class FrsController extends BaseController
             'frsData' => $frsData,
         ];
         
-        return view('frs/laporan_oprasional', $data);
+        return view('frs/laporan/laporan_oprasional', $data);
     }
 
     public function filter()
@@ -834,6 +834,6 @@ class FrsController extends BaseController
             'frsData'       => $filteredData,
         ];
 
-        return view('frs/laporan_pemeriksaan', $data);
+        return view('frs/laporan/laporan_pemeriksaan', $data);
     }
 }
