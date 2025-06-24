@@ -131,7 +131,8 @@ class IhcModel extends Model
             ->join('authorized_ihc', 'authorized_ihc.id_ihc = ihc.id_ihc', 'left')
             ->join('pencetakan_ihc', 'pencetakan_ihc.id_ihc = ihc.id_ihc', 'left')
             ->join('mutu_ihc', 'mutu_ihc.id_ihc = ihc.id_ihc', 'left')
-            ->orderBy('ihc.kode_ihc', 'ASC')
+            ->orderBy("CAST(SUBSTRING_INDEX(SUBSTRING_INDEX(kode_ihc, '/', 1), '.', -1) AS UNSIGNED) ASC")
+            ->orderBy("CAST(SUBSTRING_INDEX(kode_ihc, '/', -1) AS UNSIGNED) ASC")
             ->findAll();
     }
 
@@ -159,6 +160,7 @@ class IhcModel extends Model
             ->join('mutu_ihc', 'mutu_ihc.id_ihc = ihc.id_ihc', 'left')
             ->join('users AS dokter_pembacaan', 'dokter_pembacaan.id_user = pembacaan_ihc.id_user_dokter_pembacaan_ihc', 'left')
             ->orderBy("CAST(SUBSTRING_INDEX(SUBSTRING_INDEX(kode_ihc, '/', 1), '.', -1) AS UNSIGNED) DESC")
+            ->orderBy("CAST(SUBSTRING_INDEX(kode_ihc, '/', -1) AS UNSIGNED) DESC")
             ->findAll();
     }
 
@@ -233,7 +235,8 @@ class IhcModel extends Model
             ->join('mutu_ihc', 'mutu_ihc.id_ihc = ihc.id_ihc', 'left')
             ->where('ihc.tanggal_permintaan >=', $previousMonthStart)
             ->where('ihc.tanggal_permintaan <=', date('Y-m-t'))
-            ->orderBy('ihc.kode_ihc', 'ASC')
+            ->orderBy("CAST(SUBSTRING_INDEX(SUBSTRING_INDEX(kode_ihc, '/', 1), '.', -1) AS UNSIGNED) ASC")
+            ->orderBy("CAST(SUBSTRING_INDEX(kode_ihc, '/', -1) AS UNSIGNED) ASC")
             ->findAll();
     }
 

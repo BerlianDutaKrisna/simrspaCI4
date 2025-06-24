@@ -128,7 +128,8 @@ class FrsModel extends Model
             ->join('authorized_frs', 'authorized_frs.id_frs = frs.id_frs', 'left')
             ->join('pencetakan_frs', 'pencetakan_frs.id_frs = frs.id_frs', 'left')
             ->join('mutu_frs', 'mutu_frs.id_frs = frs.id_frs', 'left')
-            ->orderBy('frs.kode_frs', 'ASC')
+            ->orderBy("CAST(SUBSTRING_INDEX(SUBSTRING_INDEX(kode_frs, '/', 1), '.', -1) AS UNSIGNED) ASC")
+            ->orderBy("CAST(SUBSTRING_INDEX(kode_frs, '/', -1) AS UNSIGNED) ASC")
             ->findAll();
     }
 
@@ -156,6 +157,7 @@ class FrsModel extends Model
             ->join('mutu_frs', 'mutu_frs.id_frs = frs.id_frs', 'left')
             ->join('users AS dokter_pembacaan', 'dokter_pembacaan.id_user = pembacaan_frs.id_user_dokter_pembacaan_frs', 'left')
             ->orderBy("CAST(SUBSTRING_INDEX(SUBSTRING_INDEX(kode_frs, '/', 1), '.', -1) AS UNSIGNED) DESC")
+            ->orderBy("CAST(SUBSTRING_INDEX(kode_frs, '/', -1) AS UNSIGNED) DESC")
             ->findAll();
     }
 
@@ -226,7 +228,8 @@ class FrsModel extends Model
             ->join('mutu_frs', 'mutu_frs.id_frs = frs.id_frs', 'left')
             ->where('frs.tanggal_permintaan >=', $previousMonthStart)
             ->where('frs.tanggal_permintaan <=', date('Y-m-t'))
-            ->orderBy('frs.kode_frs', 'ASC')
+            ->orderBy("CAST(SUBSTRING_INDEX(SUBSTRING_INDEX(kode_frs, '/', 1), '.', -1) AS UNSIGNED) ASC")
+            ->orderBy("CAST(SUBSTRING_INDEX(kode_frs, '/', -1) AS UNSIGNED) ASC")
             ->findAll();
     }
 

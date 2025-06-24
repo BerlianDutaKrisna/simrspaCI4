@@ -6,7 +6,7 @@
         <h6 class="m-0 font-weight-bold text-primary">Buku Laporan</h6>
     </div>
     <div class="card-body">
-        <h1>Buku Laporan Pemeriksaan Fine Needle Aspiration Biopsy</h1>
+        <h1>Buku Laporan Pemeriksaan Histopatologi</h1>
         <a href="<?= base_url('/dashboard') ?>" class="btn btn-primary mb-3"><i class="fas fa-reply"></i> Kembali</a>
         <?= $this->include('templates/laporan/button_laporan_pemeriksaan'); ?>
 
@@ -75,23 +75,23 @@
                 <thead>
                     <tr>
                         <th>NO</th>
-                        <th>TANGGAL TRANSAKSI</th>
-                        <th>NO RM</th>
+                        <th>REGISTER</th>
                         <th>NAMA</th>
+                        <th>NO RM</th>
                         <th>TANGGAL LAHIR</th>
                         <th>L/P</th>
                         <th>ALAMAT</th>
                         <th>JENIS PASIEN</th>
-                        <th>JENIS PENUNJANG</th>
+                        <th>TANGGAL TRANSAKSI</th>
                         <th>DOKTER PERUJUK</th>
+                        <th>DOKTER PA</th>
                         <th>UNIT ASAL</th>
-                        <th>REGISTER</th>
                         <th>PEMERIKSAAN</th>
-                        <th>RESPONSE TIME</th>
                         <th>STATUS LOKASI</th>
                         <th>DIAGNOSA KLINIK</th>
                         <th>DIAGNOSA PATOLOGI</TH>
                         <th>MUTU SEDIAAN</th>
+                        <th>RESPONSE TIME</th>
                         <th>1 HARI</th>
                     </tr>
                 </thead>
@@ -101,22 +101,26 @@
                         <?php foreach ($frsData as $row) : ?>
                             <tr>
                                 <td><?= $i ?></td>
-                                <td>
-                                    <?= empty($row['tanggal_permintaan']) ? 'Belum Diisi' : esc(date('d-m-Y', strtotime($row['tanggal_permintaan']))); ?>
-                                </td>
-                                <td><?= esc($row['norm_pasien'] ?? 'Belum Diisi') ?></td>
+                                <td><?= esc($row['kode_frs'] ?? 'Belum Diisi') ?></td>
                                 <td><?= esc($row['nama_pasien'] ?? 'Belum Diisi') ?></td>
+                                <td><?= esc($row['norm_pasien'] ?? 'Belum Diisi') ?></td>
                                 <td>
                                     <?= empty($row['tanggal_lahir_pasien']) ? 'Belum Diisi' : esc(date('d-m-Y', strtotime($row['tanggal_lahir_pasien']))); ?>
                                 </td>
                                 <td><?= esc($row['jenis_kelamin_pasien'] ?? 'Belum Diisi') ?></td>
                                 <td><?= esc($row['alamat_pasien'] ?? 'Belum Diisi') ?></td>
                                 <td><?= esc($row['status_pasien'] ?? 'Belum Diisi') ?></td>
+                                <td>
+                                    <?= empty($row['tanggal_permintaan']) ? 'Belum Diisi' : esc(date('d-m-Y', strtotime($row['tanggal_permintaan']))); ?>
+                                </td>
                                 <td><?= esc($row['dokter_pengirim'] ?? 'Belum Diisi') ?></td>
                                 <td><?= esc($row['dokter_pembaca'] ?? 'Belum Diisi') ?></td>
                                 <td><?= esc($row['unit_asal'] ?? 'Belum Diisi') ?></td>
-                                <td><?= esc($row['kode_frs'] ?? 'Belum Diisi') ?></td>
                                 <td><?= esc($row['tindakan_spesimen'] ?? 'Belum Diisi') ?></td>
+                                <td><?= esc($row['lokasi_spesimen'] ?? 'Belum Diisi') ?></td>
+                                <td><?= esc($row['diagnosa_klinik'] ?? 'Belum Diisi') ?></td>
+                                <td><?= esc(strip_tags($row['hasil_frs'] ?? 'Belum Ada Hasil')) ?></td>
+                                <td><?= esc($row['total_nilai_mutu_frs'] ?? 'Belum Diisi') ?>%</td>
                                 <td>
                                     <?php
                                     if (!empty($row['mulai_penerimaan_frs']) && !empty($row['selesai_pemverifikasi_frs'])) {
@@ -129,10 +133,6 @@
                                     }
                                     ?>
                                 </td>
-                                <td><?= esc($row['lokasi_spesimen'] ?? 'Belum Diisi') ?></td>
-                                <td><?= esc($row['diagnosa_klinik'] ?? 'Belum Diisi') ?></td>
-                                <td><?= esc(strip_tags($row['hasil_frs'] ?? 'Belum Ada Hasil')) ?></td>
-                                <td><?= esc($row['total_nilai_mutu_frs'] ?? 'Belum Diisi') ?>%</td>
                                 <td>
                                     <?php
                                     if (!empty($row['mulai_penerimaan_frs']) && !empty($row['selesai_pemverifikasi_frs'])) {

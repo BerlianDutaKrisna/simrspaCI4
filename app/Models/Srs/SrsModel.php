@@ -102,7 +102,8 @@ class SrsModel extends Model
             ->findAll();
     }
 
-    public function getTotalSrs() {
+    public function getTotalSrs()
+    {
         return $this->db->table('srs')->countAllResults();
     }
 
@@ -127,7 +128,8 @@ class SrsModel extends Model
             ->join('authorized_srs', 'authorized_srs.id_srs = srs.id_srs', 'left')
             ->join('pencetakan_srs', 'pencetakan_srs.id_srs = srs.id_srs', 'left')
             ->join('mutu_srs', 'mutu_srs.id_srs = srs.id_srs', 'left')
-            ->orderBy('srs.kode_srs', 'ASC')
+            ->orderBy("CAST(SUBSTRING_INDEX(SUBSTRING_INDEX(kode_srs, '/', 1), '.', -1) AS UNSIGNED) ASC")
+            ->orderBy("CAST(SUBSTRING_INDEX(kode_srs, '/', -1) AS UNSIGNED) ASC")
             ->findAll();
     }
 
@@ -155,6 +157,7 @@ class SrsModel extends Model
             ->join('mutu_srs', 'mutu_srs.id_srs = srs.id_srs', 'left')
             ->join('users AS dokter_pembacaan', 'dokter_pembacaan.id_user = pembacaan_srs.id_user_dokter_pembacaan_srs', 'left')
             ->orderBy("CAST(SUBSTRING_INDEX(SUBSTRING_INDEX(kode_srs, '/', 1), '.', -1) AS UNSIGNED) DESC")
+            ->orderBy("CAST(SUBSTRING_INDEX(kode_srs, '/', -1) AS UNSIGNED) DESC")
             ->findAll();
     }
 
@@ -229,7 +232,8 @@ class SrsModel extends Model
             ->join('mutu_srs', 'mutu_srs.id_srs = srs.id_srs', 'left')
             ->where('srs.tanggal_permintaan >=', $previousMonthStart)
             ->where('srs.tanggal_permintaan <=', date('Y-m-t'))
-            ->orderBy('srs.kode_srs', 'ASC')
+            ->orderBy("CAST(SUBSTRING_INDEX(SUBSTRING_INDEX(kode_srs, '/', 1), '.', -1) AS UNSIGNED) ASC")
+            ->orderBy("CAST(SUBSTRING_INDEX(kode_srs, '/', -1) AS UNSIGNED) ASC")
             ->findAll();
     }
 

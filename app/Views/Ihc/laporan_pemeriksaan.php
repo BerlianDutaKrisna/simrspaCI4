@@ -74,24 +74,24 @@
             <table class="table table-bordered text-center" id="dataTableButtons" width="100%" cellspacing="0">
                 <thead>
                     <tr>
-                        <th>NO</th>
-                        <th>TANGGAL TRANSAKSI</th>
-                        <th>NO RM</th>
+                    <th>NO</th>
+                        <th>REGISTER</th>
                         <th>NAMA</th>
+                        <th>NO RM</th>
                         <th>TANGGAL LAHIR</th>
                         <th>L/P</th>
                         <th>ALAMAT</th>
                         <th>JENIS PASIEN</th>
-                        <th>JENIS PENUNJANG</th>
+                        <th>TANGGAL TRANSAKSI</th>
                         <th>DOKTER PERUJUK</th>
+                        <th>DOKTER PA</th>
                         <th>UNIT ASAL</th>
-                        <th>REGISTER</th>
                         <th>PEMERIKSAAN</th>
-                        <th>RESPONSE TIME</th>
                         <th>STATUS LOKASI</th>
                         <th>DIAGNOSA KLINIK</th>
                         <th>DIAGNOSA PATOLOGI</TH>
                         <th>MUTU SEDIAAN</th>
+                        <th>RESPONSE TIME</th>
                         <th>7 HARI</th>
                         <th>KODE BLOCK HPA</th>
                         <th>NO KTP</th>
@@ -105,22 +105,26 @@
                         <?php foreach ($ihcData as $row) : ?>
                             <tr>
                                 <td><?= $i ?></td>
-                                <td>
-                                    <?= empty($row['tanggal_permintaan']) ? 'Belum Diisi' : esc(date('d-m-Y', strtotime($row['tanggal_permintaan']))); ?>
-                                </td>
-                                <td><?= esc($row['norm_pasien'] ?? 'Belum Diisi') ?></td>
+                                <td><?= esc($row['kode_ihc'] ?? 'Belum Diisi') ?></td>
                                 <td><?= esc($row['nama_pasien'] ?? 'Belum Diisi') ?></td>
+                                <td><?= esc($row['norm_pasien'] ?? 'Belum Diisi') ?></td>
                                 <td>
                                     <?= empty($row['tanggal_lahir_pasien']) ? 'Belum Diisi' : esc(date('d-m-Y', strtotime($row['tanggal_lahir_pasien']))); ?>
                                 </td>
                                 <td><?= esc($row['jenis_kelamin_pasien'] ?? 'Belum Diisi') ?></td>
                                 <td><?= esc($row['alamat_pasien'] ?? 'Belum Diisi') ?></td>
                                 <td><?= esc($row['status_pasien'] ?? 'Belum Diisi') ?></td>
+                                <td>
+                                    <?= empty($row['tanggal_permintaan']) ? 'Belum Diisi' : esc(date('d-m-Y', strtotime($row['tanggal_permintaan']))); ?>
+                                </td>
                                 <td><?= esc($row['dokter_pengirim'] ?? 'Belum Diisi') ?></td>
                                 <td><?= esc($row['dokter_pembaca'] ?? 'Belum Diisi') ?></td>
                                 <td><?= esc($row['unit_asal'] ?? 'Belum Diisi') ?></td>
-                                <td><?= esc($row['kode_ihc'] ?? 'Belum Diisi') ?></td>
                                 <td><?= esc($row['tindakan_spesimen'] ?? 'Belum Diisi') ?></td>
+                                <td><?= esc($row['lokasi_spesimen'] ?? 'Belum Diisi') ?></td>
+                                <td><?= esc($row['diagnosa_klinik'] ?? 'Belum Diisi') ?></td>
+                                <td><?= esc(strip_tags($row['hasil_ihc'] ?? 'Belum Ada Hasil')) ?></td>
+                                <td><?= esc($row['total_nilai_mutu_ihc'] ?? 'Belum Diisi') ?>%</td>
                                 <td>
                                     <?php
                                     if (!empty($row['mulai_penerimaan_ihc']) && !empty($row['selesai_pemverifikasi_ihc'])) {
@@ -133,10 +137,6 @@
                                     }
                                     ?>
                                 </td>
-                                <td><?= esc($row['lokasi_spesimen'] ?? 'Belum Diisi') ?></td>
-                                <td><?= esc($row['diagnosa_klinik'] ?? 'Belum Diisi') ?></td>
-                                <td><?= esc(strip_tags($row['hasil_ihc'] ?? 'Belum Ada Hasil')) ?></td>
-                                <td><?= esc($row['total_nilai_mutu_ihc'] ?? 'Belum Diisi') ?>%</td>
                                 <td>
                                     <?php
                                     if (!empty($row['mulai_penerimaan_ihc']) && !empty($row['selesai_pemverifikasi_ihc'])) {
