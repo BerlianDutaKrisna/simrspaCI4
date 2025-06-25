@@ -235,17 +235,7 @@ class HpaModel extends Model
             IFNULL(TIMESTAMPDIFF(SECOND, pemverifikasi_hpa.mulai_pemverifikasi_hpa, pemverifikasi_hpa.selesai_pemverifikasi_hpa), 0) +
             IFNULL(TIMESTAMPDIFF(SECOND, authorized_hpa.mulai_authorized_hpa, authorized_hpa.selesai_authorized_hpa), 0) +
             IFNULL(TIMESTAMPDIFF(SECOND, pencetakan_hpa.mulai_pencetakan_hpa, pencetakan_hpa.selesai_pencetakan_hpa), 0)
-        )) AS total_waktu_kerja,
-        SEC_TO_TIME((
-            IFNULL(TIMESTAMPDIFF(SECOND, pemotongan_hpa.mulai_pemotongan_hpa, pemotongan_hpa.selesai_pemotongan_hpa), 0) +
-            IFNULL(TIMESTAMPDIFF(SECOND, pemprosesan_hpa.mulai_pemprosesan_hpa, pemprosesan_hpa.selesai_pemprosesan_hpa), 0) +
-            IFNULL(TIMESTAMPDIFF(SECOND, penanaman_hpa.mulai_penanaman_hpa, penanaman_hpa.selesai_penanaman_hpa), 0) +
-            IFNULL(TIMESTAMPDIFF(SECOND, pemotongan_tipis_hpa.mulai_pemotongan_tipis_hpa, pemotongan_tipis_hpa.selesai_pemotongan_tipis_hpa), 0) +
-            IFNULL(TIMESTAMPDIFF(SECOND, pewarnaan_hpa.mulai_pewarnaan_hpa, pewarnaan_hpa.selesai_pewarnaan_hpa), 0) +
-            IFNULL(TIMESTAMPDIFF(SECOND, pembacaan_hpa.mulai_pembacaan_hpa, pembacaan_hpa.selesai_pembacaan_hpa), 0) +
-            IFNULL(TIMESTAMPDIFF(SECOND, penulisan_hpa.mulai_penulisan_hpa, penulisan_hpa.selesai_penulisan_hpa), 0) +
-            IFNULL(TIMESTAMPDIFF(SECOND, pencetakan_hpa.mulai_pencetakan_hpa, pencetakan_hpa.selesai_pencetakan_hpa), 0)
-        )) AS total_waktu_operasional
+        )) AS total_waktu_kerja
     ')
             ->join('patient', 'patient.id_pasien = hpa.id_pasien', 'left')
             ->join('penerimaan_hpa', 'penerimaan_hpa.id_hpa = hpa.id_hpa', 'left')

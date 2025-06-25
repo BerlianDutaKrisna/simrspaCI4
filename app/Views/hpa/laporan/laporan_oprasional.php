@@ -131,7 +131,7 @@
                                     <?= empty($row['tanggal_permintaan']) ? 'Belum Diisi' : esc(date('d-m-Y', strtotime($row['tanggal_permintaan']))); ?>
                                 </td>
                                 <td><?= esc($row['durasi_pemotongan_hpa'] ?? 'Data Belum Lengkap') ?></td>
-                                <td><?= esc($row['durasi_pemrosesan_hpa'] ?? 'Data Belum Lengkap') ?></td>
+                                <td><?= esc($row['durasi_pemprosesan_hpa'] ?? 'Data Belum Lengkap') ?></td>
                                 <td><?= esc($row['durasi_penanaman_hpa'] ?? 'Data Belum Lengkap') ?></td>
                                 <td><?= esc($row['durasi_pemotongan_tipis_hpa'] ?? 'Data Belum Lengkap') ?></td>
                                 <td><?= esc($row['durasi_penulisan_hpa'] ?? 'Data Belum Lengkap') ?></td>
