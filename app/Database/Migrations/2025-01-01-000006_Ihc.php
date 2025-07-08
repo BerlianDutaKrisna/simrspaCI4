@@ -121,6 +121,26 @@ class Ihc extends Migration
                 'type' => 'VARCHAR',
                 'constraint' => 100,
                 'null' => true,
+            ],            
+            'ER' => [
+                'type'       => 'BOOLEAN',
+                'null'       => false,
+                'default'    => 0,
+            ],
+            'PR' => [
+                'type'       => 'BOOLEAN',
+                'null'       => false,
+                'default'    => 0,
+            ],
+            'HER2' => [
+                'type'       => 'BOOLEAN',
+                'null'       => false,
+                'default'    => 0,
+            ],
+            'KI67' => [
+                'type'       => 'BOOLEAN',
+                'null'       => false,
+                'default'    => 0,
             ],
             'created_at' => [
                 'type' => 'DATETIME',

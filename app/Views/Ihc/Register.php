@@ -278,6 +278,48 @@
     </div>
 </div>
 
+<!-- Modal Konfirmasi -->
+<div class="modal fade" id="confirmModal" tabindex="-1" aria-labelledby="confirmModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmModalLabel">Konfirmasi</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Tutup">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <?php if (!empty($ihcSebelumnya) && !empty($ihcSebelumnya['kode_ihc'])) : ?>
+                    Pasien sudah memiliki permintaan IHC dengan kode <strong><?= esc($ihcSebelumnya['kode_ihc']) ?></strong>.
+                <?php else: ?>
+                    <p>Belum ada permintaan IHC sebelumnya untuk pasien ini.</p>
+                <?php endif; ?>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="btnCancel" class="btn btn-secondary">Batal</button>
+                <button type="button" id="confirmContinue" class="btn btn-primary">Lanjutkan</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- javascript untuk menampilkan modal konfirmasi -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        $('#confirmModal').modal('show');
+
+        document.getElementById('confirmContinue').addEventListener('click', function() {
+            // Cukup tutup modal, jangan submit form
+            $('#confirmModal').modal('hide');
+        });
+
+        document.getElementById('btnCancel').addEventListener('click', function() {
+            $('#confirmModal').modal('hide');
+            window.location.href = '<?= base_url('/dashboard') ?>';
+        });
+    });
+</script>
+
 <!-- javascript untuk menampilkan modal -->
 <script>
     function tampilkanModal(isi) {

@@ -77,7 +77,7 @@ class ihcController extends BaseController
             'nama_user'  => session()->get('nama_user'),
             'ihcData' => $ihcData,
         ];
-        
+
         return view('ihc/index_buku_penerima', $data);
     }
 
@@ -103,6 +103,11 @@ class ihcController extends BaseController
         $normPasien = $this->request->getGet('norm_pasien');
         $patient = $normPasien ? $this->patientModel->where('norm_pasien', $normPasien)->first() : null;
         $id_pasien = $patient['id_pasien'];
+        $ihcSebelumnya = null;
+        if ($patient) {
+            $id_pasien = $patient['id_pasien'];
+            $ihcSebelumnya = $this->ihcModel->where('id_pasien', $id_pasien)->first();
+        }
         $riwayat_hpa = $this->hpaModel->riwayatPemeriksaanhpa($id_pasien);
         $riwayat_frs = $this->frsModel->riwayatPemeriksaanfrs($id_pasien);
         $riwayat_srs = $this->srsModel->riwayatPemeriksaansrs($id_pasien);
@@ -112,12 +117,13 @@ class ihcController extends BaseController
             'nama_user' => session()->get('nama_user'),
             'kode_ihc'  => $kodeIhc,
             'patient'   => $patient,
+            'ihcSebelumnya' => $ihcSebelumnya,
             'riwayat_hpa' => $riwayat_hpa,
             'riwayat_frs' => $riwayat_frs,
             'riwayat_srs' => $riwayat_srs,
             'riwayat_ihc' => $riwayat_ihc,
         ];
-        
+
         return view('ihc/Register', $data);
     }
 
@@ -194,7 +200,7 @@ class ihcController extends BaseController
             return redirect()->back()->withInput()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
         }
     }
-    
+
     public function delete()
     {
         $id_ihc = $this->request->getPost('id_ihc');
@@ -207,7 +213,7 @@ class ihcController extends BaseController
             return $this->response->setJSON(['success' => false, 'message' => 'Gagal menghapus data.']);
         }
     }
-    
+
     // Menampilkan form edit ihc
     public function edit($id_ihc)
     {
@@ -255,7 +261,7 @@ class ihcController extends BaseController
             'pembacaan_ihc' => $pembacaan_ihc,
             'users'      => $users,
         ];
-        
+
         return view('ihc/edit', $data);
     }
 
@@ -290,7 +296,7 @@ class ihcController extends BaseController
             'id_user'         => session()->get('id_user'),
             'nama_user'       => session()->get('nama_user'),
         ];
-        
+
         return view('ihc/edit_mikroskopis', $data);
     }
 
@@ -330,7 +336,7 @@ class ihcController extends BaseController
             'penulisan' => $penulisan_ihc,
             'users' => $users,
         ];
-        
+
         return view('ihc/edit_penulisan', $data);
     }
 
@@ -355,7 +361,7 @@ class ihcController extends BaseController
             'ihc' => $ihc,
             'pembacaan_ihc' => $pembacaan_ihc,
         ];
-        
+
         return view('ihc/edit_print', $data);
     }
 
@@ -744,7 +750,7 @@ class ihcController extends BaseController
             'nama_user'  => session()->get('nama_user'),
             'ihcData' => $ihcData,
         ];
-        
+
         return view('ihc/laporan/laporan_pemeriksaan', $data);
     }
 
@@ -757,7 +763,7 @@ class ihcController extends BaseController
             'nama_user'  => session()->get('nama_user'),
             'ihcData' => $ihcData,
         ];
-        
+
         return view('ihc/laporan/laporan_kerja', $data);
     }
 
@@ -770,7 +776,7 @@ class ihcController extends BaseController
             'nama_user'  => session()->get('nama_user'),
             'ihcData' => $ihcData,
         ];
-        
+
         return view('ihc/laporan/laporan_oprasional', $data);
     }
 
