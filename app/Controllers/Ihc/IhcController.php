@@ -304,6 +304,7 @@ class ihcController extends BaseController
     {
         // Ambil data ihc berdasarkan ID
         $ihc = $this->ihcModel->getihcWithRelationsProses($id_ihc);
+        $id_pasien = $ihc['id_pasien'];
         if (!$ihc) {
             return redirect()->back()->with('message', ['error' => 'ihc tidak ditemukan.']);
         }
@@ -328,10 +329,18 @@ class ihcController extends BaseController
         // Ambil daftar user dengan status "Dokter"
         $users = $this->usersModel->where('status_user', 'Dokter')->findAll();
         // Data yang akan dikirim ke view
+        $riwayat_hpa = $this->hpaModel->riwayatPemeriksaanhpa($id_pasien);
+        $riwayat_frs = $this->frsModel->riwayatPemeriksaanfrs($id_pasien);
+        $riwayat_srs = $this->srsModel->riwayatPemeriksaansrs($id_pasien);
+        $riwayat_ihc = $this->ihcModel->riwayatPemeriksaanihc($id_pasien);
         $data = [
             'id_user' => session()->get('id_user'),
             'nama_user' => session()->get('nama_user'),
             'ihc' => $ihc,
+            'riwayat_hpa'        => $riwayat_hpa,
+            'riwayat_frs'        => $riwayat_frs,
+            'riwayat_srs'        => $riwayat_srs,
+            'riwayat_ihc'        => $riwayat_ihc,
             'pembacaan' => $pembacaan_ihc,
             'penulisan' => $penulisan_ihc,
             'users' => $users,
