@@ -537,7 +537,7 @@ class srsController extends BaseController
                     </table>
                     <font size="5" face="verdana"><b>LAPORAN PEMERIKSAAN:<br></b></font>
                     <div>
-                        <font size="5" face="verdana"><b> MAKROSKOPIK :</b> 
+                        <font size="5" face="verdana"><b> MAKROSKOPIK :</b><br> 
                     ' . nl2br(htmlspecialchars(str_replace(['<p>', '</p>', '<br>'], '', $makroskopis_srs))) . '
                     </font>
                     </div>
