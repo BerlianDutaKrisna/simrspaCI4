@@ -35,7 +35,7 @@ class IhcModel extends Model
         'ER',
         'PR',
         'HER2',
-        'Ki67',
+        'KI67',
         'created_at',
         'updated_at',
     ];

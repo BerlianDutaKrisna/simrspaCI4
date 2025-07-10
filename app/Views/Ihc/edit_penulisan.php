@@ -196,74 +196,42 @@
                         <div class="col-sm-5">
                             <input type="text" name="kode_block_ihc" value="<?= $ihc['kode_block_ihc'] ?? '' ?>" class="form-control form-control-user">
                         </div>
+
                         <div class="form-group row">
-                            <!-- Label ER -->
-                            <div class="col-md-6">
-                                <label class="col-form-label">Kontrol ER</label>
-                            </div>
-                            <!-- Label HER2 -->
-                            <div class="col-md-6">
-                                <label class="col-form-label">Kontrol HER2</label>
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <!-- Radio ER -->
-                            <div class="col-md-6">
-                                <div class="custom-control custom-radio custom-control-inline">
-                                    <input type="radio" id="kontrol_er_pos" name="kontrol_er" value="1" class="custom-control-input">
-                                    <label class="custom-control-label" for="kontrol_er_pos">Positif</label>
-                                </div>
-                                <div class="custom-control custom-radio custom-control-inline">
-                                    <input type="radio" id="kontrol_er_neg" name="kontrol_er" value="0" class="custom-control-input" checked>
-                                    <label class="custom-control-label" for="kontrol_er_neg">Negatif</label>
+                            <!-- Kontrol ER -->
+                            <div class="col-md-2">
+                                <div class="custom-control custom-checkbox">
+                                    <input type="checkbox" class="custom-control-input" id="ER" name="ER" value="1"
+                                        <?= isset($ihc['ER']) && $ihc['ER'] == 1 ? 'checked' : '' ?>>
+                                    <label class="custom-control-label font-weight-bold" for="ER">Kontrol ER (Positif)</label>
                                 </div>
                             </div>
-                            <!-- Radio HER2 -->
-                            <div class="col-md-6">
-                                <div class="custom-control custom-radio custom-control-inline">
-                                    <input type="radio" id="kontrol_her2_pos" name="kontrol_her2" value="1" class="custom-control-input">
-                                    <label class="custom-control-label" for="kontrol_her2_pos">Positif</label>
-                                </div>
-                                <div class="custom-control custom-radio custom-control-inline">
-                                    <input type="radio" id="kontrol_her2_neg" name="kontrol_her2" value="0" class="custom-control-input" checked>
-                                    <label class="custom-control-label" for="kontrol_her2_neg">Negatif</label>
+                            <!-- Kontrol PR -->
+                            <div class="col-md-2">
+                                <div class="custom-control custom-checkbox">
+                                    <input type="checkbox" class="custom-control-input" id="PR" name="PR" value="1"
+                                        <?= isset($ihc['PR']) && $ihc['PR'] == 1 ? 'checked' : '' ?>>
+                                    <label class="custom-control-label font-weight-bold" for="PR">Kontrol PR (Positif)</label>
                                 </div>
                             </div>
-                        </div>
-                        <div class="form-group row">
-                            <!-- Label PR -->
-                            <div class="col-md-6">
-                                <label class="col-form-label">Kontrol PR</label>
-                            </div>
-                            <!-- Label KI67 -->
-                            <div class="col-md-6">
-                                <label class="col-form-label">Kontrol KI67</label>
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <!-- Radio PR -->
-                            <div class="col-md-6">
-                                <div class="custom-control custom-radio custom-control-inline">
-                                    <input type="radio" id="kontrol_pr_pos" name="kontrol_pr" value="1" class="custom-control-input">
-                                    <label class="custom-control-label" for="kontrol_pr_pos">Positif</label>
-                                </div>
-                                <div class="custom-control custom-radio custom-control-inline">
-                                    <input type="radio" id="kontrol_pr_neg" name="kontrol_pr" value="0" class="custom-control-input" checked>
-                                    <label class="custom-control-label" for="kontrol_pr_neg">Negatif</label>
+                            <!-- Kontrol HER2 -->
+                            <div class="col-md-2">
+                                <div class="custom-control custom-checkbox">
+                                    <input type="checkbox" class="custom-control-input" id="HER2" name="HER2" value="1"
+                                        <?= isset($ihc['HER2']) && $ihc['HER2'] == 1 ? 'checked' : '' ?>>
+                                    <label class="custom-control-label font-weight-bold" for="HER2">Kontrol HER2 (Positif)</label>
                                 </div>
                             </div>
-                            <!-- Radio KI67 -->
-                            <div class="col-md-6">
-                                <div class="custom-control custom-radio custom-control-inline">
-                                    <input type="radio" id="kontrol_ki67_pos" name="kontrol_ki67" value="1" class="custom-control-input">
-                                    <label class="custom-control-label" for="kontrol_ki67_pos">Positif</label>
-                                </div>
-                                <div class="custom-control custom-radio custom-control-inline">
-                                    <input type="radio" id="kontrol_ki67_neg" name="kontrol_ki67" value="0" class="custom-control-input" checked>
-                                    <label class="custom-control-label" for="kontrol_ki67_neg">Negatif</label>
+                            <!-- Kontrol KI67 -->
+                            <div class="col-md-2">
+                                <div class="custom-control custom-checkbox">
+                                    <input type="checkbox" class="custom-control-input" id="KI67" name="KI67" value="1"
+                                        <?= isset($ihc['KI67']) && $ihc['KI67'] == 1 ? 'checked' : '' ?>>
+                                    <label class="custom-control-label font-weight-bold" for="KI67">Kontrol KI67 (Positif)</label>
                                 </div>
                             </div>
                         </div>
+
                         <div class="form-group">
                             <label class="col-sm-2 col-form-label">Mikroskopis</label>
                         </div>
@@ -386,6 +354,37 @@
         </div>
     </div>
 </div>
+
+<!-- Modal Riweyat -->
+<div class="modal fade" id="modalDetail" tabindex="-1" aria-labelledby="modalDetailLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalDetailLabel">Detail Pemeriksaan</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="modal-body-content">
+                <!-- Isi modal akan dimasukkan melalui JavaScript -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- javascript untuk menampilkan modal -->
+<script>
+    function tampilkanModal(isi) {
+        // Masukkan isi ke dalam modal
+        document.getElementById("modal-body-content").innerHTML = isi;
+        // Tampilkan modal
+        var myModal = new bootstrap.Modal(document.getElementById("modalDetail"));
+        myModal.show();
+    }
+</script>
 
 
 <?= $this->include('templates/notifikasi') ?>

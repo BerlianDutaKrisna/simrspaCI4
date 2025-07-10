@@ -278,6 +278,17 @@
     </div>
 </div>
 
+<!-- javascript untuk menampilkan modal -->
+<script>
+    function tampilkanModal(isi) {
+        // Masukkan isi ke dalam modal
+        document.getElementById("modal-body-content").innerHTML = isi;
+        // Tampilkan modal
+        var myModal = new bootstrap.Modal(document.getElementById("modalDetail"));
+        myModal.show();
+    }
+</script>
+
 <?php if (!empty($ihcSebelumnya)) : ?>
     <!-- Modal Peringatan -->
     <div class="modal fade" id="confirmModal" tabindex="-1" aria-labelledby="confirmModalLabel" aria-hidden="true">
@@ -321,17 +332,6 @@
         });
     </script>
 <?php endif; ?>
-
-<!-- javascript untuk menampilkan modal -->
-<script>
-    function tampilkanModal(isi) {
-        // Masukkan isi ke dalam modal
-        document.getElementById("modal-body-content").innerHTML = isi;
-        // Tampilkan modal
-        var myModal = new bootstrap.Modal(document.getElementById("modalDetail"));
-        myModal.show();
-    }
-</script>
 
 <script>
     // Function to set Tanggal Hasil based on Tanggal Permintaan

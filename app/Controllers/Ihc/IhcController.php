@@ -442,6 +442,10 @@ class ihcController extends BaseController
                     $mikroskopis_ihc = $this->request->getPost('mikroskopis_ihc');
                     $tindakan_spesimen = $this->request->getPost('tindakan_spesimen');
                     $kode_block_ihc = $this->request->getPost('kode_block_ihc');
+                    $ER    = $this->request->getPost('ER') ? 1 : 0;
+                    $PR    = $this->request->getPost('PR') ? 1 : 0;
+                    $HER2  = $this->request->getPost('HER2') ? 1 : 0;
+                    $KI67  = $this->request->getPost('KI67') ? 1 : 0;
                     $hasil_ihc = $this->request->getPost('hasil_ihc');
                     // Simpan data lokasi, diagnosa, makroskopis, mikroskopis, hasil terlebih dahulu
                     $this->ihcModel->update($id_ihc, [
@@ -450,6 +454,10 @@ class ihcController extends BaseController
                         'makroskopis_ihc' => $makroskopis_ihc,
                         'mikroskopis_ihc' => $mikroskopis_ihc,
                         'kode_block_ihc' => $kode_block_ihc,
+                        'ER'                => $ER,
+                        'PR'                => $PR,
+                        'HER2'              => $HER2,
+                        'KI67'              => $KI67,
                         'hasil_ihc' => $hasil_ihc,
                     ]);
                     // Setelah semua data tersimpan, buat data print_ihc
