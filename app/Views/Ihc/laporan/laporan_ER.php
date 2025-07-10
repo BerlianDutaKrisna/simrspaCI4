@@ -72,7 +72,7 @@
 
         <div class="row justify-content-center mb-3">
             <div class="col-auto">
-                <h5 class="text-center font-weight-bold">Kontrol Positif</h5>
+                <h5 class="text-center font-weight-bold">Kontrol Positif ER</h5>
             </div>
         </div>
 
@@ -86,7 +86,7 @@
                 </a>
             </div>
             <div class="col-auto">
-                <a href="#" class="btn btn-secondary btn-icon-split m-2">
+                <a href="<?= base_url('ihc/laporan_PR'); ?>" class="btn btn-secondary btn-icon-split m-2">
                     <span class="text"><b style="color: white;">PR</b></span>
                     <span class="icon text-white-50">
                         <i class="fas fa-plus-circle"></i>
@@ -94,7 +94,7 @@
                 </a>
             </div>
             <div class="col-auto">
-                <a href="#" class="btn btn-secondary btn-icon-split m-2">
+                <a href="<?= base_url('ihc/laporan_HER2'); ?>" class="btn btn-secondary btn-icon-split m-2">
                     <span class="text"><b style="color: white;">HER2</b></span>
                     <span class="icon text-white-50">
                         <i class="fas fa-plus-circle"></i>
@@ -102,7 +102,7 @@
                 </a>
             </div>
             <div class="col-auto">
-                <a href="#" class="btn btn-secondary btn-icon-split m-2">
+                <a href="<?= base_url('ihc/laporan_KI67'); ?>" class="btn btn-secondary btn-icon-split m-2">
                     <span class="text"><b style="color: white;">KI67</b></span>
                     <span class="icon text-white-50">
                         <i class="fas fa-plus-circle"></i>
@@ -111,34 +111,17 @@
             </div>
         </div>
 
-
         <div class="table-responsive">
             <table class="table table-bordered text-center" id="dataTableButtons" width="100%" cellspacing="0">
                 <thead>
                     <tr>
                         <th>NO</th>
-                        <th>REGISTER</th>
                         <th>NAMA</th>
                         <th>NO RM</th>
-                        <th>TANGGAL LAHIR</th>
-                        <th>L/P</th>
-                        <th>ALAMAT</th>
-                        <th>JENIS PASIEN</th>
-                        <th>TANGGAL TRANSAKSI</th>
-                        <th>DOKTER PERUJUK</th>
-                        <th>DOKTER PA</th>
-                        <th>UNIT ASAL</th>
-                        <th>PEMERIKSAAN</th>
-                        <th>STATUS LOKASI</th>
-                        <th>DIAGNOSA KLINIK</th>
-                        <th>DIAGNOSA PATOLOGI</TH>
-                        <th>MUTU SEDIAAN</th>
-                        <th>RESPONSE TIME</th>
-                        <th>7 HARI</th>
                         <th>KODE BLOCK HPA</th>
-                        <th>NO KTP</th>
-                        <th>NO BPJS</th>
-                        <th>NO TELP</th>
+                        <th>Hasil HPA</th>
+                        <th>HASIL IHC</th>
+                        <th>STATUS</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -147,58 +130,12 @@
                         <?php foreach ($ihcData as $row) : ?>
                             <tr>
                                 <td><?= $i ?></td>
-                                <td><?= esc($row['kode_ihc'] ?? 'Belum Diisi') ?></td>
                                 <td><?= esc($row['nama_pasien'] ?? 'Belum Diisi') ?></td>
                                 <td><?= esc($row['norm_pasien'] ?? 'Belum Diisi') ?></td>
-                                <td>
-                                    <?= empty($row['tanggal_lahir_pasien']) ? 'Belum Diisi' : esc(date('d-m-Y', strtotime($row['tanggal_lahir_pasien']))); ?>
-                                </td>
-                                <td><?= esc($row['jenis_kelamin_pasien'] ?? 'Belum Diisi') ?></td>
-                                <td><?= esc($row['alamat_pasien'] ?? 'Belum Diisi') ?></td>
-                                <td><?= esc($row['status_pasien'] ?? 'Belum Diisi') ?></td>
-                                <td>
-                                    <?= empty($row['tanggal_permintaan']) ? 'Belum Diisi' : esc(date('d-m-Y', strtotime($row['tanggal_permintaan']))); ?>
-                                </td>
-                                <td><?= esc($row['dokter_pengirim'] ?? 'Belum Diisi') ?></td>
-                                <td><?= esc($row['dokter_pembaca'] ?? 'Belum Diisi') ?></td>
-                                <td><?= esc($row['unit_asal'] ?? 'Belum Diisi') ?></td>
-                                <td><?= esc($row['tindakan_spesimen'] ?? 'Belum Diisi') ?></td>
-                                <td><?= esc($row['lokasi_spesimen'] ?? 'Belum Diisi') ?></td>
-                                <td><?= esc($row['diagnosa_klinik'] ?? 'Belum Diisi') ?></td>
-                                <td><?= esc(strip_tags($row['hasil_ihc'] ?? 'Belum Ada Hasil')) ?></td>
-                                <td><?= esc($row['total_nilai_mutu_ihc'] ?? 'Belum Diisi') ?>%</td>
-                                <td>
-                                    <?php
-                                    if (!empty($row['mulai_penerimaan_ihc']) && !empty($row['selesai_pemverifikasi_ihc'])) {
-                                        $start = new DateTime($row['mulai_penerimaan_ihc']);
-                                        $end = new DateTime($row['selesai_pemverifikasi_ihc']);
-                                        $interval = $start->diff($end);
-                                        echo $interval->format('%a hari %h jam %i menit %s detik');
-                                    } else {
-                                        echo 'Belum lengkap';
-                                    }
-                                    ?>
-                                </td>
-                                <td>
-                                    <?php
-                                    if (!empty($row['mulai_penerimaan_ihc']) && !empty($row['selesai_pemverifikasi_ihc'])) {
-                                        $start = new DateTime($row['mulai_penerimaan_ihc']);
-                                        $end = new DateTime($row['selesai_pemverifikasi_ihc']);
-                                        $interval = $start->diff($end);
-                                        if ($interval->days <= 7) {
-                                            echo '<span class="text-success">Tepat Waktu</span>';
-                                        } else {
-                                            echo '<span class="text-danger">Terlambat</span>';
-                                        }
-                                    } else {
-                                        echo '-';
-                                    }
-                                    ?>
-                                </td>
                                 <td><?= esc($row['kode_block_ihc'] ?? 'Belum Diisi') ?></td>
-                                <td><?= esc($row['no_ktp_ihc'] ?? 'Belum Diisi') ?></td>
-                                <td><?= esc($row['no_bpjs_ihc'] ?? 'Belum Diisi') ?></td>
-                                <td><?= esc($row['no_tlp_ihc'] ?? 'Belum Diisi') ?></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
                             </tr>
                             <?php $i++; ?>
                         <?php endforeach; ?>

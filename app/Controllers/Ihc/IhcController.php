@@ -767,7 +767,7 @@ class ihcController extends BaseController
             'nama_user'  => session()->get('nama_user'),
             'ihcData' => $ihcData,
         ];
-
+        
         return view('ihc/laporan/laporan_pemeriksaan', $data);
     }
 
@@ -793,8 +793,60 @@ class ihcController extends BaseController
             'nama_user'  => session()->get('nama_user'),
             'ihcData' => $ihcData,
         ];
-
+        
         return view('ihc/laporan/laporan_oprasional', $data);
+    }
+
+    public function laporan_ER()
+    {
+        $ihcData = $this->ihcModel->kontrol_ER() ?? [];
+
+        $data = [
+            'id_user'    => session()->get('id_user'),
+            'nama_user'  => session()->get('nama_user'),
+            'ihcData' => $ihcData,
+        ];
+        
+        return view('ihc/laporan/laporan_ER', $data);
+    }
+
+    public function laporan_PR()
+    {
+        $ihcData = $this->ihcModel->kontrol_PR() ?? [];
+
+        $data = [
+            'id_user'    => session()->get('id_user'),
+            'nama_user'  => session()->get('nama_user'),
+            'ihcData' => $ihcData,
+        ];
+        
+        return view('ihc/laporan/laporan_PR', $data);
+    }
+
+    public function laporan_HER2()
+    {
+        $ihcData = $this->ihcModel->kontrol_HER2() ?? [];
+
+        $data = [
+            'id_user'    => session()->get('id_user'),
+            'nama_user'  => session()->get('nama_user'),
+            'ihcData' => $ihcData,
+        ];
+        
+        return view('ihc/laporan/laporan_HER2', $data);
+    }
+
+    public function laporan_KI67()
+    {
+        $ihcData = $this->ihcModel->kontrol_KI67() ?? [];
+
+        $data = [
+            'id_user'    => session()->get('id_user'),
+            'nama_user'  => session()->get('nama_user'),
+            'ihcData' => $ihcData,
+        ];
+        
+        return view('ihc/laporan/laporan_KI67', $data);
     }
 
     public function filter()

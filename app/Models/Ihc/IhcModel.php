@@ -110,7 +110,8 @@ class IhcModel extends Model
             ->findAll();
     }
 
-    public function getTotalIhc() {
+    public function getTotalIhc()
+    {
         return $this->db->table('ihc')->countAllResults();
     }
 
@@ -274,4 +275,49 @@ class IhcModel extends Model
 
         return $builder->get()->getResultArray();
     }
+
+    public function kontrol_ER()
+    {
+        return $this->select('
+        ihc.*, 
+        patient.*
+    ')
+            ->join('patient', 'patient.id_pasien = ihc.id_pasien', 'left')
+            ->where('ER', 1)
+            ->findAll();
+    }
+    
+    public function kontrol_PR()
+    {
+        return $this->select('
+        ihc.*, 
+        patient.*
+    ')
+            ->join('patient', 'patient.id_pasien = ihc.id_pasien', 'left')
+            ->where('PR', 1)
+            ->findAll();
+    }
+
+    public function kontrol_HER2()
+    {
+        return $this->select('
+        ihc.*, 
+        patient.*
+    ')
+            ->join('patient', 'patient.id_pasien = ihc.id_pasien', 'left')
+            ->where('HER2', 1)
+            ->findAll();
+    }
+
+    public function kontrol_KI67()
+    {
+        return $this->select('
+        ihc.*, 
+        patient.*
+    ')
+            ->join('patient', 'patient.id_pasien = ihc.id_pasien', 'left')
+            ->where('KI67', 1)
+            ->findAll();
+    }
+
 }

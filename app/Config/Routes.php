@@ -146,6 +146,10 @@ $routes->group('ihc', ['namespace' => 'App\Controllers\Ihc'], function ($routes)
     $routes->get('laporan_kerja', 'IhcController::laporan_kerja');
     $routes->get('laporan_oprasional', 'IhcController::laporan_oprasional');
     $routes->get('laporan_BHP', 'IhcController::laporan_BHP');
+    $routes->get('laporan_ER', 'IhcController::laporan_ER');
+    $routes->get('laporan_PR', 'IhcController::laporan_PR');
+    $routes->get('laporan_HER2', 'IhcController::laporan_HER2');
+    $routes->get('laporan_KI67', 'IhcController::laporan_KI67');
     $routes->get('filter', 'IhcController::filter');
 });
 
