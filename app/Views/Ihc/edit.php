@@ -105,6 +105,55 @@
                     </div>
                 </div>
 
+                <div class="form-group row">
+                    <label class="col-sm-2 col-form-label"></label>
+                    <div class="col-sm-4">
+
+                    </div>
+
+                    <label class="col-sm-2 col-form-label">Kontrol Positif</label>
+                    <div class="col-sm-4">
+                        <div class="form-group row">
+                            <!-- Kontrol ER -->
+                            <div class="col-sm-3">
+                                <div class="custom-control custom-checkbox">
+                                    <input type="hidden" name="ER" value="0">
+                                    <input type="checkbox" class="custom-control-input" id="ER" name="ER" value="1"
+                                        <?= isset($ihc['ER']) && $ihc['ER'] == 1 ? 'checked' : '' ?>>
+                                    <label class="custom-control-label font-weight-bold" for="ER">Kontrol ER (Positif)</label>
+                                </div>
+                            </div>
+                            <!-- Kontrol PR -->
+                            <div class="col-sm-3">
+                                <div class="custom-control custom-checkbox">
+                                    <input type="hidden" name="PR" value="0">
+                                    <input type="checkbox" class="custom-control-input" id="PR" name="PR" value="1"
+                                        <?= isset($ihc['PR']) && $ihc['PR'] == 1 ? 'checked' : '' ?>>
+                                    <label class="custom-control-label font-weight-bold" for="PR">Kontrol PR (Positif)</label>
+                                </div>
+                            </div>
+                            <!-- Kontrol HER2 -->
+                            <div class="col-sm-3">
+                                <div class="custom-control custom-checkbox">
+                                    <input type="hidden" name="HER2" value="0">
+                                    <input type="checkbox" class="custom-control-input" id="HER2" name="HER2" value="1"
+                                        <?= isset($ihc['HER2']) && $ihc['HER2'] == 1 ? 'checked' : '' ?>>
+                                    <label class="custom-control-label font-weight-bold" for="HER2">Kontrol HER2 (Positif)</label>
+                                </div>
+                            </div>
+                            <!-- Kontrol KI67 -->
+                            <div class="col-sm-3">
+                                <div class="custom-control custom-checkbox">
+                                    <input type="hidden" name="KI67" value="0">
+                                    <input type="checkbox" class="custom-control-input" id="KI67" name="KI67" value="1"
+                                        <?= isset($ihc['KI67']) && $ihc['KI67'] == 1 ? 'checked' : '' ?>>
+                                    <label class="custom-control-label font-weight-bold" for="KI67">Kontrol KI67 (Positif)</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <button class="btn btn-outline-info mb-3" type="button" data-toggle="collapse" data-target="#riwayatCollapse" aria-expanded="false" aria-controls="riwayatCollapse">
                     <i class="fas fa-book-medical"></i> Riwayat Pemeriksaan
                 </button>

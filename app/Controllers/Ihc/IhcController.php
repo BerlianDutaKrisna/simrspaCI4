@@ -327,12 +327,12 @@ class ihcController extends BaseController
             $penulisan_ihc = $this->penulisan_ihc->find($ihc['id_penulisan_ihc']) ?? [];
         }
         // Ambil daftar user dengan status "Dokter"
-        $users = $this->usersModel->where('status_user', 'Dokter')->findAll();
-        // Data yang akan dikirim ke view
+        $users = $this->usersModel->where('status_user', 'Dokter')->findAll(); 
         $riwayat_hpa = $this->hpaModel->riwayatPemeriksaanhpa($id_pasien);
         $riwayat_frs = $this->frsModel->riwayatPemeriksaanfrs($id_pasien);
         $riwayat_srs = $this->srsModel->riwayatPemeriksaansrs($id_pasien);
         $riwayat_ihc = $this->ihcModel->riwayatPemeriksaanihc($id_pasien);
+        // Data yang akan dikirim ke view
         $data = [
             'id_user' => session()->get('id_user'),
             'nama_user' => session()->get('nama_user'),
