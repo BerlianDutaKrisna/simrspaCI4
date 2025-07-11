@@ -86,7 +86,7 @@
                 </a>
             </div>
             <div class="col-auto">
-                <a href="#" class="btn btn-secondary btn-icon-split m-2">
+                <a href="<?= base_url('ihc/laporan_PR'); ?>" class="btn btn-secondary btn-icon-split m-2">
                     <span class="text"><b style="color: white;">PR</b></span>
                     <span class="icon text-white-50">
                         <i class="fas fa-plus-circle"></i>
@@ -94,7 +94,7 @@
                 </a>
             </div>
             <div class="col-auto">
-                <a href="#" class="btn btn-secondary btn-icon-split m-2">
+                <a href="<?= base_url('ihc/laporan_HER2'); ?>" class="btn btn-secondary btn-icon-split m-2">
                     <span class="text"><b style="color: white;">HER2</b></span>
                     <span class="icon text-white-50">
                         <i class="fas fa-plus-circle"></i>
@@ -102,7 +102,7 @@
                 </a>
             </div>
             <div class="col-auto">
-                <a href="#" class="btn btn-secondary btn-icon-split m-2">
+                <a href="<?= base_url('ihc/laporan_KI67'); ?>" class="btn btn-secondary btn-icon-split m-2">
                     <span class="text"><b style="color: white;">KI67</b></span>
                     <span class="icon text-white-50">
                         <i class="fas fa-plus-circle"></i>
@@ -110,7 +110,6 @@
                 </a>
             </div>
         </div>
-
 
         <div class="table-responsive">
             <table class="table table-bordered text-center" id="dataTableButtons" width="100%" cellspacing="0">
