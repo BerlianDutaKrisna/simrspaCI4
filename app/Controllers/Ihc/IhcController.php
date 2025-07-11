@@ -804,7 +804,7 @@ class ihcController extends BaseController
         $data = [
             'id_user'    => session()->get('id_user'),
             'nama_user'  => session()->get('nama_user'),
-            'ihcData' => $ihcData,
+            'ihcData' => $ihcData,          
         ];
         
         return view('ihc/laporan/laporan_ER', $data);
