@@ -235,7 +235,9 @@ class HpaController extends BaseController
             return redirect()->back()->with('message', ['error' => 'HPA tidak ditemukan.']);
         }
         $id_pemotongan_hpa = $hpa['id_pemotongan_hpa'];
+        $id_penerimaan_hpa = $hpa['id_penerimaan_hpa'];
         $id_pembacaan_hpa = $hpa['id_pembacaan_hpa'];
+        $id_pemnulisan_hpa = $hpa['id_penulisan_hpa'];
         $id_pasien = $hpa['id_pasien'];
         $riwayat_hpa = $this->hpaModel->riwayatPemeriksaanhpa($id_pasien);
         $riwayat_frs = $this->frsModel->riwayatPemeriksaanfrs($id_pasien);
@@ -245,7 +247,9 @@ class HpaController extends BaseController
         $users = $this->usersModel->where('status_user', 'Dokter')->findAll();
         // Ambil data pemotongan berdasarkan ID
         $pemotongan_hpa = $this->pemotongan_hpa->find($id_pemotongan_hpa);
+        $penerima_hpa = $this->penerimaan_hpa->find($id_penerimaan_hpa);
         $pembacaan_hpa = $this->pembacaan_hpa->find($id_pembacaan_hpa);
+        $penulisan_hpa = $this->penulisan_hpa->find($id_pemnulisan_hpa);
         $dokter_nama = null;
         $analis_nama = null;
         if ($pemotongan_hpa) {
@@ -288,7 +292,9 @@ class HpaController extends BaseController
             'riwayat_srs'        => $riwayat_srs,
             'riwayat_ihc'        => $riwayat_ihc,
             'pemotongan_hpa' => $pemotongan_hpa,
+            'penerimaan_hpa' => $penerima_hpa,
             'pembacaan_hpa' => $pembacaan_hpa,
+            'penulisan_hpa' => $penulisan_hpa,
             'users'      => $users,
         ];
 

@@ -222,7 +222,9 @@ class ihcController extends BaseController
         if (!$ihc) {
             return redirect()->back()->with('message', ['error' => 'ihc tidak ditemukan.']);
         }
+        $id_penerimaan_ihc = $ihc['id_penerimaan_ihc'];
         $id_pembacaan_ihc = $ihc['id_pembacaan_ihc'];
+        $id_pemnulisan_ihc = $ihc['id_penulisan_ihc'];
         $id_pasien = $ihc['id_pasien'];
         $riwayat_hpa = $this->hpaModel->riwayatPemeriksaanhpa($id_pasien);
         $riwayat_frs = $this->frsModel->riwayatPemeriksaanfrs($id_pasien);
@@ -231,7 +233,9 @@ class ihcController extends BaseController
         // Ambil data pengguna dengan status "Dokter"
         $users = $this->usersModel->where('status_user', 'Dokter')->findAll();
         // Ambil data pemotongan berdasarkan ID
+        $penerima_ihc = $this->penerimaan_ihc->find($id_penerimaan_ihc);
         $pembacaan_ihc = $this->pembacaan_ihc->find($id_pembacaan_ihc);
+        $penulisan_ihc = $this->penulisan_ihc->find($id_pemnulisan_ihc);
         $dokter_nama = null;
         $analis_nama = null;
         if ($pembacaan_ihc) {
@@ -258,7 +262,9 @@ class ihcController extends BaseController
             'riwayat_frs'        => $riwayat_frs,
             'riwayat_srs'        => $riwayat_srs,
             'riwayat_ihc'        => $riwayat_ihc,
+            'penerimaan_ihc' => $penerima_ihc,
             'pembacaan_ihc' => $pembacaan_ihc,
+            'penulisan_ihc' => $penulisan_ihc,
             'users'      => $users,
         ];
 

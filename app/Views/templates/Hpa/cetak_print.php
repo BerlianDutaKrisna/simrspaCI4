@@ -15,7 +15,7 @@ if ($pembacaan_hpa['dokter_nama'] === "dr. Ayu Tyasmara Pratiwi, Sp.PA") {
 ?>
 <script>
     function cetakPrintHpa() {
-        var detailPrintHpa = document.getElementById('print_hpa') ? document.getElementById('print_hpa').value : '';
+        var detailPrinthpa = document.getElementById('print_hpa') ? document.getElementById('print_hpa').value : '';
         var printWindow = window.open('', '', 'height=500,width=900');
         printWindow.document.write(`
 <!DOCTYPE html>
@@ -73,8 +73,8 @@ if ($pembacaan_hpa['dokter_nama'] === "dr. Ayu Tyasmara Pratiwi, Sp.PA") {
                         <td align="center" width="500" nowrap colspan="3"><h3>UNIT PATOLOGI ANATOMI</h3></td>
                     </tr>
                     <tr><td align="center" width="500" colspan="3">&nbsp;</td></tr>
-                    <tr><td nowrap>Tanggal Terima</td><td>:</td><td>&nbsp; <?= isset($penerimaan['mulai_penerimaan']) ? date('d-m-Y H:i:s', strtotime($penerimaan['mulai_penerimaan'])) : '' ?></td></tr>
-                    <tr><td nowrap>Tanggal Hasil</td><td>:</td><td>&nbsp; <?= isset($hpa['tanggal_hasil']) ? date('d-m-Y H:i:s', strtotime($hpa['tanggal_hasil'])) : '' ?></td></tr>
+                    <tr><td nowrap>Tanggal Terima</td><td>:</td><td>&nbsp; <?= isset($penerimaan_hpa['mulai_penerimaan_hpa']) ? date('d-m-Y H:i:s', strtotime($penerimaan_hpa['mulai_penerimaan_hpa'])) : '' ?></td></tr>
+                    <tr><td nowrap>Tanggal Hasil</td><td>:</td><td>&nbsp; <?= isset($penulisan_hpa['selesai_penulisan_hpa']) ? date('d-m-Y H:i:s', strtotime($penulisan_hpa['selesai_penulisan_hpa'])) : '' ?></td></tr>
                 </table>
             </td>
         </tr>
@@ -83,7 +83,7 @@ if ($pembacaan_hpa['dokter_nama'] === "dr. Ayu Tyasmara Pratiwi, Sp.PA") {
         </tr>
         <tr height="500">
             <td colspan="2" height="400" valign="top">
-                ${detailPrintHpa}
+                ${detailPrinthpa}
             </td>
         </tr>
         <tr>
@@ -108,11 +108,18 @@ if ($pembacaan_hpa['dokter_nama'] === "dr. Ayu Tyasmara Pratiwi, Sp.PA") {
                     'November',
                     'Desember'
                 ];
-                $tanggal = date('d');
-                $bulanIndo = $bulan[date('n') - 1];
-                $tahun = date('Y');
+
+                // Cek apakah tanggal selesai_penulisan ada dan valid
+                if (!empty($penulisan_hpa['selesai_penulisan_hpa'])) {
+                    $timestamp = strtotime($penulisan_hpa['selesai_penulisan_hpa']);
+                    $tanggal = date('d', $timestamp);
+                    $bulanIndo = $bulan[date('n', $timestamp) - 1];
+                    $tahun = date('Y', $timestamp);
+                    echo "Surabaya, {$tanggal} {$bulanIndo} {$tahun}";
+                } else {
+                    echo "Surabaya, -";
+                }
                 ?>
-                Surabaya, <?= $tanggal . ' ' . $bulanIndo . ' ' . $tahun ?>
                 </td>
             </tr>
             <tr>
