@@ -154,6 +154,43 @@
                     </div>
                 </div>
 
+                <div class="form-group row">
+                    <label class="col-sm-2 col-form-label"></label>
+                    <div class="col-sm-4">
+                        <!-- kosong / isi sesuai kebutuhan -->
+                    </div>
+
+                    <label class="col-sm-2 col-form-label">Status Kontrol</label>
+                    <div class="col-sm-4">
+                        <select name="status_kontrol" id="status_kontrol" class="form-control">
+                            <option value="">-- Pilih Status --</option>
+                            <option value="Tersedia" <?= ($ihc['status_kontrol'] === 'Tersedia') ? 'selected' : '' ?>>Tersedia</option>
+                            <option value="Terbatas" <?= ($ihc['status_kontrol'] === 'Terbatas') ? 'selected' : '' ?>>Terbatas</option>
+                            <option value="Habis" <?= ($ihc['status_kontrol'] === 'Habis') ? 'selected' : '' ?>>Habis</option>
+                        </select>
+                    </div>
+                </div>
+                <script>
+                    document.addEventListener("DOMContentLoaded", function() {
+                        const select = document.getElementById("status_kontrol");
+
+                        function updateSelectColor() {
+                            select.classList.remove("bg-success", "bg-warning", "bg-danger", "text-white", "text-dark");
+
+                            if (select.value === "Tersedia") {
+                                select.classList.add("bg-success", "text-white");
+                            } else if (select.value === "Terbatas") {
+                                select.classList.add("bg-warning", "text-dark");
+                            } else if (select.value === "Habis") {
+                                select.classList.add("bg-danger", "text-white");
+                            }
+                        }
+
+                        select.addEventListener("change", updateSelectColor);
+                        updateSelectColor(); // Panggil saat awal (jika ada nilai dari DB)
+                    });
+                </script>
+
                 <button class="btn btn-outline-info mb-3" type="button" data-toggle="collapse" data-target="#riwayatCollapse" aria-expanded="false" aria-controls="riwayatCollapse">
                     <i class="fas fa-book-medical"></i> Riwayat Pemeriksaan
                 </button>

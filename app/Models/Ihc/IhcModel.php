@@ -36,6 +36,7 @@ class IhcModel extends Model
         'PR',
         'HER2',
         'KI67',
+        'status_kontrol',
         'created_at',
         'updated_at',
     ];
