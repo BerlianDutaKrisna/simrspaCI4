@@ -102,9 +102,9 @@
                 </a>
             </div>
             <div class="col-auto">
-                <a href="<?= base_url('ihc/laporan_KI67'); ?>" class="btn btn-secondary btn-icon-split m-2">
-                    <span class="text"><b style="color: white;">KI67</b></span>
-                    <span class="icon text-white-50">
+                <a href="<?= base_url('ihc/laporan_KI67'); ?>" class="btn btn-light btn-icon-split m-2">
+                    <span class="text"><b style="color: dark;">KI67</b></span>
+                    <span class="icon text-dark-50">
                         <i class="fas fa-plus-circle"></i>
                     </span>
                 </a>
@@ -119,7 +119,6 @@
                         <th>NAMA</th>
                         <th>NO RM</th>
                         <th>KODE BLOCK HPA</th>
-                        <th>Hasil HPA</th>
                         <th>HASIL IHC</th>
                         <th>STATUS</th>
                     </tr>
@@ -133,9 +132,30 @@
                                 <td><?= esc($row['nama_pasien'] ?? 'Belum Diisi') ?></td>
                                 <td><?= esc($row['norm_pasien'] ?? 'Belum Diisi') ?></td>
                                 <td><?= esc($row['kode_block_ihc'] ?? 'Belum Diisi') ?></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
+                                <td> <a href="<?= base_url('ihc/edit/' . esc($row['id_ihc'])) ?>" class="btn btn-sm btn-warning mx-1">
+                                        <i class="fas fa-edit"></i> Edit
+                                    </a>
+                                </td>
+                                <td>
+                                    <?php
+                                    // Check the value of status_kontrol and display the appropriate button
+                                    if (isset($row['status_kontrol'])) {
+                                        if ($row['status_kontrol'] == 'Tersedia') {
+                                            echo '<button type="button" class="btn btn-success">Tersedia</button>';
+                                        } elseif ($row['status_kontrol'] == 'Terbatas') {
+                                            echo '<button type="button" class="btn btn-warning">Terbatas</button>';
+                                        } elseif ($row['status_kontrol'] == 'Habis') {
+                                            echo '<button type="button" class="btn btn-danger">Habis</button>';
+                                        } else {
+                                            // Optional: Handle cases where status_kontrol might have an unexpected value
+                                            echo '<button type="button" class="btn btn-secondary">Status Tidak Diketahui</button>';
+                                        }
+                                    } else {
+                                        // Optional: Handle cases where status_kontrol is not set
+                                        echo '<button type="button" class="btn btn-info">Status Belum Diisi</button>';
+                                    }
+                                    ?>
+                                </td>
                             </tr>
                             <?php $i++; ?>
                         <?php endforeach; ?>
