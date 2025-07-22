@@ -138,21 +138,18 @@
                                 </td>
                                 <td>
                                     <?php
-                                    // Check the value of status_kontrol and display the appropriate button
                                     if (isset($row['status_kontrol'])) {
                                         if ($row['status_kontrol'] == 'Tersedia') {
-                                            echo '<button type="button" class="btn btn-success">Tersedia</button>';
+                                            echo '<span class="text-success font-weight-bold" style="font-weight:900;">Tersedia</span>';
                                         } elseif ($row['status_kontrol'] == 'Terbatas') {
-                                            echo '<button type="button" class="btn btn-warning">Terbatas</button>';
+                                            echo '<span class="text-warning font-weight-bold" style="font-weight:900;">Terbatas</span>';
                                         } elseif ($row['status_kontrol'] == 'Habis') {
-                                            echo '<button type="button" class="btn btn-danger">Habis</button>';
+                                            echo '<span class="text-danger font-weight-bold" style="font-weight:900;">Habis</span>';
                                         } else {
-                                            // Optional: Handle cases where status_kontrol might have an unexpected value
-                                            echo '<button type="button" class="btn btn-secondary">Status Tidak Diketahui</button>';
+                                            echo '<span class="text-secondary font-weight-bold" style="font-weight:900;">Status Tidak Diketahui</span>';
                                         }
                                     } else {
-                                        // Optional: Handle cases where status_kontrol is not set
-                                        echo '<button type="button" class="btn btn-info">Status Belum Diisi</button>';
+                                        echo '<span class="text-info font-weight-bold" style="font-weight:900;">Status Belum Diisi</span>';
                                     }
                                     ?>
                                 </td>
