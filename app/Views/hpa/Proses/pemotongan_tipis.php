@@ -20,7 +20,30 @@
                     <thead>
                         <tr>
                             <th>No</th>
-                            <th>Aksi</th>
+                            <th class="align-middle text-center">
+                                <div class="custom-control custom-checkbox d-inline-block">
+                                    <input type="checkbox" class="custom-control-input" id="checkAll">
+                                    <label class="custom-control-label" for="checkAll">Aksi Check All</label>
+                                </div>
+                            </th>
+                            <script>
+                                document.getElementById('checkAll').addEventListener('change', function() {
+                                    let checkboxes = document.querySelectorAll('.checkbox-item');
+                                    checkboxes.forEach(cb => {
+                                        cb.checked = this.checked;
+
+                                        // Paksa trigger event 'change' agar logika lain ikut jalan (misal toggleButtons)
+                                        cb.dispatchEvent(new Event('change'));
+
+                                        // Opsional: akses data-status jika dibutuhkan langsung
+                                        if (this.checked && cb.dataset.status) {
+                                            let statusObj = JSON.parse(cb.dataset.status);
+                                            console.log(statusObj); // Untuk debugging
+                                            // Kamu bisa push ke array atau proses data di sini
+                                        }
+                                    });
+                                });
+                            </script>
                             <th>Kode HPA</th>
                             <th>Nama Pasien</th>
                             <th>Status Pemotongan Tipis</th>
