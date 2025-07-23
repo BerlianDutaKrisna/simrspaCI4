@@ -23,7 +23,7 @@
                             <th class="align-middle text-center">
                                 <div class="custom-control custom-checkbox d-inline-block">
                                     <input type="checkbox" class="custom-control-input" id="checkAll">
-                                    <label class="custom-control-label" for="checkAll">Aksi Check All</label>
+                                    <label class="custom-control-label" for="checkAll">Aksi Check Semua</label>
                                 </div>
                             </th>
                             <script>
