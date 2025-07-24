@@ -41,7 +41,7 @@ class Pembacaan extends BaseController
             'counts' => $this->getCounts(),
             'pembacaanDatahpa' => $pembacaanData_hpa,
         ];
-
+        
         return view('Hpa/Proses/pembacaan', $data);
     }
 
