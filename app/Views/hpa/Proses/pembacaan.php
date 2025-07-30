@@ -27,7 +27,6 @@
                             <th>Kode HPA</th>
                             <th>Nama Pasien</th>
                             <th>jumlah slide</th>
-                            <th>Aksi Cetak Stiker</th>
                             <th>Dokter</th>
                             <th>Status Pembacaan</th>
                             <th>Mulai Pembacaan</th>
@@ -73,13 +72,6 @@
                                     $slide = $row['jumlah_slide'];
                                     $jumlahSlide = is_numeric($slide) ? (int)$slide : 1; // fallback ke 1 jika bukan angka
                                     ?>
-                                    <td>
-                                        <button class="btn btn-primary btn-sm btn-cetak-stiker"
-                                            data-kode="<?= esc($row['kode_hpa']); ?>"
-                                            data-slide="<?= $jumlahSlide; ?>">
-                                            <i class="fas fa-print"></i> Cetak Stiker
-                                        </button>
-                                    </td>
                                     <td><?= $row['nama_user_dokter_pemotongan_hpa']; ?></td>
                                     <td><?= $row['status_pembacaan_hpa']; ?></td>
                                     <td>
@@ -119,7 +111,6 @@
                 </table>
             </div>
 
-            <?= $this->include('templates/hpa/cetak_stiker'); ?>
             <?= $this->include('templates/proses/button_proses'); ?>
             <?= $this->include('dashboard/jenis_tindakan'); ?>
             <?= $this->include('templates/dashboard/footer_dashboard'); ?>
