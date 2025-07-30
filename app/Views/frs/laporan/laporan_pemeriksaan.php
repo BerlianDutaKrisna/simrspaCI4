@@ -36,12 +36,12 @@
                     <div class="col-md-6">
                         <label for="filterDate">Tanggal Pencarian</label>
                         <input type="date" class="form-control" id="filterDate" name="filterDate"
-                            value="<?= old('filterDate') ?: date('Y-m-01', strtotime('-1 month')); ?>">
+                            value="<?= esc($_GET['filterDate'] ?? date('Y-m-01', strtotime('-1 month'))); ?>">
                     </div>
                     <div class="col-md-6">
                         <label for="filterDate2">Sampai Tanggal</label>
                         <input type="date" class="form-control" id="filterDate2" name="filterDate2"
-                            value="<?= old('filterDate2') ?: date('Y-m-d'); ?>">
+                            value="<?= esc($_GET['filterDate2'] ?? date('Y-m-d')); ?>">
                     </div>
                 </div>
 
@@ -69,6 +69,10 @@
                 }
             }
         </script>
+
+        <div class="mb-3">
+            <strong>Total Data Pasien:</strong> <?= count($frsData) ?>
+        </div>
 
         <div class="table-responsive">
             <table class="table table-bordered text-center" id="dataTableButtons" width="100%" cellspacing="0">
