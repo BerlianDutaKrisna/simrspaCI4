@@ -76,10 +76,10 @@
                                     <td><?= $row['jumlah_slide']; ?></td>
                                     <?php
                                     $slide = $row['jumlah_slide'];
-                                    $jumlahSlide = is_numeric($slide) ? (int)$slide : 1; // fallback ke 1 jika bukan angka
+                                    $jumlahSlide = is_numeric($slide) ? (int)$slide : 1;
                                     ?>
                                     <td>
-                                        <button class="btn btn-primary btn-sm btn-cetak-stiker"
+                                        <button class="btn btn-info btn-sm btn-cetak-stiker"
                                             data-kode="<?= esc($row['kode_hpa']); ?>"
                                             data-slide="<?= $jumlahSlide; ?>">
                                             <i class="fas fa-print"></i> Cetak Stiker
@@ -127,5 +127,4 @@
             <?= $this->include('templates/hpa/cetak_stiker'); ?>
             <?= $this->include('templates/proses/button_proses'); ?>
             <?= $this->include('dashboard/jenis_tindakan'); ?>
-            <?= $this->include('templates/notifikasi'); ?>
             <?= $this->include('templates/dashboard/footer_dashboard'); ?>
