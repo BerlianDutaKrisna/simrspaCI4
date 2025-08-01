@@ -334,7 +334,7 @@
                     $jumlahSlide = is_numeric($slide) ? (int)$slide : 1;
                     ?>
                     <div class="col-sm-3 text-center">
-                        <button type="button" btn btn-outline-info btn-user w-100 w-md-auto btn-cetak-stiker"
+                        <button type="button" class="btn btn-outline-info btn-user w-100 w-md-auto btn-cetak-stiker"
                             data-kode="<?= esc($hpa['kode_hpa']); ?>"
                             data-slide="<?= $jumlahSlide; ?>">
                             <i class="fas fa-print"></i> Cetak Stiker

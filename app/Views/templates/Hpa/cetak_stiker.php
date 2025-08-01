@@ -134,7 +134,7 @@
 
         printWindow.document.open();
         printWindow.document.write(html);
-        
+        printWindow.document.close();      
       });
     });
   });

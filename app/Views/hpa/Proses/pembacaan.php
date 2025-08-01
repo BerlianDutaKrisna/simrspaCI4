@@ -110,7 +110,7 @@
                     </tbody>
                 </table>
             </div>
-
+            <?= $this->include('templates/notifikasi'); ?>
             <?= $this->include('templates/proses/button_proses'); ?>
             <?= $this->include('dashboard/jenis_tindakan'); ?>
             <?= $this->include('templates/dashboard/footer_dashboard'); ?>
