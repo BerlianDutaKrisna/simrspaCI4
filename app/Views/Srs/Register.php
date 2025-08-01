@@ -165,6 +165,7 @@
                     <label for="unit_asal">Unit Asal</label>
                     <select class="form-control" id="unit_asal" name="unit_asal" onchange="handleUnitAsalChange(this)">
                         <option value="" selected>Belum Dipilih</option>
+                        <option value="Klinik Kandungan">Klinik Kandungan</option>
                         <option value="Ruangan Aster">Ruangan Aster</option>
                         <option value="Ruangan Anggrek">Ruangan Anggrek</option>
                         <option value="Ruangan Bougenvil">Ruangan Bougenvil</option>
@@ -206,6 +207,7 @@
                         <option value="dr. Eri Chusairi Yulianto, Sp.THT">dr. Eri Chusairi Yulianto, Sp.THT</option>
                         <option value="dr. Yahya Haryo Nugroho, Sp.PD">dr. Yahya Haryo Nugroho, Sp.PD</option>
                         <option value="dr. Purwakaning Purnomo Agung, M.Kes., Sp.PD">dr. Purwakaning Purnomo Agung, M.Kes., Sp.PD</option>
+                        <option value="dr. Rizza Maulana Azmi, Sp.O.G, M.Si, M.Ked.Klin">dr. Rizza Maulana Azmi, Sp.O.G, M.Si, M.Ked.Klin</option>
                         <option value="lainnya">Lainnya</option>
                     </select>
                     <input type="text" class="form-control mt-2 d-none" id="dokter_pengirim_custom" name="dokter_pengirim_custom" placeholder="Masukkan Dokter Pengirim Lainnya">
