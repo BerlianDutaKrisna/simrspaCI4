@@ -79,7 +79,7 @@
                                     $jumlahSlide = is_numeric($slide) ? (int)$slide : 1;
                                     ?>
                                     <td>
-                                        <button class="btn btn-info btn-sm btn-cetak-stiker"
+                                        <button class="btn btn-outline-info btn-sm btn-cetak-stiker"
                                             data-kode="<?= esc($row['kode_hpa']); ?>"
                                             data-slide="<?= $jumlahSlide; ?>">
                                             <i class="fas fa-print"></i> Cetak Stiker
