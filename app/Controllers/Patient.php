@@ -200,27 +200,39 @@ class Patient extends BaseController
 
     public function modal_search()
     {
-        // Ambil data 'norm' yang dikirim dari frontend
-        $norm_pasien = $this->request->getVar('norm');
+        $request = service('request');
+        $json = $request->getJSON();
 
-        // Inisialisasi model
-        $patientModel = new PatientModel();
-
-        // Cari pasien berdasarkan norm_pasien
-        $patient = $patientModel->where('norm_pasien', $norm_pasien)->first();
-
-        // Cek apakah pasien ditemukan
-        if ($patient) {
-            // Jika ditemukan, kirimkan data pasien dalam format JSON
-            return $this->response->setJSON([
-                'status' => 'success',
-                'data' => $patient
-            ]);
-        } else {
-            // Jika tidak ditemukan, kirimkan pesan kesalahan
+        if (!isset($json->norm)) {
             return $this->response->setJSON([
                 'status' => 'error',
-                'message' => 'Pasien belum terdaftar'
+                'message' => 'Norm tidak dikirim.'
+            ]);
+        }
+
+        $norm = $json->norm;
+        $client = \Config\Services::curlrequest();
+        $apiURL = "http://10.250.10.107/apibdrs/apibdrs/getPemeriksaanPasien/" . $norm;
+
+        try {
+            $apiResponse = $client->get($apiURL);
+            $result = json_decode($apiResponse->getBody(), true);
+
+            if (isset($result['code']) && $result['code'] == 200 && !empty($result['data'])) {
+                return $this->response->setJSON([
+                    'status' => 'success',
+                    'data' => $result['data']
+                ]);
+            } else {
+                return $this->response->setJSON([
+                    'status' => 'error',
+                    'message' => 'Pasien tidak ditemukan.'
+                ]);
+            }
+        } catch (\Exception $e) {
+            return $this->response->setJSON([
+                'status' => 'error',
+                'message' => 'Terjadi kesalahan: ' . $e->getMessage()
             ]);
         }
     }

@@ -23,7 +23,7 @@
 
             <!-- Modal untuk Menampilkan Hasil -->
             <div class="modal fade" id="resultModal" tabindex="-1" role="dialog" aria-labelledby="resultModalLabel" aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
                             <h5 class="modal-title" id="resultModalLabel">Hasil Pencarian</h5>
@@ -73,7 +73,7 @@
         }
 
         // Mengirim permintaan AJAX
-        fetch('<?= base_url('patient/modal_search') ?>', {
+        fetch('<?= base_url("patient/modal_search") ?>', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -86,6 +86,7 @@
             .then((data) => {
                 console.log('Data:', data); // Menampilkan data JSON
                 // Fungsi untuk memformat tanggal menjadi d-m-Y
+                // Fungsi untuk memformat tanggal menjadi d-m-Y
                 function formatDate(dateString) {
                     const date = new Date(dateString);
                     const day = String(date.getDate()).padStart(2, '0');
@@ -94,35 +95,87 @@
 
                     return `${day}-${month}-${year}`;
                 }
-                // Jika status 'success', tampilkan hasil di modal
-                if (data.status === 'success') {
-                    const patient = data.data;
-                    document.getElementById('modalBody').innerHTML = `
-                    <p><strong>Norm:</strong> ${patient.norm_pasien}</p>
-                    <p><strong>Nama:</strong> ${patient.nama_pasien}</p>
-                    <p><strong>Alamat:</strong> ${patient.alamat_pasien ? patient.alamat_pasien : 'Belum diisi'}</p>
-                    <p><strong>Jenis Kelamin/Tanggal Lahir:</strong> ${patient.jenis_kelamin_pasien} / ${patient.tanggal_lahir_pasien ? formatDate(patient.tanggal_lahir_pasien) : 'Belum diisi'}</p>
-                    <p><strong>Status:</strong> ${patient.status_pasien}</p>
-                `;
 
-                    // Tambahkan tombol 'Tambah Pemeriksaan'
-                    document.getElementById('modalFooter').innerHTML = `
-                    <a href="<?= base_url('hpa/register') ?>?norm_pasien=${norm}" class="btn btn-danger"><i class="fas fa-plus-square"></i> HPA</a>
-                    <a href="<?= base_url('frs/register') ?>?norm_pasien=${norm}" class="btn btn-primary"><i class="fas fa-plus-square"></i> FNAB</a>
-                    <a href="<?= base_url('srs/register') ?>?norm_pasien=${norm}" class="btn btn-success"><i class="fas fa-plus-square"></i> SRS</a>
-                    <a href="<?= base_url('ihc/register') ?>?norm_pasien=${norm}" class="btn btn-warning"><i class="fas fa-plus-square"></i> IHC</a>
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fas fa-times"></i> Tutup</button>
-                `;
-                } else {
-                    // Jika status 'error', tampilkan pesan kesalahan
-                    document.getElementById('modalBody').innerHTML = `<p>${data.message}</p>`;
+                // Fungsi untuk memformat tanggal dan waktu menjadi d-m-Y H:i
+                function formatDateTime(dateTimeString) {
+                    const date = new Date(dateTimeString);
+                    const day = String(date.getDate()).padStart(2, '0');
+                    const month = String(date.getMonth() + 1).padStart(2, '0');
+                    const year = date.getFullYear();
 
-                    // Tambahkan tombol 'Tambah Pasien'
-                    document.getElementById('modalFooter').innerHTML = `
-                    <a href="<?= base_url('patient/register_patient') ?>?norm_pasien=${norm}" class="btn btn-success"><i class="fas fa-plus-square"></i> Tambah Pasien</a>
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fas fa-times"></i> Tutup</button>
-                `;
+                    const hours = String(date.getHours()).padStart(2, '0');
+                    const minutes = String(date.getMinutes()).padStart(2, '0');
+
+                    return `${day}-${month}-${year} ${hours}:${minutes}`;
                 }
+                if (data.status === 'success') {
+                    const patients = data.data;
+
+                    // Ambil norm dari data pertama (karena semua norm sama)
+                    const norm = patients[0].norm;
+
+                    // Buat tabel
+                    let tableHTML = `
+        <table class="table table-sm table-bordered">
+            <thead>
+                <tr>
+                    <th>Norm</th>
+                    <th>Nama</th>
+                    <th>Tgl Lahir</th>
+                    <th>Alamat</th>
+                    <th>Tanggal Daftar</th>
+                    <th>No. Register</th>
+                    <th>Pemeriksaan</th>
+                    <th>Aksi</th>
+                </tr>
+            </thead>
+            <tbody>
+    `;
+
+                    patients.forEach((patient) => {
+                        tableHTML += `
+            <tr>
+                <td>${patient.norm}</td>
+                <td>${patient.nama}</td>
+                <td>${formatDate(patient.tgl_lhr)}</td>
+                <td>${patient.alamat}</td>
+                <td>${formatDateTime(patient.tanggal)}</td>
+                <td>${patient.register}</td>
+                <td>${patient.pemeriksaan}</td>
+                <td>
+                    <button class="btn btn-outline-primary btn-checklist" data-idtransaksi="${patient.idtransaksi}">
+                    <i class="fas fa-check-square"></i> Pilih
+                    </button>
+                </td>
+            </tr>
+        `;
+                    });
+
+                    tableHTML += `</tbody></table>`;
+
+                    document.getElementById('modalBody').innerHTML = tableHTML;
+
+                    // Tombol Tambah Pemeriksaan
+                    document.getElementById('modalFooter').innerHTML = `
+        <a href="<?= base_url('hpa/register') ?>?norm_pasien=${norm}" class="btn btn-danger"><i class="fas fa-plus-square"></i> HPA</a>
+        <a href="<?= base_url('frs/register') ?>?norm_pasien=${norm}" class="btn btn-primary"><i class="fas fa-plus-square"></i> FNAB</a>
+        <a href="<?= base_url('srs/register') ?>?norm_pasien=${norm}" class="btn btn-success"><i class="fas fa-plus-square"></i> SRS</a>
+        <a href="<?= base_url('ihc/register') ?>?norm_pasien=${norm}" class="btn btn-warning"><i class="fas fa-plus-square"></i> IHC</a>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fas fa-times"></i> Tutup</button>
+    `;
+
+                    // Event listener untuk tombol checklist
+                    document.querySelectorAll('.checklist-btn').forEach(btn => {
+                        btn.addEventListener('click', function() {
+                            const idtransaksi = this.getAttribute('data-id');
+                            // Lakukan aksi, misal arahkan atau AJAX kirim ke server
+                            console.log("Checklist ID:", idtransaksi);
+                            // Contoh redirect:
+                            // window.location.href = `/checklist/proses?id=${idtransaksi}`;
+                        });
+                    });
+                }
+
 
                 // Menampilkan modal
                 $('#resultModal').modal('show');
