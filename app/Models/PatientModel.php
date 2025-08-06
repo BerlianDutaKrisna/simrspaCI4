@@ -10,6 +10,7 @@ class PatientModel extends Model
     protected $primaryKey = 'id_pasien';
     protected $returnType = 'array';
     protected $allowedFields = [
+        'id_pasien',  
         'norm_pasien',
         'nama_pasien',
         'alamat_pasien',

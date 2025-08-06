@@ -144,7 +144,7 @@ class HpaController extends BaseController
             'patient'       => $patient,
             'riwayat_api'   => $riwayat_api,
         ];;
-        
+
         return view('Hpa/Register', $data);
     }
 
@@ -176,6 +176,31 @@ class HpaController extends BaseController
             // Tentukan tindakan_spesimen
             $tindakan_spesimen = !empty($data['tindakan_spesimen']) ? $data['tindakan_spesimen'] : $data['tindakan_spesimen_custom'];
             // Data yang akan disimpan
+
+            // ====== CEK PASIEN DI TABEL PATIENT ======
+            $id_pasien = $data['id_pasien'];
+
+            // Cek apakah pasien sudah ada
+            $patient = $this->patientModel->where('id_pasien', $id_pasien)->first();
+            
+            if (!$patient) {
+                // Jika pasien tidak ditemukan, insert data pasien baru
+                $patientData = [
+                    'id_pasien'    => $id_pasien,
+                    'norm_pasien' => $data['norm_pasien'] ?? '',
+                    'nama_pasien'  => $data['nama_pasien'] ?? '', 
+                    'alamat_pasien' => $data['alamat_pasien'] ?? '',
+                    'tanggal_lahir_pasien' => $data['tanggal_lahir_pasien'] ?? null,
+                    'jenis_kelamin_pasien' => $data['jenis_kelamin_pasien'] ?? '',
+                    'status_pasien' => $data['status_pasien'] ?? '',
+                    // Tambahkan kolom lain sesuai struktur tabel patient Anda
+                ];
+
+                if (!$this->patientModel->insert($patientData)) {
+                    throw new Exception('Gagal menyimpan data pasien: ' . implode(', ', $this->patientModel->errors()));
+                }
+            }
+
             $hpaData = [
                 'kode_hpa' => $data['kode_hpa'],
                 'id_pasien' => $data['id_pasien'],

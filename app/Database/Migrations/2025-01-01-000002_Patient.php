@@ -42,10 +42,10 @@ class Patient extends Migration
                 'null'       => true,
             ],
             'status_pasien' => [
-                'type'       => 'ENUM',
-                'constraint' => ['PBI', 'Non PBI', 'Umum', 'Belum Dipilih'],
-                'default'    => 'Belum Dipilih',
-                'null'       => true,
+                'type'       => 'VARCHAR',
+                'constraint' => 100,
+                'default'    => 'Belum Diisi',
+                'null' => true,
             ],'created_at' => [
                 'type' => 'DATETIME',
                 'null' => true,
