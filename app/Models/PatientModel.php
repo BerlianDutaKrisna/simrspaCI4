@@ -228,4 +228,35 @@ class PatientModel extends Model
 
         return $builder->get()->getResultArray();
     }
+
+    public function apiPemeriksaanPasien($norm)
+    {
+        $client = \Config\Services::curlrequest();
+        $apiURL = "http://10.250.10.107/apibdrs/apibdrs/getPemeriksaanPasien/" . $norm;
+
+        try {
+            $response = $client->get($apiURL);
+            $result = json_decode($response->getBody(), true);
+
+            if (isset($result['code']) && $result['code'] == 200 && isset($result['data']) && is_array($result['data'])) {
+                // Filter hanya data yang hasilnya: null, "", atau "<br>"
+                $filteredData = array_filter($result['data'], function ($item) {
+                    $hasil = trim($item['hasil'] ?? ''); // Trim untuk hilangkan spasi dan newline
+                    return $hasil === '' || $hasil === '<br>';
+                });
+
+                return [
+                    'code' => 200,
+                    'data' => array_values($filteredData)
+                ];
+            }
+
+            return [
+                'code' => $result['code'] ?? 500,
+                'data' => []
+            ];
+        } catch (\Exception $e) {
+            throw new \RuntimeException("Gagal mengambil data API: " . $e->getMessage());
+        }
+    }
 }

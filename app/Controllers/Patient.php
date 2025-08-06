@@ -211,17 +211,15 @@ class Patient extends BaseController
         }
 
         $norm = $json->norm;
-        $client = \Config\Services::curlrequest();
-        $apiURL = "http://10.250.10.107/apibdrs/apibdrs/getPemeriksaanPasien/" . $norm;
+        $model = new \App\Models\PatientModel();
 
         try {
-            $apiResponse = $client->get($apiURL);
-            $result = json_decode($apiResponse->getBody(), true);
+            $data = $model->apiPemeriksaanPasien($norm);
 
-            if (isset($result['code']) && $result['code'] == 200 && !empty($result['data'])) {
+            if (isset($data['code']) && $data['code'] == 200 && !empty($data['data'])) {
                 return $this->response->setJSON([
                     'status' => 'success',
-                    'data' => $result['data']
+                    'data' => $data['data']
                 ]);
             } else {
                 return $this->response->setJSON([

@@ -142,6 +142,12 @@ class Ihc extends Migration
                 'null'       => false,
                 'default'    => 0,
             ],
+            'status_kontrol' => [
+                'type'       => 'ENUM',
+                'constraint' => ['Tersedia','Terbatas','Habis'],
+                'default'    => 'Tersedia',
+                'null'       => true,
+            ],
             'created_at' => [
                 'type' => 'DATETIME',
                 'null' => true,

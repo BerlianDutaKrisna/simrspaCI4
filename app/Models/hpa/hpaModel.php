@@ -28,6 +28,9 @@ class HpaModel extends Model
         'print_hpa',
         'penerima_hpa',
         'tanggal_penerima',
+        'id_transaksi',
+        'tanggal_transaksi',
+        'no_register',
         'created_at',
         'updated_at',
     ];
