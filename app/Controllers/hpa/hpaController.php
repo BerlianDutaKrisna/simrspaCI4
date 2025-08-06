@@ -66,7 +66,7 @@ class HpaController extends BaseController
             'nama_user' => session()->get('nama_user'),
             'hpaData' => $hpaData
         ];
-        
+
         return view('Hpa/index', $data);
     }
 
@@ -81,46 +81,73 @@ class HpaController extends BaseController
             'nama_user'  => session()->get('nama_user'),
             'hpaData' => $hpaData,
         ];
-        
+
         return view('hpa/index_buku_penerima', $data);
     }
-    
+
     public function register()
     {
+        // Ambil kode HPA terakhir
         $lasthpa = $this->hpaModel->getLastKodeHPA();
         $currentYear = date('y');
         $nextNumber = 1;
+
         if ($lasthpa) {
             $lastKode = $lasthpa['kode_hpa'];
             $lastParts = explode('/', $lastKode);
             $lastYear = $lastParts[1];
+
             if ($lastYear == $currentYear) {
                 $lastNumber = (int) explode('.', $lastParts[0])[1];
                 $nextNumber = $lastNumber + 1;
             }
         }
+
         $kodehpa = sprintf('H.%02d/%s', $nextNumber, $currentYear);
-        // Proses norm_pasien sebelum data dibuat
-        $normPasien = $this->request->getGet('norm_pasien');
-        $patient = $normPasien ? $this->patientModel->where('norm_pasien', $normPasien)->first() : null;
-        $id_pasien = $patient['id_pasien'];
-        $riwayat_hpa = $this->hpaModel->riwayatPemeriksaanhpa($id_pasien);
-        $riwayat_frs = $this->frsModel->riwayatPemeriksaanfrs($id_pasien);
-        $riwayat_srs = $this->srsModel->riwayatPemeriksaansrs($id_pasien);
-        $riwayat_ihc = $this->ihcModel->riwayatPemeriksaanihc($id_pasien);
-        $data = [
-            'id_user'   => session()->get('id_user'),
-            'nama_user' => session()->get('nama_user'),
-            'kode_hpa'  => $kodehpa,
-            'patient'   => $patient,
-            'riwayat_hpa' => $riwayat_hpa,
-            'riwayat_frs' => $riwayat_frs,
-            'riwayat_srs' => $riwayat_srs,
-            'riwayat_ihc' => $riwayat_ihc,
+
+        // Tangkap dari GET parameter
+        $register_api_raw = $this->request->getGet('register_api');
+        $register_api = json_decode($register_api_raw, true);
+
+        // Ambil data riwayat dari API
+        $norm = $register_api['norm'] ?? '';
+        $riwayat_api = [];
+        if ($norm !== '') {
+            $riwayat_api_response = $this->patientModel->riwayatPemeriksaanPasien($norm);
+            if ($riwayat_api_response['code'] == 200) {
+                $riwayat_api = $riwayat_api_response['data'];
+            }
+        }
+
+        // Map ke $patient
+        $patient = [
+            'norm_pasien' => $register_api['norm'] ?? '',
+            'nama_pasien' => $register_api['nama'] ?? '',
+            'alamat_pasien'      => $register_api['alamat'] ?? '',
+            'tanggal_lahir_pasien'   => $register_api['tgl_lhr'] ?? '',
+            'jenis_kelamin_pasien'  => $register_api['jeniskelamin'] ?? '',
+            'status_pasien' => $register_api['jenispasien'] ?? '',
+            'unitasal'    => $register_api['unitasal'] ?? '',
+            'dokterperujuk' => $register_api['dokterperujuk'] ?? '',
+            'pemeriksaan' => $register_api['pemeriksaan'] ?? '',
+            'id_transaksi_simrs' => $register_api['idtransaksi'] ?? '',
+            'id_pasien'   => $register_api['idpasien'] ?? '',
+            'lokasi_spesimen' => $register_api['statuslokasi'],
+            'diagnosa_klinik' => $register_api['diagnosaklinik'],
+            'tindakan_spesimen' => $register_api['pemeriksaan']
         ];
+
+        $data = [
+            'id_user'       => session()->get('id_user'),
+            'nama_user'     => session()->get('nama_user'),
+            'kode_hpa'      => $kodehpa,
+            'patient'       => $patient,
+            'riwayat_api'   => $riwayat_api,
+        ];;
         
         return view('Hpa/Register', $data);
     }
+
 
     public function insert()
     {
@@ -343,7 +370,7 @@ class HpaController extends BaseController
             'id_user'    => $this->session->get('id_user'),
             'nama_user'  => $this->session->get('nama_user'),
         ];
-        
+
         return view('hpa/edit_makroskopis', $data);
     }
 
@@ -414,7 +441,7 @@ class HpaController extends BaseController
             'id_user'         => session()->get('id_user'),
             'nama_user'       => session()->get('nama_user'),
         ];
-        
+
         return view('hpa/edit_mikroskopis', $data);
     }
 
@@ -489,7 +516,7 @@ class HpaController extends BaseController
             'hpa' => $hpa,
             'pembacaan_hpa' => $pembacaan_hpa,
         ];
-        
+
         return view('hpa/edit_print', $data);
     }
 
@@ -910,7 +937,7 @@ class HpaController extends BaseController
             'nama_user'  => session()->get('nama_user'),
             'hpaData' => $hpaData,
         ];
-        
+
         return view('hpa/laporan/laporan_pemeriksaan', $data);
     }
 
@@ -923,7 +950,7 @@ class HpaController extends BaseController
             'nama_user'  => session()->get('nama_user'),
             'hpaData' => $hpaData,
         ];
-        
+
         return view('hpa/laporan/laporan_kerja', $data);
     }
 
@@ -936,7 +963,7 @@ class HpaController extends BaseController
             'nama_user'  => session()->get('nama_user'),
             'hpaData' => $hpaData,
         ];
-        
+
         return view('hpa/laporan/laporan_oprasional', $data);
     }
 
@@ -946,7 +973,7 @@ class HpaController extends BaseController
         $filterValue = $this->request->getGet('filterValue');
         $startDate   = $this->request->getGet('filterDate');
         $endDate     = $this->request->getGet('filterDate2');
-        
+
         $filteredData = $this->hpaModel->filterhpaWithRelations(
             $filterField ?: null,
             $filterValue ?: null,

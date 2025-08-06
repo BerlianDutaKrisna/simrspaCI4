@@ -47,11 +47,9 @@
 
 <!-- Script untuk Mengontrol Modal dan Pencarian -->
 <script>
-    // Fungsi untuk menjalankan pencarian
     function searchPatient() {
         const norm = document.getElementById('norm').value;
 
-        // Validasi input
         if (!norm) {
             document.getElementById('modalBody').innerHTML = `<p class="text-danger">Masukkan Norm pasien terlebih dahulu.</p>`;
             $('#resultModal').modal('show');
@@ -81,7 +79,6 @@
             })
             .then((response) => response.json())
             .then((data) => {
-                // Fungsi format tanggal
                 function formatDate(dateString) {
                     const date = new Date(dateString);
                     const day = String(date.getDate()).padStart(2, '0');
@@ -119,9 +116,9 @@
                             </tr>
                         </thead>
                         <tbody>
-                `;
+                    `;
 
-                    patients.forEach((patient) => {
+                    patients.forEach((patient, index) => {
                         tableHTML += `
                         <tr>
                             <td>${patient.norm}</td>
@@ -132,7 +129,7 @@
                             <td>${patient.register}</td>
                             <td>${patient.pemeriksaan}</td>
                             <td>
-                                <button class="btn btn-outline-primary btn-checklist" data-idtransaksi="${patient.idtransaksi}">
+                                <button class="btn btn-outline-primary btn-checklist" data-index="${index}">
                                     <i class="fas fa-check-square"></i> Checklist
                                 </button>
                             </td>
@@ -143,18 +140,34 @@
                     tableHTML += `</tbody></table>`;
                     document.getElementById('modalBody').innerHTML = tableHTML;
 
+                    // Form dan tombol layanan
                     document.getElementById('modalFooter').innerHTML = `
-                    <a href="<?= base_url('hpa/register') ?>?norm_pasien=${norm}" class="btn btn-danger"><i class="fas fa-plus-square"></i> HPA</a>
-                    <a href="<?= base_url('frs/register') ?>?norm_pasien=${norm}" class="btn btn-primary"><i class="fas fa-plus-square"></i> FNAB</a>
-                    <a href="<?= base_url('srs/register') ?>?norm_pasien=${norm}" class="btn btn-success"><i class="fas fa-plus-square"></i> SRS</a>
-                    <a href="<?= base_url('ihc/register') ?>?norm_pasien=${norm}" class="btn btn-warning"><i class="fas fa-plus-square"></i> IHC</a>
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fas fa-times"></i> Tutup</button>
-                `;
+                        <form id="actionForm" method="GET">
+                            <input type="hidden" name="register_api" id="register_api">
+                            
+                            <button type="submit" formaction="<?= base_url('hpa/register') ?>" class="btn btn-danger">
+                                <i class="fas fa-plus-square"></i> HPA
+                            </button>
+                            <button type="submit" formaction="<?= base_url('frs/register') ?>" class="btn btn-primary">
+                                <i class="fas fa-plus-square"></i> FNAB
+                            </button>
+                            <button type="submit" formaction="<?= base_url('srs/register') ?>" class="btn btn-success">
+                                <i class="fas fa-plus-square"></i> SRS
+                            </button>
+                            <button type="submit" formaction="<?= base_url('ihc/register') ?>" class="btn btn-warning">
+                                <i class="fas fa-plus-square"></i> IHC
+                            </button>
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                                <i class="fas fa-times"></i> Tutup
+                            </button>
+                        </form>
+                    `;
 
-                    // Event listener untuk checklist (satu aktif)
-                    document.querySelectorAll('.btn-checklist').forEach(function(button) {
+                    let selectedData = null;
+
+                    document.querySelectorAll('.btn-checklist').forEach(button => {
                         button.addEventListener('click', function() {
-                            // Reset semua button
+                            // Reset semua tombol
                             document.querySelectorAll('.btn-checklist').forEach(btn => {
                                 btn.classList.remove('btn-primary');
                                 btn.classList.add('btn-outline-primary');
@@ -164,12 +177,24 @@
                             this.classList.remove('btn-outline-primary');
                             this.classList.add('btn-primary');
 
-                            const idTransaksi = this.dataset.idtransaksi;
-                            console.log("Checklist ID terpilih:", idTransaksi);
+                            const index = parseInt(this.dataset.index);
+                            selectedData = patients[index];
+
+                            // Masukkan JSON ke hidden input
+                            document.getElementById('register_api').value = JSON.stringify(selectedData);
+                            console.log("Data transaksi terpilih:", selectedData);
                         });
                     });
 
+                    document.getElementById('actionForm').addEventListener('submit', function(e) {
+                        if (!selectedData) {
+                            e.preventDefault();
+                            alert("Silakan pilih salah satu pemeriksaan terlebih dahulu.");
+                        }
+                    });
+
                     $('#resultModal').modal('show');
+
                 } else {
                     document.getElementById('modalBody').innerHTML = `<p class="text-danger">Pasien belum terdaftar pada Layanan PM pada SIMRS.</p>`;
                     document.getElementById('modalFooter').innerHTML = `<button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>`;
@@ -181,7 +206,7 @@
             });
     }
 
-    // Tombol cari dan enter
+    // Tombol cari & enter event
     document.getElementById('searchButton').addEventListener('click', searchPatient);
     document.getElementById('norm').addEventListener('keypress', function(event) {
         if (event.key === 'Enter') {

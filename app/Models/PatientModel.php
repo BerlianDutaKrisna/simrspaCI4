@@ -259,4 +259,29 @@ class PatientModel extends Model
             throw new \RuntimeException("Gagal mengambil data API: " . $e->getMessage());
         }
     }
+
+    public function riwayatPemeriksaanPasien($norm)
+    {
+        $client = \Config\Services::curlrequest();
+        $apiURL = "http://10.250.10.107/apibdrs/apibdrs/getPemeriksaanPasien/" . $norm;
+
+        try {
+            $response = $client->get($apiURL);
+            $result = json_decode($response->getBody(), true);
+
+            if (isset($result['code']) && $result['code'] == 200 && isset($result['data']) && is_array($result['data'])) {
+                return [
+                    'code' => 200,
+                    'data' => array_values($result['data']) // Tanpa filter, langsung semua data
+                ];
+            }
+
+            return [
+                'code' => $result['code'] ?? 500,
+                'data' => []
+            ];
+        } catch (\Exception $e) {
+            throw new \RuntimeException("Gagal mengambil data API: " . $e->getMessage());
+        }
+    }
 }
