@@ -123,7 +123,7 @@ class Hpa extends Migration
             'no_register' => [
                 'type' => 'VARCHAR',
                 'constraint' => 100,
-                'default'    => 'Belum Diambil',
+                'default'    => 'Belum Diisi',
                 'null' => true,
             ],
             'created_at' => [
