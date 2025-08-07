@@ -106,6 +106,7 @@
             <input type="hidden" name="tanggal_lahir_pasien" value="<?= isset($patient['tanggal_lahir_pasien']) ? esc(date('Y-m-d', strtotime($patient['tanggal_lahir_pasien']))) : ''; ?>">
             <input type="hidden" name="jenis_kelamin_pasien" value="<?= isset($patient['jenis_kelamin_pasien']) ? esc($patient['jenis_kelamin_pasien']) : ''; ?>">
             <input type="hidden" name="status_pasien" value="<?= isset($patient['status_pasien']) ? esc($patient['status_pasien']) : ''; ?>">
+            
             <div class="form-row">
                 <!-- Form group untuk Kode HPA -->
                 <div class="form-group col-md-3">

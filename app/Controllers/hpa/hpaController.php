@@ -143,7 +143,7 @@ class HpaController extends BaseController
             'kode_hpa'      => $kodehpa,
             'patient'       => $patient,
             'riwayat_api'   => $riwayat_api,
-        ];;
+        ];
 
         return view('Hpa/Register', $data);
     }

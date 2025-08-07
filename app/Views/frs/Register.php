@@ -149,9 +149,15 @@
     <div class="card-body">
         <form action="<?= base_url('frs/insert') ?>" method="POST">
             <?= csrf_field(); ?> <!-- CSRF token untuk keamanan -->
-
             <!-- Hidden input untuk id_pasien -->
             <input type="hidden" name="id_pasien" value="<?= isset($patient['id_pasien']) ? esc($patient['id_pasien']) : ''; ?>">
+            <input type="hidden" name="norm_pasien" value="<?= isset($patient['norm_pasien']) ? esc($patient['norm_pasien']) : ''; ?>">
+            <input type="hidden" name="nama_pasien" value="<?= isset($patient['nama_pasien']) ? esc($patient['nama_pasien']) : ''; ?>">
+            <input type="hidden" name="alamat_pasien" value="<?= isset($patient['alamat_pasien']) ? esc($patient['alamat_pasien']) : ''; ?>">
+            <input type="hidden" name="tanggal_lahir_pasien" value="<?= isset($patient['tanggal_lahir_pasien']) ? esc(date('Y-m-d', strtotime($patient['tanggal_lahir_pasien']))) : ''; ?>">
+            <input type="hidden" name="jenis_kelamin_pasien" value="<?= isset($patient['jenis_kelamin_pasien']) ? esc($patient['jenis_kelamin_pasien']) : ''; ?>">
+            <input type="hidden" name="status_pasien" value="<?= isset($patient['status_pasien']) ? esc($patient['status_pasien']) : ''; ?>">
+            
             <div class="form-row">
                 <!-- Form group untuk Kode FRS -->
                 <div class="form-group col-md-3">
@@ -164,7 +170,9 @@
                 <div class="form-group col-md-3">
                     <label for="unit_asal">Unit Asal</label>
                     <select class="form-control" id="unit_asal" name="unit_asal" onchange="handleUnitAsalChange(this)">
-                        <option value="" selected>Belum Dipilih</option>
+                        <?php if (!empty($patient['unitasal'])): ?>
+                            <option value="<?= esc($patient['unitasal']) ?>" selected><?= esc(strtoupper($patient['unitasal'])) ?></option>
+                        <?php endif; ?>
                         <option value="Klinik Bedah">Klinik Bedah</option>
                         <option value="Klinik Bedah Onkologi">Klinik Bedah Onkologi</option>
                         <option value="Klinik Bedah Mulut">Klinik Bedah Mulut</option>
@@ -185,7 +193,9 @@
                 <div class="form-group col-md-3">
                     <label for="dokter_pengirim">Dokter Pengirim</label>
                     <select class="form-control" id="dokter_pengirim" name="dokter_pengirim" onchange="handleDokterPengirimChange(this)">
-                        <option value="" selected>Belum Dipilih</option>
+                        <?php if (!empty($patient['dokterperujuk'])): ?>
+                            <option value="<?= esc($patient['dokterperujuk']) ?>" selected><?= esc($patient['dokterperujuk']) ?></option>
+                        <?php endif; ?>
                         <option value="dr. Ihyan Amri, Sp.B">dr. Ihyan Amri, Sp.B</option>
                         <option value="dr. Andy Achmad Suanda, Sp.B">dr. Andy Achmad Suanda, Sp.B</option>
                         <option value="dr. Agus Maulana,Sp.B,FinaCs,M.Ked.Klin">dr. Agus Maulana,Sp.B,FinaCs,M.Ked.Klin</option>
@@ -236,6 +246,9 @@
                 <div class="form-group col-md-3">
                     <label for="tindakan_spesimen">Tindakan Spesimen</label>
                     <select class="form-control" id="tindakan_spesimen" name="tindakan_spesimen" onchange="handleTindakanSpesimenChange(this)">
+                        <?php if (!empty($patient['tindakan_spesimen'])): ?>
+                            <option value="<?= esc($patient['tindakan_spesimen']) ?>" selected><?= esc($patient['tindakan_spesimen']) ?></option>
+                        <?php endif; ?>
                         <option value="FNAB" selected>FNAB</option>
                         <option value="FNAB dengan tuntunan CT-Scan">FNAB dengan tuntunan CT-Scan</option>
                         <option value="FNAB dengan tuntunan USG">FNAB dengan tuntunan USG</option>

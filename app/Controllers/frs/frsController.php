@@ -100,23 +100,44 @@ class FrsController extends BaseController
         }
         $kodefrs = sprintf('FRS.%02d/%s', $nextNumber, $currentYear);
 
-        // Proses norm_pasien sebelum data dibuat
-        $normPasien = $this->request->getGet('norm_pasien');
-        $patient = $normPasien ? $this->patientModel->where('norm_pasien', $normPasien)->first() : null;
-        $id_pasien = $patient['id_pasien'];
-        $riwayat_hpa = $this->hpaModel->riwayatPemeriksaanhpa($id_pasien);
-        $riwayat_frs = $this->frsModel->riwayatPemeriksaanfrs($id_pasien);
-        $riwayat_srs = $this->srsModel->riwayatPemeriksaansrs($id_pasien);
-        $riwayat_ihc = $this->ihcModel->riwayatPemeriksaanihc($id_pasien);
+        // Tangkap dari GET parameter
+        $register_api_raw = $this->request->getGet('register_api');
+        $register_api = json_decode($register_api_raw, true);
+
+        // Ambil data riwayat dari API
+        $norm = $register_api['norm'] ?? '';
+        $riwayat_api = [];
+        if ($norm !== '') {
+            $riwayat_api_response = $this->patientModel->getPemeriksaanPasien($norm);
+            if ($riwayat_api_response['code'] == 200) {
+                $riwayat_api = $riwayat_api_response['data'];
+            }
+        }
+
+        // Map ke $patient
+        $patient = [
+            'norm_pasien' => $register_api['norm'] ?? '',
+            'nama_pasien' => $register_api['nama'] ?? '',
+            'alamat_pasien'      => $register_api['alamat'] ?? '',
+            'tanggal_lahir_pasien'   => $register_api['tgl_lhr'] ?? '',
+            'jenis_kelamin_pasien'  => $register_api['jeniskelamin'] ?? '',
+            'status_pasien' => $register_api['jenispasien'] ?? '',
+            'unitasal'    => $register_api['unitasal'] ?? '',
+            'dokterperujuk' => $register_api['dokterperujuk'] ?? '',
+            'pemeriksaan' => $register_api['pemeriksaan'] ?? '',
+            'id_transaksi_simrs' => $register_api['idtransaksi'] ?? '',
+            'id_pasien'   => $register_api['idpasien'] ?? '',
+            'lokasi_spesimen' => $register_api['statuslokasi'],
+            'diagnosa_klinik' => $register_api['diagnosaklinik'],
+            'tindakan_spesimen' => $register_api['pemeriksaan']
+        ];
+
         $data = [
-            'id_user'   => session()->get('id_user'),
-            'nama_user' => session()->get('nama_user'),
-            'kode_frs'  => $kodefrs,
-            'patient'   => $patient,
-            'riwayat_hpa' => $riwayat_hpa,
-            'riwayat_frs' => $riwayat_frs,
-            'riwayat_srs' => $riwayat_srs,
-            'riwayat_ihc' => $riwayat_ihc,
+            'id_user'       => session()->get('id_user'),
+            'nama_user'     => session()->get('nama_user'),
+            'kode_frs'      => $kodefrs,
+            'patient'       => $patient,
+            'riwayat_api'   => $riwayat_api,
         ];
 
         return view('frs/Register', $data);
