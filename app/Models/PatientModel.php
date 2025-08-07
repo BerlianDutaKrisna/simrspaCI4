@@ -261,7 +261,7 @@ class PatientModel extends Model
         }
     }
 
-    public function riwayatPemeriksaanPasien($norm)
+    public function getPemeriksaanPasien($norm)
     {
         $client = \Config\Services::curlrequest();
         $apiURL = "http://10.250.10.107/apibdrs/apibdrs/getPemeriksaanPasien/" . $norm;
@@ -285,4 +285,47 @@ class PatientModel extends Model
             throw new \RuntimeException("Gagal mengambil data API: " . $e->getMessage());
         }
     }
+
+    public function getKunjunganPasien($norm)
+    {
+        $client = \Config\Services::curlrequest();
+
+        // Dapatkan hari ini dan 7 hari ke belakang (1 minggu)
+        $tanggalAkhir = date('Y-m-d'); // Hari ini, misalnya 2025-08-07
+        $tanggalAwal = date('Y-m-d', strtotime('-3 days')); // 3 hari ke belakang, misalnya 2025-08-01
+
+        // Endpoint dengan rentang tanggal
+        $apiURL = "http://10.250.10.107/apibdrs/apibdrs/getKunjunganPasien/{$tanggalAwal}/{$tanggalAkhir}";
+
+        try {
+            $response = $client->get($apiURL);
+            $result = json_decode($response->getBody(), true);
+
+            if (
+                isset($result['code']) &&
+                $result['code'] == 200 &&
+                isset($result['data']) &&
+                is_array($result['data'])
+            ) {
+                // Filter berdasarkan norm
+                $filteredData = array_filter($result['data'], function ($item) use ($norm) {
+                    return isset($item['norm']) && $item['norm'] == $norm;
+                });
+
+                return [
+                    'code' => 200,
+                    'data' => array_values($filteredData) // kembalikan sebagai array numerik
+                ];
+            }
+
+            return [
+                'code' => $result['code'] ?? 500,
+                'data' => []
+            ];
+        } catch (\Exception $e) {
+            throw new \RuntimeException("Gagal mengambil data API: " . $e->getMessage());
+        }
+    }
+
+    // http://10.250.10.107/apibdrs/apibdrs/getKunjunganPasien/2025-08-07
 }

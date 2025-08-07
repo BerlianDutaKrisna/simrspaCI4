@@ -46,7 +46,21 @@
 </div>
 
 <!-- Script untuk Mengontrol Modal dan Pencarian -->
+<!-- Script untuk Mengontrol Modal dan Pencarian -->
 <script>
+    function showLoading() {
+        document.getElementById('modalBody').innerHTML = `
+            <div class="text-center py-5">
+                <div class="spinner-border text-primary" role="status" style="width: 3rem; height: 3rem;">
+                    <span class="sr-only">Loading...</span>
+                </div>
+                <p class="mt-3">Sedang memuat data pasien...</p>
+            </div>
+        `;
+        document.getElementById('modalFooter').innerHTML = '';
+        $('#resultModal').modal('show');
+    }
+
     function searchPatient() {
         const norm = document.getElementById('norm').value;
 
@@ -67,6 +81,8 @@
             $('#resultModal').modal('show');
             return;
         }
+
+        showLoading(); // tampilkan spinner loading
 
         fetch('<?= base_url("patient/modal_search") ?>', {
                 method: 'POST',
@@ -112,6 +128,7 @@
                                 <th>Tanggal Daftar</th>
                                 <th>No. Register</th>
                                 <th>Pemeriksaan</th>
+                                <th>Unit Asal</th>
                                 <th>Aksi</th>
                             </tr>
                         </thead>
@@ -128,6 +145,7 @@
                             <td>${formatDateTime(patient.tanggal)}</td>
                             <td>${patient.register}</td>
                             <td>${patient.pemeriksaan}</td>
+                            <td>${patient.unitasal}</td>
                             <td>
                                 <button class="btn btn-outline-primary btn-checklist" data-index="${index}">
                                     <i class="fas fa-check-square"></i> Checklist
@@ -167,20 +185,17 @@
 
                     document.querySelectorAll('.btn-checklist').forEach(button => {
                         button.addEventListener('click', function() {
-                            // Reset semua tombol
                             document.querySelectorAll('.btn-checklist').forEach(btn => {
                                 btn.classList.remove('btn-primary');
                                 btn.classList.add('btn-outline-primary');
                             });
 
-                            // Aktifkan yang dipilih
                             this.classList.remove('btn-outline-primary');
                             this.classList.add('btn-primary');
 
                             const index = parseInt(this.dataset.index);
                             selectedData = patients[index];
 
-                            // Masukkan JSON ke hidden input
                             document.getElementById('register_api').value = JSON.stringify(selectedData);
                             console.log("Data transaksi terpilih:", selectedData);
                         });
@@ -203,6 +218,8 @@
             })
             .catch((error) => {
                 console.error('Error:', error);
+                document.getElementById('modalBody').innerHTML = `<p class="text-danger">Terjadi kesalahan saat mengambil data.</p>`;
+                document.getElementById('modalFooter').innerHTML = `<button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>`;
             });
     }
 

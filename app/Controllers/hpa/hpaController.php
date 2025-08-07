@@ -113,7 +113,7 @@ class HpaController extends BaseController
         $norm = $register_api['norm'] ?? '';
         $riwayat_api = [];
         if ($norm !== '') {
-            $riwayat_api_response = $this->patientModel->riwayatPemeriksaanPasien($norm);
+            $riwayat_api_response = $this->patientModel->getPemeriksaanPasien($norm);
             if ($riwayat_api_response['code'] == 200) {
                 $riwayat_api = $riwayat_api_response['data'];
             }
@@ -178,24 +178,34 @@ class HpaController extends BaseController
             // Data yang akan disimpan
 
             // ====== CEK PASIEN DI TABEL PATIENT ======
-            $id_pasien = $data['id_pasien'];
+            $id_pasien   = $data['id_pasien'];
+            $norm_pasien = $data['norm_pasien'] ?? '';
 
-            // Cek apakah pasien sudah ada
-            $patient = $this->patientModel->where('id_pasien', $id_pasien)->first();
-            
-            if (!$patient) {
-                // Jika pasien tidak ditemukan, insert data pasien baru
-                $patientData = [
-                    'id_pasien'    => $id_pasien,
-                    'norm_pasien' => $data['norm_pasien'] ?? '',
-                    'nama_pasien'  => $data['nama_pasien'] ?? '', 
-                    'alamat_pasien' => $data['alamat_pasien'] ?? '',
-                    'tanggal_lahir_pasien' => $data['tanggal_lahir_pasien'] ?? null,
-                    'jenis_kelamin_pasien' => $data['jenis_kelamin_pasien'] ?? '',
-                    'status_pasien' => $data['status_pasien'] ?? '',
-                    // Tambahkan kolom lain sesuai struktur tabel patient Anda
-                ];
+            // Cek apakah pasien sudah ada berdasarkan id_pasien atau norm_pasien
+            $patient = $this->patientModel
+                ->where('id_pasien', $id_pasien)
+                ->orWhere('norm_pasien', $norm_pasien)
+                ->first();
 
+            // Data yang akan disimpan atau diperbarui
+            $patientData = [
+                'id_pasien'    => $id_pasien,
+                'norm_pasien'  => $norm_pasien,
+                'nama_pasien'  => $data['nama_pasien'] ?? '',
+                'alamat_pasien' => $data['alamat_pasien'] ?? '',
+                'tanggal_lahir_pasien' => $data['tanggal_lahir_pasien'] ?? null,
+                'jenis_kelamin_pasien' => $data['jenis_kelamin_pasien'] ?? '',
+                'status_pasien' => $data['status_pasien'] ?? '',
+                // Kolom lainnya jika ada
+            ];
+
+            if ($patient) {
+                // ✅ Update data jika pasien sudah ditemukan
+                if (!$this->patientModel->update($patient['id_pasien'], $patientData)) {
+                    throw new Exception('Gagal memperbarui data pasien: ' . implode(', ', $this->patientModel->errors()));
+                }
+            } else {
+                // ✅ Insert data jika pasien belum ada
                 if (!$this->patientModel->insert($patientData)) {
                     throw new Exception('Gagal menyimpan data pasien: ' . implode(', ', $this->patientModel->errors()));
                 }

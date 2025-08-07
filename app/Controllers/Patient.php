@@ -214,7 +214,7 @@ class Patient extends BaseController
         $model = new \App\Models\PatientModel();
 
         try {
-            $data = $model->apiPemeriksaanPasien($norm);
+            $data = $model->getKunjunganPasien($norm);
 
             if (isset($data['code']) && $data['code'] == 200 && !empty($data['data'])) {
                 return $this->response->setJSON([
