@@ -292,7 +292,7 @@ class PatientModel extends Model
 
         // Dapatkan hari ini dan 7 hari ke belakang (1 minggu)
         $tanggalAkhir = date('Y-m-d'); // Hari ini, misalnya 2025-08-07
-        $tanggalAwal = date('Y-m-d', strtotime('-3 days')); // 3 hari ke belakang, misalnya 2025-08-01
+        $tanggalAwal = date('Y-m-d', strtotime('-6 days')); // 3 hari ke belakang, misalnya 2025-08-01
 
         // Endpoint dengan rentang tanggal
         $apiURL = "http://10.250.10.107/apibdrs/apibdrs/getKunjunganPasien/{$tanggalAwal}/{$tanggalAkhir}";
