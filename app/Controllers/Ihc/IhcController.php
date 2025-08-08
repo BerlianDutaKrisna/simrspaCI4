@@ -9,6 +9,7 @@ use App\Models\Srs\SrsModel;
 use App\Models\Ihc\IhcModel;
 use App\Models\UsersModel;
 use App\Models\PatientModel;
+use App\Models\SimrsModel;
 use App\Models\Ihc\Proses\Penerimaan_ihc;
 use App\Models\Ihc\Proses\Pembacaan_ihc;
 use App\Models\Ihc\Proses\Penulisan_ihc;
@@ -26,6 +27,7 @@ class ihcController extends BaseController
     protected $ihcModel;
     protected $usersModel;
     protected $patientModel;
+    protected $simrsModel;
     protected $penerimaan_ihc;
     protected $pemotongan_ihc;
     protected $pembacaan_ihc;
@@ -44,6 +46,7 @@ class ihcController extends BaseController
         $this->ihcModel = new ihcModel();
         $this->usersModel = new UsersModel();
         $this->patientModel = new PatientModel();
+        $this->simrsModel = new SimrsModel();
         $this->penerimaan_ihc = new Penerimaan_ihc();;
         $this->pembacaan_ihc = new Pembacaan_ihc();
         $this->penulisan_ihc = new Penulisan_ihc();
@@ -97,31 +100,46 @@ class ihcController extends BaseController
                 $nextNumber = $lastNumber + 1;
             }
         }
-        $kodeIhc = sprintf('IHC.%02d/%s', $nextNumber, $currentYear);
+        $kodeihc = sprintf('IHC.%02d/%s', $nextNumber, $currentYear);
 
-        // Proses norm_pasien sebelum data dibuat
-        $normPasien = $this->request->getGet('norm_pasien');
-        $patient = $normPasien ? $this->patientModel->where('norm_pasien', $normPasien)->first() : null;
-        $id_pasien = $patient['id_pasien'];
-        $ihcSebelumnya = null;
-        if ($patient) {
-            $id_pasien = $patient['id_pasien'];
-            $ihcSebelumnya = $this->ihcModel->where('id_pasien', $id_pasien)->first();
+        // Tangkap dari GET parameter
+        $register_api_raw = $this->request->getGet('register_api');
+        $register_api = json_decode($register_api_raw, true);
+
+        // Ambil data riwayat dari API
+        $norm = $register_api['norm'] ?? '';
+        $riwayat_api = [];
+        if ($norm !== '') {
+            $riwayat_api_response = $this->simrsModel->getPemeriksaanPasien($norm);
+            if ($riwayat_api_response['code'] == 200) {
+                $riwayat_api = $riwayat_api_response['data'];
+            }
         }
-        $riwayat_hpa = $this->hpaModel->riwayatPemeriksaanhpa($id_pasien);
-        $riwayat_frs = $this->frsModel->riwayatPemeriksaanfrs($id_pasien);
-        $riwayat_srs = $this->srsModel->riwayatPemeriksaansrs($id_pasien);
-        $riwayat_ihc = $this->ihcModel->riwayatPemeriksaanihc($id_pasien);
+
+        // Map ke $patient
+        $patient = [
+            'norm_pasien' => $register_api['norm'] ?? '',
+            'nama_pasien' => $register_api['nama'] ?? '',
+            'alamat_pasien'      => $register_api['alamat'] ?? '',
+            'tanggal_lahir_pasien'   => $register_api['tgl_lhr'] ?? '',
+            'jenis_kelamin_pasien'  => $register_api['jeniskelamin'] ?? '',
+            'status_pasien' => $register_api['jenispasien'] ?? '',
+            'unitasal'    => $register_api['unitasal'] ?? '',
+            'dokterperujuk' => $register_api['dokterperujuk'] ?? '',
+            'pemeriksaan' => $register_api['pemeriksaan'] ?? '',
+            'id_transaksi_simrs' => $register_api['idtransaksi'] ?? '',
+            'id_pasien'   => isset($register_api['idpasien']) ? (int) $register_api['idpasien'] : null,
+            'lokasi_spesimen' => $register_api['statuslokasi'],
+            'diagnosa_klinik' => $register_api['diagnosaklinik'],
+            'tindakan_spesimen' => $register_api['pemeriksaan']
+        ];
+
         $data = [
-            'id_user'   => session()->get('id_user'),
-            'nama_user' => session()->get('nama_user'),
-            'kode_ihc'  => $kodeIhc,
-            'patient'   => $patient,
-            'ihcSebelumnya' => $ihcSebelumnya,
-            'riwayat_hpa' => $riwayat_hpa,
-            'riwayat_frs' => $riwayat_frs,
-            'riwayat_srs' => $riwayat_srs,
-            'riwayat_ihc' => $riwayat_ihc,
+            'id_user'       => session()->get('id_user'),
+            'nama_user'     => session()->get('nama_user'),
+            'kode_ihc'      => $kodeihc,
+            'patient'       => $patient,
+            'riwayat_api'   => $riwayat_api,
         ];
 
         return view('ihc/Register', $data);
@@ -153,10 +171,42 @@ class ihcController extends BaseController
                 : $data['dokter_pengirim_custom'];
             // Tentukan tindakan_spesimen
             $tindakan_spesimen = !empty($data['tindakan_spesimen']) ? $data['tindakan_spesimen'] : $data['tindakan_spesimen_custom'];
+            // ====== CEK PASIEN DI TABEL PATIENT ======
+            $id_pasien   = $data['id_pasien'];
+            $norm_pasien = $data['norm_pasien'] ?? '';
+
+            // Cek apakah norm_pasien sudah ada di database
+            $patient = $this->patientModel
+                ->where('norm_pasien', $norm_pasien)
+                ->first();
+
+            // Data yang akan disimpan atau diperbarui
+            $patientData = [
+                'id_pasien'    => (int) $id_pasien,
+                'norm_pasien'  => $norm_pasien,
+                'nama_pasien'  => $data['nama_pasien'] ?? '',
+                'alamat_pasien' => $data['alamat_pasien'] ?? '',
+                'tanggal_lahir_pasien' => $data['tanggal_lahir_pasien'] ?? null,
+                'jenis_kelamin_pasien' => $data['jenis_kelamin_pasien'] ?? '',
+                'status_pasien' => $data['status_pasien'] ?? '',
+                // Tambahkan kolom lain jika ada
+            ];
+
+            if ($patient) {
+                // ✅ Update data berdasarkan norm_pasien
+                if (!$this->patientModel->update($patient['id_pasien'], $patientData)) {
+                    throw new Exception('Gagal memperbarui data pasien: ' . implode(', ', $this->patientModel->errors()));
+                }
+            } else {
+                // ✅ Insert data baru jika norm_pasien belum ada
+                if (!$this->patientModel->insert($patientData)) {
+                    throw new Exception('Gagal menyimpan data pasien: ' . implode(', ', $this->patientModel->errors()));
+                }
+            }
             // Data yang akan disimpan
             $ihcData = [
                 'kode_ihc' => $data['kode_ihc'],
-                'id_pasien' => $data['id_pasien'],
+                'id_pasien' => (int) $data['id_pasien'],
                 'unit_asal' => $unit_asal,
                 'dokter_pengirim' => $dokter_pengirim,
                 'tanggal_permintaan' => $data['tanggal_permintaan'] ?: null,

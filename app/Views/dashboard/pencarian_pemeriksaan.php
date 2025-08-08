@@ -211,7 +211,7 @@
                     $('#resultModal').modal('show');
 
                 } else {
-                    document.getElementById('modalBody').innerHTML = `<p class="text-danger">Pasien belum terdaftar pada Layanan PM pada SIMRS.</p>`;
+                    document.getElementById('modalBody').innerHTML = `<p class="text-danger">Data Pasien lebih dari 3 hari dari data Kasir.</p>`;
                     document.getElementById('modalFooter').innerHTML = `<button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>`;
                     $('#resultModal').modal('show');
                 }

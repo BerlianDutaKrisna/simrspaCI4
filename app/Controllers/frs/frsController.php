@@ -9,6 +9,7 @@ use App\Models\Srs\SrsModel;
 use App\Models\Ihc\IhcModel;
 use App\Models\UsersModel;
 use App\Models\PatientModel;
+use App\Models\SimrsModel;
 use App\Models\Frs\Proses\Penerimaan_frs;
 use App\Models\Frs\Proses\Pembacaan_frs;
 use App\Models\Frs\Proses\Penulisan_frs;
@@ -27,6 +28,7 @@ class FrsController extends BaseController
     protected $ihcModel;
     protected $usersModel;
     protected $patientModel;
+    protected $simrsModel;
     protected $penerimaan_frs;
     protected $pemotongan_frs;
     protected $pembacaan_frs;
@@ -45,6 +47,7 @@ class FrsController extends BaseController
         $this->ihcModel = new ihcModel();
         $this->usersModel = new UsersModel();
         $this->patientModel = new PatientModel();
+        $this->simrsModel = new SimrsModel();
         $this->penerimaan_frs = new Penerimaan_frs();;
         $this->pembacaan_frs = new Pembacaan_frs();
         $this->penulisan_frs = new Penulisan_frs();
@@ -108,7 +111,7 @@ class FrsController extends BaseController
         $norm = $register_api['norm'] ?? '';
         $riwayat_api = [];
         if ($norm !== '') {
-            $riwayat_api_response = $this->patientModel->getPemeriksaanPasien($norm);
+            $riwayat_api_response = $this->simrsModel->getPemeriksaanPasien($norm);
             if ($riwayat_api_response['code'] == 200) {
                 $riwayat_api = $riwayat_api_response['data'];
             }
@@ -126,7 +129,7 @@ class FrsController extends BaseController
             'dokterperujuk' => $register_api['dokterperujuk'] ?? '',
             'pemeriksaan' => $register_api['pemeriksaan'] ?? '',
             'id_transaksi_simrs' => $register_api['idtransaksi'] ?? '',
-            'id_pasien'   => $register_api['idpasien'] ?? '',
+            'id_pasien'   => isset($register_api['idpasien']) ? (int) $register_api['idpasien'] : null,
             'lokasi_spesimen' => $register_api['statuslokasi'],
             'diagnosa_klinik' => $register_api['diagnosaklinik'],
             'tindakan_spesimen' => $register_api['pemeriksaan']
@@ -169,10 +172,42 @@ class FrsController extends BaseController
                 : $data['dokter_pengirim_custom'];
             // Tentukan tindakan_spesimen
             $tindakan_spesimen = !empty($data['tindakan_spesimen']) ? $data['tindakan_spesimen'] : $data['tindakan_spesimen_custom'];
+            // ====== CEK PASIEN DI TABEL PATIENT ======
+            $id_pasien   = $data['id_pasien'];
+            $norm_pasien = $data['norm_pasien'] ?? '';
+
+            // Cek apakah norm_pasien sudah ada di database
+            $patient = $this->patientModel
+                ->where('norm_pasien', $norm_pasien)
+                ->first();
+
+            // Data yang akan disimpan atau diperbarui
+            $patientData = [
+                'id_pasien'    => (int) $id_pasien,
+                'norm_pasien'  => $norm_pasien,
+                'nama_pasien'  => $data['nama_pasien'] ?? '',
+                'alamat_pasien' => $data['alamat_pasien'] ?? '',
+                'tanggal_lahir_pasien' => $data['tanggal_lahir_pasien'] ?? null,
+                'jenis_kelamin_pasien' => $data['jenis_kelamin_pasien'] ?? '',
+                'status_pasien' => $data['status_pasien'] ?? '',
+                // Tambahkan kolom lain jika ada
+            ];
+
+            if ($patient) {
+                // ✅ Update data berdasarkan norm_pasien
+                if (!$this->patientModel->update($patient['id_pasien'], $patientData)) {
+                    throw new Exception('Gagal memperbarui data pasien: ' . implode(', ', $this->patientModel->errors()));
+                }
+            } else {
+                // ✅ Insert data baru jika norm_pasien belum ada
+                if (!$this->patientModel->insert($patientData)) {
+                    throw new Exception('Gagal menyimpan data pasien: ' . implode(', ', $this->patientModel->errors()));
+                }
+            }
             // Data yang akan disimpan
             $frsData = [
                 'kode_frs' => $data['kode_frs'],
-                'id_pasien' => $data['id_pasien'],
+                'id_pasien' => (int) $data['id_pasien'],
                 'unit_asal' => $unit_asal,
                 'dokter_pengirim' => $dokter_pengirim,
                 'tanggal_permintaan' => $data['tanggal_permintaan'] ?: null,

@@ -9,7 +9,7 @@ use App\Models\Srs\SrsModel;
 use App\Models\Ihc\IhcModel;
 use App\Models\UsersModel;
 use App\Models\PatientModel;
-use App\MOdels\SimrsModel;
+use App\Models\SimrsModel;
 use App\Models\Hpa\Proses\Penerimaan_hpa;
 use App\Models\Hpa\Proses\Pemotongan_hpa;
 use App\Models\Hpa\Proses\pembacaan_hpa;
