@@ -27,21 +27,27 @@ class Patient extends BaseController
     }
 
     // Menampilkan halaman registrasi pasien
-    public function register_patient()
+    public function register_patient($norm_pasien = null)
     {
-        // Mendapatkan nilai norm_pasien dari query string
-        $norm_pasien = $this->request->getGet('norm_pasien');
+        $patientModel = new PatientModel();
 
-        // Jika nilai norm_pasien ada, gunakan untuk prapengisian
+        // Jika ada parameter norm di URL
         if ($norm_pasien) {
-            // Lakukan logika yang sesuai, misalnya prapengisian form
-            $data['norm_pasien'] = $norm_pasien;
+            // Cari data pasien berdasarkan norm
+            $patient = $patientModel->where('norm_pasien', $norm_pasien)->first();
+
+            if ($patient) {
+                $data['patient'] = $patient;
+            } else {
+                // Jika norm tidak ditemukan, tetap isi norm_pasien agar bisa input manual
+                $data['patient']['norm_pasien'] = $norm_pasien;
+            }
         }
 
-        // Mengambil id_user dan nama_user dari session untuk ditampilkan di form
+        // Data dari session
         $data['id_user'] = session()->get('id_user');
         $data['nama_user'] = session()->get('nama_user');
-        // Mengirim data ke view untuk ditampilkan
+        
         return view('patient/register_patient', $data);
     }
 
@@ -72,6 +78,7 @@ class Patient extends BaseController
 
         // Data yang akan disimpan
         $data = [
+            'id_pasien'          => $this->request->getPost('id_pasien') ?: date('ymdHis'),
             'norm_pasien'         => $this->request->getPost('norm_pasien'),
             'nama_pasien'         => strtoupper($this->request->getPost('nama_pasien')),
             'alamat_pasien'       => strtoupper($this->request->getPost('alamat_pasien')),
@@ -79,7 +86,7 @@ class Patient extends BaseController
             'jenis_kelamin_pasien' => $this->request->getPost('jenis_kelamin_pasien'),
             'status_pasien'       => $this->request->getPost('status_pasien'),
         ];
-
+        dd($data);
         // Simpan data ke database
         if ($this->PatientModel->save($data)) {
             return redirect()->to('/dashboard')->with('success', 'Registrasi berhasil!');

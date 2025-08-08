@@ -33,8 +33,9 @@ $routes->group('users', function ($routes) {
 
 // Route untuk Patient
 $routes->group('patient', function ($routes) {
-    $routes->get('index_patient', 'Patient::index_patient'); 
-    $routes->get('register_patient', 'Patient::register_patient'); 
+    $routes->get('index_patient', 'Patient::index_patient');
+    $routes->get('register_patient', 'Patient::register_patient');
+    $routes->get('register_patient/(:segment)', 'Patient::register_patient/$1'); 
     $routes->post('insert', 'Patient::insert'); 
     $routes->get('delete/(:segment)', 'Patient::delete/$1');
     $routes->get('edit_patient/(:segment)', 'Patient::edit_patient/$1'); 
