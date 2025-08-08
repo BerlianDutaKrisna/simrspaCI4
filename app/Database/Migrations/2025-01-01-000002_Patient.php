@@ -46,7 +46,8 @@ class Patient extends Migration
                 'constraint' => 100,
                 'default'    => 'Belum Diisi',
                 'null' => true,
-            ],'created_at' => [
+            ],
+            'created_at' => [
                 'type' => 'DATETIME',
                 'null' => true,
             ],
@@ -59,6 +60,30 @@ class Patient extends Migration
         $this->forge->addKey('id_pasien', true);
         $this->forge->createTable('patient');
     }
+
+    //ALTER TABLE frs DROP FOREIGN KEY frs_id_pasien_foreign;
+    // ALTER TABLE hpa DROP FOREIGN KEY hpa_id_pasien_foreign;
+    // ALTER TABLE srs DROP FOREIGN KEY srs_id_pasien_foreign;
+    // ALTER TABLE ihc DROP FOREIGN KEY ihc_id_pasien_foreign;
+
+    // HAPUS AUTOINCREMEN PADA ID_PASIEN
+
+    // ALTER TABLE frs ADD CONSTRAINT frs_id_pasien_foreign
+    // FOREIGN KEY (id_pasien) REFERENCES patient(id_pasien)
+    // ON DELETE CASCADE ON UPDATE CASCADE;
+
+    // ALTER TABLE hpa ADD CONSTRAINT hpa_id_pasien_foreign
+    // FOREIGN KEY (id_pasien) REFERENCES patient(id_pasien)
+    // ON DELETE CASCADE ON UPDATE CASCADE;
+
+    // ALTER TABLE srs ADD CONSTRAINT srs_id_pasien_foreign
+    // FOREIGN KEY (id_pasien) REFERENCES patient(id_pasien)
+    // ON DELETE CASCADE ON UPDATE CASCADE;
+
+    // ALTER TABLE ihc ADD CONSTRAINT ihc_id_pasien_foreign
+    // FOREIGN KEY (id_pasien) REFERENCES patient(id_pasien)
+    // ON DELETE CASCADE ON UPDATE CASCADE;
+
 
     public function down()
     {

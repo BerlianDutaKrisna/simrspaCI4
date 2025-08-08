@@ -84,7 +84,7 @@
 
         showLoading(); // tampilkan spinner loading
 
-        fetch('<?= base_url("patient/modal_search") ?>', {
+        fetch('<?= base_url("simrs/modal_search") ?>', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'

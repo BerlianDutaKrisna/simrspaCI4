@@ -44,6 +44,11 @@ $routes->group('patient', function ($routes) {
     $routes->get('filter', 'Patient::filter');
 });
 
+// Route untuk Simrs
+$routes->group('simrs', ['namespace' => 'App\Controllers'], function ($routes) {
+    $routes->post('modal_search', 'SimrsController::modal_search');
+});
+
 // Route untuk exam
 $routes->group('exam', ['namespace' => 'App\Controllers\Exam'], function ($routes) {
     $routes->get('index', 'ExamController::index');
