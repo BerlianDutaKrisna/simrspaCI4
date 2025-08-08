@@ -49,7 +49,7 @@
         </button>
 
         <!-- Area collapse -->
-        <div class="collapse" id="riwayatCollapse">
+        <div class="collapse show" id="riwayatCollapse">
             <div class="card card-body">
                 <?php if (!empty($riwayat_api)) : ?>
                     <div class="table-responsive">

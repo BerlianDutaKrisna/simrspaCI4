@@ -171,6 +171,7 @@ class ihcController extends BaseController
                 : $data['dokter_pengirim_custom'];
             // Tentukan tindakan_spesimen
             $tindakan_spesimen = !empty($data['tindakan_spesimen']) ? $data['tindakan_spesimen'] : $data['tindakan_spesimen_custom'];
+            
             // ====== CEK PASIEN DI TABEL PATIENT ======
             $id_pasien   = $data['id_pasien'];
             $norm_pasien = $data['norm_pasien'] ?? '';
@@ -194,15 +195,16 @@ class ihcController extends BaseController
 
             if ($patient) {
                 // ✅ Update data berdasarkan norm_pasien
-                if (!$this->patientModel->update($patient['id_pasien'], $patientData)) {
-                    throw new Exception('Gagal memperbarui data pasien: ' . implode(', ', $this->patientModel->errors()));
+                if ($this->patientModel->update($patient['id_pasien'], $patientData)) {
+                    session()->setFlashdata('success', 'Data pasien diperbarui.');
                 }
             } else {
                 // ✅ Insert data baru jika norm_pasien belum ada
-                if (!$this->patientModel->insert($patientData)) {
-                    throw new Exception('Gagal menyimpan data pasien: ' . implode(', ', $this->patientModel->errors()));
+                if ($this->patientModel->insert($patientData)) {
+                    session()->setFlashdata('success', 'Data pasien ditambahkan.');
                 }
             }
+
             // Data yang akan disimpan
             $ihcData = [
                 'kode_ihc' => $data['kode_ihc'],

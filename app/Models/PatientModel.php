@@ -44,6 +44,6 @@ class PatientModel extends Model
     // Mencari pasien berdasarkan norm_pasien
     public function searchByNorm($norm_pasien)
     {
-        return $this->where('norm_pasien', $norm_pasien)->first();  // Mengambil satu data pasien yang cocok
+        return $this->where('norm_pasien', $norm_pasien)->first();
     }
 }

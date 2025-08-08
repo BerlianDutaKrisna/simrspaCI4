@@ -203,15 +203,15 @@ class HpaController extends BaseController
 
             if ($patient) {
                 // ✅ Update data berdasarkan norm_pasien
-                if (!$this->patientModel->update($patient['id_pasien'], $patientData)) {
-                    throw new Exception('Gagal memperbarui data pasien: ' . implode(', ', $this->patientModel->errors()));
+                if ($this->patientModel->update($patient['id_pasien'], $patientData)) {
+                    session()->setFlashdata('success', 'Data pasien diperbarui.');
                 }
             } else {
                 // ✅ Insert data baru jika norm_pasien belum ada
-                if (!$this->patientModel->insert($patientData)) {
-                    throw new Exception('Gagal menyimpan data pasien: ' . implode(', ', $this->patientModel->errors()));
+                if ($this->patientModel->insert($patientData)) {
+                    session()->setFlashdata('success', 'Data pasien ditambahkan.');
                 }
-            }
+            }            
 
             $hpaData = [
                 'kode_hpa' => $data['kode_hpa'],

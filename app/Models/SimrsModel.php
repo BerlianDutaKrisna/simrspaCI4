@@ -54,7 +54,7 @@ class SimrsModel extends Model
     public function getKunjunganPasien(string $norm): array
     {
         $tanggalAkhir = date('Y-m-d');
-        $tanggalAwal = date('Y-m-d', strtotime('-3 days'));
+        $tanggalAwal = date('Y-m-d', strtotime('-7 days'));
         $cacheKey = "kunjungan_all_{$tanggalAwal}_{$tanggalAkhir}";
 
         try {
