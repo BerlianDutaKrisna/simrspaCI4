@@ -211,7 +211,7 @@
                     $('#resultModal').modal('show');
 
                 } else {
-                    document.getElementById('modalBody').innerHTML = `<p class="text-danger">Data Pasien lebih dari 3 hari dari data Kasir.</p>`;
+                    document.getElementById('modalBody').innerHTML = `<p class="text-danger">Cek apakah Pasien belum daftar / Terdaftar lebih dari 3 hari / Server 10.250.10.107 mati</p>`;
                     document.getElementById('modalFooter').innerHTML = `<button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>`;
                     $('#resultModal').modal('show');
                 }
