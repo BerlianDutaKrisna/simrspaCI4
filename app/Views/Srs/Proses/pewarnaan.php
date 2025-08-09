@@ -74,7 +74,14 @@
                                     </td>
                                     <td><?= $row['kode_srs']; ?></td>
                                     <td><?= $row['nama_pasien']; ?></td>
-                                    <td><?= $row['jumlah_slide']; ?></td>
+                                    <td>
+                                        <input
+                                            type="number"
+                                            class="form-control"
+                                            value="<?= $row['jumlah_slide']; ?>"
+                                            min="0"
+                                            step="1">
+                                    </td>
                                     <?php
                                     $slide = $row['jumlah_slide'];
                                     $jumlahSlide = is_numeric($slide) ? (int)$slide : 1;
@@ -124,7 +131,7 @@
                     </tbody>
                 </table>
             </div>
-            <?= $this->include('templates/notifikasi'); ?>                
+            <?= $this->include('templates/notifikasi'); ?>
             <?= $this->include('templates/srs/cetak_stiker'); ?>
             <?= $this->include('templates/proses/button_proses'); ?>
             <?= $this->include('dashboard/jenis_tindakan'); ?>

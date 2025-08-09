@@ -205,7 +205,7 @@ class Pewarnaan extends BaseController
             if ($this->pewarnaan_srs->delete($id_pewarnaan)) {
                 // Update status_srs ke tahap sebelumnya 
                 $this->srsModel->update($id_srs, [
-                    'status_srs' => 'Pemotongan Tipis',
+                    'status_srs' => 'Penerimaan',
                 ]);
                 return $this->response->setJSON(['success' => true]);
             } else {

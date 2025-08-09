@@ -238,21 +238,19 @@
 
                         <div class="form-group row">
                             <label class="col-sm-2 col-form-label" for="jumlah_slide">Jumlah Slide</label>
-                            <div class="col-sm-4">
-                                <select class="form-control" id="jumlah_slide" name="jumlah_slide" onchange="handleJumlahSlideChange(this)">
-                                    <option value="0" <?= ($hpa['jumlah_slide'] == '0') ? 'selected' : '' ?>>0</option>
-                                    <option value="1" <?= ($hpa['jumlah_slide'] == '1') ? 'selected' : '' ?>>1</option>
-                                    <option value="2" <?= ($hpa['jumlah_slide'] == '2') ? 'selected' : '' ?>>2</option>
-                                    <option value="3" <?= ($hpa['jumlah_slide'] == '3') ? 'selected' : '' ?>>3</option>
-                                    <option value="lainnya" <?= (!in_array($hpa['jumlah_slide'], ['0', '1', '2', '3']) ? 'selected' : '') ?>>Lainnya</option>
-                                </select>
-                                <input
-                                    type="text"
-                                    class="form-control mt-2 <?= (!in_array($hpa['jumlah_slide'], ['0', '1', '2', '3'])) ? '' : 'd-none' ?>"
-                                    id="jumlah_slide_custom"
-                                    name="jumlah_slide_custom"
-                                    placeholder="Masukkan Jumlah Slide Lainnya"
-                                    value="<?= (!in_array($hpa['jumlah_slide'], ['0', '1', '2', '3'])) ? $hpa['jumlah_slide'] : '' ?>">
+                            <div class="col-sm-2">
+                                <input type="number"
+                                    class="form-control form-control-sm jumlah-slide-input"
+                                    data-id="<?= $hpa['id_hpa']; ?>"
+                                    value="<?= $hpa['jumlah_slide']; ?>"
+                                    min="0" step="1" style="width:100px;">
+                            </div>
+                            <div class="col-sm-2">
+                                <button type="button" class="btn btn-outline-info btn-sm btn-cetak-stiker"
+                                    data-id="<?= esc($hpa['id_hpa']); ?>"
+                                    data-kode="<?= esc($hpa['kode_hpa']); ?>">
+                                    <i class="fas fa-print"></i> Cetak Stiker
+                                </button>
                             </div>
                         </div>
                         <!-- Kolom Mikroskopis -->
@@ -273,7 +271,7 @@
                         <!-- Dokter Pemotong -->
                         <div class="form-group row">
                             <label class="col-sm-2 col-form-label">Dokter yang memotong</label>
-                            <div class="col-sm-4">
+                            <div class="col-sm-5">
                                 <select class="form-control" id="id_user_dokter_pemotongan_hpa" name="id_user_dokter_pemotongan_hpa">
                                     <option value="" <?= empty($hpa['id_user_dokter_pemotongan_hpa']) ? 'selected' : '' ?>>-- Pilih Dokter --</option>
                                     <?php foreach ($users as $user): ?>
@@ -298,7 +296,7 @@
                         </textarea>
                         <div class="form-group row mt-3">
                             <label class="col-sm-2 col-form-label">Dokter yang Membaca</label>
-                            <div class="col-sm-4">
+                            <div class="col-sm-5">
                                 <select class="form-control" id="id_user_dokter_pembacaan_hpa" name="id_user_dokter_pembacaan_hpa">
                                     <option value="" <?= empty($hpa['id_user_dokter_pembacaan_hpa']) ? 'selected' : '' ?>>-- Pilih Dokter --</option>
                                     <?php foreach ($users as $user): ?>
@@ -317,30 +315,19 @@
 
                 <!-- Tombol Simpan -->
                 <div class="form-group row">
-                    <div class="col-sm-3 text-center">
+                    <div class="col-sm-4 text-center">
                         <button type="submit"
                             class="btn btn-success btn-user w-100"
                             formaction="<?= base_url('hpa/update/' . $hpa['id_hpa']); ?>">
                             <i class="fas fa-save"></i> Simpan
                         </button>
                     </div>
-                    <div class="col-sm-3 text-center">
+                    <div class="col-sm-4 text-center">
                         <button type="button" class="btn btn-info btn-user w-100 w-md-auto" onclick="cetakProses()">
                             <i class="fas fa-print"></i> Cetak Proses
                         </button>
                     </div>
-                    <?php
-                    $slide = $hpa['jumlah_slide'];
-                    $jumlahSlide = is_numeric($slide) ? (int)$slide : 1;
-                    ?>
-                    <div class="col-sm-3 text-center">
-                        <button type="button" class="btn btn-outline-info btn-user w-100 w-md-auto btn-cetak-stiker"
-                            data-kode="<?= esc($hpa['kode_hpa']); ?>"
-                            data-slide="<?= $jumlahSlide; ?>">
-                            <i class="fas fa-print"></i> Cetak Stiker
-                        </button>
-                    </div>
-                    <div class="col-sm-3 text-center">
+                    <div class="col-sm-4 text-center">
                         <button type="button" class="btn btn-primary btn-user w-100 w-md-auto" onclick="cetakPrintHpa()">
                             <i class="fas fa-print"></i> Cetak Hasil
                         </button>
@@ -422,3 +409,40 @@
 <?= $this->include('templates/hpa/cetak_proses'); ?>
 <?= $this->include('templates/hpa/cetak_stiker'); ?>
 <?= $this->include('templates/hpa/cetak_print'); ?>
+
+<script>
+    $(document).ready(function() {
+        $(".jumlah-slide-input").on("change", function() {
+            let input = $(this);
+            let id_hpa = input.data("id");
+            let jumlah_slide = input.val();
+
+            $.ajax({
+                url: "<?= base_url('hpa/update_jumlah_slide'); ?>",
+                type: "POST",
+                data: {
+                    id_hpa: id_hpa,
+                    jumlah_slide: jumlah_slide,
+                    <?= csrf_token() ?>: "<?= csrf_hash() ?>" // CSRF protection
+                },
+                dataType: "json",
+                success: function(res) {
+                    if (res.status === "success") {
+                        console.log("Jumlah slide berhasil diperbarui");
+
+                        // Update tombol cetak di baris yang sama
+                        let btnCetak = input.closest("tr").find(".btn-cetak-stiker");
+                        if (btnCetak.length) {
+                            btnCetak.data("slide", jumlah_slide);
+                        }
+                    } else {
+                        alert("Gagal memperbarui jumlah slide!");
+                    }
+                },
+                error: function(xhr, status, error) {
+                    alert("Terjadi kesalahan: " + error);
+                }
+            });
+        });
+    });
+</script>

@@ -205,7 +205,7 @@ class Pewarnaan extends BaseController
             if ($this->pewarnaan_frs->delete($id_pewarnaan)) {
                 // Update status_frs ke tahap sebelumnya 
                 $this->frsModel->update($id_frs, [
-                    'status_frs' => 'Pemotongan Tipis',
+                    'status_frs' => 'Penerimaan',
                 ]);
                 return $this->response->setJSON(['success' => true]);
             } else {

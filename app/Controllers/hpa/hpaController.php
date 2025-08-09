@@ -855,6 +855,27 @@ class HpaController extends BaseController
         return redirect()->to('hpa/index')->with('success', 'Status HPA berhasil disimpan.');
     }
 
+    public function update_jumlah_slide()
+    {
+        if ($this->request->isAJAX()) {
+            $id_hpa = $this->request->getPost('id_hpa');
+            $jumlah_slide = $this->request->getPost('jumlah_slide');
+
+            if ($id_hpa && $jumlah_slide !== null) {
+                $this->hpaModel->update($id_hpa, ['jumlah_slide' => $jumlah_slide]);
+                return $this->response->setJSON([
+                    'status' => 'success',
+                    'message' => 'Jumlah slide berhasil disimpan.'
+                ]);
+            } else {
+                return $this->response->setJSON([
+                    'status' => 'error',
+                    'message' => 'Data tidak lengkap.'
+                ]);
+            }
+        }
+    }
+
     public function uploadFotoMakroskopis($id_hpa)
     {
         date_default_timezone_set('Asia/Jakarta');
