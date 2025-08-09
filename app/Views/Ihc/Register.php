@@ -106,6 +106,9 @@
             <input type="hidden" name="tanggal_lahir_pasien" value="<?= isset($patient['tanggal_lahir_pasien']) ? esc(date('Y-m-d', strtotime($patient['tanggal_lahir_pasien']))) : ''; ?>">
             <input type="hidden" name="jenis_kelamin_pasien" value="<?= isset($patient['jenis_kelamin_pasien']) ? esc($patient['jenis_kelamin_pasien']) : ''; ?>">
             <input type="hidden" name="status_pasien" value="<?= isset($patient['status_pasien']) ? esc($patient['status_pasien']) : ''; ?>">
+            <input type="hidden" name="id_transaksi" value="<?= isset($patient['id_transaksi']) ? (int) $patient['id_transaksi'] : '' ?>">
+            <input type="hidden" name="tanggal_transaksi" value="<?= !empty($patient['tanggal_transaksi']) ? esc($patient['tanggal_transaksi']) : '' ?>">
+            <input type="hidden" name="no_register" value="<?= isset($patient['no_register']) ? esc($patient['no_register']) : ''; ?>">
 
             <div class="form-row">
                 <!-- Form group untuk Kode ihc -->

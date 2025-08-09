@@ -241,10 +241,10 @@ class HpaController extends BaseController
                 'lokasi_spesimen' => $data['lokasi_spesimen'],
                 'tindakan_spesimen' => $tindakan_spesimen,
                 'diagnosa_klinik' => $data['diagnosa_klinik'],
-                'status_hpa' => 'Penerimaan',
-                'id_transaksi' => isset($data['id_transaksi']) ? (int) $data['id_transaksi'] : null,
+                'id_transaksi' => ($data['id_transaksi'] ?? '') === '' ? null : (int) $data['id_transaksi'],
                 'tanggal_transaksi' => $data['tanggal_transaksi'] ?: null,
-                'no_register' => $data['no_register'] ?? ''
+                'no_register' => $data['no_register'] ?? '',
+                'status_hpa' => 'Penerimaan'
             ];
             
             // Simpan data HPA

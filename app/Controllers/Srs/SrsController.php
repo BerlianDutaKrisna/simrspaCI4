@@ -137,7 +137,10 @@ class srsController extends BaseController
                 'id_transaksi_simrs'    => $register_api['idtransaksi'] ?? '',
                 'lokasi_spesimen'       => $register_api['statuslokasi'] ?? '',
                 'diagnosa_klinik'       => $register_api['diagnosaklinik'] ?? '',
-                'tindakan_spesimen'     => $register_api['pemeriksaan'] ?? ''
+                'tindakan_spesimen'     => $register_api['pemeriksaan'] ?? '',
+                'id_transaksi'          => isset($register_api['idtransaksi']) ? (int) $register_api['idtransaksi'] : null,
+                'tanggal_transaksi'     => $register_api['tanggal'] ?? '',
+                'no_register'           => $register_api['register'] ?? ''
             ];
         } elseif ($normPasien = $this->request->getGet('norm_pasien')) {
 
@@ -232,6 +235,9 @@ class srsController extends BaseController
                 'lokasi_spesimen' => $data['lokasi_spesimen'],
                 'tindakan_spesimen' => $tindakan_spesimen,
                 'diagnosa_klinik' => $data['diagnosa_klinik'],
+                'id_transaksi' => ($data['id_transaksi'] ?? '') === '' ? null : (int) $data['id_transaksi'],
+                'tanggal_transaksi' => $data['tanggal_transaksi'] ?: null,
+                'no_register' => $data['no_register'] ?? '',
                 'status_srs' => 'Penerimaan',
             ];
             // Simpan data srs
