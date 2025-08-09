@@ -43,6 +43,18 @@
                 <p class="form-control-plaintext"><?= isset($patient['status_pasien']) ? esc($patient['status_pasien']) : ''; ?></p>
             </div>
         </div>
+        <div class="row">
+            <div class="col-md-4 mb-3">
+                <strong>ID Transaksi: </strong><?= isset($patient['id_transaksi']) ? esc($patient['id_transaksi']) : ''; ?>
+                </p>
+            </div>
+            <div class="col-md-4 mb-3">
+                <strong>No. Pendaftaran: </strong><?= isset($patient['no_register']) ? esc($patient['no_register']) : ''; ?>
+            </div>
+            <div class="col-md-4 mb-3">
+                <strong>Tanggal Transaksi: </strong><?= isset($patient['tanggal_transaksi']) && !empty($patient['tanggal_transaksi']) ? esc(date('d-m-Y', strtotime($patient['tanggal_transaksi']))) : 'Belum diisi'; ?>
+            </div>
+        </div>
 
         <button class="btn btn-outline-info mb-3" type="button" data-toggle="collapse" data-target="#riwayatCollapse" aria-expanded="false" aria-controls="riwayatCollapse">
             <i class="fas fa-book-medical"></i> Riwayat Pemeriksaan
@@ -106,6 +118,9 @@
             <input type="hidden" name="tanggal_lahir_pasien" value="<?= isset($patient['tanggal_lahir_pasien']) ? esc(date('Y-m-d', strtotime($patient['tanggal_lahir_pasien']))) : ''; ?>">
             <input type="hidden" name="jenis_kelamin_pasien" value="<?= isset($patient['jenis_kelamin_pasien']) ? esc($patient['jenis_kelamin_pasien']) : ''; ?>">
             <input type="hidden" name="status_pasien" value="<?= isset($patient['status_pasien']) ? esc($patient['status_pasien']) : ''; ?>">
+            <input type="hidden" name="id_transaksi" value="<?= isset($patient['id_pasien']) ? (int) $patient['id_pasien'] : 0; ?>">
+            <input type="hidden" name="tanggal_transaksi" value="<?= !empty($patient['tanggal_transaksi']) ? esc($patient['tanggal_transaksi']) : '' ?>">
+            <input type="hidden" name="no_register" value="<?= isset($patient['no_register']) ? esc($patient['no_register']) : ''; ?>">
 
             <div class="form-row">
                 <!-- Form group untuk Kode HPA -->

@@ -36,11 +36,22 @@
 <?php endif; ?>
 
 <script>
-    // Menunggu hingga halaman selesai dimuat
-    window.onload = function() {
-        // Menampilkan modal jika ada pesan flash
+    window.onload = () => {
         <?php if (session()->getFlashdata('error') || session()->getFlashdata('success')): ?>
             $('#messageModal').modal('show');
+
+            // Tutup modal otomatis setelah 1 detik lalu refresh halaman
+            setTimeout(() => {
+                $('#messageModal').modal('hide');
+                location.reload();
+            }, 1000);
+        <?php else: ?>
+            // Jika tidak ada notifikasi, fokus input norm_simrs langsung
+            const inputNormSimrs = document.getElementById('norm_simrs');
+            if (inputNormSimrs) {
+                inputNormSimrs.focus();
+            }
         <?php endif; ?>
     };
 </script>
+

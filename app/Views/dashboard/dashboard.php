@@ -49,23 +49,8 @@
     </div>
 </div>
 
+
+
 <?= $this->include('dashboard/grafik_pemeriksaan'); ?>
 <?= $this->include('templates/notifikasi'); ?>
 <?= $this->include('templates/dashboard/footer_dashboard'); ?>
-
-<script>
-    window.onload = () => {
-    const inputNormSimrs = document.getElementById('norm_simrs');
-    if (inputNormSimrs) {
-        inputNormSimrs.focus();
-    }
-};
-
-// Fokuskan input saat modal ditutup supaya user bisa langsung ketik ulang
-$('#resultModal').on('hidden.bs.modal', () => {
-    const inputNormSimrs = document.getElementById('norm_simrs');
-    if (inputNormSimrs) {
-        inputNormSimrs.focus();
-    }
-});
-</script>

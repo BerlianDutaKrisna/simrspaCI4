@@ -75,8 +75,8 @@
                     <label for="status_pasien">Status Pasien</label>
                     <select class="form-control" id="status_pasien" name="status_pasien">
                         <option value="Belum Dipilih" <?= (!isset($patient['status_pasien']) && old('status_pasien') === '') ? 'selected' : '' ?>>Pilih status pasien</option>
-                        <option value="PBI" <?= (isset($patient['status_pasien']) && $patient['status_pasien'] == 'PBI') || old('status_pasien') == 'PBI' ? 'selected' : '' ?>>PBI</option>
-                        <option value="Non PBI" <?= (isset($patient['status_pasien']) && $patient['status_pasien'] == 'Non PBI') || old('status_pasien') == 'Non PBI' ? 'selected' : '' ?>>Non PBI</option>
+                        <option value="JKN / BPJS PBI" <?= (isset($patient['status_pasien']) && $patient['status_pasien'] == 'JKN / BPJS PBI') || old('status_pasien') == 'JKN / BPJS PBI' ? 'selected' : '' ?>>JKN / BPJS PBI</option>
+                        <option value="JKN / BPJS NON PBI" <?= (isset($patient['status_pasien']) && $patient['status_pasien'] == 'JKN / BPJS NON PBI') || old('status_pasien') == 'JKN / BPJS NON PBI' ? 'selected' : '' ?>>JKN / BPJS NON PBI</option>
                         <option value="Umum" <?= (isset($patient['status_pasien']) && $patient['status_pasien'] == 'Umum') || old('status_pasien') == 'Umum' ? 'selected' : '' ?>>Umum</option>
                     </select>
                 </div>

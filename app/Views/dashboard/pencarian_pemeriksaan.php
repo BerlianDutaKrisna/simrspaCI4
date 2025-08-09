@@ -10,7 +10,7 @@
         <div class="row mb-3">
             <!-- Kolom pertama: Pencarian Pasien SIMRS (lebih lebar) -->
             <div class="col-md-8 col-sm-12 mb-3">
-                <h5 class="mb-2">Pencarian Pasien SIMRS</h5>
+                <h5 class="mb-2">Pencarian Pasien <strong class="text-primary">SIMRS</strong></h5>
                 <div class="input-group">
                     <input type="text" id="norm_simrs" name="norm_simrs" class="form-control" placeholder="Masukkan Norm Pasien SIMRS">
                     <div class="input-group-append">

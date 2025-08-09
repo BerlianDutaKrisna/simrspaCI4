@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Models;
 
 use CodeIgniter\Model;
@@ -11,6 +10,10 @@ class SimrsModel extends Model
     protected $client;
     protected $cache;
 
+    // Endpoint URL dasar untuk kunjungan dan pemeriksaan
+    protected $primaryBaseURL = "http://10.250.10.107/apibdrs/apibdrs";
+    protected $backupBaseURL = "http://172.20.29.240/apibdrs/apibdrs";
+
     public function __construct()
     {
         parent::__construct();
@@ -18,37 +21,68 @@ class SimrsModel extends Model
         $this->cache = Services::cache();
     }
 
-    public function getPemeriksaanPasien(string $norm): array
+    /**
+     * Fungsi umum untuk mengambil data dengan fallback dan caching.
+     * Bisa dipakai untuk berbagai endpoint dengan cacheKey yang berbeda.
+     */
+    protected function getDataWithCache(string $cacheKey, string $primaryURL, string $backupURL, int $cacheTTL = 600): array
     {
-        $apiURL = "http://10.250.10.107/apibdrs/apibdrs/getPemeriksaanPasien/{$norm}";
+        // Cek cache dulu
+        $result = $this->cache->get($cacheKey);
 
-        try {
-            $response = $this->client->get($apiURL);
-            $statusCode = $response->getStatusCode();
-
-            if ($statusCode !== 200) {
-                throw new \RuntimeException("HTTP Error: $statusCode");
+        if (!$result) {
+            try {
+                $response = $this->client->get($primaryURL);
+                if ($response->getStatusCode() !== 200) {
+                    throw new \RuntimeException("HTTP Error Primary: " . $response->getStatusCode());
+                }
+            } catch (\Exception $e) {
+                // Coba ke backup
+                try {
+                    $response = $this->client->get($backupURL);
+                    if ($response->getStatusCode() !== 200) {
+                        throw new \RuntimeException("HTTP Error Backup: " . $response->getStatusCode());
+                    }
+                } catch (\Exception $ex) {
+                    throw new \RuntimeException("Gagal mengakses kedua endpoint: Primary({$e->getMessage()}), Backup({$ex->getMessage()})");
+                }
             }
 
             $result = json_decode($response->getBody(), true);
 
-            if (
-                isset($result['code']) && $result['code'] == 200 &&
-                isset($result['data']) && is_array($result['data'])
-            ) {
-                return [
-                    'code' => 200,
-                    'data' => array_values($result['data']),
-                ];
-            }
+            // Simpan ke cache
+            $this->cache->save($cacheKey, $result, $cacheTTL);
+        }
 
-            return [
-                'code' => $result['code'] ?? 500,
-                'data' => [],
-            ];
+        return $result;
+    }
+
+    public function getPemeriksaanPasien(string $norm): array
+    {
+        $cacheKey = "pemeriksaan_{$norm}";
+        $primaryURL = "{$this->primaryBaseURL}/getPemeriksaanPasien/{$norm}";
+        $backupURL = "{$this->backupBaseURL}/getPemeriksaanPasien/{$norm}";
+
+        try {
+            $result = $this->getDataWithCache($cacheKey, $primaryURL, $backupURL);
         } catch (\Exception $e) {
             throw new \RuntimeException("Gagal mengambil data pemeriksaan: " . $e->getMessage());
         }
+
+        if (
+            isset($result['code']) && $result['code'] == 200 &&
+            isset($result['data']) && is_array($result['data'])
+        ) {
+            return [
+                'code' => 200,
+                'data' => array_values($result['data']),
+            ];
+        }
+
+        return [
+            'code' => $result['code'] ?? 500,
+            'data' => [],
+        ];
     }
 
     public function getKunjunganPasien(string $norm): array
@@ -57,77 +91,42 @@ class SimrsModel extends Model
         $tanggalAwal = date('Y-m-d', strtotime('-3 days'));
         $cacheKey = "kunjungan_all_{$tanggalAwal}_{$tanggalAkhir}";
 
+        $primaryURL = "{$this->primaryBaseURL}/getKunjunganPasien/{$tanggalAwal}/{$tanggalAkhir}";
+        $backupURL = "{$this->backupBaseURL}/getKunjunganPasien/{$tanggalAwal}/{$tanggalAkhir}";
+
         try {
-            // Ambil dari cache
-            $result = $this->cache->get($cacheKey);
-
-            // Jika cache tidak ada, ambil dari API dan simpan ke cache
-            if (!$result) {
-                $result = $this->refreshKunjunganCache($tanggalAwal, $tanggalAkhir, $cacheKey);
-            }
-
-            // Cek dan filter data berdasarkan norm
-            if (
-                isset($result['code']) && $result['code'] == 200 &&
-                isset($result['data']) && is_array($result['data'])
-            ) {
-                $filtered = array_filter($result['data'], fn($item) => isset($item['norm']) && $item['norm'] === $norm);
-
-                // ✅ Jika data norm tidak ditemukan, coba refresh cache
-                if (empty($filtered)) {
-                    $result = $this->refreshKunjunganCache($tanggalAwal, $tanggalAkhir, $cacheKey);
-
-                    if (
-                        isset($result['code']) && $result['code'] == 200 &&
-                        isset($result['data']) && is_array($result['data'])
-                    ) {
-                        $filtered = array_filter($result['data'], fn($item) => isset($item['norm']) && $item['norm'] === $norm);
-                    }
-                }
-
-                return [
-                    'code' => 200,
-                    'data' => array_values($filtered),
-                ];
-            }
-
-            return [
-                'code' => $result['code'] ?? 500,
-                'data' => [],
-            ];
+            $result = $this->getDataWithCache($cacheKey, $primaryURL, $backupURL);
         } catch (\Exception $e) {
             throw new \RuntimeException("Gagal mengambil data kunjungan: " . $e->getMessage());
         }
-    }
 
-    private function refreshKunjunganCache(string $tanggalAwal, string $tanggalAkhir, string $cacheKey): array
-    {
-        $primaryURL = "http://10.250.10.107/apibdrs/apibdrs/getKunjunganPasien/{$tanggalAwal}/{$tanggalAkhir}";
-        $backupURL = "http://172.20.29.240/apibdrs/apibdrs/getKunjunganPasien/{$tanggalAwal}/{$tanggalAkhir}";
+        if (
+            isset($result['code']) && $result['code'] == 200 &&
+            isset($result['data']) && is_array($result['data'])
+        ) {
+            $filtered = array_filter($result['data'], fn($item) => isset($item['norm']) && $item['norm'] === $norm);
 
-        try {
-            $response = $this->client->get($primaryURL);
-            if ($response->getStatusCode() !== 200) {
-                throw new \RuntimeException("HTTP Error Primary: " . $response->getStatusCode());
-            }
-        } catch (\Exception $e) {
-            // Jika gagal di primary, coba ke backup
-            try {
-                $response = $this->client->get($backupURL);
-                if ($response->getStatusCode() !== 200) {
-                    throw new \RuntimeException("HTTP Error Backup: " . $response->getStatusCode());
+            // Jika data tidak ditemukan, coba refresh cache ulang
+            if (empty($filtered)) {
+                $this->cache->delete($cacheKey); // hapus cache lama
+                $result = $this->getDataWithCache($cacheKey, $primaryURL, $backupURL);
+                if (
+                    isset($result['code']) && $result['code'] == 200 &&
+                    isset($result['data']) && is_array($result['data'])
+                ) {
+                    $filtered = array_filter($result['data'], fn($item) => isset($item['norm']) && $item['norm'] === $norm);
                 }
-            } catch (\Exception $ex) {
-                // Jika juga gagal di backup, lempar error
-                throw new \RuntimeException("Gagal mengakses kedua endpoint: Primary({$e->getMessage()}), Backup({$ex->getMessage()})");
             }
+
+            return [
+                'code' => 200,
+                'data' => array_values($filtered),
+            ];
         }
 
-        $result = json_decode($response->getBody(), true);
-
-        // Simpan ke cache selama 10 menit
-        $this->cache->save($cacheKey, $result, 600);
-
-        return $result;
+        return [
+            'code' => $result['code'] ?? 500,
+            'data' => [],
+        ];
     }
 }

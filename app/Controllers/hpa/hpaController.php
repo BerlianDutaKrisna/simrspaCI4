@@ -140,10 +140,12 @@ class HpaController extends BaseController
                 'unitasal'              => $register_api['unitasal'] ?? '',
                 'dokterperujuk'         => $register_api['dokterperujuk'] ?? '',
                 'pemeriksaan'           => $register_api['pemeriksaan'] ?? '',
-                'id_transaksi_simrs'    => $register_api['idtransaksi'] ?? '',
                 'lokasi_spesimen'       => $register_api['statuslokasi'] ?? '',
                 'diagnosa_klinik'       => $register_api['diagnosaklinik'] ?? '',
-                'tindakan_spesimen'     => $register_api['pemeriksaan'] ?? ''
+                'tindakan_spesimen'     => $register_api['pemeriksaan'] ?? '',
+                'id_transaksi'          => isset($register_api['idtransaksi']) ? (int) $register_api['idtransaksi'] : null,
+                'tanggal_transaksi'     => $register_api['tanggal'] ?? '',
+                'no_register'           => $register_api['register'] ?? ''
             ];
         } elseif ($normPasien = $this->request->getGet('norm_pasien')) {
 
@@ -228,7 +230,7 @@ class HpaController extends BaseController
                     session()->setFlashdata('success', 'Data pasien ditambahkan.');
                 }
             }
-
+            
             $hpaData = [
                 'kode_hpa' => $data['kode_hpa'],
                 'id_pasien' => (int) $data['id_pasien'],
@@ -240,8 +242,11 @@ class HpaController extends BaseController
                 'tindakan_spesimen' => $tindakan_spesimen,
                 'diagnosa_klinik' => $data['diagnosa_klinik'],
                 'status_hpa' => 'Penerimaan',
+                'id_transaksi' => isset($data['id_transaksi']) ? (int) $data['id_transaksi'] : null,
+                'tanggal_transaksi' => $data['tanggal_transaksi'] ?: null,
+                'no_register' => $data['no_register'] ?? ''
             ];
-
+            
             // Simpan data HPA
             if (!$this->hpaModel->insert($hpaData)) {
                 throw new Exception('Gagal menyimpan data HPA: ' . $this->hpaModel->errors());
