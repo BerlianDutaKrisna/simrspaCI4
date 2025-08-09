@@ -4,7 +4,7 @@
 <div class="container-fluid">
     <div class="card shadow mb-4">
         <div class="card-header py-3">
-            <h6 class="m-0 font-weight-bold text-primary">Edit Hpa</h6>
+            <h6 class="m-0 font-weight-bold text-primary">Edit</h6>
         </div>
 
         <div class="card-body">
@@ -317,19 +317,30 @@
 
                 <!-- Tombol Simpan -->
                 <div class="form-group row">
-                    <div class="col-sm-4 text-center">
+                    <div class="col-sm-3 text-center">
                         <button type="submit"
                             class="btn btn-success btn-user w-100"
                             formaction="<?= base_url('hpa/update/' . $hpa['id_hpa']); ?>">
                             <i class="fas fa-save"></i> Simpan
                         </button>
                     </div>
-                    <div class="col-sm-4 text-center">
+                    <div class="col-sm-3 text-center">
                         <button type="button" class="btn btn-info btn-user w-100 w-md-auto" onclick="cetakProses()">
                             <i class="fas fa-print"></i> Cetak Proses
                         </button>
                     </div>
-                    <div class="col-sm-4 text-center">
+                    <?php
+                    $slide = $hpa['jumlah_slide'];
+                    $jumlahSlide = is_numeric($slide) ? (int)$slide : 1;
+                    ?>
+                    <div class="col-sm-3 text-center">
+                        <button type="button" class="btn btn-outline-info btn-user w-100 w-md-auto btn-cetak-stiker"
+                            data-kode="<?= esc($hpa['kode_hpa']); ?>"
+                            data-slide="<?= $jumlahSlide; ?>">
+                            <i class="fas fa-print"></i> Cetak Stiker
+                        </button>
+                    </div>
+                    <div class="col-sm-3 text-center">
                         <button type="button" class="btn btn-primary btn-user w-100 w-md-auto" onclick="cetakPrintHpa()">
                             <i class="fas fa-print"></i> Cetak Hasil
                         </button>
@@ -409,4 +420,5 @@
 <?= $this->include('templates/notifikasi') ?>
 <?= $this->include('templates/hpa/footer_edit'); ?>
 <?= $this->include('templates/hpa/cetak_proses'); ?>
+<?= $this->include('templates/hpa/cetak_stiker'); ?>
 <?= $this->include('templates/hpa/cetak_print'); ?>

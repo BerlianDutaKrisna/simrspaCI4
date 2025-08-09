@@ -85,7 +85,7 @@
                                 ($counts['countPembacaanihc'] ?? 0);
                             ?>
                             <?= esc($contsTotalPembacaan ?? 0) ?>
-                    </b> Pembacaan</span>
+                    </b> Screening / Pembacaan</span>
                     <span class="icon text-white-50">
                         <i class="fas fa-microscope"></i> <!-- Ikon untuk Pembacaan -->
                     </span>

@@ -54,18 +54,20 @@ class Pembacaan_ihc extends Model // Update nama model
             ->findAll();
     }
 
-    // Fungsi untuk mengupdate data pembacaan_ihc
-    public function updatepembacaan_ihc($id_pembacaan_ihc, $data) // Update nama fungsi dan parameter
+    public function detailspembacaan_ihc($id_pembacaan_ihc)
     {
-        $builder = $this->db->table($this->table);  // Mengambil tabel pembacaan_ihc
-        $builder->where('id_pembacaan_ihc', $id_pembacaan_ihc);  // Menentukan baris yang akan diupdate berdasarkan id_pembacaan_ihc
-        $builder->update($data);  // Melakukan update dengan data yang dikirimkan
-        return $this->db->affectedRows();  // Mengembalikan jumlah baris yang terpengaruh
-    }
+        $data = $this->select(
+            'pembacaan_ihc.*, 
+        ihc.*, 
+        patient.*, 
+        users.nama_user AS nama_user_pembacaan_ihc'
+        )
+            ->join('ihc', 'pembacaan_ihc.id_ihc = ihc.id_ihc', 'left')
+            ->join('patient', 'ihc.id_pasien = patient.id_pasien', 'left')
+            ->join('users', 'pembacaan_ihc.id_user_dokter_pembacaan_ihc = users.id_user', 'left')
+            ->where('pembacaan_ihc.id_pembacaan_ihc', $id_pembacaan_ihc)
+            ->first();
 
-    public function deletepembacaan_ihc($id_pembacaan_ihc)
-    {
-        return $this->delete($id_pembacaan_ihc);
+        return $data;
     }
-
 }

@@ -54,17 +54,20 @@ class Penulisan_ihc extends Model // Update nama model
             ->findAll();
     }
 
-    // Fungsi untuk mengupdate data penulisan_ihc
-    public function updatepenulisan_ihc($id_penulisan_ihc, $data) // Update nama fungsi dan parameter
+    public function detailspenulisan_ihc($id_penulisan_ihc)
     {
-        $builder = $this->db->table($this->table);  // Mengambil tabel penulisan_ihc
-        $builder->where('id_penulisan_ihc', $id_penulisan_ihc);  // Menentukan baris yang akan diupdate berdasarkan id_penulisan_ihc
-        $builder->update($data);  // Melakukan update dengan data yang dikirimkan
-        return $this->db->affectedRows();  // Mengembalikan jumlah baris yang terpengaruh
-    }
+        $data = $this->select(
+            'penulisan_ihc.*, 
+        ihc.*, 
+        patient.*, 
+        users.nama_user AS nama_user_penulisan_ihc'
+        )
+            ->join('ihc', 'penulisan_ihc.id_ihc = ihc.id_ihc', 'left')
+            ->join('patient', 'ihc.id_pasien = patient.id_pasien', 'left')
+            ->join('users', 'penulisan_ihc.id_user_penulisan_ihc = users.id_user', 'left')
+            ->where('penulisan_ihc.id_penulisan_ihc', $id_penulisan_ihc)
+            ->first();
 
-    public function deletepenulisan_ihc($id_penulisan_ihc)
-    {
-        return $this->delete($id_penulisan_ihc);
+        return $data;
     }
 }

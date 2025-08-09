@@ -9,6 +9,7 @@ use App\Models\Srs\SrsModel;
 use App\Models\Ihc\IhcModel;
 use App\Models\UsersModel;
 use App\Models\PatientModel;
+use App\Models\SimrsModel;
 use App\Models\srs\Proses\Penerimaan_srs;
 use App\Models\srs\Proses\Pembacaan_srs;
 use App\Models\srs\Proses\Penulisan_srs;
@@ -26,6 +27,7 @@ class srsController extends BaseController
     protected $ihcModel;
     protected $usersModel;
     protected $patientModel;
+    protected $simrsModel;
     protected $penerimaan_srs;
     protected $pemotongan_srs;
     protected $pembacaan_srs;
@@ -44,6 +46,7 @@ class srsController extends BaseController
         $this->ihcModel = new ihcModel();
         $this->usersModel = new UsersModel();
         $this->patientModel = new PatientModel();
+        $this->simrsModel = new SimrsModel();
         $this->penerimaan_srs = new Penerimaan_srs();;
         $this->pembacaan_srs = new Pembacaan_srs();
         $this->penulisan_srs = new Penulisan_srs();
@@ -62,14 +65,14 @@ class srsController extends BaseController
             'nama_user' => session()->get('nama_user'),
             'srsData' => $srsData
         ];
-        
-        return view('srs/index', $data);
+
+        return view('Srs/index', $data);
     }
 
     public function index_buku_penerima()
     {
         // Mengambil data srs menggunakan properti yang sudah ada
-        $srsData = $this->srsModel->getsrsWithPatient() ?? [];
+        $srsData = $this->srsModel->getsrsWithPatientDESC() ?? [];
 
         // Kirimkan data ke view
         $data = [
@@ -77,7 +80,7 @@ class srsController extends BaseController
             'nama_user'  => session()->get('nama_user'),
             'srsData' => $srsData,
         ];
-        
+
         return view('srs/index_buku_penerima', $data);
     }
 
@@ -99,23 +102,63 @@ class srsController extends BaseController
         }
         $kodesrs = sprintf('SRS.%02d/%s', $nextNumber, $currentYear);
 
-        // Proses norm_pasien sebelum data dibuat
-        $normPasien = $this->request->getGet('norm_pasien');
-        $patient = $normPasien ? $this->patientModel->where('norm_pasien', $normPasien)->first() : null;
-        $id_pasien = $patient['id_pasien'];
-        $riwayat_hpa = $this->hpaModel->riwayatPemeriksaanhpa($id_pasien);
-        $riwayat_frs = $this->frsModel->riwayatPemeriksaanfrs($id_pasien);
-        $riwayat_srs = $this->srsModel->riwayatPemeriksaansrs($id_pasien);
-        $riwayat_ihc = $this->ihcModel->riwayatPemeriksaanihc($id_pasien);
+        // Tangkap dari GET parameter
+        $register_api_raw = $this->request->getGet('register_api');
+        $register_api = json_decode($register_api_raw, true);
+
+        // Ambil data riwayat dari API / Manual
+        // Cek apakah data dari API tersedia
+        if (!empty($register_api) && is_array($register_api)) {
+
+            // Ambil norm
+            $norm = $register_api['norm'] ?? '';
+
+            // Ambil riwayat dari API
+            $riwayat_api = [];
+            if ($norm !== '') {
+                $riwayat_api_response = $this->simrsModel->getPemeriksaanPasien($norm);
+                if (!empty($riwayat_api_response['code']) && $riwayat_api_response['code'] == 200) {
+                    $riwayat_api = $riwayat_api_response['data'];
+                }
+            }
+
+            // Map ke array $patient
+            $patient = [
+                'id_pasien'             => isset($register_api['idpasien']) ? (int) $register_api['idpasien'] : null,
+                'norm_pasien'           => $register_api['norm'] ?? '',
+                'nama_pasien'           => $register_api['nama'] ?? '',
+                'alamat_pasien'         => $register_api['alamat'] ?? '',
+                'tanggal_lahir_pasien'  => $register_api['tgl_lhr'] ?? '',
+                'jenis_kelamin_pasien'  => $register_api['jeniskelamin'] ?? '',
+                'status_pasien'         => $register_api['jenispasien'] ?? '',
+                'unitasal'              => $register_api['unitasal'] ?? '',
+                'dokterperujuk'         => $register_api['dokterperujuk'] ?? '',
+                'pemeriksaan'           => $register_api['pemeriksaan'] ?? '',
+                'id_transaksi_simrs'    => $register_api['idtransaksi'] ?? '',
+                'lokasi_spesimen'       => $register_api['statuslokasi'] ?? '',
+                'diagnosa_klinik'       => $register_api['diagnosaklinik'] ?? '',
+                'tindakan_spesimen'     => $register_api['pemeriksaan'] ?? '',
+                'id_transaksi'          => isset($register_api['idtransaksi']) ? (int) $register_api['idtransaksi'] : null,
+                'tanggal_transaksi'     => $register_api['tanggal'] ?? '',
+                'no_register'           => $register_api['register'] ?? ''
+            ];
+        } elseif ($normPasien = $this->request->getGet('norm_pasien')) {
+
+            // Ambil data pasien dari DB jika norm_pasien tersedia di GET
+            $patient = $this->patientModel->where('norm_pasien', $normPasien)->first();
+            $riwayat_api = [];
+        } else {
+            // Jika tidak ada sumber data sama sekali
+            $patient = null;
+            $riwayat_api = [];
+        }
+
         $data = [
-            'id_user'   => session()->get('id_user'),
-            'nama_user' => session()->get('nama_user'),
-            'kode_srs'  => $kodesrs,
-            'patient'   => $patient,
-            'riwayat_hpa' => $riwayat_hpa,
-            'riwayat_frs' => $riwayat_frs,
-            'riwayat_srs' => $riwayat_srs,
-            'riwayat_ihc' => $riwayat_ihc,
+            'id_user'       => session()->get('id_user'),
+            'nama_user'     => session()->get('nama_user'),
+            'kode_srs'      => $kodesrs,
+            'patient'       => $patient,
+            'riwayat_api'   => $riwayat_api,
         ];
 
         return view('srs/Register', $data);
@@ -147,10 +190,44 @@ class srsController extends BaseController
                 : $data['dokter_pengirim_custom'];
             // Tentukan tindakan_spesimen
             $tindakan_spesimen = !empty($data['tindakan_spesimen']) ? $data['tindakan_spesimen'] : $data['tindakan_spesimen_custom'];
+
+            // ====== CEK PASIEN DI TABEL PATIENT ======
+            $id_pasien   = $data['id_pasien'];
+            $norm_pasien = $data['norm_pasien'] ?? '';
+
+            // Cek apakah norm_pasien sudah ada di database
+            $patient = $this->patientModel
+                ->where('norm_pasien', $norm_pasien)
+                ->first();
+
+            // Data yang akan disimpan atau diperbarui
+            $patientData = [
+                'id_pasien'    => (int) $id_pasien,
+                'norm_pasien'  => $norm_pasien,
+                'nama_pasien'  => $data['nama_pasien'] ?? '',
+                'alamat_pasien' => $data['alamat_pasien'] ?? '',
+                'tanggal_lahir_pasien' => $data['tanggal_lahir_pasien'] ?? null,
+                'jenis_kelamin_pasien' => $data['jenis_kelamin_pasien'] ?? '',
+                'status_pasien' => $data['status_pasien'] ?? '',
+                // Tambahkan kolom lain jika ada
+            ];
+
+            if ($patient) {
+                // ✅ Update data berdasarkan norm_pasien
+                if ($this->patientModel->update($patient['id_pasien'], $patientData)) {
+                    session()->setFlashdata('success', 'Data pasien diperbarui.');
+                }
+            } else {
+                // ✅ Insert data baru jika norm_pasien belum ada
+                if ($this->patientModel->insert($patientData)) {
+                    session()->setFlashdata('success', 'Data pasien ditambahkan.');
+                }
+            }
+
             // Data yang akan disimpan
             $srsData = [
                 'kode_srs' => $data['kode_srs'],
-                'id_pasien' => $data['id_pasien'],
+                'id_pasien' => (int) $data['id_pasien'],
                 'unit_asal' => $unit_asal,
                 'dokter_pengirim' => $dokter_pengirim,
                 'tanggal_permintaan' => $data['tanggal_permintaan'] ?: null,
@@ -158,6 +235,9 @@ class srsController extends BaseController
                 'lokasi_spesimen' => $data['lokasi_spesimen'],
                 'tindakan_spesimen' => $tindakan_spesimen,
                 'diagnosa_klinik' => $data['diagnosa_klinik'],
+                'id_transaksi' => ($data['id_transaksi'] ?? '') === '' ? null : (int) $data['id_transaksi'],
+                'tanggal_transaksi' => $data['tanggal_transaksi'] ?: null,
+                'no_register' => $data['no_register'] ?? '',
                 'status_srs' => 'Penerimaan',
             ];
             // Simpan data srs
@@ -190,7 +270,7 @@ class srsController extends BaseController
             return redirect()->back()->withInput()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
         }
     }
-    
+
     public function delete()
     {
         $id_srs = $this->request->getPost('id_srs');
@@ -203,7 +283,7 @@ class srsController extends BaseController
             return $this->response->setJSON(['success' => false, 'message' => 'Gagal menghapus data.']);
         }
     }
-    
+
     // Menampilkan form edit srs
     public function edit($id_srs)
     {
@@ -251,7 +331,7 @@ class srsController extends BaseController
             'pembacaan_srs' => $pembacaan_srs,
             'users'      => $users,
         ];
-        
+
         return view('srs/edit', $data);
     }
 
@@ -284,7 +364,7 @@ class srsController extends BaseController
             'id_user'    => $this->session->get('id_user'),
             'nama_user'  => $this->session->get('nama_user'),
         ];
-        
+
         return view('srs/edit_makroskopis', $data);
     }
 
@@ -301,10 +381,20 @@ class srsController extends BaseController
         if (!$srs) {
             return redirect()->back()->with('message', ['error' => 'srs tidak ditemukan.']);
         }
-        // Ambil data pemotongan dan pembacaan_srs berdasarkan ID
+        $id_penerimaan_srs = $srs['id_penerimaan_srs'];
         $id_pembacaan_srs = $srs['id_pembacaan_srs'];
-        // Ambil data pembacaan_srs jika tersedia
+        $penerimaan_srs = $id_penerimaan_srs ? $this->penerimaan_srs->find($id_penerimaan_srs) : [];
         $pembacaan_srs = $id_pembacaan_srs ? $this->pembacaan_srs->find($id_pembacaan_srs) : [];
+        if (!empty($srs['id_penerimaan_srs'])) {
+            $penerimaan_srs = $this->penerimaan_srs->find($srs['id_penerimaan_srs']) ?? [];
+            // Ambil nama analis dari penerimaan jika tersedia
+            if (!empty($penerimaan_srs['id_user_penerimaan_srs'])) {
+                $analis = $this->usersModel->find($penerimaan_srs['id_user_penerimaan_srs']);
+                $penerimaan_srs['analis_nama'] = $analis ? $analis['nama_user'] : null;
+            } else {
+                $penerimaan_srs['analis_nama'] = null;
+            }
+        }
         // Ambil data pengguna dengan status "Dokter"
         $users = $this->usersModel->where('status_user', 'Dokter')->findAll();
         // Persiapkan data yang akan dikirim ke view
@@ -314,12 +404,13 @@ class srsController extends BaseController
             'riwayat_frs'        => $riwayat_frs,
             'riwayat_srs'        => $riwayat_srs,
             'riwayat_ihc'        => $riwayat_ihc,
+            'penerimaan_srs' => $penerimaan_srs,
             'pembacaan_srs'   => $pembacaan_srs,
             'users'           => $users,
             'id_user'         => session()->get('id_user'),
             'nama_user'       => session()->get('nama_user'),
         ];
-        
+
         return view('srs/edit_mikroskopis', $data);
     }
 
@@ -327,6 +418,7 @@ class srsController extends BaseController
     {
         // Ambil data srs berdasarkan ID
         $srs = $this->srsModel->getsrsWithRelationsProses($id_srs);
+        $id_pasien = $srs['id_pasien'];
         if (!$srs) {
             return redirect()->back()->with('message', ['error' => 'srs tidak ditemukan.']);
         }
@@ -350,16 +442,24 @@ class srsController extends BaseController
         }
         // Ambil daftar user dengan status "Dokter"
         $users = $this->usersModel->where('status_user', 'Dokter')->findAll();
+        $riwayat_hpa = $this->hpaModel->riwayatPemeriksaanhpa($id_pasien);
+        $riwayat_frs = $this->frsModel->riwayatPemeriksaanfrs($id_pasien);
+        $riwayat_srs = $this->srsModel->riwayatPemeriksaansrs($id_pasien);
+        $riwayat_ihc = $this->ihcModel->riwayatPemeriksaanihc($id_pasien);
         // Data yang akan dikirim ke view
         $data = [
             'id_user' => session()->get('id_user'),
             'nama_user' => session()->get('nama_user'),
             'srs' => $srs,
+            'riwayat_hpa'        => $riwayat_hpa,
+            'riwayat_frs'        => $riwayat_frs,
+            'riwayat_srs'        => $riwayat_srs,
+            'riwayat_ihc'        => $riwayat_ihc,
             'pembacaan' => $pembacaan_srs,
             'penulisan' => $penulisan_srs,
             'users' => $users,
         ];
-        
+
         return view('srs/edit_penulisan', $data);
     }
 
@@ -384,7 +484,7 @@ class srsController extends BaseController
             'srs' => $srs,
             'pembacaan_srs' => $pembacaan_srs,
         ];
-        
+
         return view('srs/edit_print', $data);
     }
 
@@ -392,7 +492,7 @@ class srsController extends BaseController
     {
         date_default_timezone_set('Asia/Jakarta');
         $id_user = session()->get('id_user');
-        
+
         $srs = $this->srsModel->getsrsWithRelationsProses($id_srs);
         if (!$srs) {
             return redirect()->back()->with('message', ['error' => 'srs tidak ditemukan.']);
@@ -517,7 +617,10 @@ class srsController extends BaseController
                     </table>
                     <font size="5" face="verdana"><b>LAPORAN PEMERIKSAAN:<br></b></font>
                     <div>
-                        <font size="5" face="verdana"><b> MAKROSKOPIK :</b> 
+                        <font size="5" face="verdana"><b> MAKROSKOPIK :</b> <br></font>
+                    </div>
+                    <div>
+                        <font size="5" face="verdana">
                     ' . nl2br(htmlspecialchars(str_replace(['<p>', '</p>', '<br>'], '', $makroskopis_srs))) . '
                     </font>
                     </div>
@@ -620,6 +723,21 @@ class srsController extends BaseController
         }
         // Jika redirect tidak sesuai dengan yang diharapkan
         return redirect()->back()->with('error', 'Terjadi kesalahan: Halaman tujuan tidak valid.');
+    }
+
+    public function update_status()
+    {
+        // Ambil data dari POST
+        $id_srs = $this->request->getPost('id_srs');
+        $status_srs = $this->request->getPost('status_srs');
+        // Data yang akan diupdate
+        $data = [
+            'status_srs' => $status_srs,
+        ];
+        // Gunakan model yang sudah diinisialisasi di konstruktor
+        $this->srsModel->update($id_srs, $data);
+        // Redirect dengan pesan sukses
+        return redirect()->to('srs/index')->with('success', 'Status SRS berhasil disimpan.');
     }
 
     public function uploadFotoMakroskopis($id_srs)
@@ -757,7 +875,7 @@ class srsController extends BaseController
         }
     }
 
-    public function laporan()
+    public function laporan_pemeriksaan()
     {
         $srsData = $this->srsModel->getsrsWithRelations() ?? [];
 
@@ -767,7 +885,33 @@ class srsController extends BaseController
             'srsData' => $srsData,
         ];
 
-        return view('srs/laporan', $data);
+        return view('srs/laporan/laporan_pemeriksaan', $data);
+    }
+
+    public function laporan_kerja()
+    {
+        $srsData = $this->srsModel->getsrsWithRelations() ?? [];
+
+        $data = [
+            'id_user'    => session()->get('id_user'),
+            'nama_user'  => session()->get('nama_user'),
+            'srsData' => $srsData,
+        ];
+
+        return view('srs/laporan/laporan_kerja', $data);
+    }
+
+    public function laporan_oprasional()
+    {
+        $srsData = $this->srsModel->getsrsWithRelations() ?? [];
+
+        $data = [
+            'id_user'    => session()->get('id_user'),
+            'nama_user'  => session()->get('nama_user'),
+            'srsData' => $srsData,
+        ];
+
+        return view('srs/laporan/laporan_oprasional', $data);
     }
 
     public function filter()
@@ -790,6 +934,6 @@ class srsController extends BaseController
             'srsData'       => $filteredData,
         ];
 
-        return view('srs/laporan', $data);
+        return view('srs/laporan/laporan_pemeriksaan', $data);
     }
 }

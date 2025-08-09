@@ -7,73 +7,83 @@
     </div>
     <div class="card-body">
         <h1>Data Pasien</h1>
+
         <!-- Tombol Kembali ke Dashboard -->
         <a href="<?= base_url('/dashboard') ?>" class="btn btn-primary mb-3"><i class="fas fa-reply"></i> Kembali</a>
+
         <!-- Form untuk input data pasien -->
         <form action="<?= base_url('patient/insert') ?>" method="POST">
             <?= csrf_field(); ?> <!-- CSRF token untuk keamanan -->
+            <input type="hidden" name="id_pasien" id="id_pasien" value="<?= old('id_pasien') ?? ($data['id_pasien'] ?? date('His')) ?>" required>
 
             <div class="form-row">
-                <!-- Form group untuk Nomor Rekam Medis dengan ukuran lebih kecil -->
-                <div class="form-group col-md-3"> <!-- Ukuran kolom lebih kecil untuk norm_pasien -->
+                <!-- Nomor Rekam Medis -->
+                <div class="form-group col-md-3">
                     <label for="norm_pasien">Nomor Rekam Medis</label>
-                    <!-- Input untuk norm_pasien dengan value lama jika ada dan required -->
                     <input type="text"
                         class="form-control"
                         id="norm_pasien"
                         name="norm_pasien"
                         placeholder="Masukkan Norm pasien"
-                        value="<?= isset($_GET['norm_pasien']) ? esc($_GET['norm_pasien']) : old('norm_pasien'); ?>"
+                        value="<?= isset($norm_pasien) ? esc($norm_pasien) : (isset($_GET['norm']) ? esc($_GET['norm']) : old('norm_pasien')) ?>"
                         required>
-
                 </div>
 
-                <!-- Form group untuk Nama Pasien dengan ukuran lebih besar -->
-                <div class="form-group col-md-9"> <!-- Ukuran kolom lebih besar untuk nama_pasien -->
+                <!-- Nama Pasien -->
+                <div class="form-group col-md-9">
                     <label for="nama_pasien">Nama Pasien</label>
-                    <!-- Input untuk nama_pasien dengan value lama jika ada dan required -->
-                    <input type="text" class="form-control" id="nama_pasien" name="nama_pasien" placeholder="Masukkan nama pasien" value="<?= old('nama_pasien'); ?>" required>
+                    <input type="text"
+                        class="form-control"
+                        id="nama_pasien"
+                        name="nama_pasien"
+                        placeholder="Masukkan nama pasien"
+                        value="<?= isset($data['nama_pasien']) ? esc($data['nama_pasien']) : (old('nama_pasien') ?: ''); ?>"
+                        required>
                 </div>
             </div>
 
-            <!-- Form group untuk Alamat Pasien -->
+            <!-- Alamat -->
             <div class="form-group">
                 <label for="alamat_pasien">Alamat Pasien</label>
-                <textarea class="form-control" id="alamat_pasien" name="alamat_pasien" placeholder="Masukkan alamat pasien"><?= old('alamat_pasien'); ?></textarea>
+                <textarea class="form-control" id="alamat_pasien" name="alamat_pasien" placeholder="Masukkan alamat pasien"><?= isset($data['alamat_pasien']) ? esc($data['alamat_pasien']) : (old('alamat_pasien') ?: '') ?></textarea>
             </div>
 
             <div class="form-row">
-                <!-- Form group untuk Tanggal Lahir Pasien -->
+                <!-- Tanggal Lahir -->
                 <div class="form-group col-md-4">
                     <label for="tanggal_lahir_pasien">Tanggal Lahir</label>
-                    <input type="date" class="form-control" id="tanggal_lahir_pasien" name="tanggal_lahir_pasien" placeholder="Masukkan tanggal lahir" value="<?= old('tanggal_lahir_pasien'); ?>">
+                    <input type="date"
+                        class="form-control"
+                        id="tanggal_lahir_pasien"
+                        name="tanggal_lahir_pasien"
+                        value="<?= isset($data['tanggal_lahir_pasien']) ? esc($data['tanggal_lahir_pasien']) : (old('tanggal_lahir_pasien') ?: '') ?>">
                 </div>
 
-                <!-- Form group untuk Jenis Kelamin Pasien -->
+                <!-- Jenis Kelamin -->
                 <div class="form-group col-md-4">
                     <label for="jenis_kelamin_pasien">Jenis Kelamin</label>
                     <select class="form-control" id="jenis_kelamin_pasien" name="jenis_kelamin_pasien">
-                        <option value="Belum Dipilih" selected>Pilih jenis kelamin</option>
-                        <option value="L" <?= old('jenis_kelamin_pasien') == 'L' ? 'selected' : ''; ?>>Laki-laki</option>
-                        <option value="P" <?= old('jenis_kelamin_pasien') == 'P' ? 'selected' : ''; ?>>Perempuan</option>
+                        <option value="Belum Dipilih" <?= (!isset($data['jenis_kelamin_pasien']) && old('jenis_kelamin_pasien') !== 'L' && old('jenis_kelamin_pasien') !== 'P') ? 'selected' : '' ?>>Pilih jenis kelamin</option>
+                        <option value="L" <?= (isset($data['jenis_kelamin_pasien']) && $data['jenis_kelamin_pasien'] == 'L') || old('jenis_kelamin_pasien') == 'L' ? 'selected' : '' ?>>Laki-laki</option>
+                        <option value="P" <?= (isset($data['jenis_kelamin_pasien']) && $data['jenis_kelamin_pasien'] == 'P') || old('jenis_kelamin_pasien') == 'P' ? 'selected' : '' ?>>Perempuan</option>
                     </select>
                 </div>
 
-                <!-- Form group untuk Status Pasien -->
+                <!-- Status Pasien -->
                 <div class="form-group col-md-4">
                     <label for="status_pasien">Status Pasien</label>
                     <select class="form-control" id="status_pasien" name="status_pasien">
-                        <option value="Belum Dipilih" selected>Pilih status pasien</option>
-                        <option value="PBI" <?= old('status_pasien') == 'PBI' ? 'selected' : ''; ?>>PBI</option>
-                        <option value="Non PBI" <?= old('status_pasien') == 'Non PBI' ? 'selected' : ''; ?>>Non PBI</option>
-                        <option value="Umum" <?= old('status_pasien') == 'Umum' ? 'selected' : ''; ?>>Umum</option>
+                        <option value="Belum Dipilih" <?= (!isset($data['status_pasien']) && old('status_pasien') === '') ? 'selected' : '' ?>>Pilih status pasien</option>
+                        <option value="JKN / BPJS PBI" <?= (isset($data['status_pasien']) && $data['status_pasien'] == 'JKN / BPJS PBI') || old('status_pasien') == 'JKN / BPJS PBI' ? 'selected' : '' ?>>JKN / BPJS PBI</option>
+                        <option value="JKN / BPJS NON PBI" <?= (isset($data['status_pasien']) && $data['status_pasien'] == 'JKN / BPJS NON PBI') || old('status_pasien') == 'JKN / BPJS NON PBI' ? 'selected' : '' ?>>JKN / BPJS NON PBI</option>
+                        <option value="Umum" <?= (isset($data['status_pasien']) && $data['status_pasien'] == 'Umum') || old('status_pasien') == 'Umum' ? 'selected' : '' ?>>Umum</option>
                     </select>
                 </div>
             </div>
 
-            <!-- Tombol untuk submit form -->
+            <!-- Tombol Simpan -->
             <div class="d-flex justify-content-end">
-                <button type="submit" class="btn btn-primary">Simpan</button>
+                <button type="submit" class="btn btn-success"><i class="fas fa-save"></i> Simpan</button>
             </div>
         </form>
     </div>

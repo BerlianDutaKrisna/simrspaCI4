@@ -9,6 +9,7 @@ use App\Models\Srs\SrsModel;
 use App\Models\Ihc\IhcModel;
 use App\Models\UsersModel;
 use App\Models\PatientModel;
+use App\Models\SimrsModel;
 use App\Models\Frs\Proses\Penerimaan_frs;
 use App\Models\Frs\Proses\Pembacaan_frs;
 use App\Models\Frs\Proses\Penulisan_frs;
@@ -27,6 +28,7 @@ class FrsController extends BaseController
     protected $ihcModel;
     protected $usersModel;
     protected $patientModel;
+    protected $simrsModel;
     protected $penerimaan_frs;
     protected $pemotongan_frs;
     protected $pembacaan_frs;
@@ -45,6 +47,7 @@ class FrsController extends BaseController
         $this->ihcModel = new ihcModel();
         $this->usersModel = new UsersModel();
         $this->patientModel = new PatientModel();
+        $this->simrsModel = new SimrsModel();
         $this->penerimaan_frs = new Penerimaan_frs();;
         $this->pembacaan_frs = new Pembacaan_frs();
         $this->penulisan_frs = new Penulisan_frs();
@@ -63,14 +66,14 @@ class FrsController extends BaseController
             'nama_user' => session()->get('nama_user'),
             'frsData' => $frsData
         ];
-        
-        return view('frs/index', $data);
+
+        return view('Frs/index', $data);
     }
 
     public function index_buku_penerima()
     {
         // Mengambil data frs menggunakan properti yang sudah ada
-        $frsData = $this->frsModel->getfrsWithPatient() ?? [];
+        $frsData = $this->frsModel->getfrsWithPatientDESC() ?? [];
 
         // Kirimkan data ke view
         $data = [
@@ -78,7 +81,7 @@ class FrsController extends BaseController
             'nama_user'  => session()->get('nama_user'),
             'frsData' => $frsData,
         ];
-        
+
         return view('frs/index_buku_penerima', $data);
     }
 
@@ -100,25 +103,65 @@ class FrsController extends BaseController
         }
         $kodefrs = sprintf('FRS.%02d/%s', $nextNumber, $currentYear);
 
-        // Proses norm_pasien sebelum data dibuat
-        $normPasien = $this->request->getGet('norm_pasien');
-        $patient = $normPasien ? $this->patientModel->where('norm_pasien', $normPasien)->first() : null;
-        $id_pasien = $patient['id_pasien'];
-        $riwayat_hpa = $this->hpaModel->riwayatPemeriksaanhpa($id_pasien);
-        $riwayat_frs = $this->frsModel->riwayatPemeriksaanfrs($id_pasien);
-        $riwayat_srs = $this->srsModel->riwayatPemeriksaansrs($id_pasien);
-        $riwayat_ihc = $this->ihcModel->riwayatPemeriksaanihc($id_pasien);
-        $data = [
-            'id_user'   => session()->get('id_user'),
-            'nama_user' => session()->get('nama_user'),
-            'kode_frs'  => $kodefrs,
-            'patient'   => $patient,
-            'riwayat_hpa' => $riwayat_hpa,
-            'riwayat_frs' => $riwayat_frs,
-            'riwayat_srs' => $riwayat_srs,
-            'riwayat_ihc' => $riwayat_ihc,
-        ];
+        // Tangkap dari GET parameter
+        $register_api_raw = $this->request->getGet('register_api');
+        $register_api = json_decode($register_api_raw, true);
 
+        // Ambil data riwayat dari API / Manual
+        // Cek apakah data dari API tersedia
+        if (!empty($register_api) && is_array($register_api)) {
+
+            // Ambil norm
+            $norm = $register_api['norm'] ?? '';
+
+            // Ambil riwayat dari API
+            $riwayat_api = [];
+            if ($norm !== '') {
+                $riwayat_api_response = $this->simrsModel->getPemeriksaanPasien($norm);
+                if (!empty($riwayat_api_response['code']) && $riwayat_api_response['code'] == 200) {
+                    $riwayat_api = $riwayat_api_response['data'];
+                }
+            }
+
+            // Map ke array $patient
+            $patient = [
+                'id_pasien'             => isset($register_api['idpasien']) ? (int) $register_api['idpasien'] : null,
+                'norm_pasien'           => $register_api['norm'] ?? '',
+                'nama_pasien'           => $register_api['nama'] ?? '',
+                'alamat_pasien'         => $register_api['alamat'] ?? '',
+                'tanggal_lahir_pasien'  => $register_api['tgl_lhr'] ?? '',
+                'jenis_kelamin_pasien'  => $register_api['jeniskelamin'] ?? '',
+                'status_pasien'         => $register_api['jenispasien'] ?? '',
+                'unitasal'              => $register_api['unitasal'] ?? '',
+                'dokterperujuk'         => $register_api['dokterperujuk'] ?? '',
+                'pemeriksaan'           => $register_api['pemeriksaan'] ?? '',
+                'id_transaksi_simrs'    => $register_api['idtransaksi'] ?? '',
+                'lokasi_spesimen'       => $register_api['statuslokasi'] ?? '',
+                'diagnosa_klinik'       => $register_api['diagnosaklinik'] ?? '',
+                'tindakan_spesimen'     => $register_api['pemeriksaan'] ?? '',
+                'id_transaksi'          => isset($register_api['idtransaksi']) ? (int) $register_api['idtransaksi'] : null,
+                'tanggal_transaksi'     => $register_api['tanggal'] ?? '',
+                'no_register'           => $register_api['register'] ?? ''
+            ];
+        } elseif ($normPasien = $this->request->getGet('norm_pasien')) {
+
+            // Ambil data pasien dari DB jika norm_pasien tersedia di GET
+            $patient = $this->patientModel->where('norm_pasien', $normPasien)->first();
+            $riwayat_api = [];
+        } else {
+            // Jika tidak ada sumber data sama sekali
+            $patient = null;
+            $riwayat_api = [];
+        }
+
+        $data = [
+            'id_user'       => session()->get('id_user'),
+            'nama_user'     => session()->get('nama_user'),
+            'kode_frs'      => $kodefrs,
+            'patient'       => $patient,
+            'riwayat_api'   => $riwayat_api,
+        ];
+        
         return view('frs/Register', $data);
     }
 
@@ -137,6 +180,7 @@ class FrsController extends BaseController
             ]);
             // Jalankan validasi
             $data = $this->request->getPost();
+            
             if (!$this->validation->run($data)) {
                 return redirect()->back()->withInput()->with('error', $this->validation->getErrors());
             }
@@ -148,10 +192,43 @@ class FrsController extends BaseController
                 : $data['dokter_pengirim_custom'];
             // Tentukan tindakan_spesimen
             $tindakan_spesimen = !empty($data['tindakan_spesimen']) ? $data['tindakan_spesimen'] : $data['tindakan_spesimen_custom'];
+
+            // ====== CEK PASIEN DI TABEL PATIENT ======
+            $id_pasien   = $data['id_pasien'];
+            $norm_pasien = $data['norm_pasien'] ?? '';
+
+            // Cek apakah norm_pasien sudah ada di database
+            $patient = $this->patientModel
+                ->where('norm_pasien', $norm_pasien)
+                ->first();
+
+            // Data yang akan disimpan atau diperbarui
+            $patientData = [
+                'id_pasien'    => (int) $id_pasien,
+                'norm_pasien'  => $norm_pasien,
+                'nama_pasien'  => $data['nama_pasien'] ?? '',
+                'alamat_pasien' => $data['alamat_pasien'] ?? '',
+                'tanggal_lahir_pasien' => $data['tanggal_lahir_pasien'] ?? null,
+                'jenis_kelamin_pasien' => $data['jenis_kelamin_pasien'] ?? '',
+                'status_pasien' => $data['status_pasien'] ?? '',
+                // Tambahkan kolom lain jika ada
+            ];
+
+            if ($patient) {
+                // ✅ Update data berdasarkan norm_pasien
+                if ($this->patientModel->update($patient['id_pasien'], $patientData)) {
+                    session()->setFlashdata('success', 'Data pasien diperbarui.');
+                }
+            } else {
+                // ✅ Insert data baru jika norm_pasien belum ada
+                if ($this->patientModel->insert($patientData)) {
+                    session()->setFlashdata('success', 'Data pasien ditambahkan.');
+                }
+            }
             // Data yang akan disimpan
             $frsData = [
                 'kode_frs' => $data['kode_frs'],
-                'id_pasien' => $data['id_pasien'],
+                'id_pasien' => (int) $data['id_pasien'],
                 'unit_asal' => $unit_asal,
                 'dokter_pengirim' => $dokter_pengirim,
                 'tanggal_permintaan' => $data['tanggal_permintaan'] ?: null,
@@ -159,8 +236,12 @@ class FrsController extends BaseController
                 'lokasi_spesimen' => $data['lokasi_spesimen'],
                 'tindakan_spesimen' => $tindakan_spesimen,
                 'diagnosa_klinik' => $data['diagnosa_klinik'],
+                'id_transaksi' => ($data['id_transaksi'] ?? '') === '' ? null : (int) $data['id_transaksi'],
+                'tanggal_transaksi' => $data['tanggal_transaksi'] ?: null,
+                'no_register' => $data['no_register'] ?? '',
                 'status_frs' => 'Penerimaan',
             ];
+            
             // Simpan data frs
             if (!$this->frsModel->insert($frsData)) {
                 throw new Exception('Gagal menyimpan data frs: ' . $this->frsModel->errors());
@@ -191,7 +272,7 @@ class FrsController extends BaseController
             return redirect()->back()->withInput()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
         }
     }
-    
+
     public function delete()
     {
         $id_frs = $this->request->getPost('id_frs');
@@ -204,7 +285,7 @@ class FrsController extends BaseController
             return $this->response->setJSON(['success' => false, 'message' => 'Gagal menghapus data.']);
         }
     }
-    
+
     // Menampilkan form edit frs
     public function edit($id_frs)
     {
@@ -252,7 +333,7 @@ class FrsController extends BaseController
             'pembacaan_frs' => $pembacaan_frs,
             'users'      => $users,
         ];
-        
+
         return view('frs/edit', $data);
     }
 
@@ -285,7 +366,7 @@ class FrsController extends BaseController
             'id_user'    => $this->session->get('id_user'),
             'nama_user'  => $this->session->get('nama_user'),
         ];
-        
+
         return view('frs/edit_makroskopis', $data);
     }
 
@@ -320,7 +401,7 @@ class FrsController extends BaseController
             'id_user'         => session()->get('id_user'),
             'nama_user'       => session()->get('nama_user'),
         ];
-        
+
         return view('frs/edit_mikroskopis', $data);
     }
 
@@ -328,6 +409,7 @@ class FrsController extends BaseController
     {
         // Ambil data frs berdasarkan ID
         $frs = $this->frsModel->getfrsWithRelationsProses($id_frs);
+        $id_pasien = $frs['id_pasien'];
         if (!$frs) {
             return redirect()->back()->with('message', ['error' => 'frs tidak ditemukan.']);
         }
@@ -351,16 +433,24 @@ class FrsController extends BaseController
         }
         // Ambil daftar user dengan status "Dokter"
         $users = $this->usersModel->where('status_user', 'Dokter')->findAll();
+        $riwayat_hpa = $this->hpaModel->riwayatPemeriksaanhpa($id_pasien);
+        $riwayat_frs = $this->frsModel->riwayatPemeriksaanfrs($id_pasien);
+        $riwayat_srs = $this->srsModel->riwayatPemeriksaansrs($id_pasien);
+        $riwayat_ihc = $this->ihcModel->riwayatPemeriksaanihc($id_pasien);
         // Data yang akan dikirim ke view
         $data = [
             'id_user' => session()->get('id_user'),
             'nama_user' => session()->get('nama_user'),
             'frs' => $frs,
+            'riwayat_hpa'        => $riwayat_hpa,
+            'riwayat_frs'        => $riwayat_frs,
+            'riwayat_srs'        => $riwayat_srs,
+            'riwayat_ihc'        => $riwayat_ihc,
             'pembacaan' => $pembacaan_frs,
             'penulisan' => $penulisan_frs,
             'users' => $users,
         ];
-        
+
         return view('frs/edit_penulisan', $data);
     }
 
@@ -385,7 +475,7 @@ class FrsController extends BaseController
             'frs' => $frs,
             'pembacaan_frs' => $pembacaan_frs,
         ];
-        
+
         return view('frs/edit_print', $data);
     }
 
@@ -393,7 +483,7 @@ class FrsController extends BaseController
     {
         date_default_timezone_set('Asia/Jakarta');
         $id_user = session()->get('id_user');
-        
+
         $frs = $this->frsModel->getfrsWithRelationsProses($id_frs);
         if (!$frs) {
             return redirect()->back()->with('message', ['error' => 'frs tidak ditemukan.']);
@@ -625,6 +715,21 @@ class FrsController extends BaseController
         return redirect()->back()->with('error', 'Terjadi kesalahan: Halaman tujuan tidak valid.');
     }
 
+    public function update_status()
+    {
+        // Ambil data dari POST
+        $id_frs = $this->request->getPost('id_frs');
+        $status_frs = $this->request->getPost('status_frs');
+        // Data yang akan diupdate
+        $data = [
+            'status_frs' => $status_frs,
+        ];
+        // Gunakan model yang sudah diinisialisasi di konstruktor
+        $this->frsModel->update($id_frs, $data);
+        // Redirect dengan pesan sukses
+        return redirect()->to('frs/index')->with('success', 'Status FRS berhasil disimpan.');
+    }
+
     public function uploadFotoMakroskopis($id_frs)
     {
         date_default_timezone_set('Asia/Jakarta');
@@ -760,7 +865,7 @@ class FrsController extends BaseController
         }
     }
 
-    public function laporan()
+    public function laporan_pemeriksaan()
     {
         $frsData = $this->frsModel->getfrsWithRelations() ?? [];
 
@@ -770,7 +875,33 @@ class FrsController extends BaseController
             'frsData' => $frsData,
         ];
 
-        return view('frs/laporan', $data);
+        return view('frs//laporan/laporan_pemeriksaan', $data);
+    }
+
+    public function laporan_kerja()
+    {
+        $frsData = $this->frsModel->getfrsWithRelations() ?? [];
+
+        $data = [
+            'id_user'    => session()->get('id_user'),
+            'nama_user'  => session()->get('nama_user'),
+            'frsData' => $frsData,
+        ];
+
+        return view('frs/laporan/laporan_kerja', $data);
+    }
+
+    public function laporan_oprasional()
+    {
+        $frsData = $this->frsModel->getfrsWithRelations() ?? [];
+
+        $data = [
+            'id_user'    => session()->get('id_user'),
+            'nama_user'  => session()->get('nama_user'),
+            'frsData' => $frsData,
+        ];
+
+        return view('frs/laporan/laporan_oprasional', $data);
     }
 
     public function filter()
@@ -793,6 +924,6 @@ class FrsController extends BaseController
             'frsData'       => $filteredData,
         ];
 
-        return view('frs/laporan', $data);
+        return view('frs/laporan/laporan_pemeriksaan', $data);
     }
 }

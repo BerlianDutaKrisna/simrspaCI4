@@ -28,13 +28,6 @@ class Pencetakan_frs extends Model // Update nama model
     protected $createdField  = 'created_at';
     protected $updatedField  = 'updated_at';
 
-    // Fungsi untuk insert data pencetakan_frs
-    public function insertpencetakan_frs(array $data): bool // Update nama fungsi
-    {
-        $this->insert($data);
-        return $this->db->affectedRows() > 0;
-    }
-
     public function getpencetakan_frs()
     {
         return $this->select(
@@ -64,18 +57,20 @@ class Pencetakan_frs extends Model // Update nama model
             ->findAll();
     }
 
-    // Fungsi untuk mengupdate data pencetakan_frs
-    public function updatepencetakan_frs($id_pencetakan_frs, $data) // Update nama fungsi dan parameter
+    public function detailspencetakan_frs($id_pencetakan_frs)
     {
-        $builder = $this->db->table($this->table);  // Mengambil tabel pencetakan_frs
-        $builder->where('id_pencetakan_frs', $id_pencetakan_frs);  // Menentukan baris yang akan diupdate berdasarkan id_pencetakan_frs
-        $builder->update($data);  // Melakukan update dengan data yang dikirimkan
-        return $this->db->affectedRows();  // Mengembalikan jumlah baris yang terpengaruh
-    }
+        $data = $this->select(
+            'pencetakan_frs.*, 
+        frs.*, 
+        patient.*, 
+        users.nama_user AS nama_user_pencetakan_frs'
+        )
+            ->join('frs', 'pencetakan_frs.id_frs = frs.id_frs', 'left')
+            ->join('patient', 'frs.id_pasien = patient.id_pasien', 'left')
+            ->join('users', 'pencetakan_frs.id_user_pencetakan_frs = users.id_user', 'left')
+            ->where('pencetakan_frs.id_pencetakan_frs', $id_pencetakan_frs)
+            ->first();
 
-    public function deletepencetakan_frs($id_pencetakan_frs)
-    {
-        return $this->delete($id_pencetakan_frs);
+        return $data;
     }
-
 }

@@ -41,25 +41,30 @@ class Mutu_ihc extends Model
         return $this->db->affectedRows() > 0;
     }
 
-    public function getmutu_ihcWithRelations()
-{
-    return $this->select(
+    public function getmutuWithRelations()
+    {
+        return $this->select(
             'mutu_ihc.*, 
             ihc.*, 
             patient.*'
         )
-        ->join('ihc', 'mutu_ihc.id_ihc = ihc.id_ihc', 'left') // Relasi dengan tabel ihc
-        ->join('patient', 'ihc.id_pasien = patient.id_pasien', 'left') // Relasi dengan tabel patient
-        ->findAll();
-}
+            ->join('ihc', 'mutu_ihc.id_ihc = ihc.id_ihc', 'left') // Relasi dengan tabel ihc
+            ->join('patient', 'ihc.id_pasien = patient.id_pasien', 'left') // Relasi dengan tabel patient
+            ->findAll();
+    }
 
-    // Fungsi untuk mengupdate data mutu_ihc
-public function updatemutu_ihc($id_mutu_ihc, $data)
-{
-    // Mengambil table mutu_ihc
-    $builder = $this->db->table($this->table);  
-    $builder->where('id_mutu_ihc', $id_mutu_ihc);  
-    $builder->update($data);  
-    return $this->db->affectedRows();  
-}
+    public function detailsmutu_ihc($id_mutu_ihc)
+    {
+        $data = $this->select(
+            'mutu_ihc.*, 
+        ihc.*, 
+        patient.*'
+        )
+            ->join('ihc', 'mutu_ihc.id_ihc = ihc.id_ihc', 'left')
+            ->join('patient', 'ihc.id_pasien = patient.id_pasien', 'left')
+            ->where('mutu_ihc.id_mutu_ihc', $id_mutu_ihc)
+            ->first();
+
+        return $data;
+    }
 }

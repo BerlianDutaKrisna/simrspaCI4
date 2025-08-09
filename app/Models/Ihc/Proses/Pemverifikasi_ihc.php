@@ -57,18 +57,20 @@ class Pemverifikasi_ihc extends Model // Update nama model
             ->findAll();
     }
 
-    // Fungsi untuk mengupdate data pemverifikasi_ihc
-    public function updatepemverifikasi_ihc($id_pemverifikasi_ihc, $data) // Update nama fungsi dan parameter
+    public function detailspemverifikasi_ihc($id_pemverifikasi_ihc)
     {
-        $builder = $this->db->table($this->table);  // Mengambil tabel pemverifikasi_ihc
-        $builder->where('id_pemverifikasi_ihc', $id_pemverifikasi_ihc);  // Menentukan baris yang akan diupdate berdasarkan id_pemverifikasi_ihc
-        $builder->update($data);  // Melakukan update dengan data yang dikirimkan
-        return $this->db->affectedRows();  // Mengembalikan jumlah baris yang terpengaruh
-    }
+        $data = $this->select(
+            'pemverifikasi_ihc.*, 
+        ihc.*, 
+        patient.*, 
+        users.nama_user AS nama_user_pemverifikasi_ihc'
+        )
+            ->join('ihc', 'pemverifikasi_ihc.id_ihc = ihc.id_ihc', 'left')
+            ->join('patient', 'ihc.id_pasien = patient.id_pasien', 'left')
+            ->join('users', 'pemverifikasi_ihc.id_user_pemverifikasi_ihc = users.id_user', 'left')
+            ->where('pemverifikasi_ihc.id_pemverifikasi_ihc', $id_pemverifikasi_ihc)
+            ->first();
 
-    public function deletepemverifikasi_ihc($id_pemverifikasi_ihc)
-    {
-        return $this->delete($id_pemverifikasi_ihc);
+        return $data;
     }
-
 }

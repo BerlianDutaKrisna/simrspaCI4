@@ -3,7 +3,7 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="penerimaModalLabel">Penerima Hasil ihc</h5>
+                <h5 class="modal-title" id="penerimaModalLabel">Penerima Hasil IHC</h5>
                 <button class="close" type="button" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">×</span>
                 </button>
@@ -25,12 +25,12 @@
     </div>
 </div>
 
-<!-- Modal Status ihc -->
+<!-- Modal Status IHC -->
 <div class="modal fade" id="statusihcModal" tabindex="-1" role="dialog" aria-labelledby="statusihcModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="statusihcModalLabel">Edit Status ihc</h5>
+                <h5 class="modal-title" id="statusihcModalLabel">Edit Status IHC</h5>
                 <button class="close" type="button" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">×</span>
                 </button>
@@ -39,7 +39,7 @@
                 <div class="modal-body">
                     <input type="hidden" id="id_ihc" name="id_ihc" value="">
                     <div class="form-group">
-                        <label for="status_ihc">Status ihc</label>
+                        <label for="status_ihc">Status IHC</label>
                         <select class="form-control" id="status_ihc" name="status_ihc">
                             <option value="Penerimaan" <?= old('status_ihc') == 'Penerimaan' ? 'selected' : '' ?>>Penerimaan</option>
                             <option value="Pembacaan" <?= old('status_ihc') == 'Pembacaan' ? 'selected' : '' ?>>Pembacaan</option>
@@ -52,8 +52,8 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Batal</button>
-                    <button type="submit" class="btn btn-success">Simpan</button>
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal"><i class="fas fa-times"></i> Batal</button>
+                    <button type="submit" class="btn btn-success"><i class="fas fa-save"></i> Simpan</button>
                 </div>
             </form>
         </div>
@@ -61,22 +61,18 @@
 </div>
 
 <!-- Modal untuk menampilkan detail -->
-<div class="modal fade" id="viewModal" tabindex="-1" role="dialog" aria-labelledby="viewModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
+<div class="modal fade" id="viewModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="viewModalLabel">Detail Proses</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
             </div>
-            <div class="modal-body">
-                <div id="modalBody">
-                    <!-- Data akan dimuat di sini melalui AJAX -->
-                </div>
+            <div class="modal-body" id="viewModalBody">
+                <!-- data akan ditampilkan di sini -->
             </div>
-            <div class="modal-footer" id="modalFooter">
-                <!-- Footer content dynamically inserted -->
+            <div class="modal-footer" id="viewModalFooter">
+                <!-- tombol tutup -->
             </div>
         </div>
     </div>
@@ -93,11 +89,11 @@
                 </button>
             </div>
             <div class="modal-body">
-                Apakah Anda yakin ingin menghapus ini?
+                Apakah Anda yakin ingin menghapus data ini?
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
-                <button type="button" class="btn btn-danger" id="confirmDelete">Hapus</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fas fa-times"></i> Batal</button>
+                <button type="button" class="btn btn-danger" id="confirmDelete"><i class="fas fa-trash"></i> Hapus</button>
             </div>
         </div>
     </div>

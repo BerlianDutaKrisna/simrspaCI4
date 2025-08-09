@@ -6,7 +6,7 @@
         <h6 class="m-0 font-weight-bold text-primary">Buku Registrasi</h6>
     </div>
     <div class="card-body">
-        <h1>Buku Registrasi Laboratorrium Patologi Anatomi</h1>
+        <h1>Buku Registrasi Laboratorium Patologi Anatomi</h1>
         <a href="<?= base_url('/dashboard') ?>" class="btn btn-primary mb-3"><i class="fas fa-reply"></i> Kembali</a>
 
         <form method="GET" action="<?= base_url('exam/search') ?>">
@@ -33,7 +33,7 @@
                     <div class="col-md-6">
                         <label for="searchDate">Tanggal Pencarian</label>
                         <input type="date" class="form-control" id="searchDate" name="searchDate"
-                            value="<?= old('searchDate') ?: date('Y-m-d', strtotime('last monday -7 days')); ?>">
+                            value="<?= old('searchDate') ?: '2025-01-01'; ?>">
                     </div>
                     <div class="col-md-6">
                         <label for="searchDate2">Sampai Tanggal</label>
@@ -90,6 +90,9 @@
                         <th>Unit Asal</th>
                         <th>Diagnosa Klinik</th>
                         <th>Hasil</th>
+                        <th>Status</th>
+                        <th>Penerima</th>
+                        <th>Tanggal Penerima</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -191,6 +194,11 @@
                                 <td><?= esc($row['unit_asal'] ?? 'Belum Diisi') ?></td>
                                 <td><?= esc($row['diagnosa_klinik'] ?? 'Belum Diisi') ?></td>
                                 <td><?= esc(strip_tags($row['hasil'] ?? 'Belum Ada Hasil')) ?></td>
+                                <td><strong class="<?= in_array($row['status'] ?? '', ['Authorized', 'Selesai']) ? 'text-success' : '' ?>"><?= esc($row['status'] ?? 'Belum Diisi') ?></strong></td>
+                                <td><?= esc($row['penerima'] ?? 'Belum Diterima') ?></td>
+                                <td>
+                                    <?= empty($row['tanggal_penerima']) ? '-' : esc(date('H:i , d-m-Y', strtotime($row['tanggal_penerima']))); ?>
+                                </td>
                             </tr>
                             <?php $i++; ?> <!-- Nomor urut bertambah dalam satu tanggal -->
                         <?php endforeach; ?>

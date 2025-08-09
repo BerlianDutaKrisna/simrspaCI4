@@ -120,22 +120,10 @@ class Pemverifikasi extends BaseController
 
     public function pemverifikasi_details()
     {
-        // Ambil id_pemverifikasi_frs dari parameter GET
         $id_pemverifikasi_frs = $this->request->getGet('id_pemverifikasi_frs');
 
         if ($id_pemverifikasi_frs) {
-            // Gunakan model yang sudah diinisialisasi di constructor
-            $data = $this->pemverifikasi_frs->select(
-                'pemverifikasi.*, 
-            frs.*, 
-            patient.*, 
-            users.nama_user AS nama_user_pemverifikasi'
-            )
-                ->join('frs', 'pemverifikasi.id_frs = frs.id_frs', 'left')
-                ->join('patient', 'frs.id_pasien = patient.id_pasien', 'left')
-                ->join('users', 'pemverifikasi.id_user_pemverifikasi_frs = users.id_user', 'left')
-                ->where('pemverifikasi.id_pemverifikasi_frs', $id_pemverifikasi_frs)
-                ->first();
+            $data = $this->pemverifikasi_frs->detailspemverifikasi_frs($id_pemverifikasi_frs);
 
             if ($data) {
                 return $this->response->setJSON($data);
@@ -143,11 +131,11 @@ class Pemverifikasi extends BaseController
                 return $this->response->setJSON(['error' => 'Data tidak ditemukan.']);
             }
         } else {
-            return $this->response->setJSON(['error' => 'ID pemverifikasi tidak ditemukan.']);
+            return $this->response->setJSON(['error' => 'Coba ulangi kembali..']);
         }
     }
 
-    public function edit_pemverifikasi()
+    public function edit()
     {
         $id_pemverifikasi_frs = $this->request->getGet('id_pemverifikasi_frs');
 
@@ -162,8 +150,8 @@ class Pemverifikasi extends BaseController
             throw new \CodeIgniter\Exceptions\PageNotFoundException('Data pemverifikasi tidak ditemukan.');
         }
 
-        // Ambil data users dengan status_user = 'Analis'
-        $users = $this->userModel->where('status_user', 'Analis')->findAll();
+        // Ambil data user
+        $users = $this->userModel->findAll();
 
         $data = [
             'pemverifikasiData' => $pemverifikasiData,
@@ -172,29 +160,62 @@ class Pemverifikasi extends BaseController
             'nama_user' => session()->get('nama_user'),
         ];
 
-        return view('edit_proses/edit_pemverifikasi', $data);
+        return view('frs/edit_proses/edit_pemverifikasi', $data);
     }
 
-    public function update_pemverifikasi()
+    public function update()
     {
         $id_pemverifikasi_frs = $this->request->getPost('id_pemverifikasi_frs');
+
+        if (!$id_pemverifikasi_frs) {
+            return redirect()->back()->with('error', 'ID tidak ditemukan.')->withInput();
+        }
 
         // Gabungkan input tanggal dan waktu
         $mulai_pemverifikasi_frs = $this->request->getPost('mulai_pemverifikasi_frs_date') . ' ' . $this->request->getPost('mulai_pemverifikasi_frs_time');
         $selesai_pemverifikasi_frs = $this->request->getPost('selesai_pemverifikasi_frs_date') . ' ' . $this->request->getPost('selesai_pemverifikasi_frs_time');
 
+        $id_user = $this->request->getPost('id_user_pemverifikasi_frs');
+
         $data = [
-            'id_user_pemverifikasi_frs' => $this->request->getPost('id_user_pemverifikasi_frs'),
+            'id_user_pemverifikasi_frs' => $id_user === '' ? null : $id_user,
             'status_pemverifikasi_frs'  => $this->request->getPost('status_pemverifikasi_frs'),
             'mulai_pemverifikasi_frs'   => $mulai_pemverifikasi_frs,
             'selesai_pemverifikasi_frs' => $selesai_pemverifikasi_frs,
-            'updated_at'         => date('Y-m-d H:i:s'),
+            'updated_at'             => date('Y-m-d H:i:s'),
         ];
 
         if (!$this->pemverifikasi_frs->update($id_pemverifikasi_frs, $data)) {
             return redirect()->back()->with('error', 'Gagal mengupdate data.')->withInput();
         }
 
-        return redirect()->to(base_url('pemverifikasi/index_pemverifikasi'))->with('success', 'Data berhasil diperbarui.');
+        return redirect()->to(base_url('pemverifikasi_frs/edit?id_pemverifikasi_frs=' . $id_pemverifikasi_frs))
+            ->with('success', 'Data berhasil diperbarui.');
+    }
+
+    public function delete()
+    {
+        try {
+            $id_pemverifikasi = $this->request->getPost('id_pemverifikasi');
+            $id_frs = $this->request->getPost('id_frs');
+            if (!$id_pemverifikasi || !$id_frs) {
+                throw new \Exception('ID tidak lengkap. Gagal menghapus data.');
+            }
+            // Hapus data pemverifikasi
+            if ($this->pemverifikasi_frs->delete($id_pemverifikasi)) {
+                // Update status_frs ke tahap sebelumnya 
+                $this->frsModel->update($id_frs, [
+                    'status_frs' => 'Penulisan',
+                ]);
+                return $this->response->setJSON(['success' => true]);
+            } else {
+                throw new \Exception('Gagal menghapus data.');
+            }
+        } catch (\Exception $e) {
+            return $this->response->setJSON([
+                'success' => false,
+                'message' => $e->getMessage()
+            ]);
+        }
     }
 }

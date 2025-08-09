@@ -28,13 +28,6 @@ class Pewarnaan_hpa extends Model // Update nama model
     protected $createdField  = 'created_at';
     protected $updatedField  = 'updated_at';
 
-    // Fungsi untuk insert data pewarnaan_hpa
-    public function insertpewarnaan_hpa(array $data): bool // Update nama fungsi
-    {
-        $this->insert($data);
-        return $this->db->affectedRows() > 0;
-    }
-
     // Mengambil data pewarnaan_hpa dengan relasi
     public function getpewarnaan_hpa()
     {
@@ -56,18 +49,20 @@ class Pewarnaan_hpa extends Model // Update nama model
             ->findAll();
     }
 
-    // Fungsi untuk mengupdate data pewarnaan_hpa
-    public function updatepewarnaan_hpa($id_pewarnaan_hpa, $data) // Update nama fungsi dan parameter
+    public function detailspewarnaan_hpa($id_pewarnaan_hpa)
     {
-        $builder = $this->db->table($this->table);  // Mengambil tabel pewarnaan_hpa
-        $builder->where('id_pewarnaan_hpa', $id_pewarnaan_hpa);  // Menentukan baris yang akan diupdate berdasarkan id_pewarnaan_hpa
-        $builder->update($data);  // Melakukan update dengan data yang dikirimkan
-        return $this->db->affectedRows();  // Mengembalikan jumlah baris yang terpengaruh
-    }
+        $data = $this->select(
+            'pewarnaan_hpa.*, 
+        hpa.*, 
+        patient.*, 
+        users.nama_user AS nama_user_pewarnaan_hpa'
+        )
+            ->join('hpa', 'pewarnaan_hpa.id_hpa = hpa.id_hpa', 'left')
+            ->join('patient', 'hpa.id_pasien = patient.id_pasien', 'left')
+            ->join('users', 'pewarnaan_hpa.id_user_pewarnaan_hpa = users.id_user', 'left')
+            ->where('pewarnaan_hpa.id_pewarnaan_hpa', $id_pewarnaan_hpa)
+            ->first();
 
-    public function deletepewarnaan_hpa($id_pewarnaan_hpa)
-    {
-        return $this->delete($id_pewarnaan_hpa);
+        return $data;
     }
-
 }

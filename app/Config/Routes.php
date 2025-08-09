@@ -7,17 +7,17 @@ use CodeIgniter\Router\RouteCollection;
  */
 
 // Tampilan awal
-$routes->get('/', 'Auth::index'); // Menampilkan form login
+$routes->get('/', 'Auth::index');
 
 // Route untuk Auth
 $routes->group('auth', function ($routes) {
-    $routes->get('login', 'Auth::index'); // Menampilkan form login
-    $routes->post('login', 'Auth::login'); // Menangani form POST dari Auth
-    $routes->get('logout', 'Auth::logout'); // Menangani logout dan menghapus session
+    $routes->get('login', 'Auth::index');
+    $routes->post('login', 'Auth::login'); 
+    $routes->get('logout', 'Auth::logout'); 
 });
 
-$routes->get('dashboard', 'Dashboard::index'); // Rute untuk dashboard
-
+// Route untuk Dashboard
+$routes->get('dashboard', 'Dashboard::index'); 
 
 // Route untuk Users
 $routes->group('users', function ($routes) {
@@ -33,8 +33,9 @@ $routes->group('users', function ($routes) {
 
 // Route untuk Patient
 $routes->group('patient', function ($routes) {
-    $routes->get('index_patient', 'Patient::index_patient'); 
-    $routes->get('register_patient', 'Patient::register_patient'); 
+    $routes->get('index_patient', 'Patient::index_patient');
+    $routes->get('register_patient', 'Patient::register_patient');
+    $routes->get('register_patient/(:segment)', 'Patient::register_patient/$1'); 
     $routes->post('insert', 'Patient::insert'); 
     $routes->get('delete/(:segment)', 'Patient::delete/$1');
     $routes->get('edit_patient/(:segment)', 'Patient::edit_patient/$1'); 
@@ -42,6 +43,11 @@ $routes->group('patient', function ($routes) {
     $routes->post('modal_search', 'Patient::modal_search');
     $routes->get('laporan', 'Patient::laporan');
     $routes->get('filter', 'Patient::filter');
+});
+
+// Route untuk Simrs
+$routes->group('simrs', ['namespace' => 'App\Controllers'], function ($routes) {
+    $routes->post('modal_search', 'SimrsController::modal_search');
 });
 
 // Route untuk exam
@@ -68,7 +74,10 @@ $routes->group('hpa', ['namespace' => 'App\Controllers\Hpa'], function ($routes)
     $routes->post('update_status', 'HpaController::update_status');
     $routes->post('uploadFotoMakroskopis/(:segment)', 'HpaController::uploadFotoMakroskopis/$1');
     $routes->post('uploadFotoMikroskopis/(:segment)', 'HpaController::uploadFotoMikroskopis/$1');
-    $routes->get('laporan', 'HpaController::laporan');
+    $routes->get('laporan_pemeriksaan', 'HpaController::laporan_pemeriksaan');
+    $routes->get('laporan_kerja', 'HpaController::laporan_kerja');
+    $routes->get('laporan_oprasional', 'HpaController::laporan_oprasional');
+    $routes->get('laporan_BHP', 'HpaController::laporan_BHP');
     $routes->get('filter', 'HpaController::filter');
 });
 
@@ -90,7 +99,10 @@ $routes->group('frs', ['namespace' => 'App\Controllers\Frs'], function ($routes)
     $routes->post('update_status', 'FrsController::update_status');
     $routes->post('uploadFotoMakroskopis/(:segment)', 'FrsController::uploadFotoMakroskopis/$1');
     $routes->post('uploadFotoMikroskopis/(:segment)', 'FrsController::uploadFotoMikroskopis/$1');
-    $routes->get('laporan', 'FrsController::laporan');
+    $routes->get('laporan_pemeriksaan', 'FrsController::laporan_pemeriksaan');
+    $routes->get('laporan_kerja', 'FrsController::laporan_kerja');
+    $routes->get('laporan_oprasional', 'FrsController::laporan_oprasional');
+    $routes->get('laporan_BHP', 'FrsController::laporan_BHP');
     $routes->get('filter', 'FrsController::filter');
 });
 
@@ -112,7 +124,10 @@ $routes->group('srs', ['namespace' => 'App\Controllers\Srs'], function ($routes)
     $routes->post('update_status', 'SrsController::update_status');
     $routes->post('uploadFotoMakroskopis/(:segment)', 'SrsController::uploadFotoMakroskopis/$1');
     $routes->post('uploadFotoMikroskopis/(:segment)', 'SrsController::uploadFotoMikroskopis/$1');
-    $routes->get('laporan', 'SrsController::laporan');
+    $routes->get('laporan_pemeriksaan', 'SrsController::laporan_pemeriksaan');
+    $routes->get('laporan_kerja', 'SrsController::laporan_kerja');
+    $routes->get('laporan_oprasional', 'SrsController::laporan_oprasional');
+    $routes->get('laporan_BHP', 'SrsController::laporan_BHP');
     $routes->get('filter', 'SrsController::filter');
 });
 
@@ -133,7 +148,14 @@ $routes->group('ihc', ['namespace' => 'App\Controllers\Ihc'], function ($routes)
     $routes->post('update_status', 'IhcController::update_status');
     $routes->post('uploadFotoMakroskopis/(:segment)', 'IhcController::uploadFotoMakroskopis/$1');
     $routes->post('uploadFotoMikroskopis/(:segment)', 'IhcController::uploadFotoMikroskopis/$1');
-    $routes->get('laporan', 'IhcController::laporan');
+    $routes->get('laporan_pemeriksaan', 'IhcController::laporan_pemeriksaan');
+    $routes->get('laporan_kerja', 'IhcController::laporan_kerja');
+    $routes->get('laporan_oprasional', 'IhcController::laporan_oprasional');
+    $routes->get('laporan_BHP', 'IhcController::laporan_BHP');
+    $routes->get('laporan_ER', 'IhcController::laporan_ER');
+    $routes->get('laporan_PR', 'IhcController::laporan_PR');
+    $routes->get('laporan_HER2', 'IhcController::laporan_HER2');
+    $routes->get('laporan_KI67', 'IhcController::laporan_KI67');
     $routes->get('filter', 'IhcController::filter');
 });
 
@@ -142,8 +164,8 @@ $routes->group('penerimaan_hpa', ['namespace' => 'App\Controllers\Hpa\Proses'], 
     $routes->get('index', 'Penerimaan::index');
     $routes->post('proses_penerimaan', 'Penerimaan::proses_penerimaan');
     $routes->get('penerimaan_details', 'Penerimaan::penerimaan_details');
-    $routes->get('edit_penerimaan', 'Penerimaan::edit_penerimaan');
-    $routes->post('update_penerimaan', 'Penerimaan::update_penerimaan');
+    $routes->get('edit', 'Penerimaan::edit');
+    $routes->post('update', 'Penerimaan::update');
 });
 
 // Route untuk Penerimaan frs
@@ -151,8 +173,8 @@ $routes->group('penerimaan_frs', ['namespace' => 'App\Controllers\Frs\Proses'], 
     $routes->get('index', 'Penerimaan::index');
     $routes->post('proses_penerimaan', 'Penerimaan::proses_penerimaan');
     $routes->get('penerimaan_details', 'Penerimaan::penerimaan_details');
-    $routes->get('edit_penerimaan', 'Penerimaan::edit_penerimaan');
-    $routes->post('update_penerimaan', 'Penerimaan::update_penerimaan');
+    $routes->get('edit', 'Penerimaan::edit');
+    $routes->post('update', 'Penerimaan::update');
 });
 
 // Route untuk Penerimaan srs
@@ -160,8 +182,8 @@ $routes->group('penerimaan_srs', ['namespace' => 'App\Controllers\Srs\Proses'], 
     $routes->get('index', 'Penerimaan::index');
     $routes->post('proses_penerimaan', 'Penerimaan::proses_penerimaan');
     $routes->get('penerimaan_details', 'Penerimaan::penerimaan_details');
-    $routes->get('edit_penerimaan', 'Penerimaan::edit_penerimaan');
-    $routes->post('update_penerimaan', 'Penerimaan::update_penerimaan');
+    $routes->get('edit', 'Penerimaan::edit');
+    $routes->post('update', 'Penerimaan::update');
 });
 
 // Route untuk Penerimaan ihc
@@ -169,188 +191,178 @@ $routes->group('penerimaan_ihc', ['namespace' => 'App\Controllers\Ihc\Proses'], 
     $routes->get('index', 'Penerimaan::index');
     $routes->post('proses_penerimaan', 'Penerimaan::proses_penerimaan');
     $routes->get('penerimaan_details', 'Penerimaan::penerimaan_details');
-    $routes->get('edit_penerimaan', 'Penerimaan::edit_penerimaan');
-    $routes->post('update_penerimaan', 'Penerimaan::update_penerimaan');
-});
-
-// Route untuk Pengirisan
-$routes->group('pengirisan_hpa', ['namespace' => 'App\Controllers\Hpa\Proses'], function ($routes) {
-    $routes->get('index', 'Pengirisan::index'); 
-    $routes->post('proses_pengirisan', 'Pengirisan::proses_pengirisan');
-    $routes->get('pengirisan_details', 'Pengirisan::pengirisan_details');
-    $routes->post('delete', 'Pengirisan::delete');
-    $routes->get('edit_pengirisan', 'Pengirisan::edit_pengirisan');
-    $routes->post('update_pengirisan', 'Pengirisan::update_pengirisan');
+    $routes->get('edit', 'Penerimaan::edit');
+    $routes->post('update', 'Penerimaan::update');
 });
 
 // Route untuk Pemotongan
 $routes->group('pemotongan_hpa', ['namespace' => 'App\Controllers\Hpa\Proses'], function ($routes) {
-    $routes->get('index', 'Pemotongan::index'); // Menampilkan halaman pemotongan
-    $routes->post('proses_pemotongan', 'Pemotongan::proses_pemotongan'); // Proses pemotongan
+    $routes->get('index', 'Pemotongan::index'); 
+    $routes->post('proses_pemotongan', 'Pemotongan::proses_pemotongan'); 
     $routes->get('pemotongan_details', 'Pemotongan::pemotongan_details');
     $routes->post('delete', 'Pemotongan::delete');
-    $routes->get('edit_pemotongan', 'Pemotongan::edit_pemotongan');
-    $routes->post('update_pemotongan', 'Pemotongan::update_pemotongan');
+    $routes->get('edit', 'Pemotongan::edit');
+    $routes->post('update', 'Pemotongan::update');
 });
 
 // Route untuk Pemprosesan
 $routes->group('pemprosesan_hpa', ['namespace' => 'App\Controllers\Hpa\Proses'], function ($routes) {
-    $routes->get('index', 'Pemprosesan::index'); // Menampilkan halaman pemprosesan
-    $routes->post('proses_pemprosesan', 'Pemprosesan::proses_pemprosesan'); // Proses pemprosesan
+    $routes->get('index', 'Pemprosesan::index'); 
+    $routes->post('proses_pemprosesan', 'Pemprosesan::proses_pemprosesan'); 
     $routes->get('pemprosesan_details', 'Pemprosesan::pemprosesan_details');
     $routes->post('delete', 'Pemprosesan::delete');
-    $routes->get('edit_pemprosesan', 'Pemprosesan::edit_pemprosesan');
-    $routes->post('update_pemprosesan', 'Pemprosesan::update_pemprosesan');
+    $routes->get('edit', 'Pemprosesan::edit');
+    $routes->post('update', 'Pemprosesan::update');
 });
 
 // Route untuk Penanaman
 $routes->group('penanaman_hpa', ['namespace' => 'App\Controllers\Hpa\Proses'], function ($routes) {
-    $routes->get('index', 'Penanaman::index'); // Menampilkan halaman penanaman
-    $routes->post('proses_penanaman', 'Penanaman::proses_penanaman'); // Proses penanaman
+    $routes->get('index', 'Penanaman::index'); 
+    $routes->post('proses_penanaman', 'Penanaman::proses_penanaman'); 
     $routes->get('penanaman_details', 'Penanaman::penanaman_details');
     $routes->post('delete', 'Penanaman::delete');
-    $routes->get('edit_penanaman', 'Penanaman::edit_penanaman');
-    $routes->post('update_penanaman', 'Penanaman::update_penanaman');
+    $routes->get('edit', 'Penanaman::edit');
+    $routes->post('update', 'Penanaman::update');
 });
 
 // Route untuk Pemotongan Tipis
 $routes->group('pemotongan_tipis_hpa', ['namespace' => 'App\Controllers\Hpa\Proses'], function ($routes) {
-    $routes->get('index', 'PemotonganTipis::index'); // Menampilkan halaman pemotongan tipis
-    $routes->post('proses_pemotongan_tipis', 'PemotonganTipis::proses_pemotongan_tipis'); // Proses pemotongan tipis
+    $routes->get('index', 'PemotonganTipis::index'); 
+    $routes->post('proses_pemotongan_tipis', 'PemotonganTipis::proses_pemotongan_tipis'); 
     $routes->get('pemotongan_tipis_details', 'PemotonganTipis::pemotongan_tipis_details');
     $routes->post('delete', 'PemotonganTipis::delete');
-    $routes->get('edit_pemotongan_tipis', 'PemotonganTipis::edit_pemotongan_tipis');
-    $routes->post('update_pemotongan_tipis', 'PemotonganTipis::update_pemotongan_tipis');
+    $routes->get('edit', 'PemotonganTipis::edit');
+    $routes->post('update', 'PemotonganTipis::update');
 });
 
 // Route untuk Pewarnaan
 $routes->group('pewarnaan_hpa', ['namespace' => 'App\Controllers\Hpa\Proses'], function ($routes) {
-    $routes->get('index', 'Pewarnaan::index'); // Menampilkan halaman pewarnaan
-    $routes->post('proses_pewarnaan', 'Pewarnaan::proses_pewarnaan'); // Proses pewarnaan
+    $routes->get('index', 'Pewarnaan::index'); 
+    $routes->post('proses_pewarnaan', 'Pewarnaan::proses_pewarnaan'); 
     $routes->get('pewarnaan_details', 'Pewarnaan::pewarnaan_details');
     $routes->post('delete', 'Pewarnaan::delete');
-    $routes->get('edit_pewarnaan', 'Pewarnaan::edit_pewarnaan');
-    $routes->post('update_pewarnaan', 'Pewarnaan::update_pewarnaan');
+    $routes->get('edit', 'Pewarnaan::edit');
+    $routes->post('update', 'Pewarnaan::update');
 });
 
 // Route untuk Pembacaan hpa
 $routes->group('pembacaan_hpa', ['namespace' => 'App\Controllers\Hpa\Proses'], function ($routes) {
-    $routes->get('index', 'Pembacaan::index'); // Menampilkan halaman pembacaan
-    $routes->post('proses_pembacaan', 'Pembacaan::proses_pembacaan'); // Proses pembacaan
+    $routes->get('index', 'Pembacaan::index'); 
+    $routes->post('proses_pembacaan', 'Pembacaan::proses_pembacaan'); 
     $routes->get('pembacaan_details', 'Pembacaan::pembacaan_details');
     $routes->post('delete', 'Pembacaan::delete');
-    $routes->get('edit_pembacaan', 'Pembacaan::edit_pembacaan');
-    $routes->post('update_pembacaan', 'Pembacaan::update_pembacaan');
+    $routes->get('edit', 'Pembacaan::edit');
+    $routes->post('update', 'Pembacaan::update');
 });
 
 // Route untuk Pembacaan frs
 $routes->group('pembacaan_frs', ['namespace' => 'App\Controllers\Frs\Proses'], function ($routes) {
-    $routes->get('index', 'Pembacaan::index'); // Menampilkan halaman pembacaan
-    $routes->post('proses_pembacaan', 'Pembacaan::proses_pembacaan'); // Proses pembacaan
+    $routes->get('index', 'Pembacaan::index'); 
+    $routes->post('proses_pembacaan', 'Pembacaan::proses_pembacaan'); 
     $routes->get('pembacaan_details', 'Pembacaan::pembacaan_details');
     $routes->post('delete', 'Pembacaan::delete');
-    $routes->get('edit_pembacaan', 'Pembacaan::edit_pembacaan');
-    $routes->post('update_pembacaan', 'Pembacaan::update_pembacaan');
+    $routes->get('edit', 'Pembacaan::edit');
+    $routes->post('update', 'Pembacaan::update');
 });
 
 // Route untuk Pembacaan srs
 $routes->group('pembacaan_srs', ['namespace' => 'App\Controllers\Srs\Proses'], function ($routes) {
-    $routes->get('index', 'Pembacaan::index'); // Menampilkan halaman pembacaan
-    $routes->post('proses_pembacaan', 'Pembacaan::proses_pembacaan'); // Proses pembacaan
+    $routes->get('index', 'Pembacaan::index'); 
+    $routes->post('proses_pembacaan', 'Pembacaan::proses_pembacaan'); 
     $routes->get('pembacaan_details', 'Pembacaan::pembacaan_details');
     $routes->post('delete', 'Pembacaan::delete');
-    $routes->get('edit_pembacaan', 'Pembacaan::edit_pembacaan');
-    $routes->post('update_pembacaan', 'Pembacaan::update_pembacaan');
+    $routes->get('edit', 'Pembacaan::edit');
+    $routes->post('update', 'Pembacaan::update');
 });
 
 // Route untuk Pembacaan ihc
 $routes->group('pembacaan_ihc', ['namespace' => 'App\Controllers\Ihc\Proses'], function ($routes) {
-    $routes->get('index', 'Pembacaan::index'); // Menampilkan halaman pembacaan
-    $routes->post('proses_pembacaan', 'Pembacaan::proses_pembacaan'); // Proses pembacaan
+    $routes->get('index', 'Pembacaan::index'); 
+    $routes->post('proses_pembacaan', 'Pembacaan::proses_pembacaan'); 
     $routes->get('pembacaan_details', 'Pembacaan::pembacaan_details');
     $routes->post('delete', 'Pembacaan::delete');
-    $routes->get('edit_pembacaan', 'Pembacaan::edit_pembacaan');
-    $routes->post('update_pembacaan', 'Pembacaan::update_pembacaan');
+    $routes->get('edit', 'Pembacaan::edit');
+    $routes->post('update', 'Pembacaan::update');
 });
 
 // Route untuk Penulisan hpa
 $routes->group('penulisan_hpa', ['namespace' => 'App\Controllers\Hpa\Proses'], function ($routes) {
-    $routes->get('index', 'Penulisan::index'); // Menampilkan halaman penulisan
-    $routes->post('proses_penulisan', 'Penulisan::proses_penulisan'); // Proses penulisan
+    $routes->get('index', 'Penulisan::index'); 
+    $routes->post('proses_penulisan', 'Penulisan::proses_penulisan'); 
     $routes->get('penulisan_details', 'Penulisan::penulisan_details');
     $routes->post('delete', 'Penulisan::delete');
-    $routes->get('edit_penulisan', 'Penulisan::edit_penulisan');
-    $routes->post('update_penulisan', 'Penulisan::update_penulisan');
+    $routes->get('edit', 'Penulisan::edit');
+    $routes->post('update', 'Penulisan::update');
 });
 
 // Route untuk Penulisan frs
 $routes->group('penulisan_frs', ['namespace' => 'App\Controllers\Frs\Proses'], function ($routes) {
-    $routes->get('index', 'Penulisan::index'); // Menampilkan halaman penulisan
-    $routes->post('proses_penulisan', 'Penulisan::proses_penulisan'); // Proses penulisan
+    $routes->get('index', 'Penulisan::index'); 
+    $routes->post('proses_penulisan', 'Penulisan::proses_penulisan'); 
     $routes->get('penulisan_details', 'Penulisan::penulisan_details');
     $routes->post('delete', 'Penulisan::delete');
-    $routes->get('edit_penulisan', 'Penulisan::edit_penulisan');
-    $routes->post('update_penulisan', 'Penulisan::update_penulisan');
+    $routes->get('edit', 'Penulisan::edit');
+    $routes->post('update', 'Penulisan::update');
 });
 
 // Route untuk Penulisan srs
 $routes->group('penulisan_srs', ['namespace' => 'App\Controllers\Srs\Proses'], function ($routes) {
-    $routes->get('index', 'Penulisan::index'); // Menampilkan halaman penulisan
-    $routes->post('proses_penulisan', 'Penulisan::proses_penulisan'); // Proses penulisan
+    $routes->get('index', 'Penulisan::index'); 
+    $routes->post('proses_penulisan', 'Penulisan::proses_penulisan'); 
     $routes->get('penulisan_details', 'Penulisan::penulisan_details');
     $routes->post('delete', 'Penulisan::delete');
-    $routes->get('edit_penulisan', 'Penulisan::edit_penulisan');
-    $routes->post('update_penulisan', 'Penulisan::update_penulisan');
+    $routes->get('edit', 'Penulisan::edit');
+    $routes->post('update', 'Penulisan::update');
 });
 
 // Route untuk Penulisan ihc
 $routes->group('penulisan_ihc', ['namespace' => 'App\Controllers\Ihc\Proses'], function ($routes) {
-    $routes->get('index', 'Penulisan::index'); // Menampilkan halaman penulisan
-    $routes->post('proses_penulisan', 'Penulisan::proses_penulisan'); // Proses penulisan
+    $routes->get('index', 'Penulisan::index'); 
+    $routes->post('proses_penulisan', 'Penulisan::proses_penulisan'); 
     $routes->get('penulisan_details', 'Penulisan::penulisan_details');
     $routes->post('delete', 'Penulisan::delete');
-    $routes->get('edit_penulisan', 'Penulisan::edit_penulisan');
-    $routes->post('update_penulisan', 'Penulisan::update_penulisan');
+    $routes->get('edit', 'Penulisan::edit');
+    $routes->post('update', 'Penulisan::update');
 });
 
 // Route untuk Pemverifikasi hpa
 $routes->group('pemverifikasi_hpa', ['namespace' => 'App\Controllers\Hpa\Proses'], function ($routes) {
-    $routes->get('index', 'Pemverifikasi::index'); // Menampilkan halaman pemverifikasi
-    $routes->post('proses_pemverifikasi', 'Pemverifikasi::proses_pemverifikasi'); // Proses pemverifikasi
+    $routes->get('index', 'Pemverifikasi::index'); 
+    $routes->post('proses_pemverifikasi', 'Pemverifikasi::proses_pemverifikasi'); 
     $routes->get('pemverifikasi_details', 'Pemverifikasi::pemverifikasi_details');
     $routes->post('delete', 'Pemverifikasi::delete');
-    $routes->get('edit_pemverifikasi', 'Pemverifikasi::edit_pemverifikasi');
-    $routes->post('update_pemverifikasi', 'Pemverifikasi::update_pemverifikasi');
+    $routes->get('edit', 'Pemverifikasi::edit');
+    $routes->post('update', 'Pemverifikasi::update');
 });
 
 // Route untuk Pemverifikasi frs
 $routes->group('pemverifikasi_frs', ['namespace' => 'App\Controllers\Frs\Proses'], function ($routes) {
-    $routes->get('index', 'Pemverifikasi::index'); // Menampilkan halaman pemverifikasi
-    $routes->post('proses_pemverifikasi', 'Pemverifikasi::proses_pemverifikasi'); // Proses pemverifikasi
+    $routes->get('index', 'Pemverifikasi::index'); 
+    $routes->post('proses_pemverifikasi', 'Pemverifikasi::proses_pemverifikasi'); 
     $routes->get('pemverifikasi_details', 'Pemverifikasi::pemverifikasi_details');
     $routes->post('delete', 'Pemverifikasi::delete');
-    $routes->get('edit_pemverifikasi', 'Pemverifikasi::edit_pemverifikasi');
-    $routes->post('update_pemverifikasi', 'Pemverifikasi::update_pemverifikasi');
+    $routes->get('edit', 'Pemverifikasi::edit');
+    $routes->post('update', 'Pemverifikasi::update');
 });
 
 // Route untuk Pemverifikasi srs
 $routes->group('pemverifikasi_srs', ['namespace' => 'App\Controllers\Srs\Proses'], function ($routes) {
-    $routes->get('index', 'Pemverifikasi::index'); // Menampilkan halaman pemverifikasi
-    $routes->post('proses_pemverifikasi', 'Pemverifikasi::proses_pemverifikasi'); // Proses pemverifikasi
+    $routes->get('index', 'Pemverifikasi::index'); 
+    $routes->post('proses_pemverifikasi', 'Pemverifikasi::proses_pemverifikasi'); 
     $routes->get('pemverifikasi_details', 'Pemverifikasi::pemverifikasi_details');
     $routes->post('delete', 'Pemverifikasi::delete');
-    $routes->get('edit_pemverifikasi', 'Pemverifikasi::edit_pemverifikasi');
-    $routes->post('update_pemverifikasi', 'Pemverifikasi::update_pemverifikasi');
+    $routes->get('edit', 'Pemverifikasi::edit');
+    $routes->post('update', 'Pemverifikasi::update');
 });
 
 // Route untuk Pemverifikasi ihc
 $routes->group('pemverifikasi_ihc', ['namespace' => 'App\Controllers\Ihc\Proses'], function ($routes) {
-    $routes->get('index', 'Pemverifikasi::index'); // Menampilkan halaman pemverifikasi
-    $routes->post('proses_pemverifikasi', 'Pemverifikasi::proses_pemverifikasi'); // Proses pemverifikasi
+    $routes->get('index', 'Pemverifikasi::index'); 
+    $routes->post('proses_pemverifikasi', 'Pemverifikasi::proses_pemverifikasi'); 
     $routes->get('pemverifikasi_details', 'Pemverifikasi::pemverifikasi_details');
     $routes->post('delete', 'Pemverifikasi::delete');
-    $routes->get('edit_pemverifikasi', 'Pemverifikasi::edit_pemverifikasi');
-    $routes->post('update_pemverifikasi', 'Pemverifikasi::update_pemverifikasi');
+    $routes->get('edit', 'Pemverifikasi::edit');
+    $routes->post('update', 'Pemverifikasi::update');
 });
 
 // Route untuk Authorized hpa
@@ -359,8 +371,8 @@ $routes->group('authorized_hpa', ['namespace' => 'App\Controllers\Hpa\Proses'], 
     $routes->post('proses_authorized', 'Authorized::proses_authorized'); 
     $routes->get('authorized_details', 'Authorized::authorized_details');
     $routes->post('delete', 'Authorized::delete');
-    $routes->get('edit_authorized', 'Authorized::edit_authorized');
-    $routes->post('update_authorized', 'Authorized::update_authorized');
+    $routes->get('edit', 'Authorized::edit');
+    $routes->post('update', 'Authorized::update');
 });
 
 // Route untuk Authorized frs
@@ -369,8 +381,8 @@ $routes->group('authorized_frs', ['namespace' => 'App\Controllers\Frs\Proses'], 
     $routes->post('proses_authorized', 'Authorized::proses_authorized'); 
     $routes->get('authorized_details', 'Authorized::authorized_details');
     $routes->post('delete', 'Authorized::delete');
-    $routes->get('edit_authorized', 'Authorized::edit_authorized');
-    $routes->post('update_authorized', 'Authorized::update_authorized');
+    $routes->get('edit', 'Authorized::edit');
+    $routes->post('update', 'Authorized::update');
 });
 
 // Route untuk Authorized srs
@@ -379,8 +391,8 @@ $routes->group('authorized_srs', ['namespace' => 'App\Controllers\Srs\Proses'], 
     $routes->post('proses_authorized', 'Authorized::proses_authorized'); 
     $routes->get('authorized_details', 'Authorized::authorized_details');
     $routes->post('delete', 'Authorized::delete');
-    $routes->get('edit_authorized', 'Authorized::edit_authorized');
-    $routes->post('update_authorized', 'Authorized::update_authorized');
+    $routes->get('edit', 'Authorized::edit');
+    $routes->post('update', 'Authorized::update');
 });
 
 // Route untuk Authorized ihc
@@ -389,64 +401,82 @@ $routes->group('authorized_ihc', ['namespace' => 'App\Controllers\ihc\Proses'], 
     $routes->post('proses_authorized', 'Authorized::proses_authorized'); 
     $routes->get('authorized_details', 'Authorized::authorized_details');
     $routes->post('delete', 'Authorized::delete');
-    $routes->get('edit_authorized', 'Authorized::edit_authorized');
-    $routes->post('update_authorized', 'Authorized::update_authorized');
+    $routes->get('edit', 'Authorized::edit');
+    $routes->post('update', 'Authorized::update');
 });
 
 // Route untuk Pencetakan hpa
 $routes->group('pencetakan_hpa', ['namespace' => 'App\Controllers\Hpa\Proses'], function ($routes) {
-    $routes->get('index', 'Pencetakan::index'); // Menampilkan halaman pencetakan
-    $routes->post('proses_pencetakan', 'Pencetakan::proses_pencetakan'); // Proses pencetakan
+    $routes->get('index', 'Pencetakan::index'); 
+    $routes->post('proses_pencetakan', 'Pencetakan::proses_pencetakan'); 
     $routes->get('pencetakan_details', 'Pencetakan::pencetakan_details');
     $routes->post('delete', 'Pencetakan::delete');
-    $routes->get('edit_pencetakan', 'Pencetakan::edit_pencetakan');
-    $routes->post('update_pencetakan', 'Pencetakan::update_pencetakan');
+    $routes->get('edit', 'Pencetakan::edit');
+    $routes->post('update', 'Pencetakan::update');
 });
 
 // Route untuk Pencetakan frs
 $routes->group('pencetakan_frs', ['namespace' => 'App\Controllers\Frs\Proses'], function ($routes) {
-    $routes->get('index', 'Pencetakan::index'); // Menampilkan halaman pencetakan
-    $routes->post('proses_pencetakan', 'Pencetakan::proses_pencetakan'); // Proses pencetakan
+    $routes->get('index', 'Pencetakan::index'); 
+    $routes->post('proses_pencetakan', 'Pencetakan::proses_pencetakan'); 
     $routes->get('pencetakan_details', 'Pencetakan::pencetakan_details');
     $routes->post('delete', 'Pencetakan::delete');
-    $routes->get('edit_pencetakan', 'Pencetakan::edit_pencetakan');
-    $routes->post('update_pencetakan', 'Pencetakan::update_pencetakan');
+    $routes->get('edit', 'Pencetakan::edit');
+    $routes->post('update', 'Pencetakan::update');
 });
 
 // Route untuk Pencetakan srs
 $routes->group('pencetakan_srs', ['namespace' => 'App\Controllers\Srs\Proses'], function ($routes) {
-    $routes->get('index', 'Pencetakan::index'); // Menampilkan halaman pencetakan
-    $routes->post('proses_pencetakan', 'Pencetakan::proses_pencetakan'); // Proses pencetakan
+    $routes->get('index', 'Pencetakan::index'); 
+    $routes->post('proses_pencetakan', 'Pencetakan::proses_pencetakan'); 
     $routes->get('pencetakan_details', 'Pencetakan::pencetakan_details');
     $routes->post('delete', 'Pencetakan::delete');
-    $routes->get('edit_pencetakan', 'Pencetakan::edit_pencetakan');
-    $routes->post('update_pencetakan', 'Pencetakan::update_pencetakan');
+    $routes->get('edit', 'Pencetakan::edit');
+    $routes->post('update', 'Pencetakan::update');
 });
 
 // Route untuk Pencetakan ihc
 $routes->group('pencetakan_ihc', ['namespace' => 'App\Controllers\Ihc\Proses'], function ($routes) {
-    $routes->get('index', 'Pencetakan::index'); // Menampilkan halaman pencetakan
-    $routes->post('proses_pencetakan', 'Pencetakan::proses_pencetakan'); // Proses pencetakan
+    $routes->get('index', 'Pencetakan::index'); 
+    $routes->post('proses_pencetakan', 'Pencetakan::proses_pencetakan'); 
     $routes->get('pencetakan_details', 'Pencetakan::pencetakan_details');
     $routes->post('delete', 'Pencetakan::delete');
-    $routes->get('edit_pencetakan', 'Pencetakan::edit_pencetakan');
-    $routes->post('update_pencetakan', 'Pencetakan::update_pencetakan');
+    $routes->get('edit', 'Pencetakan::edit');
+    $routes->post('update', 'Pencetakan::update');
 });
 
-// Router untuk Mutu
-$routes->group('mutu', function ($routes) {
-    $routes->get('mutu_details', 'Mutu::mutu_details');
-    $routes->get('edit_mutu', 'Mutu::edit_mutu');
-    $routes->post('update_mutu', 'Mutu::update_mutu');
+// Router untuk Mutu Hpa
+$routes->group('mutu_hpa', ['namespace' => 'App\Controllers\Hpa'], function ($routes) {
+    $routes->get('index', 'mutu::index');
+    $routes->post('proses_mutu', 'mutu::proses_mutu');
+    $routes->get('mutu_details', 'mutu::mutu_details');
+    $routes->get('edit', 'mutu::edit');
+    $routes->post('update', 'mutu::update');
 });
 
-// Router untuk Cetak
-$routes->group('cetak', function ($routes) {
-    $routes->get('form_hpa', 'Cetak::cetak_form_hpa');
-    $routes->get('cetak_proses/(:num)', 'Cetak::cetak_proses/$1');
-    $routes->get('autorized/(:num)', 'Cetak::autorized/$1');
-    $routes->get('cetak_hpa/(:num)', 'Cetak::cetak_hpa/$1');
+// Router untuk Mutu Frs
+$routes->group('mutu_frs', ['namespace' => 'App\Controllers\Frs'], function ($routes) {
+    $routes->get('index', 'mutu::index');
+    $routes->post('proses_mutu', 'mutu::proses_mutu');
+    $routes->get('mutu_details', 'mutu::mutu_details');
+    $routes->get('edit', 'mutu::edit');
+    $routes->post('update', 'mutu::update');
 });
 
-// Laporan
-$routes->get('laporan_jumlah_pasien', 'Laporan\Laporan::index_laporan');
+// Router untuk Mutu Srs
+$routes->group('mutu_srs', ['namespace' => 'App\Controllers\Srs'], function ($routes) {
+    $routes->get('index', 'mutu::index');
+    $routes->post('proses_mutu', 'mutu::proses_mutu');
+    $routes->get('mutu_details', 'mutu::mutu_details');
+    $routes->get('edit', 'mutu::edit');
+    $routes->post('update', 'mutu::update');
+});
+
+// Router untuk Mutu Ihc
+$routes->group('mutu_ihc', ['namespace' => 'App\Controllers\Ihc'], function ($routes) {
+    $routes->get('index', 'mutu::index');
+    $routes->post('proses_mutu', 'mutu::proses_mutu');
+    $routes->get('mutu_details', 'mutu::mutu_details');
+    $routes->get('edit', 'mutu::edit');
+    $routes->post('update', 'mutu::update');
+});

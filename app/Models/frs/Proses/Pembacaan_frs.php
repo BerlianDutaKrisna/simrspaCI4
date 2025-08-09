@@ -54,18 +54,20 @@ class Pembacaan_frs extends Model // Update nama model
             ->findAll();
     }
 
-    // Fungsi untuk mengupdate data pembacaan_frs
-    public function updatepembacaan_frs($id_pembacaan_frs, $data) // Update nama fungsi dan parameter
+    public function detailspembacaan_frs($id_pembacaan_frs)
     {
-        $builder = $this->db->table($this->table);  // Mengambil tabel pembacaan_frs
-        $builder->where('id_pembacaan_frs', $id_pembacaan_frs);  // Menentukan baris yang akan diupdate berdasarkan id_pembacaan_frs
-        $builder->update($data);  // Melakukan update dengan data yang dikirimkan
-        return $this->db->affectedRows();  // Mengembalikan jumlah baris yang terpengaruh
-    }
+        $data = $this->select(
+            'pembacaan_frs.*, 
+        frs.*, 
+        patient.*, 
+        users.nama_user AS nama_user_pembacaan_frs'
+        )
+            ->join('frs', 'pembacaan_frs.id_frs = frs.id_frs', 'left')
+            ->join('patient', 'frs.id_pasien = patient.id_pasien', 'left')
+            ->join('users', 'pembacaan_frs.id_user_dokter_pembacaan_frs = users.id_user', 'left')
+            ->where('pembacaan_frs.id_pembacaan_frs', $id_pembacaan_frs)
+            ->first();
 
-    public function deletepembacaan_frs($id_pembacaan_frs)
-    {
-        return $this->delete($id_pembacaan_frs);
+        return $data;
     }
-
 }

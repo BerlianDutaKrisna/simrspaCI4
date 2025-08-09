@@ -32,6 +32,14 @@ class IhcModel extends Model
         'no_tlp_ihc',
         'no_bpjs_ihc',
         'no_ktp_ihc',
+        'ER',
+        'PR',
+        'HER2',
+        'KI67',
+        'status_kontrol',
+        'id_transaksi',
+        'tanggal_transaksi',
+        'no_register',
         'created_at',
         'updated_at',
     ];
@@ -106,15 +114,62 @@ class IhcModel extends Model
             ->findAll();
     }
 
-    public function getTotalIhc() {
+    public function getTotalIhc()
+    {
         return $this->db->table('ihc')->countAllResults();
     }
 
     public function getihcWithPatient()
     {
-        return $this->select('ihc.*, patient.*')
-            ->join('patient', 'patient.id_pasien = ihc.id_pasien')
-            ->orderBy('ihc.kode_ihc', 'ASC')
+        return $this->select('
+            ihc.*, 
+            patient.*, 
+            penerimaan_ihc.id_penerimaan_ihc AS id_penerimaan,
+            pembacaan_ihc.id_pembacaan_ihc AS id_pembacaan,
+            penulisan_ihc.id_penulisan_ihc AS id_penulisan,
+            pemverifikasi_ihc.id_pemverifikasi_ihc AS id_pemverifikasi,
+            authorized_ihc.id_authorized_ihc AS id_authorized,
+            pencetakan_ihc.id_pencetakan_ihc AS id_pencetakan,
+            mutu_ihc.id_mutu_ihc AS id_mutu
+        ')
+            ->join('patient', 'patient.id_pasien = ihc.id_pasien', 'left')
+            ->join('penerimaan_ihc', 'penerimaan_ihc.id_ihc = ihc.id_ihc', 'left')
+            ->join('pembacaan_ihc', 'pembacaan_ihc.id_ihc = ihc.id_ihc', 'left')
+            ->join('penulisan_ihc', 'penulisan_ihc.id_ihc = ihc.id_ihc', 'left')
+            ->join('pemverifikasi_ihc', 'pemverifikasi_ihc.id_ihc = ihc.id_ihc', 'left')
+            ->join('authorized_ihc', 'authorized_ihc.id_ihc = ihc.id_ihc', 'left')
+            ->join('pencetakan_ihc', 'pencetakan_ihc.id_ihc = ihc.id_ihc', 'left')
+            ->join('mutu_ihc', 'mutu_ihc.id_ihc = ihc.id_ihc', 'left')
+            ->orderBy("CAST(SUBSTRING_INDEX(SUBSTRING_INDEX(kode_ihc, '/', 1), '.', -1) AS UNSIGNED) ASC")
+            ->orderBy("CAST(SUBSTRING_INDEX(kode_ihc, '/', -1) AS UNSIGNED) ASC")
+            ->findAll();
+    }
+
+    public function getihcWithPatientDESC()
+    {
+        return $this->select('
+            ihc.*, 
+            patient.*, 
+            penerimaan_ihc.id_penerimaan_ihc AS id_penerimaan,
+            pembacaan_ihc.id_pembacaan_ihc AS id_pembacaan,
+            penulisan_ihc.id_penulisan_ihc AS id_penulisan,
+            pemverifikasi_ihc.id_pemverifikasi_ihc AS id_pemverifikasi,
+            authorized_ihc.id_authorized_ihc AS id_authorized,
+            pencetakan_ihc.id_pencetakan_ihc AS id_pencetakan,
+            mutu_ihc.id_mutu_ihc AS id_mutu,
+            dokter_pembacaan.nama_user AS nama_dokter_pembacaan
+        ')
+            ->join('patient', 'patient.id_pasien = ihc.id_pasien', 'left')
+            ->join('penerimaan_ihc', 'penerimaan_ihc.id_ihc = ihc.id_ihc', 'left')
+            ->join('pembacaan_ihc', 'pembacaan_ihc.id_ihc = ihc.id_ihc', 'left')
+            ->join('penulisan_ihc', 'penulisan_ihc.id_ihc = ihc.id_ihc', 'left')
+            ->join('pemverifikasi_ihc', 'pemverifikasi_ihc.id_ihc = ihc.id_ihc', 'left')
+            ->join('authorized_ihc', 'authorized_ihc.id_ihc = ihc.id_ihc', 'left')
+            ->join('pencetakan_ihc', 'pencetakan_ihc.id_ihc = ihc.id_ihc', 'left')
+            ->join('mutu_ihc', 'mutu_ihc.id_ihc = ihc.id_ihc', 'left')
+            ->join('users AS dokter_pembacaan', 'dokter_pembacaan.id_user = pembacaan_ihc.id_user_dokter_pembacaan_ihc', 'left')
+            ->orderBy("CAST(SUBSTRING_INDEX(SUBSTRING_INDEX(kode_ihc, '/', 1), '.', -1) AS UNSIGNED) DESC")
+            ->orderBy("CAST(SUBSTRING_INDEX(kode_ihc, '/', -1) AS UNSIGNED) DESC")
             ->findAll();
     }
 
@@ -189,7 +244,8 @@ class IhcModel extends Model
             ->join('mutu_ihc', 'mutu_ihc.id_ihc = ihc.id_ihc', 'left')
             ->where('ihc.tanggal_permintaan >=', $previousMonthStart)
             ->where('ihc.tanggal_permintaan <=', date('Y-m-t'))
-            ->orderBy('ihc.kode_ihc', 'ASC')
+            ->orderBy("CAST(SUBSTRING_INDEX(SUBSTRING_INDEX(kode_ihc, '/', 1), '.', -1) AS UNSIGNED) ASC")
+            ->orderBy("CAST(SUBSTRING_INDEX(kode_ihc, '/', -1) AS UNSIGNED) ASC")
             ->findAll();
     }
 
@@ -223,4 +279,49 @@ class IhcModel extends Model
 
         return $builder->get()->getResultArray();
     }
+
+    public function kontrol_ER()
+    {
+        return $this->select('
+        ihc.*, 
+        patient.*
+    ')
+            ->join('patient', 'patient.id_pasien = ihc.id_pasien', 'left')
+            ->where('ER', 1)
+            ->findAll();
+    }
+    
+    public function kontrol_PR()
+    {
+        return $this->select('
+        ihc.*, 
+        patient.*
+    ')
+            ->join('patient', 'patient.id_pasien = ihc.id_pasien', 'left')
+            ->where('PR', 1)
+            ->findAll();
+    }
+
+    public function kontrol_HER2()
+    {
+        return $this->select('
+        ihc.*, 
+        patient.*
+    ')
+            ->join('patient', 'patient.id_pasien = ihc.id_pasien', 'left')
+            ->where('HER2', 1)
+            ->findAll();
+    }
+
+    public function kontrol_KI67()
+    {
+        return $this->select('
+        ihc.*, 
+        patient.*
+    ')
+            ->join('patient', 'patient.id_pasien = ihc.id_pasien', 'left')
+            ->where('KI67', 1)
+            ->findAll();
+    }
+
 }

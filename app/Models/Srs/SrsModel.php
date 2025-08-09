@@ -28,6 +28,9 @@ class SrsModel extends Model
         'print_srs',
         'penerima_srs',
         'tanggal_penerima',
+        'id_transaksi',
+        'tanggal_transaksi',
+        'no_register',
         'created_at',
         'updated_at',
     ];
@@ -102,15 +105,62 @@ class SrsModel extends Model
             ->findAll();
     }
 
-    public function getTotalSrs() {
+    public function getTotalSrs()
+    {
         return $this->db->table('srs')->countAllResults();
     }
 
     public function getsrsWithPatient()
     {
-        return $this->select('srs.*, patient.*')
-            ->join('patient', 'patient.id_pasien = srs.id_pasien')
-            ->orderBy('srs.kode_srs', 'ASC')
+        return $this->select('
+            srs.*, 
+            patient.*, 
+            penerimaan_srs.id_penerimaan_srs AS id_penerimaan,
+            pembacaan_srs.id_pembacaan_srs AS id_pembacaan,
+            penulisan_srs.id_penulisan_srs AS id_penulisan,
+            pemverifikasi_srs.id_pemverifikasi_srs AS id_pemverifikasi,
+            authorized_srs.id_authorized_srs AS id_authorized,
+            pencetakan_srs.id_pencetakan_srs AS id_pencetakan,
+            mutu_srs.id_mutu_srs AS id_mutu
+        ')
+            ->join('patient', 'patient.id_pasien = srs.id_pasien', 'left')
+            ->join('penerimaan_srs', 'penerimaan_srs.id_srs = srs.id_srs', 'left')
+            ->join('pembacaan_srs', 'pembacaan_srs.id_srs = srs.id_srs', 'left')
+            ->join('penulisan_srs', 'penulisan_srs.id_srs = srs.id_srs', 'left')
+            ->join('pemverifikasi_srs', 'pemverifikasi_srs.id_srs = srs.id_srs', 'left')
+            ->join('authorized_srs', 'authorized_srs.id_srs = srs.id_srs', 'left')
+            ->join('pencetakan_srs', 'pencetakan_srs.id_srs = srs.id_srs', 'left')
+            ->join('mutu_srs', 'mutu_srs.id_srs = srs.id_srs', 'left')
+            ->orderBy("CAST(SUBSTRING_INDEX(SUBSTRING_INDEX(kode_srs, '/', 1), '.', -1) AS UNSIGNED) ASC")
+            ->orderBy("CAST(SUBSTRING_INDEX(kode_srs, '/', -1) AS UNSIGNED) ASC")
+            ->findAll();
+    }
+
+    public function getsrsWithPatientDESC()
+    {
+        return $this->select('
+            srs.*, 
+            patient.*, 
+            penerimaan_srs.id_penerimaan_srs AS id_penerimaan,
+            pembacaan_srs.id_pembacaan_srs AS id_pembacaan,
+            penulisan_srs.id_penulisan_srs AS id_penulisan,
+            pemverifikasi_srs.id_pemverifikasi_srs AS id_pemverifikasi,
+            authorized_srs.id_authorized_srs AS id_authorized,
+            pencetakan_srs.id_pencetakan_srs AS id_pencetakan,
+            mutu_srs.id_mutu_srs AS id_mutu,
+            dokter_pembacaan.nama_user AS nama_dokter_pembacaan
+        ')
+            ->join('patient', 'patient.id_pasien = srs.id_pasien', 'left')
+            ->join('penerimaan_srs', 'penerimaan_srs.id_srs = srs.id_srs', 'left')
+            ->join('pembacaan_srs', 'pembacaan_srs.id_srs = srs.id_srs', 'left')
+            ->join('penulisan_srs', 'penulisan_srs.id_srs = srs.id_srs', 'left')
+            ->join('pemverifikasi_srs', 'pemverifikasi_srs.id_srs = srs.id_srs', 'left')
+            ->join('authorized_srs', 'authorized_srs.id_srs = srs.id_srs', 'left')
+            ->join('pencetakan_srs', 'pencetakan_srs.id_srs = srs.id_srs', 'left')
+            ->join('mutu_srs', 'mutu_srs.id_srs = srs.id_srs', 'left')
+            ->join('users AS dokter_pembacaan', 'dokter_pembacaan.id_user = pembacaan_srs.id_user_dokter_pembacaan_srs', 'left')
+            ->orderBy("CAST(SUBSTRING_INDEX(SUBSTRING_INDEX(kode_srs, '/', 1), '.', -1) AS UNSIGNED) DESC")
+            ->orderBy("CAST(SUBSTRING_INDEX(kode_srs, '/', -1) AS UNSIGNED) DESC")
             ->findAll();
     }
 
@@ -185,7 +235,8 @@ class SrsModel extends Model
             ->join('mutu_srs', 'mutu_srs.id_srs = srs.id_srs', 'left')
             ->where('srs.tanggal_permintaan >=', $previousMonthStart)
             ->where('srs.tanggal_permintaan <=', date('Y-m-t'))
-            ->orderBy('srs.kode_srs', 'ASC')
+            ->orderBy("CAST(SUBSTRING_INDEX(SUBSTRING_INDEX(kode_srs, '/', 1), '.', -1) AS UNSIGNED) ASC")
+            ->orderBy("CAST(SUBSTRING_INDEX(kode_srs, '/', -1) AS UNSIGNED) ASC")
             ->findAll();
     }
 

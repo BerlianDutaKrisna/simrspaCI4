@@ -120,22 +120,10 @@ class Pemotongan extends BaseController
 
     public function pemotongan_details()
     {
-        // Ambil id_pemotongan_hpa dari parameter GET
         $id_pemotongan_hpa = $this->request->getGet('id_pemotongan_hpa');
 
         if ($id_pemotongan_hpa) {
-            // Gunakan model yang sudah diinisialisasi di constructor
-            $data = $this->pemotongan_hpa->select(
-                'pemotongan.*, 
-            hpa.*, 
-            patient.*, 
-            users.nama_user AS nama_user_pemotongan'
-            )
-                ->join('hpa', 'pemotongan.id_hpa = hpa.id_hpa', 'left')
-                ->join('patient', 'hpa.id_pasien = patient.id_pasien', 'left')
-                ->join('users', 'pemotongan.id_user_pemotongan_hpa = users.id_user', 'left')
-                ->where('pemotongan.id_pemotongan_hpa', $id_pemotongan_hpa)
-                ->first();
+            $data = $this->pemotongan_hpa->detailspemotongan_hpa($id_pemotongan_hpa);
 
             if ($data) {
                 return $this->response->setJSON($data);
@@ -143,11 +131,11 @@ class Pemotongan extends BaseController
                 return $this->response->setJSON(['error' => 'Data tidak ditemukan.']);
             }
         } else {
-            return $this->response->setJSON(['error' => 'ID pemotongan tidak ditemukan.']);
+            return $this->response->setJSON(['error' => 'Coba ulangi kembali..']);
         }
     }
 
-    public function edit_pemotongan()
+    public function edit()
     {
         $id_pemotongan_hpa = $this->request->getGet('id_pemotongan_hpa');
 
@@ -162,8 +150,8 @@ class Pemotongan extends BaseController
             throw new \CodeIgniter\Exceptions\PageNotFoundException('Data pemotongan tidak ditemukan.');
         }
 
-        // Ambil data users dengan status_user = 'Analis'
-        $users = $this->userModel->where('status_user', 'Analis')->findAll();
+        // Ambil data user
+        $users = $this->userModel->findAll();
 
         $data = [
             'pemotonganData' => $pemotonganData,
@@ -172,29 +160,62 @@ class Pemotongan extends BaseController
             'nama_user' => session()->get('nama_user'),
         ];
 
-        return view('edit_proses/edit_pemotongan', $data);
+        return view('Hpa/edit_proses/edit_pemotongan', $data);
     }
 
-    public function update_pemotongan()
+    public function update()
     {
         $id_pemotongan_hpa = $this->request->getPost('id_pemotongan_hpa');
+
+        if (!$id_pemotongan_hpa) {
+            return redirect()->back()->with('error', 'ID tidak ditemukan.')->withInput();
+        }
 
         // Gabungkan input tanggal dan waktu
         $mulai_pemotongan_hpa = $this->request->getPost('mulai_pemotongan_hpa_date') . ' ' . $this->request->getPost('mulai_pemotongan_hpa_time');
         $selesai_pemotongan_hpa = $this->request->getPost('selesai_pemotongan_hpa_date') . ' ' . $this->request->getPost('selesai_pemotongan_hpa_time');
 
+        $id_user = $this->request->getPost('id_user_pemotongan_hpa');
+
         $data = [
-            'id_user_pemotongan_hpa' => $this->request->getPost('id_user_pemotongan_hpa'),
+            'id_user_pemotongan_hpa' => $id_user === '' ? null : $id_user,
             'status_pemotongan_hpa'  => $this->request->getPost('status_pemotongan_hpa'),
             'mulai_pemotongan_hpa'   => $mulai_pemotongan_hpa,
             'selesai_pemotongan_hpa' => $selesai_pemotongan_hpa,
-            'updated_at'         => date('Y-m-d H:i:s'),
+            'updated_at'             => date('Y-m-d H:i:s'),
         ];
 
         if (!$this->pemotongan_hpa->update($id_pemotongan_hpa, $data)) {
             return redirect()->back()->with('error', 'Gagal mengupdate data.')->withInput();
         }
 
-        return redirect()->to(base_url('pemotongan/index_pemotongan'))->with('success', 'Data berhasil diperbarui.');
+        return redirect()->to(base_url('pemotongan_hpa/edit?id_pemotongan_hpa=' . $id_pemotongan_hpa))
+            ->with('success', 'Data berhasil diperbarui.');
+    }
+
+    public function delete()
+    {
+        try {
+            $id_pemotongan = $this->request->getPost('id_pemotongan');
+            $id_hpa = $this->request->getPost('id_hpa');
+            if (!$id_pemotongan || !$id_hpa) {
+                throw new \Exception('ID tidak lengkap. Gagal menghapus data.');
+            }
+            // Hapus data pemotongan
+            if ($this->pemotongan_hpa->delete($id_pemotongan)) {
+                // Update status_hpa ke tahap sebelumnya 
+                $this->hpaModel->update($id_hpa, [
+                    'status_hpa' => 'Penerimaan',
+                ]);
+                return $this->response->setJSON(['success' => true]);
+            } else {
+                throw new \Exception('Gagal menghapus data.');
+            }
+        } catch (\Exception $e) {
+            return $this->response->setJSON([
+                'success' => false,
+                'message' => $e->getMessage()
+            ]);
+        }
     }
 }

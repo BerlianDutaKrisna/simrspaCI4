@@ -54,17 +54,21 @@ class Pembacaan_hpa extends Model // Update nama model
             ->orderBy('hpa.kode_hpa', 'ASC')
             ->findAll();
     }
-    // Fungsi untuk mengupdate data pembacaan_hpa
-    public function updatepembacaan_hpa($id_pembacaan_hpa, $data) // Update nama fungsi dan parameter
-    {
-        $builder = $this->db->table($this->table);  // Mengambil tabel pembacaan_hpa
-        $builder->where('id_pembacaan_hpa', $id_pembacaan_hpa);  // Menentukan baris yang akan diupdate berdasarkan id_pembacaan_hpa
-        $builder->update($data);  // Melakukan update dengan data yang dikirimkan
-        return $this->db->affectedRows();  // Mengembalikan jumlah baris yang terpengaruh
-    }
 
-    public function deletepembacaan_hpa($id_pembacaan_hpa)
+    public function detailspembacaan_hpa($id_pembacaan_hpa)
     {
-        return $this->delete($id_pembacaan_hpa);
+        $data = $this->select(
+            'pembacaan_hpa.*, 
+        hpa.*, 
+        patient.*, 
+        users.nama_user AS nama_user_pembacaan_hpa'
+        )
+            ->join('hpa', 'pembacaan_hpa.id_hpa = hpa.id_hpa', 'left')
+            ->join('patient', 'hpa.id_pasien = patient.id_pasien', 'left')
+            ->join('users', 'pembacaan_hpa.id_user_dokter_pembacaan_hpa = users.id_user', 'left')
+            ->where('pembacaan_hpa.id_pembacaan_hpa', $id_pembacaan_hpa)
+            ->first();
+
+        return $data;
     }
 }

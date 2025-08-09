@@ -17,7 +17,7 @@
                 <input type="hidden" name="id_pembacaan_srs" value="<?= $pembacaan_srs['id_pembacaan_srs'] ?>">
                 <input type="hidden" name="page_source" value="edit_mikroskopis">
 
-                <!-- Kolom Kode srs dan Diagnosa -->
+                <!-- Kolom Kode SRS dan Diagnosa -->
                 <div class="form-group row">
                     <label class="col-sm-2 col-form-label">Kode SRS</label>
                     <div class="col-sm-4">
@@ -236,7 +236,7 @@
                     </div>
                 </div>
 
-                <!-- Kolom Hasil srs dan Dokter -->
+                <!-- Kolom Hasil SRS dan Dokter -->
                 <div class="form-group row">
                     <label class="col-sm-2 col-form-label">Hasil Kesimpulan</label>
                     <div class="col-sm-4">
@@ -265,13 +265,19 @@
 
                 <!-- Tombol Simpan -->
                 <div class="form-group row">
-                    <div class="col-sm-12 text-center mb-3">
+                    <div class="col-sm-6 text-center">
                         <button type="submit"
                             class="btn btn-success btn-user w-100"
                             formaction="<?= base_url('srs/update/' . $srs['id_srs']); ?>">
                             Simpan
                         </button>
                     </div>
+                    <!-- Tombol Cetak -->
+                    <div class="col-sm-6 text-center">
+                    <button type="button" class="btn btn-info btn-user w-100 w-md-auto" onclick="cetakProses()">
+                        <i class="fas fa-print"></i> Cetak
+                    </button>
+                </div>
                 </div>
             </form>
         </div>

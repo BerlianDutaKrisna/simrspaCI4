@@ -110,22 +110,10 @@ class Pencetakan extends BaseController
 
     public function pencetakan_details()
     {
-        // Ambil id_pencetakan_hpa dari parameter GET
         $id_pencetakan_hpa = $this->request->getGet('id_pencetakan_hpa');
 
         if ($id_pencetakan_hpa) {
-            // Gunakan model yang sudah diinisialisasi di constructor
-            $data = $this->pencetakan_hpa->select(
-                'pencetakan.*, 
-            hpa.*, 
-            patient.*, 
-            users.nama_user AS nama_user_pencetakan'
-            )
-                ->join('hpa', 'pencetakan.id_hpa = hpa.id_hpa', 'left')
-                ->join('patient', 'hpa.id_pasien = patient.id_pasien', 'left')
-                ->join('users', 'pencetakan.id_user_pencetakan_hpa = users.id_user', 'left')
-                ->where('pencetakan.id_pencetakan_hpa', $id_pencetakan_hpa)
-                ->first();
+            $data = $this->pencetakan_hpa->detailspencetakan_hpa($id_pencetakan_hpa);
 
             if ($data) {
                 return $this->response->setJSON($data);
@@ -133,11 +121,11 @@ class Pencetakan extends BaseController
                 return $this->response->setJSON(['error' => 'Data tidak ditemukan.']);
             }
         } else {
-            return $this->response->setJSON(['error' => 'ID pencetakan tidak ditemukan.']);
+            return $this->response->setJSON(['error' => 'Coba ulangi kembali..']);
         }
     }
 
-    public function edit_pencetakan()
+    public function edit()
     {
         $id_pencetakan_hpa = $this->request->getGet('id_pencetakan_hpa');
 
@@ -152,8 +140,8 @@ class Pencetakan extends BaseController
             throw new \CodeIgniter\Exceptions\PageNotFoundException('Data pencetakan tidak ditemukan.');
         }
 
-        // Ambil data users dengan status_user = 'Analis'
-        $users = $this->userModel->where('status_user', 'Analis')->findAll();
+        // Ambil data user
+        $users = $this->userModel->findAll();
 
         $data = [
             'pencetakanData' => $pencetakanData,
@@ -162,29 +150,62 @@ class Pencetakan extends BaseController
             'nama_user' => session()->get('nama_user'),
         ];
 
-        return view('edit_proses/edit_pencetakan', $data);
+        return view('Hpa/edit_proses/edit_pencetakan', $data);
     }
 
-    public function update_pencetakan()
+    public function update()
     {
         $id_pencetakan_hpa = $this->request->getPost('id_pencetakan_hpa');
+
+        if (!$id_pencetakan_hpa) {
+            return redirect()->back()->with('error', 'ID tidak ditemukan.')->withInput();
+        }
 
         // Gabungkan input tanggal dan waktu
         $mulai_pencetakan_hpa = $this->request->getPost('mulai_pencetakan_hpa_date') . ' ' . $this->request->getPost('mulai_pencetakan_hpa_time');
         $selesai_pencetakan_hpa = $this->request->getPost('selesai_pencetakan_hpa_date') . ' ' . $this->request->getPost('selesai_pencetakan_hpa_time');
 
+        $id_user = $this->request->getPost('id_user_pencetakan_hpa');
+
         $data = [
-            'id_user_pencetakan_hpa' => $this->request->getPost('id_user_pencetakan_hpa'),
+            'id_user_pencetakan_hpa' => $id_user === '' ? null : $id_user,
             'status_pencetakan_hpa'  => $this->request->getPost('status_pencetakan_hpa'),
             'mulai_pencetakan_hpa'   => $mulai_pencetakan_hpa,
             'selesai_pencetakan_hpa' => $selesai_pencetakan_hpa,
-            'updated_at'         => date('Y-m-d H:i:s'),
+            'updated_at'             => date('Y-m-d H:i:s'),
         ];
 
         if (!$this->pencetakan_hpa->update($id_pencetakan_hpa, $data)) {
             return redirect()->back()->with('error', 'Gagal mengupdate data.')->withInput();
         }
 
-        return redirect()->to(base_url('pencetakan/index_pencetakan'))->with('success', 'Data berhasil diperbarui.');
+        return redirect()->to(base_url('pencetakan_hpa/edit?id_pencetakan_hpa=' . $id_pencetakan_hpa))
+            ->with('success', 'Data berhasil diperbarui.');
+    }
+
+    public function delete()
+    {
+        try {
+            $id_pencetakan = $this->request->getPost('id_pencetakan'); 
+            $id_hpa = $this->request->getPost('id_hpa');
+            if (!$id_pencetakan || !$id_hpa) {
+                throw new \Exception('ID tidak lengkap. Gagal menghapus data.');
+            }
+            // Hapus data pencetakan
+            if ($this->pencetakan_hpa->delete($id_pencetakan)) {
+                // Update status_hpa ke tahap sebelumnya 
+                $this->hpaModel->update($id_hpa, [
+                    'status_hpa' => 'Authorized',
+                ]);
+                return $this->response->setJSON(['success' => true]);
+            } else {
+                throw new \Exception('Gagal menghapus data.');
+            }
+        } catch (\Exception $e) {
+            return $this->response->setJSON([
+                'success' => false,
+                'message' => $e->getMessage()
+            ]);
+        }
     }
 }

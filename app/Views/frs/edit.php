@@ -4,11 +4,11 @@
 <div class="container-fluid">
     <div class="card shadow mb-4">
         <div class="card-header py-3">
-            <h6 class="m-0 font-weight-bold text-primary">Edit frs</h6>
+            <h6 class="m-0 font-weight-bold text-primary">Edit</h6>
         </div>
 
         <div class="card-body">
-            <h1>Edit Data Histopatologi</h1>
+            <h1>Edit Data Fine Needle Aspiration Biopsy</h1>
             <a href="<?= base_url('frs/index') ?>" class="btn btn-primary mb-3"><i class="fas fa-reply"></i> Kembali</a>
 
             <!-- Form -->
@@ -16,7 +16,7 @@
                 <?= csrf_field(); ?>
                 <input type="hidden" name="id_frs" value="<?= $frs['id_frs'] ?>">
 
-                <!-- Kolom Kode frs dan Diagnosa -->
+                <!-- Kolom Kode FRS dan Diagnosa -->
                 <div class="form-group row">
                     <label class="col-sm-2 col-form-label">Kode FRS</label>
                     <div class="col-sm-4">
@@ -263,9 +263,9 @@
                             </div>
                         </div>
 
-                        <!-- Kolom Hasil frs dan Jumlah Slide -->
+                        <!-- Kolom Hasil FRS dan Jumlah Slide -->
                         <div class="form-group row">
-                            <label class="col-sm-2 col-form-label">Hasil frs</label>
+                            <label class="col-sm-2 col-form-label">Hasil FRS</label>
                             <div class="col-sm-10">
                                 <textarea class="form-control summernote" name="hasil_frs" id="hasil_frs"><?= $frs['hasil_frs'] ?? '' ?></textarea>
                             </div>

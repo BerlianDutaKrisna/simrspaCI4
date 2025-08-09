@@ -48,18 +48,20 @@ class Penerimaan_ihc extends Model
             ->findAll();
     }
 
-    // Fungsi untuk mengupdate data penerimaan_ihc
-    public function updatepenerimaan_ihc($id_penerimaan_ihc, $data)
+    public function detailspenerimaan_ihc($id_penerimaan_ihc)
     {
-        $builder = $this->db->table($this->table);  // Mengambil table penerimaan_ihc
-        $builder->where('id_penerimaan_ihc', $id_penerimaan_ihc);  // Menentukan baris yang akan diupdate berdasarkan id_penerimaan_ihc
-        $builder->update($data);  // Melakukan update dengan data yang dikirimkan
-        return $this->db->affectedRows();  // Mengembalikan jumlah baris yang terpengaruh
-    }
+        $data = $this->select(
+            'penerimaan_ihc.*, 
+        ihc.*, 
+        patient.*, 
+        users.nama_user AS nama_user_penerimaan_ihc'
+        )
+            ->join('ihc', 'penerimaan_ihc.id_ihc = ihc.id_ihc', 'left')
+            ->join('patient', 'ihc.id_pasien = patient.id_pasien', 'left')
+            ->join('users', 'penerimaan_ihc.id_user_penerimaan_ihc = users.id_user', 'left')
+            ->where('penerimaan_ihc.id_penerimaan_ihc', $id_penerimaan_ihc)
+            ->first();
 
-    public function deletepenerimaan_ihc($id_penerimaan_ihc)
-    {
-        return $this->delete($id_penerimaan_ihc);
+        return $data;
     }
-
 }

@@ -120,22 +120,10 @@ class Penulisan extends BaseController
 
     public function penulisan_details()
     {
-        // Ambil id_penulisan_frs dari parameter GET
         $id_penulisan_frs = $this->request->getGet('id_penulisan_frs');
 
         if ($id_penulisan_frs) {
-            // Gunakan model yang sudah diinisialisasi di constructor
-            $data = $this->penulisan_frs->select(
-                'penulisan.*, 
-            frs.*, 
-            patient.*, 
-            users.nama_user AS nama_user_penulisan'
-            )
-                ->join('frs', 'penulisan.id_frs = frs.id_frs', 'left')
-                ->join('patient', 'frs.id_pasien = patient.id_pasien', 'left')
-                ->join('users', 'penulisan.id_user_penulisan_frs = users.id_user', 'left')
-                ->where('penulisan.id_penulisan_frs', $id_penulisan_frs)
-                ->first();
+            $data = $this->penulisan_frs->detailspenulisan_frs($id_penulisan_frs);
 
             if ($data) {
                 return $this->response->setJSON($data);
@@ -143,11 +131,11 @@ class Penulisan extends BaseController
                 return $this->response->setJSON(['error' => 'Data tidak ditemukan.']);
             }
         } else {
-            return $this->response->setJSON(['error' => 'ID penulisan tidak ditemukan.']);
+            return $this->response->setJSON(['error' => 'Coba ulangi kembali..']);
         }
     }
 
-    public function edit_penulisan()
+    public function edit()
     {
         $id_penulisan_frs = $this->request->getGet('id_penulisan_frs');
 
@@ -162,8 +150,8 @@ class Penulisan extends BaseController
             throw new \CodeIgniter\Exceptions\PageNotFoundException('Data penulisan tidak ditemukan.');
         }
 
-        // Ambil data users dengan status_user = 'Analis'
-        $users = $this->userModel->where('status_user', 'Analis')->findAll();
+        // Ambil data user
+        $users = $this->userModel->findAll();
 
         $data = [
             'penulisanData' => $penulisanData,
@@ -172,29 +160,62 @@ class Penulisan extends BaseController
             'nama_user' => session()->get('nama_user'),
         ];
 
-        return view('edit_proses/edit_penulisan', $data);
+        return view('frs/edit_proses/edit_penulisan', $data);
     }
 
-    public function update_penulisan()
+    public function update()
     {
         $id_penulisan_frs = $this->request->getPost('id_penulisan_frs');
+
+        if (!$id_penulisan_frs) {
+            return redirect()->back()->with('error', 'ID tidak ditemukan.')->withInput();
+        }
 
         // Gabungkan input tanggal dan waktu
         $mulai_penulisan_frs = $this->request->getPost('mulai_penulisan_frs_date') . ' ' . $this->request->getPost('mulai_penulisan_frs_time');
         $selesai_penulisan_frs = $this->request->getPost('selesai_penulisan_frs_date') . ' ' . $this->request->getPost('selesai_penulisan_frs_time');
 
+        $id_user = $this->request->getPost('id_user_penulisan_frs');
+
         $data = [
-            'id_user_penulisan_frs' => $this->request->getPost('id_user_penulisan_frs'),
+            'id_user_penulisan_frs' => $id_user === '' ? null : $id_user,
             'status_penulisan_frs'  => $this->request->getPost('status_penulisan_frs'),
             'mulai_penulisan_frs'   => $mulai_penulisan_frs,
             'selesai_penulisan_frs' => $selesai_penulisan_frs,
-            'updated_at'         => date('Y-m-d H:i:s'),
+            'updated_at'             => date('Y-m-d H:i:s'),
         ];
 
         if (!$this->penulisan_frs->update($id_penulisan_frs, $data)) {
             return redirect()->back()->with('error', 'Gagal mengupdate data.')->withInput();
         }
 
-        return redirect()->to(base_url('penulisan/index_penulisan'))->with('success', 'Data berhasil diperbarui.');
+        return redirect()->to(base_url('penulisan_frs/edit?id_penulisan_frs=' . $id_penulisan_frs))
+            ->with('success', 'Data berhasil diperbarui.');
+    }
+
+    public function delete()
+    {
+        try {
+            $id_penulisan = $this->request->getPost('id_penulisan');
+            $id_frs = $this->request->getPost('id_frs');
+            if (!$id_penulisan || !$id_frs) {
+                throw new \Exception('ID tidak lengkap. Gagal menghapus data.');
+            }
+            // Hapus data penulisan
+            if ($this->penulisan_frs->delete($id_penulisan)) {
+                // Update status_frs ke tahap sebelumnya 
+                $this->frsModel->update($id_frs, [
+                    'status_frs' => 'Pembacaan',
+                ]);
+                return $this->response->setJSON(['success' => true]);
+            } else {
+                throw new \Exception('Gagal menghapus data.');
+            }
+        } catch (\Exception $e) {
+            return $this->response->setJSON([
+                'success' => false,
+                'message' => $e->getMessage()
+            ]);
+        }
     }
 }

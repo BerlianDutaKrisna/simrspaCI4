@@ -54,18 +54,20 @@ class Pembacaan_srs extends Model // Update nama model
             ->findAll();
     }
 
-    // Fungsi untuk mengupdate data pembacaan_srs
-    public function updatepembacaan_srs($id_pembacaan_srs, $data) // Update nama fungsi dan parameter
+    public function detailspembacaan_srs($id_pembacaan_srs)
     {
-        $builder = $this->db->table($this->table);  // Mengambil tabel pembacaan_srs
-        $builder->where('id_pembacaan_srs', $id_pembacaan_srs);  // Menentukan baris yang akan diupdate berdasarkan id_pembacaan_srs
-        $builder->update($data);  // Melakukan update dengan data yang dikirimkan
-        return $this->db->affectedRows();  // Mengembalikan jumlah baris yang terpengaruh
-    }
+        $data = $this->select(
+            'pembacaan_srs.*, 
+        srs.*, 
+        patient.*, 
+        users.nama_user AS nama_user_pembacaan_srs'
+        )
+            ->join('srs', 'pembacaan_srs.id_srs = srs.id_srs', 'left')
+            ->join('patient', 'srs.id_pasien = patient.id_pasien', 'left')
+            ->join('users', 'pembacaan_srs.id_user_dokter_pembacaan_srs = users.id_user', 'left')
+            ->where('pembacaan_srs.id_pembacaan_srs', $id_pembacaan_srs)
+            ->first();
 
-    public function deletepembacaan_srs($id_pembacaan_srs)
-    {
-        return $this->delete($id_pembacaan_srs);
+        return $data;
     }
-
 }

@@ -29,13 +29,6 @@ class Authorized_hpa extends Model // Update nama model
     protected $createdField  = 'created_at';
     protected $updatedField  = 'updated_at';
 
-    // Fungsi untuk insert data authorized_hpa
-    public function insertauthorized_hpa(array $data): bool // Update nama fungsi
-    {
-        $this->insert($data);
-        return $this->db->affectedRows() > 0;
-    }
-
     public function getauthorized_hpa()
     {
         return $this->select(
@@ -64,17 +57,21 @@ class Authorized_hpa extends Model // Update nama model
             ->orderBy('hpa.kode_hpa', 'ASC')
             ->findAll();
     }
-    // Fungsi untuk mengupdate data authorized_hpa
-    public function updateauthorized_hpa($id_authorized_hpa, $data) // Update nama fungsi dan parameter
-    {
-        $builder = $this->db->table($this->table);  // Mengambil tabel authorized_hpa
-        $builder->where('id_authorized_hpa', $id_authorized_hpa);  // Menentukan baris yang akan diupdate berdasarkan id_authorized_hpa
-        $builder->update($data);  // Melakukan update dengan data yang dikirimkan
-        return $this->db->affectedRows();  // Mengembalikan jumlah baris yang terpengaruh
-    }
 
-    public function deleteauthorized_hpa($id_authorized_hpa)
+    public function detailsauthorized_hpa($id_authorized_hpa)
     {
-        return $this->delete($id_authorized_hpa);
+        $data = $this->select(
+            'authorized_hpa.*, 
+        hpa.*, 
+        patient.*, 
+        users.nama_user AS nama_user_authorized_hpa'
+        )
+            ->join('hpa', 'authorized_hpa.id_hpa = hpa.id_hpa', 'left')
+            ->join('patient', 'hpa.id_pasien = patient.id_pasien', 'left')
+            ->join('users', 'authorized_hpa.id_user_dokter_authorized_hpa = users.id_user', 'left')
+            ->where('authorized_hpa.id_authorized_hpa', $id_authorized_hpa)
+            ->first();
+
+        return $data;
     }
 }

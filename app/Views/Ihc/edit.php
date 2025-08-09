@@ -4,7 +4,7 @@
 <div class="container-fluid">
     <div class="card shadow mb-4">
         <div class="card-header py-3">
-            <h6 class="m-0 font-weight-bold text-primary">Edit Ihc</h6>
+            <h6 class="m-0 font-weight-bold text-primary">Edit</h6>
         </div>
 
         <div class="card-body">
@@ -16,7 +16,7 @@
                 <?= csrf_field(); ?>
                 <input type="hidden" name="id_ihc" value="<?= $ihc['id_ihc'] ?>">
 
-                <!-- Kolom Kode ihc dan Diagnosa -->
+                <!-- Kolom Kode IHC dan Diagnosa -->
                 <div class="form-group row">
                     <label class="col-sm-2 col-form-label">Kode IHC</label>
                     <div class="col-sm-4">
@@ -104,6 +104,92 @@
                         <input type="text" name="kode_block_ihc" value="<?= $ihc['kode_block_ihc'] ?? '' ?>" class="form-control form-control-user">
                     </div>
                 </div>
+
+                <div class="form-group row">
+                    <label class="col-sm-2 col-form-label"></label>
+                    <div class="col-sm-4">
+
+                    </div>
+
+                    <label class="col-sm-2 col-form-label">Kontrol Positif</label>
+                    <div class="col-sm-4">
+                        <div class="form-group row">
+                            <!-- Kontrol ER -->
+                            <div class="col-sm-3">
+                                <div class="custom-control custom-checkbox">
+                                    <input type="hidden" name="ER" value="0">
+                                    <input type="checkbox" class="custom-control-input" id="ER" name="ER" value="1"
+                                        <?= isset($ihc['ER']) && $ihc['ER'] == 1 ? 'checked' : '' ?>>
+                                    <label class="custom-control-label font-weight-bold" for="ER">Kontrol ER (Positif)</label>
+                                </div>
+                            </div>
+                            <!-- Kontrol PR -->
+                            <div class="col-sm-3">
+                                <div class="custom-control custom-checkbox">
+                                    <input type="hidden" name="PR" value="0">
+                                    <input type="checkbox" class="custom-control-input" id="PR" name="PR" value="1"
+                                        <?= isset($ihc['PR']) && $ihc['PR'] == 1 ? 'checked' : '' ?>>
+                                    <label class="custom-control-label font-weight-bold" for="PR">Kontrol PR (Positif)</label>
+                                </div>
+                            </div>
+                            <!-- Kontrol HER2 -->
+                            <div class="col-sm-3">
+                                <div class="custom-control custom-checkbox">
+                                    <input type="hidden" name="HER2" value="0">
+                                    <input type="checkbox" class="custom-control-input" id="HER2" name="HER2" value="1"
+                                        <?= isset($ihc['HER2']) && $ihc['HER2'] == 1 ? 'checked' : '' ?>>
+                                    <label class="custom-control-label font-weight-bold" for="HER2">Kontrol HER2 (Positif)</label>
+                                </div>
+                            </div>
+                            <!-- Kontrol KI67 -->
+                            <div class="col-sm-3">
+                                <div class="custom-control custom-checkbox">
+                                    <input type="hidden" name="KI67" value="0">
+                                    <input type="checkbox" class="custom-control-input" id="KI67" name="KI67" value="1"
+                                        <?= isset($ihc['KI67']) && $ihc['KI67'] == 1 ? 'checked' : '' ?>>
+                                    <label class="custom-control-label font-weight-bold" for="KI67">Kontrol KI67 (Positif)</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label class="col-sm-2 col-form-label"></label>
+                    <div class="col-sm-4">
+                        <!-- kosong / isi sesuai kebutuhan -->
+                    </div>
+
+                    <label class="col-sm-2 col-form-label">Status Kontrol</label>
+                    <div class="col-sm-4">
+                        <select name="status_kontrol" id="status_kontrol" class="form-control">
+                            <option value="">-- Pilih Status --</option>
+                            <option value="Tersedia" <?= ($ihc['status_kontrol'] === 'Tersedia') ? 'selected' : '' ?>>Tersedia</option>
+                            <option value="Terbatas" <?= ($ihc['status_kontrol'] === 'Terbatas') ? 'selected' : '' ?>>Terbatas</option>
+                            <option value="Habis" <?= ($ihc['status_kontrol'] === 'Habis') ? 'selected' : '' ?>>Habis</option>
+                        </select>
+                    </div>
+                </div>
+                <script>
+                    document.addEventListener("DOMContentLoaded", function() {
+                        const select = document.getElementById("status_kontrol");
+
+                        function updateSelectColor() {
+                            select.classList.remove("bg-success", "bg-warning", "bg-danger", "text-white", "text-dark");
+
+                            if (select.value === "Tersedia") {
+                                select.classList.add("bg-success", "text-white");
+                            } else if (select.value === "Terbatas") {
+                                select.classList.add("bg-warning", "text-dark");
+                            } else if (select.value === "Habis") {
+                                select.classList.add("bg-danger", "text-white");
+                            }
+                        }
+
+                        select.addEventListener("change", updateSelectColor);
+                        updateSelectColor(); // Panggil saat awal (jika ada nilai dari DB)
+                    });
+                </script>
 
                 <button class="btn btn-outline-info mb-3" type="button" data-toggle="collapse" data-target="#riwayatCollapse" aria-expanded="false" aria-controls="riwayatCollapse">
                     <i class="fas fa-book-medical"></i> Riwayat Pemeriksaan
@@ -220,7 +306,7 @@
                             </div>
                         </div>
 
-                        <!-- Kolom Hasil ihc dan Jumlah Slide -->
+                        <!-- Kolom Hasil IHC dan Jumlah Slide -->
                         <div class="form-group row">
                             <label class="col-sm-2 col-form-label">Hasil Kesimpulan</label>
                             <div class="col-sm-10">

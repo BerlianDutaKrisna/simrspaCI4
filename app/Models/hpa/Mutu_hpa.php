@@ -41,25 +41,30 @@ class Mutu_hpa extends Model
         return $this->db->affectedRows() > 0;
     }
 
-    public function getmutu_hpaWithRelations()
-{
-    return $this->select(
+    public function getmutuWithRelations()
+    {
+        return $this->select(
             'mutu_hpa.*, 
             hpa.*, 
             patient.*'
         )
-        ->join('hpa', 'mutu_hpa.id_hpa = hpa.id_hpa', 'left') // Relasi dengan tabel hpa
-        ->join('patient', 'hpa.id_pasien = patient.id_pasien', 'left') // Relasi dengan tabel patient
-        ->findAll();
-}
+            ->join('hpa', 'mutu_hpa.id_hpa = hpa.id_hpa', 'left') // Relasi dengan tabel hpa
+            ->join('patient', 'hpa.id_pasien = patient.id_pasien', 'left') // Relasi dengan tabel patient
+            ->findAll();
+    }
 
-    // Fungsi untuk mengupdate data mutu_hpa
-public function updatemutu_hpa($id_mutu_hpa, $data)
-{
-    // Mengambil table mutu_hpa
-    $builder = $this->db->table($this->table);  
-    $builder->where('id_mutu_hpa', $id_mutu_hpa);  
-    $builder->update($data);  
-    return $this->db->affectedRows();  
-}
+    public function detailsmutu_hpa($id_mutu_hpa)
+    {
+        $data = $this->select(
+            'mutu_hpa.*, 
+        hpa.*, 
+        patient.*'
+        )
+            ->join('hpa', 'mutu_hpa.id_hpa = hpa.id_hpa', 'left')
+            ->join('patient', 'hpa.id_pasien = patient.id_pasien', 'left')
+            ->where('mutu_hpa.id_mutu_hpa', $id_mutu_hpa)
+            ->first();
+
+        return $data;
+    }
 }

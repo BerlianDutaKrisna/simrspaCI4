@@ -120,22 +120,10 @@ class Pewarnaan extends BaseController
 
     public function pewarnaan_details()
     {
-        // Ambil id_pewarnaan_hpa dari parameter GET
         $id_pewarnaan_hpa = $this->request->getGet('id_pewarnaan_hpa');
 
         if ($id_pewarnaan_hpa) {
-            // Gunakan model yang sudah diinisialisasi di constructor
-            $data = $this->pewarnaan_hpa->select(
-                'pewarnaan.*, 
-            hpa.*, 
-            patient.*, 
-            users.nama_user AS nama_user_pewarnaan'
-            )
-                ->join('hpa', 'pewarnaan.id_hpa = hpa.id_hpa', 'left')
-                ->join('patient', 'hpa.id_pasien = patient.id_pasien', 'left')
-                ->join('users', 'pewarnaan.id_user_pewarnaan_hpa = users.id_user', 'left')
-                ->where('pewarnaan.id_pewarnaan_hpa', $id_pewarnaan_hpa)
-                ->first();
+            $data = $this->pewarnaan_hpa->detailspewarnaan_hpa($id_pewarnaan_hpa);
 
             if ($data) {
                 return $this->response->setJSON($data);
@@ -143,11 +131,11 @@ class Pewarnaan extends BaseController
                 return $this->response->setJSON(['error' => 'Data tidak ditemukan.']);
             }
         } else {
-            return $this->response->setJSON(['error' => 'ID pewarnaan tidak ditemukan.']);
+            return $this->response->setJSON(['error' => 'Coba ulangi kembali..']);
         }
     }
 
-    public function edit_pewarnaan()
+    public function edit()
     {
         $id_pewarnaan_hpa = $this->request->getGet('id_pewarnaan_hpa');
 
@@ -162,8 +150,8 @@ class Pewarnaan extends BaseController
             throw new \CodeIgniter\Exceptions\PageNotFoundException('Data pewarnaan tidak ditemukan.');
         }
 
-        // Ambil data users dengan status_user = 'Analis'
-        $users = $this->userModel->where('status_user', 'Analis')->findAll();
+        // Ambil data user
+        $users = $this->userModel->findAll();
 
         $data = [
             'pewarnaanData' => $pewarnaanData,
@@ -172,29 +160,62 @@ class Pewarnaan extends BaseController
             'nama_user' => session()->get('nama_user'),
         ];
 
-        return view('edit_proses/edit_pewarnaan', $data);
+        return view('Hpa/edit_proses/edit_pewarnaan', $data);
     }
 
-    public function update_pewarnaan()
+    public function update()
     {
         $id_pewarnaan_hpa = $this->request->getPost('id_pewarnaan_hpa');
+
+        if (!$id_pewarnaan_hpa) {
+            return redirect()->back()->with('error', 'ID tidak ditemukan.')->withInput();
+        }
 
         // Gabungkan input tanggal dan waktu
         $mulai_pewarnaan_hpa = $this->request->getPost('mulai_pewarnaan_hpa_date') . ' ' . $this->request->getPost('mulai_pewarnaan_hpa_time');
         $selesai_pewarnaan_hpa = $this->request->getPost('selesai_pewarnaan_hpa_date') . ' ' . $this->request->getPost('selesai_pewarnaan_hpa_time');
 
+        $id_user = $this->request->getPost('id_user_pewarnaan_hpa');
+
         $data = [
-            'id_user_pewarnaan_hpa' => $this->request->getPost('id_user_pewarnaan_hpa'),
+            'id_user_pewarnaan_hpa' => $id_user === '' ? null : $id_user,
             'status_pewarnaan_hpa'  => $this->request->getPost('status_pewarnaan_hpa'),
             'mulai_pewarnaan_hpa'   => $mulai_pewarnaan_hpa,
             'selesai_pewarnaan_hpa' => $selesai_pewarnaan_hpa,
-            'updated_at'         => date('Y-m-d H:i:s'),
+            'updated_at'             => date('Y-m-d H:i:s'),
         ];
 
         if (!$this->pewarnaan_hpa->update($id_pewarnaan_hpa, $data)) {
             return redirect()->back()->with('error', 'Gagal mengupdate data.')->withInput();
         }
 
-        return redirect()->to(base_url('pewarnaan/index_pewarnaan'))->with('success', 'Data berhasil diperbarui.');
+        return redirect()->to(base_url('pewarnaan_hpa/edit?id_pewarnaan_hpa=' . $id_pewarnaan_hpa))
+            ->with('success', 'Data berhasil diperbarui.');
+    }
+
+    public function delete()
+    {
+        try {
+            $id_pewarnaan = $this->request->getPost('id_pewarnaan');
+            $id_hpa = $this->request->getPost('id_hpa');
+            if (!$id_pewarnaan || !$id_hpa) {
+                throw new \Exception('ID tidak lengkap. Gagal menghapus data.');
+            }
+            // Hapus data pewarnaan
+            if ($this->pewarnaan_hpa->delete($id_pewarnaan)) {
+                // Update status_hpa ke tahap sebelumnya 
+                $this->hpaModel->update($id_hpa, [
+                    'status_hpa' => 'Pemotongan Tipis',
+                ]);
+                return $this->response->setJSON(['success' => true]);
+            } else {
+                throw new \Exception('Gagal menghapus data.');
+            }
+        } catch (\Exception $e) {
+            return $this->response->setJSON([
+                'success' => false,
+                'message' => $e->getMessage()
+            ]);
+        }
     }
 }

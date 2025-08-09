@@ -29,13 +29,6 @@ class Pemotongan_hpa extends Model
     protected $createdField  = 'created_at';
     protected $updatedField  = 'updated_at';
 
-    // Fungsi untuk insert data pemotongan_hpa
-    public function insertpemotongan_hpa(array $data): bool
-    {
-        $this->insert($data);
-        return $this->db->affectedRows() > 0;
-    }
-
     // Mengambil data pemotongan_hpa dengan relasi
     public function getPemotongan_hpa()
     {
@@ -57,19 +50,20 @@ class Pemotongan_hpa extends Model
             ->findAll();
     }
 
-
-    // Fungsi untuk mengupdate data pemotongan_hpa
-    public function updatepemotongan_hpa($id_pemotongan_hpa, $data)
+    public function detailspemotongan_hpa($id_pemotongan_hpa)
     {
-        $builder = $this->db->table($this->table);  // Mengambil table pemotongan_hpa
-        $builder->where('id_pemotongan_hpa', $id_pemotongan_hpa);  // Menentukan baris yang akan diupdate berdasarkan id_pemotongan_hpa
-        $builder->update($data);  // Melakukan update dengan data yang dikirimkan
-        return $this->db->affectedRows();  // Mengembalikan jumlah baris yang terpengaruh
-    }
+        $data = $this->select(
+            'pemotongan_hpa.*, 
+        hpa.*, 
+        patient.*, 
+        users.nama_user AS nama_user_pemotongan_hpa'
+        )
+            ->join('hpa', 'pemotongan_hpa.id_hpa = hpa.id_hpa', 'left')
+            ->join('patient', 'hpa.id_pasien = patient.id_pasien', 'left')
+            ->join('users', 'pemotongan_hpa.id_user_pemotongan_hpa = users.id_user', 'left')
+            ->where('pemotongan_hpa.id_pemotongan_hpa', $id_pemotongan_hpa)
+            ->first();
 
-    public function deletepemotongan_hpa($id_pemotongan_hpa)
-    {
-        return $this->delete($id_pemotongan_hpa);
+        return $data;
     }
-
 }

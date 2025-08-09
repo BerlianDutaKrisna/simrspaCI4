@@ -4,7 +4,7 @@
 <div class="container-fluid">
     <div class="card shadow mb-4">
         <div class="card-header py-3">
-            <h6 class="m-0 font-weight-bold text-primary">Edit SRS</h6>
+            <h6 class="m-0 font-weight-bold text-primary">Edit</h6>
         </div>
 
         <div class="card-body">
@@ -16,7 +16,7 @@
                 <?= csrf_field(); ?>
                 <input type="hidden" name="id_srs" value="<?= $srs['id_srs'] ?>">
 
-                <!-- Kolom Kode srs dan Diagnosa -->
+                <!-- Kolom Kode SRS dan Diagnosa -->
                 <div class="form-group row">
                     <label class="col-sm-2 col-form-label">Kode SRS</label>
                     <div class="col-sm-4">
@@ -263,7 +263,7 @@
                             </div>
                         </div>
 
-                        <!-- Kolom Hasil srs dan Jumlah Slide -->
+                        <!-- Kolom Hasil SRS dan Jumlah Slide -->
                         <div class="form-group row">
                             <label class="col-sm-2 col-form-label">Hasil Kesimpulan</label>
                             <div class="col-sm-10">

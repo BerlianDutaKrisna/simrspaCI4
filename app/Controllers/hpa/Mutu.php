@@ -1,66 +1,55 @@
 <?php
 
-namespace App\Controllers;
+namespace App\Controllers\Hpa;
 
 use App\Controllers\BaseController;
-use App\Models\HpaModel;
-use App\Models\MutuModel;
+use App\Models\Hpa\HpaModel;
+use App\Models\Hpa\Mutu_hpa;
 use CodeIgniter\Exceptions\PageNotFoundException;
 
 class mutu extends BaseController
 {
-    protected $mutuModel;
-    protected $userModel;
+    protected $hpaModel;
+    protected $mutu_hpa;
 
     public function __construct()
     {
-        $this->mutuModel = new mutuModel();
+        $this->hpaModel = new hpaModel();
+        $this->mutu_hpa = new Mutu_hpa();
     }
 
 
     public function mutu_details()
     {
-        // Ambil id_mutu dari parameter GET
-        $id_mutu = $this->request->getGet('id_mutu');
+        $id_mutu_hpa = $this->request->getGet('id_mutu_hpa');
 
-        if ($id_mutu) {
-            // Muat model mutu
-            $model = new mutuModel();
-
-            // Ambil data mutu berdasarkan id_mutu dan relasi yang ada
-            $data = $model->select(
-                'mutu.*, 
-                hpa.*'
-            )
-                ->join('hpa','mutu.id_hpa = hpa.id_hpa','left')
-                ->where('mutu.id_mutu', $id_mutu)
-                ->first();
+        if ($id_mutu_hpa) {
+            $data = $this->mutu_hpa->detailsmutu_hpa($id_mutu_hpa);
 
             if ($data) {
-                // Kirimkan data dalam format JSON
                 return $this->response->setJSON($data);
             } else {
                 return $this->response->setJSON(['error' => 'Data tidak ditemukan.']);
             }
         } else {
-            return $this->response->setJSON(['error' => 'ID mutu tidak ditemukan.']);
+            return $this->response->setJSON(['error' => 'Coba ulangi kembali..']);
         }
     }
 
-    public function edit_mutu()
+    public function edit()
     {
-        $id_mutu = $this->request->getGet('id_mutu');
+        $id_mutu_hpa = $this->request->getGet('id_mutu_hpa');
 
-        if (!$id_mutu) {
+        if (!$id_mutu_hpa) {
             throw new PageNotFoundException('ID mutu tidak ditemukan.');
         }
 
         // Ambil data mutu beserta relasi dari model getmutuWithRelations
-        $mutuData = $this->mutuModel->getmutuWithRelations();
+        $mutuData = $this->mutu_hpa->getmutuWithRelations();
 
-        // Filter data berdasarkan id_mutu
-        $mutuData = array_filter($mutuData, function ($mutu) use ($id_mutu) {
-            return $mutu['id_mutu'] == $id_mutu;
+        // Filter data berdasarkan id_mutu_hpa
+        $mutuData = array_filter($mutuData, function ($mutu) use ($id_mutu_hpa) {
+            return $mutu['id_mutu_hpa'] == $id_mutu_hpa;
         });
 
         // Jika data tidak ditemukan
@@ -68,7 +57,7 @@ class mutu extends BaseController
             throw new PageNotFoundException('Data mutu tidak ditemukan.');
         }
 
-        // Ambil data pertama (karena kita filter berdasarkan id_mutu)
+        // Ambil data pertama (karena kita filter berdasarkan id_mutu_hpa)
         $mutuData = array_values($mutuData)[0];
 
         // Kirimkan data ke view
@@ -77,32 +66,33 @@ class mutu extends BaseController
             'id_user' => session()->get('id_user'),
             'nama_user' => session()->get('nama_user'),
         ];
-        return view('mutu/edit_mutu', $data);
+        return view('Hpa/edit_mutu', $data);
     }
 
-    public function update_mutu()
+    public function update()
     {
-        $id_mutu = $this->request->getPost('id_mutu');
+        $id_mutu_hpa = $this->request->getPost('id_mutu_hpa');
 
-        $data = [
-            'indikator_1' => $this->request->getPost('indikator_1'),
-            'indikator_2'  => $this->request->getPost('indikator_2'),
-            'indikator_3' => $this->request->getPost('indikator_3'),
-            'indikator_4'  => $this->request->getPost('indikator_4'),
-            'indikator_5' => $this->request->getPost('indikator_5'),
-            'indikator_6'  => $this->request->getPost('indikator_6'),
-            'indikator_7' => $this->request->getPost('indikator_7'),
-            'indikator_8'  => $this->request->getPost('indikator_8'),
-            'indikator_9'  => $this->request->getPost('indikator_9'),
-            'indikator_10'  => $this->request->getPost('indikator_10'),
-            'total_nilai_mutu'  => $this->request->getPost('total_nilai_mutu'),
-            'updated_at'         => date('Y-m-d H:i:s'),
-        ];
+        // Ambil semua nilai indikator dari POST
+        $indikator = [];
+        $total = 0;
+        for ($i = 1; $i <= 10; $i++) {
+            $nilai = (int) $this->request->getPost("indikator_$i");
+            $indikator["indikator_$i"] = $nilai;
+            $total += $nilai;
+        }
 
-        if (!$this->mutuModel->update($id_mutu, $data)) {
+        // Susun array data
+        $data = array_merge($indikator, [
+            'total_nilai_mutu_hpa' => $total,
+            'updated_at'           => date('Y-m-d H:i:s'),
+        ]);
+
+        if (!$this->mutu_hpa->update($id_mutu_hpa, $data)) {
             return redirect()->back()->with('error', 'Gagal mengupdate data.')->withInput();
         }
 
-        return redirect()->to(base_url('exam/index_exam'))->with('success', 'Data berhasil diperbarui.');
+        return redirect()->to(base_url('mutu_hpa/edit?id_mutu_hpa=' . $id_mutu_hpa))
+            ->with('success', 'Data berhasil diperbarui.');
     }
 }

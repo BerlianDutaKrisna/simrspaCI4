@@ -48,18 +48,20 @@ class Penerimaan_frs extends Model
             ->findAll();
     }
 
-    // Fungsi untuk mengupdate data penerimaan_frs
-    public function updatepenerimaan_frs($id_penerimaan_frs, $data)
+    public function detailspenerimaan_frs($id_penerimaan_frs)
     {
-        $builder = $this->db->table($this->table);  // Mengambil table penerimaan_frs
-        $builder->where('id_penerimaan_frs', $id_penerimaan_frs);  // Menentukan baris yang akan diupdate berdasarkan id_penerimaan_frs
-        $builder->update($data);  // Melakukan update dengan data yang dikirimkan
-        return $this->db->affectedRows();  // Mengembalikan jumlah baris yang terpengaruh
-    }
+        $data = $this->select(
+            'penerimaan_frs.*, 
+        frs.*, 
+        patient.*, 
+        users.nama_user AS nama_user_penerimaan_frs'
+        )
+            ->join('frs', 'penerimaan_frs.id_frs = frs.id_frs', 'left')
+            ->join('patient', 'frs.id_pasien = patient.id_pasien', 'left')
+            ->join('users', 'penerimaan_frs.id_user_penerimaan_frs = users.id_user', 'left')
+            ->where('penerimaan_frs.id_penerimaan_frs', $id_penerimaan_frs)
+            ->first();
 
-    public function deletepenerimaan_frs($id_penerimaan_frs)
-    {
-        return $this->delete($id_penerimaan_frs);
+        return $data;
     }
-
 }

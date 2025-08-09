@@ -16,7 +16,7 @@
             <input type="hidden" name="id_penerimaan_srs" value="<?= $srs['id_penerimaan_srs'] ?>">
             <input type="hidden" name="page_source" value="edit_makroskopis">
 
-            <!-- Kolom Kode srs dan Diagnosa -->
+            <!-- Kolom Kode SRS dan Diagnosa -->
             <div class="form-group row">
                 <label class="col-sm-2 col-form-label">Kode SRS</label>
                 <div class="col-sm-4">

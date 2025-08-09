@@ -28,13 +28,6 @@ class Pemprosesan_hpa extends Model // Update nama model
     protected $createdField  = 'created_at';
     protected $updatedField  = 'updated_at';
 
-    // Fungsi untuk insert data pemprosesan_hpa
-    public function insertpemprosesan_hpa(array $data): bool // Update nama fungsi
-    {
-        $this->insert($data);
-        return $this->db->affectedRows() > 0;
-    }
-
     // Mengambil data pemprosesan_hpa dengan relasi
     public function getpemprosesan_hpa()
     {
@@ -56,18 +49,21 @@ class Pemprosesan_hpa extends Model // Update nama model
             ->findAll();
     }
 
-    // Fungsi untuk mengupdate data pemprosesan_hpa
-    public function updatepemprosesan_hpa($id_pemprosesan_hpa, $data) // Update nama fungsi dan parameter
+    public function detailspemprosesan_hpa($id_pemprosesan_hpa)
     {
-        $builder = $this->db->table($this->table);  // Mengambil table pemprosesan_hpa
-        $builder->where('id_pemprosesan_hpa', $id_pemprosesan_hpa);  // Menentukan baris yang akan diupdate berdasarkan id_pemprosesan_hpa
-        $builder->update($data);  // Melakukan update dengan data yang dikirimkan
-        return $this->db->affectedRows();  // Mengembalikan jumlah baris yang terpengaruh
-    }
+        $data = $this->select(
+            'pemprosesan_hpa.*, 
+        hpa.*, 
+        patient.*, 
+        users.nama_user AS nama_user_pemprosesan_hpa'
+        )
+            ->join('hpa', 'pemprosesan_hpa.id_hpa = hpa.id_hpa', 'left')
+            ->join('patient', 'hpa.id_pasien = patient.id_pasien', 'left')
+            ->join('users', 'pemprosesan_hpa.id_user_pemprosesan_hpa = users.id_user', 'left')
+            ->where('pemprosesan_hpa.id_pemprosesan_hpa', $id_pemprosesan_hpa)
+            ->first();
 
-    public function deletepemprosesan_hpa($id_pemprosesan_hpa)
-    {
-        return $this->delete($id_pemprosesan_hpa);
+        return $data;
     }
 
     public function countpemprosesan_hpa()

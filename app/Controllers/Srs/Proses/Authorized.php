@@ -123,22 +123,10 @@ class Authorized extends BaseController
 
     public function authorized_details()
     {
-        // Ambil id_authorized_srs dari parameter GET
         $id_authorized_srs = $this->request->getGet('id_authorized_srs');
 
         if ($id_authorized_srs) {
-            // Gunakan model yang sudah diinisialisasi di constructor
-            $data = $this->authorized_srs->select(
-                'authorized.*, 
-            srs.*, 
-            patient.*, 
-            users.nama_user AS nama_user_authorized'
-            )
-                ->join('srs', 'authorized.id_srs = srs.id_srs', 'left')
-                ->join('patient', 'srs.id_pasien = patient.id_pasien', 'left')
-                ->join('users', 'authorized.id_user_authorized_srs = users.id_user', 'left')
-                ->where('authorized.id_authorized_srs', $id_authorized_srs)
-                ->first();
+            $data = $this->authorized_srs->detailsauthorized_srs($id_authorized_srs);
 
             if ($data) {
                 return $this->response->setJSON($data);
@@ -146,11 +134,11 @@ class Authorized extends BaseController
                 return $this->response->setJSON(['error' => 'Data tidak ditemukan.']);
             }
         } else {
-            return $this->response->setJSON(['error' => 'ID authorized tidak ditemukan.']);
+            return $this->response->setJSON(['error' => 'Coba ulangi kembali..']);
         }
     }
 
-    public function edit_authorized()
+    public function edit()
     {
         $id_authorized_srs = $this->request->getGet('id_authorized_srs');
 
@@ -165,8 +153,8 @@ class Authorized extends BaseController
             throw new \CodeIgniter\Exceptions\PageNotFoundException('Data authorized tidak ditemukan.');
         }
 
-        // Ambil data users dengan status_user = 'Analis'
-        $users = $this->userModel->where('status_user', 'Analis')->findAll();
+        // Ambil data user
+        $users = $this->userModel->findAll();
 
         $data = [
             'authorizedData' => $authorizedData,
@@ -175,29 +163,62 @@ class Authorized extends BaseController
             'nama_user' => session()->get('nama_user'),
         ];
 
-        return view('edit_proses/edit_authorized', $data);
+        return view('srs/edit_proses/edit_authorized', $data);
     }
 
-    public function update_authorized()
+    public function update()
     {
         $id_authorized_srs = $this->request->getPost('id_authorized_srs');
+
+        if (!$id_authorized_srs) {
+            return redirect()->back()->with('error', 'ID tidak ditemukan.')->withInput();
+        }
 
         // Gabungkan input tanggal dan waktu
         $mulai_authorized_srs = $this->request->getPost('mulai_authorized_srs_date') . ' ' . $this->request->getPost('mulai_authorized_srs_time');
         $selesai_authorized_srs = $this->request->getPost('selesai_authorized_srs_date') . ' ' . $this->request->getPost('selesai_authorized_srs_time');
 
+        $id_user = $this->request->getPost('id_user_dokter_authorized_srs');
+
         $data = [
-            'id_user_authorized_srs' => $this->request->getPost('id_user_authorized_srs'),
+            'id_user_dokter_authorized_srs' => $id_user === '' ? null : $id_user,
             'status_authorized_srs'  => $this->request->getPost('status_authorized_srs'),
             'mulai_authorized_srs'   => $mulai_authorized_srs,
             'selesai_authorized_srs' => $selesai_authorized_srs,
-            'updated_at'         => date('Y-m-d H:i:s'),
+            'updated_at'             => date('Y-m-d H:i:s'),
         ];
 
         if (!$this->authorized_srs->update($id_authorized_srs, $data)) {
             return redirect()->back()->with('error', 'Gagal mengupdate data.')->withInput();
         }
 
-        return redirect()->to(base_url('authorized/index_authorized'))->with('success', 'Data berhasil diperbarui.');
+        return redirect()->to(base_url('authorized_srs/edit?id_authorized_srs=' . $id_authorized_srs))
+            ->with('success', 'Data berhasil diperbarui.');
+    }
+
+    public function delete()
+    {
+        try {
+            $id_authorized = $this->request->getPost('id_authorized');
+            $id_srs = $this->request->getPost('id_srs');
+            if (!$id_authorized || !$id_srs) {
+                throw new \Exception('ID tidak lengkap. Gagal menghapus data.');
+            }
+            // Hapus data authorized
+            if ($this->authorized_srs->delete($id_authorized)) {
+                // Update status_srs ke tahap sebelumnya
+                $this->srsModel->update($id_srs, [
+                    'status_srs' => 'Pemverifikasi',
+                ]);
+                return $this->response->setJSON(['success' => true]);
+            } else {
+                throw new \Exception('Gagal menghapus data.');
+            }
+        } catch (\Exception $e) {
+            return $this->response->setJSON([
+                'success' => false,
+                'message' => $e->getMessage()
+            ]);
+        }
     }
 }

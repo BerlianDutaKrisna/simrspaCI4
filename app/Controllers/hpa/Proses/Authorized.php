@@ -123,22 +123,10 @@ class Authorized extends BaseController
 
     public function authorized_details()
     {
-        // Ambil id_authorized_hpa dari parameter GET
         $id_authorized_hpa = $this->request->getGet('id_authorized_hpa');
 
         if ($id_authorized_hpa) {
-            // Gunakan model yang sudah diinisialisasi di constructor
-            $data = $this->authorized_hpa->select(
-                'authorized.*, 
-            hpa.*, 
-            patient.*, 
-            users.nama_user AS nama_user_authorized'
-            )
-                ->join('hpa', 'authorized.id_hpa = hpa.id_hpa', 'left')
-                ->join('patient', 'hpa.id_pasien = patient.id_pasien', 'left')
-                ->join('users', 'authorized.id_user_authorized_hpa = users.id_user', 'left')
-                ->where('authorized.id_authorized_hpa', $id_authorized_hpa)
-                ->first();
+            $data = $this->authorized_hpa->detailsauthorized_hpa($id_authorized_hpa);
 
             if ($data) {
                 return $this->response->setJSON($data);
@@ -146,11 +134,11 @@ class Authorized extends BaseController
                 return $this->response->setJSON(['error' => 'Data tidak ditemukan.']);
             }
         } else {
-            return $this->response->setJSON(['error' => 'ID authorized tidak ditemukan.']);
+            return $this->response->setJSON(['error' => 'Coba ulangi kembali..']);
         }
     }
 
-    public function edit_authorized()
+    public function edit()
     {
         $id_authorized_hpa = $this->request->getGet('id_authorized_hpa');
 
@@ -165,8 +153,8 @@ class Authorized extends BaseController
             throw new \CodeIgniter\Exceptions\PageNotFoundException('Data authorized tidak ditemukan.');
         }
 
-        // Ambil data users dengan status_user = 'Analis'
-        $users = $this->userModel->where('status_user', 'Analis')->findAll();
+        // Ambil data user
+        $users = $this->userModel->findAll();
 
         $data = [
             'authorizedData' => $authorizedData,
@@ -175,29 +163,62 @@ class Authorized extends BaseController
             'nama_user' => session()->get('nama_user'),
         ];
 
-        return view('edit_proses/edit_authorized', $data);
+        return view('Hpa/edit_proses/edit_authorized', $data);
     }
 
-    public function update_authorized()
+    public function update()
     {
         $id_authorized_hpa = $this->request->getPost('id_authorized_hpa');
+
+        if (!$id_authorized_hpa) {
+            return redirect()->back()->with('error', 'ID tidak ditemukan.')->withInput();
+        }
 
         // Gabungkan input tanggal dan waktu
         $mulai_authorized_hpa = $this->request->getPost('mulai_authorized_hpa_date') . ' ' . $this->request->getPost('mulai_authorized_hpa_time');
         $selesai_authorized_hpa = $this->request->getPost('selesai_authorized_hpa_date') . ' ' . $this->request->getPost('selesai_authorized_hpa_time');
 
+        $id_user = $this->request->getPost('id_user_dokter_authorized_hpa');
+
         $data = [
-            'id_user_authorized_hpa' => $this->request->getPost('id_user_authorized_hpa'),
+            'id_user_dokter_authorized_hpa' => $id_user === '' ? null : $id_user,
             'status_authorized_hpa'  => $this->request->getPost('status_authorized_hpa'),
             'mulai_authorized_hpa'   => $mulai_authorized_hpa,
             'selesai_authorized_hpa' => $selesai_authorized_hpa,
-            'updated_at'         => date('Y-m-d H:i:s'),
+            'updated_at'             => date('Y-m-d H:i:s'),
         ];
 
         if (!$this->authorized_hpa->update($id_authorized_hpa, $data)) {
             return redirect()->back()->with('error', 'Gagal mengupdate data.')->withInput();
         }
 
-        return redirect()->to(base_url('authorized/index_authorized'))->with('success', 'Data berhasil diperbarui.');
+        return redirect()->to(base_url('authorized_hpa/edit?id_authorized_hpa=' . $id_authorized_hpa))
+            ->with('success', 'Data berhasil diperbarui.');
+    }
+
+    public function delete()
+    {
+        try {
+            $id_authorized = $this->request->getPost('id_authorized'); 
+            $id_hpa = $this->request->getPost('id_hpa');
+            if (!$id_authorized || !$id_hpa) {
+                throw new \Exception('ID tidak lengkap. Gagal menghapus data.');
+            }
+            // Hapus data authorized
+            if ($this->authorized_hpa->delete($id_authorized)) {
+                // Update status_hpa ke tahap sebelumnya
+                $this->hpaModel->update($id_hpa, [
+                    'status_hpa' => 'Pemverifikasi',
+                ]);
+                return $this->response->setJSON(['success' => true]);
+            } else {
+                throw new \Exception('Gagal menghapus data.');
+            }
+        } catch (\Exception $e) {
+            return $this->response->setJSON([
+                'success' => false,
+                'message' => $e->getMessage()
+            ]);
+        }
     }
 }

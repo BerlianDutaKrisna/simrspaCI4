@@ -21,7 +21,7 @@ class Penerimaan extends BaseController
     protected $srsModel;
     protected $userModel;
     protected $patientModel;
-    protected $Penerimaan_srs;
+    protected $penerimaan_srs;
     protected $Pembacaan_srs;
     protected $Penulisan_srs;
     protected $Pemverifikasi_srs;
@@ -35,7 +35,7 @@ class Penerimaan extends BaseController
         $this->srsModel = new srsModel();
         $this->userModel = new UsersModel();
         $this->patientModel = new PatientModel();
-        $this->Penerimaan_srs = new Penerimaan_srs();
+        $this->penerimaan_srs = new Penerimaan_srs();
         $this->Pembacaan_srs = new Pembacaan_srs();
         $this->Penulisan_srs = new Penulisan_srs();
         $this->Pemverifikasi_srs = new Pemverifikasi_srs();
@@ -48,7 +48,7 @@ class Penerimaan extends BaseController
 
     public function index()
     {
-        $penerimaanData_srs = $this->Penerimaan_srs->getPenerimaan_srs();
+        $penerimaanData_srs = $this->penerimaan_srs->getPenerimaan_srs();
         $data = [
             'nama_user' => $this->session->get('nama_user'),
             'counts' => $this->getCounts(),
@@ -91,21 +91,21 @@ class Penerimaan extends BaseController
             switch ($action) {
                 case 'mulai':
                     $this->srsModel->update($id_srs, ['status_srs' => 'Penerimaan']);
-                    $this->Penerimaan_srs->update($id_penerimaan_srs, [
+                    $this->penerimaan_srs->update($id_penerimaan_srs, [
                         'id_user_penerimaan_srs' => $id_user,
                         'status_penerimaan_srs' => 'Proses Penerimaan',
                         'mulai_penerimaan_srs' => date('Y-m-d H:i:s'),
                     ]);
                     break;
                 case 'selesai':
-                    $this->Penerimaan_srs->update($id_penerimaan_srs, [
+                    $this->penerimaan_srs->update($id_penerimaan_srs, [
                         'id_user_penerimaan_srs' => $id_user,
                         'status_penerimaan_srs' => 'Selesai Penerimaan',
                         'selesai_penerimaan_srs' => date('Y-m-d H:i:s'),
                     ]);
                     break;
                 case 'reset':
-                    $this->Penerimaan_srs->update($id_penerimaan_srs, [
+                    $this->penerimaan_srs->update($id_penerimaan_srs, [
                         'id_user_penerimaan_srs' => null,
                         'status_penerimaan_srs' => 'Belum Penerimaan',
                         'mulai_penerimaan_srs' => null,
@@ -131,22 +131,10 @@ class Penerimaan extends BaseController
 
     public function penerimaan_details()
     {
-        // Ambil id_penerimaan_srs dari parameter GET
         $id_penerimaan_srs = $this->request->getGet('id_penerimaan_srs');
 
         if ($id_penerimaan_srs) {
-            // Gunakan model yang sudah diinisialisasi di constructor
-            $data = $this->Penerimaan_srs->select(
-                'penerimaan.*, 
-            srs.*, 
-            patient.*, 
-            users.nama_user AS nama_user_penerimaan'
-            )
-                ->join('srs', 'penerimaan.id_srs = srs.id_srs', 'left')
-                ->join('patient', 'srs.id_pasien = patient.id_pasien', 'left')
-                ->join('users', 'penerimaan.id_user_penerimaan_srs = users.id_user', 'left')
-                ->where('penerimaan.id_penerimaan_srs', $id_penerimaan_srs)
-                ->first();
+            $data = $this->penerimaan_srs->detailspenerimaan_srs($id_penerimaan_srs);
 
             if ($data) {
                 return $this->response->setJSON($data);
@@ -154,11 +142,11 @@ class Penerimaan extends BaseController
                 return $this->response->setJSON(['error' => 'Data tidak ditemukan.']);
             }
         } else {
-            return $this->response->setJSON(['error' => 'ID Penerimaan tidak ditemukan.']);
+            return $this->response->setJSON(['error' => 'Coba ulangi kembali..']);
         }
     }
 
-    public function edit_penerimaan()
+    public function edit()
     {
         $id_penerimaan_srs = $this->request->getGet('id_penerimaan_srs');
 
@@ -167,14 +155,14 @@ class Penerimaan extends BaseController
         }
 
         // Ambil data penerimaan
-        $penerimaanData = $this->Penerimaan_srs->find($id_penerimaan_srs);
+        $penerimaanData = $this->penerimaan_srs->find($id_penerimaan_srs);
 
         if (!$penerimaanData) {
             throw new \CodeIgniter\Exceptions\PageNotFoundException('Data penerimaan tidak ditemukan.');
         }
 
-        // Ambil data users dengan status_user = 'Analis'
-        $users = $this->userModel->where('status_user', 'Analis')->findAll();
+        // Ambil data user
+        $users = $this->userModel->findAll();
 
         $data = [
             'penerimaanData' => $penerimaanData,
@@ -183,29 +171,36 @@ class Penerimaan extends BaseController
             'nama_user' => session()->get('nama_user'),
         ];
 
-        return view('edit_proses/edit_penerimaan', $data);
+        return view('srs/edit_proses/edit_penerimaan', $data);
     }
 
-    public function update_penerimaan()
+    public function update()
     {
         $id_penerimaan_srs = $this->request->getPost('id_penerimaan_srs');
+
+        if (!$id_penerimaan_srs) {
+            return redirect()->back()->with('error', 'ID tidak ditemukan.')->withInput();
+        }
 
         // Gabungkan input tanggal dan waktu
         $mulai_penerimaan_srs = $this->request->getPost('mulai_penerimaan_srs_date') . ' ' . $this->request->getPost('mulai_penerimaan_srs_time');
         $selesai_penerimaan_srs = $this->request->getPost('selesai_penerimaan_srs_date') . ' ' . $this->request->getPost('selesai_penerimaan_srs_time');
 
+        $id_user = $this->request->getPost('id_user_penerimaan_srs');
+
         $data = [
-            'id_user_penerimaan_srs' => $this->request->getPost('id_user_penerimaan_srs'),
+            'id_user_penerimaan_srs' => $id_user === '' ? null : $id_user,
             'status_penerimaan_srs'  => $this->request->getPost('status_penerimaan_srs'),
             'mulai_penerimaan_srs'   => $mulai_penerimaan_srs,
             'selesai_penerimaan_srs' => $selesai_penerimaan_srs,
-            'updated_at'         => date('Y-m-d H:i:s'),
+            'updated_at'             => date('Y-m-d H:i:s'),
         ];
 
-        if (!$this->Penerimaan_srs->update($id_penerimaan_srs, $data)) {
+        if (!$this->penerimaan_srs->update($id_penerimaan_srs, $data)) {
             return redirect()->back()->with('error', 'Gagal mengupdate data.')->withInput();
         }
 
-        return redirect()->to(base_url('penerimaan/index_penerimaan'))->with('success', 'Data berhasil diperbarui.');
+        return redirect()->to(base_url('penerimaan_srs/edit?id_penerimaan_srs=' . $id_penerimaan_srs))
+            ->with('success', 'Data berhasil diperbarui.');
     }
 }

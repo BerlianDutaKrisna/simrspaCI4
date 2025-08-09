@@ -28,6 +28,9 @@ class FrsModel extends Model
         'print_frs',
         'penerima_frs',
         'tanggal_penerima',
+        'id_transaksi',
+        'tanggal_transaksi',
+        'no_register',
         'created_at',
         'updated_at',
     ];
@@ -101,16 +104,63 @@ class FrsModel extends Model
             ->orderBy("MIN(tanggal_permintaan)", "ASC")
             ->findAll();
     }
-    
-    public function getTotalFrs() {
+
+    public function getTotalFrs()
+    {
         return $this->db->table('frs')->countAllResults();
     }
 
     public function getfrsWithPatient()
     {
-        return $this->select('frs.*, patient.*')
-            ->join('patient', 'patient.id_pasien = frs.id_pasien')
-            ->orderBy('frs.kode_frs', 'ASC')
+        return $this->select('
+            frs.*, 
+            patient.*, 
+            penerimaan_frs.id_penerimaan_frs AS id_penerimaan,
+            pembacaan_frs.id_pembacaan_frs AS id_pembacaan,
+            penulisan_frs.id_penulisan_frs AS id_penulisan,
+            pemverifikasi_frs.id_pemverifikasi_frs AS id_pemverifikasi,
+            authorized_frs.id_authorized_frs AS id_authorized,
+            pencetakan_frs.id_pencetakan_frs AS id_pencetakan,
+            mutu_frs.id_mutu_frs AS id_mutu
+        ')
+            ->join('patient', 'patient.id_pasien = frs.id_pasien', 'left')
+            ->join('penerimaan_frs', 'penerimaan_frs.id_frs = frs.id_frs', 'left')
+            ->join('pembacaan_frs', 'pembacaan_frs.id_frs = frs.id_frs', 'left')
+            ->join('penulisan_frs', 'penulisan_frs.id_frs = frs.id_frs', 'left')
+            ->join('pemverifikasi_frs', 'pemverifikasi_frs.id_frs = frs.id_frs', 'left')
+            ->join('authorized_frs', 'authorized_frs.id_frs = frs.id_frs', 'left')
+            ->join('pencetakan_frs', 'pencetakan_frs.id_frs = frs.id_frs', 'left')
+            ->join('mutu_frs', 'mutu_frs.id_frs = frs.id_frs', 'left')
+            ->orderBy("CAST(SUBSTRING_INDEX(SUBSTRING_INDEX(kode_frs, '/', 1), '.', -1) AS UNSIGNED) ASC")
+            ->orderBy("CAST(SUBSTRING_INDEX(kode_frs, '/', -1) AS UNSIGNED) ASC")
+            ->findAll();
+    }
+
+    public function getfrsWithPatientDESC()
+    {
+        return $this->select('
+            frs.*, 
+            patient.*, 
+            penerimaan_frs.id_penerimaan_frs AS id_penerimaan,
+            pembacaan_frs.id_pembacaan_frs AS id_pembacaan,
+            penulisan_frs.id_penulisan_frs AS id_penulisan,
+            pemverifikasi_frs.id_pemverifikasi_frs AS id_pemverifikasi,
+            authorized_frs.id_authorized_frs AS id_authorized,
+            pencetakan_frs.id_pencetakan_frs AS id_pencetakan,
+            mutu_frs.id_mutu_frs AS id_mutu,
+            dokter_pembacaan.nama_user AS nama_dokter_pembacaan
+        ')
+            ->join('patient', 'patient.id_pasien = frs.id_pasien', 'left')
+            ->join('penerimaan_frs', 'penerimaan_frs.id_frs = frs.id_frs', 'left')
+            ->join('pembacaan_frs', 'pembacaan_frs.id_frs = frs.id_frs', 'left')
+            ->join('penulisan_frs', 'penulisan_frs.id_frs = frs.id_frs', 'left')
+            ->join('pemverifikasi_frs', 'pemverifikasi_frs.id_frs = frs.id_frs', 'left')
+            ->join('authorized_frs', 'authorized_frs.id_frs = frs.id_frs', 'left')
+            ->join('pencetakan_frs', 'pencetakan_frs.id_frs = frs.id_frs', 'left')
+            ->join('mutu_frs', 'mutu_frs.id_frs = frs.id_frs', 'left')
+            ->join('users AS dokter_pembacaan', 'dokter_pembacaan.id_user = pembacaan_frs.id_user_dokter_pembacaan_frs', 'left')
+            ->orderBy("CAST(SUBSTRING_INDEX(SUBSTRING_INDEX(kode_frs, '/', 1), '.', -1) AS UNSIGNED) DESC")
+            ->orderBy("CAST(SUBSTRING_INDEX(kode_frs, '/', -1) AS UNSIGNED) DESC")
             ->findAll();
     }
 
@@ -127,6 +177,50 @@ class FrsModel extends Model
             ->join('mutu_frs', 'mutu_frs.id_frs = frs.id_frs', 'left')
             ->where('frs.id_frs', $id_frs)
             ->first();
+    }
+
+    public function getfrsWithTime()
+    {
+        return $this->select('
+        frs.*,
+        patient.*,
+        penerimaan_frs.mulai_penerimaan_frs, penerimaan_frs.selesai_penerimaan_frs,
+        SEC_TO_TIME(TIMESTAMPDIFF(SECOND, penerimaan_frs.mulai_penerimaan_frs, penerimaan_frs.selesai_penerimaan_frs)) AS durasi_penerimaan_frs,
+        pembacaan_frs.mulai_pembacaan_frs, pembacaan_frs.selesai_pembacaan_frs,
+        SEC_TO_TIME(TIMESTAMPDIFF(SECOND, pembacaan_frs.mulai_pembacaan_frs, pembacaan_frs.selesai_pembacaan_frs)) AS durasi_pembacaan_frs,
+        penulisan_frs.mulai_penulisan_frs, penulisan_frs.selesai_penulisan_frs,
+        SEC_TO_TIME(TIMESTAMPDIFF(SECOND, penulisan_frs.mulai_penulisan_frs, penulisan_frs.selesai_penulisan_frs)) AS durasi_penulisan_frs,
+        pemverifikasi_frs.mulai_pemverifikasi_frs, pemverifikasi_frs.selesai_pemverifikasi_frs,
+        SEC_TO_TIME(TIMESTAMPDIFF(SECOND, pemverifikasi_frs.mulai_pemverifikasi_frs, pemverifikasi_frs.selesai_pemverifikasi_frs)) AS durasi_pemverifikasi_frs,
+        authorized_frs.mulai_authorized_frs, authorized_frs.selesai_authorized_frs,
+        SEC_TO_TIME(TIMESTAMPDIFF(SECOND, authorized_frs.mulai_authorized_frs, authorized_frs.selesai_authorized_frs)) AS durasi_authorized_frs,
+        pencetakan_frs.mulai_pencetakan_frs, pencetakan_frs.selesai_pencetakan_frs,
+        SEC_TO_TIME(TIMESTAMPDIFF(SECOND, pencetakan_frs.mulai_pencetakan_frs, pencetakan_frs.selesai_pencetakan_frs)) AS durasi_pencetakan_frs,
+        SEC_TO_TIME((
+            IFNULL(TIMESTAMPDIFF(SECOND, penerimaan_frs.mulai_penerimaan_frs, penerimaan_frs.selesai_penerimaan_frs), 0) +
+            IFNULL(TIMESTAMPDIFF(SECOND, pembacaan_frs.mulai_pembacaan_frs, pembacaan_frs.selesai_pembacaan_frs), 0) +
+            IFNULL(TIMESTAMPDIFF(SECOND, penulisan_frs.mulai_penulisan_frs, penulisan_frs.selesai_penulisan_frs), 0) +
+            IFNULL(TIMESTAMPDIFF(SECOND, pemverifikasi_frs.mulai_pemverifikasi_frs, pemverifikasi_frs.selesai_pemverifikasi_frs), 0) +
+            IFNULL(TIMESTAMPDIFF(SECOND, authorized_frs.mulai_authorized_frs, authorized_frs.selesai_authorized_frs), 0) +
+            IFNULL(TIMESTAMPDIFF(SECOND, pencetakan_frs.mulai_pencetakan_frs, pencetakan_frs.selesai_pencetakan_frs), 0)
+        )) AS total_waktu_kerja,
+        SEC_TO_TIME((
+            IFNULL(TIMESTAMPDIFF(SECOND, pemotongan_frs.mulai_pemotongan_frs, pemotongan_frs.selesai_pemotongan_frs), 0) +
+            IFNULL(TIMESTAMPDIFF(SECOND, pembacaan_frs.mulai_pembacaan_frs, pembacaan_frs.selesai_pembacaan_frs), 0) +
+            IFNULL(TIMESTAMPDIFF(SECOND, penulisan_frs.mulai_penulisan_frs, penulisan_frs.selesai_penulisan_frs), 0) +
+            IFNULL(TIMESTAMPDIFF(SECOND, pencetakan_frs.mulai_pencetakan_frs, pencetakan_frs.selesai_pencetakan_frs), 0)
+        )) AS total_waktu_operasional
+    ')
+            ->join('patient', 'patient.id_pasien = frs.id_pasien', 'left')
+            ->join('penerimaan_frs', 'penerimaan_frs.id_frs = frs.id_frs', 'left')
+            ->join('pembacaan_frs', 'pembacaan_frs.id_frs = frs.id_frs', 'left')
+            ->join('penulisan_frs', 'penulisan_frs.id_frs = frs.id_frs', 'left')
+            ->join('pemverifikasi_frs', 'pemverifikasi_frs.id_frs = frs.id_frs', 'left')
+            ->join('authorized_frs', 'authorized_frs.id_frs = frs.id_frs', 'left')
+            ->join('pencetakan_frs', 'pencetakan_frs.id_frs = frs.id_frs', 'left')
+            ->orderBy("CAST(SUBSTRING_INDEX(SUBSTRING_INDEX(kode_frs, '/', 1), '.', -1) AS UNSIGNED) ASC")
+            ->orderBy("CAST(SUBSTRING_INDEX(kode_frs, '/', -1) AS UNSIGNED) ASC")
+            ->findAll();
     }
 
     public function riwayatPemeriksaanfrs($id_pasien)
@@ -180,7 +274,8 @@ class FrsModel extends Model
             ->join('mutu_frs', 'mutu_frs.id_frs = frs.id_frs', 'left')
             ->where('frs.tanggal_permintaan >=', $previousMonthStart)
             ->where('frs.tanggal_permintaan <=', date('Y-m-t'))
-            ->orderBy('frs.kode_frs', 'ASC')
+            ->orderBy("CAST(SUBSTRING_INDEX(SUBSTRING_INDEX(kode_frs, '/', 1), '.', -1) AS UNSIGNED) ASC")
+            ->orderBy("CAST(SUBSTRING_INDEX(kode_frs, '/', -1) AS UNSIGNED) ASC")
             ->findAll();
     }
 

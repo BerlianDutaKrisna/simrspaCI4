@@ -28,13 +28,6 @@ class Penanaman_hpa extends Model // Update nama model
     protected $createdField  = 'created_at';
     protected $updatedField  = 'updated_at';
 
-    // Fungsi untuk insert data penanaman_hpa
-    public function insertpenanaman_hpa(array $data): bool // Update nama fungsi
-    {
-        $this->insert($data);
-        return $this->db->affectedRows() > 0;
-    }
-
     // Mengambil data penanaman_hpa dengan relasi
     public function getpenanaman_hpa()
     {
@@ -56,18 +49,20 @@ class Penanaman_hpa extends Model // Update nama model
             ->findAll();
     }
 
-    // Fungsi untuk mengupdate data penanaman_hpa
-    public function updatepenanaman_hpa($id_penanaman_hpa, $data) // Update nama fungsi dan parameter
+    public function detailspenanaman_hpa($id_penanaman_hpa)
     {
-        $builder = $this->db->table($this->table);  // Mengambil tabel penanaman_hpa
-        $builder->where('id_penanaman_hpa', $id_penanaman_hpa);  // Menentukan baris yang akan diupdate berdasarkan id_penanaman_hpa
-        $builder->update($data);  // Melakukan update dengan data yang dikirimkan
-        return $this->db->affectedRows();  // Mengembalikan jumlah baris yang terpengaruh
-    }
+        $data = $this->select(
+            'penanaman_hpa.*, 
+        hpa.*, 
+        patient.*, 
+        users.nama_user AS nama_user_penanaman_hpa'
+        )
+            ->join('hpa', 'penanaman_hpa.id_hpa = hpa.id_hpa', 'left')
+            ->join('patient', 'hpa.id_pasien = patient.id_pasien', 'left')
+            ->join('users', 'penanaman_hpa.id_user_penanaman_hpa = users.id_user', 'left')
+            ->where('penanaman_hpa.id_penanaman_hpa', $id_penanaman_hpa)
+            ->first();
 
-    public function deletepenanaman_hpa($id_penanaman_hpa)
-    {
-        return $this->delete($id_penanaman_hpa);
+        return $data;
     }
-
 }

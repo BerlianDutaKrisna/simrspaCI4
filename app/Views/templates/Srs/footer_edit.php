@@ -2,7 +2,13 @@
     <div class="container my-auto">
         <div class="row">
             <div class="col-md-6 text-center text-md-left">
-                <p class="mb-0">© 2025 SIMRSPA - Developed by <strong>Berlian Duta Krisna S.Tr.Kes</strong></p>
+                <p class="mb-0">© 2025 SIMRSPA — Developed by <strong>Berlian Duta Krisna, S.Tr.Kes</strong></p>
+                <p class="mb-0 text-sm">Versi 2.0</p>
+                <p class="text-sm">
+                    <i class="fab fa-php"></i> PHP (CodeIgniter 4),
+                    <i class="fab fa-bootstrap"></i> Bootstrap 4,
+                    <i class="fas fa-database"></i> MySQL (MySQLi)
+                </p>
             </div>
             <div class="col-md-6 text-center text-md-right">
                 <ul class="list-inline mb-0">
@@ -69,20 +75,37 @@
             if (tindakanSpesimen === "Pap Smear") {
                 // Jika tindakan spesimen adalah "Pap Smear"
                 $('#makroskopis_srs').summernote('code', `
-                <b>I. BAHAN PEMERIKSAAN :</b><br>&nbsp;&nbsp;&nbsp; Cervical Smear.<br>
-                <b>II. KETERANGAN KLINIS :</b><br>
-                &nbsp; a. Keluhan : -.<br>
-                &nbsp; b. Pemeriksaan Fisik : -.<br>
-                <b>III. HASIL PEMERIKSAAN :</b><br>
-                &nbsp;&nbsp; a. Makroskopis : Diterima 1 smear dari cervix.<br>
-                &nbsp;&nbsp; b. Mikroskopis : <br>
-                &nbsp;&nbsp;&nbsp;&nbsp; - Sel Epitel: Sel Superfisial, Intermediate, Parabasal, dan Metaplastik.<br>
-                &nbsp;&nbsp;&nbsp;&nbsp; - Sel Inflamasi: Sel radang PMN dan Monokuler.<br>
-                &nbsp;&nbsp;&nbsp;&nbsp; - Mikroorganisme: Tidak ditemukan.<br>
-                &nbsp;&nbsp;&nbsp;&nbsp; - Perubahan Seluler: Tidak ada perubahan.<br>
-                <b>IV. KESIMPULAN :</b><br>
-                &nbsp; a. Spesimen: Adekuat.<br>
-                &nbsp; b. Hasil: <b>RADANG NON SPESIFIK / NILM / PAPANICOLOU CLASS II</b><br>
+                <b>I. BAHAN PEMERIKSAAN :</b><br>
+                    &nbsp;&nbsp;&nbsp; Cervical Smear.<br>
+
+                    <b>II. KETERANGAN KLINIS :</b><br>
+                    &nbsp; a. Keluhan : - , Keputihan, Gatatal, Lain-lain:.....<br>
+                    &nbsp; b. Pemeriksaan Fisik : - , Tenang, Erosi, Mencurigakan Keganasan.<br>
+            `);
+                $('#mikroskopis_srs').summernote('code', `
+                    <b>III. HASIL PEMERIKSAAN :</b><br>
+                    &nbsp;&nbsp; a. Makroskopis : Diterima 1 smear dari cervix/Vaginal swab.<br>
+                    &nbsp;&nbsp; b. Mikroskopis : <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp; - Sel Epitel: Sel Superfisial, Intermediate, Parabasal/basal, Endocervix/metaplastik.<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp; - Sel Inflamasi: Sel radang PMN, Monokuler, Histocyte.<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp; - Mikroorganisme: Tidak ditemukan, Ditemukan .....<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp; - Perubahan Seluler: Tidak ada perubahan, Displasia sedang-Berat, Perubahan Keradangan, Displasia ringan, Sel malignancy.<br>
+            `);
+                $('#hasil_srs').summernote('code', `
+                    <b>IV. KESIMPULAN :</b><br>
+                    &nbsp; a. Spesimen: Adekuat (Sel silinder + metaplastik), Cukup adekuat, kurang adekuat.<br>
+                    &nbsp; b. Hasil: 
+                    <b><br>
+                    - NORMAL SMEAR / NILM / PAPANICOLAOU CLASS I <br>
+                    - RADANG NON SPESIFIK / NILM / PAPANICOLOU CLASS II <br>
+                    - TRICHOMONAS VAGINALIS / NILM / PAPANICOLAU CLASS II <br>
+                    - BACTERIAL BAGINOSIS / NILM / PAPANICOLAOU CLASS II <br>
+                    - MONIALIS / NILM PAPANICOLAOU CLASS II <br>
+                    - DISPLASIA RINGAN / CIN 1 / LSIL / PAPANICOLAOU CLASS III <br>
+                    - DISPLASIA SEDANG-BERAT / CIN 2-3 / HSIL / PAPANICOLAOU CLASS IV <br>
+                    - SEL MALIGNANCY / PAPANICOLAOU CLASS V <br>
+                    - ....  
+                    </b>
             `);
             } else {
                 // Default untuk kondisi lain

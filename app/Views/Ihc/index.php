@@ -19,10 +19,12 @@
                     <thead>
                         <tr>
                             <th>No</th>
-                            <th>Norm Pasien</th>
-                            <th>Kode ihc</th>
-                            <th>Nama Pasien</th>
                             <th>Aksi</th>
+                            <th>No. RM</th>
+                            <th>Kode IHC</th>
+                            <th>Nama Pasien</th>
+                            <th>Status IHC</th>
+                            <th>Proses</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -31,24 +33,80 @@
                             <?php foreach ($ihcData as $row) : ?>
                                 <tr>
                                     <td><?= $i ?></td>
-                                    <td><?= esc($row['norm_pasien']) ?></td>
-                                    <td><?= esc($row['kode_ihc']) ?></td>
-                                    <td><?= esc($row['nama_pasien']) ?></td>
                                     <td>
                                         <div class="d-flex justify-content-around">
-                                            <!-- Tombol Edit -->
                                             <a href="<?= base_url('ihc/edit/' . esc($row['id_ihc'])) ?>" class="btn btn-sm btn-warning mx-1">
                                                 <i class="fas fa-edit"></i> Edit
                                             </a>
-                                            <!-- Tombol Hapus ihc -->
                                             <button class="btn btn-sm btn-danger mx-1 delete-ihc"
                                                 data-toggle="modal"
                                                 data-target="#deleteModal"
                                                 data-id_ihc="<?= htmlspecialchars($row['id_ihc'], ENT_QUOTES, 'UTF-8') ?>"
                                                 data-action="ihc"
-                                                aria-label="Hapus ihc">
+                                                aria-label="Hapus IHC">
                                                 <i class="fas fa-trash-alt"></i> Hapus
                                             </button>
+                                        </div>
+                                    </td>
+                                    <td><?= esc($row['norm_pasien']) ?></td>
+                                    <td><?= esc($row['kode_ihc']) ?></td>
+                                    <td><?= esc($row['nama_pasien']) ?></td>
+                                    <td>
+                                        <a href="#"
+                                            class="btn btn-info btn-sm"
+                                            data-toggle="modal"
+                                            data-target="#statusihcModal"
+                                            data-id_ihc="<?= esc($row['id_ihc']) ?>"
+                                            data-status_ihc="<?= esc($row['status_ihc']) ?>">
+                                            <?= esc($row['status_ihc']) ?>
+                                        </a>
+                                    </td>
+                                    <td>
+                                        <div class="d-flex flex-wrap gap-2 justify-content-start">
+                                            <?php
+                                            $prosesList = [
+                                                'mutu' => $row['id_mutu'] ?? null,
+                                                'penerimaan' => $row['id_penerimaan'] ?? null,
+                                                'pembacaan' => $row['id_pembacaan'] ?? null,
+                                                'penulisan' => $row['id_penulisan'] ?? null,
+                                                'pemverifikasi' => $row['id_pemverifikasi'] ?? null,
+                                                'authorized' => $row['id_authorized'] ?? null,
+                                                'pencetakan' => $row['id_pencetakan'] ?? null,
+                                            ];
+
+                                            foreach ($prosesList as $nama => $id) :
+                                                if ($id) :
+                                                    $isPrimary = in_array($nama, ['mutu', 'penerimaan']);
+                                                    $btnClass = $isPrimary ? 'btn-outline-primary' : 'btn-outline-warning';
+                                            ?>
+                                                    <div class="btn-group btn-group-sm mb-1">
+                                                        <!-- Tombol Lihat Proses -->
+                                                        <button type="button"
+                                                            class="btn <?= $btnClass ?> btn-view-proses"
+                                                            data-toggle="modal"
+                                                            data-target="#viewModal"
+                                                            data-id="<?= esc($id) ?>"
+                                                            data-proses="<?= esc($nama) ?>">
+                                                            <?= ucfirst($nama) ?>
+                                                        </button>
+                                                        <?php if (!$isPrimary) : ?>
+                                                            <!-- Tombol Hapus -->
+                                                            <button type="button"
+                                                                class="btn btn-outline-danger delete-<?= $nama ?>"
+                                                                data-toggle="modal"
+                                                                data-target="#deleteModal"
+                                                                data-id_<?= $nama ?>="<?= esc($id) ?>"
+                                                                data-id_ihc="<?= esc($row['id_ihc']) ?>"
+                                                                data-action="<?= esc($nama) ?>"
+                                                                aria-label="Hapus <?= esc($nama) ?>">
+                                                                <i class="fas fa-trash-alt"></i>
+                                                            </button>
+                                                        <?php endif; ?>
+                                                    </div>
+                                            <?php
+                                                endif;
+                                            endforeach;
+                                            ?>
                                         </div>
                                     </td>
                                 </tr>
@@ -56,7 +114,7 @@
                             <?php endforeach; ?>
                         <?php else : ?>
                             <tr>
-                                <td colspan="33">Tidak ada data yang tersedia.</td>
+                                <td colspan="6">Tidak ada data yang tersedia.</td>
                             </tr>
                         <?php endif; ?>
                     </tbody>

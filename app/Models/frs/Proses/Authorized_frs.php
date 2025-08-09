@@ -65,17 +65,20 @@ class Authorized_frs extends Model // Update nama model
             ->findAll();
     }
 
-    // Fungsi untuk mengupdate data authorized_frs
-    public function updateauthorized_frs($id_authorized_frs, $data) // Update nama fungsi dan parameter
+    public function detailsauthorized_frs($id_authorized_frs)
     {
-        $builder = $this->db->table($this->table);  // Mengambil tabel authorized_frs
-        $builder->where('id_authorized_frs', $id_authorized_frs);  // Menentukan baris yang akan diupdate berdasarkan id_authorized_frs
-        $builder->update($data);  // Melakukan update dengan data yang dikirimkan
-        return $this->db->affectedRows();  // Mengembalikan jumlah baris yang terpengaruh
-    }
+        $data = $this->select(
+            'authorized_frs.*, 
+        frs.*, 
+        patient.*, 
+        users.nama_user AS nama_user_authorized_frs'
+        )
+            ->join('frs', 'authorized_frs.id_frs = frs.id_frs', 'left')
+            ->join('patient', 'frs.id_pasien = patient.id_pasien', 'left')
+            ->join('users', 'authorized_frs.id_user_dokter_authorized_frs = users.id_user', 'left')
+            ->where('authorized_frs.id_authorized_frs', $id_authorized_frs)
+            ->first();
 
-    public function deleteauthorized_frs($id_authorized_frs)
-    {
-        return $this->delete($id_authorized_frs);
+        return $data;
     }
 }

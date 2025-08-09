@@ -123,22 +123,10 @@ class Authorized extends BaseController
 
     public function authorized_details()
     {
-        // Ambil id_authorized_ihc dari parameter GET
         $id_authorized_ihc = $this->request->getGet('id_authorized_ihc');
 
         if ($id_authorized_ihc) {
-            // Gunakan model yang sudah diinisialisasi di constructor
-            $data = $this->authorized_ihc->select(
-                'authorized.*, 
-            ihc.*, 
-            patient.*, 
-            users.nama_user AS nama_user_authorized'
-            )
-                ->join('ihc', 'authorized.id_ihc = ihc.id_ihc', 'left')
-                ->join('patient', 'ihc.id_pasien = patient.id_pasien', 'left')
-                ->join('users', 'authorized.id_user_authorized_ihc = users.id_user', 'left')
-                ->where('authorized.id_authorized_ihc', $id_authorized_ihc)
-                ->first();
+            $data = $this->authorized_ihc->detailsauthorized_ihc($id_authorized_ihc);
 
             if ($data) {
                 return $this->response->setJSON($data);
@@ -146,11 +134,11 @@ class Authorized extends BaseController
                 return $this->response->setJSON(['error' => 'Data tidak ditemukan.']);
             }
         } else {
-            return $this->response->setJSON(['error' => 'ID authorized tidak ditemukan.']);
+            return $this->response->setJSON(['error' => 'Coba ulangi kembali..']);
         }
     }
 
-    public function edit_authorized()
+    public function edit()
     {
         $id_authorized_ihc = $this->request->getGet('id_authorized_ihc');
 
@@ -165,8 +153,8 @@ class Authorized extends BaseController
             throw new \CodeIgniter\Exceptions\PageNotFoundException('Data authorized tidak ditemukan.');
         }
 
-        // Ambil data users dengan status_user = 'Analis'
-        $users = $this->userModel->where('status_user', 'Analis')->findAll();
+        // Ambil data user
+        $users = $this->userModel->findAll();
 
         $data = [
             'authorizedData' => $authorizedData,
@@ -175,29 +163,62 @@ class Authorized extends BaseController
             'nama_user' => session()->get('nama_user'),
         ];
 
-        return view('edit_proses/edit_authorized', $data);
+        return view('ihc/edit_proses/edit_authorized', $data);
     }
 
-    public function update_authorized()
+    public function update()
     {
         $id_authorized_ihc = $this->request->getPost('id_authorized_ihc');
+
+        if (!$id_authorized_ihc) {
+            return redirect()->back()->with('error', 'ID tidak ditemukan.')->withInput();
+        }
 
         // Gabungkan input tanggal dan waktu
         $mulai_authorized_ihc = $this->request->getPost('mulai_authorized_ihc_date') . ' ' . $this->request->getPost('mulai_authorized_ihc_time');
         $selesai_authorized_ihc = $this->request->getPost('selesai_authorized_ihc_date') . ' ' . $this->request->getPost('selesai_authorized_ihc_time');
 
+        $id_user = $this->request->getPost('id_user_dokter_authorized_ihc');
+
         $data = [
-            'id_user_authorized_ihc' => $this->request->getPost('id_user_authorized_ihc'),
+            'id_user_dokter_authorized_ihc' => $id_user === '' ? null : $id_user,
             'status_authorized_ihc'  => $this->request->getPost('status_authorized_ihc'),
             'mulai_authorized_ihc'   => $mulai_authorized_ihc,
             'selesai_authorized_ihc' => $selesai_authorized_ihc,
-            'updated_at'         => date('Y-m-d H:i:s'),
+            'updated_at'             => date('Y-m-d H:i:s'),
         ];
 
         if (!$this->authorized_ihc->update($id_authorized_ihc, $data)) {
             return redirect()->back()->with('error', 'Gagal mengupdate data.')->withInput();
         }
 
-        return redirect()->to(base_url('authorized/index_authorized'))->with('success', 'Data berhasil diperbarui.');
+        return redirect()->to(base_url('authorized_ihc/edit?id_authorized_ihc=' . $id_authorized_ihc))
+            ->with('success', 'Data berhasil diperbarui.');
+    }
+
+    public function delete()
+    {
+        try {
+            $id_authorized = $this->request->getPost('id_authorized');
+            $id_ihc = $this->request->getPost('id_ihc');
+            if (!$id_authorized || !$id_ihc) {
+                throw new \Exception('ID tidak lengkap. Gagal menghapus data.');
+            }
+            // Hapus data authorized
+            if ($this->authorized_ihc->delete($id_authorized)) {
+                // Update status_ihc ke tahap sebelumnya
+                $this->ihcModel->update($id_ihc, [
+                    'status_ihc' => 'Pemverifikasi',
+                ]);
+                return $this->response->setJSON(['success' => true]);
+            } else {
+                throw new \Exception('Gagal menghapus data.');
+            }
+        } catch (\Exception $e) {
+            return $this->response->setJSON([
+                'success' => false,
+                'message' => $e->getMessage()
+            ]);
+        }
     }
 }

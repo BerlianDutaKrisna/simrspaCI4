@@ -29,64 +29,76 @@ class Patient extends BaseController
     // Menampilkan halaman registrasi pasien
     public function register_patient()
     {
-        // Mendapatkan nilai norm_pasien dari query string
-        $norm_pasien = $this->request->getGet('norm_pasien');
+        // Ambil norm_pasien dari query string, kalau tidak ada jadi null
+        $norm_pasien = $this->request->getGet('norm_pasien') ?? null;
 
-        // Jika nilai norm_pasien ada, gunakan untuk prapengisian
-        if ($norm_pasien) {
-            // Lakukan logika yang sesuai, misalnya prapengisian form
-            $data['norm_pasien'] = $norm_pasien;
-        }
+        $data = [
+            'id_user'     => session()->get('id_user'),
+            'nama_user'   => session()->get('nama_user'),
+            'norm_pasien' => $norm_pasien,
+        ];
 
-        // Mengambil id_user dan nama_user dari session untuk ditampilkan di form
-        $data['id_user'] = session()->get('id_user');
-        $data['nama_user'] = session()->get('nama_user');
-        // Mengirim data ke view untuk ditampilkan
         return view('patient/register_patient', $data);
     }
 
+
     // Menangani penyimpanan data pasien baru
     public function insert()
-    {
-        helper(['form', 'url']);
+{
+    helper(['form', 'url']);
 
-        // Validasi input
-        if (!$this->validate([
-            'norm_pasien' => [
-                'rules'  => 'required|min_length[6]|max_length[6]|numeric|is_unique[patient.norm_pasien]',
-                'errors' => [
-                    'required'   => 'Norm Pasien harus diisi.',
-                    'min_length' => 'Norm Pasien minimal harus 6 karakter.',
-                    'max_length' => 'Norm Pasien maksimal harus 6 karakter.',
-                    'numeric'    => 'Norm Pasien harus berupa angka.',
-                    'is_unique'  => 'Norm Pasien sudah terdaftar!'
-                ]
-            ],
-            'nama_pasien' => [
-                'rules'  => 'required',
-                'errors' => ['required' => 'Nama Pasien harus diisi.']
+    if (!$this->validate([
+        'norm_pasien' => [
+            'rules'  => 'required|min_length[6]|max_length[6]|numeric|is_unique[patient.norm_pasien]',
+            'errors' => [
+                'required'   => 'Norm Pasien harus diisi.',
+                'min_length' => 'Norm Pasien minimal harus 6 karakter.',
+                'max_length' => 'Norm Pasien maksimal harus 6 karakter.',
+                'numeric'    => 'Norm Pasien harus berupa angka.',
+                'is_unique'  => 'Norm Pasien sudah terdaftar!'
             ]
-        ])) {
-            return redirect()->back()->withInput()->with('error', $this->validator->getErrors());
-        }
-
-        // Data yang akan disimpan
-        $data = [
-            'norm_pasien'         => $this->request->getPost('norm_pasien'),
-            'nama_pasien'         => strtoupper($this->request->getPost('nama_pasien')),
-            'alamat_pasien'       => strtoupper($this->request->getPost('alamat_pasien')),
-            'tanggal_lahir_pasien' => $this->request->getPost('tanggal_lahir_pasien') ?: null,
-            'jenis_kelamin_pasien' => $this->request->getPost('jenis_kelamin_pasien'),
-            'status_pasien'       => $this->request->getPost('status_pasien'),
-        ];
-
-        // Simpan data ke database
-        if ($this->PatientModel->save($data)) {
-            return redirect()->to('/dashboard')->with('success', 'Registrasi berhasil!');
-        }
-
-        return redirect()->back()->with('error', 'Terjadi kesalahan saat mendaftar.');
+        ],
+        'nama_pasien' => [
+            'rules'  => 'required',
+            'errors' => ['required' => 'Nama Pasien harus diisi.']
+        ]
+    ])) {
+        return redirect()->back()->withInput()->with('error', $this->validator->getErrors());
     }
+
+    $id_pasien = $this->request->getPost('id_pasien');
+    if (!$id_pasien) {
+        $id_pasien = (int) date('His') . rand(100, 999);
+    } else {
+        $id_pasien = (int) $id_pasien;
+    }
+
+    $patientData = [
+        'id_pasien'           => $id_pasien,
+        'norm_pasien'         => $this->request->getPost('norm_pasien'),
+        'nama_pasien'         => strtoupper($this->request->getPost('nama_pasien')),
+        'alamat_pasien'       => strtoupper($this->request->getPost('alamat_pasien')),
+        'tanggal_lahir_pasien' => $this->request->getPost('tanggal_lahir_pasien') ?: null,
+        'jenis_kelamin_pasien' => $this->request->getPost('jenis_kelamin_pasien'),
+        'status_pasien'       => $this->request->getPost('status_pasien'),
+    ];
+
+    // Cek validasi model (jika ada di model)
+    if (!$this->PatientModel->validate($patientData)) {
+        $errors = $this->PatientModel->errors();
+        return redirect()->back()->with('error', 'Validasi model gagal: ' . implode(', ', $errors));
+    }
+
+    $insertId = $this->PatientModel->insert($patientData);
+
+    if ($insertId === false) {
+        $errors = $this->PatientModel->errors();
+        return redirect()->back()->with('error', 'Gagal menyimpan data! ' . implode(', ', $errors));
+    }
+
+    return redirect()->to('/dashboard')->with('success', 'Registrasi berhasil!');
+}
+
 
 
     // Menampilkan halaman detail pasien
@@ -262,7 +274,7 @@ class Patient extends BaseController
             'status_pasien'       => $status_pasien,
             'patientData'         => $patientData,
         ];
-        
+
         return view('patient/laporan', $data);
     }
 }

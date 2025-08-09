@@ -120,22 +120,10 @@ class Pemverifikasi extends BaseController
 
     public function pemverifikasi_details()
     {
-        // Ambil id_pemverifikasi_hpa dari parameter GET
         $id_pemverifikasi_hpa = $this->request->getGet('id_pemverifikasi_hpa');
 
         if ($id_pemverifikasi_hpa) {
-            // Gunakan model yang sudah diinisialisasi di constructor
-            $data = $this->pemverifikasi_hpa->select(
-                'pemverifikasi.*, 
-            hpa.*, 
-            patient.*, 
-            users.nama_user AS nama_user_pemverifikasi'
-            )
-                ->join('hpa', 'pemverifikasi.id_hpa = hpa.id_hpa', 'left')
-                ->join('patient', 'hpa.id_pasien = patient.id_pasien', 'left')
-                ->join('users', 'pemverifikasi.id_user_pemverifikasi_hpa = users.id_user', 'left')
-                ->where('pemverifikasi.id_pemverifikasi_hpa', $id_pemverifikasi_hpa)
-                ->first();
+            $data = $this->pemverifikasi_hpa->detailspemverifikasi_hpa($id_pemverifikasi_hpa);
 
             if ($data) {
                 return $this->response->setJSON($data);
@@ -143,11 +131,11 @@ class Pemverifikasi extends BaseController
                 return $this->response->setJSON(['error' => 'Data tidak ditemukan.']);
             }
         } else {
-            return $this->response->setJSON(['error' => 'ID pemverifikasi tidak ditemukan.']);
+            return $this->response->setJSON(['error' => 'Coba ulangi kembali..']);
         }
     }
 
-    public function edit_pemverifikasi()
+    public function edit()
     {
         $id_pemverifikasi_hpa = $this->request->getGet('id_pemverifikasi_hpa');
 
@@ -162,8 +150,8 @@ class Pemverifikasi extends BaseController
             throw new \CodeIgniter\Exceptions\PageNotFoundException('Data pemverifikasi tidak ditemukan.');
         }
 
-        // Ambil data users dengan status_user = 'Analis'
-        $users = $this->userModel->where('status_user', 'Analis')->findAll();
+        // Ambil data user
+        $users = $this->userModel->findAll();
 
         $data = [
             'pemverifikasiData' => $pemverifikasiData,
@@ -172,29 +160,62 @@ class Pemverifikasi extends BaseController
             'nama_user' => session()->get('nama_user'),
         ];
 
-        return view('edit_proses/edit_pemverifikasi', $data);
+        return view('Hpa/edit_proses/edit_pemverifikasi', $data);
     }
 
-    public function update_pemverifikasi()
+    public function update()
     {
         $id_pemverifikasi_hpa = $this->request->getPost('id_pemverifikasi_hpa');
+
+        if (!$id_pemverifikasi_hpa) {
+            return redirect()->back()->with('error', 'ID tidak ditemukan.')->withInput();
+        }
 
         // Gabungkan input tanggal dan waktu
         $mulai_pemverifikasi_hpa = $this->request->getPost('mulai_pemverifikasi_hpa_date') . ' ' . $this->request->getPost('mulai_pemverifikasi_hpa_time');
         $selesai_pemverifikasi_hpa = $this->request->getPost('selesai_pemverifikasi_hpa_date') . ' ' . $this->request->getPost('selesai_pemverifikasi_hpa_time');
 
+        $id_user = $this->request->getPost('id_user_pemverifikasi_hpa');
+
         $data = [
-            'id_user_pemverifikasi_hpa' => $this->request->getPost('id_user_pemverifikasi_hpa'),
+            'id_user_pemverifikasi_hpa' => $id_user === '' ? null : $id_user,
             'status_pemverifikasi_hpa'  => $this->request->getPost('status_pemverifikasi_hpa'),
             'mulai_pemverifikasi_hpa'   => $mulai_pemverifikasi_hpa,
             'selesai_pemverifikasi_hpa' => $selesai_pemverifikasi_hpa,
-            'updated_at'         => date('Y-m-d H:i:s'),
+            'updated_at'             => date('Y-m-d H:i:s'),
         ];
 
         if (!$this->pemverifikasi_hpa->update($id_pemverifikasi_hpa, $data)) {
             return redirect()->back()->with('error', 'Gagal mengupdate data.')->withInput();
         }
 
-        return redirect()->to(base_url('pemverifikasi/index_pemverifikasi'))->with('success', 'Data berhasil diperbarui.');
+        return redirect()->to(base_url('pemverifikasi_hpa/edit?id_pemverifikasi_hpa=' . $id_pemverifikasi_hpa))
+            ->with('success', 'Data berhasil diperbarui.');
+    }
+
+    public function delete()
+    {
+        try {
+            $id_pemverifikasi = $this->request->getPost('id_pemverifikasi');
+            $id_hpa = $this->request->getPost('id_hpa');
+            if (!$id_pemverifikasi || !$id_hpa) {
+                throw new \Exception('ID tidak lengkap. Gagal menghapus data.');
+            }
+            // Hapus data pemverifikasi
+            if ($this->pemverifikasi_hpa->delete($id_pemverifikasi)) {
+                // Update status_hpa ke tahap sebelumnya 
+                $this->hpaModel->update($id_hpa, [
+                    'status_hpa' => 'Penulisan',
+                ]);
+                return $this->response->setJSON(['success' => true]);
+            } else {
+                throw new \Exception('Gagal menghapus data.');
+            }
+        } catch (\Exception $e) {
+            return $this->response->setJSON([
+                'success' => false,
+                'message' => $e->getMessage()
+            ]);
+        }
     }
 }

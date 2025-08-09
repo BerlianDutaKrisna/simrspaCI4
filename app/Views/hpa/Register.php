@@ -43,100 +43,61 @@
                 <p class="form-control-plaintext"><?= isset($patient['status_pasien']) ? esc($patient['status_pasien']) : ''; ?></p>
             </div>
         </div>
+        <div class="row">
+            <div class="col-md-4 mb-3">
+                <strong>ID Transaksi: </strong><?= isset($patient['id_transaksi']) ? esc($patient['id_transaksi']) : ''; ?>
+                </p>
+            </div>
+            <div class="col-md-4 mb-3">
+                <strong>No. Pendaftaran: </strong><?= isset($patient['no_register']) ? esc($patient['no_register']) : ''; ?>
+            </div>
+            <div class="col-md-4 mb-3">
+                <strong>Tanggal Transaksi: </strong><?= isset($patient['tanggal_transaksi']) && !empty($patient['tanggal_transaksi']) ? esc(date('d-m-Y', strtotime($patient['tanggal_transaksi']))) : 'Belum diisi'; ?>
+            </div>
+        </div>
 
         <button class="btn btn-outline-info mb-3" type="button" data-toggle="collapse" data-target="#riwayatCollapse" aria-expanded="false" aria-controls="riwayatCollapse">
             <i class="fas fa-book-medical"></i> Riwayat Pemeriksaan
         </button>
 
-        <div class="collapse" id="riwayatCollapse">
-            <div class="form-group row">
-                <!-- Riwayat Pemeriksaan Histopatologi (HPA) -->
-                <div class="col-md-3">
-                    <label class="col-form-label">Riwayat Pemeriksaan <b>Histopatologi</b></label>
-                    <?php if (!empty($riwayat_hpa)) : ?>
-                        <?php foreach ($riwayat_hpa as $row) : ?>
-                            <div class="border p-2 mb-2">
-                                <strong>Tanggal Permintaan:</strong> <?= isset($row['tanggal_permintaan']) ? date('d-m-Y', strtotime($row['tanggal_permintaan'])) : '-' ?><br>
-                                <strong>Kode HPA:</strong> <?= esc($row['kode_hpa'] ?? '-') ?><br>
-                                <strong>Lokasi Spesimen:</strong> <?= esc($row['lokasi_spesimen'] ?? '-') ?><br>
-                                <strong>Hasil HPA:</strong> <?= esc(strip_tags($row['hasil_hpa'])) ?? '-' ?><br>
-                                <strong>Dokter Pembaca:</strong> <?= esc($row['dokter_nama'] ?? 'Belum Dibaca') ?><br>
-                                <button type="button" class="btn btn-info btn-sm"
-                                    onclick="tampilkanModal('<?= nl2br(esc($row['print_hpa'] ?? 'Tidak ada hasil', 'js')) ?>')">
-                                    Lihat Detail
-                                </button>
-                            </div>
-                        <?php endforeach; ?>
-                    <?php else : ?>
-                        <p>Tidak ada riwayat pemeriksaan HPA.</p>
-                    <?php endif; ?>
-                </div>
-
-                <!-- Riwayat Pemeriksaan FRS -->
-                <div class="col-md-3">
-                    <label class="col-form-label">Riwayat Pemeriksaan <b>Fine Needle Aspiration Biopsy</b></label>
-                    <?php if (!empty($riwayat_frs)) : ?>
-                        <?php foreach ($riwayat_frs as $row) : ?>
-                            <div class="border p-2 mb-2">
-                                <strong>Tanggal Permintaan:</strong> <?= isset($row['tanggal_permintaan']) ? date('d-m-Y', strtotime($row['tanggal_permintaan'])) : '-' ?><br>
-                                <strong>Kode FRS:</strong> <?= esc($row['kode_frs'] ?? '-') ?><br>
-                                <strong>Lokasi Spesimen:</strong> <?= esc($row['lokasi_spesimen'] ?? '-') ?><br>
-                                <strong>Hasil FRS:</strong> <?= esc(strip_tags($row['hasil_frs'])) ?? '-' ?><br>
-                                <strong>Dokter Pembaca:</strong> <?= esc($row['dokter_nama'] ?? 'Belum Dibaca') ?><br>
-                                <button type="button" class="btn btn-info btn-sm"
-                                    onclick="tampilkanModal('<?= nl2br(esc($row['print_frs'] ?? 'Tidak ada hasil', 'js')) ?>')">
-                                    Lihat Detail
-                                </button>
-                            </div>
-                        <?php endforeach; ?>
-                    <?php else : ?>
-                        <p>Tidak ada riwayat pemeriksaan FRS.</p>
-                    <?php endif; ?>
-                </div>
-
-                <!-- Riwayat Pemeriksaan SRS -->
-                <div class="col-md-3">
-                    <label class="col-form-label">Riwayat Pemeriksaan <b>Sitologi</b></label>
-                    <?php if (!empty($riwayat_srs)) : ?>
-                        <?php foreach ($riwayat_srs as $row) : ?>
-                            <div class="border p-2 mb-2">
-                                <strong>Tanggal Permintaan:</strong> <?= isset($row['tanggal_permintaan']) ? date('d-m-Y', strtotime($row['tanggal_permintaan'])) : '-' ?><br>
-                                <strong>Kode SRS:</strong> <?= esc($row['kode_srs'] ?? '-') ?><br>
-                                <strong>Lokasi Spesimen:</strong> <?= esc($row['lokasi_spesimen'] ?? '-') ?><br>
-                                <strong>Hasil SRS:</strong> <?= esc(strip_tags($row['hasil_srs'])) ?? '-' ?><br>
-                                <strong>Dokter Pembaca:</strong> <?= esc($row['dokter_nama'] ?? 'Belum Dibaca') ?><br>
-                                <button type="button" class="btn btn-info btn-sm"
-                                    onclick="tampilkanModal('<?= nl2br(esc($row['print_srs'] ?? 'Tidak ada hasil', 'js')) ?>')">
-                                    Lihat Detail
-                                </button>
-                            </div>
-                        <?php endforeach; ?>
-                    <?php else : ?>
-                        <p>Tidak ada riwayat pemeriksaan SRS.</p>
-                    <?php endif; ?>
-                </div>
-
-                <!-- Riwayat Pemeriksaan IHC -->
-                <div class="col-md-3">
-                    <label class="col-form-label">Riwayat Pemeriksaan <b>Imunohistokimia</b></label>
-                    <?php if (!empty($riwayat_ihc)) : ?>
-                        <?php foreach ($riwayat_ihc as $row) : ?>
-                            <div class="border p-2 mb-2">
-                                <strong>Tanggal Permintaan:</strong> <?= isset($row['tanggal_permintaan']) ? date('d-m-Y', strtotime($row['tanggal_permintaan'])) : '-' ?><br>
-                                <strong>Kode IHC:</strong> <?= esc($row['kode_ihc'] ?? '-') ?><br>
-                                <strong>Lokasi Spesimen:</strong> <?= esc($row['lokasi_spesimen'] ?? '-') ?><br>
-                                <strong>Hasil IHC:</strong> <?= esc(strip_tags($row['hasil_ihc'])) ?? '-' ?><br>
-                                <strong>Dokter Pembaca:</strong> <?= esc($row['dokter_nama'] ?? 'Belum Dibaca') ?><br>
-                                <button type="button" class="btn btn-info btn-sm"
-                                    onclick="tampilkanModal('<?= nl2br(esc($row['print_ihc'] ?? 'Tidak ada hasil', 'js')) ?>')">
-                                    Lihat Detail
-                                </button>
-                            </div>
-                        <?php endforeach; ?>
-                    <?php else : ?>
-                        <p>Tidak ada riwayat pemeriksaan IHC.</p>
-                    <?php endif; ?>
-                </div>
+        <!-- Area collapse -->
+        <div class="collapse show" id="riwayatCollapse">
+            <div class="card card-body">
+                <?php if (!empty($riwayat_api)) : ?>
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-striped table-sm">
+                            <thead class="thead-dark">
+                                <tr>
+                                    <th>No</th>
+                                    <th>Tanggal</th>
+                                    <th>Dokter</th>
+                                    <th>Diagnosa Klinik</th>
+                                    <th>Pemeriksaan</th>
+                                    <th>Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php foreach ($riwayat_api as $i => $row) : ?>
+                                    <tr>
+                                        <td><?= $i + 1 ?></td>
+                                        <td><?= (!empty($row['tanggal']) && strtotime($row['tanggal'])) ? date('d-m-Y', strtotime($row['tanggal'])) : '-' ?></td>
+                                        <td><?= esc($row['dokterpa'] ?? '-') ?></td>
+                                        <td><?= esc($row['diagnosaklinik'] ?? '-') ?></td>
+                                        <td><?= esc($row['pemeriksaan'] ?? '-') ?></td>
+                                        <td>
+                                            <button type="button" class="btn btn-info btn-sm"
+                                                onclick="tampilkanModal(`<?= nl2br(esc($row['hasil'] ?? 'Tidak ada hasil', 'js')) ?>`)">
+                                                Lihat Detail
+                                            </button>
+                                        </td>
+                                    </tr>
+                                <?php endforeach ?>
+                            </tbody>
+                        </table>
+                    </div>
+                <?php else : ?>
+                    <p class="text-muted">Tidak ada data riwayat pemeriksaan tersedia.</p>
+                <?php endif ?>
             </div>
         </div>
     </div>
@@ -149,9 +110,18 @@
     <div class="card-body">
         <form action="<?= base_url('hpa/insert') ?>" method="POST">
             <?= csrf_field(); ?> <!-- CSRF token untuk keamanan -->
-
             <!-- Hidden input untuk id_pasien -->
-            <input type="hidden" name="id_pasien" value="<?= isset($patient['id_pasien']) ? esc($patient['id_pasien']) : ''; ?>">
+            <input type="hidden" name="id_pasien" value="<?= isset($patient['id_pasien']) ? (int) $patient['id_pasien'] : 0; ?>">
+            <input type="hidden" name="norm_pasien" value="<?= isset($patient['norm_pasien']) ? esc($patient['norm_pasien']) : ''; ?>">
+            <input type="hidden" name="nama_pasien" value="<?= isset($patient['nama_pasien']) ? esc($patient['nama_pasien']) : ''; ?>">
+            <input type="hidden" name="alamat_pasien" value="<?= isset($patient['alamat_pasien']) ? esc($patient['alamat_pasien']) : ''; ?>">
+            <input type="hidden" name="tanggal_lahir_pasien" value="<?= isset($patient['tanggal_lahir_pasien']) ? esc(date('Y-m-d', strtotime($patient['tanggal_lahir_pasien']))) : ''; ?>">
+            <input type="hidden" name="jenis_kelamin_pasien" value="<?= isset($patient['jenis_kelamin_pasien']) ? esc($patient['jenis_kelamin_pasien']) : ''; ?>">
+            <input type="hidden" name="status_pasien" value="<?= isset($patient['status_pasien']) ? esc($patient['status_pasien']) : ''; ?>">
+            <input type="hidden" name="id_transaksi" value="<?= isset($patient['id_transaksi']) ? (int) $patient['id_transaksi'] : '' ?>">
+            <input type="hidden" name="tanggal_transaksi" value="<?= !empty($patient['tanggal_transaksi']) ? esc($patient['tanggal_transaksi']) : '' ?>">
+            <input type="hidden" name="no_register" value="<?= isset($patient['no_register']) ? esc($patient['no_register']) : ''; ?>">
+
             <div class="form-row">
                 <!-- Form group untuk Kode HPA -->
                 <div class="form-group col-md-3">
@@ -164,7 +134,9 @@
                 <div class="form-group col-md-3">
                     <label for="unit_asal">Unit Asal</label>
                     <select class="form-control" id="unit_asal" name="unit_asal" onchange="handleUnitAsalChange(this)">
-                        <option value="" selected>Belum Dipilih</option>
+                        <option value="<?= esc($patient['unitasal'] ?? 'Belum Dipilih') ?>" selected>
+                            <?= esc($patient['unitasal'] ?? 'Belum Dipilih') ?>
+                        </option>
                         <option value="OK Elektif">OK ELEKTIF</option>
                         <option value="OK Emergency">OK EMERGENCY</option>
                         <option value="RSUD. EC">RSUD. EC</option>
@@ -179,7 +151,9 @@
                 <div class="form-group col-md-3">
                     <label for="dokter_pengirim">Dokter Pengirim</label>
                     <select class="form-control" id="dokter_pengirim" name="dokter_pengirim" onchange="handleDokterPengirimChange(this)">
-                        <option value="" selected>Belum Dipilih</option>
+                        <option value="<?= esc($patient['dokterperujuk'] ?? 'Belum Dipilih') ?>" selected>
+                            <?= esc($patient['dokterperujuk'] ?? 'Belum Dipilih') ?>
+                        </option>
                         <option value="dr. Ihyan Amri, Sp.B">dr. Ihyan Amri, Sp.B</option>
                         <option value="dr. Andy Achmad Suanda, Sp.B">dr. Andy Achmad Suanda, Sp.B</option>
                         <option value="dr. Agus Maulana,Sp.B,FinaCs,M.Ked.Klin">dr. Agus Maulana,Sp.B,FinaCs,M.Ked.Klin</option>
@@ -190,7 +164,7 @@
                         <option value="dr. Nurlaella Iswan Nusi, Sp.OG">dr. Nurlaella Iswan Nusi, Sp.OG.</option>
                         <option value="drg. Okky Prasetyo, Sp.BM">drg. Okky Prasetyo, Sp.BM</option>
                         <option value="dr. Taufik Indrawan, Sp.U">dr. Taufik Indrawan, Sp.U</option>
-                        <option value="dr. dr. Chairani Fitri Saphira, Sp.BP-RE (K)">dr. dr. Chairani Fitri Saphira, Sp.BP-RE (K)</option>
+                        <option value="dr. Chairani Fitri Saphira, Sp.BP-RE (K)">dr. Chairani Fitri Saphira, Sp.BP-RE (K)</option>
                         <option value="dr. Billy Daniel Messakh, Sp.B">dr. Billy Daniel Messakh, Sp.B</option>
                         <option value="dr. Khamim Thohari, Sp.BS">dr. Khamim Thohari, Sp.BS</option>
                         <option value="dr. Danang Irsayanto, Sp. U.,M.Ked.Klin">dr. Danang Irsayanto, Sp. U.,M.Ked.Klin</option>
@@ -199,6 +173,7 @@
                     </select>
                     <input type="text" class="form-control mt-2 d-none" id="dokter_pengirim_custom" name="dokter_pengirim_custom" placeholder="Masukkan Dokter Pengirim Lainnya">
                 </div>
+
 
                 <!-- Form group untuk Tanggal Permintaan -->
                 <div class="form-group col-md-3">
@@ -214,19 +189,21 @@
                 </div>
                 <div class="form-group col-md-3">
                     <label for="lokasi_spesimen">Lokasi Spesimen</label>
-                    <input type="text" class="form-control" id="lokasi_spesimen" name="lokasi_spesimen" placeholder="Masukkan Lokasi Spesimen" value="<?= old('lokasi_spesimen'); ?>">
+                    <input type="text" class="form-control" id="lokasi_spesimen" name="lokasi_spesimen" placeholder="Masukkan Lokasi Spesimen" value="<?= esc(old('lokasi_spesimen') ?? $patient['lokasi_spesimen'] ?? '') ?>">
                 </div>
 
 
                 <div class="form-group col-md-3">
                     <label for="diagnosa_klinik">Diagnosa Klinik</label>
-                    <input type="text" class="form-control" id="diagnosa_klinik" name="diagnosa_klinik" placeholder="Masukkan Diagnosa Klinik" value="<?= old('diagnosa_klinik'); ?>">
+                    <input type="text" class="form-control" id="diagnosa_klinik" name="diagnosa_klinik" placeholder="Masukkan Diagnosa Klinik" value="<?= esc(old('diagnosa_klinik') ?? $patient['diagnosa_klinik'] ?? '') ?>">
                 </div>
                 <!-- Form group untuk Tindakan Spesimen -->
                 <div class="form-group col-md-3">
                     <label for="tindakan_spesimen">Tindakan Spesimen</label>
                     <select class="form-control" id="tindakan_spesimen" name="tindakan_spesimen" onchange="handleTindakanSpesimenChange(this)">
-                        <option value="" selected>Belum Dipilih</option>
+                        <option value="<?= esc($patient['tindakan_spesimen'] ?? 'Belum Dipilih') ?>" selected>
+                            <?= esc($patient['tindakan_spesimen'] ?? 'Belum Dipilih') ?>
+                        </option>
                         <option value="Biopsi">Biopsi</option>
                         <option value="Biopsi Beberapa Tempat">Biopsi Beberapa Tempat</option>
                         <option value="Kerokan">Kerokan</option>
@@ -249,7 +226,7 @@
 
             <!-- Tombol untuk submit form -->
             <div class="d-flex justify-content-end">
-                <button type="submit" class="btn btn-primary">Simpan</button>
+                <button type="submit" class="btn btn-success"><i class="fas fa-save"></i> Simpan</button>
             </div>
         </form>
     </div>

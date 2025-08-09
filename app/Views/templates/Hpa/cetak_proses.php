@@ -41,11 +41,16 @@
             }
             .header-table {
                 width: 100%;
-                border: none;
+                border-collapse: collapse;
+                margin: 0;
+                font-size: 11px;
+                font-family: Verdana, Arial, sans-serif;
             }
             .header-table td {
-                padding: 5px;
+                padding: 3px 4px;
                 vertical-align: top;
+                border: 1px solid #000;
+                line-height: 1.2;
             }
             .makroskopis-content-table td,
             .mikroskopis-content-table td {
@@ -87,6 +92,19 @@
                 padding: 10px;
                 text-align: left;
                 vertical-align: top;
+            }
+            .mutu-table {
+                font-size: 12px;
+                font-family: Verdana, Arial, sans-serif;
+                border-collapse: collapse;
+                width: 100%;
+                margin: 0;
+            }
+            .mutu-table td {
+                border: 1px solid black;
+                padding: 5px;
+                vertical-align: middle;
+                text-align: left;
             }
             /* Styling untuk tabel gambar */
             .gambar-table {
@@ -225,6 +243,16 @@
             </tr>
             <tr>
                 <td colspan="2">${detailMikroskopis}</td>
+            </tr>
+        </table>
+
+        <table class="mutu-table">
+            <tr>
+                <td>☐ Sediaan tanpa lipatan?</td>
+                <td>☐ Sediaan tanpa goresan mata pisau?</td>
+                <td>☐ Kontras warna sediaan cukup jelas?</td>
+                <td>☐ Sediaan tanpa gelembung udara?</td>
+                <td>☐ Sediaan tanpa bercak / sidik jari?</td>
             </tr>
         </table>
 

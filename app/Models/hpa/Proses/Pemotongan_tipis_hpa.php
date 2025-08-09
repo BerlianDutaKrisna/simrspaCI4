@@ -28,13 +28,6 @@ class Pemotongan_tipis_hpa extends Model // Update nama model
     protected $createdField  = 'created_at';
     protected $updatedField  = 'updated_at';
 
-    // Fungsi untuk insert data PemotonganTipis
-    public function insertPemotonganTipis(array $data): bool // Update nama fungsi
-    {
-        $this->insert($data);
-        return $this->db->affectedRows() > 0;
-    }
-
     // Mengambil data PemotonganTipis dengan relasi
     public function getpemotongan_tipis_hpa()
     {
@@ -56,18 +49,20 @@ class Pemotongan_tipis_hpa extends Model // Update nama model
             ->findAll();
     }
 
-    // Fungsi untuk mengupdate data pemotongan tipis
-    public function updatePemotonganTipis($id_pemotongan_tipis_hpa, $data) // Update nama fungsi dan parameter
+    public function detailspemotongan_tipis_hpa($id_pemotongan_tipis_hpa)
     {
-        $builder = $this->db->table($this->table);  // Mengambil tabel pemotongan tipis
-        $builder->where('id_pemotongan_tipis_hpa', $id_pemotongan_tipis_hpa);  // Menentukan baris yang akan diupdate berdasarkan id_pemotongan_tipis_hpa
-        $builder->update($data);  // Melakukan update dengan data yang dikirimkan
-        return $this->db->affectedRows();  // Mengembalikan jumlah baris yang terpengaruh
-    }
+        $data = $this->select(
+            'pemotongan_tipis_hpa.*, 
+        hpa.*, 
+        patient.*, 
+        users.nama_user AS nama_user_pemotongan_tipis_hpa'
+        )
+            ->join('hpa', 'pemotongan_tipis_hpa.id_hpa = hpa.id_hpa', 'left')
+            ->join('patient', 'hpa.id_pasien = patient.id_pasien', 'left')
+            ->join('users', 'pemotongan_tipis_hpa.id_user_pemotongan_tipis_hpa = users.id_user', 'left')
+            ->where('pemotongan_tipis_hpa.id_pemotongan_tipis_hpa', $id_pemotongan_tipis_hpa)
+            ->first();
 
-    public function deletePemotonganTipis($id_pemotongan_tipis_hpa)
-    {
-        return $this->delete($id_pemotongan_tipis_hpa);
+        return $data;
     }
-
 }

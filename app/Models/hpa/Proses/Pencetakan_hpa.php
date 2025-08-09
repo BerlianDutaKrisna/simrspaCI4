@@ -28,13 +28,6 @@ class Pencetakan_hpa extends Model // Update nama model
     protected $createdField  = 'created_at';
     protected $updatedField  = 'updated_at';
 
-    // Fungsi untuk insert data pencetakan_hpa
-    public function insertpencetakan_hpa(array $data): bool // Update nama fungsi
-    {
-        $this->insert($data);
-        return $this->db->affectedRows() > 0;
-    }
-
     public function getpencetakan_hpa()
     {
         return $this->select(
@@ -64,17 +57,20 @@ class Pencetakan_hpa extends Model // Update nama model
             ->findAll();
     }
 
-    // Fungsi untuk mengupdate data pencetakan_hpa
-    public function updatepencetakan_hpa($id_pencetakan_hpa, $data) // Update nama fungsi dan parameter
+    public function detailspencetakan_hpa($id_pencetakan_hpa)
     {
-        $builder = $this->db->table($this->table);  // Mengambil tabel pencetakan_hpa
-        $builder->where('id_pencetakan_hpa', $id_pencetakan_hpa);  // Menentukan baris yang akan diupdate berdasarkan id_pencetakan_hpa
-        $builder->update($data);  // Melakukan update dengan data yang dikirimkan
-        return $this->db->affectedRows();  // Mengembalikan jumlah baris yang terpengaruh
-    }
+        $data = $this->select(
+            'pencetakan_hpa.*, 
+        hpa.*, 
+        patient.*, 
+        users.nama_user AS nama_user_pencetakan_hpa'
+        )
+            ->join('hpa', 'pencetakan_hpa.id_hpa = hpa.id_hpa', 'left')
+            ->join('patient', 'hpa.id_pasien = patient.id_pasien', 'left')
+            ->join('users', 'pencetakan_hpa.id_user_pencetakan_hpa = users.id_user', 'left')
+            ->where('pencetakan_hpa.id_pencetakan_hpa', $id_pencetakan_hpa)
+            ->first();
 
-    public function deletepencetakan_hpa($id_pencetakan_hpa)
-    {
-        return $this->delete($id_pencetakan_hpa);
+        return $data;
     }
 }

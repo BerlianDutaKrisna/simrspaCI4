@@ -1,187 +1,109 @@
-<!-- JavaScript untuk modal tetap sama -->
 <script>
     $(document).ready(function() {
+
         // ==========================
         // Fungsi Format Tanggal & Waktu
         // ==========================
         function formatDateTime(dateString) {
-            if (!dateString || isNaN(Date.parse(dateString))) return "-"; // Validasi input
-            var date = new Date(dateString);
+            if (!dateString || isNaN(Date.parse(dateString))) return "-";
+            const date = new Date(dateString);
 
-            // Format waktu (HH:mm)
-            var hours = date.getHours().toString().padStart(2, "0");
-            var minutes = date.getMinutes().toString().padStart(2, "0");
-            var time = hours + ":" + minutes;
+            const hours = String(date.getHours()).padStart(2, '0');
+            const minutes = String(date.getMinutes()).padStart(2, '0');
+            const time = `${hours}:${minutes}`;
 
-            // Format tanggal (DD-MM-YYYY)
-            var day = date.getDate().toString().padStart(2, "0");
-            var month = (date.getMonth() + 1).toString().padStart(2, "0");
-            var year = date.getFullYear();
+            const day = String(date.getDate()).padStart(2, '0');
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const year = date.getFullYear();
+            const formattedDate = `${day}/${month}/${year}`;
 
-            return time + ", " + day + "-" + month + "-" + year;
+            return `${time}, ${formattedDate}`;
         }
 
-
-        // Menangani event click pada tombol Penerima untuk memunculkan modal
-        $('#penerimaModal').on('show.bs.modal', function(event) {
-            var button = $(event.relatedTarget); // Tombol yang memicu modal
-            var id_srs = button.data('id_srs'); // Kode srs
-            var penerima_srs = button.data('penerima_srs'); // Nama penerima
-
-            var modal = $(this);
-            modal.find('#id_srs').val(id_srs); // Isi id_srs ke input hidden
-            modal.find('#penerima_srs').val(""); // Isi penerima_srs dengan data dari tombol
-        });
         // ==========================
-        // Modal Status srs
+        // Modal Penerima SRS
+        // ==========================
+        $('#penerimaModal').on('show.bs.modal', function(event) {
+            const button = $(event.relatedTarget);
+            const id_srs = button.data('id_srs');
+            const modal = $(this);
+
+            modal.find('#id_srs').val(id_srs);
+            modal.find('#penerima_srs').val("");
+        });
+
+        // ==========================
+        // Modal Status SRS
         // ==========================
         $('#statussrsModal').on('show.bs.modal', function(event) {
-            var button = $(event.relatedTarget); // Button that triggered the modal
-            var idsrs = button.data('id_srs'); // Extract id_srs from data-* attributes
-            var statussrs = button.data('status_srs'); // Extract status_srs
+            const button = $(event.relatedTarget);
+            const modal = $(this);
 
-            var modal = $(this);
-            modal.find('.modal-body #id_srs').val(idsrs); // Set id_srs in the modal input
-            modal.find('.modal-body #status_srs').val(statussrs); // Set status_srs in the select
+            modal.find('#id_srs').val(button.data('id_srs'));
+            modal.find('#status_srs').val(button.data('status_srs'));
         });
 
         // ==========================
-        // Hapus DATA
+        // Hapus Data (Set Modal)
         // ==========================
-        $(document).on("click", ".delete-srs, .delete-pengirisan, .delete-pemotongan, .delete-pemprosesan, .delete-penanaman, .delete-pemotongan_tipis, .delete-pewarnaan, .delete-pembacaan, .delete-penulisan, .delete-pemverifikasi, .delete-autorized, .delete-pencetakan", function() {
-            var action = $(this).data("action"); // Menyimpan data action (srs atau pengirisan)
-            var id_srs = $(this).data("id_srs");
-            var id_pengirisan = $(this).data("id_pengirisan");
-            var id_pemotongan = $(this).data("id_pemotongan");
-            var id_pemprosesan = $(this).data("id_pemprosesan");
-            var id_penanaman = $(this).data("id_penanaman");
-            var id_pemotongan_tipis = $(this).data("id_pemotongan_tipis");
-            var id_pewarnaan = $(this).data("id_pewarnaan");
-            var id_pembacaan = $(this).data("id_pembacaan");
-            var id_penulisan = $(this).data("id_penulisan");
-            var id_pemverifikasi = $(this).data("id_pemverifikasi");
-            var id_autorized = $(this).data("id_autorized");
-            var id_pencetakan = $(this).data("id_pencetakan");
+        const deleteSelectors = [
+            "srs", "pembacaan", "penulisan",
+            "pemverifikasi", "authorized", "pencetakan"
+        ];
 
-            // Menyimpan data ID yang dibutuhkan untuk operasi delete
-            $("#confirmDelete").data("action", action);
-            $("#confirmDelete").data("id_srs", id_srs);
-            $("#confirmDelete").data("id_pengirisan", id_pengirisan);
-            $("#confirmDelete").data("id_pemotongan", id_pemotongan);
-            $("#confirmDelete").data("id_pemprosesan", id_pemprosesan);
-            $("#confirmDelete").data("id_penanaman", id_penanaman);
-            $("#confirmDelete").data("id_pemotongan_tipis", id_pemotongan_tipis);
-            $("#confirmDelete").data("id_pewarnaan", id_pewarnaan);
-            $("#confirmDelete").data("id_pembacaan", id_pembacaan);
-            $("#confirmDelete").data("id_penulisan", id_penulisan);
-            $("#confirmDelete").data("id_pemverifikasi", id_pemverifikasi);
-            $("#confirmDelete").data("id_autorized", id_autorized);
-            $("#confirmDelete").data("id_pencetakan", id_pencetakan);
+        $(document).on("click", deleteSelectors.map(sel => `.delete-${sel}`).join(", "), function() {
+            const button = $(this);
+            const modal = $('#deleteModal');
+            const confirmBtn = $('#confirmDelete');
 
-            // Menampilkan modal konfirmasi
-            $('#deleteModal').modal('show');
+            confirmBtn.data("action", button.data("action"));
+            deleteSelectors.forEach(sel => {
+                confirmBtn.data(`id_${sel}`, button.data(`id_${sel}`));
+            });
+            confirmBtn.data("id_srs", button.data("id_srs"));
+
+            modal.modal('show');
         });
 
-        // Menangani klik konfirmasi hapus pada modal
+        // ==========================
+        // Konfirmasi Hapus (Ajax)
+        // ==========================
         $("#confirmDelete").on("click", function() {
-            var action = $(this).data("action");
-            var id_srs = $(this).data("id_srs");
-            var id_pengirisan = $(this).data("id_pengirisan");
-            var id_pemotongan = $(this).data("id_pemotongan");
-            var id_pemprosesan = $(this).data("id_pemprosesan");
-            var id_penanaman = $(this).data("id_penanaman");
-            var id_pemotongan_tipis = $(this).data("id_pemotongan_tipis");
-            var id_pewarnaan = $(this).data("id_pewarnaan");
-            var id_pembacaan = $(this).data("id_pembacaan");
-            var id_penulisan = $(this).data("id_penulisan");
-            var id_pemverifikasi = $(this).data("id_pemverifikasi");
-            var id_autorized = $(this).data("id_autorized");
-            var id_pencetakan = $(this).data("id_pencetakan");
+            const action = $(this).data("action");
+            const id_srs = $(this).data("id_srs");
 
-            var url = "";
-            var data = {};
+            console.log("Action:", action);
+            console.log("ID SRS:", id_srs);
 
-            if (action === "srs") {
-                url = "<?= base_url('srs/delete'); ?>"; // URL penghapusan srs
-                data = {
-                    id_srs: id_srs
-                };
-            } else if (action === "pengirisan") {
-                url = "<?= base_url('pengirisan/delete'); ?>"; // URL penghapusan pengirisan
-                data = {
-                    id_pengirisan: id_pengirisan,
-                    id_srs: id_srs
-                };
-            } else if (action === "pemotongan") {
-                url = "<?= base_url('pemotongan/delete'); ?>"; // URL penghapusan pemotongan
-                data = {
-                    id_pemotongan: id_pemotongan,
-                    id_srs: id_srs
-                };
-            } else if (action === "pemprosesan") {
-                url = "<?= base_url('pemprosesan/delete'); ?>"; // URL penghapusan pemprosesan
-                data = {
-                    id_pemprosesan: id_pemprosesan,
-                    id_srs: id_srs
-                };
-            } else if (action === "penanaman") {
-                url = "<?= base_url('penanaman/delete'); ?>"; // URL penghapusan penanaman
-                data = {
-                    id_penanaman: id_penanaman,
-                    id_srs: id_srs
-                };
-            } else if (action === "pemotongan_tipis") {
-                url = "<?= base_url('pemotongan_tipis/delete'); ?>"; // URL penghapusan pemotongan_tipis
-                data = {
-                    id_pemotongan_tipis: id_pemotongan_tipis,
-                    id_srs: id_srs
-                };
-            } else if (action === "pewarnaan") {
-                url = "<?= base_url('pewarnaan/delete'); ?>"; // URL penghapusan pewarnaan
-                data = {
-                    id_pewarnaan: id_pewarnaan,
-                    id_srs: id_srs
-                };
-            } else if (action === "pembacaan") {
-                url = "<?= base_url('pembacaan/delete'); ?>"; // URL penghapusan pembacaan
-                data = {
-                    id_pembacaan: id_pembacaan,
-                    id_srs: id_srs
-                };
-            } else if (action === "penulisan") {
-                url = "<?= base_url('penulisan/delete'); ?>"; // URL penghapusan penulisan
-                data = {
-                    id_penulisan: id_penulisan,
-                    id_srs: id_srs
-                };
-            } else if (action === "pemverifikasi") {
-                url = "<?= base_url('pemverifikasi/delete'); ?>"; // URL penghapusan pemverifikasi
-                data = {
-                    id_pemverifikasi: id_pemverifikasi,
-                    id_srs: id_srs
-                };
-            } else if (action === "autorized") {
-                url = "<?= base_url('autorized/delete'); ?>"; // URL penghapusan autorized
-                data = {
-                    id_autorized: id_autorized,
-                    id_srs: id_srs
-                };
-            } else if (action === "pencetakan") {
-                url = "<?= base_url('pencetakan/delete'); ?>"; // URL penghapusan pencetakan
-                data = {
-                    id_pencetakan: id_pencetakan,
-                    id_srs: id_srs
-                };
+            const urlMap = {
+                srs: "<?= base_url('srs/delete'); ?>",
+                pemotongan: "<?= base_url('pemotongan_srs/delete'); ?>",
+                pemprosesan: "<?= base_url('pemprosesan_srs/delete'); ?>",
+                penanaman: "<?= base_url('penanaman_srs/delete'); ?>",
+                pemotongan_tipis: "<?= base_url('pemotongan_tipis_srs/delete'); ?>",
+                pewarnaan: "<?= base_url('pewarnaan_srs/delete'); ?>",
+                pembacaan: "<?= base_url('pembacaan_srs/delete'); ?>",
+                penulisan: "<?= base_url('penulisan_srs/delete'); ?>",
+                pemverifikasi: "<?= base_url('pemverifikasi_srs/delete'); ?>",
+                authorized: "<?= base_url('authorized_srs/delete'); ?>",
+                pencetakan: "<?= base_url('pencetakan_srs/delete'); ?>",
+            };
+
+            const idName = `id_${action}`;
+            const data = {
+                [idName]: $(this).data(idName)
+            };
+            if (action !== 'srs') {
+                data["id_srs"] = id_srs;
             }
 
-            // Mengirimkan permintaan AJAX untuk menghapus data
             $.ajax({
-                url: url,
+                url: urlMap[action],
                 type: "POST",
                 data: data,
                 success: function(response) {
                     if (response.success) {
-                        location.reload(); // Refresh halaman setelah operasi
+                        location.reload();
                     } else {
                         alert("Gagal menghapus data.");
                     }
@@ -191,291 +113,105 @@
                 }
             });
 
-            // Menutup modal setelah konfirmasi hapus
             $('#deleteModal').modal('hide');
         });
 
         // ==========================
-        // Detail Proses
+        // Detail Proses 
         // ==========================
-        $(document).on("click", ".view-penerimaan, .view-pengirisan, .view-pemotongan, .view-pemprosesan, .view-penanaman, .view-pemotongan_tipis, .view-pewarnaan, .view-pembacaan, .view-penulisan, .view-pemverifikasi, .view-autorized, .view-pencetakan, .view-mutu", function() {
-            var action = $(this).data("action");
-            var id_penerimaan = $(this).data("id_penerimaan");
-            var id_pengirisan = $(this).data("id_pengirisan");
-            var id_pemotongan = $(this).data("id_pemotongan");
-            var id_pemprosesan = $(this).data("id_pemprosesan");
-            var id_penanaman = $(this).data("id_penanaman");
-            var id_pemotongan_tipis = $(this).data("id_pemotongan_tipis");
-            var id_pewarnaan = $(this).data("id_pewarnaan");
-            var id_pembacaan = $(this).data("id_pembacaan");
-            var id_penulisan = $(this).data("id_penulisan");
-            var id_pemverifikasi = $(this).data("id_pemverifikasi");
-            var id_autorized = $(this).data("id_autorized");
-            var id_pencetakan = $(this).data("id_pencetakan");
-            var id_mutu = $(this).data("id_mutu");
+        $(document).ready(function() {
+            const baseUrl = "<?= base_url() ?>";
 
-            var url = "";
-            var data = {};
-            var type = ""; // Menyimpan tipe (penerimaan atau pengirisan)
-            var id = ""; // Menyimpan ID yang sesuai
+            $('.btn-view-proses').on('click', function() {
+                const id = $(this).data('id');
+                const proses = $(this).data('proses');
+                console.log(id, proses);
+                const url = `${baseUrl}${proses}_srs/${proses}_details?id_${proses}_srs=${id}`;
 
-            // Tentukan URL dan data yang diperlukan berdasarkan action
-            if (action === "penerimaan") {
-                url = "<?= base_url('penerimaan/penerimaan_details'); ?>";
-                data = {
-                    id_penerimaan: encodeURIComponent(id_penerimaan)
-                };
-                type = "penerimaan";
-                id = id_penerimaan;
-            } else if (action === "pengirisan") {
-                url = "<?= base_url('pengirisan/pengirisan_details'); ?>";
-                data = {
-                    id_pengirisan: encodeURIComponent(id_pengirisan)
-                };
-                type = "pengirisan";
-                id = id_pengirisan;
-            } else if (action === "pemotongan") {
-                url = "<?= base_url('pemotongan/pemotongan_details'); ?>";
-                data = {
-                    id_pemotongan: encodeURIComponent(id_pemotongan)
-                };
-                type = "pemotongan";
-                id = id_pemotongan;
-            } else if (action === "pemprosesan") {
-                url = "<?= base_url('pemprosesan/pemprosesan_details'); ?>";
-                data = {
-                    id_pemprosesan: encodeURIComponent(id_pemprosesan)
-                };
-                type = "pemprosesan";
-                id = id_pemprosesan;
-            } else if (action === "penanaman") {
-                url = "<?= base_url('penanaman/penanaman_details'); ?>";
-                data = {
-                    id_penanaman: encodeURIComponent(id_penanaman)
-                };
-                type = "penanaman";
-                id = id_penanaman;
-            } else if (action === "pemotongan_tipis") {
-                url = "<?= base_url('pemotongan_tipis/pemotongan_tipis_details'); ?>";
-                data = {
-                    id_pemotongan_tipis: encodeURIComponent(id_pemotongan_tipis)
-                };
-                type = "pemotongan_tipis";
-                id = id_pemotongan_tipis;
-            } else if (action === "pewarnaan") {
-                url = "<?= base_url('pewarnaan/pewarnaan_details'); ?>";
-                data = {
-                    id_pewarnaan: encodeURIComponent(id_pewarnaan)
-                };
-                type = "pewarnaan";
-                id = id_pewarnaan;
-            } else if (action === "pembacaan") {
-                url = "<?= base_url('pembacaan/pembacaan_details'); ?>";
-                data = {
-                    id_pembacaan: encodeURIComponent(id_pembacaan)
-                };
-                type = "pembacaan";
-                id = id_pembacaan;
-            } else if (action === "penulisan") {
-                url = "<?= base_url('penulisan/penulisan_details'); ?>";
-                data = {
-                    id_penulisan: encodeURIComponent(id_penulisan)
-                };
-                type = "penulisan";
-                id = id_penulisan;
-            } else if (action === "pemverifikasi") {
-                url = "<?= base_url('pemverifikasi/pemverifikasi_details'); ?>";
-                data = {
-                    id_pemverifikasi: encodeURIComponent(id_pemverifikasi)
-                };
-                type = "pemverifikasi";
-                id = id_pemverifikasi;
-            } else if (action === "autorized") {
-                url = "<?= base_url('autorized/autorized_details'); ?>";
-                data = {
-                    id_autorized: encodeURIComponent(id_autorized)
-                };
-                type = "autorized";
-                id = id_autorized;
-            } else if (action === "pencetakan") {
-                url = "<?= base_url('pencetakan/pencetakan_details'); ?>";
-                data = {
-                    id_pencetakan: encodeURIComponent(id_pencetakan)
-                };
-                type = "pencetakan";
-                id = id_pencetakan;
-            } else if (action === "mutu") {
-                url = "<?= base_url('mutu/mutu_details'); ?>";
-                data = {
-                    id_mutu: encodeURIComponent(id_mutu)
-                };
-                type = "mutu";
-                id = id_mutu;
-            }
+                // Bersihkan konten modal terlebih dahulu
+                const body = $('#viewModalBody');
+                const footer = $('#viewModalFooter');
+                body.html('<div class="spinner-border" role="status"><span class="sr-only">Loading...</span></div>');
+                footer.html('<button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>');
 
-            // Mengambil data detail melalui AJAX
-            $.ajax({
-                url: url,
-                type: "GET",
-                data: data,
-                success: function(response) {
-                    if (response.error) {
-                        $("#modalBody").html(`<p>${response.error}</p>`);
-                        $("#modalFooter").html(
-                            '<button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>'
-                        );
-                    } else {
-                        var detailHtml = "";
-                        if (action === "penerimaan") {
-                            // Menampilkan detail penerimaan
-                            detailHtml = `
-                        <p><strong>Kode srs:</strong> ${response.kode_srs || "-"}</p>
-                        <p><strong>Dikerjakan Oleh:</strong> ${response.nama_user_penerimaan || "-"}</p>
-                        <p><strong>Status Penerimaan:</strong> ${response.status_penerimaan || "-"}</p>
-                        <p><strong>Mulai Penerimaan:</strong> ${formatDateTime(response.mulai_penerimaan)}</p>
-                        <p><strong>Selesai Penerimaan:</strong> ${formatDateTime(response.selesai_penerimaan)}</p>
-                    `;
-                        } else if (action === "pengirisan") {
-                            // Menampilkan detail pengirisan
-                            detailHtml = `
-                        <p><strong>Kode srs:</strong> ${response.kode_srs || "-"}</p>
-                        <p><strong>Dikerjakan Oleh:</strong> ${response.nama_user_pengirisan || "-"}</p>
-                        <p><strong>Status Pengirisan:</strong> ${response.status_pengirisan || "-"}</p>
-                        <p><strong>Mulai Pengirisan:</strong> ${formatDateTime(response.mulai_pengirisan)}</p>
-                        <p><strong>Selesai Pengirisan:</strong> ${formatDateTime(response.selesai_pengirisan)}</p>
-                    `;
-                        } else if (action === "pemotongan") {
-                            // Menampilkan detail pemotongan
-                            detailHtml = `
-                        <p><strong>Kode srs:</strong> ${response.kode_srs || "-"}</p>
-                        <p><strong>Dikerjakan Oleh:</strong> ${response.nama_user_pemotongan || "-"}</p>
-                        <p><strong>Status Pemotongan:</strong> ${response.status_pemotongan || "-"}</p>
-                        <p><strong>Mulai Pemotongan:</strong> ${formatDateTime(response.mulai_pemotongan)}</p>
-                        <p><strong>Selesai Pemotongan:</strong> ${formatDateTime(response.selesai_pemotongan)}</p>
-                    `;
-                        } else if (action === "pemprosesan") {
-                            // Menampilkan detail pemprosesan
-                            detailHtml = `
-                        <p><strong>Kode srs:</strong> ${response.kode_srs || "-"}</p>
-                        <p><strong>Dikerjakan Oleh:</strong> ${response.nama_user_pemprosesan || "-"}</p>
-                        <p><strong>Status Pemprosesan:</strong> ${response.status_pemprosesan || "-"}</p>
-                        <p><strong>Mulai Pemprosesan:</strong> ${formatDateTime(response.mulai_pemprosesan)}</p>
-                        <p><strong>Selesai Pemprosesan:</strong> ${formatDateTime(response.selesai_pemprosesan)}</p>
-                    `;
-                        } else if (action === "penanaman") {
-                            // Menampilkan detail penanaman
-                            detailHtml = `
-                        <p><strong>Kode srs:</strong> ${response.kode_srs || "-"}</p>
-                        <p><strong>Dikerjakan Oleh:</strong> ${response.nama_user_penanaman || "-"}</p>
-                        <p><strong>Status Penanaman:</strong> ${response.status_penanaman || "-"}</p>
-                        <p><strong>Mulai Penanaman:</strong> ${formatDateTime(response.mulai_penanaman)}</p>
-                        <p><strong>Selesai Penanaman:</strong> ${formatDateTime(response.selesai_penanaman)}</p>
-                    `;
-                        } else if (action === "pemotongan_tipis") {
-                            // Menampilkan detail pemotongan_tipis
-                            detailHtml = `
-                        <p><strong>Kode srs:</strong> ${response.kode_srs || "-"}</p>
-                        <p><strong>Dikerjakan Oleh:</strong> ${response.nama_user_pemotongan_tipis || "-"}</p>
-                        <p><strong>Status Pemotongan Tipis:</strong> ${response.status_pemotongan_tipis || "-"}</p>
-                        <p><strong>Mulai Pemotongan Tipis:</strong> ${formatDateTime(response.mulai_pemotongan_tipis)}</p>
-                        <p><strong>Selesai Pemotongan Tipis:</strong> ${formatDateTime(response.selesai_pemotongan_tipis)}</p>
-                    `;
-                        } else if (action === "pewarnaan") {
-                            // Menampilkan detail pewarnaan
-                            detailHtml = `
-                        <p><strong>Kode srs:</strong> ${response.kode_srs || "-"}</p>
-                        <p><strong>Dikerjakan Oleh:</strong> ${response.nama_user_pewarnaan || "-"}</p>
-                        <p><strong>Status Pewarnaan:</strong> ${response.status_pewarnaan || "-"}</p>
-                        <p><strong>Mulai Pewarnaan:</strong> ${formatDateTime(response.mulai_pewarnaan)}</p>
-                        <p><strong>Selesai Pewarnaan:</strong> ${formatDateTime(response.selesai_pewarnaan)}</p>
-                    `;
-                        } else if (action === "pembacaan") {
-                            // Menampilkan detail pembacaan
-                            detailHtml = `
-                        <p><strong>Kode srs:</strong> ${response.kode_srs || "-"}</p>
-                        <p><strong>Dikerjakan Oleh:</strong> ${response.nama_user_pembacaan || "-"}</p>
-                        <p><strong>Status Pembacaan:</strong> ${response.status_pembacaan || "-"}</p>
-                        <p><strong>Mulai Pembacaan:</strong> ${formatDateTime(response.mulai_pembacaan)}</p>
-                        <p><strong>Selesai Pembacaan:</strong> ${formatDateTime(response.selesai_pembacaan)}</p>
-                    `;
-                        } else if (action === "penulisan") {
-                            // Menampilkan detail penulisan
-                            detailHtml = `
-                        <p><strong>Kode srs:</strong> ${response.kode_srs || "-"}</p>
-                        <p><strong>Dikerjakan Oleh:</strong> ${response.nama_user_penulisan || "-"}</p>
-                        <p><strong>Status Penulisan:</strong> ${response.status_penulisan || "-"}</p>
-                        <p><strong>Mulai Penulisan:</strong> ${formatDateTime(response.mulai_penulisan)}</p>
-                        <p><strong>Selesai Penulisan:</strong> ${formatDateTime(response.selesai_penulisan)}</p>
-                    `;
-                        } else if (action === "pemverifikasi") {
-                            // Menampilkan detail pemverifikasi
-                            detailHtml = `
-                        <p><strong>Kode srs:</strong> ${response.kode_srs || "-"}</p>
-                        <p><strong>Dikerjakan Oleh:</strong> ${response.nama_user_pemverifikasi || "-"}</p>
-                        <p><strong>Status Pemverifikasi:</strong> ${response.status_pemverifikasi || "-"}</p>
-                        <p><strong>Mulai Pemverifikasi:</strong> ${formatDateTime(response.mulai_pemverifikasi)}</p>
-                        <p><strong>Selesai Pemverifikasi:</strong> ${formatDateTime(response.selesai_pemverifikasi)}</p>
-                    `;
-                        } else if (action === "autorized") {
-                            // Menampilkan detail autorized
-                            detailHtml = `
-                        <p><strong>Kode srs:</strong> ${response.kode_srs || "-"}</p>
-                        <p><strong>Dikerjakan Oleh:</strong> ${response.nama_user_autorized || "-"}</p>
-                        <p><strong>Status autorized:</strong> ${response.status_autorized || "-"}</p>
-                        <p><strong>Mulai autorized:</strong> ${formatDateTime(response.mulai_autorized)}</p>
-                        <p><strong>Selesai autorized:</strong> ${formatDateTime(response.selesai_autorized)}</p>
-                    `;
-                        } else if (action === "pencetakan") {
-                            // Menampilkan detail pencetakan
-                            detailHtml = `
-                        <p><strong>Kode srs:</strong> ${response.kode_srs || "-"}</p>
-                        <p><strong>Dikerjakan Oleh:</strong> ${response.nama_user_pencetakan || "-"}</p>
-                        <p><strong>Status Pencetakan:</strong> ${response.status_pencetakan || "-"}</p>
-                        <p><strong>Mulai Pencetakan:</strong> ${formatDateTime(response.mulai_pencetakan)}</p>
-                        <p><strong>Selesai Pencetakan:</strong> ${formatDateTime(response.selesai_pencetakan)}</p>
-                    `;
-                        } else if (action === "mutu") {
-                            // Menampilkan detail mutu
-                            detailHtml = `
-                        <p><strong>Kode srs:</strong> ${response.kode_srs || "-"}</p>
-                        <p><strong>Volume cairan sesuai:</strong> ${response.indikator_1 || "-"}</p>
-                        <p><strong>Jaringan terfiksasi merata:</strong> ${response.indikator_2 || "-"}</p>
-                        <p><strong>Blok parafin tidak ada fragmentasi:</strong> ${response.indikator_3 || "-"}</p>
-                        <p><strong>Sediaan tanpa lipatan:</strong> ${response.indikator_4 || "-"}</p>
-                        <p><strong>Sediaan tanpa goresan mata pisau:</strong> ${response.indikator_5 || "-"}</p>
-                        <p><strong>Kontras warna sediaan cukup jelas:</strong> ${response.indikator_6 || "-"}</p>
-                        <p><strong>Sediaan tanpa gelembung udara:</strong> ${response.indikator_7 || "-"}</p>
-                        <p><strong>Sediaan tanpa bercak / sidik jari:</strong> ${response.indikator_8 || "-"}</p>
-                        <p><strong>Indikator 9:</strong> ${response.indikator_9 || "-"}</p>
-                        <p><strong>Indikator 10:</strong> ${response.indikator_10 || "-"}</p>
-                        <p><strong>Total nilai mutu:</strong> ${response.total_nilai_mutu || "-"}</p>
-                    `;
+                $.ajax({
+                    url: url,
+                    method: 'GET',
+                    dataType: 'json',
+                    success: function(data) {
+                        if (data.error) {
+                            body.html(`<div class="alert alert-danger">${data.error}</div>`);
+                        } else {
+                            if (proses === 'mutu') {
+                                // Informasi utama pasien
+                                const patientInfo = `
+                            <p><strong>No. RM:</strong> ${data.norm_pasien}</p>
+                            <p><strong>Nama Pasien:</strong> ${data.nama_pasien}</p>
+                            <p><strong>Kode SRS:</strong> ${data.kode_srs}</p>
+                        `;
+                                let indikatorList = '';
+                                indikatorList += `<li class="list-group-item"><strong>Indikator 1?</strong>: ${data.indikator_1}</li>`;
+                                indikatorList += `<li class="list-group-item"><strong>Indikator 2?</strong>: ${data.indikator_2}</li>`;
+                                indikatorList += `<li class="list-group-item"><strong>Indikator 3?</strong>: ${data.indikator_3}</li>`;
+                                indikatorList += `<li class="list-group-item"><strong>Indikator 4?</strong>: ${data.indikator_4}</li>`;
+                                indikatorList += `<li class="list-group-item"><strong>Indikator 5?</strong>: ${data.indikator_5}</li>`;
+                                indikatorList += `<li class="list-group-item"><strong>Indikator 6?</strong>: ${data.indikator_6}</li>`;
+                                indikatorList += `<li class="list-group-item"><strong>Indikator 7?</strong>: ${data.indikator_7}</li>`;
+                                indikatorList += `<li class="list-group-item"><strong>Indikator 8?</strong>: ${data.indikator_8}</li>`;
+                                indikatorList += `<li class="list-group-item"><strong>Indikator 9?</strong>: ${data.indikator_9}</li>`;
+                                indikatorList += `<li class="list-group-item"><strong>Indikator 10?</strong>: ${data.indikator_10}</li>`;
+                                indikatorList += `<li class="list-group-item"><strong><b></b>Total Nilai Mutu: ${data.total_nilai_mutu_srs}</b></strong></li>`;
+
+                                body.html(`
+                            ${patientInfo}
+                            <ul class="list-group mt-3">
+                                ${indikatorList}
+                            </ul>
+                        `);
+                            } else {
+                                // Format tanggal
+                                let mulai = formatDateTime(data[`mulai_${proses}_srs`]);
+                                let selesai = formatDateTime(data[`selesai_${proses}_srs`]);
+                                let user = data[`nama_user_${proses}_srs`];
+
+                                body.html(`
+                            <ul class="list-group">
+                                <p><strong>No. RM:</strong> ${data.norm_pasien}</p>
+                                <p><strong>Nama Pasien:</strong> ${data.nama_pasien}</p>
+                                <p><strong>Kode SRS:</strong> ${data.kode_srs}</p>
+                                <p><strong>Mulai ${proses}:</strong> ${mulai}</p>
+                                <p><strong>Selesai ${proses}:</strong> ${selesai}</p>
+                                <p><strong>User ${proses}:</strong> ${user}</p>
+                            </ul>
+                        `);
+                            }
+
+                            $('#viewModalLabel').text('Detail Proses ' + proses.replace('_', ' '));
+                            footer.html(`
+                        <a href="${baseUrl}${proses}_srs/edit?id_${proses}_srs=${id}" class="btn btn-warning">
+                            <i class="fas fa-pen"></i> Edit
+                        </a>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                            <i class="fas fa-times"></i> Tutup
+                        </button>
+                    `);
+                            $('#viewModal').modal('show');
                         }
-
-                        $("#modalBody").html(detailHtml);
-
-                        // Menggunakan base_url yang dihasilkan oleh PHP
-                        var base_url = "<?= base_url(); ?>"; // Diberikan oleh PHP ke JavaScript
-
-                        // Kemudian buat URL dinamis berdasarkan 'type' dan 'id'
-                        var footerHtml = `
-                    <a href="${base_url}/${type}/edit_${type}?id_${type}=${id}" class="btn btn-warning">Edit</a>
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
-                `;
-
-                        $("#modalFooter").html(footerHtml);
+                    },
+                    error: function(xhr, status, error) {
+                        body.html(`<div class="alert alert-danger">Terjadi kesalahan saat mengambil data.</div>`);
+                        footer.html(`
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                        <i class="fas fa-times"></i> Tutup
+                    </button>
+                `);
+                        $('#viewModalLabel').text('Kesalahan');
+                        $('#viewModal').modal('show');
+                        console.error("AJAX Error:", status, error);
                     }
-
-                    // Menampilkan modal dengan footer yang telah diperbarui
-                    $("#viewModal").modal("show");
-                },
-                error: function() {
-                    $("#modalBody").html('<p>Terjadi kesalahan saat mengambil data. Silakan coba lagi.</p>');
-                    $("#modalFooter").html(
-                        '<button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>'
-                    );
-                }
+                });
             });
         });
+
     });
 </script>

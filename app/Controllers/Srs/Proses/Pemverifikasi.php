@@ -120,22 +120,10 @@ class Pemverifikasi extends BaseController
 
     public function pemverifikasi_details()
     {
-        // Ambil id_pemverifikasi_srs dari parameter GET
         $id_pemverifikasi_srs = $this->request->getGet('id_pemverifikasi_srs');
 
         if ($id_pemverifikasi_srs) {
-            // Gunakan model yang sudah diinisialisasi di constructor
-            $data = $this->pemverifikasi_srs->select(
-                'pemverifikasi.*, 
-            srs.*, 
-            patient.*, 
-            users.nama_user AS nama_user_pemverifikasi'
-            )
-                ->join('srs', 'pemverifikasi.id_srs = srs.id_srs', 'left')
-                ->join('patient', 'srs.id_pasien = patient.id_pasien', 'left')
-                ->join('users', 'pemverifikasi.id_user_pemverifikasi_srs = users.id_user', 'left')
-                ->where('pemverifikasi.id_pemverifikasi_srs', $id_pemverifikasi_srs)
-                ->first();
+            $data = $this->pemverifikasi_srs->detailspemverifikasi_srs($id_pemverifikasi_srs);
 
             if ($data) {
                 return $this->response->setJSON($data);
@@ -143,11 +131,11 @@ class Pemverifikasi extends BaseController
                 return $this->response->setJSON(['error' => 'Data tidak ditemukan.']);
             }
         } else {
-            return $this->response->setJSON(['error' => 'ID pemverifikasi tidak ditemukan.']);
+            return $this->response->setJSON(['error' => 'Coba ulangi kembali..']);
         }
     }
 
-    public function edit_pemverifikasi()
+    public function edit()
     {
         $id_pemverifikasi_srs = $this->request->getGet('id_pemverifikasi_srs');
 
@@ -162,8 +150,8 @@ class Pemverifikasi extends BaseController
             throw new \CodeIgniter\Exceptions\PageNotFoundException('Data pemverifikasi tidak ditemukan.');
         }
 
-        // Ambil data users dengan status_user = 'Analis'
-        $users = $this->userModel->where('status_user', 'Analis')->findAll();
+        // Ambil data user
+        $users = $this->userModel->findAll();
 
         $data = [
             'pemverifikasiData' => $pemverifikasiData,
@@ -172,29 +160,62 @@ class Pemverifikasi extends BaseController
             'nama_user' => session()->get('nama_user'),
         ];
 
-        return view('edit_proses/edit_pemverifikasi', $data);
+        return view('srs/edit_proses/edit_pemverifikasi', $data);
     }
 
-    public function update_pemverifikasi()
+    public function update()
     {
         $id_pemverifikasi_srs = $this->request->getPost('id_pemverifikasi_srs');
+
+        if (!$id_pemverifikasi_srs) {
+            return redirect()->back()->with('error', 'ID tidak ditemukan.')->withInput();
+        }
 
         // Gabungkan input tanggal dan waktu
         $mulai_pemverifikasi_srs = $this->request->getPost('mulai_pemverifikasi_srs_date') . ' ' . $this->request->getPost('mulai_pemverifikasi_srs_time');
         $selesai_pemverifikasi_srs = $this->request->getPost('selesai_pemverifikasi_srs_date') . ' ' . $this->request->getPost('selesai_pemverifikasi_srs_time');
 
+        $id_user = $this->request->getPost('id_user_pemverifikasi_srs');
+
         $data = [
-            'id_user_pemverifikasi_srs' => $this->request->getPost('id_user_pemverifikasi_srs'),
+            'id_user_pemverifikasi_srs' => $id_user === '' ? null : $id_user,
             'status_pemverifikasi_srs'  => $this->request->getPost('status_pemverifikasi_srs'),
             'mulai_pemverifikasi_srs'   => $mulai_pemverifikasi_srs,
             'selesai_pemverifikasi_srs' => $selesai_pemverifikasi_srs,
-            'updated_at'         => date('Y-m-d H:i:s'),
+            'updated_at'             => date('Y-m-d H:i:s'),
         ];
 
         if (!$this->pemverifikasi_srs->update($id_pemverifikasi_srs, $data)) {
             return redirect()->back()->with('error', 'Gagal mengupdate data.')->withInput();
         }
 
-        return redirect()->to(base_url('pemverifikasi/index_pemverifikasi'))->with('success', 'Data berhasil diperbarui.');
+        return redirect()->to(base_url('pemverifikasi_srs/edit?id_pemverifikasi_srs=' . $id_pemverifikasi_srs))
+            ->with('success', 'Data berhasil diperbarui.');
+    }
+
+    public function delete()
+    {
+        try {
+            $id_pemverifikasi = $this->request->getPost('id_pemverifikasi');
+            $id_srs = $this->request->getPost('id_srs');
+            if (!$id_pemverifikasi || !$id_srs) {
+                throw new \Exception('ID tidak lengkap. Gagal menghapus data.');
+            }
+            // Hapus data pemverifikasi
+            if ($this->pemverifikasi_srs->delete($id_pemverifikasi)) {
+                // Update status_srs ke tahap sebelumnya 
+                $this->srsModel->update($id_srs, [
+                    'status_srs' => 'Penulisan',
+                ]);
+                return $this->response->setJSON(['success' => true]);
+            } else {
+                throw new \Exception('Gagal menghapus data.');
+            }
+        } catch (\Exception $e) {
+            return $this->response->setJSON([
+                'success' => false,
+                'message' => $e->getMessage()
+            ]);
+        }
     }
 }

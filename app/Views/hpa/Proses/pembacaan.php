@@ -68,6 +68,10 @@
                                     <td><?= $row['kode_hpa']; ?></td>
                                     <td><?= $row['nama_pasien']; ?></td>
                                     <td><?= $row['jumlah_slide']; ?></td>
+                                    <?php
+                                    $slide = $row['jumlah_slide'];
+                                    $jumlahSlide = is_numeric($slide) ? (int)$slide : 1; // fallback ke 1 jika bukan angka
+                                    ?>
                                     <td><?= $row['nama_user_dokter_pemotongan_hpa']; ?></td>
                                     <td><?= $row['status_pembacaan_hpa']; ?></td>
                                     <td>
@@ -106,9 +110,7 @@
                     </tbody>
                 </table>
             </div>
-
-
+            <?= $this->include('templates/notifikasi'); ?>
             <?= $this->include('templates/proses/button_proses'); ?>
             <?= $this->include('dashboard/jenis_tindakan'); ?>
-            <?= $this->include('templates/notifikasi'); ?>
             <?= $this->include('templates/dashboard/footer_dashboard'); ?>

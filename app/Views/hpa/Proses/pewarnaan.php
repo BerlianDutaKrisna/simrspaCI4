@@ -20,9 +20,34 @@
                     <thead>
                         <tr>
                             <th>No</th>
-                            <th>Aksi</th>
+                            <th class="align-middle text-center">
+                                <div class="custom-control custom-checkbox d-inline-block">
+                                    <input type="checkbox" class="custom-control-input" id="checkAll">
+                                    <label class="custom-control-label" for="checkAll">Aksi Check Semua</label>
+                                </div>
+                            </th>
+                            <script>
+                                document.getElementById('checkAll').addEventListener('change', function() {
+                                    let checkboxes = document.querySelectorAll('.checkbox-item');
+                                    checkboxes.forEach(cb => {
+                                        cb.checked = this.checked;
+
+                                        // Paksa trigger event 'change' agar logika lain ikut jalan (misal toggleButtons)
+                                        cb.dispatchEvent(new Event('change'));
+
+                                        // Opsional: akses data-status jika dibutuhkan langsung
+                                        if (this.checked && cb.dataset.status) {
+                                            let statusObj = JSON.parse(cb.dataset.status);
+                                            console.log(statusObj); // Untuk debugging
+                                            // Kamu bisa push ke array atau proses data di sini
+                                        }
+                                    });
+                                });
+                            </script>
                             <th>Kode HPA</th>
                             <th>Nama Pasien</th>
+                            <th>jumlah slide</th>
+                            <th>Aksi Cetak Stiker</th>
                             <th>Status Pewarnaan</th>
                             <th>Analis</th>
                             <th>Mulai Pewarnaan</th>
@@ -48,6 +73,18 @@
                                     </td>
                                     <td><?= $row['kode_hpa']; ?></td>
                                     <td><?= $row['nama_pasien']; ?></td>
+                                    <td><?= $row['jumlah_slide']; ?></td>
+                                    <?php
+                                    $slide = $row['jumlah_slide'];
+                                    $jumlahSlide = is_numeric($slide) ? (int)$slide : 1;
+                                    ?>
+                                    <td>
+                                        <button type="button" class="btn btn-outline-info btn-sm btn-cetak-stiker"
+                                            data-kode="<?= esc($row['kode_hpa']); ?>"
+                                            data-slide="<?= $jumlahSlide; ?>">
+                                            <i class="fas fa-print"></i> Cetak Stiker
+                                        </button>
+                                    </td>
                                     <td><?= $row['status_pewarnaan_hpa']; ?></td>
                                     <td><?= $row['nama_user_pewarnaan_hpa']; ?></td>
                                     <td>
@@ -86,9 +123,8 @@
                     </tbody>
                 </table>
             </div>
-
-
+            <?= $this->include('templates/notifikasi'); ?>                
+            <?= $this->include('templates/hpa/cetak_stiker'); ?>
             <?= $this->include('templates/proses/button_proses'); ?>
             <?= $this->include('dashboard/jenis_tindakan'); ?>
-            <?= $this->include('templates/notifikasi'); ?>
             <?= $this->include('templates/dashboard/footer_dashboard'); ?>
