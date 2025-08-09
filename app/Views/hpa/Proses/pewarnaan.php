@@ -8,6 +8,7 @@
     <div class="card-body">
         <h1>Daftar Pewarnaan Histopatologi</h1>
         <a href="<?= base_url('/dashboard') ?>" class="btn btn-primary mb-3"><i class="fas fa-reply"></i> Kembali</a>
+        <?= $this->include('templates/proses/button_pewarnaan'); ?>
 
         <!-- Form -->
         <form id="mainForm" action="<?= base_url('pewarnaan_hpa/proses_pewarnaan'); ?>" method="POST">

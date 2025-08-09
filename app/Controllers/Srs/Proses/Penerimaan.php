@@ -7,6 +7,7 @@ use App\Models\Srs\srsModel;
 use App\Models\UsersModel;
 use App\Models\PatientModel;
 use App\Models\Srs\Proses\Penerimaan_srs;
+use App\Models\Srs\Proses\Pewarnaan_srs;
 use App\Models\Srs\Proses\Pembacaan_srs;
 use App\Models\Srs\Proses\Penulisan_srs;
 use App\Models\Srs\Proses\Pemverifikasi_srs;
@@ -22,6 +23,7 @@ class Penerimaan extends BaseController
     protected $userModel;
     protected $patientModel;
     protected $penerimaan_srs;
+    protected $Pewarnaan_srs;
     protected $Pembacaan_srs;
     protected $Penulisan_srs;
     protected $Pemverifikasi_srs;
@@ -36,6 +38,7 @@ class Penerimaan extends BaseController
         $this->userModel = new UsersModel();
         $this->patientModel = new PatientModel();
         $this->penerimaan_srs = new Penerimaan_srs();
+        $this->Pewarnaan_srs = new Pewarnaan_srs();
         $this->Pembacaan_srs = new Pembacaan_srs();
         $this->Penulisan_srs = new Penulisan_srs();
         $this->Pemverifikasi_srs = new Pemverifikasi_srs();
@@ -113,13 +116,13 @@ class Penerimaan extends BaseController
                     ]);
                     break;
                 case 'lanjut':
-                    $this->srsModel->update($id_srs, ['status_srs' => 'Pembacaan']);
-                    $pembacaanData = [
+                    $this->srsModel->update($id_srs, ['status_srs' => 'Pewarnaan']);
+                    $pewarnaanData = [
                         'id_srs'            => $id_srs,
-                        'status_pembacaan_srs' => 'Belum Pembacaan',
+                        'status_pewarnaan_srs' => 'Belum Pewarnaan',
                     ];
-                    if (!$this->Pembacaan_srs->insert($pembacaanData)) {
-                        throw new Exception('Gagal menyimpan data Pembacaan.');
+                    if (!$this->Pewarnaan_srs->insert($pewarnaanData)) {
+                        throw new Exception('Gagal menyimpan data Pewarnaan.');
                     }
                     break;
             }

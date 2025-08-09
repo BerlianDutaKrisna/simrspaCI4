@@ -51,26 +51,6 @@ class SrsModel extends Model
     {
         return $this->where('status_srs', 'Penerimaan')->countAllResults() ?? 0;
     }
-    public function countPengirisansrs()
-    {
-        return $this->where('status_srs =', 'Pengirisan')->countAllResults() ?? 0;
-    }
-    public function countPemotongansrs()
-    {
-        return $this->where('status_srs =', 'Pemotongan')->countAllResults() ?? 0;
-    }
-    public function countPemprosesansrs()
-    {
-        return $this->where('status_srs =', 'Pemprosesan')->countAllResults() ?? 0;
-    }
-    public function countPenanamansrs()
-    {
-        return $this->where('status_srs =', 'Penanaman')->countAllResults() ?? 0;
-    }
-    public function countPemotonganTipissrs()
-    {
-        return $this->where('status_srs =', 'Pemotongan Tipis')->countAllResults() ?? 0;
-    }
     public function countPewarnaansrs()
     {
         return $this->where('status_srs =', 'Pewarnaan')->countAllResults() ?? 0;

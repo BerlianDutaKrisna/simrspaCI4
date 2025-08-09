@@ -6,7 +6,7 @@
         <h6 class="m-0 font-weight-bold text-primary">Table Penerimaan</h6>
     </div>
     <div class="card-body">
-        <h1>Daftar Penerimaan SRS</h1>
+        <h1>Daftar Penerimaan Sitologi</h1>
         <a href="<?= base_url('/dashboard') ?>" class="btn btn-primary mb-3"><i class="fas fa-reply"></i> Kembali</a>
         <?= $this->include('templates/proses/button_penerimaan'); ?>
         <!-- Form -->

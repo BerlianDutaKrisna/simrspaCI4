@@ -122,7 +122,7 @@ class Pembacaan extends BaseController
                 case 'kembalikan':
                     $this->pembacaan_frs->delete($id_pembacaan_frs);
                     $this->frsModel->update($id_frs, [
-                        'status_frs' => 'Penerimaan',
+                        'status_frs' => 'Pewarnaan',
                     ]);
                     break;
             }

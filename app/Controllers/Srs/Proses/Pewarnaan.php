@@ -108,7 +108,7 @@ class Pewarnaan extends BaseController
                 case 'kembalikan':
                     $this->pewarnaan_srs->delete($id_pewarnaan_srs);
                     $this->srsModel->update($id_srs, [
-                        'status_srs' => 'Pemotongan Tipis',
+                        'status_srs' => 'Penerimaan',
                     ]);
                     break;
             }

@@ -235,8 +235,28 @@ $routes->group('pemotongan_tipis_hpa', ['namespace' => 'App\Controllers\Hpa\Pros
     $routes->post('update', 'PemotonganTipis::update');
 });
 
-// Route untuk Pewarnaan
+// Route untuk Pewarnaan hpa
 $routes->group('pewarnaan_hpa', ['namespace' => 'App\Controllers\Hpa\Proses'], function ($routes) {
+    $routes->get('index', 'Pewarnaan::index'); 
+    $routes->post('proses_pewarnaan', 'Pewarnaan::proses_pewarnaan'); 
+    $routes->get('pewarnaan_details', 'Pewarnaan::pewarnaan_details');
+    $routes->post('delete', 'Pewarnaan::delete');
+    $routes->get('edit', 'Pewarnaan::edit');
+    $routes->post('update', 'Pewarnaan::update');
+});
+
+// Route untuk Pewarnaan frs
+$routes->group('pewarnaan_frs', ['namespace' => 'App\Controllers\Frs\Proses'], function ($routes) {
+    $routes->get('index', 'Pewarnaan::index'); 
+    $routes->post('proses_pewarnaan', 'Pewarnaan::proses_pewarnaan'); 
+    $routes->get('pewarnaan_details', 'Pewarnaan::pewarnaan_details');
+    $routes->post('delete', 'Pewarnaan::delete');
+    $routes->get('edit', 'Pewarnaan::edit');
+    $routes->post('update', 'Pewarnaan::update');
+});
+
+// Route untuk Pewarnaan srs
+$routes->group('pewarnaan_srs', ['namespace' => 'App\Controllers\Srs\Proses'], function ($routes) {
     $routes->get('index', 'Pewarnaan::index'); 
     $routes->post('proses_pewarnaan', 'Pewarnaan::proses_pewarnaan'); 
     $routes->get('pewarnaan_details', 'Pewarnaan::pewarnaan_details');

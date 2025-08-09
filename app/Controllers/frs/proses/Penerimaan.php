@@ -7,6 +7,7 @@ use App\Models\frs\frsModel;
 use App\Models\UsersModel;
 use App\Models\PatientModel;
 use App\Models\frs\Proses\penerimaan_frs;
+use App\Models\frs\Proses\Pewarnaan_frs;
 use App\Models\frs\Proses\Pembacaan_frs;
 use App\Models\frs\Proses\Penulisan_frs;
 use App\Models\frs\Proses\Pemverifikasi_frs;
@@ -22,6 +23,7 @@ class Penerimaan extends BaseController
     protected $userModel;
     protected $patientModel;
     protected $penerimaan_frs;
+    protected $Pewarnaan_frs;
     protected $Pembacaan_frs;
     protected $Penulisan_frs;
     protected $Pemverifikasi_frs;
@@ -37,6 +39,7 @@ class Penerimaan extends BaseController
         $this->patientModel = new PatientModel();
         $this->penerimaan_frs = new penerimaan_frs();
         $this->Pembacaan_frs = new Pembacaan_frs();
+        $this->Pewarnaan_frs = new Pewarnaan_frs();
         $this->Penulisan_frs = new Penulisan_frs();
         $this->Pemverifikasi_frs = new Pemverifikasi_frs();
         $this->Authorized_frs = new Authorized_frs();
@@ -113,13 +116,13 @@ class Penerimaan extends BaseController
                     ]);
                     break;
                 case 'lanjut':
-                    $this->frsModel->update($id_frs, ['status_frs' => 'Pembacaan']);
-                    $pembacaanData = [
+                    $this->frsModel->update($id_frs, ['status_frs' => 'Pewarnaan']);
+                    $pewarnaanData = [
                         'id_frs'            => $id_frs,
-                        'status_pembacaan_frs' => 'Belum Pembacaan',
+                        'status_pewarnaan_frs' => 'Belum Pewarnaan',
                     ];
-                    if (!$this->Pembacaan_frs->insert($pembacaanData)) {
-                        throw new Exception('Gagal menyimpan data Pembacaan.');
+                    if (!$this->Pewarnaan_frs->insert($pewarnaanData)) {
+                        throw new Exception('Gagal menyimpan data Pewarnaan.');
                     }
                     break;
             }

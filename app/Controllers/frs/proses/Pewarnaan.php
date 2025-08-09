@@ -41,7 +41,7 @@ class Pewarnaan extends BaseController
             'counts' => $this->getCounts(),
             'pewarnaanDatafrs' => $pewarnaanData_frs,
         ];
-
+        
         return view('frs/Proses/pewarnaan', $data);
     }
 
@@ -108,7 +108,7 @@ class Pewarnaan extends BaseController
                 case 'kembalikan':
                     $this->pewarnaan_frs->delete($id_pewarnaan_frs);
                     $this->frsModel->update($id_frs, [
-                        'status_frs' => 'Pemotongan Tipis',
+                        'status_frs' => 'Penerimaan',
                     ]);
                     break;
             }

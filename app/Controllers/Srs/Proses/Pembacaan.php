@@ -122,7 +122,7 @@ class Pembacaan extends BaseController
                 case 'kembalikan':
                     $this->pembacaan_srs->delete($id_pembacaan_srs);
                     $this->srsModel->update($id_srs, [
-                        'status_srs' => 'Penerimaan',
+                        'status_srs' => 'Pewarnaan',
                     ]);
                     break;
             }

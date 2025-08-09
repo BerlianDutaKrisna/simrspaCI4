@@ -51,26 +51,6 @@ class FrsModel extends Model
     {
         return $this->where('status_frs', 'Penerimaan')->countAllResults() ?? 0;
     }
-    public function countPengirisanfrs()
-    {
-        return $this->where('status_frs =', 'Pengirisan')->countAllResults() ?? 0;
-    }
-    public function countPemotonganfrs()
-    {
-        return $this->where('status_frs =', 'Pemotongan')->countAllResults() ?? 0;
-    }
-    public function countPemprosesanfrs()
-    {
-        return $this->where('status_frs =', 'Pemprosesan')->countAllResults() ?? 0;
-    }
-    public function countPenanamanfrs()
-    {
-        return $this->where('status_frs =', 'Penanaman')->countAllResults() ?? 0;
-    }
-    public function countPemotonganTipisfrs()
-    {
-        return $this->where('status_frs =', 'Pemotongan Tipis')->countAllResults() ?? 0;
-    }
     public function countPewarnaanfrs()
     {
         return $this->where('status_frs =', 'Pewarnaan')->countAllResults() ?? 0;
