@@ -96,6 +96,7 @@ class FrsModel extends Model
             frs.*, 
             patient.*, 
             penerimaan_frs.id_penerimaan_frs AS id_penerimaan,
+            pewarnaan_frs.id_pewarnaan_frs AS id_pewarnaan,
             pembacaan_frs.id_pembacaan_frs AS id_pembacaan,
             penulisan_frs.id_penulisan_frs AS id_penulisan,
             pemverifikasi_frs.id_pemverifikasi_frs AS id_pemverifikasi,
@@ -105,6 +106,7 @@ class FrsModel extends Model
         ')
             ->join('patient', 'patient.id_pasien = frs.id_pasien', 'left')
             ->join('penerimaan_frs', 'penerimaan_frs.id_frs = frs.id_frs', 'left')
+            ->join('pewarnaan_frs', 'pewarnaan_frs.id_frs = frs.id_frs', 'left')
             ->join('pembacaan_frs', 'pembacaan_frs.id_frs = frs.id_frs', 'left')
             ->join('penulisan_frs', 'penulisan_frs.id_frs = frs.id_frs', 'left')
             ->join('pemverifikasi_frs', 'pemverifikasi_frs.id_frs = frs.id_frs', 'left')

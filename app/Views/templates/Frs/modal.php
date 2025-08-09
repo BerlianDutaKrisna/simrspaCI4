@@ -42,6 +42,7 @@
                         <label for="status_frs">Status FRS</label>
                         <select class="form-control" id="status_frs" name="status_frs">
                             <option value="Penerimaan" <?= old('status_frs') == 'Penerimaan' ? 'selected' : '' ?>>Penerimaan</option>
+                            <option value="Pewarnaan" <?= old('status_frs') == 'Pewarnaan' ? 'selected' : '' ?>>Pewarnaan</option>
                             <option value="Pembacaan" <?= old('status_frs') == 'Pembacaan' ? 'selected' : '' ?>>Pembacaan</option>
                             <option value="Penulisan" <?= old('status_frs') == 'Penulisan' ? 'selected' : '' ?>>Penulisan</option>
                             <option value="Pemverifikasi" <?= old('status_frs') == 'Pemverifikasi' ? 'selected' : '' ?>>Pemverifikasi</option>

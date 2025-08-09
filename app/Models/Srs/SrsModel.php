@@ -96,6 +96,7 @@ class SrsModel extends Model
             srs.*, 
             patient.*, 
             penerimaan_srs.id_penerimaan_srs AS id_penerimaan,
+            pewarnaan_srs.id_pewarnaan_srs AS id_pewarnaan,
             pembacaan_srs.id_pembacaan_srs AS id_pembacaan,
             penulisan_srs.id_penulisan_srs AS id_penulisan,
             pemverifikasi_srs.id_pemverifikasi_srs AS id_pemverifikasi,
@@ -105,6 +106,7 @@ class SrsModel extends Model
         ')
             ->join('patient', 'patient.id_pasien = srs.id_pasien', 'left')
             ->join('penerimaan_srs', 'penerimaan_srs.id_srs = srs.id_srs', 'left')
+            ->join('pewarnaan_srs', 'pewarnaan_srs.id_srs = srs.id_srs', 'left')
             ->join('pembacaan_srs', 'pembacaan_srs.id_srs = srs.id_srs', 'left')
             ->join('penulisan_srs', 'penulisan_srs.id_srs = srs.id_srs', 'left')
             ->join('pemverifikasi_srs', 'pemverifikasi_srs.id_srs = srs.id_srs', 'left')

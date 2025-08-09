@@ -67,13 +67,14 @@
                                             $prosesList = [
                                                 'mutu' => $row['id_mutu'] ?? null,
                                                 'penerimaan' => $row['id_penerimaan'] ?? null,
+                                                'pewarnaan' => $row['id_pewarnaan'] ?? null,
                                                 'pembacaan' => $row['id_pembacaan'] ?? null,
                                                 'penulisan' => $row['id_penulisan'] ?? null,
                                                 'pemverifikasi' => $row['id_pemverifikasi'] ?? null,
                                                 'authorized' => $row['id_authorized'] ?? null,
                                                 'pencetakan' => $row['id_pencetakan'] ?? null,
                                             ];
-
+                                            
                                             foreach ($prosesList as $nama => $id) :
                                                 if ($id) :
                                                     $isPrimary = in_array($nama, ['mutu', 'penerimaan']);

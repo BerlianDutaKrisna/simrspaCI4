@@ -42,6 +42,7 @@
                         <label for="status_srs">Status SRS</label>
                         <select class="form-control" id="status_srs" name="status_srs">
                             <option value="Penerimaan" <?= old('status_srs') == 'Penerimaan' ? 'selected' : '' ?>>Penerimaan</option>
+                            <option value="Pewarnaan" <?= old('status_srs') == 'Pewarnaan' ? 'selected' : '' ?>>Pewarnaan</option>
                             <option value="Pembacaan" <?= old('status_srs') == 'Pembacaan' ? 'selected' : '' ?>>Pembacaan</option>
                             <option value="Penulisan" <?= old('status_srs') == 'Penulisan' ? 'selected' : '' ?>>Penulisan</option>
                             <option value="Pemverifikasi" <?= old('status_srs') == 'Pemverifikasi' ? 'selected' : '' ?>>Pemverifikasi</option>
