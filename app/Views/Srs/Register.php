@@ -119,9 +119,9 @@
                 <div class="form-group col-md-3">
                     <label for="unit_asal">Unit Asal</label>
                     <select class="form-control" id="unit_asal" name="unit_asal" onchange="handleUnitAsalChange(this)">
-                        <?php if (!empty($patient['unitasal'])): ?>
-                            <option value="<?= esc($patient['unitasal']) ?>" selected><?= esc(strtoupper($patient['unitasal'])) ?></option>
-                        <?php endif; ?>
+                        <option value="<?= esc($patient['dokterperujuk'] ?? 'Belum Dipilih') ?>" selected>
+                            <?= esc($patient['dokterperujuk'] ?? 'Belum Dipilih') ?>
+                        </option>
                         <option value="Klinik Kandungan">Klinik Kandungan</option>
                         <option value="Ruangan Aster">Ruangan Aster</option>
                         <option value="Ruangan Anggrek">Ruangan Anggrek</option>
@@ -144,9 +144,9 @@
                 <div class="form-group col-md-3">
                     <label for="dokter_pengirim">Dokter Pengirim</label>
                     <select class="form-control" id="dokter_pengirim" name="dokter_pengirim" onchange="handleDokterPengirimChange(this)">
-                        <?php if (!empty($patient['dokterperujuk'])): ?>
-                            <option value="<?= esc($patient['dokterperujuk']) ?>" selected><?= esc($patient['dokterperujuk']) ?></option>
-                        <?php endif; ?>
+                        <option value="<?= esc($patient['dokterperujuk'] ?? 'Belum Dipilih') ?>" selected>
+                            <?= esc($patient['dokterperujuk'] ?? 'Belum Dipilih') ?>
+                        </option>
                         <option value="dr. Ihyan Amri, Sp.B">dr. Ihyan Amri, Sp.B</option>
                         <option value="dr. Andy Achmad Suanda, Sp.B">dr. Andy Achmad Suanda, Sp.B</option>
                         <option value="dr. Agus Maulana,Sp.B,FinaCs,M.Ked.Klin">dr. Agus Maulana,Sp.B,FinaCs,M.Ked.Klin</option>
@@ -198,9 +198,9 @@
                 <div class="form-group col-md-3">
                     <label for="tindakan_spesimen">Tindakan Spesimen</label>
                     <select class="form-control" id="tindakan_spesimen" name="tindakan_spesimen" onchange="handleTindakanSpesimenChange(this)">
-                        <?php if (!empty($patient['tindakan_spesimen'])): ?>
-                            <option value="<?= esc($patient['tindakan_spesimen']) ?>" selected><?= esc($patient['tindakan_spesimen']) ?></option>
-                        <?php endif; ?>
+                        <option value="<?= esc($patient['tindakan_spesimen'] ?? 'Belum Dipilih') ?>" selected>
+                            <?= esc($patient['tindakan_spesimen'] ?? 'Belum Dipilih') ?>
+                        </option>
                         <option value="Sitologi">Sitologi</option>
                         <option value="Sitologi dan Cell Block">Sitologi dan Cell Block</option>
                         <option value="Pap Smear">Pap Smear</option>

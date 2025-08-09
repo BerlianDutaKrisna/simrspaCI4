@@ -102,17 +102,30 @@ class SimrsModel extends Model
 
     private function refreshKunjunganCache(string $tanggalAwal, string $tanggalAkhir, string $cacheKey): array
     {
-        $apiURL = "http://10.250.10.107/apibdrs/apibdrs/getKunjunganPasien/{$tanggalAwal}/{$tanggalAkhir}";
+        $primaryURL = "http://10.250.10.107/apibdrs/apibdrs/getKunjunganPasien/{$tanggalAwal}/{$tanggalAkhir}";
+        $backupURL = "http://172.20.29.240/apibdrs/apibdrs/getKunjunganPasien/{$tanggalAwal}/{$tanggalAkhir}";
 
-        $response = $this->client->get($apiURL);
-
-        if ($response->getStatusCode() !== 200) {
-            throw new \RuntimeException("HTTP Error: " . $response->getStatusCode());
+        try {
+            $response = $this->client->get($primaryURL);
+            if ($response->getStatusCode() !== 200) {
+                throw new \RuntimeException("HTTP Error Primary: " . $response->getStatusCode());
+            }
+        } catch (\Exception $e) {
+            // Jika gagal di primary, coba ke backup
+            try {
+                $response = $this->client->get($backupURL);
+                if ($response->getStatusCode() !== 200) {
+                    throw new \RuntimeException("HTTP Error Backup: " . $response->getStatusCode());
+                }
+            } catch (\Exception $ex) {
+                // Jika juga gagal di backup, lempar error
+                throw new \RuntimeException("Gagal mengakses kedua endpoint: Primary({$e->getMessage()}), Backup({$ex->getMessage()})");
+            }
         }
 
         $result = json_decode($response->getBody(), true);
 
-        // Simpan hasil terbaru ke cache (10 menit)
+        // Simpan ke cache selama 10 menit
         $this->cache->save($cacheKey, $result, 600);
 
         return $result;
