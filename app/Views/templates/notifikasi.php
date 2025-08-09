@@ -51,7 +51,9 @@
             if (inputNormSimrs) {
                 inputNormSimrs.focus();
             }
+            $(document).ready(function() {
+                $('.dataTables_filter input[type="search"]').focus();
+            });
         <?php endif; ?>
     };
 </script>
-
