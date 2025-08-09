@@ -27,27 +27,21 @@ class Patient extends BaseController
     }
 
     // Menampilkan halaman registrasi pasien
-    public function register_patient($norm_pasien = null)
+    public function register_patient()
     {
-        $patientModel = new PatientModel();
+        // Mendapatkan nilai norm_pasien dari query string
+        $norm_pasien = $this->request->getGet('norm_pasien');
 
-        // Jika ada parameter norm di URL
+        // Jika nilai norm_pasien ada, gunakan untuk prapengisian
         if ($norm_pasien) {
-            // Cari data pasien berdasarkan norm
-            $patient = $patientModel->where('norm_pasien', $norm_pasien)->first();
-
-            if ($patient) {
-                $data['patient'] = $patient;
-            } else {
-                // Jika norm tidak ditemukan, tetap isi norm_pasien agar bisa input manual
-                $data['patient']['norm_pasien'] = $norm_pasien;
-            }
+            // Lakukan logika yang sesuai, misalnya prapengisian form
+            $data['norm_pasien'] = $norm_pasien;
         }
 
-        // Data dari session
+        // Mengambil id_user dan nama_user dari session untuk ditampilkan di form
         $data['id_user'] = session()->get('id_user');
         $data['nama_user'] = session()->get('nama_user');
-        
+        // Mengirim data ke view untuk ditampilkan
         return view('patient/register_patient', $data);
     }
 
@@ -78,7 +72,6 @@ class Patient extends BaseController
 
         // Data yang akan disimpan
         $data = [
-            'id_pasien'          => $this->request->getPost('id_pasien') ?: date('ymdHis'),
             'norm_pasien'         => $this->request->getPost('norm_pasien'),
             'nama_pasien'         => strtoupper($this->request->getPost('nama_pasien')),
             'alamat_pasien'       => strtoupper($this->request->getPost('alamat_pasien')),
@@ -86,7 +79,7 @@ class Patient extends BaseController
             'jenis_kelamin_pasien' => $this->request->getPost('jenis_kelamin_pasien'),
             'status_pasien'       => $this->request->getPost('status_pasien'),
         ];
-        dd($data);
+
         // Simpan data ke database
         if ($this->PatientModel->save($data)) {
             return redirect()->to('/dashboard')->with('success', 'Registrasi berhasil!');
@@ -207,37 +200,27 @@ class Patient extends BaseController
 
     public function modal_search()
     {
-        $request = service('request');
-        $json = $request->getJSON();
+        // Ambil data 'norm' yang dikirim dari frontend
+        $norm_pasien = $this->request->getVar('norm');
 
-        if (!isset($json->norm)) {
+        // Inisialisasi model
+        $patientModel = new PatientModel();
+
+        // Cari pasien berdasarkan norm_pasien
+        $patient = $patientModel->where('norm_pasien', $norm_pasien)->first();
+
+        // Cek apakah pasien ditemukan
+        if ($patient) {
+            // Jika ditemukan, kirimkan data pasien dalam format JSON
             return $this->response->setJSON([
-                'status' => 'error',
-                'message' => 'Norm tidak dikirim.'
+                'status' => 'success',
+                'data' => $patient
             ]);
-        }
-
-        $norm = $json->norm;
-        $model = new \App\Models\PatientModel();
-
-        try {
-            $data = $model->getKunjunganPasien($norm);
-
-            if (isset($data['code']) && $data['code'] == 200 && !empty($data['data'])) {
-                return $this->response->setJSON([
-                    'status' => 'success',
-                    'data' => $data['data']
-                ]);
-            } else {
-                return $this->response->setJSON([
-                    'status' => 'error',
-                    'message' => 'Pasien tidak ditemukan.'
-                ]);
-            }
-        } catch (\Exception $e) {
+        } else {
+            // Jika tidak ditemukan, kirimkan pesan kesalahan
             return $this->response->setJSON([
                 'status' => 'error',
-                'message' => 'Terjadi kesalahan: ' . $e->getMessage()
+                'message' => 'Pasien belum terdaftar'
             ]);
         }
     }

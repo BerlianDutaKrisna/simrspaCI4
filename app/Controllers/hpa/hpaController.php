@@ -112,33 +112,49 @@ class HpaController extends BaseController
         $register_api_raw = $this->request->getGet('register_api');
         $register_api = json_decode($register_api_raw, true);
 
-        // Ambil data riwayat dari API
-        $norm = $register_api['norm'] ?? '';
-        $riwayat_api = [];
-        if ($norm !== '') {
-            $riwayat_api_response = $this->simrsModel->getPemeriksaanPasien($norm);
-            if ($riwayat_api_response['code'] == 200) {
-                $riwayat_api = $riwayat_api_response['data'];
-            }
-        }
+        // Ambil data riwayat dari API / Manual
+        // Cek apakah data dari API tersedia
+        if (!empty($register_api) && is_array($register_api)) {
 
-        // Map ke $patient
-        $patient = [
-            'norm_pasien' => $register_api['norm'] ?? '',
-            'nama_pasien' => $register_api['nama'] ?? '',
-            'alamat_pasien'      => $register_api['alamat'] ?? '',
-            'tanggal_lahir_pasien'   => $register_api['tgl_lhr'] ?? '',
-            'jenis_kelamin_pasien'  => $register_api['jeniskelamin'] ?? '',
-            'status_pasien' => $register_api['jenispasien'] ?? '',
-            'unitasal'    => $register_api['unitasal'] ?? '',
-            'dokterperujuk' => $register_api['dokterperujuk'] ?? '',
-            'pemeriksaan' => $register_api['pemeriksaan'] ?? '',
-            'id_transaksi_simrs' => $register_api['idtransaksi'] ?? '',
-            'id_pasien'   => isset($register_api['idpasien']) ? (int) $register_api['idpasien'] : null,
-            'lokasi_spesimen' => $register_api['statuslokasi'],
-            'diagnosa_klinik' => $register_api['diagnosaklinik'],
-            'tindakan_spesimen' => $register_api['pemeriksaan']
-        ];
+            // Ambil norm
+            $norm = $register_api['norm'] ?? '';
+
+            // Ambil riwayat dari API
+            $riwayat_api = [];
+            if ($norm !== '') {
+                $riwayat_api_response = $this->simrsModel->getPemeriksaanPasien($norm);
+                if (!empty($riwayat_api_response['code']) && $riwayat_api_response['code'] == 200) {
+                    $riwayat_api = $riwayat_api_response['data'];
+                }
+            }
+
+            // Map ke array $patient
+            $patient = [
+                'id_pasien'             => isset($register_api['idpasien']) ? (int) $register_api['idpasien'] : null,
+                'norm_pasien'           => $register_api['norm'] ?? '',
+                'nama_pasien'           => $register_api['nama'] ?? '',
+                'alamat_pasien'         => $register_api['alamat'] ?? '',
+                'tanggal_lahir_pasien'  => $register_api['tgl_lhr'] ?? '',
+                'jenis_kelamin_pasien'  => $register_api['jeniskelamin'] ?? '',
+                'status_pasien'         => $register_api['jenispasien'] ?? '',
+                'unitasal'              => $register_api['unitasal'] ?? '',
+                'dokterperujuk'         => $register_api['dokterperujuk'] ?? '',
+                'pemeriksaan'           => $register_api['pemeriksaan'] ?? '',
+                'id_transaksi_simrs'    => $register_api['idtransaksi'] ?? '',
+                'lokasi_spesimen'       => $register_api['statuslokasi'] ?? '',
+                'diagnosa_klinik'       => $register_api['diagnosaklinik'] ?? '',
+                'tindakan_spesimen'     => $register_api['pemeriksaan'] ?? ''
+            ];
+        } elseif ($normPasien = $this->request->getGet('norm_pasien')) {
+
+            // Ambil data pasien dari DB jika norm_pasien tersedia di GET
+            $patient = $this->patientModel->where('norm_pasien', $normPasien)->first();
+            $riwayat_api = [];
+        } else {
+            // Jika tidak ada sumber data sama sekali
+            $patient = null;
+            $riwayat_api = [];
+        }
 
         $data = [
             'id_user'       => session()->get('id_user'),
@@ -211,7 +227,7 @@ class HpaController extends BaseController
                 if ($this->patientModel->insert($patientData)) {
                     session()->setFlashdata('success', 'Data pasien ditambahkan.');
                 }
-            }            
+            }
 
             $hpaData = [
                 'kode_hpa' => $data['kode_hpa'],
@@ -225,7 +241,7 @@ class HpaController extends BaseController
                 'diagnosa_klinik' => $data['diagnosa_klinik'],
                 'status_hpa' => 'Penerimaan',
             ];
-            
+
             // Simpan data HPA
             if (!$this->hpaModel->insert($hpaData)) {
                 throw new Exception('Gagal menyimpan data HPA: ' . $this->hpaModel->errors());

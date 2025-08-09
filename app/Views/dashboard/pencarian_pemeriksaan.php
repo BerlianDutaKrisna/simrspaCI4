@@ -25,10 +25,10 @@
             <div class="col-md-4 col-sm-12 mb-3">
                 <h5 class="mb-2">Pencarian Manual</h5>
                 <div class="input-group">
-                    <input type="text" id="norm_manual" name="norm_manual" class="form-control" placeholder="Masukkan Norm Pasien Manual" required>
+                <input type="text" id="norm" name="norm" class="form-control" placeholder="Masukkan Norm Pasien" required>
                     <div class="input-group-append">
-                        <button type="button" id="searchButtonManual" class="btn btn-secondary">
-                            <i class="fas fa-search fa-sm"></i> Cari
+                    <button type="button" id="searchButton" class="btn btn-secondary">
+                            <i class="fas fa-search fa-sm"></i> Cari <!-- Ikon untuk tombol cari -->
                         </button>
                     </div>
                 </div>
