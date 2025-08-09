@@ -12,7 +12,7 @@
             <div class="col-md-8 col-sm-12 mb-3">
                 <h5 class="mb-2">Pencarian Pasien SIMRS</h5>
                 <div class="input-group">
-                    <input type="text" id="norm_simrs" name="norm_simrs" class="form-control" placeholder="Masukkan Norm Pasien SIMRS" required>
+                    <input type="text" id="norm_simrs" name="norm_simrs" class="form-control" placeholder="Masukkan Norm Pasien SIMRS">
                     <div class="input-group-append">
                         <button type="button" id="searchButtonSimrs" class="btn btn-primary">
                             <i class="fas fa-search fa-sm"></i> Cari
@@ -25,7 +25,7 @@
             <div class="col-md-4 col-sm-12 mb-3">
                 <h5 class="mb-2">Pencarian Manual</h5>
                 <div class="input-group">
-                <input type="text" id="norm" name="norm" class="form-control" placeholder="Masukkan Norm Pasien" required>
+                <input type="text" id="norm" name="norm" class="form-control" placeholder="Masukkan Norm Pasien">
                     <div class="input-group-append">
                     <button type="button" id="searchButton" class="btn btn-secondary">
                             <i class="fas fa-search fa-sm"></i> Cari <!-- Ikon untuk tombol cari -->
