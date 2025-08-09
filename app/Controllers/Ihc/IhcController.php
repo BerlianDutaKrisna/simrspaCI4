@@ -106,33 +106,49 @@ class ihcController extends BaseController
         $register_api_raw = $this->request->getGet('register_api');
         $register_api = json_decode($register_api_raw, true);
 
-        // Ambil data riwayat dari API
-        $norm = $register_api['norm'] ?? '';
-        $riwayat_api = [];
-        if ($norm !== '') {
-            $riwayat_api_response = $this->simrsModel->getPemeriksaanPasien($norm);
-            if ($riwayat_api_response['code'] == 200) {
-                $riwayat_api = $riwayat_api_response['data'];
-            }
-        }
+        // Ambil data riwayat dari API / Manual
+        // Cek apakah data dari API tersedia
+        if (!empty($register_api) && is_array($register_api)) {
 
-        // Map ke $patient
-        $patient = [
-            'norm_pasien' => $register_api['norm'] ?? '',
-            'nama_pasien' => $register_api['nama'] ?? '',
-            'alamat_pasien'      => $register_api['alamat'] ?? '',
-            'tanggal_lahir_pasien'   => $register_api['tgl_lhr'] ?? '',
-            'jenis_kelamin_pasien'  => $register_api['jeniskelamin'] ?? '',
-            'status_pasien' => $register_api['jenispasien'] ?? '',
-            'unitasal'    => $register_api['unitasal'] ?? '',
-            'dokterperujuk' => $register_api['dokterperujuk'] ?? '',
-            'pemeriksaan' => $register_api['pemeriksaan'] ?? '',
-            'id_transaksi_simrs' => $register_api['idtransaksi'] ?? '',
-            'id_pasien'   => isset($register_api['idpasien']) ? (int) $register_api['idpasien'] : null,
-            'lokasi_spesimen' => $register_api['statuslokasi'],
-            'diagnosa_klinik' => $register_api['diagnosaklinik'],
-            'tindakan_spesimen' => $register_api['pemeriksaan']
-        ];
+            // Ambil norm
+            $norm = $register_api['norm'] ?? '';
+
+            // Ambil riwayat dari API
+            $riwayat_api = [];
+            if ($norm !== '') {
+                $riwayat_api_response = $this->simrsModel->getPemeriksaanPasien($norm);
+                if (!empty($riwayat_api_response['code']) && $riwayat_api_response['code'] == 200) {
+                    $riwayat_api = $riwayat_api_response['data'];
+                }
+            }
+
+            // Map ke array $patient
+            $patient = [
+                'id_pasien'             => isset($register_api['idpasien']) ? (int) $register_api['idpasien'] : null,
+                'norm_pasien'           => $register_api['norm'] ?? '',
+                'nama_pasien'           => $register_api['nama'] ?? '',
+                'alamat_pasien'         => $register_api['alamat'] ?? '',
+                'tanggal_lahir_pasien'  => $register_api['tgl_lhr'] ?? '',
+                'jenis_kelamin_pasien'  => $register_api['jeniskelamin'] ?? '',
+                'status_pasien'         => $register_api['jenispasien'] ?? '',
+                'unitasal'              => $register_api['unitasal'] ?? '',
+                'dokterperujuk'         => $register_api['dokterperujuk'] ?? '',
+                'pemeriksaan'           => $register_api['pemeriksaan'] ?? '',
+                'id_transaksi_simrs'    => $register_api['idtransaksi'] ?? '',
+                'lokasi_spesimen'       => $register_api['statuslokasi'] ?? '',
+                'diagnosa_klinik'       => $register_api['diagnosaklinik'] ?? '',
+                'tindakan_spesimen'     => $register_api['pemeriksaan'] ?? ''
+            ];
+        } elseif ($normPasien = $this->request->getGet('norm_pasien')) {
+
+            // Ambil data pasien dari DB jika norm_pasien tersedia di GET
+            $patient = $this->patientModel->where('norm_pasien', $normPasien)->first();
+            $riwayat_api = [];
+        } else {
+            // Jika tidak ada sumber data sama sekali
+            $patient = null;
+            $riwayat_api = [];
+        }
 
         $data = [
             'id_user'       => session()->get('id_user'),
@@ -171,7 +187,7 @@ class ihcController extends BaseController
                 : $data['dokter_pengirim_custom'];
             // Tentukan tindakan_spesimen
             $tindakan_spesimen = !empty($data['tindakan_spesimen']) ? $data['tindakan_spesimen'] : $data['tindakan_spesimen_custom'];
-            
+
             // ====== CEK PASIEN DI TABEL PATIENT ======
             $id_pasien   = $data['id_pasien'];
             $norm_pasien = $data['norm_pasien'] ?? '';
@@ -385,7 +401,7 @@ class ihcController extends BaseController
             $penulisan_ihc = $this->penulisan_ihc->find($ihc['id_penulisan_ihc']) ?? [];
         }
         // Ambil daftar user dengan status "Dokter"
-        $users = $this->usersModel->where('status_user', 'Dokter')->findAll(); 
+        $users = $this->usersModel->where('status_user', 'Dokter')->findAll();
         $riwayat_hpa = $this->hpaModel->riwayatPemeriksaanhpa($id_pasien);
         $riwayat_frs = $this->frsModel->riwayatPemeriksaanfrs($id_pasien);
         $riwayat_srs = $this->srsModel->riwayatPemeriksaansrs($id_pasien);
@@ -825,7 +841,7 @@ class ihcController extends BaseController
             'nama_user'  => session()->get('nama_user'),
             'ihcData' => $ihcData,
         ];
-        
+
         return view('ihc/laporan/laporan_pemeriksaan', $data);
     }
 
@@ -851,7 +867,7 @@ class ihcController extends BaseController
             'nama_user'  => session()->get('nama_user'),
             'ihcData' => $ihcData,
         ];
-        
+
         return view('ihc/laporan/laporan_oprasional', $data);
     }
 
@@ -862,9 +878,9 @@ class ihcController extends BaseController
         $data = [
             'id_user'    => session()->get('id_user'),
             'nama_user'  => session()->get('nama_user'),
-            'ihcData' => $ihcData,          
+            'ihcData' => $ihcData,
         ];
-        
+
         return view('ihc/laporan/laporan_ER', $data);
     }
 
@@ -877,7 +893,7 @@ class ihcController extends BaseController
             'nama_user'  => session()->get('nama_user'),
             'ihcData' => $ihcData,
         ];
-        
+
         return view('ihc/laporan/laporan_PR', $data);
     }
 
@@ -890,7 +906,7 @@ class ihcController extends BaseController
             'nama_user'  => session()->get('nama_user'),
             'ihcData' => $ihcData,
         ];
-        
+
         return view('ihc/laporan/laporan_HER2', $data);
     }
 
@@ -903,7 +919,7 @@ class ihcController extends BaseController
             'nama_user'  => session()->get('nama_user'),
             'ihcData' => $ihcData,
         ];
-        
+
         return view('ihc/laporan/laporan_KI67', $data);
     }
 
