@@ -14,38 +14,36 @@ class SimrsController extends BaseController
         $this->simrsModel = new SimrsModel();
     }
 
-    /**
-     * Endpoint untuk mencari kunjungan pasien berdasarkan norm (dikirim via JSON POST)
-     * URL: /simrs/modal_search
-     */
     public function modal_search()
     {
         $request = service('request');
         $json = $request->getJSON();
 
-        if (!isset($json->norm)) {
+        // Sesuaikan nama key sesuai JS: "norm_simrs"
+        if (!isset($json->norm_simrs)) {
             return $this->response->setJSON([
                 'status' => 'error',
-                'message' => 'Norm tidak dikirim.'
+                'message' => 'Norm pasien tidak dikirim.'
             ]);
         }
 
-        $norm = $json->norm;
+        $norm = trim($json->norm_simrs);
 
         try {
             $data = $this->simrsModel->getKunjunganPasien($norm);
 
             if (isset($data['code']) && $data['code'] == 200 && !empty($data['data'])) {
+                // Data dari model berupa array pasien (bisa banyak)
                 return $this->response->setJSON([
                     'status' => 'success',
-                    'data' => $data['data']
-                ]);
-            } else {
-                return $this->response->setJSON([
-                    'status' => 'error',
-                    'message' => 'Pasien tidak ditemukan.'
+                    'data' => $data['data'] // kirim seluruh array pasien
                 ]);
             }
+
+            return $this->response->setJSON([
+                'status' => 'error',
+                'message' => 'Pasien tidak ditemukan.'
+            ]);
         } catch (\Exception $e) {
             return $this->response->setJSON([
                 'status' => 'error',
