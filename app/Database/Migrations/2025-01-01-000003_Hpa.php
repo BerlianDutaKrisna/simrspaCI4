@@ -112,6 +112,14 @@ class Hpa extends Migration
                 'type' => 'DATETIME',
                 'null' => true,
             ],
+            'PUG' => [
+                'type' => 'INT',
+                'null' => true,
+            ],
+            'PUB' => [
+                'type' => 'INT',
+                'null' => true,
+            ],
             'id_transaksi' => [
                 'type' => 'INT',
                 'null' => true,

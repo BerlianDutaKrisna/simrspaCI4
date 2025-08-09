@@ -28,6 +28,9 @@ class SrsModel extends Model
         'print_srs',
         'penerima_srs',
         'tanggal_penerima',
+        'id_transaksi',
+        'tanggal_transaksi',
+        'no_register',
         'created_at',
         'updated_at',
     ];

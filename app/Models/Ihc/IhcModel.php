@@ -37,6 +37,9 @@ class IhcModel extends Model
         'HER2',
         'KI67',
         'status_kontrol',
+        'id_transaksi',
+        'tanggal_transaksi',
+        'no_register',
         'created_at',
         'updated_at',
     ];

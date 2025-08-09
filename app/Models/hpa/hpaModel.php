@@ -28,6 +28,8 @@ class HpaModel extends Model
         'print_hpa',
         'penerima_hpa',
         'tanggal_penerima',
+        'PUG',
+        'PUB',
         'id_transaksi',
         'tanggal_transaksi',
         'no_register',

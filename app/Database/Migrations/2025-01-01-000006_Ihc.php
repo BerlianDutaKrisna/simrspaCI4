@@ -148,6 +148,20 @@ class Ihc extends Migration
                 'default'    => 'Tersedia',
                 'null'       => true,
             ],
+            'id_transaksi' => [
+                'type' => 'INT',
+                'null' => true,
+            ],
+            'tanggal_transaksi' => [
+                'type' => 'DATETIME',
+                'null' => true,
+            ],
+            'no_register' => [
+                'type' => 'VARCHAR',
+                'constraint' => 100,
+                'default'    => 'Belum Diisi',
+                'null' => true,
+            ],
             'created_at' => [
                 'type' => 'DATETIME',
                 'null' => true,
