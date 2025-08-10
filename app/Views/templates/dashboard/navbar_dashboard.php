@@ -16,12 +16,26 @@
         <ul class="navbar-nav ml-auto d-flex align-items-center">
             <!-- Display Nama User Always (Desktop and Mobile) -->
             <li class="nav-item d-flex align-items-center mr-3">
-                <span class="mr-2 text-gray-600 small font-weight-bold"><?= esc($nama_user) ?? ""; ?></span>
+                <span class="mr-2 text-gray-600 large font-weight-bold"><?= esc($nama_user) ?? ""; ?></span>
             </li>
             <!-- User Information Dropdown -->
             <li class="nav-item dropdown no-arrow">
+                <?php
+                $userImgPath = 'img/' . esc($id_user) . '.png';
+                $defaultImgPath = 'img/analis.jpg';
+
+                if (file_exists(FCPATH . $userImgPath)) {
+                    $imgSrc = base_url($userImgPath);
+                } else {
+                    $imgSrc = base_url($defaultImgPath);
+                }
+                ?>
                 <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <img class="img-profile rounded-circle" src="<?= base_url('img/analis.jpg') ?>" alt="User Profile Picture" style="width: 35px; height: 35px;">
+                    <img
+                        class="img-profile rounded-circle"
+                        src="<?= $imgSrc ?>"
+                        alt="User Profile Picture"
+                        style="width: 65px; height: 65px;">
                 </a>
                 <!-- Dropdown - User Information -->
                 <div class="dropdown-menu dropdown-menu-right shadow-sm animated--grow-in" aria-labelledby="userDropdown">
