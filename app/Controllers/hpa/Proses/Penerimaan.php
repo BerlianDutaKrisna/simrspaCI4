@@ -37,6 +37,7 @@ class Penerimaan extends BaseController
     {
         $penerimaanData_hpa = $this->penerimaan_hpa->getPenerimaan_hpa();
         $data = [
+            'id_user' => session()->get('id_user'),
             'nama_user' => $this->session->get('nama_user'),
             'counts' => $this->getCounts(),
             'penerimaanDatahpa' => $penerimaanData_hpa,

@@ -488,6 +488,8 @@ class HpaController extends BaseController
         $users = $this->usersModel->where('status_user', 'Dokter')->findAll();
         // Persiapkan data yang akan dikirim ke view
         $data = [
+            'id_user'  => session()->get('id_user'),
+            'nama_user'  => session()->get('nama_user'),
             'hpa'             => $hpa,
             'riwayat_hpa'        => $riwayat_hpa,
             'riwayat_frs'        => $riwayat_frs,

@@ -37,6 +37,7 @@ class Pewarnaan extends BaseController
     {
         $pewarnaanData_hpa = $this->pewarnaan_hpa->getpewarnaan_hpa();
         $data = [
+            'id_user' => session()->get('id_user'),
             'nama_user' => $this->session->get('nama_user'),
             'counts' => $this->getCounts(),
             'pewarnaanDatahpa' => $pewarnaanData_hpa,

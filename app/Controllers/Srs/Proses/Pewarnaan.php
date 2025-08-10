@@ -37,6 +37,7 @@ class Pewarnaan extends BaseController
     {
         $pewarnaanData_srs = $this->pewarnaan_srs->getpewarnaan_srs();
         $data = [
+            'id_user' => session()->get('id_user'),
             'nama_user' => $this->session->get('nama_user'),
             'counts' => $this->getCounts(),
             'pewarnaanDatasrs' => $pewarnaanData_srs,

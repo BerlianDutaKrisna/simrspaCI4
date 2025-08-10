@@ -37,6 +37,7 @@ class Authorized extends BaseController
     {
         $authorizedData_srs = $this->authorized_srs->getauthorized_srs();
         $data = [
+            'id_user' => session()->get('id_user'),
             'nama_user' => $this->session->get('nama_user'),
             'counts' => $this->getCounts(),
             'authorizedDatasrs' => $authorizedData_srs,

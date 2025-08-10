@@ -35,7 +35,7 @@
                         class="img-profile rounded-circle"
                         src="<?= $imgSrc ?>"
                         alt="User Profile Picture"
-                        style="width: 65px; height: 65px;">
+                        style="width: 50px; height: 50px;">
                 </a>
                 <!-- Dropdown - User Information -->
                 <div class="dropdown-menu dropdown-menu-right shadow-sm animated--grow-in" aria-labelledby="userDropdown">

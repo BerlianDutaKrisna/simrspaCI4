@@ -37,6 +37,7 @@ class Authorized extends BaseController
     {
         $authorizedData_hpa = $this->authorized_hpa->getauthorized_hpa();
         $data = [
+            'id_user' => session()->get('id_user'),
             'nama_user' => $this->session->get('nama_user'),
             'counts' => $this->getCounts(),
             'authorizedDatahpa' => $authorizedData_hpa,

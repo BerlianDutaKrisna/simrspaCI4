@@ -37,6 +37,7 @@ class Pemotongan extends BaseController
     {
         $pemotonganData_hpa = $this->pemotongan_hpa->getpemotongan_hpa();
         $data = [
+            'id_user' => session()->get('id_user'),
             'nama_user' => $this->session->get('nama_user'),
             'counts' => $this->getCounts(),
             'pemotonganDatahpa' => $pemotonganData_hpa,

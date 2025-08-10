@@ -50,6 +50,7 @@ class Penerimaan extends BaseController
     {
         $penerimaanData_ihc = $this->penerimaan_ihc->getPenerimaan_ihc();
         $data = [
+            'id_user' => session()->get('id_user'),
             'nama_user' => $this->session->get('nama_user'),
             'counts' => $this->getCounts(),
             'penerimaanDataihc' => $penerimaanData_ihc,

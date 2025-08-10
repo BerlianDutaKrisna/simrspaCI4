@@ -37,6 +37,7 @@ class Penulisan extends BaseController
     {
         $penulisanData_frs = $this->penulisan_frs->getpenulisan_frs();
         $data = [
+            'id_user' => session()->get('id_user'),
             'nama_user' => $this->session->get('nama_user'),
             'counts' => $this->getCounts(),
             'penulisanDatafrs' => $penulisanData_frs,

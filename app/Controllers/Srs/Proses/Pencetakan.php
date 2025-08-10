@@ -34,6 +34,7 @@ class Pencetakan extends BaseController
     {
         $pencetakanData_srs = $this->pencetakan_srs->getpencetakan_srs();
         $data = [
+            'id_user' => session()->get('id_user'),
             'nama_user' => $this->session->get('nama_user'),
             'counts' => $this->getCounts(),
             'pencetakanDatasrs' => $pencetakanData_srs,

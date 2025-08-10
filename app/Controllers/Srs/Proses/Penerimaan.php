@@ -53,6 +53,7 @@ class Penerimaan extends BaseController
     {
         $penerimaanData_srs = $this->penerimaan_srs->getPenerimaan_srs();
         $data = [
+            'id_user' => session()->get('id_user'),
             'nama_user' => $this->session->get('nama_user'),
             'counts' => $this->getCounts(),
             'penerimaanDatasrs' => $penerimaanData_srs,

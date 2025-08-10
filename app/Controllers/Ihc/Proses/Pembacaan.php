@@ -37,6 +37,7 @@ class Pembacaan extends BaseController
     {
         $pembacaanData_ihc = $this->pembacaan_ihc->getpembacaan_ihc();
         $data = [
+            'id_user' => session()->get('id_user'),
             'nama_user' => $this->session->get('nama_user'),
             'counts' => $this->getCounts(),
             'pembacaanDataihc' => $pembacaanData_ihc,

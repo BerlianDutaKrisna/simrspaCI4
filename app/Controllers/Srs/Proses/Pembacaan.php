@@ -37,6 +37,7 @@ class Pembacaan extends BaseController
     {
         $pembacaanData_srs = $this->pembacaan_srs->getpembacaan_srs();
         $data = [
+            'id_user' => session()->get('id_user'),
             'nama_user' => $this->session->get('nama_user'),
             'counts' => $this->getCounts(),
             'pembacaanDatasrs' => $pembacaanData_srs,

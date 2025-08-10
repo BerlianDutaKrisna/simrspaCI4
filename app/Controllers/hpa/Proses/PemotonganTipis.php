@@ -37,6 +37,7 @@ class PemotonganTipis extends BaseController
     {
         $pemotonganTipisDatahpa = $this->pemotongan_tipis_hpa->getpemotongan_tipis_hpa();
         $data = [
+            'id_user' => session()->get('id_user'),
             'nama_user' => $this->session->get('nama_user'),
             'counts' => $this->getCounts(),
             'pemotonganTipisDatahpa' => $pemotonganTipisDatahpa,

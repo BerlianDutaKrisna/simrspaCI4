@@ -53,6 +53,7 @@ class Penerimaan extends BaseController
     {
         $penerimaanData_frs = $this->penerimaan_frs->getpenerimaan_frs();
         $data = [
+            'id_user' => session()->get('id_user'),
             'nama_user' => $this->session->get('nama_user'),
             'counts' => $this->getCounts(),
             'penerimaanDatafrs' => $penerimaanData_frs,

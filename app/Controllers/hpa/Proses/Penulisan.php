@@ -37,6 +37,7 @@ class Penulisan extends BaseController
     {
         $penulisanData_hpa = $this->penulisan_hpa->getpenulisan_hpa();
         $data = [
+            'id_user' => session()->get('id_user'),
             'nama_user' => $this->session->get('nama_user'),
             'counts' => $this->getCounts(),
             'penulisanDatahpa' => $penulisanData_hpa,

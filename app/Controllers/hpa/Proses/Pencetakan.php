@@ -34,6 +34,7 @@ class Pencetakan extends BaseController
     {
         $pencetakanData_hpa = $this->pencetakan_hpa->getpencetakan_hpa();
         $data = [
+            'id_user' => session()->get('id_user'),
             'nama_user' => $this->session->get('nama_user'),
             'counts' => $this->getCounts(),
             'pencetakanDatahpa' => $pencetakanData_hpa,

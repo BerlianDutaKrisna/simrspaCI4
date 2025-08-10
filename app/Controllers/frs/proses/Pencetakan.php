@@ -34,6 +34,7 @@ class Pencetakan extends BaseController
     {
         $pencetakanData_frs = $this->pencetakan_frs->getpencetakan_frs();
         $data = [
+            'id_user' => session()->get('id_user'),
             'nama_user' => $this->session->get('nama_user'),
             'counts' => $this->getCounts(),
             'pencetakanDatafrs' => $pencetakanData_frs,
