@@ -107,7 +107,7 @@
                     <div class="card-body">
                         <div class="row no-gutters align-items-center">
                             <div class="col mr-2">
-                                <div class="text-s font-weight-bold text-primary text-uppercase mb-1">
+                                <div class="text-s font-weight-bold text-secondary text-uppercase mb-1">
                                     Cek Koneksi <strong class="text-primary">SIMRS</strong>
                                 </div>
                             </div>
