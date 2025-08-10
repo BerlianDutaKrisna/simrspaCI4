@@ -21,11 +21,10 @@ class Pemeriksaan extends ResourceController
 
         try {
             $data = $this->model->getPemeriksaanPasien($norm);
-
             if (isset($data['code']) && $data['code'] == 200 && !empty($data['data'])) {
                 return $this->respond([
                     'status' => 'success',
-                    'data'   => $data['data'],
+                    'data' => $data['data'],
                 ]);
             }
 

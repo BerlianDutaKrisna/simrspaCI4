@@ -49,8 +49,8 @@ $routes->group('patient', function ($routes) {
 $routes->group('api', ['namespace' => 'App\Controllers\Api'], function ($routes) {
     $routes->resource('koneksi', ['only' => ['index']]);
     $routes->resource('kunjungan', ['only' => ['show']]);
-    $routes->get('api/pemeriksaan/norm_pasien/(:num)', 'Api\Pemeriksaan::showByNorm/$1');
-    $routes->put('api/pemeriksaan/id_transaksi/(:num)', 'Api\Pemeriksaan::updateByTransaksi/$1');
+    $routes->get('pemeriksaan/norm_pasien/(:num)', 'Pemeriksaan::showByNorm/$1');
+    $routes->put('pemeriksaan/id_transaksi/(:num)', 'Pemeriksaan::updateByTransaksi/$1');
 });
 
 // Route untuk exam
