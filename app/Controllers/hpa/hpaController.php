@@ -230,7 +230,7 @@ class HpaController extends BaseController
                     session()->setFlashdata('success', 'Data pasien ditambahkan.');
                 }
             }
-            
+
             $hpaData = [
                 'kode_hpa' => $data['kode_hpa'],
                 'id_pasien' => (int) $data['id_pasien'],
@@ -246,7 +246,7 @@ class HpaController extends BaseController
                 'no_register' => $data['no_register'] ?? '',
                 'status_hpa' => 'Penerimaan'
             ];
-            
+
             // Simpan data HPA
             if (!$this->hpaModel->insert($hpaData)) {
                 throw new Exception('Gagal menyimpan data HPA: ' . $this->hpaModel->errors());
@@ -317,6 +317,7 @@ class HpaController extends BaseController
     {
         // Ambil data HPA berdasarkan ID
         $hpa = $this->hpaModel->getHpaWithRelationsProses($id_hpa);
+        $id_mutu_hpa = $hpa['id_mutu_hpa'];
         if (!$hpa) {
             return redirect()->back()->with('message', ['error' => 'HPA tidak ditemukan.']);
         }
@@ -368,6 +369,18 @@ class HpaController extends BaseController
             $pembacaan_hpa['dokter_nama'] = $dokter_nama;
             $pembacaan_hpa['analis_nama'] = $analis_nama;
         }
+        // Ambil data mutu jika tersedia
+        $mutu_hpa = $id_mutu_hpa ? $this->mutu_hpa->find($id_mutu_hpa) : null;
+        // Pastikan mutu tidak kosong sebelum mengambil indikator
+        $mutu_hpa = [
+            'id_mutu_hpa' => $id_mutu_hpa ?? null,
+            'indikator_4' => $mutu_hpa['indikator_4'] ?? "0",
+            'indikator_5' => $mutu_hpa['indikator_5'] ?? "0",
+            'indikator_6' => $mutu_hpa['indikator_6'] ?? "0",
+            'indikator_7' => $mutu_hpa['indikator_7'] ?? "0",
+            'indikator_8' => $mutu_hpa['indikator_8'] ?? "0",
+            'total_nilai_mutu_hpa' => $mutu_hpa['total_nilai_mutu_hpa'] ?? "0"
+        ];
         // Data yang dikirim ke view
         $data = [
             'id_user'    => session()->get('id_user'),
@@ -381,6 +394,7 @@ class HpaController extends BaseController
             'penerimaan_hpa' => $penerima_hpa,
             'pembacaan_hpa' => $pembacaan_hpa,
             'penulisan_hpa' => $penulisan_hpa,
+            'mutu_hpa'        => $mutu_hpa,
             'users'      => $users,
         ];
 
@@ -499,8 +513,6 @@ class HpaController extends BaseController
             'pembacaan_hpa'   => $pembacaan_hpa,
             'mutu_hpa'        => $mutu_hpa,
             'users'           => $users,
-            'id_user'         => session()->get('id_user'),
-            'nama_user'       => session()->get('nama_user'),
         ];
 
         return view('hpa/edit_mikroskopis', $data);
@@ -511,6 +523,7 @@ class HpaController extends BaseController
         // Ambil data HPA berdasarkan ID
         $hpa = $this->hpaModel->getHpaWithRelationsProses($id_hpa);
         $id_pasien = $hpa['id_pasien'];
+
         if (!$hpa) {
             return redirect()->back()->with('message', ['error' => 'HPA tidak ditemukan.']);
         }
@@ -532,6 +545,7 @@ class HpaController extends BaseController
         if (!empty($hpa['id_penulisan_hpa'])) {
             $penulisan_hpa = $this->penulisan_hpa->find($hpa['id_penulisan_hpa']) ?? [];
         }
+        
         // Ambil daftar user dengan status "Dokter"
         $users = $this->usersModel->where('status_user', 'Dokter')->findAll();
         $riwayat_hpa = $this->hpaModel->riwayatPemeriksaanhpa($id_pasien);
@@ -612,14 +626,19 @@ class HpaController extends BaseController
 
         // Mengambil data dari form
         $data = $this->request->getPost();
+
         $page_source = $this->request->getPost('page_source');
 
-        // Mengubah 'jumlah_slide' jika memilih 'lainnya'
-        if ($this->request->getPost('jumlah_slide') === 'lainnya') {
-            $data['jumlah_slide'] = $this->request->getPost('jumlah_slide') === 'lainnya'
-                ? $this->request->getPost('jumlah_slide_custom')
-                : $this->request->getPost('jumlah_slide');
-        }
+        // Mengubah jika memilih 'lainnya'
+        $data['jumlah_slide'] = ($this->request->getPost('jumlah_slide') === 'lainnya')
+            ? $this->request->getPost('jumlah_slide_custom')
+            : $this->request->getPost('jumlah_slide');
+        $data['PUG'] = ($this->request->getPost('PUG') === 'lainnya')
+            ? $this->request->getPost('pug_custom')
+            : $this->request->getPost('PUG');
+        $data['PUB'] = ($this->request->getPost('PUB') === 'lainnya')
+            ? $this->request->getPost('PUB_custom')
+            : $this->request->getPost('PUB');
 
         // Proses update tabel HPA
         if ($this->hpaModel->update($id_hpa, $data)) {

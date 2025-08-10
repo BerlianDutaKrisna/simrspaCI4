@@ -235,7 +235,7 @@
                                 <textarea class="form-control summernote" name="makroskopis_hpa" id="makroskopis_hpa"><?= $hpa['makroskopis_hpa'] ?? '' ?></textarea>
                             </div>
                         </div>
-                        
+
                         <!-- Kolom Jumlah Slide dan Tombol Cetak Stiker -->
                         <div class="form-group row">
                             <label class="col-sm-2 col-form-label" for="jumlah_slide">Jumlah Slide</label>
@@ -285,6 +285,163 @@
                                         <?php endif; ?>
                                     <?php endforeach; ?>
                                 </select>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-2 col-form-label" for="jumlah_slide">Potong ulang</label>
+                            <div class="col-sm-2">
+                                <label class="col-form-label" for="PUG">Potong ulang Gross (PUG)</label>
+                                <?php
+                                $options = ['0', '1', '2', '3'];
+                                $pugValue = isset($hpa['PUG']) ? (string)$hpa['PUG'] : '';
+                                ?>
+                                <select class="form-control" id="PUG" name="PUG" onchange="handlePugChange(this)">
+                                    <?php foreach ($options as $opt): ?>
+                                        <option value="<?= $opt ?>" <?= ($pugValue === $opt) ? 'selected' : '' ?>><?= $opt ?></option>
+                                    <?php endforeach; ?>
+                                    <option value="lainnya" <?= (!in_array($pugValue, $options) && $pugValue !== '') ? 'selected' : '' ?>>Lainnya</option>
+                                </select>
+                                <input
+                                    type="text"
+                                    class="form-control mt-2 <?= (!in_array($pugValue, $options) && $pugValue !== '') ? '' : 'd-none' ?>"
+                                    id="pug_custom"
+                                    name="pug_custom"
+                                    placeholder="Masukkan nilai PUG lainnya"
+                                    value="<?= (!in_array($pugValue, $options) && $pugValue !== '') ? esc($pugValue) : '' ?>">
+                            </div>
+
+                            <div class="col-sm-2">
+                                <label class="col-form-label" for="PUB">Potong ulang Block (PUB)</label>
+                                <?php
+                                $pubValue = isset($hpa['PUB']) ? (string)$hpa['PUB'] : '';
+                                ?>
+                                <select class="form-control" id="PUB" name="PUB" onchange="handlePUBChange(this)">
+                                    <?php foreach ($options as $opt): ?>
+                                        <option value="<?= $opt ?>" <?= ($pubValue === $opt) ? 'selected' : '' ?>><?= $opt ?></option>
+                                    <?php endforeach; ?>
+                                    <option value="lainnya" <?= (!in_array($pubValue, $options) && $pubValue !== '') ? 'selected' : '' ?>>Lainnya</option>
+                                </select>
+                                <input
+                                    type="text"
+                                    class="form-control mt-2 <?= (!in_array($pubValue, $options) && $pubValue !== '') ? '' : 'd-none' ?>"
+                                    id="PUB_custom"
+                                    name="PUB_custom"
+                                    placeholder="Masukkan nilai PUB lainnya"
+                                    value="<?= (!in_array($pubValue, $options) && $pubValue !== '') ? esc($pubValue) : '' ?>">
+                            </div>
+                        </div>
+
+                        <script>
+                            function handlePugChange(select) {
+                                if ($(select).val() === 'lainnya') {
+                                    $('#pug_custom').removeClass('d-none');
+                                } else {
+                                    $('#pug_custom').addClass('d-none').val('');
+                                }
+                            }
+
+                            function handlePUBChange(select) {
+                                if ($(select).val() === 'lainnya') {
+                                    $('#PUB_custom').removeClass('d-none');
+                                } else {
+                                    $('#PUB_custom').addClass('d-none').val('');
+                                }
+                            }
+                        </script>
+
+                        <div class="form-group row">
+                            <label class="col-sm-2 col-form-label">mutu hpa</label>
+                            <div class="col-sm-4">
+                                <div class="form-check">
+                                    <input type="checkbox" id="checkAll_<?= $mutu_hpa['id_mutu_hpa']; ?>" class="form-check-input">
+                                    <label class="form-check-label" for="checkAll_<?= $mutu_hpa['id_mutu_hpa']; ?>">
+                                        Pilih Semua
+                                    </label>
+                                </div>
+
+                                <div class="form-check">
+                                    <input type="checkbox"
+                                        name="indikator_4"
+                                        value="10"
+                                        id="indikator_4_<?= $mutu_hpa['id_mutu_hpa']; ?>"
+                                        class="form-check-input child-checkbox"
+                                        <?= ($mutu_hpa['indikator_4'] !== "0") ? 'checked' : ''; ?>>
+                                    <label class="form-check-label" for="indikator_4_<?= $mutu_hpa['id_mutu_hpa']; ?>">
+                                        Sediaan tanpa lipatan?
+                                    </label>
+                                </div>
+
+                                <div class="form-check">
+                                    <input type="checkbox"
+                                        name="indikator_5"
+                                        value="10"
+                                        id="indikator_5_<?= $mutu_hpa['id_mutu_hpa']; ?>"
+                                        class="form-check-input child-checkbox"
+                                        <?= ($mutu_hpa['indikator_5'] !== "0") ? 'checked' : ''; ?>>
+                                    <label class="form-check-label" for="indikator_5_<?= $mutu_hpa['id_mutu_hpa']; ?>">
+                                        Sediaan tanpa goresan mata pisau?
+                                    </label>
+                                </div>
+
+                                <div class="form-check">
+                                    <input type="checkbox"
+                                        name="indikator_6"
+                                        value="10"
+                                        id="indikator_6_<?= $mutu_hpa['id_mutu_hpa']; ?>"
+                                        class="form-check-input child-checkbox"
+                                        <?= ($mutu_hpa['indikator_6'] !== "0") ? 'checked' : ''; ?>>
+                                    <label class="form-check-label" for="indikator_6_<?= $mutu_hpa['id_mutu_hpa']; ?>">
+                                        Kontras warna sediaan cukup jelas?
+                                    </label>
+                                </div>
+
+                                <div class="form-check">
+                                    <input type="checkbox"
+                                        name="indikator_7"
+                                        value="10"
+                                        id="indikator_7_<?= $mutu_hpa['id_mutu_hpa']; ?>"
+                                        class="form-check-input child-checkbox"
+                                        <?= ($mutu_hpa['indikator_7'] !== "0") ? 'checked' : ''; ?>>
+                                    <label class="form-check-label" for="indikator_7_<?= $mutu_hpa['id_mutu_hpa']; ?>">
+                                        Sediaan tanpa gelembung udara?
+                                    </label>
+                                </div>
+
+                                <div class="form-check">
+                                    <input type="checkbox"
+                                        name="indikator_8"
+                                        value="10"
+                                        id="indikator_8_<?= $mutu_hpa['id_mutu_hpa']; ?>"
+                                        class="form-check-input child-checkbox"
+                                        <?= ($mutu_hpa['indikator_8'] !== "0") ? 'checked' : ''; ?>>
+                                    <label class="form-check-label" for="indikator_8_<?= $mutu_hpa['id_mutu_hpa']; ?>">
+                                        Sediaan tanpa bercak / sidik jari?
+                                    </label>
+                                </div>
+
+                                <script>
+                                    document.addEventListener('DOMContentLoaded', function() {
+                                        const checkAll = document.getElementById('checkAll_<?= $mutu_hpa['id_mutu_hpa']; ?>');
+                                        const checkboxes = document.querySelectorAll('.child-checkbox');
+
+                                        // Ketika "Pilih Semua" dicentang/ditandai
+                                        checkAll.addEventListener('change', function() {
+                                            checkboxes.forEach(checkbox => {
+                                                checkbox.checked = checkAll.checked; // Semua checkbox mengikuti status "Pilih Semua"
+                                            });
+                                        });
+
+                                        // Update status "Pilih Semua" berdasarkan checkbox lainnya
+                                        checkboxes.forEach(checkbox => {
+                                            checkbox.addEventListener('change', function() {
+                                                checkAll.checked = Array.from(checkboxes).every(checkbox => checkbox.checked);
+                                            });
+                                        });
+
+                                        // Cek apakah semua checkbox sudah dicentang, lalu centang "Pilih Semua" jika iya
+                                        checkAll.checked = Array.from(checkboxes).every(checkbox => checkbox.checked);
+                                    });
+                                </script>
                             </div>
                         </div>
                     </div>

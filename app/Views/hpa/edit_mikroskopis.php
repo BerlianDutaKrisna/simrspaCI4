@@ -268,7 +268,67 @@
                 </div>
 
                 <div class="form-group row">
-                    <label class="col-sm-2 col-form-label">mutu_hpa</label>
+                    <label class="col-sm-2 col-form-label" for="jumlah_slide">Potong ulang</label>
+                    <div class="col-sm-2">
+                        <label class="col-form-label" for="PUG">Potong ulang Gross (PUG)</label>
+                        <?php
+                        $options = ['0', '1', '2', '3'];
+                        $pugValue = isset($hpa['PUG']) ? (string)$hpa['PUG'] : '';
+                        ?>
+                        <select class="form-control" id="PUG" name="PUG" onchange="handlePugChange(this)">
+                            <?php foreach ($options as $opt): ?>
+                                <option value="<?= $opt ?>" <?= ($pugValue === $opt) ? 'selected' : '' ?>><?= $opt ?></option>
+                            <?php endforeach; ?>
+                            <option value="lainnya" <?= (!in_array($pugValue, $options) && $pugValue !== '') ? 'selected' : '' ?>>Lainnya</option>
+                        </select>
+                        <input
+                            type="text"
+                            class="form-control mt-2 <?= (!in_array($pugValue, $options) && $pugValue !== '') ? '' : 'd-none' ?>"
+                            id="pug_custom"
+                            name="pug_custom"
+                            placeholder="Masukkan nilai PUG lainnya"
+                            value="<?= (!in_array($pugValue, $options) && $pugValue !== '') ? esc($pugValue) : '' ?>">
+                    </div>
+                    <div class="col-sm-2">
+                        <label class="col-form-label" for="PUB">Potong ulang Block (PUB)</label>
+                        <?php
+                        $pubValue = isset($hpa['PUB']) ? (string)$hpa['PUB'] : '';
+                        ?>
+                        <select class="form-control" id="PUB" name="PUB" onchange="handlePUBChange(this)">
+                            <?php foreach ($options as $opt): ?>
+                                <option value="<?= $opt ?>" <?= ($pubValue === $opt) ? 'selected' : '' ?>><?= $opt ?></option>
+                            <?php endforeach; ?>
+                            <option value="lainnya" <?= (!in_array($pubValue, $options) && $pubValue !== '') ? 'selected' : '' ?>>Lainnya</option>
+                        </select>
+                        <input
+                            type="text"
+                            class="form-control mt-2 <?= (!in_array($pubValue, $options) && $pubValue !== '') ? '' : 'd-none' ?>"
+                            id="PUB_custom"
+                            name="PUB_custom"
+                            placeholder="Masukkan nilai PUB lainnya"
+                            value="<?= (!in_array($pubValue, $options) && $pubValue !== '') ? esc($pubValue) : '' ?>">
+                    </div>
+                </div>
+
+                <script>
+                    function handlePugChange(select) {
+                        if ($(select).val() === 'lainnya') {
+                            $('#pug_custom').removeClass('d-none');
+                        } else {
+                            $('#pug_custom').addClass('d-none').val('');
+                        }
+                    }
+                    function handlePUBChange(select) {
+                        if ($(select).val() === 'lainnya') {
+                            $('#PUB_custom').removeClass('d-none');
+                        } else {
+                            $('#PUB_custom').addClass('d-none').val('');
+                        }
+                    }
+                </script>
+
+                <div class="form-group row">
+                    <label class="col-sm-2 col-form-label">mutu hpa</label>
                     <div class="col-sm-4">
                         <div class="form-check">
                             <input type="checkbox" id="checkAll_<?= $mutu_hpa['id_mutu_hpa']; ?>" class="form-check-input">
@@ -276,7 +336,6 @@
                                 Pilih Semua
                             </label>
                         </div>
-
                         <div class="form-check">
                             <input type="checkbox"
                                 name="indikator_4"
@@ -288,7 +347,6 @@
                                 Sediaan tanpa lipatan?
                             </label>
                         </div>
-
                         <div class="form-check">
                             <input type="checkbox"
                                 name="indikator_5"
@@ -300,7 +358,6 @@
                                 Sediaan tanpa goresan mata pisau?
                             </label>
                         </div>
-
                         <div class="form-check">
                             <input type="checkbox"
                                 name="indikator_6"
@@ -312,7 +369,6 @@
                                 Kontras warna sediaan cukup jelas?
                             </label>
                         </div>
-
                         <div class="form-check">
                             <input type="checkbox"
                                 name="indikator_7"
@@ -324,7 +380,6 @@
                                 Sediaan tanpa gelembung udara?
                             </label>
                         </div>
-
                         <div class="form-check">
                             <input type="checkbox"
                                 name="indikator_8"
@@ -360,6 +415,7 @@
                                 checkAll.checked = Array.from(checkboxes).every(checkbox => checkbox.checked);
                             });
                         </script>
+                        
                     </div>
                 </div>
 
