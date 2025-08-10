@@ -248,24 +248,24 @@
         container.innerHTML = `<p class="text-center text-primary">Memuat data...</p>`;
 
         // Fetch ke API (ubah url sesuai routes API Anda)
-        fetch(`<?= base_url('api/pemeriksaan') ?>/${norm}`)
+        fetch(`<?= base_url('api/pemeriksaan/norm_pasien') ?>/${norm}`)
             .then(response => response.json())
             .then(data => {
                 if (data.status === 'success' && data.data.length > 0) {
                     // Bangun tabel hasil
                     let html = `<div class="table-responsive">
                     <table class="table table-bordered table-striped table-sm text-center">
-                      <thead class="thead-dark">
-                        <tr>
-                          <th>No</th>
-                          <th>Tanggal</th>
-                          <th>Dokter</th>
-                          <th>Diagnosa Klinik</th>
-                          <th>Pemeriksaan</th>
-                          <th>Aksi</th>
-                        </tr>
-                      </thead>
-                      <tbody>`;
+                        <thead class="thead-dark">
+                            <tr>
+                            <th>No</th>
+                            <th>Tanggal</th>
+                            <th>Dokter</th>
+                            <th>Diagnosa Klinik</th>
+                            <th>Pemeriksaan</th>
+                            <th>Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody>`;
 
                     data.data.forEach((row, i) => {
                         const tanggal = row.tanggal ? new Date(row.tanggal).toLocaleDateString('id-ID') : '-';
@@ -273,18 +273,18 @@
                         const hasilEscaped = row.hasil ? row.hasil.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;").replace(/\n/g, "<br>") : 'Tidak ada hasil';
 
                         html += `<tr>
-                   <td>${i + 1}</td>
-                   <td>${tanggal}</td>
-                   <td>${row.dokterpa ?? '-'}</td>
-                   <td>${row.diagnosaklinik ?? '-'}</td>
-                   <td>${row.pemeriksaan ?? '-'}</td>
-                   <td>
-                     <button type="button" class="btn btn-info btn-sm"
-                       onclick="tampilkanModal('${hasilEscaped}')">
-                       Lihat Detail
-                     </button>
-                   </td>
-                 </tr>`;
+                    <td>${i + 1}</td>
+                    <td>${tanggal}</td>
+                    <td>${row.dokterpa ?? '-'}</td>
+                    <td>${row.diagnosaklinik ?? '-'}</td>
+                    <td>${row.pemeriksaan ?? '-'}</td>
+                    <td>
+                        <button type="button" class="btn btn-info btn-sm"
+                        onclick="tampilkanModal('${hasilEscaped}')">
+                        Lihat Detail
+                        </button>
+                    </td>
+                    </tr>`;
                     });
 
                     html += `</tbody></table></div>`;
