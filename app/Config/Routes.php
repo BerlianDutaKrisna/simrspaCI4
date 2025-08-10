@@ -47,6 +47,7 @@ $routes->group('patient', function ($routes) {
 
 // Route untuk API
 $routes->group('api', ['namespace' => 'App\Controllers\Api'], function($routes) {
+    $routes->resource('koneksi', ['only' => ['index']]);
     $routes->resource('kunjungan', ['only' => ['show']]);
     $routes->resource('pemeriksaan', ['only' => ['show']]);
 });
