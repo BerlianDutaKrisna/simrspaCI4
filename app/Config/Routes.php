@@ -98,6 +98,7 @@ $routes->group('frs', ['namespace' => 'App\Controllers\Frs'], function ($routes)
     $routes->post('update_print/(:segment)', 'FrsController::update_print/$1');
     $routes->post('update_buku_penerima', 'FrsController::update_buku_penerima');
     $routes->post('update_status', 'FrsController::update_status');
+    $routes->post('update_jumlah_slide', 'FrsController::update_jumlah_slide');
     $routes->post('uploadFotoMakroskopis/(:segment)', 'FrsController::uploadFotoMakroskopis/$1');
     $routes->post('uploadFotoMikroskopis/(:segment)', 'FrsController::uploadFotoMikroskopis/$1');
     $routes->get('laporan_pemeriksaan', 'FrsController::laporan_pemeriksaan');
@@ -123,6 +124,7 @@ $routes->group('srs', ['namespace' => 'App\Controllers\Srs'], function ($routes)
     $routes->post('update_print/(:segment)', 'SrsController::update_print/$1');
     $routes->post('update_buku_penerima', 'SrsController::update_buku_penerima');
     $routes->post('update_status', 'SrsController::update_status');
+    $routes->post('update_jumlah_slide', 'SrsController::update_jumlah_slide');
     $routes->post('uploadFotoMakroskopis/(:segment)', 'SrsController::uploadFotoMakroskopis/$1');
     $routes->post('uploadFotoMikroskopis/(:segment)', 'SrsController::uploadFotoMikroskopis/$1');
     $routes->get('laporan_pemeriksaan', 'SrsController::laporan_pemeriksaan');

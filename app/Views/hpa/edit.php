@@ -235,7 +235,8 @@
                                 <textarea class="form-control summernote" name="makroskopis_hpa" id="makroskopis_hpa"><?= $hpa['makroskopis_hpa'] ?? '' ?></textarea>
                             </div>
                         </div>
-
+                        
+                        <!-- Kolom Jumlah Slide dan Tombol Cetak Stiker -->
                         <div class="form-group row">
                             <label class="col-sm-2 col-form-label" for="jumlah_slide">Jumlah Slide</label>
                             <div class="col-sm-2">
@@ -253,6 +254,7 @@
                                 </button>
                             </div>
                         </div>
+
                         <!-- Kolom Mikroskopis -->
                         <div class="form-group row">
                             <label class="col-sm-2 col-form-label">Mikroskopis</label>

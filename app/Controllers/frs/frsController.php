@@ -730,6 +730,27 @@ class FrsController extends BaseController
         return redirect()->to('frs/index')->with('success', 'Status FRS berhasil disimpan.');
     }
 
+    public function update_jumlah_slide()
+    {
+        if ($this->request->isAJAX()) {
+            $id_frs = $this->request->getPost('id_frs');
+            $jumlah_slide = $this->request->getPost('jumlah_slide');
+
+            if ($id_frs && $jumlah_slide !== null) {
+                $this->frsModel->update($id_frs, ['jumlah_slide' => $jumlah_slide]);
+                return $this->response->setJSON([
+                    'status' => 'success',
+                    'message' => 'Jumlah slide berhasil disimpan.'
+                ]);
+            } else {
+                return $this->response->setJSON([
+                    'status' => 'error',
+                    'message' => 'Data tidak lengkap.'
+                ]);
+            }
+        }
+    }
+
     public function uploadFotoMakroskopis($id_frs)
     {
         date_default_timezone_set('Asia/Jakarta');

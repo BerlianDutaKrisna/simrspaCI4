@@ -75,21 +75,16 @@
                                     <td><?= $row['kode_frs']; ?></td>
                                     <td><?= $row['nama_pasien']; ?></td>
                                     <td>
-                                        <input
-                                            type="number"
-                                            class="form-control"
+                                        <input type="number"
+                                            class="form-control form-control-sm jumlah-slide-input"
+                                            data-id="<?= $row['id_frs']; ?>"
                                             value="<?= $row['jumlah_slide']; ?>"
-                                            min="0"
-                                            step="1">
+                                            min="0" step="1" style="width:100px;">
                                     </td>
-                                    <?php
-                                    $slide = $row['jumlah_slide'];
-                                    $jumlahSlide = is_numeric($slide) ? (int)$slide : 1;
-                                    ?>
                                     <td>
                                         <button type="button" class="btn btn-outline-info btn-sm btn-cetak-stiker"
-                                            data-kode="<?= esc($row['kode_frs']); ?>"
-                                            data-slide="<?= $jumlahSlide; ?>">
+                                            data-id="<?= esc($row['id_frs']); ?>"
+                                            data-kode="<?= esc($row['kode_frs']); ?>">
                                             <i class="fas fa-print"></i> Cetak Stiker
                                         </button>
                                     </td>
@@ -136,3 +131,40 @@
             <?= $this->include('templates/proses/button_proses'); ?>
             <?= $this->include('dashboard/jenis_tindakan'); ?>
             <?= $this->include('templates/dashboard/footer_dashboard'); ?>
+
+            <script>
+                $(document).ready(function() {
+                    $(".jumlah-slide-input").on("change", function() {
+                        let input = $(this);
+                        let id_frs = input.data("id");
+                        let jumlah_slide = input.val();
+
+                        $.ajax({
+                            url: "<?= base_url('frs/update_jumlah_slide'); ?>",
+                            type: "POST",
+                            data: {
+                                id_frs: id_frs,
+                                jumlah_slide: jumlah_slide,
+                                <?= csrf_token() ?>: "<?= csrf_hash() ?>" // CSRF protection
+                            },
+                            dataType: "json",
+                            success: function(res) {
+                                if (res.status === "success") {
+                                    console.log("Jumlah slide berhasil diperbarui");
+
+                                    // Update tombol cetak di baris yang sama
+                                    let btnCetak = input.closest("tr").find(".btn-cetak-stiker");
+                                    if (btnCetak.length) {
+                                        btnCetak.data("slide", jumlah_slide);
+                                    }
+                                } else {
+                                    alert("Gagal memperbarui jumlah slide!");
+                                }
+                            },
+                            error: function(xhr, status, error) {
+                                alert("Terjadi kesalahan: " + error);
+                            }
+                        });
+                    });
+                });
+            </script>

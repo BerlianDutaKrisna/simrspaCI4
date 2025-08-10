@@ -740,6 +740,27 @@ class srsController extends BaseController
         return redirect()->to('srs/index')->with('success', 'Status SRS berhasil disimpan.');
     }
 
+    public function update_jumlah_slide()
+    {
+        if ($this->request->isAJAX()) {
+            $id_srs = $this->request->getPost('id_srs');
+            $jumlah_slide = $this->request->getPost('jumlah_slide');
+
+            if ($id_srs && $jumlah_slide !== null) {
+                $this->srsModel->update($id_srs, ['jumlah_slide' => $jumlah_slide]);
+                return $this->response->setJSON([
+                    'status' => 'success',
+                    'message' => 'Jumlah slide berhasil disimpan.'
+                ]);
+            } else {
+                return $this->response->setJSON([
+                    'status' => 'error',
+                    'message' => 'Data tidak lengkap.'
+                ]);
+            }
+        }
+    }
+
     public function uploadFotoMakroskopis($id_srs)
     {
         date_default_timezone_set('Asia/Jakarta');
