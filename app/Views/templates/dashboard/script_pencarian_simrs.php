@@ -32,25 +32,27 @@
 
         showLoadingSimrs();
 
-        fetch('<?= base_url("simrs/modal_search") ?>', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ norm_simrs: norm })
-        })
-        .then(res => res.json())
-        .then(data => {
-            function formatDate(dateString) {
-                const d = new Date(dateString);
-                return `${String(d.getDate()).padStart(2, '0')}-${String(d.getMonth()+1).padStart(2, '0')}-${d.getFullYear()}`;
-            }
-            function formatDateTime(dateTimeString) {
-                const d = new Date(dateTimeString);
-                return `${String(d.getDate()).padStart(2, '0')}-${String(d.getMonth()+1).padStart(2, '0')}-${d.getFullYear()} ${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`;
-            }
+        fetch('<?= base_url("api/kunjungan/") ?>' + encodeURIComponent(norm), {
+                method: 'GET',
+                headers: {
+                    'Accept': 'application/json'
+                }
+            })
+            .then(res => res.json())
+            .then(data => {
+                function formatDate(dateString) {
+                    const d = new Date(dateString);
+                    return `${String(d.getDate()).padStart(2, '0')}-${String(d.getMonth()+1).padStart(2, '0')}-${d.getFullYear()}`;
+                }
 
-            if (data.status === 'success') {
-                const patients = data.data;
-                let html = `<table class="table table-sm table-bordered">
+                function formatDateTime(dateTimeString) {
+                    const d = new Date(dateTimeString);
+                    return `${String(d.getDate()).padStart(2, '0')}-${String(d.getMonth()+1).padStart(2, '0')}-${d.getFullYear()} ${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`;
+                }
+
+                if (data.status === 'success') {
+                    const patients = data.data;
+                    let html = `<table class="table table-sm table-bordered">
                     <thead>
                         <tr>
                             <th>Norm</th><th>Nama</th><th>Tgl Lahir</th>
@@ -60,8 +62,8 @@
                         </tr>
                     </thead><tbody>`;
 
-                patients.forEach((p, i) => {
-                    html += `<tr>
+                    patients.forEach((p, i) => {
+                        html += `<tr>
                         <td>${p.norm}</td>
                         <td>${p.nama}</td>
                         <td>${formatDate(p.tgl_lhr)}</td>
@@ -72,12 +74,12 @@
                         <td>${p.unitasal}</td>
                         <td><button class="btn btn-outline-primary btn-checklist" data-index="${i}"><i class="fas fa-check-square"></i> Checklist</button></td>
                     </tr>`;
-                });
+                    });
 
-                html += `</tbody></table>`;
-                document.getElementById('modalBody').innerHTML = html;
+                    html += `</tbody></table>`;
+                    document.getElementById('modalBody').innerHTML = html;
 
-                document.getElementById('modalFooter').innerHTML = `
+                    document.getElementById('modalFooter').innerHTML = `
                     <form id="actionFormSimrs" method="GET">
                         <input type="hidden" name="register_api" id="register_api">
                         <button formaction="<?= base_url('hpa/register') ?>" class="btn btn-danger"><i class="fas fa-plus-square"></i> HPA</button>
@@ -88,36 +90,39 @@
                     </form>
                 `;
 
-                let selectedData = null;
-                document.querySelectorAll('.btn-checklist').forEach(btn => {
-                    btn.addEventListener('click', function() {
-                        document.querySelectorAll('.btn-checklist').forEach(b => b.classList.replace('btn-primary','btn-outline-primary'));
-                        this.classList.replace('btn-outline-primary','btn-primary');
-                        selectedData = patients[this.dataset.index];
-                        document.getElementById('register_api').value = JSON.stringify(selectedData);
+                    let selectedData = null;
+                    document.querySelectorAll('.btn-checklist').forEach(btn => {
+                        btn.addEventListener('click', function() {
+                            document.querySelectorAll('.btn-checklist').forEach(b => b.classList.replace('btn-primary', 'btn-outline-primary'));
+                            this.classList.replace('btn-outline-primary', 'btn-primary');
+                            selectedData = patients[this.dataset.index];
+                            document.getElementById('register_api').value = JSON.stringify(selectedData);
+                        });
                     });
-                });
 
-                document.getElementById('actionFormSimrs').addEventListener('submit', e => {
-                    if (!selectedData) {
-                        e.preventDefault();
-                        alert("Silakan pilih salah satu pemeriksaan terlebih dahulu.");
-                    }
-                });
+                    document.getElementById('actionFormSimrs').addEventListener('submit', e => {
+                        if (!selectedData) {
+                            e.preventDefault();
+                            alert("Silakan pilih salah satu pemeriksaan terlebih dahulu.");
+                        }
+                    });
 
-            } else {
-                document.getElementById('modalBody').innerHTML = `<p class="text-danger">Cek apakah Pasien sudah daftar / >3 Hari / Server mati</p>`;
+                } else {
+                    document.getElementById('modalBody').innerHTML = `<p class="text-danger">Cek apakah Pasien sudah daftar / >3 Hari / Server mati</p>`;
+                    document.getElementById('modalFooter').innerHTML = `<button class="btn btn-secondary" data-dismiss="modal">Tutup</button>`;
+                }
+            })
+            .catch(() => {
+                document.getElementById('modalBody').innerHTML = `<p class="text-danger">Terjadi kesalahan saat mengambil data.</p>`;
                 document.getElementById('modalFooter').innerHTML = `<button class="btn btn-secondary" data-dismiss="modal">Tutup</button>`;
-            }
-        })
-        .catch(() => {
-            document.getElementById('modalBody').innerHTML = `<p class="text-danger">Terjadi kesalahan saat mengambil data.</p>`;
-            document.getElementById('modalFooter').innerHTML = `<button class="btn btn-secondary" data-dismiss="modal">Tutup</button>`;
-        });
+            });
     }
 
     document.getElementById('searchButtonSimrs').addEventListener('click', searchPatientSimrs);
     document.getElementById('norm_simrs').addEventListener('keypress', e => {
-        if (e.key === 'Enter') { e.preventDefault(); searchPatientSimrs(); }
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            searchPatientSimrs();
+        }
     });
 </script>
