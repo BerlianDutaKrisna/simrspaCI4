@@ -17,6 +17,9 @@
                 <input type="hidden" name="id_authorized_hpa" value="<?= $hpa['id_authorized_hpa'] ?? '' ?>">
                 <input type="hidden" name="id_pencetakan_hpa" value="<?= $hpa['id_pencetakan_hpa'] ?? '' ?>">
                 <input type="hidden" name="redirect" value="<?= $_GET['redirect'] ?? '' ?>">
+                <input type="hidden" name="id_transaksi" value="<?= isset($hpa['id_transaksi']) ? (int) $hpa['id_transaksi'] : '' ?>">
+                <input type="hidden" name="tanggal_transaksi" value="<?= !empty($hpa['tanggal_transaksi']) ? esc($hpa['tanggal_transaksi']) : '' ?>">
+                <input type="hidden" name="no_register" value="<?= isset($hpa['no_register']) ? esc($hpa['no_register']) : ''; ?>">
 
                 <!-- Tombol Kembali  -->
                 <a href="javascript:history.back()" class="btn btn-primary mb-3"><i class="fas fa-reply"></i> Kembali</a>

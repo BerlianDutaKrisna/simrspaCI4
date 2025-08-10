@@ -43,8 +43,8 @@ class Pemeriksaan extends ResourceController
             ], 422);
         }
 
-        // Ambil data dari body request
-        $input = $this->request->getRawInput();
+        // Ambil data dari body request, bisa pakai getRawInput() atau getJSON() jika kiriman JSON
+        $input = $this->request->getJSON(true) ?? $this->request->getRawInput();
 
         if (empty($input)) {
             return $this->fail([
@@ -53,8 +53,23 @@ class Pemeriksaan extends ResourceController
             ], 422);
         }
 
+        // Filter hanya field yang boleh diupdate
+        $allowedFields = ['id_pemverifikasi_hpa', 'id_authorized_hpa', 'id_pencetakan_hpa', 'print_hpa', 'tanggal_transaksi', 'no_register'];
+        $filteredInput = array_filter(
+            $input,
+            fn($key) => in_array($key, $allowedFields),
+            ARRAY_FILTER_USE_KEY
+        );
+
+        if (empty($filteredInput)) {
+            return $this->fail([
+                'status'  => 'error',
+                'message' => 'Tidak ada data valid untuk diperbarui.'
+            ], 422);
+        }
+
         try {
-            $update = $this->model->updatePemeriksaanByTransaksi($id_transaksi, $input);
+            $update = $this->model->updatePemeriksaanByTransaksi($id_transaksi, $filteredInput);
 
             if ($update) {
                 return $this->respond([

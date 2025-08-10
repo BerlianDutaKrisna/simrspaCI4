@@ -823,6 +823,7 @@ class HpaController extends BaseController
         }
         // Mengambil data dari POST dan melakukan update
         $data = $this->request->getPost();
+        
         $this->hpaModel->update($id_hpa, $data);
         $redirect = $this->request->getPost('redirect');
         if (!$redirect) {
@@ -838,16 +839,16 @@ class HpaController extends BaseController
             ]);
             return redirect()->to('pemverifikasi_hpa/index')->with('success', 'Data berhasil diverifikasi.');
         }
-        if ($redirect === 'index_authorized_hpa' && isset($_POST['id_authorized_hpa'])) {
-            $id_authorized_hpa = $this->request->getPost('id_authorized_hpa');
+        if ($redirect === 'index_authorized_hpa' && isset($data['id_authorized_hpa'])) {
+            $id_authorized_hpa = $data['id_authorized_hpa'];
             $this->authorized_hpa->update($id_authorized_hpa, [
                 'id_user_authorized_hpa' => $id_user,
                 'id_user_dokter_authorized_hpa' => $id_user,
                 'status_authorized_hpa' => 'Selesai Authorized',
                 'selesai_authorized_hpa' => date('Y-m-d H:i:s'),
             ]);
-            return redirect()->to('authorized_hpa/index')->with('success', 'Data berhasil diauthorized.');
-        }
+            return redirect()->to('authorized_hpa/index')->with('success', session()->getFlashdata('success') ?? 'Data berhasil diauthorized.');
+        }        
         if ($redirect === 'index_pencetakan_hpa' && isset($_POST['id_pencetakan_hpa'])) {
             $id_pencetakan_hpa = $this->request->getPost('id_pencetakan_hpa');
             $this->pencetakan_hpa->update($id_pencetakan_hpa, [
