@@ -35,6 +35,22 @@ class Kunjungan extends ResourceController
         }
     }
 
+    public function index()
+    {
+        $kunjunganModel = new \App\Models\KunjunganModel();
+        $allData = $kunjunganModel
+            ->orderBy('tanggal', 'DESC')
+            ->findAll();
+
+        $data = [
+            'id_user'   => session()->get('id_user'),
+            'nama_user' => session()->get('nama_user'),
+            'data'      => $allData
+        ];
+        
+        return view('Kunjungan/index', $data);
+    }
+
     public function getKunjunganHariIni()
     {
         try {

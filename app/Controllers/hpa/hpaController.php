@@ -115,7 +115,20 @@ class HpaController extends BaseController
         // Ambil data riwayat dari API / Manual
         // Cek apakah data dari API tersedia
         if (!empty($register_api) && is_array($register_api)) {
+            $idtransaksi = $register_api['idtransaksi'] ?? null;
 
+    if ($idtransaksi) {
+        // Panggil model kunjungan
+        $kunjunganModel = new \App\Models\KunjunganModel();
+
+        // Cek apakah idtransaksi ada di database
+        $kunjungan = $kunjunganModel->where('idtransaksi', $idtransaksi)->first();
+
+        if ($kunjungan) {
+            // Update hasil menjadi "Terdaftar"
+            $kunjunganModel->update($kunjungan['idtransaksi'], ['hasil' => 'Terdaftar']);
+        }
+    }
             // Ambil norm
             $norm = $register_api['norm'] ?? '';
 
