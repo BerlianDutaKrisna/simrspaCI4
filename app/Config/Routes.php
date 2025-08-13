@@ -47,10 +47,11 @@ $routes->group('patient', function ($routes) {
 
 // Route untuk API
 $routes->group('api', ['namespace' => 'App\Controllers\Api'], function ($routes) {
-    $routes->resource('koneksi', ['only' => ['index']]);
-    $routes->resource('kunjungan', ['only' => ['show']]);
+    $routes->get('kunjungan/getKunjunganHariIni', 'Kunjungan::getKunjunganHariIni');
     $routes->get('pemeriksaan/norm_pasien/(:num)', 'Pemeriksaan::showByNorm/$1');
     $routes->put('pemeriksaan/id_transaksi/(:num)', 'Pemeriksaan::updateByTransaksi/$1');
+    $routes->resource('koneksi', ['only' => ['index']]);
+    $routes->resource('kunjungan', ['only' => ['show']]);
 });
 
 // Route untuk exam

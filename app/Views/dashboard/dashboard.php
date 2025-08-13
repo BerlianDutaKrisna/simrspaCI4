@@ -5,4 +5,5 @@
 <?= $this->include('dashboard/jenis_tindakan'); ?>
 <?= $this->include('dashboard/grafik_pemeriksaan'); ?>
 <?= $this->include('templates/notifikasi'); ?>
+<?= $this->include('templates/dashboard/script_syncKunjungan'); ?>
 <?= $this->include('templates/dashboard/footer_dashboard'); ?>

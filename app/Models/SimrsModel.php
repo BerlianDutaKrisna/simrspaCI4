@@ -129,4 +129,34 @@ class SimrsModel extends Model
             'data' => [],
         ];
     }
+
+    public function getKunjunganHariIni(): array
+    {
+        $tanggal = date('Y-m-d'); // hanya hari ini
+        $cacheKey = "kunjungan_all_{$tanggal}";
+
+        $primaryURL = "{$this->primaryBaseURL}/getKunjunganPasien/{$tanggal}/{$tanggal}";
+        $backupURL  = "{$this->backupBaseURL}/getKunjunganPasien/{$tanggal}/{$tanggal}";
+
+        try {
+            $result = $this->getDataWithCache($cacheKey, $primaryURL, $backupURL);
+        } catch (\Exception $e) {
+            throw new \RuntimeException("Gagal mengambil data kunjungan: " . $e->getMessage());
+        }
+
+        if (
+            isset($result['code']) && $result['code'] == 200 &&
+            isset($result['data']) && is_array($result['data'])
+        ) {
+            return [
+                'code' => 200,
+                'data' => array_values($result['data']),
+            ];
+        }
+
+        return [
+            'code' => $result['code'] ?? 500,
+            'data' => [],
+        ];
+    }
 }

@@ -8,7 +8,7 @@
                 class="fas fa-download fa-sm text-white-50"></i> Generate Report</a>
     </div> -->
     <!-- Judul Halaman -->
-    <h1 class="h3 mb-2 text-gray-800">Jumlah sampel yang belum selesai</h1>
+    <h1 class="h3 mb-2 text-gray-800">Ji</h1>
     <!-- Deskripsi Halaman -->
     <p class="mb-3 text-gray-500">A goal is a dream with a deadline - Napoleon Hill</p>
 
