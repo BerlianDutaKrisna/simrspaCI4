@@ -76,12 +76,12 @@
                     </tr>`;
                     });
 
-                    html += `</tbody></table></div>`;
+                    html += `</tbody></table>`;
                     document.getElementById('modalBody').innerHTML = html;
 
                     document.getElementById('modalFooter').innerHTML = `
                     <form id="actionFormSimrs" method="GET">
-                        <input type="hidden" name="selected_patients" id="selected_patients">
+                        <input type="hidden" name="register_api" id="register_api">
                         <button formaction="<?= base_url('hpa/register') ?>" class="btn btn-danger"><i class="fas fa-plus-square"></i> HPA</button>
                         <button formaction="<?= base_url('frs/register') ?>" class="btn btn-primary"><i class="fas fa-plus-square"></i> FNAB</button>
                         <button formaction="<?= base_url('srs/register') ?>" class="btn btn-success"><i class="fas fa-plus-square"></i> SRS</button>
