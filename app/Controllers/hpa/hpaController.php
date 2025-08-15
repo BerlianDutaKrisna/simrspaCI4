@@ -138,22 +138,22 @@ class HpaController extends BaseController
 
                 // Mapping data patient dari kunjungan
                 $patient = [
-                    'id_pasien'         => $kunjungan['idpasien'] ?? null,
-                    'norm_pasien'       => $kunjungan['norm'] ?? '',
-                    'nama_pasien'       => $kunjungan['nama'] ?? '',
-                    'alamat_pasien'     => $kunjungan['alamat'] ?? '',
-                    'tanggal_lahir'     => $kunjungan['tgl_lhr'] ?? '',
-                    'jenis_kelamin'     => $kunjungan['jeniskelamin'] ?? '',
-                    'jenis_pasien'      => $kunjungan['jenispasien'] ?? '',
-                    'unit_asal'         => $kunjungan['unitasal'] ?? '',
-                    'dokter_perujuk'    => $kunjungan['dokterperujuk'] ?? '',
-                    'pemeriksaan'       => $kunjungan['pemeriksaan'] ?? '',
-                    'lokasi_spesimen'   => $kunjungan['statuslokasi'] ?? '',
-                    'diagnosa_klinik'   => $kunjungan['diagnosaklinik'] ?? '',
-                    'mutu_sediaan'      => $kunjungan['mutusediaan'] ?? '',
-                    'id_transaksi'      => $kunjungan['idtransaksi'] ?? null,
-                    'tanggal_transaksi' => $kunjungan['tanggal'] ?? '',
-                    'no_register'       => $kunjungan['register'] ?? ''
+                    'id_pasien'             => isset($kunjungan['idpasien']) ? (int) $kunjungan['idpasien'] : null,
+                    'norm_pasien'           => $kunjungan['norm'] ?? '',
+                    'nama_pasien'           => $kunjungan['nama'] ?? '',
+                    'alamat_pasien'         => $kunjungan['alamat'] ?? '',
+                    'tanggal_lahir_pasien'  => $kunjungan['tgl_lhr'] ?? '',
+                    'jenis_kelamin_pasien'  => $kunjungan['jeniskelamin'] ?? '',
+                    'status_pasien'         => $kunjungan['jenispasien'] ?? '',
+                    'unitasal'              => $kunjungan['unitasal'] ?? '',
+                    'dokterperujuk'         => $kunjungan['dokterperujuk'] ?? '',
+                    'pemeriksaan'           => $kunjungan['pemeriksaan'] ?? '',
+                    'lokasi_spesimen'       => $kunjungan['statuslokasi'] ?? '',
+                    'diagnosa_klinik'       => $kunjungan['diagnosaklinik'] ?? '',
+                    'tindakan_spesimen'     => $kunjungan['pemeriksaan'] ?? '',
+                    'id_transaksi'          => isset($kunjungan['idtransaksi']) ? (int) $kunjungan['idtransaksi'] : null,
+                    'tanggal_transaksi'     => $kunjungan['tanggal'] ?? '',
+                    'no_register'           => $kunjungan['register'] ?? ''
                 ];
             }
         }
