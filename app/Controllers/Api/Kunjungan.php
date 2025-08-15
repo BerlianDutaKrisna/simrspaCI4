@@ -23,20 +23,28 @@ class Kunjungan extends ResourceController
         return view('Kunjungan/index', $data);
     }
 
-    public function search_patient()
+    public function modal_search($norm = null)
     {
-        $norm = $this->request->getPost('norm');
+        if (!$norm) {
+            return $this->respond([
+                'status' => 'error',
+                'message' => 'No RM pasien tidak diberikan'
+            ], 400);
+        }
 
-        // Langsung pakai $this->model
-        $patient = $this->model
-            ->where('norm', $norm)
-            ->orderBy('tanggal', 'DESC')
-            ->first();
+        // Cari pasien berdasarkan kolom 'norm' di tabel 'kunjungan'
+        $kunjungan = $this->model->where('norm', $norm)->findAll(); // gunakan findAll() untuk array
 
-        if ($patient) {
-            return view('patient_search_result', ['patient' => $patient]);
+        if (!empty($kunjungan)) {
+            return $this->respond([
+                'status' => 'success',
+                'data' => $kunjungan // langsung kirim array pasien
+            ]);
         } else {
-            return view('patient_search_result', ['error' => 'Patient not found']);
+            return $this->respond([
+                'status' => 'error',
+                'message' => 'Pasien tidak ditemukan / >3 Hari / Server mati'
+            ], 404);
         }
     }
 

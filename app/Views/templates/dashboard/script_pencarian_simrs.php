@@ -4,7 +4,7 @@
     function showLoadingSimrs() {
         document.getElementById('modalBody').innerHTML = `
             <div class="text-center py-5">
-                <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;"></div>
+                <div class="spinner-border text-primary" style="width: 3rem; height: 3rem"></div>
                 <p class="mt-3">Sedang memuat data pasien...</p>
             </div>
         `;
@@ -14,16 +14,16 @@
 
     function searchPatientSimrs() {
         const normInput = document.getElementById('norm_simrs');
-        const norm = normInput ? normInput.value.trim() : '';
+        const norm_simrs = normInput ? normInput.value.trim() : '';
 
-        if (!norm) {
-            document.getElementById('modalBody').innerHTML = `<p class="text-danger">Masukkan Norm pasien terlebih dahulu.</p>`;
+        if (!norm_simrs) {
+            document.getElementById('modalBody').innerHTML = `<p class="text-danger">Masukkan _simrs pasien terlebih dahulu.</p>`;
             document.getElementById('modalFooter').innerHTML = `<button class="btn btn-secondary" data-dismiss="modal">Tutup</button>`;
             $('#resultModal').modal('show');
             return;
         }
 
-        if (norm.length !== 6 || !/^\d+$/.test(norm)) {
+        if (norm_simrs.length !== 6 || !/^\d+$/.test(norm_simrs)) {
             document.getElementById('modalBody').innerHTML = `<p class="text-danger">Norm pasien harus berupa 6 digit angka.</p>`;
             document.getElementById('modalFooter').innerHTML = `<button class="btn btn-secondary" data-dismiss="modal">Tutup</button>`;
             $('#resultModal').modal('show');
@@ -32,7 +32,7 @@
 
         showLoadingSimrs();
 
-        fetch('<?= base_url("api/kunjungan/") ?>' + encodeURIComponent(norm), {
+        fetch('<?= base_url("api/kunjungan/modal_search/") ?>' + encodeURIComponent(norm_simrs), {
                 method: 'GET',
                 headers: {
                     'Accept': 'application/json'
@@ -42,17 +42,17 @@
             .then(data => {
                 function formatDate(dateString) {
                     const d = new Date(dateString);
-                    return `${String(d.getDate()).padStart(2, '0')}-${String(d.getMonth()+1).padStart(2, '0')}-${d.getFullYear()}`;
+                    return `${String(d.getDate()).padStart(2,'0')}-${String(d.getMonth()+1).padStart(2,'0')}-${d.getFullYear()}`;
                 }
 
                 function formatDateTime(dateTimeString) {
                     const d = new Date(dateTimeString);
-                    return `${String(d.getDate()).padStart(2, '0')}-${String(d.getMonth()+1).padStart(2, '0')}-${d.getFullYear()} ${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`;
+                    return `${String(d.getDate()).padStart(2,'0')}-${String(d.getMonth()+1).padStart(2,'0')}-${d.getFullYear()} ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
                 }
 
-                if (data.status === 'success') {
+                if (data.status === 'success' && data.data.length > 0) {
                     const patients = data.data;
-                    let html = `<table class="table table-sm table-bordered">
+                    let html = `<div style="max-height: 60vh; overflow-y: auto;"><table class="table table-sm table-bordered">
                     <thead>
                         <tr>
                             <th>Norm</th><th>Nama</th><th>Tgl Lahir</th>
@@ -76,12 +76,12 @@
                     </tr>`;
                     });
 
-                    html += `</tbody></table>`;
+                    html += `</tbody></table></div>`;
                     document.getElementById('modalBody').innerHTML = html;
 
                     document.getElementById('modalFooter').innerHTML = `
                     <form id="actionFormSimrs" method="GET">
-                        <input type="hidden" name="register_api" id="register_api">
+                        <input type="hidden" name="selected_patients" id="selected_patients">
                         <button formaction="<?= base_url('hpa/register') ?>" class="btn btn-danger"><i class="fas fa-plus-square"></i> HPA</button>
                         <button formaction="<?= base_url('frs/register') ?>" class="btn btn-primary"><i class="fas fa-plus-square"></i> FNAB</button>
                         <button formaction="<?= base_url('srs/register') ?>" class="btn btn-success"><i class="fas fa-plus-square"></i> SRS</button>
@@ -90,25 +90,33 @@
                     </form>
                 `;
 
-                    let selectedData = null;
+                    let selectedData = [];
                     document.querySelectorAll('.btn-checklist').forEach(btn => {
                         btn.addEventListener('click', function() {
-                            document.querySelectorAll('.btn-checklist').forEach(b => b.classList.replace('btn-primary', 'btn-outline-primary'));
-                            this.classList.replace('btn-outline-primary', 'btn-primary');
-                            selectedData = patients[this.dataset.index];
-                            document.getElementById('register_api').value = JSON.stringify(selectedData);
+                            const index = this.dataset.index;
+                            const patient = patients[index];
+                            if (selectedData.includes(patient)) {
+                                // Unselect
+                                selectedData = selectedData.filter(p => p !== patient);
+                                this.classList.replace('btn-primary', 'btn-outline-primary');
+                            } else {
+                                // Select
+                                selectedData.push(patient);
+                                this.classList.replace('btn-outline-primary', 'btn-primary');
+                            }
+                            document.getElementById('selected_patients').value = JSON.stringify(selectedData);
                         });
                     });
 
                     document.getElementById('actionFormSimrs').addEventListener('submit', e => {
-                        if (!selectedData) {
+                        if (selectedData.length === 0) {
                             e.preventDefault();
-                            alert("Silakan pilih salah satu pemeriksaan terlebih dahulu.");
+                            alert("Silakan pilih minimal satu pemeriksaan.");
                         }
                     });
 
                 } else {
-                    document.getElementById('modalBody').innerHTML = `<p class="text-danger">Cek apakah Pasien sudah daftar / >3 Hari / Server mati</p>`;
+                    document.getElementById('modalBody').innerHTML = `<p class="text-danger">Pasien tidak ditemukan / >3 Hari / Server mati</p>`;
                     document.getElementById('modalFooter').innerHTML = `<button class="btn btn-secondary" data-dismiss="modal">Tutup</button>`;
                 }
             })
