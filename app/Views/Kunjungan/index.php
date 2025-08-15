@@ -21,11 +21,10 @@
                     <thead class="thead-dark">
                         <tr>
                             <th>No</th>
-                            <th>ID Transaksi</th>
                             <th>Tanggal</th>
                             <th>No. RM</th>
                             <th>Nama</th>
-                            <th>Jenis Kelamin</th>
+                            <th>Jenis Kelamin / Usia</th>
                             <th>Tgl Lahir</th>
                             <th>Alamat</th>
                             <th>Jenis Pasien</th>
@@ -51,7 +50,6 @@
                                 ?>
                                 <tr class="<?= $rowClass ?>">
                                     <td><?= $i ?></td>
-                                    <td><?= esc($row['idtransaksi'] ?? '') ?></td>
                                     <td>
                                         <!-- Jam merah kalau hasil null -->
                                         <?php if (empty($row['hasil'])): ?>
@@ -62,8 +60,10 @@
                                     </td>
                                     <td><?= esc($row['norm'] ?? '') ?></td>
                                     <td><?= esc($row['nama'] ?? '') ?></td>
-                                    <td><?= esc($row['jeniskelamin'] ?? '') ?></td>
-                                    <td><?= esc($row['tgl_lhr'] ?? '') ?></td>
+                                    <td><?= esc(($row['jeniskelamin'] ?? '') . ' / ' . ($row['pasien_usia'] ?? '')) ?></td>
+                                    <td>
+                                        <?= !empty($row['tgl_lhr']) ? esc(date('d-m-Y', strtotime($row['tgl_lhr']))) : '-' ?>
+                                    </td>
                                     <td><?= esc($row['alamat'] ?? '') ?></td>
                                     <td><?= esc($row['jenispasien'] ?? '') ?></td>
                                     <td><?= esc($row['dokterperujuk'] ?? '') ?></td>
