@@ -21,10 +21,6 @@ class SimrsModel extends Model
         $this->cache = Services::cache();
     }
 
-    /**
-     * Fungsi umum untuk mengambil data dengan fallback dan caching.
-     * Bisa dipakai untuk berbagai endpoint dengan cacheKey yang berbeda.
-     */
     protected function getDataWithCache(string $cacheKey, string $primaryURL, string $backupURL, int $cacheTTL = 600): array
     {
         // Cek cache dulu

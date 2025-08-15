@@ -73,10 +73,8 @@
                                     <td>
                                         <?php if (empty($row['hasil'])): ?>
                                             <strong class="text-danger">Belum Terdaftar</strong>
-                                        <?php elseif ($row['hasil'] === 'Terdaftar'): ?>
-                                            <strong class="text-success"><?= esc($row['hasil']) ?></strong>
                                         <?php else: ?>
-                                            <?= esc($row['hasil']) ?>
+                                            <strong class="text-success">Terdaftar</strong>
                                         <?php endif; ?>
                                     </td>
                                 </tr>

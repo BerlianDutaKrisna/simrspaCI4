@@ -3,52 +3,41 @@
 namespace App\Controllers\Api;
 
 use CodeIgniter\RESTful\ResourceController;
-use App\Models\SimrsModel;
+use App\Models\KunjunganModel;
 
 class Kunjungan extends ResourceController
 {
-    protected $modelName = SimrsModel::class;
+    protected $modelName = KunjunganModel::class;
     protected $format    = 'json';
-
-    public function show($norm = null)
-    {
-        if (empty($norm)) {
-            return $this->fail([
-                'status'  => 'error',
-                'message' => 'Norm pasien tidak dikirim.'
-            ], 422);
-        }
-
-        try {
-            $data = $this->model->getKunjunganPasien($norm);
-
-            if (isset($data['code']) && $data['code'] == 200 && !empty($data['data'])) {
-                return $this->respond([
-                    'status' => 'success',
-                    'data'   => $data['data']
-                ]);
-            }
-
-            return $this->failNotFound('Pasien tidak ditemukan.');
-        } catch (\Exception $e) {
-            return $this->failServerError('Terjadi kesalahan: ' . $e->getMessage());
-        }
-    }
 
     public function index()
     {
-        $kunjunganModel = new \App\Models\KunjunganModel();
-        $allData = $kunjunganModel
-            ->orderBy('tanggal', 'DESC')
-            ->findAll();
+        $allData = $this->model->getKunjunganHariIniTable();
 
         $data = [
             'id_user'   => session()->get('id_user'),
             'nama_user' => session()->get('nama_user'),
             'data'      => $allData
         ];
-        
+
         return view('Kunjungan/index', $data);
+    }
+
+    public function search_patient()
+    {
+        $norm = $this->request->getPost('norm');
+
+        // Langsung pakai $this->model
+        $patient = $this->model
+            ->where('norm', $norm)
+            ->orderBy('tanggal', 'DESC')
+            ->first();
+
+        if ($patient) {
+            return view('patient_search_result', ['patient' => $patient]);
+        } else {
+            return view('patient_search_result', ['error' => 'Patient not found']);
+        }
     }
 
     public function getKunjunganHariIni()
