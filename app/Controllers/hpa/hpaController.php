@@ -10,6 +10,7 @@ use App\Models\Ihc\IhcModel;
 use App\Models\UsersModel;
 use App\Models\PatientModel;
 use App\Models\SimrsModel;
+use App\Models\KunjunganModel;
 use App\Models\Hpa\Proses\Penerimaan_hpa;
 use App\Models\Hpa\Proses\Pemotongan_hpa;
 use App\Models\Hpa\Proses\pembacaan_hpa;
@@ -31,6 +32,7 @@ class HpaController extends BaseController
     protected $usersModel;
     protected $patientModel;
     protected $simrsModel;
+    protected $kunjunganModel;
     protected $penerimaan_hpa;
     protected $pemotongan_hpa;
     protected $pembacaan_hpa;
@@ -50,6 +52,7 @@ class HpaController extends BaseController
         $this->usersModel = new UsersModel();
         $this->patientModel = new PatientModel();
         $this->simrsModel = new SimrsModel();
+        $this->kunjunganModel = new KunjunganModel();
         $this->penerimaan_hpa = new Penerimaan_hpa();
         $this->pemotongan_hpa = new Pemotongan_hpa();
         $this->pembacaan_hpa = new pembacaan_hpa();
@@ -108,69 +111,58 @@ class HpaController extends BaseController
 
         $kodehpa = sprintf('H.%02d/%s', $nextNumber, $currentYear);
 
-        // Tangkap dari GET parameter
-        $register_api_raw = $this->request->getGet('register_api');
-        $register_api = json_decode($register_api_raw, true);
+        // --- Cek apakah request dari script pertama ---
+        $idtransaksi = $this->request->getGet('idtransaksi');
+        $normPasien = $this->request->getGet('norm_pasien');
+        $patient = null;
+        $riwayat_api = [];
 
-        // Ambil data riwayat dari API / Manual
-        // Cek apakah data dari API tersedia
-        if (!empty($register_api) && is_array($register_api)) {
-            $idtransaksi = $register_api['idtransaksi'] ?? null;
+        if ($idtransaksi) {
+            // Script pertama → cari dari kunjungan
+            $kunjungan = $this->kunjunganModel->where('idtransaksi', $idtransaksi)->first();
 
-    if ($idtransaksi) {
-        // Panggil model kunjungan
-        $kunjunganModel = new \App\Models\KunjunganModel();
+            if ($kunjungan) {
+                // Update hasil jadi "Terdaftar"
+                $this->kunjunganModel->update($kunjungan['idtransaksi'], ['hasil' => 'Terdaftar']);
 
-        // Cek apakah idtransaksi ada di database
-        $kunjungan = $kunjunganModel->where('idtransaksi', $idtransaksi)->first();
+                // Ambil norm dari tabel kunjungan
+                $norm = $kunjungan['norm'] ?? '';
 
-        if ($kunjungan) {
-            // Update hasil menjadi "Terdaftar"
-            $kunjunganModel->update($kunjungan['idtransaksi'], ['hasil' => 'Terdaftar']);
-        }
-    }
-            // Ambil norm
-            $norm = $register_api['norm'] ?? '';
-
-            // Ambil riwayat dari API
-            $riwayat_api = [];
-            if ($norm !== '') {
-                $riwayat_api_response = $this->simrsModel->getPemeriksaanPasien($norm);
-                if (!empty($riwayat_api_response['code']) && $riwayat_api_response['code'] == 200) {
-                    $riwayat_api = $riwayat_api_response['data'];
+                // Ambil riwayat dari API SIMRS
+                if ($norm !== '') {
+                    $riwayat_api_response = $this->simrsModel->getPemeriksaanPasien($norm);
+                    if (!empty($riwayat_api_response['code']) && $riwayat_api_response['code'] == 200) {
+                        $riwayat_api = $riwayat_api_response['data'];
+                    }
                 }
+
+                // Mapping data patient dari kunjungan
+                $patient = [
+                    'id_pasien'         => $kunjungan['idpasien'] ?? null,
+                    'norm_pasien'       => $kunjungan['norm'] ?? '',
+                    'nama_pasien'       => $kunjungan['nama'] ?? '',
+                    'alamat_pasien'     => $kunjungan['alamat'] ?? '',
+                    'tanggal_lahir'     => $kunjungan['tgl_lhr'] ?? '',
+                    'jenis_kelamin'     => $kunjungan['jeniskelamin'] ?? '',
+                    'jenis_pasien'      => $kunjungan['jenispasien'] ?? '',
+                    'unit_asal'         => $kunjungan['unitasal'] ?? '',
+                    'dokter_perujuk'    => $kunjungan['dokterperujuk'] ?? '',
+                    'pemeriksaan'       => $kunjungan['pemeriksaan'] ?? '',
+                    'lokasi_spesimen'   => $kunjungan['statuslokasi'] ?? '',
+                    'diagnosa_klinik'   => $kunjungan['diagnosaklinik'] ?? '',
+                    'mutu_sediaan'      => $kunjungan['mutusediaan'] ?? '',
+                    'id_transaksi'      => $kunjungan['idtransaksi'] ?? null,
+                    'tanggal_transaksi' => $kunjungan['tanggal'] ?? '',
+                    'no_register'       => $kunjungan['register'] ?? ''
+                ];
             }
-
-            // Map ke array $patient
-            $patient = [
-                'id_pasien'             => isset($register_api['idpasien']) ? (int) $register_api['idpasien'] : null,
-                'norm_pasien'           => $register_api['norm'] ?? '',
-                'nama_pasien'           => $register_api['nama'] ?? '',
-                'alamat_pasien'         => $register_api['alamat'] ?? '',
-                'tanggal_lahir_pasien'  => $register_api['tgl_lhr'] ?? '',
-                'jenis_kelamin_pasien'  => $register_api['jeniskelamin'] ?? '',
-                'status_pasien'         => $register_api['jenispasien'] ?? '',
-                'unitasal'              => $register_api['unitasal'] ?? '',
-                'dokterperujuk'         => $register_api['dokterperujuk'] ?? '',
-                'pemeriksaan'           => $register_api['pemeriksaan'] ?? '',
-                'lokasi_spesimen'       => $register_api['statuslokasi'] ?? '',
-                'diagnosa_klinik'       => $register_api['diagnosaklinik'] ?? '',
-                'tindakan_spesimen'     => $register_api['pemeriksaan'] ?? '',
-                'id_transaksi'          => isset($register_api['idtransaksi']) ? (int) $register_api['idtransaksi'] : null,
-                'tanggal_transaksi'     => $register_api['tanggal'] ?? '',
-                'no_register'           => $register_api['register'] ?? ''
-            ];
-        } elseif ($normPasien = $this->request->getGet('norm_pasien')) {
-
-            // Ambil data pasien dari DB jika norm_pasien tersedia di GET
+        }
+        // --- Cek apakah request dari script kedua ---
+        elseif ($normPasien) {
             $patient = $this->patientModel->where('norm_pasien', $normPasien)->first();
             $riwayat_api = [];
-        } else {
-            // Jika tidak ada sumber data sama sekali
-            $patient = null;
-            $riwayat_api = [];
         }
-
+        
         $data = [
             'id_user'       => session()->get('id_user'),
             'nama_user'     => session()->get('nama_user'),

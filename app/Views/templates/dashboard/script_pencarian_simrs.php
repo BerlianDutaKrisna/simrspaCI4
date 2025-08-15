@@ -81,40 +81,47 @@
 
                     document.getElementById('modalFooter').innerHTML = `
                     <form id="actionFormSimrs" method="GET">
-                        <input type="hidden" name="register_api" id="register_api">
-                        <button formaction="<?= base_url('hpa/register') ?>" class="btn btn-danger"><i class="fas fa-plus-square"></i> HPA</button>
-                        <button formaction="<?= base_url('frs/register') ?>" class="btn btn-primary"><i class="fas fa-plus-square"></i> FNAB</button>
-                        <button formaction="<?= base_url('srs/register') ?>" class="btn btn-success"><i class="fas fa-plus-square"></i> SRS</button>
-                        <button formaction="<?= base_url('ihc/register') ?>" class="btn btn-warning"><i class="fas fa-plus-square"></i> IHC</button>
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fas fa-times"></i> Tutup</button>
+                        <input type="hidden" name="idtransaksi" id="idtransaksi">
+                        <button formaction="<?= base_url('hpa/register') ?>" class="btn btn-danger">
+                            <i class="fas fa-plus-square"></i> HPA
+                        </button>
+                        <button formaction="<?= base_url('frs/register') ?>" class="btn btn-primary">
+                            <i class="fas fa-plus-square"></i> FNAB
+                        </button>
+                        <button formaction="<?= base_url('srs/register') ?>" class="btn btn-success">
+                            <i class="fas fa-plus-square"></i> SRS
+                        </button>
+                        <button formaction="<?= base_url('ihc/register') ?>" class="btn btn-warning">
+                            <i class="fas fa-plus-square"></i> IHC
+                        </button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                            <i class="fas fa-times"></i> Tutup
+                        </button>
                     </form>
-                `;
-
-                    let selectedData = [];
+                    `;
+                    
+                    let selectedData = null;
                     document.querySelectorAll('.btn-checklist').forEach(btn => {
                         btn.addEventListener('click', function() {
                             const index = this.dataset.index;
                             const patient = patients[index];
-                            if (selectedData.includes(patient)) {
-                                // Unselect
-                                selectedData = selectedData.filter(p => p !== patient);
-                                this.classList.replace('btn-primary', 'btn-outline-primary');
-                            } else {
-                                // Select
-                                selectedData.push(patient);
-                                this.classList.replace('btn-outline-primary', 'btn-primary');
-                            }
-                            document.getElementById('selected_patients').value = JSON.stringify(selectedData);
+
+                            // Simpan data pasien yang dipilih
+                            selectedData = patient;
+                            document.getElementById('idtransaksi').value = patient.idtransaksi; // <=== KIRIM IDTRANSAKSI
+
+                            // Ubah style tombol terpilih
+                            document.querySelectorAll('.btn-checklist').forEach(b => b.classList.replace('btn-primary', 'btn-outline-primary'));
+                            this.classList.replace('btn-outline-primary', 'btn-primary');
                         });
                     });
 
                     document.getElementById('actionFormSimrs').addEventListener('submit', e => {
-                        if (selectedData.length === 0) {
+                        if (!selectedData) {
                             e.preventDefault();
-                            alert("Silakan pilih minimal satu pemeriksaan.");
+                            alert("Silakan pilih salah satu pemeriksaan.");
                         }
                     });
-
                 } else {
                     document.getElementById('modalBody').innerHTML = `<p class="text-danger">Pasien tidak ditemukan / >3 Hari / Server mati</p>`;
                     document.getElementById('modalFooter').innerHTML = `<button class="btn btn-secondary" data-dismiss="modal">Tutup</button>`;
