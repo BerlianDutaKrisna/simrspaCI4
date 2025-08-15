@@ -123,7 +123,7 @@
                         }
                     });
                 } else {
-                    document.getElementById('modalBody').innerHTML = `<p class="text-danger">Pasien tidak ditemukan / >3 Hari / Server mati</p>`;
+                    document.getElementById('modalBody').innerHTML = `<p class="text-danger">Pasien belum mendaftar pada loket / Server mati</p>`;
                     document.getElementById('modalFooter').innerHTML = `<button class="btn btn-secondary" data-dismiss="modal">Tutup</button>`;
                 }
             })

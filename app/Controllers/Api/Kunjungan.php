@@ -43,7 +43,7 @@ class Kunjungan extends ResourceController
         } else {
             return $this->respond([
                 'status' => 'error',
-                'message' => 'Pasien tidak ditemukan / >3 Hari / Server mati'
+                'message' => 'Pasien belum mendaftar pada loket / Server mati'
             ], 404);
         }
     }
