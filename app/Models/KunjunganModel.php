@@ -125,4 +125,10 @@ class KunjunganModel extends Model
             ->orderBy('tanggal', 'DESC')
             ->findAll();
     }
+
+    public function getKunjunganTable()
+    {
+        return $this->orderBy('tanggal', 'DESC')
+            ->findAll();
+    }
 }

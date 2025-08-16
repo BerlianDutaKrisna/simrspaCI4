@@ -50,6 +50,7 @@ $routes->group('api', ['namespace' => 'App\Controllers\Api'], function ($routes)
     $routes->get('kunjungan/getKunjunganHariIni', 'Kunjungan::getKunjunganHariIni');
     $routes->get('kunjungan/modal_search/(:segment)', 'Kunjungan::modal_search/$1');
     $routes->get('kunjungan/index', 'Kunjungan::index');
+    $routes->get('kunjungan/indexAll', 'Kunjungan::indexAll');
     $routes->get('pemeriksaan/norm_pasien/(:num)', 'Pemeriksaan::showByNorm/$1');
     $routes->put('pemeriksaan/id_transaksi/(:num)', 'Pemeriksaan::updateByTransaksi/$1');
     $routes->resource('koneksi', ['only' => ['index']]);

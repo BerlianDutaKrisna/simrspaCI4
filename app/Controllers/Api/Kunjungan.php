@@ -23,6 +23,19 @@ class Kunjungan extends ResourceController
         return view('Kunjungan/index', $data);
     }
 
+    public function indexAll()
+    {
+        $allData = $this->model->getKunjunganTable();
+
+        $data = [
+            'id_user'   => session()->get('id_user'),
+            'nama_user' => session()->get('nama_user'),
+            'data'      => $allData
+        ];
+         // Debugging line, remove in production
+        return view('Kunjungan/index_all', $data);
+    }
+
     public function modal_search($norm = null)
     {
         if (!$norm) {
