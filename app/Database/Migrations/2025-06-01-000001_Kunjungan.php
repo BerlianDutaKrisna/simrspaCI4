@@ -143,6 +143,10 @@ class Kunjungan extends Migration
                 'constraint' => 200,
                 'null'       => true
             ],
+            'tagihan' => [
+                'type'       => 'BIGINT',
+                'null'       => true
+            ],
         ]);
 
         $this->forge->addKey('idtransaksi', true);

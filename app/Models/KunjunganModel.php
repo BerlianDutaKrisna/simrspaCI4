@@ -39,7 +39,8 @@ class KunjunganModel extends Model
         'diagnosaklinik',
         'hasil',
         'diagnosapatologi',
-        'mutusediaan'
+        'mutusediaan',
+        'tagihan'
     ];
     protected $useTimestamps = false;
 
