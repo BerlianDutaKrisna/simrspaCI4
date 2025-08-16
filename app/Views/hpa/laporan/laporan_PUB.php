@@ -28,7 +28,7 @@
                     <div class="col-md-6" id="filterValueContainer" style="display: none;">
                         <label for="filterValue">Masukkan Nilai</label>
                         <input type="text" class="form-control" id="filterValue" name="filterValue"
-                            value="<?= esc($_GET['filterValue'] ?? '') ?>">
+                            value="<?= htmlspecialchars(old('filterValue')) ?>">
                     </div>
                 </div>
 
@@ -36,12 +36,12 @@
                     <div class="col-md-6">
                         <label for="filterDate">Tanggal Pencarian</label>
                         <input type="date" class="form-control" id="filterDate" name="filterDate"
-                            value="<?= esc($_GET['filterDate'] ?? date('Y-m-01', strtotime('-1 month'))); ?>">
+                            value="<?= old('filterDate') ?: date('Y-m-01', strtotime('-1 month')); ?>">
                     </div>
                     <div class="col-md-6">
                         <label for="filterDate2">Sampai Tanggal</label>
                         <input type="date" class="form-control" id="filterDate2" name="filterDate2"
-                            value="<?= esc($_GET['filterDate2'] ?? date('Y-m-d')); ?>">
+                            value="<?= old('filterDate2') ?: date('Y-m-d'); ?>">
                     </div>
                 </div>
 
@@ -70,23 +70,23 @@
             }
         </script>
 
-<div class="row justify-content-center mb-3">
+        <div class="row justify-content-center mb-3">
             <div class="col-auto">
-                <h5 class="text-center font-weight-bold">Potong Ulang</h5>
+                <h5 class="text-center font-weight-bold">Potong Ulang Block PUB</h5>
             </div>
         </div>
 
         <div class="row justify-content-center">
             <div class="col-auto">
                 <a href="<?= base_url('hpa/laporan_PUG'); ?>" class="btn btn-secondary btn-icon-split m-2">
-                    <span class="text"><b style="color: white;">PUG</b></span>
-                    <span class="icon text-white-50">
+                    <span class="text"><b style="color: dark;">PUG</b></span>
+                    <span class="icon text-dark-50">
                         <i class="fas fa-plus-circle"></i>
                     </span>
                 </a>
             </div>
             <div class="col-auto">
-                <a href="<?= base_url('hpa/laporan_PUB'); ?>" class="btn btn-secondary btn-icon-split m-2">
+                <a href="<?= base_url('hpa/laporan_PUB'); ?>" class="btn btn-light btn-icon-split m-2">
                     <span class="text"><b style="color: white;">PUB</b></span>
                     <span class="icon text-white-50">
                         <i class="fas fa-plus-circle"></i>
@@ -95,33 +95,17 @@
             </div>
         </div>
 
-        <div class="mb-3">
-            <strong>Total Data Pasien:</strong> <?= count($hpaData) ?>
-        </div>
-
         <div class="table-responsive">
             <table class="table table-bordered text-center" id="dataTableButtons" width="100%" cellspacing="0">
                 <thead>
                     <tr>
                         <th>NO</th>
-                        <th>REGISTER</th>
                         <th>NAMA</th>
                         <th>NO RM</th>
-                        <th>TANGGAL LAHIR</th>
-                        <th>L/P</th>
-                        <th>ALAMAT</th>
-                        <th>JENIS PASIEN</th>
-                        <th>TANGGAL TRANSAKSI</th>
-                        <th>DOKTER PERUJUK</th>
-                        <th>DOKTER PA</th>
-                        <th>UNIT ASAL</th>
-                        <th>PEMERIKSAAN</th>
-                        <th>STATUS LOKASI</th>
-                        <th>DIAGNOSA KLINIK</th>
-                        <th>DIAGNOSA PATOLOGI</TH>
-                        <th>MUTU SEDIAAN</th>
-                        <th>RESPONSE TIME</th>
-                        <th>7 HARI</th>
+                        <th>KODE HPA</th>
+                        <th>Tanggal Permeriksaan</th>
+                        <th>Jumlah PUB</th>
+                        <th>Hasil HPA</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -130,53 +114,21 @@
                         <?php foreach ($hpaData as $row) : ?>
                             <tr>
                                 <td><?= $i ?></td>
-                                <td><?= esc($row['kode_hpa'] ?? 'Belum Diisi') ?></td>
                                 <td><?= esc($row['nama_pasien'] ?? 'Belum Diisi') ?></td>
                                 <td><?= esc($row['norm_pasien'] ?? 'Belum Diisi') ?></td>
+                                <td><?= esc($row['kode_hpa'] ?? 'Belum Diisi') ?></td>
                                 <td>
-                                    <?= empty($row['tanggal_lahir_pasien']) ? 'Belum Diisi' : esc(date('d-m-Y', strtotime($row['tanggal_lahir_pasien']))); ?>
-                                </td>
-                                <td><?= esc($row['jenis_kelamin_pasien'] ?? 'Belum Diisi') ?></td>
-                                <td><?= esc($row['alamat_pasien'] ?? 'Belum Diisi') ?></td>
-                                <td><?= esc($row['status_pasien'] ?? 'Belum Diisi') ?></td>
-                                <td>
-                                    <?= empty($row['tanggal_permintaan']) ? 'Belum Diisi' : esc(date('d-m-Y', strtotime($row['tanggal_permintaan']))); ?>
-                                </td>
-                                <td><?= esc($row['dokter_pengirim'] ?? 'Belum Diisi') ?></td>
-                                <td><?= esc($row['dokter_pembaca'] ?? 'Belum Diisi') ?></td>
-                                <td><?= esc($row['unit_asal'] ?? 'Belum Diisi') ?></td>
-                                <td><?= esc($row['tindakan_spesimen'] ?? 'Belum Diisi') ?></td>
-                                <td><?= esc($row['lokasi_spesimen'] ?? 'Belum Diisi') ?></td>
-                                <td><?= esc($row['diagnosa_klinik'] ?? 'Belum Diisi') ?></td>
-                                <td><?= esc(strip_tags($row['hasil_hpa'] ?? 'Belum Ada Hasil')) ?></td>
-                                <td><?= esc($row['total_nilai_mutu_hpa'] ?? 'Belum Diisi') ?>%</td>
-                                <td>
-                                    <?php
-                                    if (!empty($row['mulai_penerimaan_hpa']) && !empty($row['selesai_pemverifikasi_hpa'])) {
-                                        $start = new DateTime($row['mulai_penerimaan_hpa']);
-                                        $end = new DateTime($row['selesai_pemverifikasi_hpa']);
-                                        $interval = $start->diff($end);
-                                        echo $interval->format('%a hari %h jam %i menit %s detik');
-                                    } else {
-                                        echo 'Belum lengkap';
-                                    }
+                                    <?= isset($row['tanggal_permintaan']) && $row['tanggal_permintaan'] != null
+                                        ? date('d-m-Y', strtotime($row['tanggal_permintaan']))
+                                        : ''
                                     ?>
                                 </td>
                                 <td>
-                                    <?php
-                                    if (!empty($row['mulai_penerimaan_hpa']) && !empty($row['selesai_pemverifikasi_hpa'])) {
-                                        $start = new DateTime($row['mulai_penerimaan_hpa']);
-                                        $end = new DateTime($row['selesai_pemverifikasi_hpa']);
-                                        $interval = $start->diff($end);
-                                        if ($interval->days <= 7) {
-                                            echo '<span class="text-success">Tepat Waktu</span>';
-                                        } else {
-                                            echo '<span class="text-danger">Terlambat</span>';
-                                        }
-                                    } else {
-                                        echo '-';
-                                    }
-                                    ?>
+                                    <?= esc($row['PUB'] ?? '') ?>
+                                </td>
+                                <td> <a href="<?= base_url('hpa/edit/' . esc($row['id_hpa'])) ?>" class="btn btn-sm btn-warning mx-1">
+                                        <i class="fas fa-edit"></i> Edit
+                                    </a>
                                 </td>
                             </tr>
                             <?php $i++; ?>

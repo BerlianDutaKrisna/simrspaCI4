@@ -85,6 +85,8 @@ $routes->group('hpa', ['namespace' => 'App\Controllers\Hpa'], function ($routes)
     $routes->get('laporan_kerja', 'HpaController::laporan_kerja');
     $routes->get('laporan_oprasional', 'HpaController::laporan_oprasional');
     $routes->get('laporan_BHP', 'HpaController::laporan_BHP');
+    $routes->get('laporan_PUG', 'HpaController::laporan_PUG');
+    $routes->get('laporan_PUB', 'HpaController::laporan_PUB');
     $routes->get('filter', 'HpaController::filter');
 });
 

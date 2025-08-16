@@ -350,4 +350,28 @@ class HpaModel extends Model
 
         return $builder->get()->getResultArray();
     }
+
+    public function laporan_PUG()
+{
+    return $this->select('
+        hpa.*, 
+        patient.*
+    ')
+    ->join('patient', 'patient.id_pasien = hpa.id_pasien', 'left')
+    ->where('PUG IS NOT NULL', null, false)
+    ->where('PUG !=', 0)
+    ->findAll();
+}
+
+public function laporan_PUB()
+{
+    return $this->select('
+        hpa.*, 
+        patient.*
+    ')
+    ->join('patient', 'patient.id_pasien = hpa.id_pasien', 'left')
+    ->where('PUB IS NOT NULL', null, false)
+    ->where('PUB !=', 0)
+    ->findAll();
+}
 }

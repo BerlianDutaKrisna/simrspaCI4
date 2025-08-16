@@ -1108,6 +1108,32 @@ class HpaController extends BaseController
         return view('hpa/laporan/laporan_oprasional', $data);
     }
 
+    public function laporan_PUG()
+    {
+        $hpaData = $this->hpaModel->laporan_PUG() ?? [];
+
+        $data = [
+            'id_user'    => session()->get('id_user'),
+            'nama_user'  => session()->get('nama_user'),
+            'hpaData' => $hpaData,
+        ];
+        
+        return view('hpa/laporan/laporan_PUG', $data);
+    }
+
+    public function laporan_PUB()
+    {
+        $hpaData = $this->hpaModel->laporan_PUB() ?? [];
+
+        $data = [
+            'id_user'    => session()->get('id_user'),
+            'nama_user'  => session()->get('nama_user'),
+            'hpaData' => $hpaData,
+        ];
+
+        return view('hpa/laporan/laporan_PUB', $data);
+    }
+
     public function filter()
     {
         $filterField = $this->request->getGet('filterInput');
