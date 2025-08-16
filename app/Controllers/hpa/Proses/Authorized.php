@@ -42,7 +42,7 @@ class Authorized extends BaseController
             'counts' => $this->getCounts(),
             'authorizedDatahpa' => $authorizedData_hpa,
         ];
-
+        
         return view('Hpa/Proses/authorized', $data);
     }
 

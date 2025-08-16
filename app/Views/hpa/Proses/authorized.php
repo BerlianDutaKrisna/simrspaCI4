@@ -94,7 +94,7 @@
                                     <td><?= $row['kode_hpa']; ?></td>
                                     <td><?= $row['nama_pasien']; ?></td>
                                     <td><?= $row['status_authorized_hpa']; ?></td>
-                                    <td><?= $row['nama_user_authorized_hpa']; ?></td>
+                                    <td><?= $row['nama_user_dokter_pembacaan']; ?></td>
                                     <td>
                                         <?= empty($row['mulai_authorized_hpa']) ? '-' : esc(date('H:i , d-m-Y', strtotime($row['mulai_authorized_hpa']))); ?>
                                     </td>

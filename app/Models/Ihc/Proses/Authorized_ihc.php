@@ -47,7 +47,8 @@ class Authorized_ihc extends Model // Update nama model
         mutu_ihc.id_mutu_ihc,
         mutu_ihc.total_nilai_mutu_ihc,
         penerimaan_ihc.id_penerimaan_ihc,
-        pembacaan_ihc.id_pembacaan_ihc, 
+        pembacaan_ihc.id_pembacaan_ihc,
+        dokter_pembacaan.nama_user AS nama_user_dokter_pembacaan, 
         pemverifikasi_ihc.id_pemverifikasi_ihc,
         pencetakan_ihc.id_pencetakan_ihc
         '
@@ -58,6 +59,7 @@ class Authorized_ihc extends Model // Update nama model
             ->join('mutu_ihc', 'ihc.id_ihc = mutu_ihc.id_ihc', 'left')
             ->join('penerimaan_ihc', 'ihc.id_ihc = penerimaan_ihc.id_ihc', 'left')
             ->join('pembacaan_ihc', 'ihc.id_ihc = pembacaan_ihc.id_ihc', 'left')
+            ->join('users AS dokter_pembacaan','dokter_pembacaan.id_user = pembacaan_ihc.id_user_dokter_pembacaan_ihc','left')
             ->join('pemverifikasi_ihc', 'ihc.id_ihc = pemverifikasi_ihc.id_ihc', 'left')
             ->join('pencetakan_ihc', 'ihc.id_ihc = pencetakan_ihc.id_ihc', 'left')
             ->where('ihc.status_ihc', 'Authorized')

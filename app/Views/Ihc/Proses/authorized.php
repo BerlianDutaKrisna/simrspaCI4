@@ -71,7 +71,7 @@
                                     <td><?= $row['kode_ihc']; ?></td>
                                     <td><?= $row['nama_pasien']; ?></td>
                                     <td><?= $row['status_authorized_ihc']; ?></td>
-                                    <td><?= $row['nama_user_authorized_ihc']; ?></td>
+                                    <td><?= $row['nama_user_dokter_pembacaan']; ?></td>
                                     <td>
                                         <?= empty($row['mulai_authorized_ihc']) ? '-' : esc(date('H:i , d-m-Y', strtotime($row['mulai_authorized_ihc']))); ?>
                                     </td>

@@ -48,6 +48,7 @@ class Authorized_srs extends Model // Update nama model
         mutu_srs.total_nilai_mutu_srs,
         penerimaan_srs.id_penerimaan_srs,
         pembacaan_srs.id_pembacaan_srs, 
+        dokter_pembacaan.nama_user AS nama_user_dokter_pembacaan,
         pemverifikasi_srs.id_pemverifikasi_srs,
         pencetakan_srs.id_pencetakan_srs
         '
@@ -58,6 +59,7 @@ class Authorized_srs extends Model // Update nama model
             ->join('mutu_srs', 'srs.id_srs = mutu_srs.id_srs', 'left')
             ->join('penerimaan_srs', 'srs.id_srs = penerimaan_srs.id_srs', 'left')
             ->join('pembacaan_srs', 'srs.id_srs = pembacaan_srs.id_srs', 'left')
+            ->join('users AS dokter_pembacaan','dokter_pembacaan.id_user = pembacaan_srs.id_user_dokter_pembacaan_srs','left')
             ->join('pemverifikasi_srs', 'srs.id_srs = pemverifikasi_srs.id_srs', 'left')
             ->join('pencetakan_srs', 'srs.id_srs = pencetakan_srs.id_srs', 'left')
             ->where('srs.status_srs', 'Authorized')

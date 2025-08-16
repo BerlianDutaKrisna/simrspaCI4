@@ -40,7 +40,8 @@ class Authorized_hpa extends Model // Update nama model
         mutu_hpa.id_mutu_hpa,
         mutu_hpa.total_nilai_mutu_hpa,
         penerimaan_hpa.id_penerimaan_hpa,
-        pembacaan_hpa.id_pembacaan_hpa, 
+        pembacaan_hpa.id_pembacaan_hpa,
+        dokter_pembacaan.nama_user AS nama_user_dokter_pembacaan,
         pemverifikasi_hpa.id_pemverifikasi_hpa,
         pencetakan_hpa.id_pencetakan_hpa
         '
@@ -51,6 +52,7 @@ class Authorized_hpa extends Model // Update nama model
             ->join('mutu_hpa', 'hpa.id_hpa = mutu_hpa.id_hpa', 'left')
             ->join('penerimaan_hpa', 'hpa.id_hpa = penerimaan_hpa.id_hpa', 'left')
             ->join('pembacaan_hpa', 'hpa.id_hpa = pembacaan_hpa.id_hpa', 'left')
+            ->join('users AS dokter_pembacaan','dokter_pembacaan.id_user = pembacaan_hpa.id_user_dokter_pembacaan_hpa','left')
             ->join('pemverifikasi_hpa', 'hpa.id_hpa = pemverifikasi_hpa.id_hpa', 'left')
             ->join('pencetakan_hpa', 'hpa.id_hpa = pencetakan_hpa.id_hpa', 'left')
             ->where('hpa.status_hpa', 'Authorized')

@@ -71,7 +71,7 @@
                                     <td><?= $row['kode_frs']; ?></td>
                                     <td><?= $row['nama_pasien']; ?></td>
                                     <td><?= $row['status_authorized_frs']; ?></td>
-                                    <td><?= $row['nama_user_authorized_frs']; ?></td>
+                                    <td><?= $row['nama_user_dokter_pembacaan']; ?></td>
                                     <td>
                                         <?= empty($row['mulai_authorized_frs']) ? '-' : esc(date('H:i , d-m-Y', strtotime($row['mulai_authorized_frs']))); ?>
                                     </td>
