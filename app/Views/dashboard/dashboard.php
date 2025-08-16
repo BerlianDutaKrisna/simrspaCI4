@@ -5,6 +5,7 @@
 <?= $this->include('dashboard/pencarian_pemeriksaan'); ?>
 <?= $this->include('dashboard/jenis_tindakan'); ?>
 <?= $this->include('dashboard/grafik_pemeriksaan'); ?>
+<?= $this->include('dashboard/grafik_mutu'); ?>
 <?= $this->include('dashboard/dashboard_gudang'); ?>
 <?= $this->include('dashboard/grafik_gudang'); ?>
 <?= $this->include('templates/notifikasi'); ?>
