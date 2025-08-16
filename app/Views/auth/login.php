@@ -11,7 +11,7 @@
             </div>
             <div class="text-center">
                 <p class="text-gray-900 mb-4">Sistem Informasi Laboratorium Patologi Anatomi (SIM LAB PA)</p>
-                <p class="text-gray-600 text-sm"><strong class="text-primary">Versi 2.1</strong></p>
+                <p class="text-gray-600 text-sm"><strong class="text-success">Versi 2.2</strong></p>
             </div>
             <form action="<?= base_url('auth/login'); ?>" method="POST" class="user">
                 <?= csrf_field(); ?> <!-- CSRF token untuk mencegah serangan CSRF -->

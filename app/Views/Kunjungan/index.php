@@ -14,7 +14,7 @@
                 <i class="fas fa-reply"></i> Kembali
             </a>
             <div>
-                <a href="<?= base_url('/api/kunjungan/indexAll') ?>" class="btn btn-primary mb-3">Tampilkan Semua data</a>
+                <a href="<?= base_url('/api/kunjungan/indexAll') ?>" class="btn btn-secondary mb-3">Tampilkan Semua data</a>
             </div>
             <!-- Tabel Data Kunjungan -->
             <div class="table-responsive">
