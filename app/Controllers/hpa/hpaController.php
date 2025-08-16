@@ -272,9 +272,24 @@ class HpaController extends BaseController
             if (!$this->hpaModel->insert($hpaData)) {
                 throw new Exception('Gagal menyimpan data HPA: ' . $this->hpaModel->errors());
             }
+            // Jika ada id_transaksi, update kunjungan
             $idtransaksi = $data['id_transaksi'] ?? null;
             if (!empty($idtransaksi)) {
-                $this->kunjunganModel->update($idtransaksi, ['hasil' => 'Terdaftar']);
+                // Ambil register dari idtransaksi
+                $kunjungan = $this->kunjunganModel
+                    ->select('register')
+                    ->where('idtransaksi', $idtransaksi)
+                    ->first();
+            
+                if ($kunjungan && !empty($kunjungan['register'])) {
+                    $register = $kunjungan['register'];
+            
+                    // Update semua hasil untuk register tersebut
+                    $this->kunjunganModel
+                        ->where('register', $register)
+                        ->set(['hasil' => 'Terdaftar'])
+                        ->update();
+                }
             }
             // Mendapatkan ID HPA yang baru diinsert
             $id_hpa = $this->hpaModel->getInsertID();

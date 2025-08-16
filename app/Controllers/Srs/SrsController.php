@@ -10,6 +10,7 @@ use App\Models\Ihc\IhcModel;
 use App\Models\UsersModel;
 use App\Models\PatientModel;
 use App\Models\SimrsModel;
+use App\Models\KunjunganModel;
 use App\Models\srs\Proses\Penerimaan_srs;
 use App\Models\srs\Proses\Pembacaan_srs;
 use App\Models\srs\Proses\Penulisan_srs;
@@ -28,6 +29,7 @@ class srsController extends BaseController
     protected $usersModel;
     protected $patientModel;
     protected $simrsModel;
+    protected $kunjunganModel;
     protected $penerimaan_srs;
     protected $pemotongan_srs;
     protected $pembacaan_srs;
@@ -47,6 +49,7 @@ class srsController extends BaseController
         $this->usersModel = new UsersModel();
         $this->patientModel = new PatientModel();
         $this->simrsModel = new SimrsModel();
+        $this->kunjunganModel = new KunjunganModel();
         $this->penerimaan_srs = new Penerimaan_srs();;
         $this->pembacaan_srs = new Pembacaan_srs();
         $this->penulisan_srs = new Penulisan_srs();
@@ -102,55 +105,69 @@ class srsController extends BaseController
         }
         $kodesrs = sprintf('SRS.%02d/%s', $nextNumber, $currentYear);
 
-        // Tangkap dari GET parameter
-        $register_api_raw = $this->request->getGet('register_api');
-        $register_api = json_decode($register_api_raw, true);
+        // --- Variabel awal ---
+        $idtransaksi   = $this->request->getGet('idtransaksi');
+        $normPasien    = $this->request->getGet('norm_pasien');
+        $patient       = null;
+        $riwayat_api   = [];
+        $riwayat_hpa   = [];
+        $riwayat_frs   = [];
+        $riwayat_srs   = [];
+        $riwayat_ihc   = [];
 
-        // Ambil data riwayat dari API / Manual
-        // Cek apakah data dari API tersedia
-        if (!empty($register_api) && is_array($register_api)) {
+        // --- Skenario 1: dari idtransaksi ---
+        if ($idtransaksi) {
+            $kunjungan = $this->kunjunganModel->where('idtransaksi', $idtransaksi)->first();
 
-            // Ambil norm
-            $norm = $register_api['norm'] ?? '';
+            if ($kunjungan) {
+                $id_pasien = isset($kunjungan['idpasien']) ? (int) $kunjungan['idpasien'] : null;
 
-            // Ambil riwayat dari API
-            $riwayat_api = [];
-            if ($norm !== '') {
-                $riwayat_api_response = $this->simrsModel->getPemeriksaanPasien($norm);
-                if (!empty($riwayat_api_response['code']) && $riwayat_api_response['code'] == 200) {
-                    $riwayat_api = $riwayat_api_response['data'];
+                $patient = [
+                    'id_pasien'             => $id_pasien,
+                    'norm_pasien'           => $kunjungan['norm'] ?? '',
+                    'nama_pasien'           => $kunjungan['nama'] ?? '',
+                    'alamat_pasien'         => $kunjungan['alamat'] ?? '',
+                    'tanggal_lahir_pasien'  => $kunjungan['tgl_lhr'] ?? '',
+                    'jenis_kelamin_pasien'  => $kunjungan['jeniskelamin'] ?? '',
+                    'status_pasien'         => $kunjungan['jenispasien'] ?? '',
+                    'unitasal'              => $kunjungan['unitasal'] ?? '',
+                    'dokterperujuk'         => $kunjungan['dokterperujuk'] ?? '',
+                    'pemeriksaan'           => $kunjungan['pemeriksaan'] ?? '',
+                    'lokasi_spesimen'       => $kunjungan['statuslokasi'] ?? '',
+                    'diagnosa_klinik'       => $kunjungan['diagnosaklinik'] ?? '',
+                    'tindakan_spesimen'     => $kunjungan['pemeriksaan'] ?? '',
+                    'id_transaksi'          => isset($kunjungan['idtransaksi']) ? (int) $kunjungan['idtransaksi'] : null,
+                    'tanggal_transaksi'     => $kunjungan['tanggal'] ?? '',
+                    'no_register'           => $kunjungan['register'] ?? ''
+                ];
+
+                if ($id_pasien) {
+                    $riwayat_hpa = $this->hpaModel->riwayatPemeriksaanhpa($id_pasien);
+                    $riwayat_frs = $this->frsModel->riwayatPemeriksaanfrs($id_pasien);
+                    $riwayat_srs = $this->srsModel->riwayatPemeriksaansrs($id_pasien);
+                    $riwayat_ihc = $this->ihcModel->riwayatPemeriksaanihc($id_pasien);
                 }
             }
+        }
+        // --- Skenario 2: dari norm_pasien ---
+        elseif ($normPasien) {
+            $patient   = $this->patientModel->where('norm_pasien', $normPasien)->first();
+            $id_pasien = $patient['id_pasien'] ?? null;
 
-            // Map ke array $patient
-            $patient = [
-                'id_pasien'             => isset($register_api['idpasien']) ? (int) $register_api['idpasien'] : null,
-                'norm_pasien'           => $register_api['norm'] ?? '',
-                'nama_pasien'           => $register_api['nama'] ?? '',
-                'alamat_pasien'         => $register_api['alamat'] ?? '',
-                'tanggal_lahir_pasien'  => $register_api['tgl_lhr'] ?? '',
-                'jenis_kelamin_pasien'  => $register_api['jeniskelamin'] ?? '',
-                'status_pasien'         => $register_api['jenispasien'] ?? '',
-                'unitasal'              => $register_api['unitasal'] ?? '',
-                'dokterperujuk'         => $register_api['dokterperujuk'] ?? '',
-                'pemeriksaan'           => $register_api['pemeriksaan'] ?? '',
-                'id_transaksi_simrs'    => $register_api['idtransaksi'] ?? '',
-                'lokasi_spesimen'       => $register_api['statuslokasi'] ?? '',
-                'diagnosa_klinik'       => $register_api['diagnosaklinik'] ?? '',
-                'tindakan_spesimen'     => $register_api['pemeriksaan'] ?? '',
-                'id_transaksi'          => isset($register_api['idtransaksi']) ? (int) $register_api['idtransaksi'] : null,
-                'tanggal_transaksi'     => $register_api['tanggal'] ?? '',
-                'no_register'           => $register_api['register'] ?? ''
-            ];
-        } elseif ($normPasien = $this->request->getGet('norm_pasien')) {
+            if ($id_pasien) {
+                $riwayat_hpa = $this->hpaModel->riwayatPemeriksaanhpa($id_pasien);
+                $riwayat_frs = $this->frsModel->riwayatPemeriksaanfrs($id_pasien);
+                $riwayat_srs = $this->srsModel->riwayatPemeriksaansrs($id_pasien);
+                $riwayat_ihc = $this->ihcModel->riwayatPemeriksaanihc($id_pasien);
+            }
+        }
 
-            // Ambil data pasien dari DB jika norm_pasien tersedia di GET
-            $patient = $this->patientModel->where('norm_pasien', $normPasien)->first();
-            $riwayat_api = [];
-        } else {
-            // Jika tidak ada sumber data sama sekali
-            $patient = null;
-            $riwayat_api = [];
+        // --- Panggil API di semua kondisi ---
+        if (!empty($patient['norm_pasien'])) {
+            $riwayat_api_response = $this->simrsModel->getPemeriksaanPasien($patient['norm_pasien']);
+            if (!empty($riwayat_api_response['code']) && $riwayat_api_response['code'] == 200) {
+                $riwayat_api = $riwayat_api_response['data'];
+            }
         }
 
         $data = [
@@ -159,6 +176,10 @@ class srsController extends BaseController
             'kode_srs'      => $kodesrs,
             'patient'       => $patient,
             'riwayat_api'   => $riwayat_api,
+            'riwayat_hpa'   => $riwayat_hpa,
+            'riwayat_frs'   => $riwayat_frs,
+            'riwayat_srs'   => $riwayat_srs,
+            'riwayat_ihc'   => $riwayat_ihc,
         ];
 
         return view('srs/Register', $data);
@@ -243,6 +264,25 @@ class srsController extends BaseController
             // Simpan data srs
             if (!$this->srsModel->insert($srsData)) {
                 throw new Exception('Gagal menyimpan data srs: ' . $this->srsModel->errors());
+            }
+            // Jika ada id_transaksi, update kunjungan
+            $idtransaksi = $data['id_transaksi'] ?? null;
+            if (!empty($idtransaksi)) {
+                // Ambil register dari idtransaksi
+                $kunjungan = $this->kunjunganModel
+                    ->select('register')
+                    ->where('idtransaksi', $idtransaksi)
+                    ->first();
+            
+                if ($kunjungan && !empty($kunjungan['register'])) {
+                    $register = $kunjungan['register'];
+            
+                    // Update semua hasil untuk register tersebut
+                    $this->kunjunganModel
+                        ->where('register', $register)
+                        ->set(['hasil' => 'Terdaftar'])
+                        ->update();
+                }
             }
             // Mendapatkan ID srs yang baru diinsert
             $id_srs = $this->srsModel->getInsertID();

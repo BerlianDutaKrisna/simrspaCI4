@@ -32,7 +32,7 @@ class Kunjungan extends ResourceController
             'nama_user' => session()->get('nama_user'),
             'data'      => $allData
         ];
-         // Debugging line, remove in production
+        
         return view('Kunjungan/index_all', $data);
     }
 
