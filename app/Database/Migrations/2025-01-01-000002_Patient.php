@@ -31,6 +31,11 @@ class Patient extends Migration
                 'default'    => 'Belum Diisi',
                 'null' => true,
             ],
+            'kota' => [
+                'type'       => 'VARCHAR',
+                'constraint' => 100,
+                'null'       => true
+            ],
             'tanggal_lahir_pasien' => [
                 'type' => 'DATE',
                 'null' => true,

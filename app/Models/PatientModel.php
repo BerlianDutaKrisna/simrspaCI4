@@ -14,6 +14,7 @@ class PatientModel extends Model
         'norm_pasien',
         'nama_pasien',
         'alamat_pasien',
+        'kota',
         'tanggal_lahir_pasien',
         'jenis_kelamin_pasien',
         'status_pasien',
