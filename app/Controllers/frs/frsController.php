@@ -548,12 +548,6 @@ class FrsController extends BaseController
         // Mengambil data dari form
         $data = $this->request->getPost();
         $page_source = $this->request->getPost('page_source');
-        // Mengubah 'jumlah_slide' jika memilih 'lainnya'
-        if ($this->request->getPost('jumlah_slide') === 'lainnya') {
-            $data['jumlah_slide'] = $this->request->getPost('jumlah_slide') === 'lainnya'
-                ? $this->request->getPost('jumlah_slide_custom')
-                : $this->request->getPost('jumlah_slide');
-        }
         // Proses update tabel frs
         if ($this->frsModel->update($id_frs, $data)) {
             // Update data pembacaan jika id_user_dokter_pembacaan_frs ada

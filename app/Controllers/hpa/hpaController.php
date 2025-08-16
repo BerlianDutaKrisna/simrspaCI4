@@ -670,9 +670,6 @@ class HpaController extends BaseController
         $page_source = $this->request->getPost('page_source');
 
         // Mengubah jika memilih 'lainnya'
-        $data['jumlah_slide'] = ($this->request->getPost('jumlah_slide') === 'lainnya')
-            ? $this->request->getPost('jumlah_slide_custom')
-            : $this->request->getPost('jumlah_slide');
         $data['PUG'] = ($this->request->getPost('PUG') === 'lainnya')
             ? $this->request->getPost('pug_custom')
             : $this->request->getPost('PUG');
