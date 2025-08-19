@@ -74,86 +74,88 @@ class Kunjungan extends ResourceController
                 // Mapping pemeriksaan → tagihan
                 $pembayaranMapping = [
                     'KEROKAN*'                  => 589000,
-                    'EKSTERPASI TUMOR JINAK*'    => 911000,
+                    'EKSTERPASI TUMOR JINAK*'  => 911000,
                     'KOLEKSISTEKTOMI*'          => 764000,
-                    'KISTEKTOMI*'          => 756000,
-                    'TIROIDEKTOMI*'          => 913000,
-                    'TAH-BSO*'            => 1343000,
-                    'MASTEKTOMI*'            => 1498000,
-                    'Reseksi Usus'          => 1371000,
-                    'Biopsi beberapa tempat' => 707000,
+                    'KISTEKTOMI*'               => 756000,
+                    'TIROIDEKTOMI*'             => 913000,
+                    'TAH-BSO*'                  => 1343000,
+                    'MASTEKTOMI*'               => 1498000,
+                    'Reseksi Usus'              => 1371000,
+                    'Biopsi beberapa tempat'    => 707000,
                     'BIOPSI*'                    => 589000,
-                    'Potong Beku (VC) biasa' => 1250000,
-                    'FNAB*'                  => 667000,
-                    'FNAB DENGAN TUNTUTAN CT SCAN*' => 960000,
-                    'SITOLOGI*'                => 433000,
-                    'Pap Smear'             => 228000,
+                    'Potong Beku (VC) biasa'    => 1250000,
+                    'FNAB*'                     => 667000,
+                    'FNAB DENGAN TUNTUTAN CT SCAN *' => 960000,
+                    'SITOLOGI*'                 => 433000,
+                    'Pap Smear'                 => 228000,
                     'IMMUNOHISTOKIMIA per Antibody' => 564000,
-
-                    // tambah pemeriksaan lain di sini
                 ];
 
                 foreach ($data['data'] as $row) {
-                    // Pastikan idtransaksi ada
-                    if (!isset($row['idtransaksi'])) continue;
+                    try {
+                        if (!isset($row['idtransaksi'])) continue;
 
-                    $idtransaksi = $row['idtransaksi'];
+                        $idtransaksi = $row['idtransaksi'];
 
-                    // Cek apakah idtransaksi sudah ada
-                    $exists = $kunjunganDB->where('idtransaksi', $idtransaksi)->first();
+                        // Cek apakah idtransaksi sudah ada
+                        $exists = $kunjunganDB->where('idtransaksi', $idtransaksi)->first();
 
-                    // Tentukan tagihan
-                    $pemeriksaan = $row['pemeriksaan'] ?? '';
-                    $tagihan = 0;
-                    foreach ($pembayaranMapping as $key => $value) {
-                        if (stripos($pemeriksaan, $key) !== false) {
-                            $tagihan = $value;
-                            break;
+                        // Tentukan tagihan
+                        $pemeriksaan = $row['pemeriksaan'] ?? '';
+                        $tagihan = 0;
+                        foreach ($pembayaranMapping as $key => $value) {
+                            if (stripos($pemeriksaan, $key) !== false) {
+                                $tagihan = $value;
+                                break;
+                            }
                         }
-                    }
 
-                    // Siapkan data untuk insert
-                    $rowData = [
-                        'idtransaksi'      => $idtransaksi,
-                        'tanggal'          => $row['tanggal'] ?? null,
-                        'idpasien'         => $row['idpasien'] ?? null,
-                        'norm'             => $row['norm'] ?? null,
-                        'nama'             => $row['nama'] ?? null,
-                        'tgl_lhr'          => $row['tgl_lhr'] ?? null,
-                        'pasien_usia'      => $row['pasien_usia'] ?? null,
-                        'beratbadan'       => $row['beratbadan'] ?? null,
-                        'tinggibadan'      => $row['tinggibadan'] ?? null,
-                        'alamat'           => $row['alamat'] ?? null,
-                        'jeniskelamin'     => $row['jeniskelamin'] ?? null,
-                        'kota'             => $row['kota'] ?? null,
-                        'jenispasien'      => $row['jenispasien'] ?? null,
-                        'iddokterperujuk'  => $row['iddokterperujuk'] ?? null,
-                        'dokterperujuk'    => $row['dokterperujuk'] ?? null,
-                        'iddokterpa'       => $row['iddokterpa'] ?? null,
-                        'dokterpa'         => $row['dokterpa'] ?? null,
-                        'pelayananasal'    => $row['pelayananasal'] ?? null,
-                        'idunitasal'       => $row['idunitasal'] ?? null,
-                        'unitasal'         => $row['unitasal'] ?? null,
-                        'register'         => $row['register'] ?? null,
-                        'pemeriksaan'      => $pemeriksaan,
-                        'responsetime'     => $row['responsetime'] ?? null,
-                        'statuslokasi'     => $row['statuslokasi'] ?? null,
-                        'diagnosaklinik'   => $row['diagnosaklinik'] ?? null,
-                        'hasil'            => $row['hasil'] ?? null,
-                        'diagnosapatologi' => $row['diagnosapatologi'] ?? null,
-                        'mutusediaan'      => $row['mutusediaan'] ?? null,
-                        'tagihan'          => $tagihan
-                    ];
+                        // Siapkan data untuk insert
+                        $rowData = [
+                            'idtransaksi'      => $idtransaksi,
+                            'tanggal'          => $row['tanggal'] ?? null,
+                            'idpasien'         => $row['idpasien'] ?? null,
+                            'norm'             => $row['norm'] ?? null,
+                            'nama'             => $row['nama'] ?? null,
+                            'tgl_lhr'          => $row['tgl_lhr'] ?? null,
+                            'pasien_usia'      => $row['pasien_usia'] ?? null,
+                            'beratbadan'       => $row['beratbadan'] ?? null,
+                            'tinggibadan'      => $row['tinggibadan'] ?? null,
+                            'alamat'           => $row['alamat'] ?? null,
+                            'jeniskelamin'     => $row['jeniskelamin'] ?? null,
+                            'kota'             => $row['kota'] ?? null,
+                            'jenispasien'      => $row['jenispasien'] ?? null,
+                            'iddokterperujuk'  => $row['iddokterperujuk'] ?? null,
+                            'dokterperujuk'    => $row['dokterperujuk'] ?? null,
+                            'iddokterpa'       => $row['iddokterpa'] ?? null,
+                            'dokterpa'         => $row['dokterpa'] ?? null,
+                            'pelayananasal'    => $row['pelayananasal'] ?? null,
+                            'idunitasal'       => $row['idunitasal'] ?? null,
+                            'unitasal'         => $row['unitasal'] ?? null,
+                            'register'         => $row['register'] ?? null,
+                            'pemeriksaan'      => $pemeriksaan,
+                            'responsetime'     => $row['responsetime'] ?? null,
+                            'statuslokasi'     => $row['statuslokasi'] ?? null,
+                            'diagnosaklinik'   => $row['diagnosaklinik'] ?? null,
+                            'hasil'            => $row['hasil'] ?? null,
+                            'diagnosapatologi' => $row['diagnosapatologi'] ?? null,
+                            'mutusediaan'      => $row['mutusediaan'] ?? null,
+                            'tagihan'          => $tagihan
+                        ];
 
-                    if (!$exists) {
-                        $toInsert[] = $rowData;
-                    } else {
-                        // Opsional: update tagihan jika pemeriksaan berubah
-                        $kunjunganDB->update($exists['id'], ['tagihan' => $tagihan]);
+                        if (!$exists) {
+                            $toInsert[] = $rowData;
+                        } else {
+                            // Update tagihan jika sudah ada
+                            $kunjunganDB->where('idtransaksi', $idtransaksi)
+                                ->set('tagihan', $tagihan)
+                                ->update();
+                        }
+                    } catch (\Exception $e) {
+                        log_message('error', "Gagal memproses idtransaksi {$row['idtransaksi']}: {$e->getMessage()}");
                     }
                 }
 
-                // Insert batch jika ada data baru
                 $insertCount = 0;
                 if (!empty($toInsert)) {
                     $kunjunganDB->insertBatch($toInsert);
@@ -173,6 +175,7 @@ class Kunjungan extends ResourceController
                 'data'   => 'Data kunjungan hari ini tidak ditemukan'
             ]);
         } catch (\Exception $e) {
+            log_message('error', "Sinkronisasi gagal: {$e->getMessage()}");
             return $this->failServerError('Terjadi kesalahan: ' . $e->getMessage());
         }
     }
