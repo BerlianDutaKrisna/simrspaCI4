@@ -82,6 +82,7 @@ class Kunjungan extends ResourceController
                     'MASTEKTOMI*'               => 1498000,
                     'Reseksi Usus'              => 1371000,
                     'Biopsi beberapa tempat'    => 707000,
+                    'Kerokan + Biopsi'          => 586000,
                     'BIOPSI*'                    => 589000,
                     'Potong Beku (VC) biasa'    => 1250000,
                     'FNAB*'                     => 667000,
