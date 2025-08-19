@@ -42,27 +42,22 @@
                     </thead>
                     <tbody>
                         <?php if (!empty($data)) : ?>
-                            <?php 
-                            $i = 1; 
-                            $uniquePatients = []; 
+                            <?php
+                            $i = 1;
+                            $uniquePatients = [];
                             $totalHarga = 0;
                             ?>
                             <?php foreach ($data as $row) : ?>
                                 <?php
-                                // Tandai baris merah jika hasil kosong/null
                                 $rowClass = empty($row['hasil']) ? 'table-danger' : '';
-
-                                // Format tanggal dan jam
                                 $timestamp = !empty($row['tanggal']) ? strtotime($row['tanggal']) : null;
                                 $jam = $timestamp ? date('H:i:s', $timestamp) : '--:--:--';
                                 $tgl = $timestamp ? date('d-m-Y', $timestamp) : '';
 
-                                // Hitung pasien unik
                                 if (!empty($row['norm'])) {
                                     $uniquePatients[$row['norm']] = true;
                                 }
 
-                                // Hitung total harga
                                 $tagihan = !empty($row['tagihan']) ? (float)$row['tagihan'] : 0;
                                 $totalHarga += $tagihan;
                                 ?>
@@ -78,9 +73,7 @@
                                     <td><?= esc($row['norm'] ?? '') ?></td>
                                     <td><?= esc($row['nama'] ?? '') ?></td>
                                     <td><?= esc(($row['jeniskelamin'] ?? '') . ' / ' . ($row['pasien_usia'] ?? '')) ?></td>
-                                    <td>
-                                        <?= !empty($row['tgl_lhr']) ? esc(date('d-m-Y', strtotime($row['tgl_lhr']))) : '-' ?>
-                                    </td>
+                                    <td><?= !empty($row['tgl_lhr']) ? esc(date('d-m-Y', strtotime($row['tgl_lhr']))) : '-' ?></td>
                                     <td><?= esc($row['alamat'] ?? '') ?></td>
                                     <td><?= esc($row['jenispasien'] ?? '') ?></td>
                                     <td><?= esc($row['dokterperujuk'] ?? '') ?></td>
@@ -94,7 +87,7 @@
                                             <strong class="text-success">Terdaftar</strong>
                                         <?php endif; ?>
                                     </td>
-                                    <td><?= number_format($tagihan, 0, ',', '.') ?></td>
+                                    <td><?= 'Rp. ' . number_format($tagihan, 0, ',', '.') ?></td>
                                 </tr>
                                 <?php $i++; ?>
                             <?php endforeach; ?>
@@ -104,15 +97,16 @@
                             </tr>
                         <?php endif; ?>
                     </tbody>
+
                     <?php if (!empty($data)) : ?>
                         <tfoot class="font-weight-bold bg-light">
                             <tr>
-                                <td colspan="13" class="text-right">Total Pasien Hari ini:</td>
-                                <td><?= count($uniquePatients) ?></td>
+                                <td colspan="12" class="text-right">Total Pasien Hari ini</td>
+                                <td colspan="2"><?= count($uniquePatients) ?></td>
                             </tr>
                             <tr>
-                                <td colspan="13" class="text-right">Total Harga</td>
-                                <td><?= number_format($totalHarga, 0, ',', '.') ?></td>
+                                <td colspan="12" class="text-right">Total Harga</td>
+                                <td colspan="2"><?= 'Rp. ' . number_format($totalHarga, 0, ',', '.') ?></td>
                             </tr>
                         </tfoot>
                     <?php endif; ?>
