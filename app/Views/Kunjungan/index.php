@@ -103,11 +103,11 @@
                     <?php if (!empty($data)) : ?>
                         <tfoot class="font-weight-bold bg-light">
                             <tr>
-                                <td colspan="12" class="text-right">Total Pasien Hari ini</td>
+                                <td colspan="13" class="text-right">Total Pasien Hari ini</td>
                                 <td colspan="2"><?= count($uniquePatients) ?></td>
                             </tr>
                             <tr>
-                                <td colspan="12" class="text-right">Total Harga</td>
+                                <td colspan="13" class="text-right">Total Harga</td>
                                 <td colspan="2"><?= 'Rp. ' . number_format($totalHarga, 0, ',', '.') ?></td>
                             </tr>
                         </tfoot>
