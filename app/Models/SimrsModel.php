@@ -11,8 +11,8 @@ class SimrsModel extends Model
     protected $cache;
 
     // Endpoint URL dasar untuk kunjungan dan pemeriksaan
-    protected $primaryBaseURL = "http://10.250.10.107/apibdrs/apibdrs";
-    protected $backupBaseURL = "http://172.20.29.240/apibdrs/apibdrs";
+    protected $primaryBaseURL = "http://172.20.29.240/apibdrs/apibdrs";
+    protected $backupBaseURL = "http://10.250.10.107/apibdrs/apibdrs";
 
     public function __construct()
     {

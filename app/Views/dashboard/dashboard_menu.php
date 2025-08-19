@@ -231,6 +231,7 @@
                             <tr>
                             <th>No</th>
                             <th>Tanggal</th>
+                            <th>Kode</th>
                             <th>Dokter</th>
                             <th>Diagnosa Klinik</th>
                             <th>Pemeriksaan</th>
@@ -243,10 +244,17 @@
                         const tanggal = row.tanggal ? new Date(row.tanggal).toLocaleDateString('id-ID') : '-';
                         // Escape hasil untuk ditampilkan aman di HTML dan JavaScript
                         const hasilEscaped = row.hasil ? row.hasil.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;").replace(/\n/g, "<br>") : 'Tidak ada hasil';
-
+                        const tanggalFormatted = row.tanggal ?
+                            new Date(row.tanggal).toLocaleDateString('id-ID', {
+                                day: '2-digit',
+                                month: '2-digit',
+                                year: 'numeric'
+                            }) :
+                            '-';
                         html += `<tr>
                     <td>${i + 1}</td>
-                    <td>${tanggal}</td>
+                    <td>${tanggalFormatted}</td>
+                    <td>${row.noregister ?? '-'}</td>
                     <td>${row.dokterpa ?? '-'}</td>
                     <td>${row.diagnosaklinik ?? '-'}</td>
                     <td>${row.pemeriksaan ?? '-'}</td>

@@ -78,7 +78,7 @@ class Kunjungan extends ResourceController
                     'KOLEKSISTEKTOMI*'          => 764000,
                     'KISTEKTOMI*'               => 756000,
                     'TIROIDEKTOMI*'             => 913000,
-                    'TAH-BSO*'                  => 1343000,
+                    'TAH - BSO*'                  => 1343000,
                     'MASTEKTOMI*'               => 1498000,
                     'Reseksi Usus'              => 1371000,
                     'Biopsi beberapa tempat'    => 707000,
