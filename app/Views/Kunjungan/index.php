@@ -26,6 +26,7 @@
                         <tr>
                             <th>No</th>
                             <th>Tanggal</th>
+                            <th>No. Pendaftaran</th>
                             <th>No. RM</th>
                             <th>Nama</th>
                             <th>Jenis Kelamin / Usia</th>
@@ -70,6 +71,7 @@
                                             <?= $jam ?> <?= $tgl ?>
                                         <?php endif; ?>
                                     </td>
+                                    <td><?= esc($row['register'] ?? '') ?></td>
                                     <td><?= esc($row['norm'] ?? '') ?></td>
                                     <td><?= esc($row['nama'] ?? '') ?></td>
                                     <td><?= esc(($row['jeniskelamin'] ?? '') . ' / ' . ($row['pasien_usia'] ?? '')) ?></td>

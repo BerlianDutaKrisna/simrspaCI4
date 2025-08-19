@@ -19,7 +19,7 @@ class Kunjungan extends ResourceController
             'nama_user' => session()->get('nama_user'),
             'data'      => $allData
         ];
-
+        
         return view('Kunjungan/index', $data);
     }
 
