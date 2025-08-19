@@ -34,6 +34,7 @@
                             <th>Pemeriksaan</th>
                             <th>Diagnosa Klinik</th>
                             <th>Status</th>
+                            <th>Harga</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -78,6 +79,7 @@
                                             <strong class="text-success">Terdaftar</strong>
                                         <?php endif; ?>
                                     </td>
+                                    <td><?= esc($row['tagihan'] ?? '') ?></td>
                                 </tr>
                                 <?php $i++; ?>
                             <?php endforeach; ?>
@@ -94,4 +96,5 @@
 </div>
 
 <?= $this->include('templates/notifikasi') ?>
+<?= $this->include('templates/dashboard/script_syncKunjungan'); ?>
 <?= $this->include('templates/dashboard/footer_dashboard') ?>

@@ -4,21 +4,24 @@
 <div class="container-fluid">
     <!-- Card untuk tabel -->
     <div class="card shadow mb-4">
-        <div class="card-header py-3">
+        <div class="card-header py-3 d-flex justify-content-between align-items-center">
             <h6 class="m-0 font-weight-bold text-primary">Data Kunjungan Pasien</h6>
+            <span class="badge badge-info p-2">Ringkasan Hari Ini</span>
         </div>
         <div class="card-body">
-            <h1>Daftar Kunjungan</h1>
+            <h1 class="h4 mb-3">Daftar Kunjungan</h1>
             <!-- Tombol Kembali ke Dashboard -->
             <a href="<?= base_url('/dashboard') ?>" class="btn btn-primary mb-3">
                 <i class="fas fa-reply"></i> Kembali
             </a>
             <div>
-                <a href="<?= base_url('/api/kunjungan/indexAll') ?>" class="btn btn-secondary mb-3">Tampilkan Semua data</a>
+                <a href="<?= base_url('/api/kunjungan/indexAll') ?>" class="btn btn-secondary mb-3">
+                    <i class="fas fa-list"></i> Tampilkan Semua Data
+                </a>
             </div>
             <!-- Tabel Data Kunjungan -->
             <div class="table-responsive">
-                <table class="table table-bordered text-center" id="dataTable" width="100%" cellspacing="0">
+                <table class="table table-bordered table-hover text-center shadow-sm" id="dataTable" width="100%" cellspacing="0">
                     <thead class="thead-dark">
                         <tr>
                             <th>No</th>
@@ -39,7 +42,11 @@
                     </thead>
                     <tbody>
                         <?php if (!empty($data)) : ?>
-                            <?php $i = 1; ?>
+                            <?php 
+                            $i = 1; 
+                            $uniquePatients = []; 
+                            $totalHarga = 0;
+                            ?>
                             <?php foreach ($data as $row) : ?>
                                 <?php
                                 // Tandai baris merah jika hasil kosong/null
@@ -49,11 +56,19 @@
                                 $timestamp = !empty($row['tanggal']) ? strtotime($row['tanggal']) : null;
                                 $jam = $timestamp ? date('H:i:s', $timestamp) : '--:--:--';
                                 $tgl = $timestamp ? date('d-m-Y', $timestamp) : '';
+
+                                // Hitung pasien unik
+                                if (!empty($row['norm'])) {
+                                    $uniquePatients[$row['norm']] = true;
+                                }
+
+                                // Hitung total harga
+                                $tagihan = !empty($row['tagihan']) ? (float)$row['tagihan'] : 0;
+                                $totalHarga += $tagihan;
                                 ?>
                                 <tr class="<?= $rowClass ?>">
                                     <td><?= $i ?></td>
                                     <td>
-                                        <!-- Jam merah kalau hasil null -->
                                         <?php if (empty($row['hasil'])): ?>
                                             <span class="text-danger"><?= $jam ?></span> <?= $tgl ?>
                                         <?php else: ?>
@@ -79,7 +94,7 @@
                                             <strong class="text-success">Terdaftar</strong>
                                         <?php endif; ?>
                                     </td>
-                                    <td><?= esc($row['tagihan'] ?? '') ?></td>
+                                    <td><?= number_format($tagihan, 0, ',', '.') ?></td>
                                 </tr>
                                 <?php $i++; ?>
                             <?php endforeach; ?>
@@ -89,6 +104,18 @@
                             </tr>
                         <?php endif; ?>
                     </tbody>
+                    <?php if (!empty($data)) : ?>
+                        <tfoot class="font-weight-bold bg-light">
+                            <tr>
+                                <td colspan="13" class="text-right">Total Pasien Hari ini:</td>
+                                <td><?= count($uniquePatients) ?></td>
+                            </tr>
+                            <tr>
+                                <td colspan="13" class="text-right">Total Harga</td>
+                                <td><?= number_format($totalHarga, 0, ',', '.') ?></td>
+                            </tr>
+                        </tfoot>
+                    <?php endif; ?>
                 </table>
             </div>
         </div>
@@ -96,4 +123,5 @@
 </div>
 
 <?= $this->include('templates/notifikasi') ?>
+<?= $this->include('templates/dashboard/script_syncKunjungan'); ?>
 <?= $this->include('templates/dashboard/footer_dashboard') ?>
