@@ -9,152 +9,155 @@ class Kunjungan extends Migration
     public function up()
     {
         $this->forge->addField([
+            'id' => [
+                'type'           => 'BIGINT',
+                'unsigned'       => true,
+                'auto_increment' => true,
+            ],
             'idtransaksi' => [
-                'type'       => 'BIGINT',
-                'unsigned'   => true,
-                'null'       => false
+                'type'     => 'BIGINT',
+                'unsigned' => true,
+                'null'     => false,
+                'unique'   => true,
             ],
             'tanggal' => [
-                'type'       => 'DATETIME',
-                'null'       => true
+                'type' => 'DATETIME',
+                'null' => false,
             ],
             'idpasien' => [
-                'type'       => 'BIGINT',
-                'unsigned'   => true,
-                'null'       => true
+                'type'     => 'BIGINT',
+                'unsigned' => true,
+                'null'     => false,
             ],
             'norm' => [
                 'type'       => 'VARCHAR',
                 'constraint' => 20,
-                'null'       => true
+                'null'       => false,
             ],
             'nama' => [
                 'type'       => 'VARCHAR',
-                'constraint' => 100,
-                'null'       => true
+                'constraint' => 150,
+                'null'       => false,
             ],
             'tgl_lhr' => [
-                'type'       => 'DATE',
-                'null'       => true
+                'type' => 'DATE',
+                'null' => true,
             ],
             'pasien_usia' => [
                 'type'       => 'VARCHAR',
                 'constraint' => 50,
-                'null'       => true
+                'null'       => true,
             ],
             'beratbadan' => [
                 'type'       => 'DECIMAL',
                 'constraint' => '5,2',
-                'null'       => true
+                'null'       => true,
             ],
             'tinggibadan' => [
                 'type'       => 'DECIMAL',
                 'constraint' => '5,2',
-                'null'       => true
+                'null'       => true,
             ],
             'alamat' => [
-                'type'       => 'TEXT',
-                'null'       => true
+                'type'       => 'VARCHAR',
+                'constraint' => 255,
+                'null'       => true,
             ],
             'jeniskelamin' => [
                 'type'       => 'CHAR',
                 'constraint' => 1,
-                'null'       => true
+                'null'       => true,
             ],
             'kota' => [
                 'type'       => 'VARCHAR',
                 'constraint' => 100,
-                'null'       => true
+                'null'       => true,
             ],
             'jenispasien' => [
                 'type'       => 'VARCHAR',
                 'constraint' => 100,
-                'null'       => true
+                'null'       => true,
             ],
             'iddokterperujuk' => [
-                'type'       => 'BIGINT',
-                'unsigned'   => true,
-                'null'       => true
+                'type'     => 'BIGINT',
+                'unsigned' => true,
+                'null'     => true,
             ],
             'dokterperujuk' => [
                 'type'       => 'VARCHAR',
-                'constraint' => 200,
-                'null'       => true
+                'constraint' => 150,
+                'null'       => true,
             ],
             'iddokterpa' => [
-                'type'       => 'BIGINT',
-                'unsigned'   => true,
-                'null'       => true
+                'type'     => 'BIGINT',
+                'unsigned' => true,
+                'null'     => true,
             ],
             'dokterpa' => [
                 'type'       => 'VARCHAR',
-                'constraint' => 200,
-                'null'       => true
+                'constraint' => 150,
+                'null'       => true,
             ],
             'pelayananasal' => [
                 'type'       => 'VARCHAR',
-                'constraint' => 10,
-                'null'       => true
+                'constraint' => 50,
+                'null'       => true,
             ],
             'idunitasal' => [
-                'type'       => 'BIGINT',
-                'unsigned'   => true,
-                'null'       => true
+                'type'     => 'BIGINT',
+                'unsigned' => true,
+                'null'     => true,
             ],
             'unitasal' => [
                 'type'       => 'VARCHAR',
-                'constraint' => 200,
-                'null'       => true
+                'constraint' => 100,
+                'null'       => true,
             ],
             'register' => [
                 'type'       => 'VARCHAR',
-                'constraint' => 50,
-                'null'       => true
+                'constraint' => 100,
+                'null'       => true,
             ],
             'pemeriksaan' => [
                 'type'       => 'VARCHAR',
-                'constraint' => 200,
-                'null'       => true
-            ],
-            'responsetime' => [
-                'type'       => 'VARCHAR',
-                'constraint' => 50,
-                'null'       => true
+                'constraint' => 100,
+                'null'       => true,
             ],
             'statuslokasi' => [
                 'type'       => 'VARCHAR',
-                'constraint' => 50,
-                'null'       => true
+                'constraint' => 100,
+                'null'       => true,
             ],
             'diagnosaklinik' => [
                 'type'       => 'TEXT',
-                'null'       => true
-            ],
-            'hasil' => [
-                'type'       => 'TEXT',
-                'null'       => true
-            ],
-            'diagnosapatologi' => [
-                'type'       => 'TEXT',
-                'null'       => true
-            ],
-            'mutusediaan' => [
-                'type'       => 'VARCHAR',
-                'constraint' => 200,
-                'null'       => true
+                'null'       => true,
             ],
             'tagihan' => [
-                'type'       => 'BIGINT',
-                'null'       => true
+                'type'     => 'BIGINT',
+                'unsigned' => true,
+                'null'     => true,
+            ],
+            'status' => [
+                'type'       => 'VARCHAR',
+                'constraint' => 100,
+                'null'       => true,
+            ],
+            'created_at' => [
+                'type' => 'DATETIME',
+                'null' => true,
+            ],
+            'updated_at' => [
+                'type' => 'DATETIME',
+                'null' => true,
             ],
         ]);
 
-        $this->forge->addKey('idtransaksi', true);
-        $this->forge->createTable('kunjungan', true);
+        $this->forge->addKey('id', true);
+        $this->forge->createTable('kunjungan');
     }
 
     public function down()
     {
-        $this->forge->dropTable('kunjungan', true);
+        $this->forge->dropTable('kunjungan');
     }
 }

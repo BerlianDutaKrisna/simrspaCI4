@@ -43,8 +43,8 @@
                             <?php $i = 1; ?>
                             <?php foreach ($data as $row) : ?>
                                 <?php
-                                // Tandai baris merah jika hasil kosong/null
-                                $rowClass = empty($row['hasil']) ? 'table-danger' : '';
+                                // Tandai baris merah jika status kosong/null
+                                $rowClass = empty($row['status']) ? 'table-danger' : '';
 
                                 // Format tanggal dan jam
                                 $timestamp = !empty($row['tanggal']) ? strtotime($row['tanggal']) : null;
@@ -54,9 +54,10 @@
                                 <tr class="<?= $rowClass ?>">
                                     <td><?= $i ?></td>
                                     <td>
-                                        <!-- Jam merah kalau hasil null -->
-                                        <?php if (empty($row['hasil'])): ?>
+                                        <?php if ($row['status'] === 'Belum Terdaftar'): ?>
                                             <span class="text-danger"><?= $jam ?></span> <?= $tgl ?>
+                                        <?php elseif ($row['status'] === 'Terdaftar'): ?>
+                                            <span class="text-success"><?= $jam ?></span> <?= $tgl ?>
                                         <?php else: ?>
                                             <?= $jam ?> <?= $tgl ?>
                                         <?php endif; ?>
@@ -75,10 +76,12 @@
                                     <td><?= esc($row['pemeriksaan'] ?? '') ?></td>
                                     <td><?= esc($row['diagnosaklinik'] ?? '') ?></td>
                                     <td>
-                                        <?php if (empty($row['hasil'])): ?>
-                                            <strong class="text-danger">Belum Terdaftar</strong>
+                                        <?php if ($row['status'] === 'Belum Terdaftar'): ?>
+                                            <strong class="text-danger"><?= esc($row['status']) ?></strong>
+                                        <?php elseif ($row['status'] === 'Terdaftar'): ?>
+                                            <strong class="text-success"><?= esc($row['status']) ?></strong>
                                         <?php else: ?>
-                                            <strong class="text-success">Terdaftar</strong>
+                                            <strong><?= esc($row['status'] ?? '-') ?></strong>
                                         <?php endif; ?>
                                     </td>
                                     <td><?= esc($row['tagihan'] ?? '') ?></td>

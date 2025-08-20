@@ -289,7 +289,7 @@ class HpaController extends BaseController
                     // Update semua hasil untuk register tersebut
                     $this->kunjunganModel
                         ->where('register', $register)
-                        ->set(['hasil' => 'Terdaftar'])
+                        ->set(['status' => 'Terdaftar'])
                         ->update();
                 }
             }

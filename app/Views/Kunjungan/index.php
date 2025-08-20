@@ -50,7 +50,7 @@
                             ?>
                             <?php foreach ($data as $row) : ?>
                                 <?php
-                                $rowClass = empty($row['hasil']) ? 'table-danger' : '';
+                                $rowClass = empty($row['status']) ? 'table-danger' : '';
                                 $timestamp = !empty($row['tanggal']) ? strtotime($row['tanggal']) : null;
                                 $jam = $timestamp ? date('H:i:s', $timestamp) : '--:--:--';
                                 $tgl = $timestamp ? date('d-m-Y', $timestamp) : '';
@@ -62,11 +62,18 @@
                                 $tagihan = !empty($row['tagihan']) ? (float)$row['tagihan'] : 0;
                                 $totalHarga += $tagihan;
                                 ?>
+                                <?php
+                                // Tentukan class baris berdasarkan status
+                                $rowClass = ($row['status'] === 'Belum Terdaftar') ? 'table-danger' : '';
+                                ?>
+
                                 <tr class="<?= $rowClass ?>">
                                     <td><?= $i ?></td>
                                     <td>
-                                        <?php if (empty($row['hasil'])): ?>
+                                        <?php if ($row['status'] === 'Belum Terdaftar'): ?>
                                             <span class="text-danger"><?= $jam ?></span> <?= $tgl ?>
+                                        <?php elseif ($row['status'] === 'Terdaftar'): ?>
+                                            <span class="text-success"><?= $jam ?></span> <?= $tgl ?>
                                         <?php else: ?>
                                             <?= $jam ?> <?= $tgl ?>
                                         <?php endif; ?>
@@ -83,10 +90,12 @@
                                     <td><?= esc($row['pemeriksaan'] ?? '') ?></td>
                                     <td><?= esc($row['diagnosaklinik'] ?? '') ?></td>
                                     <td>
-                                        <?php if (empty($row['hasil'])): ?>
-                                            <strong class="text-danger">Belum Terdaftar</strong>
+                                        <?php if ($row['status'] === 'Belum Terdaftar'): ?>
+                                            <strong class="text-danger"><?= esc($row['status']) ?></strong>
+                                        <?php elseif ($row['status'] === 'Terdaftar'): ?>
+                                            <strong class="text-success"><?= esc($row['status']) ?></strong>
                                         <?php else: ?>
-                                            <strong class="text-success">Terdaftar</strong>
+                                            <strong><?= esc($row['status'] ?? '-') ?></strong>
                                         <?php endif; ?>
                                     </td>
                                     <td><?= 'Rp. ' . number_format($tagihan, 0, ',', '.') ?></td>

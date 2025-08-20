@@ -135,15 +135,13 @@ class Kunjungan extends ResourceController
                             'unitasal'         => $row['unitasal'] ?? null,
                             'register'         => $row['register'] ?? null,
                             'pemeriksaan'      => $pemeriksaan,
-                            'responsetime'     => $row['responsetime'] ?? null,
-                            'statuslokasi'     => $row['statuslokasi'] ?? null,
+                            'status'           => (empty($row['hasil']) ? 'Belum Terdaftar' : 'Terdaftar'), // <- kondisi hasil
                             'diagnosaklinik'   => $row['diagnosaklinik'] ?? null,
-                            'hasil'            => $row['hasil'] ?? null,
                             'diagnosapatologi' => $row['diagnosapatologi'] ?? null,
                             'mutusediaan'      => $row['mutusediaan'] ?? null,
-                            'tagihan'          => $tagihan
+                            'tagihan'          => $tagihan,
                         ];
-
+                        
                         if (!$exists) {
                             $toInsert[] = $rowData;
                         } else {

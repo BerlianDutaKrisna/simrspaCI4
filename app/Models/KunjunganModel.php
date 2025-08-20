@@ -8,7 +8,10 @@ use Config\Services;
 class KunjunganModel extends Model
 {
     protected $table            = 'kunjungan';
-    protected $primaryKey       = 'idtransaksi';
+    protected $primaryKey       = 'id';
+    protected $useAutoIncrement = true;
+    protected $returnType       = 'array';
+    protected $useSoftDeletes   = false;
     protected $allowedFields    = [
         'idtransaksi',
         'tanggal',
@@ -32,21 +35,20 @@ class KunjunganModel extends Model
         'unitasal',
         'register',
         'pemeriksaan',
-        'responsetime',
         'statuslokasi',
         'diagnosaklinik',
-        'hasil',
-        'diagnosapatologi',
-        'mutusediaan',
-        'tagihan'
+        'tagihan',
+        'status'
     ];
-    protected $useTimestamps = false;
-
-    protected $client;
+    protected $useTimestamps = true;
+    protected $createdField  = 'created_at';
+    protected $updatedField  = 'updated_at';
 
     // Endpoint URL dasar untuk kunjungan dan pemeriksaan
     protected $primaryBaseURL = "http://10.250.10.107/apibdrs/apibdrs";
     protected $backupBaseURL  = "http://172.20.29.240/apibdrs/apibdrs";
+
+    protected $client;
 
     public function __construct()
     {
@@ -56,10 +58,12 @@ class KunjunganModel extends Model
 
     public function getKunjunganHariIni(): array
     {
-        $tanggal = date('Y-m-d'); // hanya hari ini
+        // ambil tanggal sekarang dan 3 hari ke belakang
+        $tanggalAkhir  = date('Y-m-d');
+        $tanggalAwal   = date('Y-m-d', strtotime('-3 days'));
 
-        $primaryURL = "{$this->primaryBaseURL}/getKunjunganPasien/{$tanggal}/{$tanggal}";
-        $backupURL  = "{$this->backupBaseURL}/getKunjunganPasien/{$tanggal}/{$tanggal}";
+        $primaryURL = "{$this->primaryBaseURL}/getKunjunganPasien/{$tanggalAwal}/{$tanggalAkhir}";
+        $backupURL  = "{$this->backupBaseURL}/getKunjunganPasien/{$tanggalAwal}/{$tanggalAkhir}";
 
         try {
             // coba endpoint primary
