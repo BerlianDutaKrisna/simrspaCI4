@@ -51,6 +51,10 @@
                                 $jam = $timestamp ? date('H:i:s', $timestamp) : '--:--:--';
                                 $tgl = $timestamp ? date('d-m-Y', $timestamp) : '';
                                 ?>
+                                // Tentukan class baris berdasarkan status
+                                <?php
+                                $rowClass = ($row['status'] === 'Belum Terdaftar') ? 'table-danger' : '';
+                                ?>
                                 <tr class="<?= $rowClass ?>">
                                     <td><?= $i ?></td>
                                     <td>

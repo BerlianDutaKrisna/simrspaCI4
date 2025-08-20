@@ -62,11 +62,10 @@
                                 $tagihan = !empty($row['tagihan']) ? (float)$row['tagihan'] : 0;
                                 $totalHarga += $tagihan;
                                 ?>
-                                <?php
                                 // Tentukan class baris berdasarkan status
+                                <?php
                                 $rowClass = ($row['status'] === 'Belum Terdaftar') ? 'table-danger' : '';
                                 ?>
-
                                 <tr class="<?= $rowClass ?>">
                                     <td><?= $i ?></td>
                                     <td>
