@@ -19,7 +19,7 @@ class Kunjungan extends ResourceController
             'nama_user' => session()->get('nama_user'),
             'data'      => $allData
         ];
-        
+
         return view('Kunjungan/index', $data);
     }
 
@@ -59,6 +59,80 @@ class Kunjungan extends ResourceController
                 'message' => 'Pasien belum mendaftar pada loket / Server mati'
             ], 404);
         }
+    }
+
+    public function store()
+    {
+        $input = $this->request->getJSON(true); // ambil JSON POST
+
+        if (!$input || !is_array($input)) {
+            return $this->respond([
+                'status' => 'error',
+                'message' => 'Tidak ada data yang dikirim'
+            ], 400);
+        }
+
+        $toInsert = [];
+        $updateCount = 0;
+        $insertCount = 0;
+
+        foreach ($input as $row) {
+            if (!isset($row['idtransaksi'])) continue;
+
+            $exists = $this->model->where('idtransaksi', $row['idtransaksi'])->first();
+
+            // Tentukan status: Belum Terdaftar jika hasil kosong, selain itu Terdaftar
+            $row['status'] = empty($row['hasil']) ? 'Belum Terdaftar' : 'Terdaftar';
+
+            $data = [
+                'idtransaksi'      => $row['idtransaksi'],
+                'tanggal'          => $row['tanggal'] ?? null,
+                'idpasien'         => $row['idpasien'] ?? null,
+                'norm'             => $row['norm'] ?? null,
+                'nama'             => $row['nama'] ?? null,
+                'tgl_lhr'          => $row['tgl_lhr'] ?? null,
+                'pasien_usia'      => $row['pasien_usia'] ?? null,
+                'beratbadan'       => $row['beratbadan'] ?? null,
+                'tinggibadan'      => $row['tinggibadan'] ?? null,
+                'alamat'           => $row['alamat'] ?? null,
+                'jeniskelamin'     => $row['jeniskelamin'] ?? null,
+                'kota'             => $row['kota'] ?? null,
+                'jenispasien'      => $row['jenispasien'] ?? null,
+                'iddokterperujuk'  => $row['iddokterperujuk'] ?? null,
+                'dokterperujuk'    => $row['dokterperujuk'] ?? null,
+                'iddokterpa'       => $row['iddokterpa'] ?? null,
+                'dokterpa'         => $row['dokterpa'] ?? null,
+                'pelayananasal'    => $row['pelayananasal'] ?? null,
+                'idunitasal'       => $row['idunitasal'] ?? null,
+                'unitasal'         => $row['unitasal'] ?? null,
+                'register'         => $row['register'] ?? null,
+                'pemeriksaan'      => $row['pemeriksaan'] ?? null,
+                'statuslokasi'     => $row['statuslokasi'] ?? null,
+                'diagnosaklinik'   => $row['diagnosaklinik'] ?? null,
+                'tagihan'          => $row['tagihan'] ?? 0,
+                'status'           => $row['status'],
+            ];
+
+            if ($exists) {
+                $this->model->update($exists['id'], $data);
+                $updateCount++;
+            } else {
+                $toInsert[] = $data;
+            }
+        }
+
+        if (!empty($toInsert)) {
+            $this->model->insertBatch($toInsert);
+            $insertCount = count($toInsert);
+        }
+
+        return $this->respond([
+            'status'       => 'success',
+            'inserted'     => $insertCount,
+            'updated'      => $updateCount,
+            'total_data'   => count($input),
+            'message'      => "{$insertCount} data baru berhasil ditambahkan, {$updateCount} data diperbarui"
+        ], 200);
     }
 
     public function getKunjunganHariIni()
@@ -141,7 +215,7 @@ class Kunjungan extends ResourceController
                             'mutusediaan'      => $row['mutusediaan'] ?? null,
                             'tagihan'          => $tagihan,
                         ];
-                        
+
                         if (!$exists) {
                             $toInsert[] = $rowData;
                         } else {
