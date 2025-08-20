@@ -63,7 +63,7 @@ class Kunjungan extends ResourceController
 
     public function store()
     {
-        $input = $this->request->getJSON(true); // ambil JSON POST
+        $input = $this->request->getJSON(true);
 
         if (!$input || !is_array($input)) {
             return $this->respond([
@@ -72,6 +72,27 @@ class Kunjungan extends ResourceController
             ], 400);
         }
 
+        // Daftar harga berdasarkan jenis pemeriksaan
+        $hargaPemeriksaan = [
+            'KEROKAN*'                        => 589000,
+            'EKSTERPASI TUMOR JINAK*'         => 911000,
+            'KOLEKSISTEKTOMI*'                => 764000,
+            'KISTEKTOMI*'                     => 756000,
+            'TIROIDEKTOMI*'                   => 913000,
+            'TAH - BSO*'                      => 1343000,
+            'MASTEKTOMI*'                     => 1498000,
+            'Reseksi Usus'                    => 1371000,
+            'Biopsi beberapa tempat'          => 707000,
+            'Kerokan + Biopsi'                => 586000,
+            'BIOPSI*'                         => 589000,
+            'Potong Beku (VC) biasa'          => 1250000,
+            'FNAB*'                           => 667000,
+            'FNAB DENGAN TUNTUTAN CT SCAN *'  => 960000,
+            'SITOLOGI*'                       => 433000,
+            'Pap Smear'                       => 228000,
+            'IMMUNOHISTOKIMIA per Antibody'   => 564000,
+        ];
+
         $toInsert = [];
         $updateCount = 0;
         $insertCount = 0;
@@ -79,11 +100,21 @@ class Kunjungan extends ResourceController
         foreach ($input as $row) {
             if (!isset($row['idtransaksi'])) continue;
 
+            // Cek apakah data dengan idtransaksi sudah ada
             $exists = $this->model->where('idtransaksi', $row['idtransaksi'])->first();
 
-            // Tentukan status: Belum Terdaftar jika hasil kosong, selain itu Terdaftar
+            // Tentukan status berdasarkan ada/tidaknya hasil
             $row['status'] = empty($row['hasil']) ? 'Belum Terdaftar' : 'Terdaftar';
 
+            // Tentukan nilai tagihan
+            $tagihan = 0;
+            if (!empty($row['pemeriksaan']) && isset($hargaPemeriksaan[$row['pemeriksaan']])) {
+                $tagihan = $hargaPemeriksaan[$row['pemeriksaan']];
+            } else {
+                $tagihan = $row['tagihan'] ?? 0;
+            }
+
+            // Susun data untuk insert/update
             $data = [
                 'idtransaksi'      => $row['idtransaksi'],
                 'tanggal'          => $row['tanggal'] ?? null,
@@ -109,10 +140,11 @@ class Kunjungan extends ResourceController
                 'pemeriksaan'      => $row['pemeriksaan'] ?? null,
                 'statuslokasi'     => $row['statuslokasi'] ?? null,
                 'diagnosaklinik'   => $row['diagnosaklinik'] ?? null,
-                'tagihan'          => $row['tagihan'] ?? 0,
+                'tagihan'          => $tagihan,
                 'status'           => $row['status'],
             ];
 
+            // Update atau Insert
             if ($exists) {
                 $this->model->update($exists['id'], $data);
                 $updateCount++;
@@ -121,6 +153,7 @@ class Kunjungan extends ResourceController
             }
         }
 
+        // Jika ada data baru, lakukan insert batch
         if (!empty($toInsert)) {
             $this->model->insertBatch($toInsert);
             $insertCount = count($toInsert);
