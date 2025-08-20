@@ -47,34 +47,31 @@
                             $i = 1;
                             $uniquePatients = [];
                             $totalHarga = 0;
+                            $hariIndo = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
                             ?>
                             <?php foreach ($data as $row) : ?>
                                 <?php
-                                $rowClass = empty($row['status']) ? 'table-danger' : '';
                                 $timestamp = !empty($row['tanggal']) ? strtotime($row['tanggal']) : null;
                                 $jam = $timestamp ? date('H:i:s', $timestamp) : '--:--:--';
                                 $tgl = $timestamp ? date('d-m-Y', $timestamp) : '';
-
+                                $hari = $timestamp ? $hariIndo[date('w', $timestamp)] : '';
                                 if (!empty($row['norm'])) {
                                     $uniquePatients[$row['norm']] = true;
                                 }
-
                                 $tagihan = !empty($row['tagihan']) ? (float)$row['tagihan'] : 0;
                                 $totalHarga += $tagihan;
-                                ?>
                                 // Tentukan class baris berdasarkan status
-                                <?php
                                 $rowClass = ($row['status'] === 'Belum Terdaftar') ? 'table-danger' : '';
                                 ?>
                                 <tr class="<?= $rowClass ?>">
                                     <td><?= $i ?></td>
                                     <td>
                                         <?php if ($row['status'] === 'Belum Terdaftar'): ?>
-                                            <span class="text-danger"><?= $jam ?></span> <?= $tgl ?>
+                                            <span class="text-danger"><?= $jam ?></span> <?= $hari ?>, <?= $tgl ?>
                                         <?php elseif ($row['status'] === 'Terdaftar'): ?>
-                                            <span class="text-success"><?= $jam ?></span> <?= $tgl ?>
+                                            <span class="text-success"><?= $jam ?></span> <?= $hari ?>, <?= $tgl ?>
                                         <?php else: ?>
-                                            <?= $jam ?> <?= $tgl ?>
+                                            <?= $jam ?> <?= $hari ?>, <?= $tgl ?>
                                         <?php endif; ?>
                                     </td>
                                     <td><?= esc($row['register'] ?? '') ?></td>
@@ -107,7 +104,6 @@
                             </tr>
                         <?php endif; ?>
                     </tbody>
-
                     <?php if (!empty($data)) : ?>
                         <tfoot class="font-weight-bold bg-light">
                             <tr>

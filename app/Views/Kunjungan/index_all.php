@@ -40,39 +40,36 @@
                     </thead>
                     <tbody>
                         <?php if (!empty($data)) : ?>
-                            <?php $i = 1; ?>
+                            <?php
+                            $i = 1;
+                            $hariIndo = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
+                            ?>
                             <?php foreach ($data as $row) : ?>
                                 <?php
-                                // Tandai baris merah jika status kosong/null
-                                $rowClass = empty($row['status']) ? 'table-danger' : '';
-
+                                // Tentukan class baris berdasarkan status
+                                $rowClass = ($row['status'] === 'Belum Terdaftar') ? 'table-danger' : '';
                                 // Format tanggal dan jam
                                 $timestamp = !empty($row['tanggal']) ? strtotime($row['tanggal']) : null;
                                 $jam = $timestamp ? date('H:i:s', $timestamp) : '--:--:--';
                                 $tgl = $timestamp ? date('d-m-Y', $timestamp) : '';
-                                ?>
-                                // Tentukan class baris berdasarkan status
-                                <?php
-                                $rowClass = ($row['status'] === 'Belum Terdaftar') ? 'table-danger' : '';
+                                $hari = $timestamp ? $hariIndo[date('w', $timestamp)] : '';
                                 ?>
                                 <tr class="<?= $rowClass ?>">
                                     <td><?= $i ?></td>
                                     <td>
                                         <?php if ($row['status'] === 'Belum Terdaftar'): ?>
-                                            <span class="text-danger"><?= $jam ?></span> <?= $tgl ?>
+                                            <span class="text-danger"><?= $jam ?></span> <?= $hari ?>, <?= $tgl ?>
                                         <?php elseif ($row['status'] === 'Terdaftar'): ?>
-                                            <span class="text-success"><?= $jam ?></span> <?= $tgl ?>
+                                            <span class="text-success"><?= $jam ?></span> <?= $hari ?>, <?= $tgl ?>
                                         <?php else: ?>
-                                            <?= $jam ?> <?= $tgl ?>
+                                            <?= $jam ?> <?= $hari ?>, <?= $tgl ?>
                                         <?php endif; ?>
                                     </td>
                                     <td><?= esc($row['register'] ?? '') ?></td>
                                     <td><?= esc($row['norm'] ?? '') ?></td>
                                     <td><?= esc($row['nama'] ?? '') ?></td>
                                     <td><?= esc(($row['jeniskelamin'] ?? '') . ' / ' . ($row['pasien_usia'] ?? '')) ?></td>
-                                    <td>
-                                        <?= !empty($row['tgl_lhr']) ? esc(date('d-m-Y', strtotime($row['tgl_lhr']))) : '-' ?>
-                                    </td>
+                                    <td><?= !empty($row['tgl_lhr']) ? esc(date('d-m-Y', strtotime($row['tgl_lhr']))) : '-' ?></td>
                                     <td><?= esc($row['alamat'] ?? '') ?></td>
                                     <td><?= esc($row['jenispasien'] ?? '') ?></td>
                                     <td><?= esc($row['dokterperujuk'] ?? '') ?></td>
