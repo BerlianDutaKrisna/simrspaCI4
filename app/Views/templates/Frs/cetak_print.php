@@ -73,8 +73,8 @@ if ($pembacaan_frs['dokter_nama'] === "dr. Ayu Tyasmara Pratiwi, Sp.PA") {
                         <td align="center" width="500" nowrap colspan="3"><h3>UNIT PATOLOGI ANATOMI</h3></td>
                     </tr>
                     <tr><td align="center" width="500" colspan="3">&nbsp;</td></tr>
-                    <tr><td nowrap>Tanggal Terima</td><td>:</td><td>&nbsp; <?= isset($penerimaan['mulai_penerimaan']) ? date('d-m-Y H:i:s', strtotime($penerimaan['mulai_penerimaan'])) : '' ?></td></tr>
-                    <tr><td nowrap>Tanggal Hasil</td><td>:</td><td>&nbsp; <?= isset($frs['tanggal_hasil']) ? date('d-m-Y H:i:s', strtotime($frs['tanggal_hasil'])) : '' ?></td></tr>
+                    <tr><td nowrap>Tanggal Terima</td><td>:</td><td>&nbsp; <?= isset($frs['mulai_penerimaan_frs']) ? date('d-m-Y H:i:s', strtotime($frs['mulai_penerimaan_frs'])) : '' ?></td></tr>
+                    <tr><td nowrap>Tanggal Hasil</td><td>:</td><td>&nbsp; <?= isset($frs['selesai_authorized_frs']) ? date('d-m-Y H:i:s', strtotime($frs['selesai_authorized_frs'])) : '' ?></td></tr>
                 </table>
             </td>
         </tr>
@@ -108,11 +108,18 @@ if ($pembacaan_frs['dokter_nama'] === "dr. Ayu Tyasmara Pratiwi, Sp.PA") {
                     'November',
                     'Desember'
                 ];
-                $tanggal = date('d');
-                $bulanIndo = $bulan[date('n') - 1];
-                $tahun = date('Y');
+
+                // Cek apakah tanggal selesai_penulisan ada dan valid
+                if (!empty($frs['selesai_authorized_frs'])) {
+                    $timestamp = strtotime($frs['selesai_authorized_frs']);
+                    $tanggal = date('d', $timestamp);
+                    $bulanIndo = $bulan[date('n', $timestamp) - 1];
+                    $tahun = date('Y', $timestamp);
+                    echo "Surabaya, {$tanggal} {$bulanIndo} {$tahun}";
+                } else {
+                    echo "Surabaya, -";
+                }
                 ?>
-                Surabaya, <?= $tanggal . ' ' . $bulanIndo . ' ' . $tahun ?>
                 </td>
             </tr>
             <tr>

@@ -632,8 +632,8 @@ class HpaController extends BaseController
             'nama_user' => session()->get('nama_user'),
             'hpa' => $hpa,
             'pembacaan_hpa' => $pembacaan_hpa,
-        ];
-
+            ];
+            
         return view('hpa/edit_print', $data);
     }
 

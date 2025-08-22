@@ -517,7 +517,7 @@ class FrsController extends BaseController
             'frs' => $frs,
             'pembacaan_frs' => $pembacaan_frs,
         ];
-
+        
         return view('frs/edit_print', $data);
     }
 
