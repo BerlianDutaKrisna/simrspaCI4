@@ -9,5 +9,4 @@
 <?= $this->include('dashboard/dashboard_gudang'); ?>
 <?= $this->include('dashboard/grafik_gudang'); ?>
 <?= $this->include('templates/notifikasi'); ?>
-<?= $this->include('templates/dashboard/script_syncKunjungan'); ?>
 <?= $this->include('templates/dashboard/footer_dashboard'); ?>

@@ -123,5 +123,4 @@
 </div>
 
 <?= $this->include('templates/notifikasi') ?>
-<?= $this->include('templates/dashboard/script_syncKunjungan'); ?>
 <?= $this->include('templates/dashboard/footer_dashboard') ?>
