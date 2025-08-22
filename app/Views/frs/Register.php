@@ -220,12 +220,12 @@
                 <div class="form-group col-md-3">
                     <label for="unit_asal">Unit Asal</label>
                     <select class="form-control" id="unit_asal" name="unit_asal" onchange="handleUnitAsalChange(this)">
-                        <option value="<?= esc($patient['dokterperujuk'] ?? 'Belum Dipilih') ?>" selected>
-                            <?= esc($patient['dokterperujuk'] ?? 'Belum Dipilih') ?>
+                        <option value="<?= esc($patient['unitasal'] ?? 'Belum Dipilih') ?>" selected>
+                            <?= esc($patient['unitasal'] ?? 'Belum Dipilih') ?>
                         </option>
                         <option value="Klinik Bedah">Klinik Bedah</option>
                         <option value="Klinik Bedah Onkologi">Klinik Bedah Onkologi</option>
-                        <option value="Klinik Bedah Mulut">Klinik Bedah Mulut</option>
+                    <option value="Klinik Bedah Mulut">Klinik Bedah Mulut</option>
                         <option value="Klinik Anak">Klinik Anak</option>
                         <option value="Klinik Paru">Klinik Paru</option>
                         <option value="Klinik THT">Klinik THT</option>
