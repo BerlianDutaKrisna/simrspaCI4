@@ -32,7 +32,7 @@
                     <p><strong>Nama:</strong> ${p.nama_pasien}</p>
                     <p><strong>Alamat:</strong> ${p.alamat_pasien || 'Belum diisi'}</p>
                     <p><strong>Jenis Kelamin/Tanggal Lahir:</strong> ${p.jenis_kelamin_pasien} / ${p.tanggal_lahir_pasien ? formatDate(p.tanggal_lahir_pasien) : 'Belum diisi'}</p>
-                    <p><strong>Status:</strong> ${p.status_pasien}</p>
+                    <p><strong>Status:</strong> ${p.status_pasien || 'Belum diisi'}</p>
                 `;
                 document.getElementById('modalFooter').innerHTML = `
                     <a href="<?= base_url('hpa/register') ?>?norm_pasien=${norm}" class="btn btn-danger"><i class="fas fa-plus-square"></i> HPA</a>
