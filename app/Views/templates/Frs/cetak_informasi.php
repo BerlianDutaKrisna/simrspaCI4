@@ -275,7 +275,20 @@
 </html>
     `);
 
-        printWindow.document.close();
+    printWindow.document.close();
+        printWindow.focus();
         printWindow.print();
+
+        // Tutup otomatis setelah selesai print
+        printWindow.onafterprint = function () {
+            printWindow.close();
+        };
+
+        // Fallback, jika onafterprint tidak jalan
+        setTimeout(function () {
+            if (!printWindow.closed) {
+                printWindow.close();
+            }
+        }, 3000);
     }
 </script>
