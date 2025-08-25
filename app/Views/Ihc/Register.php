@@ -90,6 +90,7 @@
                 <?php endif ?>
             </div>
         </div>
+        
         <button class="btn btn-outline-info mb-3" type="button" data-toggle="collapse" data-target="#riwayatCollapse" aria-expanded="false" aria-controls="riwayatCollapse">
             <i class="fas fa-book-medical"></i> Riwayat Pemeriksaan Lokal
         </button>
