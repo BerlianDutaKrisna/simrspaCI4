@@ -58,7 +58,7 @@ class PatientModel extends Model
             p.tanggal_lahir_pasien, 
             p.jenis_kelamin_pasien, 
             hpa.unit_asal, hpa.dokter_pengirim, hpa.diagnosa_klinik, 
-            hpa.kode_hpa AS kode_pemeriksaan, hpa.tanggal_permintaan, 'HPA' AS jenis_pemeriksaan,
+            hpa.kode_hpa AS kode_pemeriksaan, hpa.tanggal_permintaan, hpa.tanggal_hasil, 'HPA' AS jenis_pemeriksaan,
             hpa.hasil_hpa AS hasil, hpa.status_hpa AS status, hpa.penerima_hpa AS penerima, hpa.tanggal_penerima
         FROM patient p
         INNER JOIN hpa ON hpa.id_pasien = p.id_pasien 
@@ -76,7 +76,7 @@ class PatientModel extends Model
             p.tanggal_lahir_pasien, 
             p.jenis_kelamin_pasien, 
             frs.unit_asal, frs.dokter_pengirim, frs.diagnosa_klinik, 
-            frs.kode_frs AS kode_pemeriksaan, frs.tanggal_permintaan, 'FRS' AS jenis_pemeriksaan,
+            frs.kode_frs AS kode_pemeriksaan, frs.tanggal_permintaan, frs.tanggal_hasil, 'FRS' AS jenis_pemeriksaan,
             frs.hasil_frs AS hasil, frs.status_frs AS status, frs.penerima_frs AS penerima, frs.tanggal_penerima
         FROM patient p
         INNER JOIN frs ON frs.id_pasien = p.id_pasien 
@@ -94,7 +94,7 @@ class PatientModel extends Model
             p.tanggal_lahir_pasien, 
             p.jenis_kelamin_pasien, 
             srs.unit_asal, srs.dokter_pengirim, srs.diagnosa_klinik, 
-            srs.kode_srs AS kode_pemeriksaan, srs.tanggal_permintaan, 'SRS' AS jenis_pemeriksaan,
+            srs.kode_srs AS kode_pemeriksaan, srs.tanggal_permintaan, srs.tanggal_hasil, 'SRS' AS jenis_pemeriksaan,
             srs.hasil_srs AS hasil, srs.status_srs AS status, srs.penerima_srs AS penerima, srs.tanggal_penerima
         FROM patient p
         INNER JOIN srs ON srs.id_pasien = p.id_pasien 
@@ -112,7 +112,7 @@ class PatientModel extends Model
             p.tanggal_lahir_pasien, 
             p.jenis_kelamin_pasien, 
             ihc.unit_asal, ihc.dokter_pengirim, ihc.diagnosa_klinik, 
-            ihc.kode_ihc AS kode_pemeriksaan, ihc.tanggal_permintaan, 'IHC' AS jenis_pemeriksaan,
+            ihc.kode_ihc AS kode_pemeriksaan, ihc.tanggal_permintaan, ihc.tanggal_hasil, 'IHC' AS jenis_pemeriksaan,
             ihc.hasil_ihc AS hasil, ihc.status_ihc AS status, ihc.penerima_ihc AS penerima, ihc.tanggal_penerima
         FROM patient p
         INNER JOIN ihc ON ihc.id_pasien = p.id_pasien 
