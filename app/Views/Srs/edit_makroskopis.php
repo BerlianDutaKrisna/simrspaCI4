@@ -319,20 +319,11 @@
             <div class="form-group row">
                 <label class="col-sm-2 col-form-label" for="jumlah_slide">Jumlah Slide</label>
                 <div class="col-sm-4">
-                    <select class="form-control" id="jumlah_slide" name="jumlah_slide" onchange="handleJumlahSlideChange(this)">
-                        <option value="0" <?= ($srs['jumlah_slide'] == '0') ? 'selected' : '' ?>>0</option>
-                        <option value="1" <?= ($srs['jumlah_slide'] == '1') ? 'selected' : '' ?>>1</option>
-                        <option value="2" <?= ($srs['jumlah_slide'] == '2') ? 'selected' : '' ?>>2</option>
-                        <option value="3" <?= ($srs['jumlah_slide'] == '3') ? 'selected' : '' ?>>3</option>
-                        <option value="lainnya" <?= (!in_array($srs['jumlah_slide'], ['0', '1', '2', '3']) ? 'selected' : '') ?>>Lainnya</option>
-                    </select>
-                    <input
-                        type="text"
-                        class="form-control mt-2 <?= (!in_array($srs['jumlah_slide'], ['0', '1', '2', '3'])) ? '' : 'd-none' ?>"
-                        id="jumlah_slide_custom"
-                        name="jumlah_slide_custom"
-                        placeholder="Masukkan Jumlah Slide Lainnya"
-                        value="<?= (!in_array($srs['jumlah_slide'], ['0', '1', '2', '3'])) ? $srs['jumlah_slide'] : '' ?>">
+                <input type="number"
+                                    class="form-control form-control-sm jumlah-slide-input"
+                                    data-id="<?= $srs['id_srs']; ?>"
+                                    value="<?= $srs['jumlah_slide']; ?>"
+                                    min="0" step="1" style="width:100px;">
                 </div>
                 <label class="col-sm-2 col-form-label" for=""></label>
                 <div class="col-sm-4">
@@ -412,3 +403,41 @@
 <?= $this->include('templates/notifikasi') ?>
 <?= $this->include('templates/srs/footer_edit'); ?>
 <?= $this->include('templates/srs/cetak_proses'); ?>
+
+// jumlah slide ajax
+<script>
+    $(document).ready(function() {
+        $(".jumlah-slide-input").on("change", function() {
+            let input = $(this);
+            let id_srs = input.data("id");
+            let jumlah_slide = input.val();
+
+            $.ajax({
+                url: "<?= base_url('srs/update_jumlah_slide'); ?>",
+                type: "POST",
+                data: {
+                    id_srs: id_srs,
+                    jumlah_slide: jumlah_slide,
+                    <?= csrf_token() ?>: "<?= csrf_hash() ?>" // CSRF protection
+                },
+                dataType: "json",
+                success: function(res) {
+                    if (res.status === "success") {
+                        console.log("Jumlah slide berhasil diperbarui");
+
+                        // Update tombol cetak di baris yang sama
+                        let btnCetak = input.closest("tr").find(".btn-cetak-stiker");
+                        if (btnCetak.length) {
+                            btnCetak.data("slide", jumlah_slide);
+                        }
+                    } else {
+                        alert("Gagal memperbarui jumlah slide!");
+                    }
+                },
+                error: function(xhr, status, error) {
+                    alert("Terjadi kesalahan: " + error);
+                }
+            });
+        });
+    });
+</script>

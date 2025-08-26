@@ -240,7 +240,7 @@
                         <div class="form-group row">
                             <label class="col-sm-2 col-form-label" for="jumlah_slide">Jumlah Slide</label>
                             <div class="col-sm-2">
-                                <input type="number"
+                                <input type="number" name="jumlah_slide" id="jumlah_slide"
                                     class="form-control form-control-sm jumlah-slide-input"
                                     data-id="<?= $hpa['id_hpa']; ?>"
                                     value="<?= $hpa['jumlah_slide']; ?>"
@@ -569,6 +569,7 @@
 <?= $this->include('templates/hpa/cetak_stiker'); ?>
 <?= $this->include('templates/hpa/cetak_print'); ?>
 
+// jumlah slide ajax
 <script>
     $(document).ready(function() {
         $(".jumlah-slide-input").on("change", function() {
