@@ -95,7 +95,7 @@ class Kunjungan extends ResourceController
             'SITOLOGI*'                       => 433000,
             'Pap Smear'                       => 228000,
             'IMMUNOHISTOKIMIA per Antibody'   => 564000,
-            'PEMBANCAAN ULANG (REVISI HASIL)' => 893062,
+            'PEMBANCAAN ULANG (REVISI HASIL)' => 250000,
         ];
 
         $toInsert = [];
@@ -242,7 +242,7 @@ class Kunjungan extends ResourceController
             'SITOLOGI*'                       => 433000,
             'Pap Smear'                       => 228000,
             'IMMUNOHISTOKIMIA per Antibody'   => 564000,
-            'PEMBANCAAN ULANG (REVISI HASIL)' => 893062,
+            'PEMBANCAAN ULANG (REVISI HASIL)' => 250000,
         ];
 
         // Cari record berdasarkan idtransaksi
@@ -339,7 +339,7 @@ class Kunjungan extends ResourceController
                     'SITOLOGI*'                       => 433000,
                     'Pap Smear'                       => 228000,
                     'IMMUNOHISTOKIMIA per Antibody'   => 564000,
-                    'PEMBANCAAN ULANG (REVISI HASIL)' => 893062,
+                    'PEMBANCAAN ULANG (REVISI HASIL)' => 250000,
                 ];
 
                 foreach ($data['data'] as $row) {
