@@ -83,6 +83,7 @@ class Kunjungan extends ResourceController
             'TAH - BSO*'                      => 1343000,
             'MASTEKTOMI*'                     => 1498000,
             'MIOMEKTOMI*'                     => 779000,
+            'OMENTEKTOMI*'                    => 720000,
             'Reseksi Usus'                    => 1371000,
             'Biopsi beberapa tempat'          => 707000,
             'Kerokan + Biopsi'                => 586000,
@@ -94,6 +95,7 @@ class Kunjungan extends ResourceController
             'SITOLOGI*'                       => 433000,
             'Pap Smear'                       => 228000,
             'IMMUNOHISTOKIMIA per Antibody'   => 564000,
+            'PEMBANCAAN ULANG (REVISI HASIL)' => 893062,
         ];
 
         $toInsert = [];
@@ -228,6 +230,7 @@ class Kunjungan extends ResourceController
             'TAH - BSO*'                      => 1343000,
             'MASTEKTOMI*'                     => 1498000,
             'MIOMEKTOMI*'                     => 779000,
+            'OMENTEKTOMI*'                    => 720000,
             'Reseksi Usus'                    => 1371000,
             'Biopsi beberapa tempat'          => 707000,
             'Kerokan + Biopsi'                => 586000,
@@ -239,6 +242,7 @@ class Kunjungan extends ResourceController
             'SITOLOGI*'                       => 433000,
             'Pap Smear'                       => 228000,
             'IMMUNOHISTOKIMIA per Antibody'   => 564000,
+            'PEMBANCAAN ULANG (REVISI HASIL)' => 893062,
         ];
 
         // Cari record berdasarkan idtransaksi
@@ -323,6 +327,7 @@ class Kunjungan extends ResourceController
                     'TAH - BSO*'                      => 1343000,
                     'MASTEKTOMI*'                     => 1498000,
                     'MIOMEKTOMI*'                     => 779000,
+                    'OMENTEKTOMI*'                    => 720000,
                     'Reseksi Usus'                    => 1371000,
                     'Biopsi beberapa tempat'          => 707000,
                     'Kerokan + Biopsi'                => 586000,
@@ -334,6 +339,7 @@ class Kunjungan extends ResourceController
                     'SITOLOGI*'                       => 433000,
                     'Pap Smear'                       => 228000,
                     'IMMUNOHISTOKIMIA per Antibody'   => 564000,
+                    'PEMBANCAAN ULANG (REVISI HASIL)' => 893062,
                 ];
 
                 foreach ($data['data'] as $row) {
