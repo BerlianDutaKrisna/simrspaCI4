@@ -282,10 +282,10 @@ class HpaController extends BaseController
                     ->select('register')
                     ->where('idtransaksi', $idtransaksi)
                     ->first();
-            
+
                 if ($kunjungan && !empty($kunjungan['register'])) {
                     $register = $kunjungan['register'];
-            
+
                     // Update semua hasil untuk register tersebut
                     $this->kunjunganModel
                         ->where('register', $register)
@@ -481,7 +481,7 @@ class HpaController extends BaseController
         // Ambil data pengguna dengan status "Dokter"
         $users = $this->usersModel->where('status_user', 'Dokter')->findAll();
         // Persiapkan data yang akan dikirim ke view
-        
+
         $data = [
             'hpa'        => $hpa,
             'riwayat_api'   => $riwayat_api ?? [],
@@ -639,10 +639,21 @@ class HpaController extends BaseController
     {
         // Ambil data hpa berdasarkan ID
         $hpa = $this->hpaModel->getHpaWithRelationsProses($id_hpa);
+
+        // Jika field mulai_pemverifikasi_hpa masih kosong, update dengan waktu sekarang
+        if (empty($hpa['mulai_pemverifikasi_hpa'])) {
+            $this->pemverifikasi_hpa->update($hpa['id_pemverifikasi_hpa'], [
+                'mulai_pemverifikasi_hpa' => date('Y-m-d H:i:s'),
+            ]);
+
+            // Refresh data biar ikut field yang sudah diperbarui
+            $hpa = $this->hpaModel->getHpaWithRelationsProses($id_hpa);
+        }
+
         // Ambil data pembacaan HPA jika tersedia
+        $pembacaan_hpa = [];
         if (!empty($hpa['id_pembacaan_hpa'])) {
             $pembacaan_hpa = $this->pembacaan_hpa->find($hpa['id_pembacaan_hpa']) ?? [];
-            // Ambil nama dokter dari pembacaan jika tersedia
             if (!empty($pembacaan_hpa['id_user_dokter_pembacaan_hpa'])) {
                 $dokter = $this->usersModel->find($pembacaan_hpa['id_user_dokter_pembacaan_hpa']);
                 $pembacaan_hpa['dokter_nama'] = $dokter ? $dokter['nama_user'] : null;
@@ -650,13 +661,14 @@ class HpaController extends BaseController
                 $pembacaan_hpa['dokter_nama'] = null;
             }
         }
+
         $data = [
             'id_user' => session()->get('id_user'),
             'nama_user' => session()->get('nama_user'),
             'hpa' => $hpa,
             'pembacaan_hpa' => $pembacaan_hpa,
-            ];
-            
+        ];
+
         return view('hpa/edit_print', $data);
     }
 
@@ -1140,7 +1152,7 @@ class HpaController extends BaseController
             'nama_user'  => session()->get('nama_user'),
             'hpaData' => $hpaData,
         ];
-        
+
         return view('hpa/laporan/laporan_PUG', $data);
     }
 

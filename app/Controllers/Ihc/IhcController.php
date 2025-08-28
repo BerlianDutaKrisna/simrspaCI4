@@ -490,11 +490,22 @@ class ihcController extends BaseController
     public function edit_print($id_ihc)
     {
         // Ambil data ihc berdasarkan ID
-        $ihc = $this->ihcModel->getihcWithRelationsProses($id_ihc);
-        // Ambil data pembacaan IHC jika tersedia
+        $ihc = $this->ihcModel->getIhcWithRelationsProses($id_ihc);
+
+        // Jika field mulai_pemverifikasi_ihc masih kosong, update dengan waktu sekarang
+        if (empty($ihc['mulai_pemverifikasi_ihc'])) {
+            $this->pemverifikasi_ihc->update($ihc['id_pemverifikasi_ihc'], [
+                'mulai_pemverifikasi_ihc' => date('Y-m-d H:i:s'),
+            ]);
+
+            // Refresh data biar ikut field yang sudah diperbarui
+            $ihc = $this->ihcModel->getIhcWithRelationsProses($id_ihc);
+        }
+
+        // Ambil data pembacaan ihc jika tersedia
+        $pembacaan_ihc = [];
         if (!empty($ihc['id_pembacaan_ihc'])) {
             $pembacaan_ihc = $this->pembacaan_ihc->find($ihc['id_pembacaan_ihc']) ?? [];
-            // Ambil nama dokter dari pembacaan jika tersedia
             if (!empty($pembacaan_ihc['id_user_dokter_pembacaan_ihc'])) {
                 $dokter = $this->usersModel->find($pembacaan_ihc['id_user_dokter_pembacaan_ihc']);
                 $pembacaan_ihc['dokter_nama'] = $dokter ? $dokter['nama_user'] : null;
@@ -502,6 +513,7 @@ class ihcController extends BaseController
                 $pembacaan_ihc['dokter_nama'] = null;
             }
         }
+
         $data = [
             'id_user' => session()->get('id_user'),
             'nama_user' => session()->get('nama_user'),

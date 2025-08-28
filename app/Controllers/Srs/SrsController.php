@@ -532,11 +532,22 @@ class srsController extends BaseController
     public function edit_print($id_srs)
     {
         // Ambil data srs berdasarkan ID
-        $srs = $this->srsModel->getsrsWithRelationsProses($id_srs);
-        // Ambil data pembacaan SRS jika tersedia
+        $srs = $this->srsModel->getSrsWithRelationsProses($id_srs);
+
+        // Jika field mulai_pemverifikasi_srs masih kosong, update dengan waktu sekarang
+        if (empty($srs['mulai_pemverifikasi_srs'])) {
+            $this->pemverifikasi_srs->update($srs['id_pemverifikasi_srs'], [
+                'mulai_pemverifikasi_srs' => date('Y-m-d H:i:s'),
+            ]);
+
+            // Refresh data biar ikut field yang sudah diperbarui
+            $srs = $this->srsModel->getSrsWithRelationsProses($id_srs);
+        }
+
+        // Ambil data pembacaan srs jika tersedia
+        $pembacaan_srs = [];
         if (!empty($srs['id_pembacaan_srs'])) {
             $pembacaan_srs = $this->pembacaan_srs->find($srs['id_pembacaan_srs']) ?? [];
-            // Ambil nama dokter dari pembacaan jika tersedia
             if (!empty($pembacaan_srs['id_user_dokter_pembacaan_srs'])) {
                 $dokter = $this->usersModel->find($pembacaan_srs['id_user_dokter_pembacaan_srs']);
                 $pembacaan_srs['dokter_nama'] = $dokter ? $dokter['nama_user'] : null;
@@ -544,6 +555,7 @@ class srsController extends BaseController
                 $pembacaan_srs['dokter_nama'] = null;
             }
         }
+
         $data = [
             'id_user' => session()->get('id_user'),
             'nama_user' => session()->get('nama_user'),

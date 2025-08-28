@@ -277,10 +277,10 @@ class FrsController extends BaseController
                     ->select('register')
                     ->where('idtransaksi', $idtransaksi)
                     ->first();
-            
+
                 if ($kunjungan && !empty($kunjungan['register'])) {
                     $register = $kunjungan['register'];
-            
+
                     // Update semua hasil untuk register tersebut
                     $this->kunjunganModel
                         ->where('register', $register)
@@ -523,11 +523,22 @@ class FrsController extends BaseController
     public function edit_print($id_frs)
     {
         // Ambil data frs berdasarkan ID
-        $frs = $this->frsModel->getfrsWithRelationsProses($id_frs);
-        // Ambil data pembacaan FRS jika tersedia
+        $frs = $this->frsModel->getFrsWithRelationsProses($id_frs);
+
+        // Jika field mulai_pemverifikasi_frs masih kosong, update dengan waktu sekarang
+        if (empty($frs['mulai_pemverifikasi_frs'])) {
+            $this->pemverifikasi_frs->update($frs['id_pemverifikasi_frs'], [
+                'mulai_pemverifikasi_frs' => date('Y-m-d H:i:s'),
+            ]);
+
+            // Refresh data biar ikut field yang sudah diperbarui
+            $frs = $this->frsModel->getFrsWithRelationsProses($id_frs);
+        }
+
+        // Ambil data pembacaan frs jika tersedia
+        $pembacaan_frs = [];
         if (!empty($frs['id_pembacaan_frs'])) {
             $pembacaan_frs = $this->pembacaan_frs->find($frs['id_pembacaan_frs']) ?? [];
-            // Ambil nama dokter dari pembacaan jika tersedia
             if (!empty($pembacaan_frs['id_user_dokter_pembacaan_frs'])) {
                 $dokter = $this->usersModel->find($pembacaan_frs['id_user_dokter_pembacaan_frs']);
                 $pembacaan_frs['dokter_nama'] = $dokter ? $dokter['nama_user'] : null;
@@ -535,13 +546,14 @@ class FrsController extends BaseController
                 $pembacaan_frs['dokter_nama'] = null;
             }
         }
+
         $data = [
             'id_user' => session()->get('id_user'),
             'nama_user' => session()->get('nama_user'),
             'frs' => $frs,
             'pembacaan_frs' => $pembacaan_frs,
         ];
-        
+
         return view('frs/edit_print', $data);
     }
 
