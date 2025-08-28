@@ -84,58 +84,59 @@
                     </div>
                 </div>
 
-                <button class="btn btn-info mb-3" type="button" data-toggle="collapse" data-target="#riwayatCollapse" aria-expanded="false" aria-controls="riwayatCollapse">
-                    <i class="fas fa-book-medical"></i> Riwayat Pemeriksaan SIMRS
-                </button>
+                <!-- Tombol & Collapse untuk SIMRS -->
+            <button class="btn btn-info mb-3" type="button" data-toggle="collapse" data-target="#riwayatSimrs" aria-expanded="false" aria-controls="riwayatSimrs">
+                <i class="fas fa-book-medical"></i> Riwayat Pemeriksaan SIMRS
+            </button>
 
-                <!-- Area collapse -->
-                <div class="collapse show" id="riwayatCollapse">
-                    <div class="card card-body">
-                        <?php if (!empty($riwayat_api)) : ?>
-                            <div class="table-responsive">
-                                <table class="table table-bordered table-striped table-sm">
-                                    <thead class="thead-dark">
+            <div class="collapse show" id="riwayatSimrs">
+                <div class="card card-body">
+                    <?php if (!empty($riwayat_api)) : ?>
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-striped table-sm">
+                                <thead class="thead-dark">
+                                    <tr>
+                                        <th>No</th>
+                                        <th>Tanggal</th>
+                                        <th>Kode</th>
+                                        <th>Dokter</th>
+                                        <th>Diagnosa Klinik</th>
+                                        <th>Pemeriksaan</th>
+                                        <th>Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php foreach ($riwayat_api as $i => $row) : ?>
                                         <tr>
-                                            <th>No</th>
-                                            <th>Tanggal</th>
-                                            <th>Kode</th>
-                                            <th>Dokter</th>
-                                            <th>Diagnosa Klinik</th>
-                                            <th>Pemeriksaan</th>
-                                            <th>Aksi</th>
+                                            <td><?= $i + 1 ?></td>
+                                            <td><?= (!empty($row['tanggal']) && strtotime($row['tanggal'])) ? date('d-m-Y', strtotime($row['tanggal'])) : '-' ?></td>
+                                            <td><?= esc($row['noregister'] ?? '-') ?></td>
+                                            <td><?= esc($row['dokterpa'] ?? '-') ?></td>
+                                            <td><?= esc($row['diagnosaklinik'] ?? '-') ?></td>
+                                            <td><?= esc($row['pemeriksaan'] ?? '-') ?></td>
+                                            <td>
+                                                <button type="button" class="btn btn-info btn-sm"
+                                                    onclick="tampilkanModal(`<?= nl2br(esc($row['hasil'] ?? 'Tidak ada hasil', 'js')) ?>`)">
+                                                    Lihat Detail
+                                                </button>
+                                            </td>
                                         </tr>
-                                    </thead>
-                                    <tbody>
-                                        <?php foreach ($riwayat_api as $i => $row) : ?>
-                                            <tr>
-                                                <td><?= $i + 1 ?></td>
-                                                <td><?= (!empty($row['tanggal']) && strtotime($row['tanggal'])) ? date('d-m-Y', strtotime($row['tanggal'])) : '-' ?></td>
-                                                <td><?= esc($row['noregister'] ?? '-') ?></td>
-                                                <td><?= esc($row['dokterpa'] ?? '-') ?></td>
-                                                <td><?= esc($row['diagnosaklinik'] ?? '-') ?></td>
-                                                <td><?= esc($row['pemeriksaan'] ?? '-') ?></td>
-                                                <td>
-                                                    <button type="button" class="btn btn-info btn-sm"
-                                                        onclick="tampilkanModal(`<?= nl2br(esc($row['hasil'] ?? 'Tidak ada hasil', 'js')) ?>`)">
-                                                        Lihat Detail
-                                                    </button>
-                                                </td>
-                                            </tr>
-                                        <?php endforeach ?>
-                                    </tbody>
-                                </table>
-                            </div>
-                        <?php else : ?>
-                            <p class="text-muted">Tidak ada data riwayat pemeriksaan tersedia.</p>
-                        <?php endif ?>
-                    </div>
+                                    <?php endforeach ?>
+                                </tbody>
+                            </table>
+                        </div>
+                    <?php else : ?>
+                        <p class="text-muted">Tidak ada data riwayat pemeriksaan tersedia.</p>
+                    <?php endif ?>
                 </div>
+            </div>
 
-                <button class="btn btn-outline-info mb-3" type="button" data-toggle="collapse" data-target="#riwayatCollapse" aria-expanded="false" aria-controls="riwayatCollapse">
-                    <i class="fas fa-book-medical"></i> Riwayat Pemeriksaan Lokal
-                </button>
+            <!-- Tombol & Collapse untuk Lokal -->
+            <button class="btn btn-outline-info mb-3" type="button" data-toggle="collapse" data-target="#riwayatLokal" aria-expanded="false" aria-controls="riwayatLokal">
+                <i class="fas fa-book-medical"></i> Riwayat Pemeriksaan Lokal
+            </button>
 
-                <div class="collapse" id="riwayatCollapse">
+            <div class="collapse" id="riwayatLokal">
                     <div class="form-group row">
                         <!-- Riwayat Pemeriksaan Histopatologi (HPA) -->
                         <div class="col-md-3">

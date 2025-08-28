@@ -44,12 +44,12 @@
             </div>
         </div>
 
-        <button class="btn btn-info mb-3" type="button" data-toggle="collapse" data-target="#riwayatCollapse" aria-expanded="false" aria-controls="riwayatCollapse">
+        <!-- Tombol & Collapse untuk SIMRS -->
+        <button class="btn btn-info mb-3" type="button" data-toggle="collapse" data-target="#riwayatSimrs" aria-expanded="false" aria-controls="riwayatSimrs">
             <i class="fas fa-book-medical"></i> Riwayat Pemeriksaan SIMRS
         </button>
 
-        <!-- Area collapse -->
-        <div class="collapse show" id="riwayatCollapse">
+        <div class="collapse show" id="riwayatSimrs">
             <div class="card card-body">
                 <?php if (!empty($riwayat_api)) : ?>
                     <div class="table-responsive">
@@ -90,12 +90,13 @@
                 <?php endif ?>
             </div>
         </div>
-        
-        <button class="btn btn-outline-info mb-3" type="button" data-toggle="collapse" data-target="#riwayatCollapse" aria-expanded="false" aria-controls="riwayatCollapse">
+
+        <!-- Tombol & Collapse untuk Lokal -->
+        <button class="btn btn-outline-info mb-3" type="button" data-toggle="collapse" data-target="#riwayatLokal" aria-expanded="false" aria-controls="riwayatLokal">
             <i class="fas fa-book-medical"></i> Riwayat Pemeriksaan Lokal
         </button>
 
-        <div class="collapse" id="riwayatCollapse">
+        <div class="collapse" id="riwayatLokal">
             <div class="form-group row">
                 <!-- Riwayat Pemeriksaan Histopatologi (HPA) -->
                 <div class="col-md-3">
@@ -226,7 +227,7 @@
                         </option>
                         <option value="Klinik Bedah">Klinik Bedah</option>
                         <option value="Klinik Bedah Onkologi">Klinik Bedah Onkologi</option>
-                    <option value="Klinik Bedah Mulut">Klinik Bedah Mulut</option>
+                        <option value="Klinik Bedah Mulut">Klinik Bedah Mulut</option>
                         <option value="Klinik Anak">Klinik Anak</option>
                         <option value="Klinik Paru">Klinik Paru</option>
                         <option value="Klinik THT">Klinik THT</option>

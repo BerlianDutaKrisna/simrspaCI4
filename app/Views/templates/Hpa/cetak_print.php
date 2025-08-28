@@ -5,12 +5,10 @@ $nip = '-';
 
 if ($pembacaan_hpa['dokter_nama'] === "dr. Ayu Tyasmara Pratiwi, Sp.PA") {
     $src = base_url('img/ttd_dr_ayu.png');
-    $pangkat = 'Penata';
     $nip = '198407022009022014';
 } elseif ($pembacaan_hpa['dokter_nama'] === "dr. Vinna Chrisdianti, Sp.PA") {
     $src = base_url('img/ttd_dr_vinna.png');
-    $pangkat = '-';
-    $nip = '-';
+    $nip = '198303152023212002';
 }
 ?>
 <script>
@@ -134,7 +132,6 @@ if ($pembacaan_hpa['dokter_nama'] === "dr. Ayu Tyasmara Pratiwi, Sp.PA") {
                     <br>
                     <br>
                     <p style="margin: 0; font-size: 20px; font-weight: bold;"><?= esc($pembacaan_hpa['dokter_nama'] ?? '____________________') ?></p>
-                    <p style="margin: 5px 0 0;"><?= $pangkat ?></p>
                     <p style="margin: 0;">NIP. <?= $nip ?></p>
                 </td>
             </tr>

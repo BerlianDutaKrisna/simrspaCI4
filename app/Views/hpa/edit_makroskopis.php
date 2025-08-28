@@ -81,12 +81,12 @@
                 </div>
             </div>
 
-            <button class="btn btn-info mb-3" type="button" data-toggle="collapse" data-target="#riwayatCollapse" aria-expanded="false" aria-controls="riwayatCollapse">
+            <!-- Tombol & Collapse untuk SIMRS -->
+            <button class="btn btn-info mb-3" type="button" data-toggle="collapse" data-target="#riwayatSimrs" aria-expanded="false" aria-controls="riwayatSimrs">
                 <i class="fas fa-book-medical"></i> Riwayat Pemeriksaan SIMRS
             </button>
 
-            <!-- Area collapse -->
-            <div class="collapse show" id="riwayatCollapse">
+            <div class="collapse show" id="riwayatSimrs">
                 <div class="card card-body">
                     <?php if (!empty($riwayat_api)) : ?>
                         <div class="table-responsive">
@@ -128,11 +128,12 @@
                 </div>
             </div>
 
-            <button class="btn btn-outline-info mb-3" type="button" data-toggle="collapse" data-target="#riwayatCollapse" aria-expanded="false" aria-controls="riwayatCollapse">
+            <!-- Tombol & Collapse untuk Lokal -->
+            <button class="btn btn-outline-info mb-3" type="button" data-toggle="collapse" data-target="#riwayatLokal" aria-expanded="false" aria-controls="riwayatLokal">
                 <i class="fas fa-book-medical"></i> Riwayat Pemeriksaan Lokal
             </button>
 
-            <div class="collapse" id="riwayatCollapse">
+            <div class="collapse" id="riwayatLokal">
                 <div class="form-group row">
                     <!-- Riwayat Pemeriksaan Histopatologi (HPA) -->
                     <div class="col-md-3">
@@ -336,11 +337,11 @@
                 </div>
                 <label class="col-sm-2 col-form-label" for="jumlah_slide">Jumlah Slide</label>
                 <div class="col-sm-4">
-                <input type="number"
-                                    class="form-control form-control-sm jumlah-slide-input"
-                                    data-id="<?= $hpa['id_hpa']; ?>"
-                                    value="<?= $hpa['jumlah_slide']; ?>"
-                                    min="0" step="1" style="width:100px;">
+                    <input type="number"
+                        class="form-control form-control-sm jumlah-slide-input"
+                        data-id="<?= $hpa['id_hpa']; ?>"
+                        value="<?= $hpa['jumlah_slide']; ?>"
+                        min="0" step="1" style="width:100px;">
                 </div>
             </div>
 

@@ -524,6 +524,17 @@ class FrsController extends BaseController
     {
         // Ambil data frs berdasarkan ID
         $frs = $this->frsModel->getFrsWithRelationsProses($id_frs);
+        $id_pasien = $frs['id_pasien'];
+        if (!empty($frs['norm_pasien'])) {
+            $riwayat_api_response = $this->simrsModel->getPemeriksaanPasien($frs['norm_pasien']);
+            if (!empty($riwayat_api_response['code']) && $riwayat_api_response['code'] == 200) {
+                $riwayat_api = $riwayat_api_response['data'];
+            }
+        }
+        $riwayat_hpa = $this->hpaModel->riwayatPemeriksaanhpa($id_pasien);
+        $riwayat_frs = $this->frsModel->riwayatPemeriksaanfrs($id_pasien);
+        $riwayat_srs = $this->srsModel->riwayatPemeriksaansrs($id_pasien);
+        $riwayat_ihc = $this->ihcModel->riwayatPemeriksaanihc($id_pasien);
 
         // Jika field mulai_pemverifikasi_frs masih kosong, update dengan waktu sekarang
         if (empty($frs['mulai_pemverifikasi_frs'])) {
@@ -551,6 +562,11 @@ class FrsController extends BaseController
             'id_user' => session()->get('id_user'),
             'nama_user' => session()->get('nama_user'),
             'frs' => $frs,
+            'riwayat_api'   => $riwayat_api ?? [],
+            'riwayat_hpa'        => $riwayat_hpa,
+            'riwayat_frs'        => $riwayat_frs,
+            'riwayat_srs'        => $riwayat_srs,
+            'riwayat_ihc'        => $riwayat_ihc,
             'pembacaan_frs' => $pembacaan_frs,
         ];
 
