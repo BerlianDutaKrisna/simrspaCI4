@@ -46,7 +46,6 @@
     </div>
 </div>
 
-// Menyertakan riwayat pemeriksaan jika ada
 <?= $this->include('templates/exam/riwayat'); ?>
 
 <div class="card shadow mb-4">

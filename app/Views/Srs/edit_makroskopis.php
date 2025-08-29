@@ -81,7 +81,6 @@
                 </div>
             </div>
 
-            // Menyertakan riwayat pemeriksaan jika ada
             <?= $this->include('templates/exam/riwayat'); ?>
 
             <!-- Kolom Foto Makroskopis -->
