@@ -536,13 +536,33 @@ class FrsController extends BaseController
         $riwayat_srs = $this->srsModel->riwayatPemeriksaansrs($id_pasien);
         $riwayat_ihc = $this->ihcModel->riwayatPemeriksaanihc($id_pasien);
 
-        // Jika field mulai_pemverifikasi_frs masih kosong, update dengan waktu sekarang
-        if (empty($frs['mulai_pemverifikasi_frs'])) {
+        // Jika field mulai_pemverifikasi_frs masih kosong dan ada id_pemverifikasi_frs
+        if (!empty($frs['id_pemverifikasi_frs']) && empty($frs['mulai_pemverifikasi_frs'])) {
             $this->pemverifikasi_frs->update($frs['id_pemverifikasi_frs'], [
                 'mulai_pemverifikasi_frs' => date('Y-m-d H:i:s'),
             ]);
 
-            // Refresh data biar ikut field yang sudah diperbarui
+            // Refresh data
+            $frs = $this->frsModel->getFrsWithRelationsProses($id_frs);
+        }
+
+        // Jika field mulai_authorized_frs masih kosong dan ada id_authorized_frs
+        if (!empty($frs['id_authorized_frs']) && empty($frs['mulai_authorized_frs'])) {
+            $this->authorized_frs->update($frs['id_authorized_frs'], [
+                'mulai_authorized_frs' => date('Y-m-d H:i:s'),
+            ]);
+
+            // Refresh data
+            $frs = $this->frsModel->getFrsWithRelationsProses($id_frs);
+        }
+
+        // Jika field mulai_pencetakan_frs masih kosong dan ada id_pencetakan_frs
+        if (!empty($frs['id_pencetakan_frs']) && empty($frs['mulai_pencetakan_frs'])) {
+            $this->pencetakan_frs->update($frs['id_pencetakan_frs'], [
+                'mulai_pencetakan_frs' => date('Y-m-d H:i:s'),
+            ]);
+
+            // Refresh data
             $frs = $this->frsModel->getFrsWithRelationsProses($id_frs);
         }
 

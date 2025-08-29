@@ -545,13 +545,33 @@ class srsController extends BaseController
         $riwayat_srs = $this->srsModel->riwayatPemeriksaansrs($id_pasien);
         $riwayat_ihc = $this->ihcModel->riwayatPemeriksaanihc($id_pasien);
 
-        // Jika field mulai_pemverifikasi_srs masih kosong, update dengan waktu sekarang
-        if (empty($srs['mulai_pemverifikasi_srs'])) {
+        // Jika field mulai_pemverifikasi_srs masih kosong dan ada id_pemverifikasi_srs
+        if (!empty($srs['id_pemverifikasi_srs']) && empty($srs['mulai_pemverifikasi_srs'])) {
             $this->pemverifikasi_srs->update($srs['id_pemverifikasi_srs'], [
                 'mulai_pemverifikasi_srs' => date('Y-m-d H:i:s'),
             ]);
 
-            // Refresh data biar ikut field yang sudah diperbarui
+            // Refresh data
+            $srs = $this->srsModel->getSrsWithRelationsProses($id_srs);
+        }
+
+        // Jika field mulai_authorized_srs masih kosong dan ada id_authorized_srs
+        if (!empty($srs['id_authorized_srs']) && empty($srs['mulai_authorized_srs'])) {
+            $this->authorized_srs->update($srs['id_authorized_srs'], [
+                'mulai_authorized_srs' => date('Y-m-d H:i:s'),
+            ]);
+
+            // Refresh data
+            $srs = $this->srsModel->getSrsWithRelationsProses($id_srs);
+        }
+
+        // Jika field mulai_pencetakan_srs masih kosong dan ada id_pencetakan_srs
+        if (!empty($srs['id_pencetakan_srs']) && empty($srs['mulai_pencetakan_srs'])) {
+            $this->pencetakan_srs->update($srs['id_pencetakan_srs'], [
+                'mulai_pencetakan_srs' => date('Y-m-d H:i:s'),
+            ]);
+
+            // Refresh data
             $srs = $this->srsModel->getSrsWithRelationsProses($id_srs);
         }
 

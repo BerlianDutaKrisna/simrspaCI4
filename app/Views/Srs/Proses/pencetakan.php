@@ -72,24 +72,20 @@
                                                             ]) ?>'
                                             autocomplete="off">
                                     </td>
-                                    <?php if (in_array($row['status_pencetakan_srs'], ["Proses Pencetakan"])): ?>
+                                    <?php if (in_array($row['status_pencetakan_srs'], ["Proses Pencetakan", "Belum Pencetakan"])): ?>
                                         <td>
-                                            <a href="<?= base_url('srs/edit_print/' .
-                                                            esc($row['id_srs']) .
-                                                            '?redirect=index_pencetakan_srs') ?>" class="btn btn-warning btn-sm">
-                                                <i class="fas fa-print"></i> Cetak Hasil
+                                            <a href="<?= esc(base_url('srs/edit_print/' . esc($row['id_srs']) . '?redirect=index_pencetakan_srs')) ?>"
+                                                class="btn btn-warning btn-sm">
+                                                <i class="fas fa-eye"></i> Cetak Hasil
                                             </a>
                                         </td>
-                                    <?php elseif (in_array($row['status_pencetakan_srs'], ["Selesai Pencetakan"])): ?>
+                                    <?php elseif ($row['status_pencetakan_srs'] === "Selesai Pencetakan"): ?>
                                         <td>
-                                            <a href="<?= base_url('srs/edit_print/' .
-                                                            esc($row['id_srs']) .
-                                                            '?redirect=index_pencetakan_srs') ?>" class="btn btn-success btn-sm">
-                                                <i class="fas fa-print"></i> Cetak Hasil
+                                            <a href="<?= esc(base_url('srs/edit_print/' . esc($row['id_srs']) . '?redirect=index_pencetakan_srs')) ?>"
+                                                class="btn btn-success btn-sm">
+                                                <i class="fas fa-eye"></i> Cetak Hasil
                                             </a>
                                         </td>
-                                    <?php else: ?>
-                                        <td></td>
                                     <?php endif; ?>
                                     <td><?= $row['kode_srs']; ?></td>
                                     <td><?= $row['nama_pasien']; ?></td>

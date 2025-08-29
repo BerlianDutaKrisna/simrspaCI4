@@ -72,24 +72,20 @@
                                                             ]) ?>'
                                             autocomplete="off">
                                     </td>
-                                    <?php if (in_array($row['status_pencetakan_ihc'], ["Proses Pencetakan"])): ?>
+                                    <?php if (in_array($row['status_pencetakan_ihc'], ["Proses Pencetakan", "Belum Pencetakan"])): ?>
                                         <td>
-                                            <a href="<?= base_url('ihc/edit_print/' .
-                                                            esc($row['id_ihc']) .
-                                                            '?redirect=index_pencetakan_ihc') ?>" class="btn btn-warning btn-sm">
-                                                <i class="fas fa-print"></i> Cetak Hasil
+                                            <a href="<?= esc(base_url('ihc/edit_print/' . esc($row['id_ihc']) . '?redirect=index_pencetakan_ihc')) ?>"
+                                                class="btn btn-warning btn-sm">
+                                                <i class="fas fa-eye"></i> Cetak Hasil
                                             </a>
                                         </td>
-                                    <?php elseif (in_array($row['status_pencetakan_ihc'], ["Selesai Pencetakan"])): ?>
+                                    <?php elseif ($row['status_pencetakan_ihc'] === "Selesai Pencetakan"): ?>
                                         <td>
-                                            <a href="<?= base_url('ihc/edit_print/' .
-                                                            esc($row['id_ihc']) .
-                                                            '?redirect=index_pencetakan_ihc') ?>" class="btn btn-success btn-sm">
-                                                <i class="fas fa-print"></i> Cetak Hasil
+                                            <a href="<?= esc(base_url('ihc/edit_print/' . esc($row['id_ihc']) . '?redirect=index_pencetakan_ihc')) ?>"
+                                                class="btn btn-success btn-sm">
+                                                <i class="fas fa-eye"></i> Cetak Hasil
                                             </a>
                                         </td>
-                                    <?php else: ?>
-                                        <td></td>
                                     <?php endif; ?>
                                     <td><?= $row['kode_ihc']; ?></td>
                                     <td><?= $row['nama_pasien']; ?></td>

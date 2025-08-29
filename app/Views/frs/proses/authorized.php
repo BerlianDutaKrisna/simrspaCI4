@@ -72,24 +72,20 @@
                                                             ]) ?>'
                                             autocomplete="off">
                                     </td>
-                                    <?php if (in_array($row['status_authorized_frs'], ["Proses Authorized"])): ?>
+                                    <?php if (in_array($row['status_authorized_frs'], ["Proses Authorized", "Belum Authorized"])): ?>
                                         <td>
-                                            <a href="<?= base_url('frs/edit_print/' .
-                                                            esc($row['id_frs']) .
-                                                            '?redirect=index_authorized_frs') ?>" class="btn btn-warning btn-sm">
+                                            <a href="<?= esc(base_url('frs/edit_print/' . esc($row['id_frs']) . '?redirect=index_authorized_frs')) ?>"
+                                                class="btn btn-warning btn-sm">
                                                 <i class="fas fa-eye"></i> Cek Verifikasi
                                             </a>
                                         </td>
-                                    <?php elseif (in_array($row['status_authorized_frs'], ["Selesai Authorized"])): ?>
+                                    <?php elseif ($row['status_authorized_frs'] === "Selesai Authorized"): ?>
                                         <td>
-                                            <a href="<?= base_url('frs/edit_print/' .
-                                                            esc($row['id_frs']) .
-                                                            '?redirect=index_authorized_frs') ?>" class="btn btn-success btn-sm">
+                                            <a href="<?= esc(base_url('frs/edit_print/' . esc($row['id_frs']) . '?redirect=index_authorized_frs')) ?>"
+                                                class="btn btn-success btn-sm">
                                                 <i class="fas fa-eye"></i> Cek Verifikasi
                                             </a>
                                         </td>
-                                    <?php else: ?>
-                                        <td></td>
                                     <?php endif; ?>
                                     <td><?= $row['kode_frs']; ?></td>
                                     <td><?= $row['nama_pasien']; ?></td>

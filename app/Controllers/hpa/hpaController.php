@@ -651,13 +651,33 @@ class HpaController extends BaseController
         $riwayat_srs = $this->srsModel->riwayatPemeriksaansrs($id_pasien);
         $riwayat_ihc = $this->ihcModel->riwayatPemeriksaanihc($id_pasien);
 
-        // Jika field mulai_pemverifikasi_hpa masih kosong, update dengan waktu sekarang
-        if (empty($hpa['mulai_pemverifikasi_hpa'])) {
+        // Jika field mulai_pemverifikasi_hpa masih kosong dan ada id_pemverifikasi_hpa
+        if (!empty($hpa['id_pemverifikasi_hpa']) && empty($hpa['mulai_pemverifikasi_hpa'])) {
             $this->pemverifikasi_hpa->update($hpa['id_pemverifikasi_hpa'], [
                 'mulai_pemverifikasi_hpa' => date('Y-m-d H:i:s'),
             ]);
 
-            // Refresh data biar ikut field yang sudah diperbarui
+            // Refresh data
+            $hpa = $this->hpaModel->getHpaWithRelationsProses($id_hpa);
+        }
+
+        // Jika field mulai_authorized_hpa masih kosong dan ada id_authorized_hpa
+        if (!empty($hpa['id_authorized_hpa']) && empty($hpa['mulai_authorized_hpa'])) {
+            $this->authorized_hpa->update($hpa['id_authorized_hpa'], [
+                'mulai_authorized_hpa' => date('Y-m-d H:i:s'),
+            ]);
+
+            // Refresh data
+            $hpa = $this->hpaModel->getHpaWithRelationsProses($id_hpa);
+        }
+
+        // Jika field mulai_pencetakan_hpa masih kosong dan ada id_pencetakan_hpa
+        if (!empty($hpa['id_pencetakan_hpa']) && empty($hpa['mulai_pencetakan_hpa'])) {
+            $this->pencetakan_hpa->update($hpa['id_pencetakan_hpa'], [
+                'mulai_pencetakan_hpa' => date('Y-m-d H:i:s'),
+            ]);
+
+            // Refresh data
             $hpa = $this->hpaModel->getHpaWithRelationsProses($id_hpa);
         }
 

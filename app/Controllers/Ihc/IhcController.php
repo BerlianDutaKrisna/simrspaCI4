@@ -504,13 +504,33 @@ class ihcController extends BaseController
         $riwayat_srs = $this->srsModel->riwayatPemeriksaansrs($id_pasien);
         $riwayat_ihc = $this->ihcModel->riwayatPemeriksaanihc($id_pasien);
 
-        // Jika field mulai_pemverifikasi_ihc masih kosong, update dengan waktu sekarang
-        if (empty($ihc['mulai_pemverifikasi_ihc'])) {
+        // Jika field mulai_pemverifikasi_ihc masih kosong dan ada id_pemverifikasi_ihc
+        if (!empty($ihc['id_pemverifikasi_ihc']) && empty($ihc['mulai_pemverifikasi_ihc'])) {
             $this->pemverifikasi_ihc->update($ihc['id_pemverifikasi_ihc'], [
                 'mulai_pemverifikasi_ihc' => date('Y-m-d H:i:s'),
             ]);
 
-            // Refresh data biar ikut field yang sudah diperbarui
+            // Refresh data
+            $ihc = $this->ihcModel->getIhcWithRelationsProses($id_ihc);
+        }
+
+        // Jika field mulai_authorized_ihc masih kosong dan ada id_authorized_ihc
+        if (!empty($ihc['id_authorized_ihc']) && empty($ihc['mulai_authorized_ihc'])) {
+            $this->authorized_ihc->update($ihc['id_authorized_ihc'], [
+                'mulai_authorized_ihc' => date('Y-m-d H:i:s'),
+            ]);
+
+            // Refresh data
+            $ihc = $this->ihcModel->getIhcWithRelationsProses($id_ihc);
+        }
+
+        // Jika field mulai_pencetakan_ihc masih kosong dan ada id_pencetakan_ihc
+        if (!empty($ihc['id_pencetakan_ihc']) && empty($ihc['mulai_pencetakan_ihc'])) {
+            $this->pencetakan_ihc->update($ihc['id_pencetakan_ihc'], [
+                'mulai_pencetakan_ihc' => date('Y-m-d H:i:s'),
+            ]);
+
+            // Refresh data
             $ihc = $this->ihcModel->getIhcWithRelationsProses($id_ihc);
         }
 
