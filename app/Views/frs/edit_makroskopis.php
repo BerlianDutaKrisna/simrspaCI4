@@ -14,7 +14,7 @@
             <?= csrf_field(); ?>
             <input type="hidden" name="id_frs" value="<?= $frs['id_frs'] ?? '' ?>">
             <input type="hidden" name="id_penerimaan_frs" value="<?= $frs['id_penerimaan_frs'] ?? '' ?>">
-            <input type="hidden" name="redirect" value="<?= $_GET['redirect'] ?? '' ?>">
+            <input type="hidden" name="redirect" value="edit_makroskopis">
 
             <!-- Kode FRS dan Diagnosa -->
             <div class="form-group row">

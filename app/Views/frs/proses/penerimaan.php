@@ -68,20 +68,20 @@
                                                             ]) ?>'
                                             autocomplete="off">
                                     </td>
-                                    <?php if (in_array($row['status_penerimaan_frs'], ["Proses Penerimaan"])): ?>
+                                    <?php if (in_array($row['status_penerimaan_frs'], ["Proses Penerimaan", "Belum Penerimaan"])): ?>
                                         <td>
-                                            <a href="<?= esc(base_url('frs/edit_makroskopis/' . esc($row['id_frs']) . '?redirect=edit_makroskopis')) ?>" class="btn btn-warning btn-sm">
-                                                <i class="fas fa-pen"></i> Informed Consent
+                                            <a href="<?= esc(base_url('frs/edit_makroskopis/' . esc($row['id_frs']) . '?redirect=index_penerimaan_frs')) ?>"
+                                                class="btn btn-warning btn-sm">
+                                                <i class="fas fa-eye"></i> Informed Consent
                                             </a>
                                         </td>
-                                    <?php elseif (in_array($row['status_penerimaan_frs'], ["Selesai Penerimaan"])): ?>
+                                    <?php elseif ($row['status_penerimaan_frs'] === "Selesai Penerimaan"): ?>
                                         <td>
-                                            <a href="<?= esc(base_url('frs/edit_makroskopis/' . esc($row['id_frs']) . '?redirect=edit_makroskopis')) ?>" class="btn btn-success btn-sm">
-                                                <i class="fas fa-pen"></i> Informed Consent
+                                            <a href="<?= esc(base_url('frs/edit_makroskopis/' . esc($row['id_frs']) . '?redirect=index_penerimaan_frs')) ?>"
+                                                class="btn btn-success btn-sm">
+                                                <i class="fas fa-eye"></i> Informed Consent
                                             </a>
                                         </td>
-                                    <?php else: ?>
-                                        <td></td>
                                     <?php endif; ?>
                                     <td><?= esc($row['kode_frs']); ?></td>
                                     <td><?= esc($row['nama_pasien']); ?></td>

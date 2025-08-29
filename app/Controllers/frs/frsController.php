@@ -398,6 +398,16 @@ class FrsController extends BaseController
         if (!$frs) {
             return redirect()->back()->with('message', ['error' => 'frs tidak ditemukan.']);
         }
+        // Jika field mulai_penerimaan_frs masih kosong dan ada id_penerimaan_frs
+        if (!empty($frs['id_penerimaan_frs']) && empty($frs['mulai_penerimaan_frs'])) {
+            $this->penerimaan_frs->update($frs['id_penerimaan_frs'], [
+                'mulai_penerimaan_frs' => date('Y-m-d H:i:s'),
+            ]);
+
+            // Refresh data
+            $frs = $this->frsModel->getfrsWithRelationsProses($id_frs);
+        }
+        // Ambil data penerimaan berdasarkan ID
         $id_penerimaan_frs = $frs['id_penerimaan_frs'];
         // Ambil data penerimaan berdasarkan id_penerimaan_frs
         $penerimaan = $this->penerimaan_frs->find($id_penerimaan_frs);
@@ -773,10 +783,18 @@ class FrsController extends BaseController
         if (!$id_frs) {
             return redirect()->back()->with('error', 'Terjadi kesalahan: ID frs tidak ditemukan.');
         }
-        // Mengambil data dari POST dan melakukan update
+        // Ambil semua data POST
         $data = $this->request->getPost();
-        $this->frsModel->update($id_frs, $data);
-        $redirect = $this->request->getPost('redirect');
+
+        // Simpan nilai redirect lalu hapus dari array $data (biar tidak ikut update frs)
+        $redirect = $data['redirect'] ?? null;
+        unset($data['redirect']);
+
+        // Jika masih ada sisa field lain selain redirect → update ke frs
+        if (!empty($data)) {
+            $this->frsModel->update($id_frs, $data);
+        }
+
         if (!$redirect) {
             return redirect()->back()->with('error', 'Terjadi kesalahan: Halaman asal tidak ditemukan.');
         }
