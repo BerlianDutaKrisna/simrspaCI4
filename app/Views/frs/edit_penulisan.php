@@ -17,6 +17,7 @@
                 <input type="hidden" name="kode_frs" value="<?= $frs['kode_frs'] ?>">
                 <input type="hidden" name="id_pembacaan_frs" value="<?= $pembacaan['id_pembacaan_frs'] ?>">
                 <input type="hidden" name="id_penulisan_frs" value="<?= $penulisan['id_penulisan_frs'] ?>">
+                <input type="hidden" name="id_user_penulisan_frs" value="<?= esc($id_user) ?>">
                 <input type="hidden" name="page_source" value="edit_penulisan">
 
                 <!-- Kolom Kode frs dan Diagnosa -->

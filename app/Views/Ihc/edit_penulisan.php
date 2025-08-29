@@ -17,6 +17,7 @@
                 <input type="hidden" name="kode_ihc" value="<?= $ihc['kode_ihc'] ?>">
                 <input type="hidden" name="id_pembacaan_ihc" value="<?= $pembacaan['id_pembacaan_ihc'] ?>">
                 <input type="hidden" name="id_penulisan_ihc" value="<?= $penulisan['id_penulisan_ihc'] ?>">
+                <input type="hidden" name="id_user_penulisan_ihc" value="<?= esc($id_user) ?>">
                 <input type="hidden" name="page_source" value="edit_penulisan">
 
                 <!-- Kolom Kode IHC dan Diagnosa -->

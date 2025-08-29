@@ -488,6 +488,15 @@ class FrsController extends BaseController
         if (!$frs) {
             return redirect()->back()->with('message', ['error' => 'frs tidak ditemukan.']);
         }
+        // Jika field mulai_penulisan_frs masih kosong dan ada id_penulisan_frs
+        if (!empty($frs['id_penulisan_frs']) && empty($frs['mulai_penulisan_frs'])) {
+            $this->penulisan_frs->update($frs['id_penulisan_frs'], [
+                'mulai_penulisan_frs' => date('Y-m-d H:i:s'),
+            ]);
+
+            // Refresh data
+            $frs = $this->frsModel->getfrsWithRelationsProses($id_frs);
+        }
         // Inisialisasi array untuk pembacaan dan penulisan frs
         $pembacaan_frs = [];
         $penulisan_frs = [];

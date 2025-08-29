@@ -446,6 +446,15 @@ class ihcController extends BaseController
         if (!$ihc) {
             return redirect()->back()->with('message', ['error' => 'ihc tidak ditemukan.']);
         }
+        // Jika field mulai_penulisan_ihc masih kosong dan ada id_penulisan_ihc
+        if (!empty($ihc['id_penulisan_ihc']) && empty($ihc['mulai_penulisan_ihc'])) {
+            $this->penulisan_ihc->update($ihc['id_penulisan_ihc'], [
+                'mulai_penulisan_ihc' => date('Y-m-d H:i:s'),
+            ]);
+
+            // Refresh data
+            $ihc = $this->ihcModel->getihcWithRelationsProses($id_ihc);
+        }
         // Inisialisasi array untuk pembacaan dan penulisan ihc
         $pembacaan_ihc = [];
         $penulisan_ihc = [];

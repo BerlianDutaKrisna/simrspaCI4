@@ -17,6 +17,7 @@
                 <input type="hidden" name="kode_hpa" value="<?= $hpa['kode_hpa'] ?>">
                 <input type="hidden" name="id_pembacaan_hpa" value="<?= $pembacaan['id_pembacaan_hpa'] ?>">
                 <input type="hidden" name="id_penulisan_hpa" value="<?= $penulisan['id_penulisan_hpa'] ?>">
+                <input type="hidden" name="id_user_penulisan_hpa" value="<?= esc($id_user) ?>">
                 <input type="hidden" name="page_source" value="edit_penulisan">
 
                 <!-- Kolom Kode HPA dan Diagnosa -->

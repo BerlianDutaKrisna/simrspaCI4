@@ -17,6 +17,7 @@
                 <input type="hidden" name="kode_srs" value="<?= $srs['kode_srs'] ?>">
                 <input type="hidden" name="id_pembacaan_srs" value="<?= $pembacaan['id_pembacaan_srs'] ?>">
                 <input type="hidden" name="id_penulisan_srs" value="<?= $penulisan['id_penulisan_srs'] ?>">
+                <input type="hidden" name="id_user_penulisan_srs" value="<?= esc($id_user) ?>">
                 <input type="hidden" name="page_source" value="edit_penulisan">
 
                 <!-- Kolom Kode SRS dan Diagnosa -->

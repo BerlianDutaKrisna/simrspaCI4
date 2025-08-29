@@ -611,6 +611,15 @@ class HpaController extends BaseController
         if (!$hpa) {
             return redirect()->back()->with('message', ['error' => 'HPA tidak ditemukan.']);
         }
+        // Jika field mulai_penulisan_hpa masih kosong dan ada id_penulisan_hpa
+        if (!empty($hpa['id_penulisan_hpa']) && empty($hpa['mulai_penulisan_hpa'])) {
+            $this->penulisan_hpa->update($hpa['id_penulisan_hpa'], [
+                'mulai_penulisan_hpa' => date('Y-m-d H:i:s'),
+            ]);
+
+            // Refresh data
+            $hpa = $this->hpaModel->getHpaWithRelationsProses($id_hpa);
+        }
         // Inisialisasi array untuk pembacaan dan penulisan HPA
         $pembacaan_hpa = [];
         $penulisan_hpa = [];
