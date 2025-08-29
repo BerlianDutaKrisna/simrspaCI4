@@ -446,6 +446,14 @@ class srsController extends BaseController
         if (!$srs) {
             return redirect()->back()->with('message', ['error' => 'srs tidak ditemukan.']);
         }
+        // Jika field mulai_pembacaan_srs masih kosong dan ada id_pembacaan_srs
+        if (!empty($srs['id_pembacaan_srs']) && empty($srs['mulai_pembacaan_srs'])) {
+            $this->pembacaan_srs->update($srs['id_pembacaan_srs'], [
+                'mulai_pembacaan_srs' => date('Y-m-d H:i:s'),
+            ]);
+            // Refresh data
+            $srs = $this->srsModel->getsrsWithRelationsProses($id_srs);
+        }
         $id_penerimaan_srs = $srs['id_penerimaan_srs'];
         $id_pembacaan_srs = $srs['id_pembacaan_srs'];
         $penerimaan_srs = $id_penerimaan_srs ? $this->penerimaan_srs->find($id_penerimaan_srs) : [];
