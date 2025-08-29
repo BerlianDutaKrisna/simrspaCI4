@@ -403,7 +403,6 @@ class FrsController extends BaseController
             $this->penerimaan_frs->update($frs['id_penerimaan_frs'], [
                 'mulai_penerimaan_frs' => date('Y-m-d H:i:s'),
             ]);
-
             // Refresh data
             $frs = $this->frsModel->getfrsWithRelationsProses($id_frs);
         }
