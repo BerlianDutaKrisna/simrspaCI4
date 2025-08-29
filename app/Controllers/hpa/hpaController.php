@@ -462,6 +462,14 @@ class HpaController extends BaseController
         if (!$hpa) {
             return redirect()->back()->with('message', ['error' => 'HPA tidak ditemukan.']);
         }
+        // Jika field mulai_pemotongan_hpa masih kosong dan ada id_pemotongan_hpa
+        if (!empty($hpa['id_pemotongan_hpa']) && empty($hpa['mulai_pemotongan_hpa'])) {
+            $this->pemotongan_hpa->update($hpa['id_pemotongan_hpa'], [
+                'mulai_pemotongan_hpa' => date('Y-m-d H:i:s'),
+            ]);
+            // Refresh data
+            $hpa = $this->hpaModel->getHpaWithRelationsProses($id_hpa);
+        }
         $id_pemotongan_hpa = $hpa['id_pemotongan_hpa'];
         // Ambil data pemotongan berdasarkan id_pemotongan_hpa
         $pemotongan = $this->pemotongan_hpa->find($id_pemotongan_hpa);
@@ -505,6 +513,14 @@ class HpaController extends BaseController
         $hpa = $this->hpaModel->getHpaWithRelationsProses($id_hpa);
         if (!$hpa) {
             return redirect()->back()->with('message', ['error' => 'HPA tidak ditemukan.']);
+        }
+        // Jika field mulai_pembacaan_hpa masih kosong dan ada id_pembacaan_hpa
+        if (!empty($hpa['id_pembacaan_hpa']) && empty($hpa['mulai_pembacaan_hpa'])) {
+            $this->pembacaan_hpa->update($hpa['id_pembacaan_hpa'], [
+                'mulai_pembacaan_hpa' => date('Y-m-d H:i:s'),
+            ]);
+            // Refresh data
+            $hpa = $this->hpaModel->getHpaWithRelationsProses($id_hpa);
         }
         // Ambil data pemotongan dan pembacaan_hpa berdasarkan ID
         $id_pemotongan_hpa = $hpa['id_pemotongan_hpa'];
@@ -739,7 +755,12 @@ class HpaController extends BaseController
 
         // Mengambil data dari form
         $data = $this->request->getPost();
-
+        
+        $id_user_pemotongan_hpa = !empty($data['id_user_pemotongan_hpa']) ? (int) $data['id_user_pemotongan_hpa'] : null;
+        $id_user_dokter_pemotongan_hpa = !empty($data['id_user_dokter_pemotongan_hpa']) ? (int) $data['id_user_dokter_pemotongan_hpa'] : null;
+        $id_user_pembacaan_hpa = !empty($data['id_user_pembacaan_hpa']) ? (int) $data['id_user_pembacaan_hpa'] : null;
+        $id_user_dokter_pembacaan_hpa = !empty($data['id_user_dokter_pembacaan_hpa']) ? (int) $data['id_user_dokter_pembacaan_hpa'] : null;
+        
         $page_source = $this->request->getPost('page_source');
 
         // Mengubah jika memilih 'lainnya'
@@ -752,24 +773,37 @@ class HpaController extends BaseController
 
         // Proses update tabel HPA
         if ($this->hpaModel->update($id_hpa, $data)) {
-            // Update data pemotongan jika id_user_dokter_pemotongan_hpa ada
-            if (!empty($data['id_user_dokter_pemotongan_hpa'])) {
-                $pemotongan = $this->pemotongan_hpa->where('id_pemotongan_hpa', $id_pemotongan_hpa)->first();
+            // Update tabel pemotongan_hpa
+            $pemotongan = $this->pemotongan_hpa->where('id_pemotongan_hpa', $id_pemotongan_hpa)->first();
+            if ($pemotongan) {
+                $updatePemotongan = [];
 
-                if ($pemotongan) {
-                    $this->pemotongan_hpa->update($pemotongan['id_pemotongan_hpa'], [
-                        'id_user_dokter_pemotongan_hpa' => $data['id_user_dokter_pemotongan_hpa'],
-                    ]);
+                if ($id_user_dokter_pemotongan_hpa !== null) {
+                    $updatePemotongan['id_user_dokter_pemotongan_hpa'] = $id_user_dokter_pemotongan_hpa;
+                }
+                if ($id_user_pemotongan_hpa !== null) {
+                    $updatePemotongan['id_user_pemotongan_hpa'] = $id_user_pemotongan_hpa;
+                }
+
+                if (!empty($updatePemotongan)) {
+                    $this->pemotongan_hpa->update($pemotongan['id_pemotongan_hpa'], $updatePemotongan);
                 }
             }
-            // Update data pembacaan jika id_user_dokter_pembacaan_hpa ada
-            if (!empty($data['id_user_dokter_pembacaan_hpa'])) {
-                $pembacaan = $this->pembacaan_hpa->where('id_pembacaan_hpa', $id_pembacaan_hpa)->first();
 
-                if ($pembacaan) {
-                    $this->pembacaan_hpa->update($pembacaan['id_pembacaan_hpa'], [
-                        'id_user_dokter_pembacaan_hpa' => $data['id_user_dokter_pembacaan_hpa'],
-                    ]);
+            // Update tabel pembacaan_hpa
+            $pembacaan = $this->pembacaan_hpa->where('id_pembacaan_hpa', $id_pembacaan_hpa)->first();
+            if ($pembacaan) {
+                $updatePembacaan = [];
+
+                if ($id_user_dokter_pembacaan_hpa !== null) {
+                    $updatePembacaan['id_user_dokter_pembacaan_hpa'] = $id_user_dokter_pembacaan_hpa;
+                }
+                if ($id_user_pembacaan_hpa !== null) {
+                    $updatePembacaan['id_user_pembacaan_hpa'] = $id_user_pembacaan_hpa;
+                }
+
+                if (!empty($updatePembacaan)) {
+                    $this->pembacaan_hpa->update($pembacaan['id_pembacaan_hpa'], $updatePembacaan);
                 }
             }
             switch ($page_source) {

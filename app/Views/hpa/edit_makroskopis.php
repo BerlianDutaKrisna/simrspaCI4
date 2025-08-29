@@ -14,6 +14,7 @@
             <?= csrf_field(); ?>
             <input type="hidden" name="id_hpa" value="<?= $hpa['id_hpa'] ?>">
             <input type="hidden" name="id_pemotongan_hpa" value="<?= $pemotongan['id_pemotongan_hpa'] ?>">
+            <input type="hidden" name="id_user_pemotongan_hpa" value="<?= esc($id_user) ?>">
             <input type="hidden" name="page_source" value="edit_makroskopis">
 
             <!-- Kolom Kode HPA dan Diagnosa -->
