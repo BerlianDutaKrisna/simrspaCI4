@@ -7,7 +7,7 @@
             <div class="text-center">
                 <h1 class="h4 text-gray-900 mb-4">Selamat Datang!</h1>
             </div>
-            <form action="<?= base_url('/users/insert') ?>" method="POST" enctype="multipart/form-data" class="user">
+            <form action="<?= base_url('users/insert') ?>" method="POST" enctype="multipart/form-data" class="user">
                 <?= csrf_field(); ?>
                 <div class="form-group">
                     <input type="text" name="nama_user" id="nama_user" class="form-control form-control-user" placeholder="Masukan Nama Lengkap" value="<?= old('nama_user'); ?>" required>
@@ -33,9 +33,6 @@
                     Daftar Akun
                 </button>
             </form>
-            <div class="text-center mt-3">
-                <a class="small" href="<?= base_url('/'); ?>">Sudah Punya Akun? Login Sekarang!</a>
-            </div>
         </div>
     </div>
 </div>

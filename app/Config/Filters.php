@@ -108,7 +108,6 @@ class Filters extends BaseFilters
         'auth' => [
             'before' => [
                 'dashboard',
-                'users/*',
                 'patient/*',
                 'hpa/*',                  
                 'frs/*',
@@ -144,7 +143,7 @@ class Filters extends BaseFilters
                 'pencetakan_frs/*',
                 'pencetakan_srs/*',
                 'pencetakan_ihc/*',
-            ]
+            ],
         ]
     ];
 }

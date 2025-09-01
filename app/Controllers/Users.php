@@ -62,20 +62,16 @@ class Users extends BaseController
         }
 
         $data = [
-            'username'     => $this->request->getPost('username'),
+            'username'      => $this->request->getPost('username'),
             'password_user' => password_hash($this->request->getPost('password'), PASSWORD_DEFAULT),
-            'nama_user'    => $this->request->getPost('nama_user'),
-            'status_user'  => $this->request->getPost('status_user')
+            'nama_user'     => $this->request->getPost('nama_user'),
+            'status_user'   => $this->request->getPost('status_user')
         ];
 
         try {
-            $this->UsersModel->insertUser($data);
+            $this->UsersModel->insert($data);
 
-            if ($this->UsersModel->db->affectedRows() > 0) {
-                return redirect()->to('login')->with('success', 'Registrasi berhasil!');
-            } else {
-                return redirect()->back()->with('error', 'Terjadi kesalahan saat mendaftar.');
-            }
+            return redirect()->to('/')->with('success', 'Registrasi berhasil!');
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'Terjadi kesalahan internal: ' . $e->getMessage());
         }
