@@ -84,7 +84,7 @@
                                         </td>
                                     <?php endif; ?>
                                     <td><?= esc($row['kode_srs']); ?></td>
-                                    <td><?= esc($row['nama_pasien']); ?></td>
+                                    <td><b><?= esc($row['nama_pasien']); ?></b> (<?= esc($row['norm_pasien']); ?>)</td>
                                     <td><?= esc($row['nama_user_penerimaan_srs']); ?></td>
                                     <td>
                                         <?= empty($row['mulai_penerimaan_srs']) ? '-' : esc(date('H:i, d-m-Y', strtotime($row['mulai_penerimaan_srs']))); ?>

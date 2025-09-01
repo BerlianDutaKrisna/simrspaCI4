@@ -106,7 +106,7 @@
                                         <?php endif; ?>
                                     </td>
                                     <td><?= esc($row['kode_hpa']); ?></td>
-                                    <td><?= esc($row['nama_pasien']); ?></td>
+                                    <td><b><?= esc($row['nama_pasien']); ?></b> (<?= esc($row['norm_pasien']); ?>)</td>
                                     <td><?= esc($row['nama_user_penerimaan_hpa']); ?></td>
                                     <td>
                                         <?= empty($row['mulai_penerimaan_hpa']) ? '-' : esc(date('H:i, d-m-Y', strtotime($row['mulai_penerimaan_hpa']))); ?>

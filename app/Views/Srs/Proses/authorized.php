@@ -88,7 +88,7 @@
                                         </td>
                                     <?php endif; ?>
                                     <td><?= $row['kode_srs']; ?></td>
-                                    <td><?= $row['nama_pasien']; ?></td>
+                                    <td><b><?= esc($row['nama_pasien']); ?></b> (<?= esc($row['norm_pasien']); ?>)</td>
                                     <td><?= $row['status_authorized_srs']; ?></td>
                                     <td><?= $row['nama_user_dokter_pembacaan']; ?></td>
                                     <td>

@@ -89,7 +89,7 @@
                                         </td>
                                     <?php endif; ?>
                                     <td><?= $row['kode_hpa']; ?></td>
-                                    <td><?= $row['nama_pasien']; ?></td>
+                                    <td><b><?= esc($row['nama_pasien']); ?></b> (<?= esc($row['norm_pasien']); ?>)</td>
                                     <td><?= $row['jumlah_slide']; ?></td>
                                     <td><?= $row['nama_user_dokter_pemotongan_hpa']; ?></td>
                                     <td><?= $row['status_pembacaan_hpa']; ?></td>

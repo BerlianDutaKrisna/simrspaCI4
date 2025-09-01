@@ -71,9 +71,8 @@
                                             autocomplete="off">
                                     </td>
                                     <td><?= $row['kode_hpa']; ?></td>
-                                    <td><?= $row['nama_pasien']; ?></td>
+                                    <td><b><?= esc($row['nama_pasien']); ?></b> (<?= esc($row['norm_pasien']); ?>)</td>
                                     <td><?= $row['status_pemotongan_tipis_hpa']; ?></td>
-
                                     <td><?= $row['diagnosa_klinik']; ?></td>
                                     <td><?= $row['nama_user_pemotongan_tipis_hpa']; ?></td>
                                     <td>

@@ -73,7 +73,7 @@
                                             autocomplete="off">
                                     </td>
                                     <td><?= $row['kode_frs']; ?></td>
-                                    <td><?= $row['nama_pasien']; ?></td>
+                                    <td><b><?= esc($row['nama_pasien']); ?></b> (<?= esc($row['norm_pasien']); ?>)</td>
                                     <td>
                                         <input type="number"
                                             class="form-control form-control-sm jumlah-slide-input"

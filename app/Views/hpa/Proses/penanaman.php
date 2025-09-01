@@ -91,7 +91,7 @@
                                         <?php endif; ?>
                                     </td>
                                     <td><?= $row['kode_hpa']; ?></td>
-                                    <td><?= $row['nama_pasien']; ?></td>
+                                    <td><b><?= esc($row['nama_pasien']); ?></b> (<?= esc($row['norm_pasien']); ?>)</td>
                                     <td><?= $row['status_penanaman_hpa']; ?></td>
                                     <td><?= $row['jumlah_slide']; ?></td>
                                     <td><?= $row['nama_user_penanaman_hpa']; ?></td>
