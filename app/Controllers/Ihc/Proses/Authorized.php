@@ -35,14 +35,22 @@ class Authorized extends BaseController
 
     public function index()
     {
-        $authorizedData_ihc = $this->authorized_ihc->getauthorized_ihc();
+        $namaUser = $this->session->get('nama_user');
+
+        // Jika user adalah salah satu dokter, filter data sesuai nama dokter
+        if (in_array($namaUser, ["dr. Vinna Chrisdianti, Sp.PA", "dr. Ayu Tyasmara Pratiwi, Sp.PA"])) {
+            $authorizedData_ihc = $this->authorized_ihc->getauthorized_ihc_by_dokter($namaUser);
+        } else {
+            $authorizedData_ihc = $this->authorized_ihc->getauthorized_ihc();
+        }
+
         $data = [
             'id_user' => session()->get('id_user'),
-            'nama_user' => $this->session->get('nama_user'),
+            'nama_user' => $namaUser,
             'counts' => $this->getCounts(),
             'authorizedDataihc' => $authorizedData_ihc,
         ];
-        
+
         return view('ihc/Proses/authorized', $data);
     }
 
