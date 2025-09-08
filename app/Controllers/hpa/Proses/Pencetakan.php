@@ -39,7 +39,7 @@ class Pencetakan extends BaseController
             'counts' => $this->getCounts(),
             'pencetakanDatahpa' => $pencetakanData_hpa,
         ];
-
+        
         return view('Hpa/Proses/pencetakan', $data);
     }
 

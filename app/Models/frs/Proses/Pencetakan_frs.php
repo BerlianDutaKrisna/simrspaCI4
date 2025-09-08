@@ -40,6 +40,7 @@ class Pencetakan_frs extends Model // Update nama model
         mutu_frs.total_nilai_mutu_frs,
         penerimaan_frs.id_penerimaan_frs,
         pembacaan_frs.id_pembacaan_frs, 
+        dokter_pembacaan.nama_user AS nama_user_dokter_pembacaan,
         pemverifikasi_frs.id_pemverifikasi_frs,
         authorized_frs.id_authorized_frs
         '
@@ -50,6 +51,7 @@ class Pencetakan_frs extends Model // Update nama model
             ->join('mutu_frs', 'frs.id_frs = mutu_frs.id_frs', 'left')
             ->join('penerimaan_frs', 'frs.id_frs = penerimaan_frs.id_frs', 'left')
             ->join('pembacaan_frs', 'frs.id_frs = pembacaan_frs.id_frs', 'left')
+            ->join('users AS dokter_pembacaan','dokter_pembacaan.id_user = pembacaan_frs.id_user_dokter_pembacaan_frs','left')
             ->join('pemverifikasi_frs', 'frs.id_frs = pemverifikasi_frs.id_frs', 'left')
             ->join('authorized_frs', 'frs.id_frs = authorized_frs.id_frs', 'left')
             ->where('frs.status_frs', 'Pencetakan') // Sesuaikan jika ada kondisi lain

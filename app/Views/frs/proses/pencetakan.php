@@ -50,6 +50,9 @@
                             <th>Kode FRS</th>
                             <th>Nama Pasien</th>
                             <th>Status pencetakan</th>
+                            <th>Dokter</th>
+                            <th>Lokasi Spesimen</th>
+                            <th>Diagnosa Klinik</th>
                             <th>Admin</th>
                             <th>Mulai pencetakan</th>
                             <th>Selesai pencetakan</th>
@@ -90,6 +93,9 @@
                                     <td><?= $row['kode_frs']; ?></td>
                                     <td><b><?= esc($row['nama_pasien']); ?></b> (<?= esc($row['norm_pasien']); ?>)</td>
                                     <td><?= $row['status_pencetakan_frs']; ?></td>
+                                    <td><?= $row['nama_user_dokter_pembacaan']; ?></td>
+                                    <td><?= $row['lokasi_spesimen']; ?></td>
+                                    <td><?= $row['diagnosa_klinik']; ?></td>
                                     <td><?= $row['nama_user_pencetakan_frs']; ?></td>
                                     <td>
                                         <?= empty($row['mulai_pencetakan_frs']) ? '-' : esc(date('H:i , d-m-Y', strtotime($row['mulai_pencetakan_frs']))); ?>
