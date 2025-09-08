@@ -238,8 +238,8 @@
                     </div>
                     <label class="col-sm-2 col-form-label">Dokter yang membaca</label>
                     <div class="col-sm-4">
-                        <select class="form-control" id="id_user_dokter_pembacaan_ihc" name="id_user_dokter_pembacaan_ihc">
-                            <option value="" <?= empty($ihc['id_user_dokter_pembacaan_ihc']) ? 'selected' : '' ?>>-- Pilih Dokter --</option>
+                        <select class="form-control" id="id_user_dokter_pembacaan_ihc" name="id_user_dokter_pembacaan_ihc" required>
+                        <option value="" disabled selected hidden>-- Pilih Dokter --</option>
                             <?php foreach ($users as $user): ?>
                                 <?php if ($user['status_user'] === 'Dokter'): ?>
                                     <option value="<?= $user['id_user'] ?>"
