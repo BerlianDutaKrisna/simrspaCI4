@@ -35,14 +35,22 @@ class Authorized extends BaseController
 
     public function index()
     {
-        $authorizedData_frs = $this->authorized_frs->getauthorized_frs();
+        $namaUser = $this->session->get('nama_user');
+
+        // Jika user adalah salah satu dokter, filter data sesuai nama dokter
+        if (in_array($namaUser, ["dr. Vinna Chrisdianti, Sp.PA", "dr. Ayu Tyasmara Pratiwi, Sp.PA"])) {
+            $authorizedData_frs = $this->authorized_frs->getauthorized_frs_by_dokter($namaUser);
+        } else {
+            $authorizedData_frs = $this->authorized_frs->getauthorized_frs();
+        }
+
         $data = [
             'id_user' => session()->get('id_user'),
-            'nama_user' => $this->session->get('nama_user'),
+            'nama_user' => $namaUser,
             'counts' => $this->getCounts(),
             'authorizedDatafrs' => $authorizedData_frs,
         ];
-        
+
         return view('frs/Proses/authorized', $data);
     }
 
