@@ -152,9 +152,9 @@
                                 <td><?= esc($row['total_nilai_mutu_hpa'] ?? 'Belum Diisi') ?>%</td>
                                 <td>
                                     <?php
-                                    if (!empty($row['mulai_penerimaan_hpa']) && !empty($row['selesai_pemverifikasi_hpa'])) {
+                                    if (!empty($row['mulai_penerimaan_hpa']) && !empty($row['selesai_penulisan_hpa'])) {
                                         $start = new DateTime($row['mulai_penerimaan_hpa']);
-                                        $end = new DateTime($row['selesai_pemverifikasi_hpa']);
+                                        $end = new DateTime($row['selesai_penulisan_hpa']);
                                         $interval = $start->diff($end);
                                         echo $interval->format('%a hari %h jam %i menit %s detik');
                                     } else {
@@ -164,9 +164,9 @@
                                 </td>
                                 <td>
                                     <?php
-                                    if (!empty($row['mulai_penerimaan_hpa']) && !empty($row['selesai_pemverifikasi_hpa'])) {
+                                    if (!empty($row['mulai_penerimaan_hpa']) && !empty($row['selesai_penulisan_hpa'])) {
                                         $start = new DateTime($row['mulai_penerimaan_hpa']);
-                                        $end = new DateTime($row['selesai_pemverifikasi_hpa']);
+                                        $end = new DateTime($row['selesai_penulisan_hpa']);
                                         $interval = $start->diff($end);
                                         if ($interval->days <= 7) {
                                             echo '<span class="text-success">Tepat Waktu</span>';

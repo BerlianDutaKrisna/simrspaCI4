@@ -245,14 +245,14 @@ class FrsModel extends Model
             patient.*, 
             users.nama_user AS dokter_pembaca,
             penerimaan_frs.mulai_penerimaan_frs,
-            pemverifikasi_frs.selesai_pemverifikasi_frs,
+            penulisan_frs.selesai_penulisan_frs,
             mutu_frs.total_nilai_mutu_frs
         ')
             ->join('patient', 'patient.id_pasien = frs.id_pasien')
             ->join('pembacaan_frs', 'pembacaan_frs.id_frs = frs.id_frs', 'left')
             ->join('users', 'users.id_user = pembacaan_frs.id_user_dokter_pembacaan_frs', 'left')
             ->join('penerimaan_frs', 'penerimaan_frs.id_frs = frs.id_frs', 'left')
-            ->join('pemverifikasi_frs', 'pemverifikasi_frs.id_frs = frs.id_frs', 'left')
+            ->join('penulisan_frs', 'penulisan_frs.id_frs = frs.id_frs', 'left')
             ->join('mutu_frs', 'mutu_frs.id_frs = frs.id_frs', 'left')
             ->where('frs.tanggal_permintaan >=', $previousMonthStart)
             ->where('frs.tanggal_permintaan <=', date('Y-m-t'))

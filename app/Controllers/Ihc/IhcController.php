@@ -971,7 +971,7 @@ class ihcController extends BaseController
             'nama_user'  => session()->get('nama_user'),
             'ihcData' => $ihcData,
         ];
-
+        
         return view('ihc/laporan/laporan_pemeriksaan', $data);
     }
 

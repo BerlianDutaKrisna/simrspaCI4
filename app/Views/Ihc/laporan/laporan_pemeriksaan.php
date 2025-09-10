@@ -172,9 +172,9 @@
                                 <td><?= esc($row['total_nilai_mutu_ihc'] ?? 'Belum Diisi') ?>%</td>
                                 <td>
                                     <?php
-                                    if (!empty($row['mulai_penerimaan_ihc']) && !empty($row['selesai_pemverifikasi_ihc'])) {
+                                    if (!empty($row['mulai_penerimaan_ihc']) && !empty($row['selesai_penulisan_ihc'])) {
                                         $start = new DateTime($row['mulai_penerimaan_ihc']);
-                                        $end = new DateTime($row['selesai_pemverifikasi_ihc']);
+                                        $end = new DateTime($row['selesai_penulisan_ihc']);
                                         $interval = $start->diff($end);
                                         echo $interval->format('%a hari %h jam %i menit %s detik');
                                     } else {
@@ -184,9 +184,9 @@
                                 </td>
                                 <td>
                                     <?php
-                                    if (!empty($row['mulai_penerimaan_ihc']) && !empty($row['selesai_pemverifikasi_ihc'])) {
+                                    if (!empty($row['mulai_penerimaan_ihc']) && !empty($row['selesai_penulisan_ihc'])) {
                                         $start = new DateTime($row['mulai_penerimaan_ihc']);
-                                        $end = new DateTime($row['selesai_pemverifikasi_ihc']);
+                                        $end = new DateTime($row['selesai_penulisan_ihc']);
                                         $interval = $start->diff($end);
                                         if ($interval->days <= 7) {
                                             echo '<span class="text-success">Tepat Waktu</span>';

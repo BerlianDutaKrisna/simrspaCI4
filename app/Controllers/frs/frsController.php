@@ -1037,7 +1037,7 @@ class FrsController extends BaseController
             'nama_user'  => session()->get('nama_user'),
             'frsData' => $frsData,
         ];
-
+        
         return view('frs//laporan/laporan_pemeriksaan', $data);
     }
 

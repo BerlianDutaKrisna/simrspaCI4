@@ -304,14 +304,14 @@ class HpaModel extends Model
             patient.*, 
             users.nama_user AS dokter_pembaca,
             penerimaan_hpa.mulai_penerimaan_hpa,
-            pemverifikasi_hpa.selesai_pemverifikasi_hpa,
+            penulisan_hpa.selesai_penulisan_hpa,
             mutu_hpa.total_nilai_mutu_hpa
         ')
             ->join('patient', 'patient.id_pasien = hpa.id_pasien')
             ->join('pembacaan_hpa', 'pembacaan_hpa.id_hpa = hpa.id_hpa', 'left')
             ->join('users', 'users.id_user = pembacaan_hpa.id_user_dokter_pembacaan_hpa', 'left')
             ->join('penerimaan_hpa', 'penerimaan_hpa.id_hpa = hpa.id_hpa', 'left')
-            ->join('pemverifikasi_hpa', 'pemverifikasi_hpa.id_hpa = hpa.id_hpa', 'left')
+            ->join('penulisan_hpa', 'penulisan_hpa.id_hpa = hpa.id_hpa', 'left')
             ->join('mutu_hpa', 'mutu_hpa.id_hpa = hpa.id_hpa', 'left')
             ->where('hpa.tanggal_permintaan >=', $previousMonthStart)
             ->where('hpa.tanggal_permintaan <=', date('Y-m-t'))

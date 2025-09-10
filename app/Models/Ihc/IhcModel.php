@@ -233,14 +233,14 @@ class IhcModel extends Model
             patient.*, 
             users.nama_user AS dokter_pembaca,
             penerimaan_ihc.mulai_penerimaan_ihc,
-            pemverifikasi_ihc.selesai_pemverifikasi_ihc,
+            penulisan_ihc.selesai_penulisan_ihc,
             mutu_ihc.total_nilai_mutu_ihc
         ')
             ->join('patient', 'patient.id_pasien = ihc.id_pasien')
             ->join('pembacaan_ihc', 'pembacaan_ihc.id_ihc = ihc.id_ihc', 'left')
             ->join('users', 'users.id_user = pembacaan_ihc.id_user_dokter_pembacaan_ihc', 'left')
             ->join('penerimaan_ihc', 'penerimaan_ihc.id_ihc = ihc.id_ihc', 'left')
-            ->join('pemverifikasi_ihc', 'pemverifikasi_ihc.id_ihc = ihc.id_ihc', 'left')
+            ->join('penulisan_ihc', 'penulisan_ihc.id_ihc = ihc.id_ihc', 'left')
             ->join('mutu_ihc', 'mutu_ihc.id_ihc = ihc.id_ihc', 'left')
             ->where('ihc.tanggal_permintaan >=', $previousMonthStart)
             ->where('ihc.tanggal_permintaan <=', date('Y-m-t'))
