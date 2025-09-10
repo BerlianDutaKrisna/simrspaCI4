@@ -143,15 +143,15 @@
                 <td rowspan="2" style="width: 20%; font-size: 15px; font-weight: bold; text-align: center;">
                     Kode srs: <?= esc($srs['kode_srs'] ?? '') ?>
                 </td>
-                <td style="width: 20%;">Nama Pasien: <?= esc($srs['nama_pasien'] ?? '') ?></td>
-                <td style="width: 20%;">Dokter Pengirim: <?= esc($srs['dokter_pengirim'] ?? '') ?></td>
-                <td style="width: 20%;">Diagnosa Klinik: <?= esc($srs['diagnosa_klinik'] ?? '') ?></td>
+                <td style="width: 20%;">Nama Pasien: <?= esc($srs['nama_pasien'] ?? '', 'js') ?></td>
+                <td style="width: 20%;">Dokter Pengirim: <?= esc($srs['dokter_pengirim'] ?? '', 'js') ?></td>
+                <td style="width: 20%;">Diagnosa Klinik: <?= esc($srs['diagnosa_klinik'] ?? '', 'js') ?></td>
                 <td style="width: 20%;">Tanggal Permintaan: <?= isset($srs['tanggal_permintaan']) ? date('d-m-Y', strtotime($srs['tanggal_permintaan'])) : ''; ?></td>
             </tr>
             <tr>
                 <td>Norm: <?= esc($srs['norm_pasien'] ?? '') ?></td>
-                <td>Unit Asal: <?= esc($srs['unit_asal'] ?? '') ?></td>
-                <td>Lokasi Spesimen: <?= esc($srs['lokasi_spesimen'] ?? '') ?></td>
+                <td>Unit Asal: <?= esc($srs['unit_asal'] ?? '', 'js') ?></td>
+                <td>Lokasi Spesimen: <?= esc($srs['lokasi_spesimen'] ?? '', 'js') ?></td>
                 <td>Estimasi Hasil: <?= isset($srs['tanggal_hasil']) ? date('d-m-Y', strtotime($srs['tanggal_hasil'])) : ''; ?></td>
             </tr>
         </table>

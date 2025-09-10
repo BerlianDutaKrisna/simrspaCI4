@@ -124,15 +124,15 @@
                 <td rowspan="2" style="width: 20%; font-size: 15px; font-weight: bold; text-align: center;">
                     Kode ihc: <?= esc($ihc['kode_ihc'] ?? '') ?>
                 </td>
-                <td style="width: 20%;">Nama Pasien: <?= esc($ihc['nama_pasien'] ?? '') ?></td>
-                <td style="width: 20%;">Dokter Pengirim: <?= esc($ihc['dokter_pengirim'] ?? '') ?></td>
-                <td style="width: 20%;">Diagnosa Klinik: <?= esc($ihc['diagnosa_klinik'] ?? '') ?></td>
+                <td style="width: 20%;">Nama Pasien: <?= esc($ihc['nama_pasien'] ?? '', 'js') ?></td>
+                <td style="width: 20%;">Dokter Pengirim: <?= esc($ihc['dokter_pengirim'] ?? '', 'js') ?></td>
+                <td style="width: 20%;">Diagnosa Klinik: <?= esc($ihc['diagnosa_klinik'] ?? '', 'js') ?></td>
                 <td style="width: 20%;">Tanggal Permintaan: <?= isset($ihc['tanggal_permintaan']) ? date('d-m-Y', strtotime($ihc['tanggal_permintaan'])) : ''; ?></td>
             </tr>
             <tr>
                 <td>Norm: <?= esc($ihc['norm_pasien'] ?? '') ?></td>
-                <td>Unit Asal: <?= esc($ihc['unit_asal'] ?? '') ?></td>
-                <td>Lokasi Spesimen: <?= esc($ihc['lokasi_spesimen'] ?? '') ?></td>
+                <td>Unit Asal: <?= esc($ihc['unit_asal'] ?? '', 'js') ?></td>
+                <td>Lokasi Spesimen: <?= esc($ihc['lokasi_spesimen'] ?? '', 'js') ?></td>
                 <td>Estimasi Hasil: <?= isset($ihc['tanggal_hasil']) ? date('d-m-Y', strtotime($ihc['tanggal_hasil'])) : ''; ?></td>
             </tr>
         </table>
