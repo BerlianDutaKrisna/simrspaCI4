@@ -7,7 +7,7 @@
             <h6 class="m-0 font-weight-bold text-primary">Edit Mikroskopis</h6>
         </div>
         <div class="card-body">
-            <h1>Edit Data Mikroskopis Fine Needle Aspiration Biopsy</h1>
+            <h1>Edit Data Mikroskopis Sitologi</h1>
             <a href="<?= base_url('pembacaan_srs/index') ?>" class="btn btn-primary mb-3"><i class="fas fa-reply"></i> Kembali</a>
 
             <!-- Form -->

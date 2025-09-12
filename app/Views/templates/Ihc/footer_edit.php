@@ -84,7 +84,7 @@
                 ER: <br>
                 PR: <br>
                 Her2 Neu: <br>
-                Ki-67 : 
+                Ki-67 : <br>
         `);
             }
         }
@@ -94,10 +94,10 @@
             var contentHasilIhc = $('#hasil_ihc').summernote('code').trim();
             if (!contentHasilIhc || contentHasilIhc === '<p><br></p>') {
                 $('#hasil_ihc').summernote('code', `
-                <div><font size="5" face="verdana"><b>ER:</b> </font></div>
-                <div><font size="5" face="verdana"><b>PR:</b> </font> </div>
-                <div><font size="5" face="verdana"><b>HER2 NEU:</b> </font></div>
-                <div><font size="5" face="verdana"><b>KI-67: INDEKS PROLIFERASI</b> </font></div>
+                <div><font size="5" face="verdana">ER: <br></font></div>
+                <div><font size="5" face="verdana">PR: <br></font> </div>
+                <div><font size="5" face="verdana">HER2 NEU: <br></font></div>
+                <div><font size="5" face="verdana">KI-67: INDEKS PROLIFERASI <br></font></div>
             `);
             }
         }

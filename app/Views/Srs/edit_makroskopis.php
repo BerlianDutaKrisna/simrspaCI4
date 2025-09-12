@@ -6,7 +6,7 @@
         <h6 class="m-0 font-weight-bold text-primary">Edit Makroskopis</h6>
     </div>
     <div class="card-body">
-        <h1>Edit Data Makroskopis Histopatologi</h1>
+        <h1>Edit Data Makroskopis Sitologi</h1>
         <a href="<?= base_url('penerimaan_srs/index') ?>" class="btn btn-primary mb-3"><i class="fas fa-reply"></i> Kembali</a>
 
         <!-- Form -->
