@@ -770,29 +770,36 @@ class HpaController extends BaseController
 
         // Mengambil data dari form
         $data = $this->request->getPost();
-        
+
         $id_user_pemotongan_hpa = !empty($data['id_user_pemotongan_hpa']) ? (int) $data['id_user_pemotongan_hpa'] : null;
         $id_user_dokter_pemotongan_hpa = !empty($data['id_user_dokter_pemotongan_hpa']) ? (int) $data['id_user_dokter_pemotongan_hpa'] : null;
         $id_user_pembacaan_hpa = !empty($data['id_user_pembacaan_hpa']) ? (int) $data['id_user_pembacaan_hpa'] : null;
         $id_user_dokter_pembacaan_hpa = !empty($data['id_user_dokter_pembacaan_hpa']) ? (int) $data['id_user_dokter_pembacaan_hpa'] : null;
         $page_source = $this->request->getPost('page_source');
-        // Proses update tabel mutu_hpa
+        // Proses update tabel mutu_hpa (jalankan hanya jika ada ID)
         $id_mutu_hpa = $this->request->getPost('id_mutu_hpa');
-        $indikator_4 = (string) ($this->request->getPost('indikator_4') ?? '0');
-        $indikator_5 = (string) ($this->request->getPost('indikator_5') ?? '0');
-        $indikator_6 = (string) ($this->request->getPost('indikator_6') ?? '0');
-        $indikator_7 = (string) ($this->request->getPost('indikator_7') ?? '0');
-        $indikator_8 = (string) ($this->request->getPost('indikator_8') ?? '0');
-        $total_nilai_mutu_hpa = (string) ($this->request->getPost('total_nilai_mutu_hpa') ?? '0');
-        $keseluruhan_nilai_mutu = $total_nilai_mutu_hpa + (int)$indikator_5 + (int)$indikator_6 + (int)$indikator_7 + (int)$indikator_8;
-        $this->mutu_hpa->update($id_mutu_hpa, [
-            'indikator_4' => $indikator_4,
-            'indikator_5' => $indikator_5,
-            'indikator_6' => $indikator_6,
-            'indikator_7' => $indikator_7,
-            'indikator_8' => $indikator_8,
-            'total_nilai_mutu_hpa' => $keseluruhan_nilai_mutu,
-        ]);
+        if (!empty($id_mutu_hpa)) {
+            $indikator_4 = (string) ($this->request->getPost('indikator_4') ?? '0');
+            $indikator_5 = (string) ($this->request->getPost('indikator_5') ?? '0');
+            $indikator_6 = (string) ($this->request->getPost('indikator_6') ?? '0');
+            $indikator_7 = (string) ($this->request->getPost('indikator_7') ?? '0');
+            $indikator_8 = (string) ($this->request->getPost('indikator_8') ?? '0');
+            $total_nilai_mutu_hpa = (string) ($this->request->getPost('total_nilai_mutu_hpa') ?? '0');
+            $keseluruhan_nilai_mutu =
+                (int)$total_nilai_mutu_hpa +
+                (int)$indikator_5 +
+                (int)$indikator_6 +
+                (int)$indikator_7 +
+                (int)$indikator_8;
+            $this->mutu_hpa->update($id_mutu_hpa, [
+                'indikator_4' => $indikator_4,
+                'indikator_5' => $indikator_5,
+                'indikator_6' => $indikator_6,
+                'indikator_7' => $indikator_7,
+                'indikator_8' => $indikator_8,
+                'total_nilai_mutu_hpa' => $keseluruhan_nilai_mutu,
+            ]);
+        }
         // Mengubah jika memilih 'lainnya'
         $data['PUG'] = ($this->request->getPost('PUG') === 'lainnya')
             ? $this->request->getPost('pug_custom')
