@@ -400,6 +400,7 @@ class srsController extends BaseController
         if (!empty($srs['id_penerimaan_srs']) && empty($srs['mulai_penerimaan_srs'])) {
             $this->penerimaan_srs->update($srs['id_penerimaan_srs'], [
                 'mulai_penerimaan_srs' => date('Y-m-d H:i:s'),
+                'id_user_penerimaan_srs'  => $this->session->get('id_user'),
             ]);
             // Refresh data
             $srs = $this->srsModel->getSrsWithRelationsProses($id_srs);
@@ -450,6 +451,7 @@ class srsController extends BaseController
         if (!empty($srs['id_pembacaan_srs']) && empty($srs['mulai_pembacaan_srs'])) {
             $this->pembacaan_srs->update($srs['id_pembacaan_srs'], [
                 'mulai_pembacaan_srs' => date('Y-m-d H:i:s'),
+                'id_user_pembacaan_srs'  => $this->session->get('id_user'),
             ]);
             // Refresh data
             $srs = $this->srsModel->getsrsWithRelationsProses($id_srs);
@@ -500,6 +502,7 @@ class srsController extends BaseController
         if (!empty($srs['id_penulisan_srs']) && empty($srs['mulai_penulisan_srs'])) {
             $this->penulisan_srs->update($srs['id_penulisan_srs'], [
                 'mulai_penulisan_srs' => date('Y-m-d H:i:s'),
+                'id_user_penulisan_srs'  => $this->session->get('id_user'),
             ]);
 
             // Refresh data
@@ -574,6 +577,7 @@ class srsController extends BaseController
         if (!empty($srs['id_pemverifikasi_srs']) && empty($srs['mulai_pemverifikasi_srs'])) {
             $this->pemverifikasi_srs->update($srs['id_pemverifikasi_srs'], [
                 'mulai_pemverifikasi_srs' => date('Y-m-d H:i:s'),
+                'id_user_pemverifikasi_srs'  => $this->session->get('id_user'),
             ]);
 
             // Refresh data
@@ -584,6 +588,7 @@ class srsController extends BaseController
         if (!empty($srs['id_authorized_srs']) && empty($srs['mulai_authorized_srs'])) {
             $this->authorized_srs->update($srs['id_authorized_srs'], [
                 'mulai_authorized_srs' => date('Y-m-d H:i:s'),
+                'id_user_authorized_srs'  => $this->session->get('id_user'),
             ]);
 
             // Refresh data
@@ -594,6 +599,7 @@ class srsController extends BaseController
         if (!empty($srs['id_pencetakan_srs']) && empty($srs['mulai_pencetakan_srs'])) {
             $this->pencetakan_srs->update($srs['id_pencetakan_srs'], [
                 'mulai_pencetakan_srs' => date('Y-m-d H:i:s'),
+                'id_user_pencetakan_srs'  => $this->session->get('id_user'),
             ]);
 
             // Refresh data

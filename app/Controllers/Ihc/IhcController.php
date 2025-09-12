@@ -411,6 +411,7 @@ class ihcController extends BaseController
         if (!empty($ihc['id_pembacaan_ihc']) && empty($ihc['mulai_pembacaan_ihc'])) {
             $this->pembacaan_ihc->update($ihc['id_pembacaan_ihc'], [
                 'mulai_pembacaan_ihc' => date('Y-m-d H:i:s'),
+                'id_user_pembacaan_ihc' => session()->get('id_user'),
             ]);
             // Refresh data
             $ihc = $this->ihcModel->getihcWithRelationsProses($id_ihc);
@@ -450,6 +451,7 @@ class ihcController extends BaseController
         if (!empty($ihc['id_penulisan_ihc']) && empty($ihc['mulai_penulisan_ihc'])) {
             $this->penulisan_ihc->update($ihc['id_penulisan_ihc'], [
                 'mulai_penulisan_ihc' => date('Y-m-d H:i:s'),
+                'id_user_penulisan_ihc' => session()->get('id_user'),
             ]);
 
             // Refresh data
@@ -525,6 +527,7 @@ class ihcController extends BaseController
         if (!empty($ihc['id_pemverifikasi_ihc']) && empty($ihc['mulai_pemverifikasi_ihc'])) {
             $this->pemverifikasi_ihc->update($ihc['id_pemverifikasi_ihc'], [
                 'mulai_pemverifikasi_ihc' => date('Y-m-d H:i:s'),
+                'id_user_pemverifikasi_ihc' => session()->get('id_user'),
             ]);
 
             // Refresh data
@@ -535,6 +538,7 @@ class ihcController extends BaseController
         if (!empty($ihc['id_authorized_ihc']) && empty($ihc['mulai_authorized_ihc'])) {
             $this->authorized_ihc->update($ihc['id_authorized_ihc'], [
                 'mulai_authorized_ihc' => date('Y-m-d H:i:s'),
+                'id_user_authorized_ihc' => session()->get('id_user'),
             ]);
 
             // Refresh data
@@ -545,6 +549,7 @@ class ihcController extends BaseController
         if (!empty($ihc['id_pencetakan_ihc']) && empty($ihc['mulai_pencetakan_ihc'])) {
             $this->pencetakan_ihc->update($ihc['id_pencetakan_ihc'], [
                 'mulai_pencetakan_ihc' => date('Y-m-d H:i:s'),
+                'id_user_pencetakan_ihc' => session()->get('id_user'),
             ]);
 
             // Refresh data

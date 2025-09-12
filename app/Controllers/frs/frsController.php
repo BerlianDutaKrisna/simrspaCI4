@@ -402,6 +402,7 @@ class FrsController extends BaseController
         if (!empty($frs['id_penerimaan_frs']) && empty($frs['mulai_penerimaan_frs'])) {
             $this->penerimaan_frs->update($frs['id_penerimaan_frs'], [
                 'mulai_penerimaan_frs' => date('Y-m-d H:i:s'),
+                'id_user_penerimaan_frs'  => $this->session->get('id_user'),
             ]);
             // Refresh data
             $frs = $this->frsModel->getfrsWithRelationsProses($id_frs);
@@ -453,6 +454,7 @@ class FrsController extends BaseController
         if (!empty($frs['id_pembacaan_frs']) && empty($frs['mulai_pembacaan_frs'])) {
             $this->pembacaan_frs->update($frs['id_pembacaan_frs'], [
                 'mulai_pembacaan_frs' => date('Y-m-d H:i:s'),
+                'id_user_pembacaan_frs'  => $this->session->get('id_user'),
             ]);
             // Refresh data
             $frs = $this->frsModel->getfrsWithRelationsProses($id_frs);
@@ -492,6 +494,7 @@ class FrsController extends BaseController
         if (!empty($frs['id_penulisan_frs']) && empty($frs['mulai_penulisan_frs'])) {
             $this->penulisan_frs->update($frs['id_penulisan_frs'], [
                 'mulai_penulisan_frs' => date('Y-m-d H:i:s'),
+                'id_user_penulisan_frs'  => $this->session->get('id_user'),
             ]);
 
             // Refresh data
@@ -566,6 +569,7 @@ class FrsController extends BaseController
         if (!empty($frs['id_pemverifikasi_frs']) && empty($frs['mulai_pemverifikasi_frs'])) {
             $this->pemverifikasi_frs->update($frs['id_pemverifikasi_frs'], [
                 'mulai_pemverifikasi_frs' => date('Y-m-d H:i:s'),
+                'id_user_pemverifikasi_frs'  => $this->session->get('id_user'),
             ]);
 
             // Refresh data
@@ -576,6 +580,7 @@ class FrsController extends BaseController
         if (!empty($frs['id_authorized_frs']) && empty($frs['mulai_authorized_frs'])) {
             $this->authorized_frs->update($frs['id_authorized_frs'], [
                 'mulai_authorized_frs' => date('Y-m-d H:i:s'),
+                'id_user_authorized_frs'  => $this->session->get('id_user'),
             ]);
 
             // Refresh data
