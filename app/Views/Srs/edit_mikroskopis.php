@@ -15,6 +15,9 @@
                 <?= csrf_field(); ?>
                 <input type="hidden" name="id_srs" value="<?= $srs['id_srs'] ?>">
                 <input type="hidden" name="id_pembacaan_srs" value="<?= $pembacaan_srs['id_pembacaan_srs'] ?>">
+                <input type="hidden" name="id_user_pembacaan_srs" value="<?= esc($id_user) ?>">
+                <input type="hidden" name="id_mutu_srs" value="<?= $mutu_srs['id_mutu_srs'] ?>">
+                <input type="hidden" name="total_nilai_mutu_srs" value="<?= $mutu_srs['total_nilai_mutu_srs']; ?>">
                 <input type="hidden" name="page_source" value="edit_mikroskopis">
 
                 <!-- Kolom Kode SRS dan Diagnosa -->
@@ -113,6 +116,17 @@
                     </div>
                 </div>
 
+                <div class="form-group row">
+                    <label class="col-sm-2 col-form-label" for="jumlah_slide">Jumlah Slide</label>
+                    <div class="col-sm-2">
+                        <input type="number" name="jumlah_slide" id="jumlah_slide"
+                            class="form-control form-control-sm jumlah-slide-input"
+                            data-id="<?= $srs['id_srs']; ?>"
+                            value="<?= $srs['jumlah_slide']; ?>"
+                            min="0" step="1" style="width:100px;">
+                    </div>
+                </div>
+
                 <!-- Kolom Foto Mikroskopis -->
                 <div class="form-group row">
                     <label class="col-sm-2 col-form-label">Foto Mikroskopis</label>
@@ -166,6 +180,98 @@
                                 <?php endif; ?>
                             <?php endforeach; ?>
                         </select>
+                    </div>
+                </div>
+                
+                <div class="form-group row">
+                    <label class="col-sm-2 col-form-label">mutu srs</label>
+                    <div class="col-sm-4">
+                        <div class="form-check">
+                            <input type="checkbox" id="checkAll_<?= $mutu_srs['id_mutu_srs']; ?>" class="form-check-input">
+                            <label class="form-check-label" for="checkAll_<?= $mutu_srs['id_mutu_srs']; ?>">
+                                Pilih Semua
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input type="checkbox"
+                                name="indikator_4"
+                                value="10"
+                                id="indikator_4_<?= $mutu_srs['id_mutu_srs']; ?>"
+                                class="form-check-input child-checkbox"
+                                <?= ($mutu_srs['indikator_4'] !== "0") ? 'checked' : ''; ?>>
+                            <label class="form-check-label" for="indikator_4_<?= $mutu_srs['id_mutu_srs']; ?>">
+                                Sediaan tanpa lipatan?
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input type="checkbox"
+                                name="indikator_5"
+                                value="10"
+                                id="indikator_5_<?= $mutu_srs['id_mutu_srs']; ?>"
+                                class="form-check-input child-checkbox"
+                                <?= ($mutu_srs['indikator_5'] !== "0") ? 'checked' : ''; ?>>
+                            <label class="form-check-label" for="indikator_5_<?= $mutu_srs['id_mutu_srs']; ?>">
+                                Sediaan tanpa goresan mata pisau?
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input type="checkbox"
+                                name="indikator_6"
+                                value="10"
+                                id="indikator_6_<?= $mutu_srs['id_mutu_srs']; ?>"
+                                class="form-check-input child-checkbox"
+                                <?= ($mutu_srs['indikator_6'] !== "0") ? 'checked' : ''; ?>>
+                            <label class="form-check-label" for="indikator_6_<?= $mutu_srs['id_mutu_srs']; ?>">
+                                Kontras warna sediaan cukup jelas?
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input type="checkbox"
+                                name="indikator_7"
+                                value="10"
+                                id="indikator_7_<?= $mutu_srs['id_mutu_srs']; ?>"
+                                class="form-check-input child-checkbox"
+                                <?= ($mutu_srs['indikator_7'] !== "0") ? 'checked' : ''; ?>>
+                            <label class="form-check-label" for="indikator_7_<?= $mutu_srs['id_mutu_srs']; ?>">
+                                Sediaan tanpa gelembung udara?
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input type="checkbox"
+                                name="indikator_8"
+                                value="10"
+                                id="indikator_8_<?= $mutu_srs['id_mutu_srs']; ?>"
+                                class="form-check-input child-checkbox"
+                                <?= ($mutu_srs['indikator_8'] !== "0") ? 'checked' : ''; ?>>
+                            <label class="form-check-label" for="indikator_8_<?= $mutu_srs['id_mutu_srs']; ?>">
+                                Sediaan tanpa bercak / sidik jari?
+                            </label>
+                        </div>
+
+                        <script>
+                            document.addEventListener('DOMContentLoaded', function() {
+                                const checkAll = document.getElementById('checkAll_<?= $mutu_srs['id_mutu_srs']; ?>');
+                                const checkboxes = document.querySelectorAll('.child-checkbox');
+
+                                // Ketika "Pilih Semua" dicentang/ditandai
+                                checkAll.addEventListener('change', function() {
+                                    checkboxes.forEach(checkbox => {
+                                        checkbox.checked = checkAll.checked; // Semua checkbox mengikuti status "Pilih Semua"
+                                    });
+                                });
+
+                                // Update status "Pilih Semua" berdasarkan checkbox lainnya
+                                checkboxes.forEach(checkbox => {
+                                    checkbox.addEventListener('change', function() {
+                                        checkAll.checked = Array.from(checkboxes).every(checkbox => checkbox.checked);
+                                    });
+                                });
+
+                                // Cek apakah semua checkbox sudah dicentang, lalu centang "Pilih Semua" jika iya
+                                checkAll.checked = Array.from(checkboxes).every(checkbox => checkbox.checked);
+                            });
+                        </script>
+
                     </div>
                 </div>
 
@@ -228,3 +334,41 @@
 <?= $this->include('templates/notifikasi') ?>
 <?= $this->include('templates/srs/footer_edit'); ?>
 <?= $this->include('templates/srs/cetak_proses'); ?>
+
+// jumlah slide ajax
+<script>
+    $(document).ready(function() {
+        $(".jumlah-slide-input").on("change", function() {
+            let input = $(this);
+            let id_srs = input.data("id");
+            let jumlah_slide = input.val();
+
+            $.ajax({
+                url: "<?= base_url('srs/update_jumlah_slide'); ?>",
+                type: "POST",
+                data: {
+                    id_srs: id_srs,
+                    jumlah_slide: jumlah_slide,
+                    <?= csrf_token() ?>: "<?= csrf_hash() ?>" // CSRF protection
+                },
+                dataType: "json",
+                success: function(res) {
+                    if (res.status === "success") {
+                        console.log("Jumlah slide berhasil diperbarui");
+
+                        // Update tombol cetak di baris yang sama
+                        let btnCetak = input.closest("tr").find(".btn-cetak-stiker");
+                        if (btnCetak.length) {
+                            btnCetak.data("slide", jumlah_slide);
+                        }
+                    } else {
+                        alert("Gagal memperbarui jumlah slide!");
+                    }
+                },
+                error: function(xhr, status, error) {
+                    alert("Terjadi kesalahan: " + error);
+                }
+            });
+        });
+    });
+</script>

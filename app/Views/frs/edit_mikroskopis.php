@@ -113,6 +113,17 @@
                     </div>
                 </div>
 
+                <div class="form-group row">
+                    <label class="col-sm-2 col-form-label" for="jumlah_slide">Jumlah Slide</label>
+                    <div class="col-sm-2">
+                        <input type="number" name="jumlah_slide" id="jumlah_slide"
+                            class="form-control form-control-sm jumlah-slide-input"
+                            data-id="<?= $frs['id_frs']; ?>"
+                            value="<?= $frs['jumlah_slide']; ?>"
+                            min="0" step="1" style="width:100px;">
+                    </div>
+                </div>
+
                 <!-- Kolom Foto Mikroskopis -->
                 <div class="form-group row">
                     <label class="col-sm-2 col-form-label">Foto Mikroskopis</label>
@@ -222,3 +233,41 @@
 <?= $this->include('templates/notifikasi') ?>
 <?= $this->include('templates/frs/footer_edit'); ?>
 <?= $this->include('templates/frs/cetak_proses'); ?>
+
+// jumlah slide ajax
+<script>
+    $(document).ready(function() {
+        $(".jumlah-slide-input").on("change", function() {
+            let input = $(this);
+            let id_frs = input.data("id");
+            let jumlah_slide = input.val();
+
+            $.ajax({
+                url: "<?= base_url('frs/update_jumlah_slide'); ?>",
+                type: "POST",
+                data: {
+                    id_frs: id_frs,
+                    jumlah_slide: jumlah_slide,
+                    <?= csrf_token() ?>: "<?= csrf_hash() ?>" // CSRF protection
+                },
+                dataType: "json",
+                success: function(res) {
+                    if (res.status === "success") {
+                        console.log("Jumlah slide berhasil diperbarui");
+
+                        // Update tombol cetak di baris yang sama
+                        let btnCetak = input.closest("tr").find(".btn-cetak-stiker");
+                        if (btnCetak.length) {
+                            btnCetak.data("slide", jumlah_slide);
+                        }
+                    } else {
+                        alert("Gagal memperbarui jumlah slide!");
+                    }
+                },
+                error: function(xhr, status, error) {
+                    alert("Terjadi kesalahan: " + error);
+                }
+            });
+        });
+    });
+</script>

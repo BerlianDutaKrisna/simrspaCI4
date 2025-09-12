@@ -854,7 +854,6 @@ class HpaController extends BaseController
                         'total_nilai_mutu_hpa' => $keseluruhan_nilai_mutu,
                     ]);
                     return redirect()->to('hpa/edit_mikroskopis/' . $id_hpa)->with('success', 'Data mikroskopis berhasil diperbarui.');
-
                 case 'edit_penulisan':
                     $id_penulisan_hpa = $this->request->getPost('id_penulisan_hpa');
                     $this->penulisan_hpa->update($id_penulisan_hpa, [

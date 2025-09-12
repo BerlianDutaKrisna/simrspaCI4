@@ -458,6 +458,7 @@ class srsController extends BaseController
         }
         $id_penerimaan_srs = $srs['id_penerimaan_srs'];
         $id_pembacaan_srs = $srs['id_pembacaan_srs'];
+        $id_mutu_srs = $srs['id_mutu_srs'];
         $penerimaan_srs = $id_penerimaan_srs ? $this->penerimaan_srs->find($id_penerimaan_srs) : [];
         $pembacaan_srs = $id_pembacaan_srs ? $this->pembacaan_srs->find($id_pembacaan_srs) : [];
         if (!empty($srs['id_penerimaan_srs'])) {
@@ -470,6 +471,18 @@ class srsController extends BaseController
                 $penerimaan_srs['analis_nama'] = null;
             }
         }
+        // Ambil data mutu jika tersedia
+        $mutu_srs = $id_mutu_srs ? $this->mutu_srs->find($id_mutu_srs) : null;
+        // Pastikan mutu tidak kosong sebelum mengambil indikator
+        $mutu_srs = [
+            'id_mutu_srs' => $id_mutu_srs ?? null,
+            'indikator_4' => $mutu_srs['indikator_4'] ?? "0",
+            'indikator_5' => $mutu_srs['indikator_5'] ?? "0",
+            'indikator_6' => $mutu_srs['indikator_6'] ?? "0",
+            'indikator_7' => $mutu_srs['indikator_7'] ?? "0",
+            'indikator_8' => $mutu_srs['indikator_8'] ?? "0",
+            'total_nilai_mutu_srs' => $mutu_srs['total_nilai_mutu_srs'] ?? "0"
+        ];
         // Ambil data pengguna dengan status "Dokter"
         $users = $this->usersModel->where('status_user', 'Dokter')->findAll();
         // Persiapkan data yang akan dikirim ke view
@@ -482,11 +495,12 @@ class srsController extends BaseController
             'riwayat_ihc'        => $riwayat_ihc,
             'penerimaan_srs' => $penerimaan_srs,
             'pembacaan_srs'   => $pembacaan_srs,
+            'mutu_srs'        => $mutu_srs,
             'users'           => $users,
             'id_user'         => session()->get('id_user'),
             'nama_user'       => session()->get('nama_user'),
         ];
-
+        
         return view('srs/edit_mikroskopis', $data);
     }
 
@@ -689,6 +703,22 @@ class srsController extends BaseController
                         'id_user_pembacaan_srs' => $id_user,
                         'status_pembacaan_srs' => 'Selesai Pembacaan',
                         'selesai_pembacaan_srs' => date('Y-m-d H:i:s'),
+                    ]);
+                    $id_mutu_srs = $this->request->getPost('id_mutu_srs');
+                    $indikator_4 = (string) ($this->request->getPost('indikator_4') ?? '0');
+                    $indikator_5 = (string) ($this->request->getPost('indikator_5') ?? '0');
+                    $indikator_6 = (string) ($this->request->getPost('indikator_6') ?? '0');
+                    $indikator_7 = (string) ($this->request->getPost('indikator_7') ?? '0');
+                    $indikator_8 = (string) ($this->request->getPost('indikator_8') ?? '0');
+                    $total_nilai_mutu_srs = (string) ($this->request->getPost('total_nilai_mutu_srs') ?? '0');
+                    $keseluruhan_nilai_mutu = $total_nilai_mutu_srs + (int)$indikator_5 + (int)$indikator_6 + (int)$indikator_7 + (int)$indikator_8;
+                    $this->mutu_srs->update($id_mutu_srs, [
+                        'indikator_4' => $indikator_4,
+                        'indikator_5' => $indikator_5,
+                        'indikator_6' => $indikator_6,
+                        'indikator_7' => $indikator_7,
+                        'indikator_8' => $indikator_8,
+                        'total_nilai_mutu_srs' => $keseluruhan_nilai_mutu,
                     ]);
                     return redirect()->to('srs/edit_mikroskopis/' . $id_srs)->with('success', 'Data mikroskopis berhasil diperbarui.');
                 case 'edit_penulisan':

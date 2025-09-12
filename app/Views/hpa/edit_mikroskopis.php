@@ -18,8 +18,9 @@
                 <input type="hidden" name="id_pembacaan_hpa" value="<?= $pembacaan_hpa['id_pembacaan_hpa'] ?>">
                 <input type="hidden" name="id_user_pembacaan_hpa" value="<?= esc($id_user) ?>">
                 <input type="hidden" name="id_mutu_hpa" value="<?= $mutu_hpa['id_mutu_hpa'] ?>">
-                <input type="hidden" name="page_source" value="edit_mikroskopis">
                 <input type="hidden" name="total_nilai_mutu_hpa" value="<?= $mutu_hpa['total_nilai_mutu_hpa']; ?>">
+                <input type="hidden" name="page_source" value="edit_mikroskopis">
+                
 
 
                 <!-- Kolom Kode HPA dan Diagnosa -->
@@ -115,6 +116,17 @@
                     <label class="col-sm-2 col-form-label">Makroskopis</label>
                     <div class="col-sm-10">
                         <textarea class="form-control summernote" name="makroskopis_hpa" id="makroskopis_hpa"><?= $hpa['makroskopis_hpa'] ?? '' ?></textarea>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label class="col-sm-2 col-form-label" for="jumlah_slide">Jumlah Slide</label>
+                    <div class="col-sm-2">
+                        <input type="number" name="jumlah_slide" id="jumlah_slide"
+                            class="form-control form-control-sm jumlah-slide-input"
+                            data-id="<?= $hpa['id_hpa']; ?>"
+                            value="<?= $hpa['jumlah_slide']; ?>"
+                            min="0" step="1" style="width:100px;">
                     </div>
                 </div>
 
@@ -387,3 +399,41 @@
 <?= $this->include('templates/notifikasi') ?>
 <?= $this->include('templates/hpa/footer_edit'); ?>
 <?= $this->include('templates/hpa/cetak_proses'); ?>
+
+// jumlah slide ajax
+<script>
+    $(document).ready(function() {
+        $(".jumlah-slide-input").on("change", function() {
+            let input = $(this);
+            let id_hpa = input.data("id");
+            let jumlah_slide = input.val();
+
+            $.ajax({
+                url: "<?= base_url('hpa/update_jumlah_slide'); ?>",
+                type: "POST",
+                data: {
+                    id_hpa: id_hpa,
+                    jumlah_slide: jumlah_slide,
+                    <?= csrf_token() ?>: "<?= csrf_hash() ?>" // CSRF protection
+                },
+                dataType: "json",
+                success: function(res) {
+                    if (res.status === "success") {
+                        console.log("Jumlah slide berhasil diperbarui");
+
+                        // Update tombol cetak di baris yang sama
+                        let btnCetak = input.closest("tr").find(".btn-cetak-stiker");
+                        if (btnCetak.length) {
+                            btnCetak.data("slide", jumlah_slide);
+                        }
+                    } else {
+                        alert("Gagal memperbarui jumlah slide!");
+                    }
+                },
+                error: function(xhr, status, error) {
+                    alert("Terjadi kesalahan: " + error);
+                }
+            });
+        });
+    });
+</script>
