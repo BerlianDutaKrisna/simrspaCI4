@@ -17,9 +17,31 @@
                 <input type="hidden" name="id_authorized_hpa" value="<?= $hpa['id_authorized_hpa'] ?? '' ?>">
                 <input type="hidden" name="id_pencetakan_hpa" value="<?= $hpa['id_pencetakan_hpa'] ?? '' ?>">
                 <input type="hidden" name="redirect" value="<?= $_GET['redirect'] ?? '' ?>">
-                <input type="hidden" name="id_transaksi" value="<?= isset($hpa['id_transaksi']) ? (int) $hpa['id_transaksi'] : '' ?>">
-                <input type="hidden" name="tanggal_transaksi" value="<?= !empty($hpa['tanggal_transaksi']) ? esc($hpa['tanggal_transaksi']) : '' ?>">
-                <input type="hidden" name="no_register" value="<?= isset($hpa['no_register']) ? esc($hpa['no_register']) : ''; ?>">
+
+                <!-- data yang dikirim untuk SIMRS -->
+                <input type="hidden" name="idtransaksi" value="<?= isset($hpa['id_transaksi']) ? (int) $hpa['id_transaksi'] : '' ?>">
+                <input type="hidden" name="tanggal" value="<?= !empty($hpa['tanggal_transaksi']) ? esc($hpa['tanggal_transaksi']) : '' ?>">
+                <input type="hidden" name="register" value="<?= isset($hpa['no_register']) ? esc($hpa['no_register']) : '' ?>">
+                <input type="hidden" name="pemeriksaan" value="<?= isset($hpa['tindakan_spesimen']) ? esc($hpa['tindakan_spesimen']) : '' ?>">
+                <input type="hidden" name="idpasien" value="<?= isset($hpa['id_pasien']) ? (int) $hpa['id_pasien'] : '' ?>">
+                <input type="hidden" name="norm" value="<?= isset($hpa['norm_pasien']) ? esc($hpa['norm_pasien']) : '' ?>">
+                <input type="hidden" name="nama" value="<?= isset($hpa['nama_pasien']) ? esc($hpa['nama_pasien']) : '' ?>">
+                <!-- kolom noregister sesuai DB -->
+                <input type="hidden" name="noregister" value="<?= isset($hpa['kode_hpa']) ? esc($hpa['kode_hpa']) : '' ?>">
+                <!-- datetime fields -->
+                <input type="hidden" name="datang" value="<?= isset($hpa['tanggal_permintaan']) ? esc($hpa['tanggal_permintaan']) : '' ?>">
+                <input type="hidden" name="periksa" value="<?= isset($hpa['mulai_penerimaan_hpa']) ? esc($hpa['mulai_penerimaan_hpa']) : '' ?>">
+                <input type="hidden" name="selesai" value="<?= isset($hpa['selesai_penulisan_hpa']) ? esc($hpa['selesai_penulisan_hpa']) : '' ?>">
+                <!-- dokter PA text -->
+                <input type="hidden" name="dokterpa" value="<?= isset($pembacaan_hpa['dokter_nama']) ? esc($pembacaan_hpa['dokter_nama']) : '' ?>">
+                <!-- status lokasi text -->
+                <input type="hidden" name="statuslokasi" value="<?= isset($hpa['lokasi_spesimen']) ? esc($hpa['lokasi_spesimen']) : '' ?>">
+                <!-- diagnosa & mutu -->
+                <input type="hidden" name="diagnosaklinik" value="<?= isset($hpa['diagnosa_klinik']) ? esc($hpa['diagnosa_klinik']) : '' ?>">
+                <input type="hidden" name="diagnosapatologi" value="<?= isset($hpa['hasil_hpa']) ? esc($hpa['hasil_hpa']) : '' ?>">
+                <input type="hidden" name="mutusediaan" value="<?= isset($hpa['total_nilai_mutu_hpa']) ? esc($hpa['total_nilai_mutu_hpa']) : '' ?>">
+
+                <input type="hidden" name="status" value="Belum Terkirim">
 
                 <!-- Tombol Kembali -->
                 <div class="mb-3">
