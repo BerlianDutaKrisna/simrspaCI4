@@ -78,7 +78,7 @@
                                                     id="indikator_1_<?= esc($row['id_mutu_hpa']); ?>"
                                                     class="form-check-input">
                                                 <label class="form-check-label" for="indikator_1_<?= esc($row['id_mutu_hpa']); ?>">
-                                                    Vol cairan fiksasi sesuai?
+                                                Cek Kesesuaian ID?
                                                 </label>
                                             </div>
                                             <div class="form-check">
@@ -88,17 +88,7 @@
                                                     id="indikator_2_<?= esc($row['id_mutu_hpa']); ?>"
                                                     class="form-check-input">
                                                 <label class="form-check-label" for="indikator_2_<?= esc($row['id_mutu_hpa']); ?>">
-                                                    Jaringan terfiksasi merata?
-                                                </label>
-                                            </div>
-                                            <div class="form-check">
-                                                <input type="checkbox"
-                                                    name="indikator_9"
-                                                    value="10"
-                                                    id="indikator_9_<?= esc($row['id_mutu_hpa']); ?>"
-                                                    class="form-check-input">
-                                                <label class="form-check-label" for="indikator_9_<?= esc($row['id_mutu_hpa']); ?>">
-                                                    Cek Kesesuaian ID?
+                                                Vol cairan fiksasi sesuai?
                                                 </label>
                                             </div>
                                         <?php else: ?>

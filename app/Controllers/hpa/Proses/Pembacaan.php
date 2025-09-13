@@ -71,8 +71,10 @@ class Pembacaan extends BaseController
                 $indikator_6 = (string) ($this->request->getPost('indikator_6') ?? '0');
                 $indikator_7 = (string) ($this->request->getPost('indikator_7') ?? '0');
                 $indikator_8 = (string) ($this->request->getPost('indikator_8') ?? '0');
+                $indikator_9 = (string) ($this->request->getPost('indikator_9') ?? '0');
+                $indikator_10 = (string) ($this->request->getPost('indikator_10') ?? '0');
                 $total_nilai_mutu_hpa = (string) ($this->request->getPost('total_nilai_mutu_hpa') ?? '0');
-                $this->processAction($action, $id_pembacaan_hpa, $id_hpa, $id_user, $id_mutu_hpa, $indikator_4, $indikator_5, $indikator_6, $indikator_7, $indikator_8, $total_nilai_mutu_hpa);
+                $this->processAction($action, $id_pembacaan_hpa, $id_hpa, $id_user, $id_mutu_hpa, $indikator_4, $indikator_5, $indikator_6, $indikator_7, $indikator_8, $indikator_9, $indikator_10, $total_nilai_mutu_hpa);
             }
 
             return redirect()->to('pembacaan_hpa/index');
@@ -81,7 +83,7 @@ class Pembacaan extends BaseController
         }
     }
 
-    private function processAction($action, $id_pembacaan_hpa, $id_hpa, $id_user, $id_mutu_hpa, $indikator_4, $indikator_5, $indikator_6, $indikator_7, $indikator_8, $total_nilai_mutu_hpa)
+    private function processAction($action, $id_pembacaan_hpa, $id_hpa, $id_user, $id_mutu_hpa, $indikator_4, $indikator_5, $indikator_6, $indikator_7, $indikator_8, $indikator_9, $indikator_10, $total_nilai_mutu_hpa)
     {
         date_default_timezone_set('Asia/Jakarta');
 
@@ -106,7 +108,9 @@ class Pembacaan extends BaseController
                         'indikator_6' => $indikator_6,
                         'indikator_7' => $indikator_7,
                         'indikator_8' => $indikator_8,
-                        'total_nilai_mutu_hpa' => $total_nilai_mutu_hpa + $indikator_4 + $indikator_5 + $indikator_6 + $indikator_7 + $indikator_8,
+                        'indikator_9' => $indikator_9,
+                        'indikator_10' => $indikator_10,
+                        'total_nilai_mutu_hpa' => $total_nilai_mutu_hpa + $indikator_4 + $indikator_5 + $indikator_6 + $indikator_7 + $indikator_8, $indikator_9 + $indikator_10,
                     ]);
                     break;
                 case 'reset':
@@ -122,6 +126,8 @@ class Pembacaan extends BaseController
                         'indikator_6' => '0',
                         'indikator_7' => '0',
                         'indikator_8' => '0',
+                        'indikator_9' => '0',
+                        'indikator_10' => '0',
                         'total_nilai_mutu_hpa' => '30',
                     ]);
                     break;

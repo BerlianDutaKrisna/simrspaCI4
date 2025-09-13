@@ -574,6 +574,8 @@ class HpaController extends BaseController
             'indikator_6' => $mutu_hpa['indikator_6'] ?? "0",
             'indikator_7' => $mutu_hpa['indikator_7'] ?? "0",
             'indikator_8' => $mutu_hpa['indikator_8'] ?? "0",
+            'indikator_9' => $mutu_hpa['indikator_9'] ?? "0",
+            'indikator_10' => $mutu_hpa['indikator_10'] ?? "0",
             'total_nilai_mutu_hpa' => $mutu_hpa['total_nilai_mutu_hpa'] ?? "0"
         ];
         // Ambil data pengguna dengan status "Dokter"
@@ -787,21 +789,29 @@ class HpaController extends BaseController
             $indikator_6 = (string) ($this->request->getPost('indikator_6') ?? '0');
             $indikator_7 = (string) ($this->request->getPost('indikator_7') ?? '0');
             $indikator_8 = (string) ($this->request->getPost('indikator_8') ?? '0');
+            $indikator_9 = (string) ($this->request->getPost('indikator_9') ?? '0');
+            $indikator_10 = (string) ($this->request->getPost('indikator_10') ?? '0');
             $total_nilai_mutu_hpa = (string) ($this->request->getPost('total_nilai_mutu_hpa') ?? '0');
             $keseluruhan_nilai_mutu =
                 (int)$total_nilai_mutu_hpa +
+                (int)$indikator_4 +
                 (int)$indikator_5 +
                 (int)$indikator_6 +
                 (int)$indikator_7 +
-                (int)$indikator_8;
-            $this->mutu_hpa->update($id_mutu_hpa, [
-                'indikator_4' => $indikator_4,
-                'indikator_5' => $indikator_5,
-                'indikator_6' => $indikator_6,
-                'indikator_7' => $indikator_7,
-                'indikator_8' => $indikator_8,
-                'total_nilai_mutu_hpa' => $keseluruhan_nilai_mutu,
-            ]);
+                (int)$indikator_8 +
+                (int)$indikator_9 +
+                (int)$indikator_10;
+                
+                $this->mutu_hpa->update($id_mutu_hpa, [
+                    'indikator_4' => $indikator_4,
+                    'indikator_5' => $indikator_5,
+                    'indikator_6' => $indikator_6,
+                    'indikator_7' => $indikator_7,
+                    'indikator_8' => $indikator_8,
+                    'indikator_9' => $indikator_9,
+                    'indikator_10' => $indikator_10,
+                    'total_nilai_mutu_hpa' => $keseluruhan_nilai_mutu,
+                ]);
         }
         // Mengubah jika memilih 'lainnya'
         $data['PUG'] = ($this->request->getPost('PUG') === 'lainnya')
@@ -868,14 +878,18 @@ class HpaController extends BaseController
                     $indikator_6 = (string) ($this->request->getPost('indikator_6') ?? '0');
                     $indikator_7 = (string) ($this->request->getPost('indikator_7') ?? '0');
                     $indikator_8 = (string) ($this->request->getPost('indikator_8') ?? '0');
+                    $indikator_9 = (string) ($this->request->getPost('indikator_9') ?? '0');
+                    $indikator_10 = (string) ($this->request->getPost('indikator_10') ?? '0');
                     $total_nilai_mutu_hpa = (string) ($this->request->getPost('total_nilai_mutu_hpa') ?? '0');
-                    $keseluruhan_nilai_mutu = $total_nilai_mutu_hpa + (int)$indikator_5 + (int)$indikator_6 + (int)$indikator_7 + (int)$indikator_8;
+                    $keseluruhan_nilai_mutu = $total_nilai_mutu_hpa + (int)$indikator_4 + (int)$indikator_5 + (int)$indikator_6 + (int)$indikator_7 + (int)$indikator_8 + (int)$indikator_9 + (int)$indikator_10;
                     $this->mutu_hpa->update($id_mutu_hpa, [
                         'indikator_4' => $indikator_4,
                         'indikator_5' => $indikator_5,
                         'indikator_6' => $indikator_6,
                         'indikator_7' => $indikator_7,
                         'indikator_8' => $indikator_8,
+                        'indikator_9' => $indikator_9,
+                        'indikator_10' => $indikator_10,
                         'total_nilai_mutu_hpa' => $keseluruhan_nilai_mutu,
                     ]);
                     return redirect()->to('hpa/edit_mikroskopis/' . $id_hpa)->with('success', 'Data mikroskopis berhasil diperbarui.');
@@ -1116,17 +1130,16 @@ class HpaController extends BaseController
                         'body'    => json_encode($payload)
                     ]
                 );
-            
+
                 $responseBody = $response->getBody();
                 log_message('info', 'Pengiriman data SIMRS berhasil: ' . $responseBody);
-            
+
                 // Kirim pesan ke browser agar bisa dilihat di console.log
                 echo "<script>console.log('Pengiriman data SIMRS berhasil: " . addslashes($responseBody) . "');</script>";
-            
             } catch (\Exception $e) {
                 $errorMessage = $e->getMessage();
                 log_message('error', 'Gagal mengirim data ke SIMRS: ' . $errorMessage);
-            
+
                 // Kirim error ke browser agar terlihat di console.log
                 echo "<script>console.error('Gagal mengirim data ke SIMRS: " . addslashes($errorMessage) . "');</script>";
             }

@@ -253,7 +253,7 @@
                         <div class="form-check">
                             <input type="checkbox" id="checkAll_<?= $mutu_hpa['id_mutu_hpa']; ?>" class="form-check-input">
                             <label class="form-check-label" for="checkAll_<?= $mutu_hpa['id_mutu_hpa']; ?>">
-                                Pilih Semua
+                                <b>Pilih Semua</b>
                             </label>
                         </div>
                         <div class="form-check">
@@ -264,7 +264,7 @@
                                 class="form-check-input child-checkbox"
                                 <?= ($mutu_hpa['indikator_4'] !== "0") ? 'checked' : ''; ?>>
                             <label class="form-check-label" for="indikator_4_<?= $mutu_hpa['id_mutu_hpa']; ?>">
-                                Sediaan tanpa lipatan?
+                                Jaringan terfiksasi merata?
                             </label>
                         </div>
                         <div class="form-check">
@@ -275,7 +275,7 @@
                                 class="form-check-input child-checkbox"
                                 <?= ($mutu_hpa['indikator_5'] !== "0") ? 'checked' : ''; ?>>
                             <label class="form-check-label" for="indikator_5_<?= $mutu_hpa['id_mutu_hpa']; ?>">
-                                Sediaan tanpa goresan mata pisau?
+                                Potongan tipis dan merata?
                             </label>
                         </div>
                         <div class="form-check">
@@ -286,7 +286,7 @@
                                 class="form-check-input child-checkbox"
                                 <?= ($mutu_hpa['indikator_6'] !== "0") ? 'checked' : ''; ?>>
                             <label class="form-check-label" for="indikator_6_<?= $mutu_hpa['id_mutu_hpa']; ?>">
-                                Kontras warna sediaan cukup jelas?
+                                Sediaan tanpa lipatan?
                             </label>
                         </div>
                         <div class="form-check">
@@ -297,7 +297,7 @@
                                 class="form-check-input child-checkbox"
                                 <?= ($mutu_hpa['indikator_7'] !== "0") ? 'checked' : ''; ?>>
                             <label class="form-check-label" for="indikator_7_<?= $mutu_hpa['id_mutu_hpa']; ?>">
-                                Sediaan tanpa gelembung udara?
+                                Sediaan tanpa goresan mata pisau?
                             </label>
                         </div>
                         <div class="form-check">
@@ -308,7 +308,29 @@
                                 class="form-check-input child-checkbox"
                                 <?= ($mutu_hpa['indikator_8'] !== "0") ? 'checked' : ''; ?>>
                             <label class="form-check-label" for="indikator_8_<?= $mutu_hpa['id_mutu_hpa']; ?>">
-                                Sediaan tanpa bercak / sidik jari?
+                                Kontras warna sediaan cukup jelas?
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input type="checkbox"
+                                name="indikator_9"
+                                value="10"
+                                id="indikator_9_<?= $mutu_hpa['id_mutu_hpa']; ?>"
+                                class="form-check-input child-checkbox"
+                                <?= ($mutu_hpa['indikator_9'] !== "0") ? 'checked' : ''; ?>>
+                            <label class="form-check-label" for="indikator_9_<?= $mutu_hpa['id_mutu_hpa']; ?>">
+                                Sediaan tanpa gelembung udara?
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input type="checkbox"
+                                name="indikator_10"
+                                value="10"
+                                id="indikator_10_<?= $mutu_hpa['id_mutu_hpa']; ?>"
+                                class="form-check-input child-checkbox"
+                                <?= ($mutu_hpa['indikator_10'] !== "0") ? 'checked' : ''; ?>>
+                            <label class="form-check-label" for="indikator_10_<?= $mutu_hpa['id_mutu_hpa']; ?>">
+                                Sediaan tanpa bercak jari?
                             </label>
                         </div>
 
