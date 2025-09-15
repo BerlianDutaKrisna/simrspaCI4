@@ -56,6 +56,7 @@ $routes->group('api', ['namespace' => 'App\Controllers\Api'], function ($routes)
     $routes->get('kunjungan/indexAll', 'Kunjungan::indexAll');
     $routes->get('pemeriksaan/norm_pasien/(:num)', 'Pemeriksaan::showByNorm/$1');
     $routes->put('pemeriksaan/id_transaksi/(:num)', 'Pemeriksaan::updateByTransaksi/$1');
+    $routes->get('pengiriman-data-simrs', 'PengirimanDataSimrs::index');
     $routes->post('pengiriman-data-simrs/kirim', 'PengirimanDataSimrs::kirim');
     $routes->post('pengiriman-data-simrs/kirim/(:num)', 'PengirimanDataSimrs::kirimById/$1');
     $routes->resource('koneksi', ['only' => ['index']]);

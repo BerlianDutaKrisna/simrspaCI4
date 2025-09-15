@@ -10,6 +10,19 @@ class PengirimanDataSimrs extends ResourceController
     protected $modelName = PengirimanDataSimrsModel::class;
     protected $format    = 'json';
 
+    public function index()
+    {
+        $allData = $this->model->getPengirimanData();
+
+        $data = [
+            'id_user'   => session()->get('id_user'),
+            'nama_user' => session()->get('nama_user'),
+            'data'      => $allData
+        ];
+
+        return view('PengirimanData/index', $data);
+    }
+
     public function kirim()
     {
         $dataBelumTerkirim = $this->model

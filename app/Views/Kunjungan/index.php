@@ -6,7 +6,9 @@
     <div class="card shadow mb-4">
         <div class="card-header py-3 d-flex justify-content-between align-items-center">
             <h6 class="m-0 font-weight-bold text-primary">Data Kunjungan Pasien</h6>
-            <span class="badge badge-info p-2">Ringkasan Hari Ini</span>
+            <span class="badge badge-info p-2">
+                <a href="<?= base_url('/api/pengiriman-data-simrs') ?>">Pengiriman Data Simrs</a>
+            </span>
         </div>
         <div class="card-body">
             <h1 class="h4 mb-3">Daftar Kunjungan</h1>
