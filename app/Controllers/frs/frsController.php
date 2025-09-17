@@ -403,6 +403,7 @@ class FrsController extends BaseController
             $this->penerimaan_frs->update($frs['id_penerimaan_frs'], [
                 'mulai_penerimaan_frs' => date('Y-m-d H:i:s'),
                 'id_user_penerimaan_frs'  => $this->session->get('id_user'),
+                'status_penerimaan_frs' => 'Proses Penerimaan',
             ]);
             // Refresh data
             $frs = $this->frsModel->getfrsWithRelationsProses($id_frs);
@@ -455,6 +456,7 @@ class FrsController extends BaseController
             $this->pembacaan_frs->update($frs['id_pembacaan_frs'], [
                 'mulai_pembacaan_frs' => date('Y-m-d H:i:s'),
                 'id_user_pembacaan_frs'  => $this->session->get('id_user'),
+                'status_pembacaan_frs' => 'Proses Pembacaan',
             ]);
             // Refresh data
             $frs = $this->frsModel->getfrsWithRelationsProses($id_frs);
@@ -495,6 +497,7 @@ class FrsController extends BaseController
             $this->penulisan_frs->update($frs['id_penulisan_frs'], [
                 'mulai_penulisan_frs' => date('Y-m-d H:i:s'),
                 'id_user_penulisan_frs'  => $this->session->get('id_user'),
+                'status_penulisan_frs' => 'Proses Penulisan',
             ]);
 
             // Refresh data
@@ -570,6 +573,7 @@ class FrsController extends BaseController
             $this->pemverifikasi_frs->update($frs['id_pemverifikasi_frs'], [
                 'mulai_pemverifikasi_frs' => date('Y-m-d H:i:s'),
                 'id_user_pemverifikasi_frs'  => $this->session->get('id_user'),
+                'status_pemverifikasi_frs' => 'Proses Pemverifikasi',
             ]);
 
             // Refresh data
@@ -581,6 +585,7 @@ class FrsController extends BaseController
             $this->authorized_frs->update($frs['id_authorized_frs'], [
                 'mulai_authorized_frs' => date('Y-m-d H:i:s'),
                 'id_user_authorized_frs'  => $this->session->get('id_user'),
+                'status_authorized_frs' => 'Proses Authorized',
             ]);
 
             // Refresh data
@@ -591,6 +596,8 @@ class FrsController extends BaseController
         if (!empty($frs['id_pencetakan_frs']) && empty($frs['mulai_pencetakan_frs'])) {
             $this->pencetakan_frs->update($frs['id_pencetakan_frs'], [
                 'mulai_pencetakan_frs' => date('Y-m-d H:i:s'),
+                'id_user_pencetakan_frs'  => $this->session->get('id_user'),
+                'status_pencetakan_frs' => 'Proses Pencetakan',
             ]);
 
             // Refresh data

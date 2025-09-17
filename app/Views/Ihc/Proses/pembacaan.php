@@ -51,6 +51,7 @@
                             <th>Nama Pasien</th>
                             <th>Dokter</th>
                             <th>Status Pembacaan</th>
+                            <th>User</th>
                             <th>Mulai Pembacaan</th>
                             <th>Selesai Pembacaan</th>
                             <th>Deadline Hasil</th>
@@ -91,6 +92,7 @@
                                     <td><b><?= esc($row['nama_pasien']); ?></b> (<?= esc($row['norm_pasien']); ?>)</td>
                                     <td><?= $row['nama_user_dokter_pembacaan_ihc']; ?></td>
                                     <td><?= $row['status_pembacaan_ihc']; ?></td>
+                                    <td><?= $row['nama_user_pembacaan_ihc']; ?></td>
                                     <td>
                                         <?= empty($row['mulai_pembacaan_ihc']) ? '-' : esc(date('H:i , d-m-Y', strtotime($row['mulai_pembacaan_ihc']))); ?>
                                     </td>

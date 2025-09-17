@@ -48,7 +48,7 @@
                             <th>Nama Pasien</th>
                             <th>Status Pemotongan Tipis</th>
                             <th>Diagnosa Klinik</th>
-                            <th>Analis</th>
+                            <th>User</th>
                             <th>Mulai Pemotongan Tipis</th>
                             <th>Selesai Pemotongan Tipis</th>
                             <th>Deadline Hasil</th>

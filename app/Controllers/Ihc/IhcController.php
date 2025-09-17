@@ -412,6 +412,7 @@ class ihcController extends BaseController
             $this->pembacaan_ihc->update($ihc['id_pembacaan_ihc'], [
                 'mulai_pembacaan_ihc' => date('Y-m-d H:i:s'),
                 'id_user_pembacaan_ihc' => session()->get('id_user'),
+                'status_pembacaan_ihc' => 'Proses Pembacaan',
             ]);
             // Refresh data
             $ihc = $this->ihcModel->getihcWithRelationsProses($id_ihc);
@@ -452,6 +453,7 @@ class ihcController extends BaseController
             $this->penulisan_ihc->update($ihc['id_penulisan_ihc'], [
                 'mulai_penulisan_ihc' => date('Y-m-d H:i:s'),
                 'id_user_penulisan_ihc' => session()->get('id_user'),
+                'status_penulisan_ihc' => 'Proses Penulisan',
             ]);
 
             // Refresh data
@@ -528,6 +530,7 @@ class ihcController extends BaseController
             $this->pemverifikasi_ihc->update($ihc['id_pemverifikasi_ihc'], [
                 'mulai_pemverifikasi_ihc' => date('Y-m-d H:i:s'),
                 'id_user_pemverifikasi_ihc' => session()->get('id_user'),
+                'status_pemverifikasi_ihc' => 'Proses Pemverifikasi',
             ]);
 
             // Refresh data
@@ -539,6 +542,7 @@ class ihcController extends BaseController
             $this->authorized_ihc->update($ihc['id_authorized_ihc'], [
                 'mulai_authorized_ihc' => date('Y-m-d H:i:s'),
                 'id_user_authorized_ihc' => session()->get('id_user'),
+                'status_authorized_ihc' => 'Proses Authorized',
             ]);
 
             // Refresh data
@@ -550,6 +554,7 @@ class ihcController extends BaseController
             $this->pencetakan_ihc->update($ihc['id_pencetakan_ihc'], [
                 'mulai_pencetakan_ihc' => date('Y-m-d H:i:s'),
                 'id_user_pencetakan_ihc' => session()->get('id_user'),
+                'status_pencetakan_ihc' => 'Proses Pencetakan',
             ]);
 
             // Refresh data

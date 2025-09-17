@@ -401,6 +401,7 @@ class srsController extends BaseController
             $this->penerimaan_srs->update($srs['id_penerimaan_srs'], [
                 'mulai_penerimaan_srs' => date('Y-m-d H:i:s'),
                 'id_user_penerimaan_srs'  => $this->session->get('id_user'),
+                'status_penerimaan_srs' => 'Proses Penerimaan',
             ]);
             // Refresh data
             $srs = $this->srsModel->getSrsWithRelationsProses($id_srs);
@@ -452,6 +453,7 @@ class srsController extends BaseController
             $this->pembacaan_srs->update($srs['id_pembacaan_srs'], [
                 'mulai_pembacaan_srs' => date('Y-m-d H:i:s'),
                 'id_user_pembacaan_srs'  => $this->session->get('id_user'),
+                'status_pembacaan_srs' => 'Proses Pembacaan',
             ]);
             // Refresh data
             $srs = $this->srsModel->getsrsWithRelationsProses($id_srs);
@@ -517,6 +519,7 @@ class srsController extends BaseController
             $this->penulisan_srs->update($srs['id_penulisan_srs'], [
                 'mulai_penulisan_srs' => date('Y-m-d H:i:s'),
                 'id_user_penulisan_srs'  => $this->session->get('id_user'),
+                'status_penulisan_srs' => 'Proses Penulisan',
             ]);
 
             // Refresh data
@@ -592,6 +595,7 @@ class srsController extends BaseController
             $this->pemverifikasi_srs->update($srs['id_pemverifikasi_srs'], [
                 'mulai_pemverifikasi_srs' => date('Y-m-d H:i:s'),
                 'id_user_pemverifikasi_srs'  => $this->session->get('id_user'),
+                'status_pemverifikasi_srs' => 'Proses Pemverifikasi',
             ]);
 
             // Refresh data
@@ -603,6 +607,7 @@ class srsController extends BaseController
             $this->authorized_srs->update($srs['id_authorized_srs'], [
                 'mulai_authorized_srs' => date('Y-m-d H:i:s'),
                 'id_user_authorized_srs'  => $this->session->get('id_user'),
+                'status_authorized_srs' => 'Proses Authorized',
             ]);
 
             // Refresh data
@@ -614,6 +619,7 @@ class srsController extends BaseController
             $this->pencetakan_srs->update($srs['id_pencetakan_srs'], [
                 'mulai_pencetakan_srs' => date('Y-m-d H:i:s'),
                 'id_user_pencetakan_srs'  => $this->session->get('id_user'),
+                'status_pencetakan_srs' => 'Proses Pencetakan',
             ]);
 
             // Refresh data

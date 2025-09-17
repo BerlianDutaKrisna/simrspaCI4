@@ -49,7 +49,7 @@
                             <th>Nama Pasien</th>
                             <th>Status Penanaman</th>
                             <th>Jumlah Slide</th>
-                            <th>Analis</th>
+                            <th>User</th>
                             <th>Mulai Penanaman</th>
                             <th>Selesai Penanaman</th>
                             <th>Deadline Hasil</th>

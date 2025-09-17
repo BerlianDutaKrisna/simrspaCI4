@@ -48,7 +48,7 @@
                             <th>Nama Pasien</th>
                             <th>Detail</th>
                             <th>Status Pemotongan</th>
-                            <th>Analis</th>
+                            <th>User</th>
                             <th>Mulai Pemotongan</th>
                             <th>Selesai Pemotongan</th>
                             <th>Deadline Hasil</th>

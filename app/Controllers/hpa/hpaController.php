@@ -470,6 +470,7 @@ class HpaController extends BaseController
             $this->pemotongan_hpa->update($hpa['id_pemotongan_hpa'], [
                 'mulai_pemotongan_hpa' => date('Y-m-d H:i:s'),
                 'id_user_pemotongan_hpa'  => $this->session->get('id_user'),
+                'status_pemotongan_hpa' => 'Proses Pemotongan',
             ]);
             // Refresh data
             $hpa = $this->hpaModel->getHpaWithRelationsProses($id_hpa);
@@ -523,6 +524,7 @@ class HpaController extends BaseController
             $this->pembacaan_hpa->update($hpa['id_pembacaan_hpa'], [
                 'mulai_pembacaan_hpa' => date('Y-m-d H:i:s'),
                 'id_user_pembacaan_hpa'  => $this->session->get('id_user'),
+                'status_pembacaan_hpa' => 'Proses Pembacaan',
             ]);
             // Refresh data
             $hpa = $this->hpaModel->getHpaWithRelationsProses($id_hpa);
@@ -623,6 +625,7 @@ class HpaController extends BaseController
             $this->penulisan_hpa->update($hpa['id_penulisan_hpa'], [
                 'mulai_penulisan_hpa' => date('Y-m-d H:i:s'),
                 'id_user_penulisan_hpa'  => $this->session->get('id_user'),
+                'status_penulisan_hpa' => 'Proses Penulisan',
             ]);
 
             // Refresh data
@@ -689,6 +692,7 @@ class HpaController extends BaseController
             $this->pemverifikasi_hpa->update($hpa['id_pemverifikasi_hpa'], [
                 'mulai_pemverifikasi_hpa' => date('Y-m-d H:i:s'),
                 'id_user_pemverifikasi_hpa'  => $this->session->get('id_user'),
+                'status_pemverifikasi_hpa' => 'Proses Pemverifikasi',
             ]);
 
             // Refresh data
@@ -700,6 +704,7 @@ class HpaController extends BaseController
             $this->authorized_hpa->update($hpa['id_authorized_hpa'], [
                 'mulai_authorized_hpa' => date('Y-m-d H:i:s'),
                 'id_user_authorized_hpa'  => $this->session->get('id_user'),
+                'status_authorized_hpa' => 'Proses Authorized',
             ]);
 
             // Refresh data
@@ -711,6 +716,7 @@ class HpaController extends BaseController
             $this->pencetakan_hpa->update($hpa['id_pencetakan_hpa'], [
                 'mulai_pencetakan_hpa' => date('Y-m-d H:i:s'),
                 'id_user_pencetakan_hpa'  => $this->session->get('id_user'),
+                'status_pencetakan_hpa' => 'Proses Pencetakan',
             ]);
 
             // Refresh data

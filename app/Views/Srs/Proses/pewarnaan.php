@@ -50,7 +50,7 @@
                             <th>jumlah slide</th>
                             <th>Aksi Cetak Stiker</th>
                             <th>Status Pewarnaan</th>
-                            <th>Analis</th>
+                            <th>User</th>
                             <th>Mulai Pewarnaan</th>
                             <th>Selesai Pewarnaan</th>
                             <th>Deadline Hasil</th>

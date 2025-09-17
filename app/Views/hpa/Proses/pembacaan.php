@@ -52,6 +52,7 @@
                             <th>jumlah slide</th>
                             <th>Dokter</th>
                             <th>Status Pembacaan</th>
+                            <th>User</th>
                             <th>Mulai Pembacaan</th>
                             <th>Selesai Pembacaan</th>
                             <th>Deadline Hasil</th>
@@ -93,6 +94,7 @@
                                     <td><?= $row['jumlah_slide']; ?></td>
                                     <td><?= $row['nama_user_dokter_pemotongan_hpa']; ?></td>
                                     <td><?= $row['status_pembacaan_hpa']; ?></td>
+                                    <td><?= $row['nama_user_pembacaan_hpa']; ?></td>
                                     <td>
                                         <?= empty($row['mulai_pembacaan_hpa']) ? '-' : esc(date('H:i , d-m-Y', strtotime($row['mulai_pembacaan_hpa']))); ?>
                                     </td>

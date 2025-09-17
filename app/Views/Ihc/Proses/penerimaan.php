@@ -46,7 +46,7 @@
                             <th>Kelengkapan Form</th>
                             <th>Kode IHC</th>
                             <th>Nama Pasien</th>
-                            <th>Analis</th>
+                            <th>User</th>
                             <th>Mulai Penerimaan</th>
                             <th>Selesai Penerimaan</th>
                             <th>Deadline Hasil</th>

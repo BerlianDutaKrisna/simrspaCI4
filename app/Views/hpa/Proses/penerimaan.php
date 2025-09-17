@@ -46,7 +46,7 @@
                             <th>Kualitas Sediaan</th>
                             <th>Kode HPA</th>
                             <th>Nama Pasien</th>
-                            <th>Analis</th>
+                            <th>User</th>
                             <th>Mulai Penerimaan</th>
                             <th>Selesai Penerimaan</th>
                             <th>Deadline Hasil</th>

@@ -47,7 +47,7 @@
                             <th>Kode HPA</th>
                             <th>Nama Pasien</th>
                             <th>Status Pemprosesan</th>
-                            <th>Analis</th>
+                            <th>User</th>
                             <th>Mulai Pemprosesan</th>
                             <th>Selesai Pemprosesan</th>
                             <th>Deadline Hasil</th>
