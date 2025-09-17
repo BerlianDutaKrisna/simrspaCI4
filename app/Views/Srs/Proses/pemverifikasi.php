@@ -50,7 +50,7 @@
                             <th>Kode SRS</th>
                             <th>Nama Pasien</th>
                             <th>Status pemverifikasi</th>
-                            <th>Analis</th>
+                            <th>User</th>
                             <th>Mulai pemverifikasi</th>
                             <th>Selesai pemverifikasi</th>
                             <th>Deadline Hasil</th>

@@ -49,7 +49,7 @@
                             <th>Kode IHC</th>
                             <th>Nama Pasien</th>
                             <th>Status Penulisan</th>
-                            <th>Admin</th>
+                            <th>User</th>
                             <th>Mulai Penulisan</th>
                             <th>Selesai Penulisan</th>
                             <th>Deadline Hasil</th>

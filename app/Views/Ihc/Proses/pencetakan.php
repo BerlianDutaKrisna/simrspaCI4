@@ -53,7 +53,7 @@
                             <th>Dokter</th>
                             <th>Lokasi Spesimen</th>
                             <th>Diagnosa Klinik</th>
-                            <th>Admin</th>
+                            <th>User</th>
                             <th>Mulai pencetakan</th>
                             <th>Selesai pencetakan</th>
                             <th>Deadline Hasil</th>
