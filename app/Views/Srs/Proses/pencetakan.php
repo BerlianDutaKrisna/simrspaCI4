@@ -49,10 +49,10 @@
                             <th>Detail</th>
                             <th>Kode SRS</th>
                             <th>Nama Pasien</th>
-                            <th>Status pencetakan</th>
                             <th>Dokter</th>
                             <th>Lokasi Spesimen</th>
                             <th>Diagnosa Klinik</th>
+                            <th>Status pencetakan</th>
                             <th>User</th>
                             <th>Mulai pencetakan</th>
                             <th>Selesai pencetakan</th>
@@ -92,10 +92,10 @@
                                     <?php endif; ?>
                                     <td><?= $row['kode_srs']; ?></td>
                                     <td><b><?= esc($row['nama_pasien']); ?></b> (<?= esc($row['norm_pasien']); ?>)</td>
-                                    <td><?= $row['status_pencetakan_srs']; ?></td>
                                     <td><?= $row['nama_user_dokter_pembacaan']; ?></td>
                                     <td><?= $row['lokasi_spesimen']; ?></td>
                                     <td><?= $row['diagnosa_klinik']; ?></td>
+                                    <td><?= $row['status_pencetakan_srs']; ?></td>
                                     <td><?= $row['nama_user_pencetakan_srs']; ?></td>
                                     <td>
                                         <?= empty($row['mulai_pencetakan_srs']) ? '-' : esc(date('H:i , d-m-Y', strtotime($row['mulai_pencetakan_srs']))); ?>
