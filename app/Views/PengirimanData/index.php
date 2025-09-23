@@ -56,7 +56,7 @@
                                     <td><?= esc($row['dokterpa'] ?? '-') ?></td>
                                     <td><?= esc($row['statuslokasi'] ?? '-') ?></td>
                                     <td><?= esc($row['diagnosaklinik'] ?? '-') ?></td>
-                                    <td><?= esc($row['diagnosapatologi'] ?? '-') ?></td>
+                                    <td><?= strip_tags($row['diagnosapatologi'] ?? '-') ?></td>
                                     <td>
                                         <?php if ($row['status'] === 'Belum Terkirim'): ?>
                                             <strong class="text-danger"><?= esc($row['status']) ?></strong>

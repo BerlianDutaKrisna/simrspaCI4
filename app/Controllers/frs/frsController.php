@@ -11,6 +11,7 @@ use App\Models\UsersModel;
 use App\Models\PatientModel;
 use App\Models\SimrsModel;
 use App\Models\KunjunganModel;
+use App\Models\PengirimanDataSimrsModel;
 use App\Models\Frs\Proses\Penerimaan_frs;
 use App\Models\Frs\Proses\Pembacaan_frs;
 use App\Models\Frs\Proses\Penulisan_frs;
@@ -31,6 +32,7 @@ class FrsController extends BaseController
     protected $patientModel;
     protected $simrsModel;
     protected $kunjunganModel;
+    protected $pengirimanDataSimrsModel;
     protected $penerimaan_frs;
     protected $pemotongan_frs;
     protected $pembacaan_frs;
@@ -51,6 +53,7 @@ class FrsController extends BaseController
         $this->patientModel = new PatientModel();
         $this->simrsModel = new SimrsModel();
         $this->kunjunganModel = new KunjunganModel();
+        $this->pengirimanDataSimrsModel = new PengirimanDataSimrsModel();
         $this->penerimaan_frs = new Penerimaan_frs();;
         $this->pembacaan_frs = new Pembacaan_frs();
         $this->penulisan_frs = new Penulisan_frs();
@@ -627,7 +630,7 @@ class FrsController extends BaseController
             'riwayat_ihc'        => $riwayat_ihc,
             'pembacaan_frs' => $pembacaan_frs,
         ];
-
+        
         return view('frs/edit_print', $data);
     }
 
@@ -846,16 +849,114 @@ class FrsController extends BaseController
             ]);
             return redirect()->to('pemverifikasi_frs/index')->with('success', 'Data berhasil diverifikasi.');
         }
-        if ($redirect === 'index_authorized_frs' && isset($_POST['id_authorized_frs'])) {
-            $id_authorized_frs = $this->request->getPost('id_authorized_frs');
+        
+        if ($redirect === 'index_authorized_frs' && isset($data['id_authorized_frs'])) {
+            $id_authorized_frs = $data['id_authorized_frs'];
+            $selesaiAuthorized = date('Y-m-d H:i:s'); // gunakan untuk diambil & responsetime
+
+            // Update authorized_frs
             $this->authorized_frs->update($id_authorized_frs, [
-                'id_user_authorized_frs' => $id_user,
+                'id_user_authorized_frs'        => $id_user,
                 'id_user_dokter_authorized_frs' => $id_user,
-                'status_authorized_frs' => 'Selesai Authorized',
-                'selesai_authorized_frs' => date('Y-m-d H:i:s'),
+                'status_authorized_frs'         => 'Selesai Authorized',
+                'selesai_authorized_frs'        => $selesaiAuthorized,
             ]);
-            return redirect()->to('authorized_frs/index')->with('success', 'Data berhasil diauthorized.');
+
+            // Ambil data hasil terbaru frs setelah update
+            $frsTerbaru = $this->frsModel->find($id_frs);
+
+            // Hitung responsetime dalam format string
+            $responsetime = null;
+            if (!empty($data['periksa'])) {
+                $start = new \DateTime($data['periksa']);
+                $end   = new \DateTime($selesaiAuthorized);
+                $diff  = $start->diff($end);
+                $responsetime = sprintf(
+                    "%d hari %d jam %d menit %d detik",
+                    $diff->days,
+                    $diff->h,
+                    $diff->i,
+                    $diff->s
+                );
+            }
+
+            // Tentukan iddokterpa berdasarkan nama dokterpa
+            $iddokterpa = null;
+            if (!empty($data['dokterpa'])) {
+                if ($data['dokterpa'] === "dr. Vinna Chrisdianti, Sp.PA") {
+                    $iddokterpa = 1179;
+                } elseif ($data['dokterpa'] === "dr. Ayu Tyasmara Pratiwi, Sp.PA") {
+                    $iddokterpa = 328;
+                }
+            }
+
+            // Siapkan data untuk pengiriman_data_simrs
+            $payload = [
+                'idtransaksi'      => $data['idtransaksi'] ?? null,
+                'tanggal'          => $data['tanggal'] ?? null,
+                'register'         => $data['register'] ?? null,
+                'pemeriksaan'      => $data['pemeriksaan'] ?? null,
+                'idpasien'         => $data['idpasien'] ?? null,
+                'norm'             => $data['norm'] ?? null,
+                'nama'             => $data['nama'] ?? null,
+                'noregister'       => $data['noregister'] ?? null,
+                'datang'           => $data['datang'] ?? null,
+                'periksa'          => $data['periksa'] ?? null,
+                'selesai'          => $data['selesai'] ?? null,
+                'diambil'          => $selesaiAuthorized,
+                'iddokterpa'       => $iddokterpa,
+                'dokterpa'         => $data['dokterpa'] ?? null,
+                'statuslokasi'     => $data['statuslokasi'] ?? null,
+                'diagnosaklinik'   => $data['diagnosaklinik'] ?? null,
+                'diagnosapatologi' => $data['diagnosapatologi'] ?? null,
+                'mutusediaan'      => $data['mutusediaan'] ?? null,
+                'responsetime'     => $responsetime,
+                'hasil'            => $frsTerbaru['print_frs'] ?? null,
+                'status'           => !empty($data['idtransaksi']) ? ($data['status'] ?? 'Belum Terkirim') : 'Belum Terdaftar',
+                'updated_at'       => date('Y-m-d H:i:s'),
+            ];
+
+            // Simpan atau update data di tabel pengiriman_data_simrs
+            if (!empty($payload['idtransaksi'])) {
+                $existing = $this->pengirimanDataSimrsModel->where('idtransaksi', $payload['idtransaksi'])->first();
+                if ($existing) {
+                    $this->pengirimanDataSimrsModel->update($existing['id'], $payload);
+                } else {
+                    $payload['created_at'] = date('Y-m-d H:i:s');
+                    $this->pengirimanDataSimrsModel->insert($payload);
+                }
+            } else {
+                $payload['created_at'] = date('Y-m-d H:i:s');
+                $this->pengirimanDataSimrsModel->insert($payload);
+            }
+
+            try {
+                $client = \Config\Services::curlrequest();
+                $response = $client->post(
+                    base_url('api/pengiriman-data-simrs/kirim'),
+                    [
+                        'headers' => ['Content-Type' => 'application/json'],
+                        'body'    => json_encode($payload)
+                    ]
+                );
+
+                $responseBody = $response->getBody();
+                log_message('info', 'Pengiriman data SIMRS berhasil: ' . $responseBody);
+
+                // Kirim pesan ke browser agar bisa dilihat di console.log
+                echo "<script>console.log('Pengiriman data SIMRS berhasil: " . addslashes($responseBody) . "');</script>";
+            } catch (\Exception $e) {
+                $errorMessage = $e->getMessage();
+                log_message('error', 'Gagal mengirim data ke SIMRS: ' . $errorMessage);
+
+                // Kirim error ke browser agar terlihat di console.log
+                echo "<script>console.error('Gagal mengirim data ke SIMRS: " . addslashes($errorMessage) . "');</script>";
+            }
+
+            return redirect()->to('authorized_frs/index')
+                ->with('success', session()->getFlashdata('success') ?? 'Data berhasil diauthorized.');
         }
+
         if ($redirect === 'index_pencetakan_frs' && isset($_POST['id_pencetakan_frs'])) {
             $id_pencetakan_frs = $this->request->getPost('id_pencetakan_frs');
             $this->pencetakan_frs->update($id_pencetakan_frs, [

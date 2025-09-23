@@ -1029,9 +1029,6 @@ class HpaController extends BaseController
         $data = $this->request->getPost();
         $this->hpaModel->update($id_hpa, $data);
 
-        // Ambil data HPA yang sudah diupdate untuk memastikan hasil terbaru
-        $updatedHpa = $this->hpaModel->find($id_hpa);
-
         $redirect = $this->request->getPost('redirect');
         if (!$redirect) {
             return redirect()->back()->with('error', 'Terjadi kesalahan: Halaman asal tidak ditemukan.');

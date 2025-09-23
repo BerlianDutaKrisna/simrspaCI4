@@ -11,6 +11,7 @@ use App\Models\UsersModel;
 use App\Models\PatientModel;
 use App\Models\SimrsModel;
 use App\Models\KunjunganModel;
+use App\Models\PengirimanDataSimrsModel;
 use App\Models\srs\Proses\Penerimaan_srs;
 use App\Models\srs\Proses\Pembacaan_srs;
 use App\Models\srs\Proses\Penulisan_srs;
@@ -30,6 +31,7 @@ class srsController extends BaseController
     protected $patientModel;
     protected $simrsModel;
     protected $kunjunganModel;
+    protected $pengirimanDataSimrsModel;
     protected $penerimaan_srs;
     protected $pemotongan_srs;
     protected $pembacaan_srs;
@@ -50,6 +52,7 @@ class srsController extends BaseController
         $this->patientModel = new PatientModel();
         $this->simrsModel = new SimrsModel();
         $this->kunjunganModel = new KunjunganModel();
+        $this->pengirimanDataSimrsModel = new PengirimanDataSimrsModel();
         $this->penerimaan_srs = new Penerimaan_srs();;
         $this->pembacaan_srs = new Pembacaan_srs();
         $this->penulisan_srs = new Penulisan_srs();
@@ -877,16 +880,114 @@ class srsController extends BaseController
             ]);
             return redirect()->to('pemverifikasi_srs/index')->with('success', 'Data berhasil diverifikasi.');
         }
-        if ($redirect === 'index_authorized_srs' && isset($_POST['id_authorized_srs'])) {
-            $id_authorized_srs = $this->request->getPost('id_authorized_srs');
+
+        if ($redirect === 'index_authorized_srs' && isset($data['id_authorized_srs'])) {
+            $id_authorized_srs = $data['id_authorized_srs'];
+            $selesaiAuthorized = date('Y-m-d H:i:s'); // gunakan untuk diambil & responsetime
+
+            // Update authorized_srs
             $this->authorized_srs->update($id_authorized_srs, [
-                'id_user_authorized_srs' => $id_user,
+                'id_user_authorized_srs'        => $id_user,
                 'id_user_dokter_authorized_srs' => $id_user,
-                'status_authorized_srs' => 'Selesai Authorized',
-                'selesai_authorized_srs' => date('Y-m-d H:i:s'),
+                'status_authorized_srs'         => 'Selesai Authorized',
+                'selesai_authorized_srs'        => $selesaiAuthorized,
             ]);
-            return redirect()->to('authorized_srs/index')->with('success', 'Data berhasil diauthorized.');
+
+            // Ambil data hasil terbaru srs setelah update
+            $srsTerbaru = $this->srsModel->find($id_srs);
+
+            // Hitung responsetime dalam format string
+            $responsetime = null;
+            if (!empty($data['periksa'])) {
+                $start = new \DateTime($data['periksa']);
+                $end   = new \DateTime($selesaiAuthorized);
+                $diff  = $start->diff($end);
+                $responsetime = sprintf(
+                    "%d hari %d jam %d menit %d detik",
+                    $diff->days,
+                    $diff->h,
+                    $diff->i,
+                    $diff->s
+                );
+            }
+
+            // Tentukan iddokterpa berdasarkan nama dokterpa
+            $iddokterpa = null;
+            if (!empty($data['dokterpa'])) {
+                if ($data['dokterpa'] === "dr. Vinna Chrisdianti, Sp.PA") {
+                    $iddokterpa = 1179;
+                } elseif ($data['dokterpa'] === "dr. Ayu Tyasmara Pratiwi, Sp.PA") {
+                    $iddokterpa = 328;
+                }
+            }
+
+            // Siapkan data untuk pengiriman_data_simrs
+            $payload = [
+                'idtransaksi'      => $data['idtransaksi'] ?? null,
+                'tanggal'          => $data['tanggal'] ?? null,
+                'register'         => $data['register'] ?? null,
+                'pemeriksaan'      => $data['pemeriksaan'] ?? null,
+                'idpasien'         => $data['idpasien'] ?? null,
+                'norm'             => $data['norm'] ?? null,
+                'nama'             => $data['nama'] ?? null,
+                'noregister'       => $data['noregister'] ?? null,
+                'datang'           => $data['datang'] ?? null,
+                'periksa'          => $data['periksa'] ?? null,
+                'selesai'          => $data['selesai'] ?? null,
+                'diambil'          => $selesaiAuthorized,
+                'iddokterpa'       => $iddokterpa,
+                'dokterpa'         => $data['dokterpa'] ?? null,
+                'statuslokasi'     => $data['statuslokasi'] ?? null,
+                'diagnosaklinik'   => $data['diagnosaklinik'] ?? null,
+                'diagnosapatologi' => $data['diagnosapatologi'] ?? null,
+                'mutusediaan'      => $data['mutusediaan'] ?? null,
+                'responsetime'     => $responsetime,
+                'hasil'            => $srsTerbaru['print_srs'] ?? null,
+                'status'           => !empty($data['idtransaksi']) ? ($data['status'] ?? 'Belum Terkirim') : 'Belum Terdaftar',
+                'updated_at'       => date('Y-m-d H:i:s'),
+            ];
+
+            // Simpan atau update data di tabel pengiriman_data_simrs
+            if (!empty($payload['idtransaksi'])) {
+                $existing = $this->pengirimanDataSimrsModel->where('idtransaksi', $payload['idtransaksi'])->first();
+                if ($existing) {
+                    $this->pengirimanDataSimrsModel->update($existing['id'], $payload);
+                } else {
+                    $payload['created_at'] = date('Y-m-d H:i:s');
+                    $this->pengirimanDataSimrsModel->insert($payload);
+                }
+            } else {
+                $payload['created_at'] = date('Y-m-d H:i:s');
+                $this->pengirimanDataSimrsModel->insert($payload);
+            }
+
+            try {
+                $client = \Config\Services::curlrequest();
+                $response = $client->post(
+                    base_url('api/pengiriman-data-simrs/kirim'),
+                    [
+                        'headers' => ['Content-Type' => 'application/json'],
+                        'body'    => json_encode($payload)
+                    ]
+                );
+
+                $responseBody = $response->getBody();
+                log_message('info', 'Pengiriman data SIMRS berhasil: ' . $responseBody);
+
+                // Kirim pesan ke browser agar bisa dilihat di console.log
+                echo "<script>console.log('Pengiriman data SIMRS berhasil: " . addslashes($responseBody) . "');</script>";
+            } catch (\Exception $e) {
+                $errorMessage = $e->getMessage();
+                log_message('error', 'Gagal mengirim data ke SIMRS: ' . $errorMessage);
+
+                // Kirim error ke browser agar terlihat di console.log
+                echo "<script>console.error('Gagal mengirim data ke SIMRS: " . addslashes($errorMessage) . "');</script>";
+            }
+
+            return redirect()->to('authorized_srs/index')
+                ->with('success', session()->getFlashdata('success') ?? 'Data berhasil diauthorized.');
         }
+
         if ($redirect === 'index_pencetakan_srs' && isset($_POST['id_pencetakan_srs'])) {
             $id_pencetakan_srs = $this->request->getPost('id_pencetakan_srs');
             $this->pencetakan_srs->update($id_pencetakan_srs, [
