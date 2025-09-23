@@ -32,7 +32,7 @@
                             <th>Diagnosa Klinik</th>
                             <th>Diagnosa Patologi</th>
                             <th>Status</th>
-                            <th>Created At</th>
+                            <th>Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -66,7 +66,18 @@
                                             <strong><?= esc($row['status'] ?? '-') ?></strong>
                                         <?php endif; ?>
                                     </td>
-                                    <td><?= esc($row['created_at'] ?? '-') ?></td>
+                                    <td>
+                                        <?php if ($row['status'] !== 'Terkirim'): ?>
+                                            <button
+                                                class="btn btn-sm btn-warning btn-kirim-ulang"
+                                                data-id="<?= esc($row['idtransaksi']) ?>"
+                                                data-norm="<?= esc($row['norm']) ?>">
+                                                <i class="fas fa-sync"></i> Kirim Ulang
+                                            </button>
+                                        <?php else: ?>
+                                            <span class="badge badge-success">Terkirim</span>
+                                        <?php endif; ?>
+                                    </td>
                                 </tr>
                                 <?php $i++; ?>
                             <?php endforeach; ?>
@@ -81,6 +92,31 @@
         </div>
     </div>
 </div>
+
+<!-- Modal -->
+<div class="modal fade" id="resultModal" tabindex="-1" role="dialog" aria-labelledby="resultModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="resultModalLabel">Hasil Kirim Ulang SIMRS</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="modalBody">
+                <!-- Hasil muncul di sini -->
+            </div>
+            <div class="modal-footer" id="modalFooter">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                    <i class="fas fa-times"></i> Tutup
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Script khusus kirim ulang -->
+<?= $this->include('templates/dashboard/script_kirim_ulang_simrs'); ?>
 
 <?= $this->include('templates/notifikasi') ?>
 <?= $this->include('templates/dashboard/footer_dashboard') ?>

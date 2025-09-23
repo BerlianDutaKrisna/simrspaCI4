@@ -15,11 +15,7 @@
                     console.error("Gagal sinkronisasi:", error);
                 });
         }
-
-        // Jalankan saat halaman pertama kali dimuat
         syncKunjunganHariIni();
-
-        // Jalankan setiap 60 detik
         setInterval(syncKunjunganHariIni, 60000);
     });
 </script>
