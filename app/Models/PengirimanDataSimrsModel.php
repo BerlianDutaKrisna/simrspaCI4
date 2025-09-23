@@ -45,6 +45,6 @@ class PengirimanDataSimrsModel extends Model
 
     public function getPengirimanData()
     {
-        return $this->findAll();
+        return $this->orderBy('id', 'DESC')->findAll();
     }
 }
