@@ -29,7 +29,7 @@
                 <!-- kolom noregister sesuai DB -->
                 <input type="hidden" name="noregister" value="<?= isset($ihc['kode_ihc']) ? esc($ihc['kode_ihc']) : '' ?>">
                 <!-- datetime fields -->
-                <input type="hidden" name="datang" value="<?= isset($ihc['tanggal_permintaan']) ? esc($ihc['tanggal_permintaan']) : '' ?>">
+                <input type="hidden" name="datang" value="<?= isset($ihc['mulai_penerimaan_ihc']) ? esc($ihc['mulai_penerimaan_ihc']) : '' ?>">
                 <input type="hidden" name="periksa" value="<?= isset($ihc['mulai_penerimaan_ihc']) ? esc($ihc['mulai_penerimaan_ihc']) : '' ?>">
                 <input type="hidden" name="selesai" value="<?= isset($ihc['selesai_penulisan_ihc']) ? esc($ihc['selesai_penulisan_ihc']) : '' ?>">
                 <!-- dokter PA text -->

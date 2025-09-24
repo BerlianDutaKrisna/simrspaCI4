@@ -29,7 +29,7 @@
                 <!-- kolom noregister sesuai DB -->
                 <input type="hidden" name="noregister" value="<?= isset($frs['kode_frs']) ? esc($frs['kode_frs']) : '' ?>">
                 <!-- datetime fields -->
-                <input type="hidden" name="datang" value="<?= isset($frs['tanggal_permintaan']) ? esc($frs['tanggal_permintaan']) : '' ?>">
+                <input type="hidden" name="datang" value="<?= isset($frs['mulai_penerimaan_frs']) ? esc($frs['mulai_penerimaan_frs']) : '' ?>">
                 <input type="hidden" name="periksa" value="<?= isset($frs['mulai_penerimaan_frs']) ? esc($frs['mulai_penerimaan_frs']) : '' ?>">
                 <input type="hidden" name="selesai" value="<?= isset($frs['selesai_penulisan_frs']) ? esc($frs['selesai_penulisan_frs']) : '' ?>">
                 <!-- dokter PA text -->

@@ -29,7 +29,7 @@
                 <!-- kolom noregister sesuai DB -->
                 <input type="hidden" name="noregister" value="<?= isset($srs['kode_srs']) ? esc($srs['kode_srs']) : '' ?>">
                 <!-- datetime fields -->
-                <input type="hidden" name="datang" value="<?= isset($srs['tanggal_permintaan']) ? esc($srs['tanggal_permintaan']) : '' ?>">
+                <input type="hidden" name="datang" value="<?= isset($srs['mulai_penerimaan_srs']) ? esc($srs['mulai_penerimaan_srs']) : '' ?>">
                 <input type="hidden" name="periksa" value="<?= isset($srs['mulai_penerimaan_srs']) ? esc($srs['mulai_penerimaan_srs']) : '' ?>">
                 <input type="hidden" name="selesai" value="<?= isset($srs['selesai_penulisan_srs']) ? esc($srs['selesai_penulisan_srs']) : '' ?>">
                 <!-- dokter PA text -->

@@ -29,7 +29,7 @@
                 <!-- kolom noregister sesuai DB -->
                 <input type="hidden" name="noregister" value="<?= isset($hpa['kode_hpa']) ? esc($hpa['kode_hpa']) : '' ?>">
                 <!-- datetime fields -->
-                <input type="hidden" name="datang" value="<?= isset($hpa['tanggal_permintaan']) ? esc($hpa['tanggal_permintaan']) : '' ?>">
+                <input type="hidden" name="datang" value="<?= isset($hpa['mulai_penerimaan_hpa']) ? esc($hpa['mulai_penerimaan_hpa']) : '' ?>">
                 <input type="hidden" name="periksa" value="<?= isset($hpa['mulai_penerimaan_hpa']) ? esc($hpa['mulai_penerimaan_hpa']) : '' ?>">
                 <input type="hidden" name="selesai" value="<?= isset($hpa['selesai_penulisan_hpa']) ? esc($hpa['selesai_penulisan_hpa']) : '' ?>">
                 <!-- dokter PA text -->

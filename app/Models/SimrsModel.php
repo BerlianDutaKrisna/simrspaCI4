@@ -9,7 +9,6 @@ class SimrsModel extends Model
 {
     protected $client;
     protected $primaryBaseURL = "http://172.20.29.240/apibdrs/apibdrs";
-    protected $backupBaseURL  = "http://10.250.10.107/apibdrs/apibdrs";
 
     public function __construct()
     {
@@ -18,41 +17,30 @@ class SimrsModel extends Model
     }
 
     /**
-     * Ambil data dengan cache dan fallback
+     * Ambil data dengan cache (tanpa backup)
      */
-    protected function getDataWithCache(string $cacheKey, string $primaryURL, string $backupURL): array
+    protected function getDataWithCache(string $cacheKey, string $primaryURL): array
     {
         $cache = cache();
 
         // 1. Cek cache dulu
         if ($cached = $cache->get($cacheKey)) {
-            return $cached;
+            return is_array($cached) ? $cached : [];
         }
 
         // 2. Coba ambil dari primary API
         try {
             $response = $this->client->get($primaryURL, ['timeout' => 3, 'connect_timeout' => 2]);
             if ($response->getStatusCode() === 200) {
-                $data = json_decode($response->getBody(), true);
+                $data = json_decode($response->getBody(), true) ?? [];
                 $cache->save($cacheKey, $data, 300); // simpan cache 5 menit
                 return $data;
             }
         } catch (\Exception $e) {
-            // gagal ambil dari primary
+            log_message('error', "[SIMRS] Primary API error: " . $e->getMessage());
         }
 
-        // 3. Coba ambil dari backup API
-        try {
-            $response = $this->client->get($backupURL, ['timeout' => 3, 'connect_timeout' => 2]);
-            if ($response->getStatusCode() === 200) {
-                $data = json_decode($response->getBody(), true);
-                $cache->save($cacheKey, $data, 300);
-                return $data;
-            }
-        } catch (\Exception $e) {
-            // gagal ambil dari backup juga
-        }
-
+        // 3. Fallback tetap array
         return [
             'code' => 500,
             'data' => [],
@@ -64,9 +52,8 @@ class SimrsModel extends Model
     {
         $cacheKey   = "pemeriksaan_{$norm}";
         $primaryURL = "{$this->primaryBaseURL}/getPemeriksaanPasien/{$norm}";
-        $backupURL  = "{$this->backupBaseURL}/getPemeriksaanPasien/{$norm}";
 
-        $result = $this->getDataWithCache($cacheKey, $primaryURL, $backupURL);
+        $result = $this->getDataWithCache($cacheKey, $primaryURL);
 
         if (
             isset($result['code']) && $result['code'] == 200 &&
@@ -91,9 +78,8 @@ class SimrsModel extends Model
 
         $cacheKey   = "kunjungan_{$norm}_{$tanggalAwal}_{$tanggalAkhir}";
         $primaryURL = "{$this->primaryBaseURL}/getKunjunganPasien/{$tanggalAwal}/{$tanggalAkhir}";
-        $backupURL  = "{$this->backupBaseURL}/getKunjunganPasien/{$tanggalAwal}/{$tanggalAkhir}";
 
-        $result = $this->getDataWithCache($cacheKey, $primaryURL, $backupURL);
+        $result = $this->getDataWithCache($cacheKey, $primaryURL);
 
         if (
             isset($result['code']) && $result['code'] == 200 &&
@@ -119,9 +105,8 @@ class SimrsModel extends Model
 
         $cacheKey   = "kunjungan_hari_ini_{$tanggal}";
         $primaryURL = "{$this->primaryBaseURL}/getKunjunganPasien/{$tanggal}/{$tanggal}";
-        $backupURL  = "{$this->backupBaseURL}/getKunjunganPasien/{$tanggal}/{$tanggal}";
 
-        $result = $this->getDataWithCache($cacheKey, $primaryURL, $backupURL);
+        $result = $this->getDataWithCache($cacheKey, $primaryURL);
 
         if (
             isset($result['code']) && $result['code'] == 200 &&
