@@ -853,19 +853,28 @@ class FrsController extends BaseController
         if ($redirect === 'index_authorized_frs' && isset($data['id_authorized_frs'])) {
             $id_authorized_frs = $data['id_authorized_frs'];
             $selesaiAuthorized = date('Y-m-d H:i:s'); // gunakan untuk diambil & responsetime
-
-            // Update authorized_frs
-            $this->authorized_frs->update($id_authorized_frs, [
+        
+            // --- UPDATE AUTHORIZED frs ---
+            $updateData = [
                 'id_user_authorized_frs'        => $id_user,
                 'id_user_dokter_authorized_frs' => $id_user,
                 'status_authorized_frs'         => 'Selesai Authorized',
                 'selesai_authorized_frs'        => $selesaiAuthorized,
-            ]);
-
+            ];
+        
+            $update = $this->authorized_frs->update($id_authorized_frs, $updateData);
+        
+            if (! $update) {
+                log_message('error', '[AUTHORIZED frs] Update gagal untuk ID: ' . $id_authorized_frs 
+                    . ' | Errors: ' . json_encode($this->authorized_frs->errors()));
+            } else {
+                log_message('debug', '[AUTHORIZED frs] Update BERHASIL untuk ID: ' . $id_authorized_frs);
+            }
+        
             // Ambil data hasil terbaru frs setelah update
             $frsTerbaru = $this->frsModel->find($id_frs);
-
-            // Hitung responsetime dalam format string
+        
+            // --- HITUNG RESPONSETIME ---
             $responsetime = null;
             if (!empty($data['periksa'])) {
                 $start = new \DateTime($data['periksa']);
@@ -879,8 +888,8 @@ class FrsController extends BaseController
                     $diff->s
                 );
             }
-
-            // Tentukan iddokterpa berdasarkan nama dokterpa
+        
+            // --- TENTUKAN ID DOKTER PA ---
             $iddokterpa = null;
             if (!empty($data['dokterpa'])) {
                 if ($data['dokterpa'] === "dr. Vinna Chrisdianti, Sp.PA") {
@@ -889,8 +898,8 @@ class FrsController extends BaseController
                     $iddokterpa = 328;
                 }
             }
-
-            // Siapkan data untuk pengiriman_data_simrs
+        
+            // --- PERSIAPAN PAYLOAD ---
             $payload = [
                 'idtransaksi'      => $data['idtransaksi'] ?? null,
                 'tanggal'          => $data['tanggal'] ?? null,
@@ -915,44 +924,33 @@ class FrsController extends BaseController
                 'status'           => !empty($data['idtransaksi']) ? ($data['status'] ?? 'Belum Terkirim') : 'Belum Terdaftar',
                 'updated_at'       => date('Y-m-d H:i:s'),
             ];
-
-            // Simpan atau update data di tabel pengiriman_data_simrs
-            if (!empty($payload['idtransaksi'])) {
-                $existing = $this->pengirimanDataSimrsModel->where('idtransaksi', $payload['idtransaksi'])->first();
-                if ($existing) {
-                    $this->pengirimanDataSimrsModel->update($existing['id'], $payload);
-                } else {
-                    $payload['created_at'] = date('Y-m-d H:i:s');
-                    $this->pengirimanDataSimrsModel->insert($payload);
-                }
-            } else {
-                $payload['created_at'] = date('Y-m-d H:i:s');
-                $this->pengirimanDataSimrsModel->insert($payload);
-            }
-
+        
+            log_message('debug', '[PENGIRIMAN SIMRS] Payload siap dikirim: ' . json_encode($payload, JSON_PRETTY_PRINT));
+        
             try {
                 $client = \Config\Services::curlrequest();
                 $response = $client->post(
-                    base_url('api/pengiriman-data-simrs/kirim'),
+                    'http://172.20.29.240/apibdrs/apibdrs/postPemeriksaan',
                     [
                         'headers' => ['Content-Type' => 'application/json'],
                         'body'    => json_encode($payload)
                     ]
                 );
-
+        
                 $responseBody = $response->getBody();
-                log_message('info', 'Pengiriman data SIMRS berhasil: ' . $responseBody);
-
-                // Kirim pesan ke browser agar bisa dilihat di console.log
-                echo "<script>console.log('Pengiriman data SIMRS berhasil: " . addslashes($responseBody) . "');</script>";
+                log_message('info', '[PENGIRIMAN SIMRS] Response: ' . $responseBody);
+        
+                // simpan ke flashdata agar bisa dicek di halaman redirect
+                session()->setFlashdata('simrs_payload', json_encode($payload));
+                session()->setFlashdata('simrs_response', $responseBody);
+        
             } catch (\Exception $e) {
                 $errorMessage = $e->getMessage();
-                log_message('error', 'Gagal mengirim data ke SIMRS: ' . $errorMessage);
-
-                // Kirim error ke browser agar terlihat di console.log
-                echo "<script>console.error('Gagal mengirim data ke SIMRS: " . addslashes($errorMessage) . "');</script>";
+                log_message('error', '[PENGIRIMAN SIMRS] Gagal kirim: ' . $errorMessage);
+        
+                session()->setFlashdata('simrs_error', $errorMessage);
             }
-
+        
             return redirect()->to('authorized_frs/index')
                 ->with('success', session()->getFlashdata('success') ?? 'Data berhasil diauthorized.');
         }

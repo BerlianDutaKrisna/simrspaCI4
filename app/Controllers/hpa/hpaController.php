@@ -1047,19 +1047,28 @@ class HpaController extends BaseController
         if ($redirect === 'index_authorized_hpa' && isset($data['id_authorized_hpa'])) {
             $id_authorized_hpa = $data['id_authorized_hpa'];
             $selesaiAuthorized = date('Y-m-d H:i:s'); // gunakan untuk diambil & responsetime
-
-            // Update authorized_hpa
-            $this->authorized_hpa->update($id_authorized_hpa, [
+        
+            // --- UPDATE AUTHORIZED HPA ---
+            $updateData = [
                 'id_user_authorized_hpa'        => $id_user,
                 'id_user_dokter_authorized_hpa' => $id_user,
                 'status_authorized_hpa'         => 'Selesai Authorized',
                 'selesai_authorized_hpa'        => $selesaiAuthorized,
-            ]);
-
+            ];
+        
+            $update = $this->authorized_hpa->update($id_authorized_hpa, $updateData);
+        
+            if (! $update) {
+                log_message('error', '[AUTHORIZED HPA] Update gagal untuk ID: ' . $id_authorized_hpa 
+                    . ' | Errors: ' . json_encode($this->authorized_hpa->errors()));
+            } else {
+                log_message('debug', '[AUTHORIZED HPA] Update BERHASIL untuk ID: ' . $id_authorized_hpa);
+            }
+        
             // Ambil data hasil terbaru HPA setelah update
             $hpaTerbaru = $this->hpaModel->find($id_hpa);
-
-            // Hitung responsetime dalam format string
+        
+            // --- HITUNG RESPONSETIME ---
             $responsetime = null;
             if (!empty($data['periksa'])) {
                 $start = new \DateTime($data['periksa']);
@@ -1073,8 +1082,8 @@ class HpaController extends BaseController
                     $diff->s
                 );
             }
-
-            // Tentukan iddokterpa berdasarkan nama dokterpa
+        
+            // --- TENTUKAN ID DOKTER PA ---
             $iddokterpa = null;
             if (!empty($data['dokterpa'])) {
                 if ($data['dokterpa'] === "dr. Vinna Chrisdianti, Sp.PA") {
@@ -1083,8 +1092,8 @@ class HpaController extends BaseController
                     $iddokterpa = 328;
                 }
             }
-
-            // Siapkan data untuk payload
+        
+            // --- PERSIAPAN PAYLOAD ---
             $payload = [
                 'idtransaksi'      => $data['idtransaksi'] ?? null,
                 'tanggal'          => $data['tanggal'] ?? null,
@@ -1109,39 +1118,36 @@ class HpaController extends BaseController
                 'status'           => !empty($data['idtransaksi']) ? ($data['status'] ?? 'Belum Terkirim') : 'Belum Terdaftar',
                 'updated_at'       => date('Y-m-d H:i:s'),
             ];
-
-            // Simpan payload ke log sebelum dikirim
+        
             log_message('debug', '[PENGIRIMAN SIMRS] Payload siap dikirim: ' . json_encode($payload, JSON_PRETTY_PRINT));
-
+        
             try {
                 $client = \Config\Services::curlrequest();
                 $response = $client->post(
-                    'http://172.20.29.240/apibdrs/apibdrs/postPemeriksaan', // langsung ke SIMRS
+                    'http://172.20.29.240/apibdrs/apibdrs/postPemeriksaan',
                     [
                         'headers' => ['Content-Type' => 'application/json'],
                         'body'    => json_encode($payload)
                     ]
                 );
-
+        
                 $responseBody = $response->getBody();
-
-                // Simpan hasil ke log
                 log_message('info', '[PENGIRIMAN SIMRS] Response: ' . $responseBody);
-
-                // Kirim ke console browser
-                echo "<script>console.log('Payload: " . addslashes(json_encode($payload)) . "');</script>";
-                echo "<script>console.log('Response SIMRS: " . addslashes($responseBody) . "');</script>";
+        
+                // simpan ke flashdata agar bisa dicek di halaman redirect
+                session()->setFlashdata('simrs_payload', json_encode($payload));
+                session()->setFlashdata('simrs_response', $responseBody);
+        
             } catch (\Exception $e) {
                 $errorMessage = $e->getMessage();
                 log_message('error', '[PENGIRIMAN SIMRS] Gagal kirim: ' . $errorMessage);
-
-                // Kirim error ke console browser
-                echo "<script>console.error('Gagal kirim ke SIMRS: " . addslashes($errorMessage) . "');</script>";
+        
+                session()->setFlashdata('simrs_error', $errorMessage);
             }
-
+        
             return redirect()->to('authorized_hpa/index')
                 ->with('success', session()->getFlashdata('success') ?? 'Data berhasil diauthorized.');
-        }
+        }        
 
         if ($redirect === 'index_pencetakan_hpa' && isset($_POST['id_pencetakan_hpa'])) {
             $id_pencetakan_hpa = $this->request->getPost('id_pencetakan_hpa');
