@@ -11,8 +11,16 @@ class PengirimanDataSimrs extends ResourceController
     protected $modelName = PengirimanDataSimrsModel::class;
     protected $format    = 'json';
 
+    protected $endpoint;
+
+    public function __construct()
+    {
+        // langsung hardcode endpoint SIMRS
+        $this->endpoint = 'http://172.20.29.240/apibdrs/apibdrs/postPemeriksaan';
+    }
+
     /**
-     * Tampilkan halaman index untuk pengiriman data SIMRS
+     * Halaman index
      */
     public function index()
     {
@@ -44,59 +52,58 @@ class PengirimanDataSimrs extends ResourceController
             ]);
         }
 
-        $endpoint = 'https://api.simrs.local/pengiriman-data'; // TODO: ganti endpoint asli
-        $results  = [];
+        $client  = \Config\Services::curlrequest();
+        $results = [];
 
         foreach ($dataBelumTerkirim as $row) {
-            $payload = json_encode($row, JSON_PRETTY_PRINT);
-
-            log_message('info', "[PENGIRIMAN SIMRS] Payload akan dikirim:\n" . $payload);
-
-            $ch = curl_init($endpoint);
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($ch, CURLOPT_HTTPHEADER, [
-                'Content-Type: application/json',
-                'Accept: application/json'
-            ]);
-            curl_setopt($ch, CURLOPT_POST, true);
-            curl_setopt($ch, CURLOPT_POSTFIELDS, $payload);
-
-            $response   = curl_exec($ch);
-            $httpCode   = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-            $curlError  = curl_error($ch);
-            curl_close($ch);
-
-            if ($httpCode === 200 && $response) {
-                $this->model->update($row['id'], [
-                    'status'     => 'Terkirim',
-                    'updated_at' => date('Y-m-d H:i:s')
+            try {
+                $response = $client->post($this->endpoint, [
+                    'headers' => [
+                        'Content-Type' => 'application/json',
+                        'Accept'       => 'application/json'
+                    ],
+                    'json' => $row // langsung array, otomatis dikonversi ke JSON
                 ]);
 
-                log_message('info', "[PENGIRIMAN SIMRS] BERHASIL (ID: {$row['id']}):\n" . $response);
+                $statusCode = $response->getStatusCode();
+                $body       = $response->getBody();
+
+                if ($statusCode === 200) {
+                    // update status
+                    $this->model->update($row['id'], [
+                        'status'     => 'Terkirim',
+                        'updated_at' => date('Y-m-d H:i:s')
+                    ]);
+
+                    log_message('info', "[PENGIRIMAN SIMRS] BERHASIL (ID: {$row['id']}): $body");
+
+                    $results[] = [
+                        'id'       => $row['id'],
+                        'status'   => 'success',
+                        'payload'  => $row,
+                        'response' => json_decode($body, true)
+                    ];
+                } else {
+                    log_message('error', "[PENGIRIMAN SIMRS] Gagal (ID: {$row['id']}), StatusCode: $statusCode, Response: $body");
+
+                    $results[] = [
+                        'id'       => $row['id'],
+                        'status'   => 'failed',
+                        'payload'  => $row,
+                        'response' => $body
+                    ];
+                }
+            } catch (\Exception $e) {
+                log_message('error', "[PENGIRIMAN SIMRS] Exception (ID: {$row['id']}): " . $e->getMessage());
 
                 $results[] = [
-                    'id'      => $row['id'],
-                    'status'  => 'success',
-                    'payload' => $row,
-                    'response' => json_decode($response, true)
-                ];
-            } else {
-                log_message(
-                    'error',
-                    "[PENGIRIMAN SIMRS] GAGAL (ID: {$row['id']}): " . ($curlError ?: "HTTP Code: $httpCode")
-                );
-
-                $results[] = [
-                    'id'      => $row['id'],
-                    'status'  => 'failed',
-                    'error'   => $curlError ?: 'HTTP Code: ' . $httpCode,
-                    'payload' => $row,
-                    'response' => $response
+                    'id'     => $row['id'],
+                    'status' => 'failed',
+                    'error'  => $e->getMessage(),
+                    'payload' => $row
                 ];
             }
         }
-
-        log_message('info', '[PENGIRIMAN SIMRS] Rekap hasil: ' . json_encode($results, JSON_PRETTY_PRINT));
 
         return $this->respond([
             'status'        => 'done',
@@ -105,6 +112,9 @@ class PengirimanDataSimrs extends ResourceController
         ]);
     }
 
+    /**
+     * Kirim ulang data berdasarkan idtransaksi atau norm
+     */
     public function kirimById($idtransaksi = null)
     {
         if (!$idtransaksi) {
@@ -117,8 +127,7 @@ class PengirimanDataSimrs extends ResourceController
                 ], 422);
             }
 
-            // cari idtransaksi dari norm (lokal DB)
-            $kunjunganModel = new \App\Models\KunjunganModel();
+            $kunjunganModel = new KunjunganModel();
             $kunjungan = $kunjunganModel
                 ->where('norm', $norm)
                 ->orderBy('tanggal', 'DESC')
@@ -131,65 +140,69 @@ class PengirimanDataSimrs extends ResourceController
             }
         }
 
-        // --- lanjut proses kirim ulang ---
         $row = $this->model->where('idtransaksi', $idtransaksi)->first();
 
         if (!$row) {
             return $this->failNotFound("Data dengan idtransaksi $idtransaksi tidak ditemukan.");
         }
 
-        $endpoint = 'https://api.simrs.local/pengiriman-data'; // endpoint SIMRS
-        $payload = json_encode($row, JSON_PRETTY_PRINT);
+        $client = \Config\Services::curlrequest();
 
-        $ch = curl_init($endpoint);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, [
-            'Content-Type: application/json',
-            'Accept: application/json'
-        ]);
-        curl_setopt($ch, CURLOPT_POST, true);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $payload);
+        try {
+            $response = $client->post($this->endpoint, [
+                'headers' => [
+                    'Content-Type' => 'application/json',
+                    'Accept'       => 'application/json'
+                ],
+                'json' => $row
+            ]);
 
-        $response = curl_exec($ch);
-        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        $curlError = curl_error($ch);
-        curl_close($ch);
+            $statusCode = $response->getStatusCode();
+            $body       = $response->getBody();
 
-        if ($httpCode === 200 && $response) {
-            // update status pengiriman
-            $this->model->where('idtransaksi', $idtransaksi)
-                ->set(['status' => 'Terkirim', 'updated_at' => date('Y-m-d H:i:s')])
-                ->update();
-
-            // 🔥 tambahan: update status kunjungan jika ada id_transaksi
-            $kunjunganModel = new \App\Models\KunjunganModel();
-            $kunjungan = $kunjunganModel
-                ->select('register')
-                ->where('idtransaksi', $idtransaksi)
-                ->first();
-
-            if ($kunjungan && !empty($kunjungan['register'])) {
-                $register = $kunjungan['register'];
-
-                $kunjunganModel
-                    ->where('register', $register)
-                    ->set(['status' => 'Terdaftar'])
+            if ($statusCode === 200) {
+                // update status pengiriman
+                $this->model->where('idtransaksi', $idtransaksi)
+                    ->set(['status' => 'Terkirim', 'updated_at' => date('Y-m-d H:i:s')])
                     ->update();
 
-                log_message('info', "[PENGIRIMAN SIMRS] Update status kunjungan register {$register} -> Terdaftar");
+                // update status kunjungan juga
+                $kunjunganModel = new KunjunganModel();
+                $kunjungan = $kunjunganModel
+                    ->select('register')
+                    ->where('idtransaksi', $idtransaksi)
+                    ->first();
+
+                if ($kunjungan && !empty($kunjungan['register'])) {
+                    $register = $kunjungan['register'];
+
+                    $kunjunganModel
+                        ->where('register', $register)
+                        ->set(['status' => 'Terdaftar'])
+                        ->update();
+
+                    log_message('info', "[PENGIRIMAN SIMRS] Update status kunjungan register {$register} -> Terdaftar");
+                }
+
+                return $this->respond([
+                    'status'      => 'success',
+                    'idtransaksi' => $idtransaksi,
+                    'response'    => json_decode($body, true)
+                ]);
             }
 
-            return $this->respond([
-                'status' => 'success',
-                'idtransaksi' => $idtransaksi,
-                'response' => json_decode($response, true)
-            ]);
+            return $this->fail([
+                'status'  => 'failed',
+                'message' => 'Gagal mengirim data.',
+                'error'   => "HTTP Code: $statusCode",
+                'body'    => $body
+            ], 500);
+        } catch (\Exception $e) {
+            return $this->fail([
+                'status'  => 'failed',
+                'message' => 'Exception saat kirim data.',
+                'error'   => $e->getMessage()
+            ], 500);
         }
-
-        return $this->fail([
-            'status' => 'failed',
-            'message' => 'Gagal mengirim data.',
-            'error' => $curlError ?: "HTTP Code: $httpCode"
-        ], 500);
     }
 }
