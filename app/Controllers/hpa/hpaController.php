@@ -1084,7 +1084,7 @@ class HpaController extends BaseController
                 }
             }
 
-            // Siapkan data untuk pengiriman_data_simrs
+            // Siapkan data untuk payload
             $payload = [
                 'idtransaksi'      => $data['idtransaksi'] ?? null,
                 'tanggal'          => $data['tanggal'] ?? null,
@@ -1110,24 +1110,13 @@ class HpaController extends BaseController
                 'updated_at'       => date('Y-m-d H:i:s'),
             ];
 
-            // Simpan atau update data di tabel pengiriman_data_simrs
-            if (!empty($payload['idtransaksi'])) {
-                $existing = $this->pengirimanDataSimrsModel->where('idtransaksi', $payload['idtransaksi'])->first();
-                if ($existing) {
-                    $this->pengirimanDataSimrsModel->update($existing['id'], $payload);
-                } else {
-                    $payload['created_at'] = date('Y-m-d H:i:s');
-                    $this->pengirimanDataSimrsModel->insert($payload);
-                }
-            } else {
-                $payload['created_at'] = date('Y-m-d H:i:s');
-                $this->pengirimanDataSimrsModel->insert($payload);
-            }
+            // Simpan payload ke log sebelum dikirim
+            log_message('debug', '[PENGIRIMAN SIMRS] Payload siap dikirim: ' . json_encode($payload, JSON_PRETTY_PRINT));
 
             try {
                 $client = \Config\Services::curlrequest();
                 $response = $client->post(
-                    base_url('api/pengiriman-data-simrs/kirim'),
+                    'http://172.20.29.240/apibdrs/apibdrs/postPemeriksaan', // langsung ke SIMRS
                     [
                         'headers' => ['Content-Type' => 'application/json'],
                         'body'    => json_encode($payload)
@@ -1135,16 +1124,19 @@ class HpaController extends BaseController
                 );
 
                 $responseBody = $response->getBody();
-                log_message('info', 'Pengiriman data SIMRS berhasil: ' . $responseBody);
 
-                // Kirim pesan ke browser agar bisa dilihat di console.log
-                echo "<script>console.log('Pengiriman data SIMRS berhasil: " . addslashes($responseBody) . "');</script>";
+                // Simpan hasil ke log
+                log_message('info', '[PENGIRIMAN SIMRS] Response: ' . $responseBody);
+
+                // Kirim ke console browser
+                echo "<script>console.log('Payload: " . addslashes(json_encode($payload)) . "');</script>";
+                echo "<script>console.log('Response SIMRS: " . addslashes($responseBody) . "');</script>";
             } catch (\Exception $e) {
                 $errorMessage = $e->getMessage();
-                log_message('error', 'Gagal mengirim data ke SIMRS: ' . $errorMessage);
+                log_message('error', '[PENGIRIMAN SIMRS] Gagal kirim: ' . $errorMessage);
 
-                // Kirim error ke browser agar terlihat di console.log
-                echo "<script>console.error('Gagal mengirim data ke SIMRS: " . addslashes($errorMessage) . "');</script>";
+                // Kirim error ke console browser
+                echo "<script>console.error('Gagal kirim ke SIMRS: " . addslashes($errorMessage) . "');</script>";
             }
 
             return redirect()->to('authorized_hpa/index')
