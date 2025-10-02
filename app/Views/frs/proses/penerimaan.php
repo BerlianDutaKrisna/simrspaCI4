@@ -19,11 +19,34 @@
                     <thead>
                         <tr>
                             <th>No</th>
-                            <th>Aksi</th>
+                            <th class="align-middle text-center">
+                                <div class="custom-control custom-checkbox d-inline-block">
+                                    <input type="checkbox" class="custom-control-input" id="checkAll">
+                                    <label class="custom-control-label" for="checkAll">Aksi Check Semua</label>
+                                </div>
+                            </th>
+                            <script>
+                                document.getElementById('checkAll').addEventListener('change', function() {
+                                    let checkboxes = document.querySelectorAll('.checkbox-item');
+                                    checkboxes.forEach(cb => {
+                                        cb.checked = this.checked;
+
+                                        // Paksa trigger event 'change' agar logika lain ikut jalan (misal toggleButtons)
+                                        cb.dispatchEvent(new Event('change'));
+
+                                        // Opsional: akses data-status jika dibutuhkan langsung
+                                        if (this.checked && cb.dataset.status) {
+                                            let statusObj = JSON.parse(cb.dataset.status);
+                                            console.log(statusObj); // Untuk debugging
+                                            // Kamu bisa push ke array atau proses data di sini
+                                        }
+                                    });
+                                });
+                            </script>
                             <th>Detail</th>
                             <th>Kode FRS</th>
                             <th>Nama Pasien</th>
-                            <th>Analis</th>
+                            <th>User</th>
                             <th>Mulai Penerimaan</th>
                             <th>Selesai Penerimaan</th>
                             <th>Deadline Hasil</th>
@@ -45,24 +68,23 @@
                                                             ]) ?>'
                                             autocomplete="off">
                                     </td>
-                                    <?php if (in_array($row['status_penerimaan_frs'], ["Proses Penerimaan"])): ?>
+                                    <?php if (in_array($row['status_penerimaan_frs'], ["Proses Penerimaan", "Belum Penerimaan"])): ?>
                                         <td>
-                                            <a href="<?= esc(base_url('frs/edit_makroskopis/' . esc($row['id_frs']) . '?redirect=edit_makroskopis')) ?>" class="btn btn-warning btn-sm">
-                                                <i class="fas fa-pen"></i> Informed Consent
+                                            <a href="<?= esc(base_url('frs/edit_makroskopis/' . esc($row['id_frs']) . '?redirect=index_penerimaan_frs')) ?>"
+                                                class="btn btn-warning btn-sm">
+                                                <i class="fas fa-eye"></i> Informed Consent
                                             </a>
                                         </td>
-                                    <?php elseif (in_array($row['status_penerimaan_frs'], ["Selesai Penerimaan"])): ?>
+                                    <?php elseif ($row['status_penerimaan_frs'] === "Selesai Penerimaan"): ?>
                                         <td>
-                                            <a href="<?= esc(base_url('frs/edit_makroskopis/' . esc($row['id_frs']) . '?redirect=edit_makroskopis')) ?>" class="btn btn-success btn-sm">
-                                                <i class="fas fa-pen"></i> Informed Consent
+                                            <a href="<?= esc(base_url('frs/edit_makroskopis/' . esc($row['id_frs']) . '?redirect=index_penerimaan_frs')) ?>"
+                                                class="btn btn-success btn-sm">
+                                                <i class="fas fa-eye"></i> Informed Consent
                                             </a>
                                         </td>
-                                    <?php else: ?>
-                                        <td></td>
                                     <?php endif; ?>
                                     <td><?= esc($row['kode_frs']); ?></td>
-                                    <td><?= esc($row['nama_pasien']); ?></td>
-
+                                    <td><b><?= esc($row['nama_pasien']); ?></b> (<?= esc($row['norm_pasien']); ?>)</td>
                                     <td><?= esc($row['nama_user_penerimaan_frs']); ?></td>
                                     <td>
                                         <?= empty($row['mulai_penerimaan_frs']) ? '-' : esc(date('H:i, d-m-Y', strtotime($row['mulai_penerimaan_frs']))); ?>

@@ -37,6 +37,7 @@ class Penanaman extends BaseController
     {
         $penanamanData_hpa = $this->penanaman_hpa->getpenanaman_hpa();
         $data = [
+            'id_user' => session()->get('id_user'),
             'nama_user' => $this->session->get('nama_user'),
             'counts' => $this->getCounts(),
             'penanamanDatahpa' => $penanamanData_hpa,

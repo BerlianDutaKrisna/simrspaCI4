@@ -37,6 +37,7 @@ class Penerimaan extends BaseController
     {
         $penerimaanData_hpa = $this->penerimaan_hpa->getPenerimaan_hpa();
         $data = [
+            'id_user' => session()->get('id_user'),
             'nama_user' => $this->session->get('nama_user'),
             'counts' => $this->getCounts(),
             'penerimaanDatahpa' => $penerimaanData_hpa,
@@ -60,9 +61,8 @@ class Penerimaan extends BaseController
                 list($id_penerimaan_hpa, $id_hpa, $id_mutu_hpa) = explode(':', $id);
                 $indikator_1 = (string) ($this->request->getPost('indikator_1') ?? '0');
                 $indikator_2 = (string) ($this->request->getPost('indikator_2') ?? '0');
-                $indikator_9 = (string) ($this->request->getPost('indikator_9') ?? '0');
                 $total_nilai_mutu_hpa = (string) ($this->request->getPost('total_nilai_mutu_hpa') ?? '0');
-                $this->processAction($action, $id_penerimaan_hpa, $id_hpa, $id_user, $id_mutu_hpa, $indikator_1, $indikator_2, $indikator_9, $total_nilai_mutu_hpa);
+                $this->processAction($action, $id_penerimaan_hpa, $id_hpa, $id_user, $id_mutu_hpa, $indikator_1, $indikator_2, $total_nilai_mutu_hpa);
             }
 
             return redirect()->to('penerimaan_hpa/index');
@@ -71,7 +71,7 @@ class Penerimaan extends BaseController
         }
     }
 
-    private function processAction($action, $id_penerimaan_hpa, $id_hpa, $id_user, $id_mutu_hpa, $indikator_1, $indikator_2, $indikator_9, $total_nilai_mutu_hpa)
+    private function processAction($action, $id_penerimaan_hpa, $id_hpa, $id_user, $id_mutu_hpa, $indikator_1, $indikator_2, $total_nilai_mutu_hpa)
     {
         date_default_timezone_set('Asia/Jakarta');
 
@@ -94,8 +94,7 @@ class Penerimaan extends BaseController
                     $this->mutu_hpa->update($id_mutu_hpa, [
                         'indikator_1' => $indikator_1,
                         'indikator_2' => $indikator_2,
-                        'indikator_9' => $indikator_9,
-                        'total_nilai_mutu_hpa' => $total_nilai_mutu_hpa + $indikator_1 + $indikator_2 + $indikator_9,
+                        'total_nilai_mutu_hpa' => $total_nilai_mutu_hpa + $indikator_1 + $indikator_2,
                     ]);
                     break;
                 case 'reset':
@@ -108,7 +107,6 @@ class Penerimaan extends BaseController
                     $this->mutu_hpa->update($id_mutu_hpa, [
                         'indikator_1' => '0',
                         'indikator_2' => '0',
-                        'indikator_9' => '0',
                         'total_nilai_mutu_hpa' => '0',
                     ]);
                     break;
@@ -170,7 +168,7 @@ class Penerimaan extends BaseController
             'id_user' => session()->get('id_user'),
             'nama_user' => session()->get('nama_user'),
         ];
-        
+
         return view('Hpa/edit_proses/edit_penerimaan', $data);
     }
 

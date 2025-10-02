@@ -10,6 +10,8 @@ use App\Models\Ihc\IhcModel;
 use App\Models\UsersModel;
 use App\Models\PatientModel;
 use App\Models\SimrsModel;
+use App\Models\KunjunganModel;
+use App\Models\PengirimanDataSimrsModel;
 use App\Models\Hpa\Proses\Penerimaan_hpa;
 use App\Models\Hpa\Proses\Pemotongan_hpa;
 use App\Models\Hpa\Proses\pembacaan_hpa;
@@ -31,6 +33,8 @@ class HpaController extends BaseController
     protected $usersModel;
     protected $patientModel;
     protected $simrsModel;
+    protected $kunjunganModel;
+    protected $pengirimanDataSimrsModel;
     protected $penerimaan_hpa;
     protected $pemotongan_hpa;
     protected $pembacaan_hpa;
@@ -50,6 +54,8 @@ class HpaController extends BaseController
         $this->usersModel = new UsersModel();
         $this->patientModel = new PatientModel();
         $this->simrsModel = new SimrsModel();
+        $this->kunjunganModel = new KunjunganModel();
+        $this->pengirimanDataSimrsModel = new PengirimanDataSimrsModel();
         $this->penerimaan_hpa = new Penerimaan_hpa();
         $this->pemotongan_hpa = new Pemotongan_hpa();
         $this->pembacaan_hpa = new pembacaan_hpa();
@@ -90,15 +96,15 @@ class HpaController extends BaseController
 
     public function register()
     {
-        // Ambil kode HPA terakhir
-        $lasthpa = $this->hpaModel->getLastKodeHPA();
-        $currentYear = date('y');
-        $nextNumber = 1;
+        // --- Ambil kode HPA terakhir ---
+        $lasthpa      = $this->hpaModel->getLastKodeHPA();
+        $currentYear  = date('y');
+        $nextNumber   = 1;
 
         if ($lasthpa) {
-            $lastKode = $lasthpa['kode_hpa'];
+            $lastKode  = $lasthpa['kode_hpa'];
             $lastParts = explode('/', $lastKode);
-            $lastYear = $lastParts[1];
+            $lastYear  = $lastParts[1] ?? '';
 
             if ($lastYear == $currentYear) {
                 $lastNumber = (int) explode('.', $lastParts[0])[1];
@@ -108,54 +114,70 @@ class HpaController extends BaseController
 
         $kodehpa = sprintf('H.%02d/%s', $nextNumber, $currentYear);
 
-        // Tangkap dari GET parameter
-        $register_api_raw = $this->request->getGet('register_api');
-        $register_api = json_decode($register_api_raw, true);
+        // --- Variabel awal ---
+        $idtransaksi   = $this->request->getGet('idtransaksi');
+        $normPasien    = $this->request->getGet('norm_pasien');
+        $patient       = null;
+        $riwayat_api   = [];
+        $riwayat_hpa   = [];
+        $riwayat_frs   = [];
+        $riwayat_srs   = [];
+        $riwayat_ihc   = [];
 
-        // Ambil data riwayat dari API / Manual
-        // Cek apakah data dari API tersedia
-        if (!empty($register_api) && is_array($register_api)) {
+        // --- Skenario 1: dari idtransaksi ---
+        if ($idtransaksi) {
+            $kunjungan = $this->kunjunganModel->where('idtransaksi', $idtransaksi)->first();
 
-            // Ambil norm
-            $norm = $register_api['norm'] ?? '';
+            if ($kunjungan) {
+                $id_pasien = isset($kunjungan['idpasien']) ? (int) $kunjungan['idpasien'] : null;
 
-            // Ambil riwayat dari API
-            $riwayat_api = [];
-            if ($norm !== '') {
-                $riwayat_api_response = $this->simrsModel->getPemeriksaanPasien($norm);
-                if (!empty($riwayat_api_response['code']) && $riwayat_api_response['code'] == 200) {
-                    $riwayat_api = $riwayat_api_response['data'];
+                $patient = [
+                    'id_pasien'             => $id_pasien,
+                    'norm_pasien'           => $kunjungan['norm'] ?? '',
+                    'nama_pasien'           => $kunjungan['nama'] ?? '',
+                    'alamat_pasien'         => $kunjungan['alamat'] ?? '',
+                    'kota'                  => $kunjungan['kota'] ?? '',
+                    'tanggal_lahir_pasien'  => $kunjungan['tgl_lhr'] ?? '',
+                    'jenis_kelamin_pasien'  => $kunjungan['jeniskelamin'] ?? '',
+                    'status_pasien'         => $kunjungan['jenispasien'] ?? '',
+                    'unitasal'              => $kunjungan['unitasal'] ?? '',
+                    'dokterperujuk'         => $kunjungan['dokterperujuk'] ?? '',
+                    'pemeriksaan'           => $kunjungan['pemeriksaan'] ?? '',
+                    'lokasi_spesimen'       => $kunjungan['statuslokasi'] ?? '',
+                    'diagnosa_klinik'       => $kunjungan['diagnosaklinik'] ?? '',
+                    'tindakan_spesimen'     => $kunjungan['pemeriksaan'] ?? '',
+                    'id_transaksi'          => isset($kunjungan['idtransaksi']) ? (int) $kunjungan['idtransaksi'] : null,
+                    'tanggal_transaksi'     => $kunjungan['tanggal'] ?? '',
+                    'no_register'           => $kunjungan['register'] ?? ''
+                ];
+
+                if ($id_pasien) {
+                    $riwayat_hpa = $this->hpaModel->riwayatPemeriksaanhpa($id_pasien);
+                    $riwayat_frs = $this->frsModel->riwayatPemeriksaanfrs($id_pasien);
+                    $riwayat_srs = $this->srsModel->riwayatPemeriksaansrs($id_pasien);
+                    $riwayat_ihc = $this->ihcModel->riwayatPemeriksaanihc($id_pasien);
                 }
             }
+        }
+        // --- Skenario 2: dari norm_pasien ---
+        elseif ($normPasien) {
+            $patient   = $this->patientModel->where('norm_pasien', $normPasien)->first();
+            $id_pasien = $patient['id_pasien'] ?? null;
 
-            // Map ke array $patient
-            $patient = [
-                'id_pasien'             => isset($register_api['idpasien']) ? (int) $register_api['idpasien'] : null,
-                'norm_pasien'           => $register_api['norm'] ?? '',
-                'nama_pasien'           => $register_api['nama'] ?? '',
-                'alamat_pasien'         => $register_api['alamat'] ?? '',
-                'tanggal_lahir_pasien'  => $register_api['tgl_lhr'] ?? '',
-                'jenis_kelamin_pasien'  => $register_api['jeniskelamin'] ?? '',
-                'status_pasien'         => $register_api['jenispasien'] ?? '',
-                'unitasal'              => $register_api['unitasal'] ?? '',
-                'dokterperujuk'         => $register_api['dokterperujuk'] ?? '',
-                'pemeriksaan'           => $register_api['pemeriksaan'] ?? '',
-                'lokasi_spesimen'       => $register_api['statuslokasi'] ?? '',
-                'diagnosa_klinik'       => $register_api['diagnosaklinik'] ?? '',
-                'tindakan_spesimen'     => $register_api['pemeriksaan'] ?? '',
-                'id_transaksi'          => isset($register_api['idtransaksi']) ? (int) $register_api['idtransaksi'] : null,
-                'tanggal_transaksi'     => $register_api['tanggal'] ?? '',
-                'no_register'           => $register_api['register'] ?? ''
-            ];
-        } elseif ($normPasien = $this->request->getGet('norm_pasien')) {
+            if ($id_pasien) {
+                $riwayat_hpa = $this->hpaModel->riwayatPemeriksaanhpa($id_pasien);
+                $riwayat_frs = $this->frsModel->riwayatPemeriksaanfrs($id_pasien);
+                $riwayat_srs = $this->srsModel->riwayatPemeriksaansrs($id_pasien);
+                $riwayat_ihc = $this->ihcModel->riwayatPemeriksaanihc($id_pasien);
+            }
+        }
 
-            // Ambil data pasien dari DB jika norm_pasien tersedia di GET
-            $patient = $this->patientModel->where('norm_pasien', $normPasien)->first();
-            $riwayat_api = [];
-        } else {
-            // Jika tidak ada sumber data sama sekali
-            $patient = null;
-            $riwayat_api = [];
+        // --- Panggil API di semua kondisi ---
+        if (!empty($patient['norm_pasien'])) {
+            $riwayat_api_response = $this->simrsModel->getPemeriksaanPasien($patient['norm_pasien']);
+            if (!empty($riwayat_api_response['code']) && $riwayat_api_response['code'] == 200) {
+                $riwayat_api = $riwayat_api_response['data'];
+            }
         }
 
         $data = [
@@ -164,11 +186,14 @@ class HpaController extends BaseController
             'kode_hpa'      => $kodehpa,
             'patient'       => $patient,
             'riwayat_api'   => $riwayat_api,
+            'riwayat_hpa'   => $riwayat_hpa,
+            'riwayat_frs'   => $riwayat_frs,
+            'riwayat_srs'   => $riwayat_srs,
+            'riwayat_ihc'   => $riwayat_ihc,
         ];
 
         return view('Hpa/Register', $data);
     }
-
 
     public function insert()
     {
@@ -213,6 +238,7 @@ class HpaController extends BaseController
                 'norm_pasien'  => $norm_pasien,
                 'nama_pasien'  => $data['nama_pasien'] ?? '',
                 'alamat_pasien' => $data['alamat_pasien'] ?? '',
+                'kota' => $data['kota'] ?? '',
                 'tanggal_lahir_pasien' => $data['tanggal_lahir_pasien'] ?? null,
                 'jenis_kelamin_pasien' => $data['jenis_kelamin_pasien'] ?? '',
                 'status_pasien' => $data['status_pasien'] ?? '',
@@ -230,7 +256,7 @@ class HpaController extends BaseController
                     session()->setFlashdata('success', 'Data pasien ditambahkan.');
                 }
             }
-            
+
             $hpaData = [
                 'kode_hpa' => $data['kode_hpa'],
                 'id_pasien' => (int) $data['id_pasien'],
@@ -246,10 +272,29 @@ class HpaController extends BaseController
                 'no_register' => $data['no_register'] ?? '',
                 'status_hpa' => 'Penerimaan'
             ];
-            
+
             // Simpan data HPA
             if (!$this->hpaModel->insert($hpaData)) {
                 throw new Exception('Gagal menyimpan data HPA: ' . $this->hpaModel->errors());
+            }
+            // Jika ada id_transaksi, update kunjungan
+            $idtransaksi = $data['id_transaksi'] ?? null;
+            if (!empty($idtransaksi)) {
+                // Ambil register dari idtransaksi
+                $kunjungan = $this->kunjunganModel
+                    ->select('register')
+                    ->where('idtransaksi', $idtransaksi)
+                    ->first();
+
+                if ($kunjungan && !empty($kunjungan['register'])) {
+                    $register = $kunjungan['register'];
+
+                    // Update semua hasil untuk register tersebut
+                    $this->kunjunganModel
+                        ->where('register', $register)
+                        ->set(['status' => 'Terdaftar'])
+                        ->update();
+                }
             }
             // Mendapatkan ID HPA yang baru diinsert
             $id_hpa = $this->hpaModel->getInsertID();
@@ -317,6 +362,7 @@ class HpaController extends BaseController
     {
         // Ambil data HPA berdasarkan ID
         $hpa = $this->hpaModel->getHpaWithRelationsProses($id_hpa);
+        $id_mutu_hpa = $hpa['id_mutu_hpa'];
         if (!$hpa) {
             return redirect()->back()->with('message', ['error' => 'HPA tidak ditemukan.']);
         }
@@ -392,12 +438,29 @@ class HpaController extends BaseController
         // Ambil data HPA berdasarkan ID
         $hpa = $this->hpaModel->getHpaWithRelationsProses($id_hpa);
         $id_pasien = $hpa['id_pasien'];
+        // --- Riwayat API ---
+        if (!empty($hpa['norm_pasien'])) {
+            $riwayat_api_response = $this->simrsModel->getPemeriksaanPasien($hpa['norm_pasien']);
+            if (!empty($riwayat_api_response['code']) && $riwayat_api_response['code'] == 200) {
+                $riwayat_api = $riwayat_api_response['data'];
+            }
+        }
         $riwayat_hpa = $this->hpaModel->riwayatPemeriksaanhpa($id_pasien);
         $riwayat_frs = $this->frsModel->riwayatPemeriksaanfrs($id_pasien);
         $riwayat_srs = $this->srsModel->riwayatPemeriksaansrs($id_pasien);
         $riwayat_ihc = $this->ihcModel->riwayatPemeriksaanihc($id_pasien);
         if (!$hpa) {
             return redirect()->back()->with('message', ['error' => 'HPA tidak ditemukan.']);
+        }
+        // Jika field mulai_pemotongan_hpa masih kosong dan ada id_pemotongan_hpa
+        if (!empty($hpa['id_pemotongan_hpa']) && empty($hpa['mulai_pemotongan_hpa'])) {
+            $this->pemotongan_hpa->update($hpa['id_pemotongan_hpa'], [
+                'mulai_pemotongan_hpa' => date('Y-m-d H:i:s'),
+                'id_user_pemotongan_hpa'  => $this->session->get('id_user'),
+                'status_pemotongan_hpa' => 'Proses Pemotongan',
+            ]);
+            // Refresh data
+            $hpa = $this->hpaModel->getHpaWithRelationsProses($id_hpa);
         }
         $id_pemotongan_hpa = $hpa['id_pemotongan_hpa'];
         // Ambil data pemotongan berdasarkan id_pemotongan_hpa
@@ -418,8 +481,10 @@ class HpaController extends BaseController
         // Ambil data pengguna dengan status "Dokter"
         $users = $this->usersModel->where('status_user', 'Dokter')->findAll();
         // Persiapkan data yang akan dikirim ke view
+
         $data = [
             'hpa'        => $hpa,
+            'riwayat_api'   => $riwayat_api ?? [],
             'riwayat_hpa'        => $riwayat_hpa,
             'riwayat_frs'        => $riwayat_frs,
             'riwayat_srs'        => $riwayat_srs,
@@ -441,11 +506,27 @@ class HpaController extends BaseController
         if (!$hpa) {
             return redirect()->back()->with('message', ['error' => 'HPA tidak ditemukan.']);
         }
+        // Jika field mulai_pembacaan_hpa masih kosong dan ada id_pembacaan_hpa
+        if (!empty($hpa['id_pembacaan_hpa']) && empty($hpa['mulai_pembacaan_hpa'])) {
+            $this->pembacaan_hpa->update($hpa['id_pembacaan_hpa'], [
+                'mulai_pembacaan_hpa' => date('Y-m-d H:i:s'),
+                'id_user_pembacaan_hpa'  => $this->session->get('id_user'),
+                'status_pembacaan_hpa' => 'Proses Pembacaan',
+            ]);
+            // Refresh data
+            $hpa = $this->hpaModel->getHpaWithRelationsProses($id_hpa);
+        }
         // Ambil data pemotongan dan pembacaan_hpa berdasarkan ID
         $id_pemotongan_hpa = $hpa['id_pemotongan_hpa'];
         $id_pembacaan_hpa = $hpa['id_pembacaan_hpa'];
         $id_mutu_hpa = $hpa['id_mutu_hpa'];
         $id_pasien = $hpa['id_pasien'];
+        if (!empty($hpa['norm_pasien'])) {
+            $riwayat_api_response = $this->simrsModel->getPemeriksaanPasien($hpa['norm_pasien']);
+            if (!empty($riwayat_api_response['code']) && $riwayat_api_response['code'] == 200) {
+                $riwayat_api = $riwayat_api_response['data'];
+            }
+        }
         $riwayat_hpa = $this->hpaModel->riwayatPemeriksaanhpa($id_pasien);
         $riwayat_frs = $this->frsModel->riwayatPemeriksaanfrs($id_pasien);
         $riwayat_srs = $this->srsModel->riwayatPemeriksaansrs($id_pasien);
@@ -482,13 +563,18 @@ class HpaController extends BaseController
             'indikator_6' => $mutu_hpa['indikator_6'] ?? "0",
             'indikator_7' => $mutu_hpa['indikator_7'] ?? "0",
             'indikator_8' => $mutu_hpa['indikator_8'] ?? "0",
+            'indikator_9' => $mutu_hpa['indikator_9'] ?? "0",
+            'indikator_10' => $mutu_hpa['indikator_10'] ?? "0",
             'total_nilai_mutu_hpa' => $mutu_hpa['total_nilai_mutu_hpa'] ?? "0"
         ];
         // Ambil data pengguna dengan status "Dokter"
         $users = $this->usersModel->where('status_user', 'Dokter')->findAll();
         // Persiapkan data yang akan dikirim ke view
         $data = [
+            'id_user'  => session()->get('id_user'),
+            'nama_user'  => session()->get('nama_user'),
             'hpa'             => $hpa,
+            'riwayat_api'   => $riwayat_api ?? [],
             'riwayat_hpa'        => $riwayat_hpa,
             'riwayat_frs'        => $riwayat_frs,
             'riwayat_srs'        => $riwayat_srs,
@@ -497,8 +583,6 @@ class HpaController extends BaseController
             'pembacaan_hpa'   => $pembacaan_hpa,
             'mutu_hpa'        => $mutu_hpa,
             'users'           => $users,
-            'id_user'         => session()->get('id_user'),
-            'nama_user'       => session()->get('nama_user'),
         ];
 
         return view('hpa/edit_mikroskopis', $data);
@@ -509,8 +593,30 @@ class HpaController extends BaseController
         // Ambil data HPA berdasarkan ID
         $hpa = $this->hpaModel->getHpaWithRelationsProses($id_hpa);
         $id_pasien = $hpa['id_pasien'];
+        if (!empty($hpa['norm_pasien'])) {
+            $riwayat_api_response = $this->simrsModel->getPemeriksaanPasien($hpa['norm_pasien']);
+            if (!empty($riwayat_api_response['code']) && $riwayat_api_response['code'] == 200) {
+                $riwayat_api = $riwayat_api_response['data'];
+            }
+        }
+        $riwayat_hpa = $this->hpaModel->riwayatPemeriksaanhpa($id_pasien);
+        $riwayat_frs = $this->frsModel->riwayatPemeriksaanfrs($id_pasien);
+        $riwayat_srs = $this->srsModel->riwayatPemeriksaansrs($id_pasien);
+        $riwayat_ihc = $this->ihcModel->riwayatPemeriksaanihc($id_pasien);
+
         if (!$hpa) {
             return redirect()->back()->with('message', ['error' => 'HPA tidak ditemukan.']);
+        }
+        // Jika field mulai_penulisan_hpa masih kosong dan ada id_penulisan_hpa
+        if (!empty($hpa['id_penulisan_hpa']) && empty($hpa['mulai_penulisan_hpa'])) {
+            $this->penulisan_hpa->update($hpa['id_penulisan_hpa'], [
+                'mulai_penulisan_hpa' => date('Y-m-d H:i:s'),
+                'id_user_penulisan_hpa'  => $this->session->get('id_user'),
+                'status_penulisan_hpa' => 'Proses Penulisan',
+            ]);
+
+            // Refresh data
+            $hpa = $this->hpaModel->getHpaWithRelationsProses($id_hpa);
         }
         // Inisialisasi array untuk pembacaan dan penulisan HPA
         $pembacaan_hpa = [];
@@ -530,17 +636,15 @@ class HpaController extends BaseController
         if (!empty($hpa['id_penulisan_hpa'])) {
             $penulisan_hpa = $this->penulisan_hpa->find($hpa['id_penulisan_hpa']) ?? [];
         }
+
         // Ambil daftar user dengan status "Dokter"
         $users = $this->usersModel->where('status_user', 'Dokter')->findAll();
-        $riwayat_hpa = $this->hpaModel->riwayatPemeriksaanhpa($id_pasien);
-        $riwayat_frs = $this->frsModel->riwayatPemeriksaanfrs($id_pasien);
-        $riwayat_srs = $this->srsModel->riwayatPemeriksaansrs($id_pasien);
-        $riwayat_ihc = $this->ihcModel->riwayatPemeriksaanihc($id_pasien);
         // Data yang akan dikirim ke view
         $data = [
             'id_user' => session()->get('id_user'),
             'nama_user' => session()->get('nama_user'),
             'hpa' => $hpa,
+            'riwayat_api'   => $riwayat_api ?? [],
             'riwayat_hpa'        => $riwayat_hpa,
             'riwayat_frs'        => $riwayat_frs,
             'riwayat_srs'        => $riwayat_srs,
@@ -558,10 +662,58 @@ class HpaController extends BaseController
     {
         // Ambil data hpa berdasarkan ID
         $hpa = $this->hpaModel->getHpaWithRelationsProses($id_hpa);
+        $id_pasien = $hpa['id_pasien'];
+        if (!empty($hpa['norm_pasien'])) {
+            $riwayat_api_response = $this->simrsModel->getPemeriksaanPasien($hpa['norm_pasien']);
+            if (!empty($riwayat_api_response['code']) && $riwayat_api_response['code'] == 200) {
+                $riwayat_api = $riwayat_api_response['data'];
+            }
+        }
+        $riwayat_hpa = $this->hpaModel->riwayatPemeriksaanhpa($id_pasien);
+        $riwayat_frs = $this->frsModel->riwayatPemeriksaanfrs($id_pasien);
+        $riwayat_srs = $this->srsModel->riwayatPemeriksaansrs($id_pasien);
+        $riwayat_ihc = $this->ihcModel->riwayatPemeriksaanihc($id_pasien);
+
+        // Jika field mulai_pemverifikasi_hpa masih kosong dan ada id_pemverifikasi_hpa
+        if (!empty($hpa['id_pemverifikasi_hpa']) && empty($hpa['mulai_pemverifikasi_hpa'])) {
+            $this->pemverifikasi_hpa->update($hpa['id_pemverifikasi_hpa'], [
+                'mulai_pemverifikasi_hpa' => date('Y-m-d H:i:s'),
+                'id_user_pemverifikasi_hpa'  => $this->session->get('id_user'),
+                'status_pemverifikasi_hpa' => 'Proses Pemverifikasi',
+            ]);
+
+            // Refresh data
+            $hpa = $this->hpaModel->getHpaWithRelationsProses($id_hpa);
+        }
+
+        // Jika field mulai_authorized_hpa masih kosong dan ada id_authorized_hpa
+        if (!empty($hpa['id_authorized_hpa']) && empty($hpa['mulai_authorized_hpa'])) {
+            $this->authorized_hpa->update($hpa['id_authorized_hpa'], [
+                'mulai_authorized_hpa' => date('Y-m-d H:i:s'),
+                'id_user_authorized_hpa'  => $this->session->get('id_user'),
+                'status_authorized_hpa' => 'Proses Authorized',
+            ]);
+
+            // Refresh data
+            $hpa = $this->hpaModel->getHpaWithRelationsProses($id_hpa);
+        }
+
+        // Jika field mulai_pencetakan_hpa masih kosong dan ada id_pencetakan_hpa
+        if (!empty($hpa['id_pencetakan_hpa']) && empty($hpa['mulai_pencetakan_hpa'])) {
+            $this->pencetakan_hpa->update($hpa['id_pencetakan_hpa'], [
+                'mulai_pencetakan_hpa' => date('Y-m-d H:i:s'),
+                'id_user_pencetakan_hpa'  => $this->session->get('id_user'),
+                'status_pencetakan_hpa' => 'Proses Pencetakan',
+            ]);
+
+            // Refresh data
+            $hpa = $this->hpaModel->getHpaWithRelationsProses($id_hpa);
+        }
+
         // Ambil data pembacaan HPA jika tersedia
+        $pembacaan_hpa = [];
         if (!empty($hpa['id_pembacaan_hpa'])) {
             $pembacaan_hpa = $this->pembacaan_hpa->find($hpa['id_pembacaan_hpa']) ?? [];
-            // Ambil nama dokter dari pembacaan jika tersedia
             if (!empty($pembacaan_hpa['id_user_dokter_pembacaan_hpa'])) {
                 $dokter = $this->usersModel->find($pembacaan_hpa['id_user_dokter_pembacaan_hpa']);
                 $pembacaan_hpa['dokter_nama'] = $dokter ? $dokter['nama_user'] : null;
@@ -569,10 +721,16 @@ class HpaController extends BaseController
                 $pembacaan_hpa['dokter_nama'] = null;
             }
         }
+
         $data = [
             'id_user' => session()->get('id_user'),
             'nama_user' => session()->get('nama_user'),
             'hpa' => $hpa,
+            'riwayat_api'   => $riwayat_api ?? [],
+            'riwayat_hpa'        => $riwayat_hpa,
+            'riwayat_frs'        => $riwayat_frs,
+            'riwayat_srs'        => $riwayat_srs,
+            'riwayat_ihc'        => $riwayat_ihc,
             'pembacaan_hpa' => $pembacaan_hpa,
         ];
 
@@ -610,35 +768,93 @@ class HpaController extends BaseController
 
         // Mengambil data dari form
         $data = $this->request->getPost();
-        $page_source = $this->request->getPost('page_source');
 
-        // Mengubah 'jumlah_slide' jika memilih 'lainnya'
-        if ($this->request->getPost('jumlah_slide') === 'lainnya') {
-            $data['jumlah_slide'] = $this->request->getPost('jumlah_slide') === 'lainnya'
-                ? $this->request->getPost('jumlah_slide_custom')
-                : $this->request->getPost('jumlah_slide');
+        $id_user_pemotongan_hpa = !empty($data['id_user_pemotongan_hpa']) ? (int) $data['id_user_pemotongan_hpa'] : null;
+        $id_user_dokter_pemotongan_hpa = !empty($data['id_user_dokter_pemotongan_hpa']) ? (int) $data['id_user_dokter_pemotongan_hpa'] : null;
+        $id_user_pembacaan_hpa = !empty($data['id_user_pembacaan_hpa']) ? (int) $data['id_user_pembacaan_hpa'] : null;
+        $id_user_dokter_pembacaan_hpa = !empty($data['id_user_dokter_pembacaan_hpa']) ? (int) $data['id_user_dokter_pembacaan_hpa'] : null;
+        $page_source = $this->request->getPost('page_source');
+        // Proses update tabel mutu_hpa (jalankan hanya jika ada ID)
+        $id_mutu_hpa = $this->request->getPost('id_mutu_hpa');
+        if (!empty($id_mutu_hpa)) {
+            $indikator_1 = (string) ($this->request->getPost('indikator_1') ?? '0');
+            $indikator_2 = (string) ($this->request->getPost('indikator_2') ?? '0');
+            $indikator_3 = (string) ($this->request->getPost('indikator_3') ?? '0');
+            $indikator_4 = (string) ($this->request->getPost('indikator_4') ?? '0');
+            $indikator_5 = (string) ($this->request->getPost('indikator_5') ?? '0');
+            $indikator_6 = (string) ($this->request->getPost('indikator_6') ?? '0');
+            $indikator_7 = (string) ($this->request->getPost('indikator_7') ?? '0');
+            $indikator_8 = (string) ($this->request->getPost('indikator_8') ?? '0');
+            $indikator_9 = (string) ($this->request->getPost('indikator_9') ?? '0');
+            $indikator_10 = (string) ($this->request->getPost('indikator_10') ?? '0');
+            $total_nilai_mutu_hpa = (string) ($this->request->getPost('total_nilai_mutu_hpa') ?? '0');
+            $keseluruhan_nilai_mutu =
+                (int)$indikator_1 +
+                (int)$indikator_2 +
+                (int)$indikator_3 +
+                (int)$indikator_4 +
+                (int)$indikator_5 +
+                (int)$indikator_6 +
+                (int)$indikator_7 +
+                (int)$indikator_8 +
+                (int)$indikator_9 +
+                (int)$indikator_10;
+                
+                $this->mutu_hpa->update($id_mutu_hpa, [
+                    'indikator_1' => $indikator_1,
+                    'indikator_2' => $indikator_2,
+                    'indikator_3' => $indikator_3,
+                    'indikator_4' => $indikator_4,
+                    'indikator_5' => $indikator_5,
+                    'indikator_6' => $indikator_6,
+                    'indikator_7' => $indikator_7,
+                    'indikator_8' => $indikator_8,
+                    'indikator_9' => $indikator_9,
+                    'indikator_10' => $indikator_10,
+                    'total_nilai_mutu_hpa' => $keseluruhan_nilai_mutu,
+                ]);
         }
+        // Mengubah jika memilih 'lainnya'
+        $data['PUG'] = ($this->request->getPost('PUG') === 'lainnya')
+            ? $this->request->getPost('pug_custom')
+            : $this->request->getPost('PUG');
+        $data['PUB'] = ($this->request->getPost('PUB') === 'lainnya')
+            ? $this->request->getPost('PUB_custom')
+            : $this->request->getPost('PUB');
 
         // Proses update tabel HPA
         if ($this->hpaModel->update($id_hpa, $data)) {
-            // Update data pemotongan jika id_user_dokter_pemotongan_hpa ada
-            if (!empty($data['id_user_dokter_pemotongan_hpa'])) {
-                $pemotongan = $this->pemotongan_hpa->where('id_pemotongan_hpa', $id_pemotongan_hpa)->first();
+            // Update tabel pemotongan_hpa
+            $pemotongan = $this->pemotongan_hpa->where('id_pemotongan_hpa', $id_pemotongan_hpa)->first();
+            if ($pemotongan) {
+                $updatePemotongan = [];
 
-                if ($pemotongan) {
-                    $this->pemotongan_hpa->update($pemotongan['id_pemotongan_hpa'], [
-                        'id_user_dokter_pemotongan_hpa' => $data['id_user_dokter_pemotongan_hpa'],
-                    ]);
+                if ($id_user_dokter_pemotongan_hpa !== null) {
+                    $updatePemotongan['id_user_dokter_pemotongan_hpa'] = $id_user_dokter_pemotongan_hpa;
+                }
+                if ($id_user_pemotongan_hpa !== null) {
+                    $updatePemotongan['id_user_pemotongan_hpa'] = $id_user_pemotongan_hpa;
+                }
+
+                if (!empty($updatePemotongan)) {
+                    $this->pemotongan_hpa->update($pemotongan['id_pemotongan_hpa'], $updatePemotongan);
                 }
             }
-            // Update data pembacaan jika id_user_dokter_pembacaan_hpa ada
-            if (!empty($data['id_user_dokter_pembacaan_hpa'])) {
-                $pembacaan = $this->pembacaan_hpa->where('id_pembacaan_hpa', $id_pembacaan_hpa)->first();
 
-                if ($pembacaan) {
-                    $this->pembacaan_hpa->update($pembacaan['id_pembacaan_hpa'], [
-                        'id_user_dokter_pembacaan_hpa' => $data['id_user_dokter_pembacaan_hpa'],
-                    ]);
+            // Update tabel pembacaan_hpa
+            $pembacaan = $this->pembacaan_hpa->where('id_pembacaan_hpa', $id_pembacaan_hpa)->first();
+            if ($pembacaan) {
+                $updatePembacaan = [];
+
+                if ($id_user_dokter_pembacaan_hpa !== null) {
+                    $updatePembacaan['id_user_dokter_pembacaan_hpa'] = $id_user_dokter_pembacaan_hpa;
+                }
+                if ($id_user_pembacaan_hpa !== null) {
+                    $updatePembacaan['id_user_pembacaan_hpa'] = $id_user_pembacaan_hpa;
+                }
+
+                if (!empty($updatePembacaan)) {
+                    $this->pembacaan_hpa->update($pembacaan['id_pembacaan_hpa'], $updatePembacaan);
                 }
             }
             switch ($page_source) {
@@ -663,18 +879,21 @@ class HpaController extends BaseController
                     $indikator_6 = (string) ($this->request->getPost('indikator_6') ?? '0');
                     $indikator_7 = (string) ($this->request->getPost('indikator_7') ?? '0');
                     $indikator_8 = (string) ($this->request->getPost('indikator_8') ?? '0');
+                    $indikator_9 = (string) ($this->request->getPost('indikator_9') ?? '0');
+                    $indikator_10 = (string) ($this->request->getPost('indikator_10') ?? '0');
                     $total_nilai_mutu_hpa = (string) ($this->request->getPost('total_nilai_mutu_hpa') ?? '0');
-                    $keseluruhan_nilai_mutu = $total_nilai_mutu_hpa + (int)$indikator_5 + (int)$indikator_6 + (int)$indikator_7 + (int)$indikator_8;
+                    $keseluruhan_nilai_mutu = $total_nilai_mutu_hpa + (int)$indikator_4 + (int)$indikator_5 + (int)$indikator_6 + (int)$indikator_7 + (int)$indikator_8 + (int)$indikator_9 + (int)$indikator_10;
                     $this->mutu_hpa->update($id_mutu_hpa, [
                         'indikator_4' => $indikator_4,
                         'indikator_5' => $indikator_5,
                         'indikator_6' => $indikator_6,
                         'indikator_7' => $indikator_7,
                         'indikator_8' => $indikator_8,
+                        'indikator_9' => $indikator_9,
+                        'indikator_10' => $indikator_10,
                         'total_nilai_mutu_hpa' => $keseluruhan_nilai_mutu,
                     ]);
                     return redirect()->to('hpa/edit_mikroskopis/' . $id_hpa)->with('success', 'Data mikroskopis berhasil diperbarui.');
-
                 case 'edit_penulisan':
                     $id_penulisan_hpa = $this->request->getPost('id_penulisan_hpa');
                     $this->penulisan_hpa->update($id_penulisan_hpa, [
@@ -796,18 +1015,20 @@ class HpaController extends BaseController
     {
         date_default_timezone_set('Asia/Jakarta');
         $id_user = session()->get('id_user');
-        // Mendapatkan id_hpa dari POST
+
         if (!$id_hpa) {
             return redirect()->back()->with('error', 'Terjadi kesalahan: ID HPA tidak ditemukan.');
         }
-        // Mengambil data dari POST dan melakukan update
+
+        // Ambil data dari POST dan update HPA lebih dulu
         $data = $this->request->getPost();
         $this->hpaModel->update($id_hpa, $data);
+
         $redirect = $this->request->getPost('redirect');
         if (!$redirect) {
             return redirect()->back()->with('error', 'Terjadi kesalahan: Halaman asal tidak ditemukan.');
         }
-        // Cek ke halaman mana harus diarahkan setelah update
+
         if ($redirect === 'index_pemverifikasi_hpa' && isset($_POST['id_pemverifikasi_hpa'])) {
             $id_pemverifikasi_hpa = $this->request->getPost('id_pemverifikasi_hpa');
             $this->pemverifikasi_hpa->update($id_pemverifikasi_hpa, [
@@ -817,16 +1038,112 @@ class HpaController extends BaseController
             ]);
             return redirect()->to('pemverifikasi_hpa/index')->with('success', 'Data berhasil diverifikasi.');
         }
-        if ($redirect === 'index_authorized_hpa' && isset($_POST['id_authorized_hpa'])) {
-            $id_authorized_hpa = $this->request->getPost('id_authorized_hpa');
-            $this->authorized_hpa->update($id_authorized_hpa, [
-                'id_user_authorized_hpa' => $id_user,
+
+        if ($redirect === 'index_authorized_hpa' && isset($data['id_authorized_hpa'])) {
+            $id_authorized_hpa = $data['id_authorized_hpa'];
+            $selesaiAuthorized = date('Y-m-d H:i:s'); // gunakan untuk diambil & responsetime
+        
+            // --- UPDATE AUTHORIZED HPA ---
+            $updateData = [
+                'id_user_authorized_hpa'        => $id_user,
                 'id_user_dokter_authorized_hpa' => $id_user,
-                'status_authorized_hpa' => 'Selesai Authorized',
-                'selesai_authorized_hpa' => date('Y-m-d H:i:s'),
-            ]);
-            return redirect()->to('authorized_hpa/index')->with('success', 'Data berhasil diauthorized.');
-        }
+                'status_authorized_hpa'         => 'Selesai Authorized',
+                'selesai_authorized_hpa'        => $selesaiAuthorized,
+            ];
+        
+            $update = $this->authorized_hpa->update($id_authorized_hpa, $updateData);
+        
+            if (! $update) {
+                log_message('error', '[AUTHORIZED HPA] Update gagal untuk ID: ' . $id_authorized_hpa 
+                    . ' | Errors: ' . json_encode($this->authorized_hpa->errors()));
+            } else {
+                log_message('debug', '[AUTHORIZED HPA] Update BERHASIL untuk ID: ' . $id_authorized_hpa);
+            }
+        
+            // Ambil data hasil terbaru HPA setelah update
+            $hpaTerbaru = $this->hpaModel->find($id_hpa);
+        
+            // --- HITUNG RESPONSETIME ---
+            $responsetime = null;
+            if (!empty($data['periksa'])) {
+                $start = new \DateTime($data['periksa']);
+                $end   = new \DateTime($selesaiAuthorized);
+                $diff  = $start->diff($end);
+                $responsetime = sprintf(
+                    "%d hari %d jam %d menit %d detik",
+                    $diff->days,
+                    $diff->h,
+                    $diff->i,
+                    $diff->s
+                );
+            }
+        
+            // --- TENTUKAN ID DOKTER PA ---
+            $iddokterpa = null;
+            if (!empty($data['dokterpa'])) {
+                if ($data['dokterpa'] === "dr. Vinna Chrisdianti, Sp.PA") {
+                    $iddokterpa = 1179;
+                } elseif ($data['dokterpa'] === "dr. Ayu Tyasmara Pratiwi, Sp.PA") {
+                    $iddokterpa = 328;
+                }
+            }
+        
+            // --- PERSIAPAN PAYLOAD ---
+            $payload = [
+                'idtransaksi'      => $data['idtransaksi'] ?? null,
+                'tanggal'          => $data['tanggal'] ?? null,
+                'register'         => $data['register'] ?? null,
+                'pemeriksaan'      => $data['pemeriksaan'] ?? null,
+                'idpasien'         => $data['idpasien'] ?? null,
+                'norm'             => $data['norm'] ?? null,
+                'nama'             => $data['nama'] ?? null,
+                'noregister'       => $data['noregister'] ?? null,
+                'datang'           => $data['datang'] ?? null,
+                'periksa'          => $data['periksa'] ?? null,
+                'selesai'          => $data['selesai'] ?? null,
+                'diambil'          => $selesaiAuthorized,
+                'iddokterpa'       => $iddokterpa,
+                'dokterpa'         => $data['dokterpa'] ?? null,
+                'statuslokasi'     => $data['statuslokasi'] ?? null,
+                'diagnosaklinik'   => $data['diagnosaklinik'] ?? null,
+                'diagnosapatologi' => $data['diagnosapatologi'] ?? null,
+                'mutusediaan'      => $data['mutusediaan'] ?? null,
+                'responsetime'     => $responsetime,
+                'hasil'            => $hpaTerbaru['print_hpa'] ?? null,
+                'status'           => !empty($data['idtransaksi']) ? ($data['status'] ?? 'Belum Terkirim') : 'Belum Terdaftar',
+                'updated_at'       => date('Y-m-d H:i:s'),
+            ];
+        
+            log_message('debug', '[PENGIRIMAN SIMRS] Payload siap dikirim: ' . json_encode($payload, JSON_PRETTY_PRINT));
+        
+            try {
+                $client = \Config\Services::curlrequest();
+                $response = $client->post(
+                    'http://172.20.29.240/apibdrs/apibdrs/postPemeriksaan',
+                    [
+                        'headers' => ['Content-Type' => 'application/json'],
+                        'body'    => json_encode($payload)
+                    ]
+                );
+        
+                $responseBody = $response->getBody();
+                log_message('info', '[PENGIRIMAN SIMRS] Response: ' . $responseBody);
+        
+                // simpan ke flashdata agar bisa dicek di halaman redirect
+                session()->setFlashdata('simrs_payload', json_encode($payload));
+                session()->setFlashdata('simrs_response', $responseBody);
+        
+            } catch (\Exception $e) {
+                $errorMessage = $e->getMessage();
+                log_message('error', '[PENGIRIMAN SIMRS] Gagal kirim: ' . $errorMessage);
+        
+                session()->setFlashdata('simrs_error', $errorMessage);
+            }
+        
+            return redirect()->to('authorized_hpa/index')
+                ->with('success', session()->getFlashdata('success') ?? 'Data berhasil diauthorized.');
+        }        
+
         if ($redirect === 'index_pencetakan_hpa' && isset($_POST['id_pencetakan_hpa'])) {
             $id_pencetakan_hpa = $this->request->getPost('id_pencetakan_hpa');
             $this->pencetakan_hpa->update($id_pencetakan_hpa, [
@@ -836,7 +1153,7 @@ class HpaController extends BaseController
             ]);
             return redirect()->to('pencetakan_hpa/index')->with('success', 'Data berhasil simpan.');
         }
-        // Jika redirect tidak sesuai dengan yang diharapkan
+
         return redirect()->back()->with('error', 'Terjadi kesalahan: Halaman tujuan tidak valid.');
     }
 
@@ -853,6 +1170,27 @@ class HpaController extends BaseController
         $this->hpaModel->update($id_hpa, $data);
         // Redirect dengan pesan sukses
         return redirect()->to('hpa/index')->with('success', 'Status HPA berhasil disimpan.');
+    }
+
+    public function update_jumlah_slide()
+    {
+        if ($this->request->isAJAX()) {
+            $id_hpa = $this->request->getPost('id_hpa');
+            $jumlah_slide = $this->request->getPost('jumlah_slide');
+
+            if ($id_hpa && $jumlah_slide !== null) {
+                $this->hpaModel->update($id_hpa, ['jumlah_slide' => $jumlah_slide]);
+                return $this->response->setJSON([
+                    'status' => 'success',
+                    'message' => 'Jumlah slide berhasil disimpan.'
+                ]);
+            } else {
+                return $this->response->setJSON([
+                    'status' => 'error',
+                    'message' => 'Data tidak lengkap.'
+                ]);
+            }
+        }
     }
 
     public function uploadFotoMakroskopis($id_hpa)
@@ -1000,6 +1338,19 @@ class HpaController extends BaseController
         return view('hpa/laporan/laporan_pemeriksaan', $data);
     }
 
+    public function laporan_mutu()
+    {
+        $hpaData = $this->hpaModel->laporan_mutu() ?? [];
+
+        $data = [
+            'id_user'    => session()->get('id_user'),
+            'nama_user'  => session()->get('nama_user'),
+            'hpaData' => $hpaData,
+        ];
+        
+        return view('hpa/laporan/laporan_mutu', $data);
+    }
+
     public function laporan_kerja()
     {
         $hpaData = $this->hpaModel->gethpaWithTime() ?? [];
@@ -1024,6 +1375,32 @@ class HpaController extends BaseController
         ];
 
         return view('hpa/laporan/laporan_oprasional', $data);
+    }
+
+    public function laporan_PUG()
+    {
+        $hpaData = $this->hpaModel->laporan_PUG() ?? [];
+
+        $data = [
+            'id_user'    => session()->get('id_user'),
+            'nama_user'  => session()->get('nama_user'),
+            'hpaData' => $hpaData,
+        ];
+
+        return view('hpa/laporan/laporan_PUG', $data);
+    }
+
+    public function laporan_PUB()
+    {
+        $hpaData = $this->hpaModel->laporan_PUB() ?? [];
+
+        $data = [
+            'id_user'    => session()->get('id_user'),
+            'nama_user'  => session()->get('nama_user'),
+            'hpaData' => $hpaData,
+        ];
+
+        return view('hpa/laporan/laporan_PUB', $data);
     }
 
     public function filter()

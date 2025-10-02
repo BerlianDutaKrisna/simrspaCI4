@@ -22,12 +22,36 @@
                     <thead>
                         <tr>
                             <th>No</th>
-                            <th>Aksi</th>
+                            <th class="align-middle text-center">
+                                <div class="custom-control custom-checkbox d-inline-block">
+                                    <input type="checkbox" class="custom-control-input" id="checkAll">
+                                    <label class="custom-control-label" for="checkAll">Aksi Check Semua</label>
+                                </div>
+                            </th>
+                            <script>
+                                document.getElementById('checkAll').addEventListener('change', function() {
+                                    let checkboxes = document.querySelectorAll('.checkbox-item');
+                                    checkboxes.forEach(cb => {
+                                        cb.checked = this.checked;
+
+                                        // Paksa trigger event 'change' agar logika lain ikut jalan (misal toggleButtons)
+                                        cb.dispatchEvent(new Event('change'));
+
+                                        // Opsional: akses data-status jika dibutuhkan langsung
+                                        if (this.checked && cb.dataset.status) {
+                                            let statusObj = JSON.parse(cb.dataset.status);
+                                            console.log(statusObj); // Untuk debugging
+                                            // Kamu bisa push ke array atau proses data di sini
+                                        }
+                                    });
+                                });
+                            </script>
                             <th>Detail</th>
                             <th>Kode SRS</th>
                             <th>Nama Pasien</th>
                             <th>Dokter</th>
                             <th>Status Pembacaan</th>
+                            <th>User</th>
                             <th>Mulai Pembacaan</th>
                             <th>Selesai Pembacaan</th>
                             <th>Deadline Hasil</th>
@@ -49,25 +73,26 @@
                                                             ]) ?>'
                                             autocomplete="off">
                                     </td>
-                                    <?php if (in_array($row['status_pembacaan_srs'], ["Proses Pembacaan"])): ?>
+                                    <?php if (in_array($row['status_pembacaan_srs'], ["Proses Pembacaan", "Belum Pembacaan"])): ?>
                                         <td>
-                                            <a href="<?= base_url('srs/edit_mikroskopis/' . esc($row['id_srs'])) ?>" class="btn btn-warning btn-sm">
+                                            <a href="<?= esc(base_url('srs/edit_mikroskopis/' . esc($row['id_srs']) . '?redirect=index_pembacaan_srs')) ?>"
+                                                class="btn btn-warning btn-sm">
                                                 <i class="fas fa-pen"></i> Detail
                                             </a>
                                         </td>
-                                    <?php elseif (in_array($row['status_pembacaan_srs'], ["Selesai Pembacaan"])): ?>
+                                    <?php elseif ($row['status_pembacaan_srs'] === "Selesai Pembacaan"): ?>
                                         <td>
-                                            <a href="<?= base_url('srs/edit_mikroskopis/' . esc($row['id_srs'])) ?>" class="btn btn-success btn-sm">
+                                            <a href="<?= esc(base_url('srs/edit_mikroskopis/' . esc($row['id_srs']) . '?redirect=index_pembacaan_frs')) ?>"
+                                                class="btn btn-success btn-sm">
                                                 <i class="fas fa-pen"></i> Detail
                                             </a>
                                         </td>
-                                    <?php else: ?>
-                                        <td></td>
                                     <?php endif; ?>
                                     <td><?= $row['kode_srs']; ?></td>
-                                    <td><?= $row['nama_pasien']; ?></td>
+                                    <td><b><?= esc($row['nama_pasien']); ?></b> (<?= esc($row['norm_pasien']); ?>)</td>
                                     <td><?= $row['nama_user_dokter_pembacaan_srs']; ?></td>
                                     <td><?= $row['status_pembacaan_srs']; ?></td>
+                                    <td><?= $row['nama_user_pembacaan_srs']; ?></td>
                                     <td>
                                         <?= empty($row['mulai_pembacaan_srs']) ? '-' : esc(date('H:i , d-m-Y', strtotime($row['mulai_pembacaan_srs']))); ?>
                                     </td>

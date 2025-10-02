@@ -5,12 +5,10 @@ $nip = '-';
 
 if ($pembacaan_hpa['dokter_nama'] === "dr. Ayu Tyasmara Pratiwi, Sp.PA") {
     $src = base_url('img/ttd_dr_ayu.png');
-    $pangkat = 'Penata';
     $nip = '198407022009022014';
 } elseif ($pembacaan_hpa['dokter_nama'] === "dr. Vinna Chrisdianti, Sp.PA") {
     $src = base_url('img/ttd_dr_vinna.png');
-    $pangkat = '-';
-    $nip = '-';
+    $nip = '198303152023212002';
 }
 ?>
 <script>
@@ -73,8 +71,8 @@ if ($pembacaan_hpa['dokter_nama'] === "dr. Ayu Tyasmara Pratiwi, Sp.PA") {
                         <td align="center" width="500" nowrap colspan="3"><h3>UNIT PATOLOGI ANATOMI</h3></td>
                     </tr>
                     <tr><td align="center" width="500" colspan="3">&nbsp;</td></tr>
-                    <tr><td nowrap>Tanggal Terima</td><td>:</td><td>&nbsp; <?= isset($penerimaan_hpa['mulai_penerimaan_hpa']) ? date('d-m-Y H:i:s', strtotime($penerimaan_hpa['mulai_penerimaan_hpa'])) : '' ?></td></tr>
-                    <tr><td nowrap>Tanggal Hasil</td><td>:</td><td>&nbsp; <?= isset($penulisan_hpa['selesai_penulisan_hpa']) ? date('d-m-Y H:i:s', strtotime($penulisan_hpa['selesai_penulisan_hpa'])) : '' ?></td></tr>
+                    <tr><td nowrap>Tanggal Terima</td><td>:</td><td>&nbsp; <?= isset($hpa['mulai_penerimaan_hpa']) ? date('d-m-Y H:i:s', strtotime($hpa['mulai_penerimaan_hpa'])) : '' ?></td></tr>
+                    <tr><td nowrap>Tanggal Hasil</td><td>:</td><td>&nbsp; <?= isset($hpa['selesai_authorized_hpa']) ? date('d-m-Y H:i:s', strtotime($hpa['selesai_authorized_hpa'])) : '' ?></td></tr>
                 </table>
             </td>
         </tr>
@@ -110,8 +108,8 @@ if ($pembacaan_hpa['dokter_nama'] === "dr. Ayu Tyasmara Pratiwi, Sp.PA") {
                 ];
 
                 // Cek apakah tanggal selesai_penulisan ada dan valid
-                if (!empty($penulisan_hpa['selesai_penulisan_hpa'])) {
-                    $timestamp = strtotime($penulisan_hpa['selesai_penulisan_hpa']);
+                if (!empty($hpa['selesai_authorized_hpa'])) {
+                    $timestamp = strtotime($hpa['selesai_authorized_hpa']);
                     $tanggal = date('d', $timestamp);
                     $bulanIndo = $bulan[date('n', $timestamp) - 1];
                     $tahun = date('Y', $timestamp);
@@ -134,7 +132,6 @@ if ($pembacaan_hpa['dokter_nama'] === "dr. Ayu Tyasmara Pratiwi, Sp.PA") {
                     <br>
                     <br>
                     <p style="margin: 0; font-size: 20px; font-weight: bold;"><?= esc($pembacaan_hpa['dokter_nama'] ?? '____________________') ?></p>
-                    <p style="margin: 5px 0 0;"><?= $pangkat ?></p>
                     <p style="margin: 0;">NIP. <?= $nip ?></p>
                 </td>
             </tr>

@@ -127,9 +127,9 @@
                                 <td><?= esc($row['total_nilai_mutu_srs'] ?? 'Belum Diisi') ?>%</td>
                                 <td>
                                     <?php
-                                    if (!empty($row['mulai_penerimaan_srs']) && !empty($row['selesai_pemverifikasi_srs'])) {
+                                    if (!empty($row['mulai_penerimaan_srs']) && !empty($row['selesai_penulisan_srs'])) {
                                         $start = new DateTime($row['mulai_penerimaan_srs']);
-                                        $end = new DateTime($row['selesai_pemverifikasi_srs']);
+                                        $end = new DateTime($row['selesai_penulisan_srs']);
                                         $interval = $start->diff($end);
                                         echo $interval->format('%a hari %h jam %i menit %s detik');
                                     } else {
@@ -139,9 +139,9 @@
                                 </td>
                                 <td>
                                     <?php
-                                    if (!empty($row['mulai_penerimaan_srs']) && !empty($row['selesai_pemverifikasi_srs'])) {
+                                    if (!empty($row['mulai_penerimaan_srs']) && !empty($row['selesai_penulisan_srs'])) {
                                         $start = new DateTime($row['mulai_penerimaan_srs']);
-                                        $end = new DateTime($row['selesai_pemverifikasi_srs']);
+                                        $end = new DateTime($row['selesai_penulisan_srs']);
                                         $interval = $start->diff($end);
                                         if ($interval->days <= 7) {
                                             echo '<span class="text-success">Tepat Waktu</span>';

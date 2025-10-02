@@ -37,6 +37,7 @@ class Pemverifikasi extends BaseController
     {
         $pemverifikasiData_frs = $this->pemverifikasi_frs->getpemverifikasi_frs();
         $data = [
+            'id_user' => session()->get('id_user'),
             'nama_user' => $this->session->get('nama_user'),
             'counts' => $this->getCounts(),
             'pemverifikasiDatafrs' => $pemverifikasiData_frs,

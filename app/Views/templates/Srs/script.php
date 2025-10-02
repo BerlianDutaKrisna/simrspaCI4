@@ -47,7 +47,7 @@
         // Hapus Data (Set Modal)
         // ==========================
         const deleteSelectors = [
-            "srs", "pembacaan", "penulisan",
+            "srs", "pewarnaan", "pembacaan", "penulisan",
             "pemverifikasi", "authorized", "pencetakan"
         ];
 

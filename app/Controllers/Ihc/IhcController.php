@@ -10,6 +10,8 @@ use App\Models\Ihc\IhcModel;
 use App\Models\UsersModel;
 use App\Models\PatientModel;
 use App\Models\SimrsModel;
+use App\Models\KunjunganModel;
+use App\Models\PengirimanDataSimrsModel;
 use App\Models\Ihc\Proses\Penerimaan_ihc;
 use App\Models\Ihc\Proses\Pembacaan_ihc;
 use App\Models\Ihc\Proses\Penulisan_ihc;
@@ -28,6 +30,8 @@ class ihcController extends BaseController
     protected $usersModel;
     protected $patientModel;
     protected $simrsModel;
+    protected $kunjunganModel;
+    protected $pengirimanDataSimrsModel;
     protected $penerimaan_ihc;
     protected $pemotongan_ihc;
     protected $pembacaan_ihc;
@@ -47,6 +51,8 @@ class ihcController extends BaseController
         $this->usersModel = new UsersModel();
         $this->patientModel = new PatientModel();
         $this->simrsModel = new SimrsModel();
+        $this->kunjunganModel = new KunjunganModel();
+        $this->pengirimanDataSimrsModel = new PengirimanDataSimrsModel();
         $this->penerimaan_ihc = new Penerimaan_ihc();;
         $this->pembacaan_ihc = new Pembacaan_ihc();
         $this->penulisan_ihc = new Penulisan_ihc();
@@ -102,55 +108,70 @@ class ihcController extends BaseController
         }
         $kodeihc = sprintf('IHC.%02d/%s', $nextNumber, $currentYear);
 
-        // Tangkap dari GET parameter
-        $register_api_raw = $this->request->getGet('register_api');
-        $register_api = json_decode($register_api_raw, true);
+        // --- Variabel awal ---
+        $idtransaksi   = $this->request->getGet('idtransaksi');
+        $normPasien    = $this->request->getGet('norm_pasien');
+        $patient       = null;
+        $riwayat_api   = [];
+        $riwayat_hpa   = [];
+        $riwayat_frs   = [];
+        $riwayat_srs   = [];
+        $riwayat_ihc   = [];
 
-        // Ambil data riwayat dari API / Manual
-        // Cek apakah data dari API tersedia
-        if (!empty($register_api) && is_array($register_api)) {
+        // --- Skenario 1: dari idtransaksi ---
+        if ($idtransaksi) {
+            $kunjungan = $this->kunjunganModel->where('idtransaksi', $idtransaksi)->first();
 
-            // Ambil norm
-            $norm = $register_api['norm'] ?? '';
+            if ($kunjungan) {
+                $id_pasien = isset($kunjungan['idpasien']) ? (int) $kunjungan['idpasien'] : null;
 
-            // Ambil riwayat dari API
-            $riwayat_api = [];
-            if ($norm !== '') {
-                $riwayat_api_response = $this->simrsModel->getPemeriksaanPasien($norm);
-                if (!empty($riwayat_api_response['code']) && $riwayat_api_response['code'] == 200) {
-                    $riwayat_api = $riwayat_api_response['data'];
+                $patient = [
+                    'id_pasien'             => $id_pasien,
+                    'norm_pasien'           => $kunjungan['norm'] ?? '',
+                    'nama_pasien'           => $kunjungan['nama'] ?? '',
+                    'alamat_pasien'         => $kunjungan['alamat'] ?? '',
+                    'kota'                  => $kunjungan['kota'] ?? '',
+                    'tanggal_lahir_pasien'  => $kunjungan['tgl_lhr'] ?? '',
+                    'jenis_kelamin_pasien'  => $kunjungan['jeniskelamin'] ?? '',
+                    'status_pasien'         => $kunjungan['jenispasien'] ?? '',
+                    'unitasal'              => $kunjungan['unitasal'] ?? '',
+                    'dokterperujuk'         => $kunjungan['dokterperujuk'] ?? '',
+                    'pemeriksaan'           => $kunjungan['pemeriksaan'] ?? '',
+                    'lokasi_spesimen'       => $kunjungan['statuslokasi'] ?? '',
+                    'diagnosa_klinik'       => $kunjungan['diagnosaklinik'] ?? '',
+                    'tindakan_spesimen'     => $kunjungan['pemeriksaan'] ?? '',
+                    'id_transaksi'          => isset($kunjungan['idtransaksi']) ? (int) $kunjungan['idtransaksi'] : null,
+                    'tanggal_transaksi'     => $kunjungan['tanggal'] ?? '',
+                    'no_register'           => $kunjungan['register'] ?? ''
+                ];
+
+                if ($id_pasien) {
+                    $riwayat_hpa = $this->hpaModel->riwayatPemeriksaanhpa($id_pasien);
+                    $riwayat_frs = $this->frsModel->riwayatPemeriksaanfrs($id_pasien);
+                    $riwayat_srs = $this->srsModel->riwayatPemeriksaansrs($id_pasien);
+                    $riwayat_ihc = $this->ihcModel->riwayatPemeriksaanihc($id_pasien);
                 }
             }
+        }
+        // --- Skenario 2: dari norm_pasien ---
+        elseif ($normPasien) {
+            $patient   = $this->patientModel->where('norm_pasien', $normPasien)->first();
+            $id_pasien = $patient['id_pasien'] ?? null;
 
-            // Map ke array $patient
-            $patient = [
-                'id_pasien'             => isset($register_api['idpasien']) ? (int) $register_api['idpasien'] : null,
-                'norm_pasien'           => $register_api['norm'] ?? '',
-                'nama_pasien'           => $register_api['nama'] ?? '',
-                'alamat_pasien'         => $register_api['alamat'] ?? '',
-                'tanggal_lahir_pasien'  => $register_api['tgl_lhr'] ?? '',
-                'jenis_kelamin_pasien'  => $register_api['jeniskelamin'] ?? '',
-                'status_pasien'         => $register_api['jenispasien'] ?? '',
-                'unitasal'              => $register_api['unitasal'] ?? '',
-                'dokterperujuk'         => $register_api['dokterperujuk'] ?? '',
-                'pemeriksaan'           => $register_api['pemeriksaan'] ?? '',
-                'id_transaksi_simrs'    => $register_api['idtransaksi'] ?? '',
-                'lokasi_spesimen'       => $register_api['statuslokasi'] ?? '',
-                'diagnosa_klinik'       => $register_api['diagnosaklinik'] ?? '',
-                'tindakan_spesimen'     => $register_api['pemeriksaan'] ?? '',
-                'id_transaksi'          => isset($register_api['idtransaksi']) ? (int) $register_api['idtransaksi'] : null,
-                'tanggal_transaksi'     => $register_api['tanggal'] ?? '',
-                'no_register'           => $register_api['register'] ?? ''
-            ];
-        } elseif ($normPasien = $this->request->getGet('norm_pasien')) {
+            if ($id_pasien) {
+                $riwayat_hpa = $this->hpaModel->riwayatPemeriksaanhpa($id_pasien);
+                $riwayat_frs = $this->frsModel->riwayatPemeriksaanfrs($id_pasien);
+                $riwayat_srs = $this->srsModel->riwayatPemeriksaansrs($id_pasien);
+                $riwayat_ihc = $this->ihcModel->riwayatPemeriksaanihc($id_pasien);
+            }
+        }
 
-            // Ambil data pasien dari DB jika norm_pasien tersedia di GET
-            $patient = $this->patientModel->where('norm_pasien', $normPasien)->first();
-            $riwayat_api = [];
-        } else {
-            // Jika tidak ada sumber data sama sekali
-            $patient = null;
-            $riwayat_api = [];
+        // --- Panggil API di semua kondisi ---
+        if (!empty($patient['norm_pasien'])) {
+            $riwayat_api_response = $this->simrsModel->getPemeriksaanPasien($patient['norm_pasien']);
+            if (!empty($riwayat_api_response['code']) && $riwayat_api_response['code'] == 200) {
+                $riwayat_api = $riwayat_api_response['data'];
+            }
         }
 
         $data = [
@@ -159,6 +180,10 @@ class ihcController extends BaseController
             'kode_ihc'      => $kodeihc,
             'patient'       => $patient,
             'riwayat_api'   => $riwayat_api,
+            'riwayat_hpa'   => $riwayat_hpa,
+            'riwayat_frs'   => $riwayat_frs,
+            'riwayat_srs'   => $riwayat_srs,
+            'riwayat_ihc'   => $riwayat_ihc,
         ];
 
         return view('ihc/Register', $data);
@@ -206,6 +231,7 @@ class ihcController extends BaseController
                 'norm_pasien'  => $norm_pasien,
                 'nama_pasien'  => $data['nama_pasien'] ?? '',
                 'alamat_pasien' => $data['alamat_pasien'] ?? '',
+                'kota' => $data['kota'] ?? '',
                 'tanggal_lahir_pasien' => $data['tanggal_lahir_pasien'] ?? null,
                 'jenis_kelamin_pasien' => $data['jenis_kelamin_pasien'] ?? '',
                 'status_pasien' => $data['status_pasien'] ?? '',
@@ -248,6 +274,25 @@ class ihcController extends BaseController
             if (!$this->ihcModel->insert($ihcData)) {
                 throw new Exception('Gagal menyimpan data ihc: ' . $this->ihcModel->errors());
             }
+            // Jika ada id_transaksi, update kunjungan
+            $idtransaksi = $data['id_transaksi'] ?? null;
+            if (!empty($idtransaksi)) {
+                // Ambil register dari idtransaksi
+                $kunjungan = $this->kunjunganModel
+                    ->select('register')
+                    ->where('idtransaksi', $idtransaksi)
+                    ->first();
+            
+                if ($kunjungan && !empty($kunjungan['register'])) {
+                    $register = $kunjungan['register'];
+            
+                    // Update semua hasil untuk register tersebut
+                    $this->kunjunganModel
+                        ->where('register', $register)
+                        ->set(['status' => 'Terdaftar'])
+                        ->update();
+                }
+            }            
             // Mendapatkan ID ihc yang baru diinsert
             $id_ihc = $this->ihcModel->getInsertID();
             // Data penerimaan
@@ -351,12 +396,29 @@ class ihcController extends BaseController
         // Ambil data ihc berdasarkan ID
         $ihc = $this->ihcModel->getihcWithRelationsProses($id_ihc);
         $id_pasien = $ihc['id_pasien'];
+        // --- Riwayat API ---
+        if (!empty($ihc['norm_pasien'])) {
+            $riwayat_api_response = $this->simrsModel->getPemeriksaanPasien($ihc['norm_pasien']);
+            if (!empty($riwayat_api_response['code']) && $riwayat_api_response['code'] == 200) {
+                $riwayat_api = $riwayat_api_response['data'];
+            }
+        }
         $riwayat_hpa = $this->hpaModel->riwayatPemeriksaanhpa($id_pasien);
         $riwayat_frs = $this->frsModel->riwayatPemeriksaanfrs($id_pasien);
         $riwayat_srs = $this->srsModel->riwayatPemeriksaansrs($id_pasien);
         $riwayat_ihc = $this->ihcModel->riwayatPemeriksaanihc($id_pasien);
         if (!$ihc) {
             return redirect()->back()->with('message', ['error' => 'ihc tidak ditemukan.']);
+        }
+        // Jika field mulai_pembacaan_frs masih kosong dan ada id_pembacaan_frs
+        if (!empty($ihc['id_pembacaan_ihc']) && empty($ihc['mulai_pembacaan_ihc'])) {
+            $this->pembacaan_ihc->update($ihc['id_pembacaan_ihc'], [
+                'mulai_pembacaan_ihc' => date('Y-m-d H:i:s'),
+                'id_user_pembacaan_ihc' => session()->get('id_user'),
+                'status_pembacaan_ihc' => 'Proses Pembacaan',
+            ]);
+            // Refresh data
+            $ihc = $this->ihcModel->getihcWithRelationsProses($id_ihc);
         }
         // Ambil data pemotongan dan pembacaan_ihc berdasarkan ID
         $id_pembacaan_ihc = $ihc['id_pembacaan_ihc'];
@@ -367,6 +429,7 @@ class ihcController extends BaseController
         // Persiapkan data yang akan dikirim ke view
         $data = [
             'ihc'             => $ihc,
+            'riwayat_api'   => $riwayat_api ?? [],
             'riwayat_hpa'        => $riwayat_hpa,
             'riwayat_frs'        => $riwayat_frs,
             'riwayat_srs'        => $riwayat_srs,
@@ -388,6 +451,17 @@ class ihcController extends BaseController
         if (!$ihc) {
             return redirect()->back()->with('message', ['error' => 'ihc tidak ditemukan.']);
         }
+        // Jika field mulai_penulisan_ihc masih kosong dan ada id_penulisan_ihc
+        if (!empty($ihc['id_penulisan_ihc']) && empty($ihc['mulai_penulisan_ihc'])) {
+            $this->penulisan_ihc->update($ihc['id_penulisan_ihc'], [
+                'mulai_penulisan_ihc' => date('Y-m-d H:i:s'),
+                'id_user_penulisan_ihc' => session()->get('id_user'),
+                'status_penulisan_ihc' => 'Proses Penulisan',
+            ]);
+
+            // Refresh data
+            $ihc = $this->ihcModel->getihcWithRelationsProses($id_ihc);
+        }
         // Inisialisasi array untuk pembacaan dan penulisan ihc
         $pembacaan_ihc = [];
         $penulisan_ihc = [];
@@ -408,6 +482,13 @@ class ihcController extends BaseController
         }
         // Ambil daftar user dengan status "Dokter"
         $users = $this->usersModel->where('status_user', 'Dokter')->findAll();
+        // --- Riwayat API ---
+        if (!empty($ihc['norm_pasien'])) {
+            $riwayat_api_response = $this->simrsModel->getPemeriksaanPasien($ihc['norm_pasien']);
+            if (!empty($riwayat_api_response['code']) && $riwayat_api_response['code'] == 200) {
+                $riwayat_api = $riwayat_api_response['data'];
+            }
+        }
         $riwayat_hpa = $this->hpaModel->riwayatPemeriksaanhpa($id_pasien);
         $riwayat_frs = $this->frsModel->riwayatPemeriksaanfrs($id_pasien);
         $riwayat_srs = $this->srsModel->riwayatPemeriksaansrs($id_pasien);
@@ -417,6 +498,7 @@ class ihcController extends BaseController
             'id_user' => session()->get('id_user'),
             'nama_user' => session()->get('nama_user'),
             'ihc' => $ihc,
+            'riwayat_api'   => $riwayat_api ?? [],
             'riwayat_hpa'        => $riwayat_hpa,
             'riwayat_frs'        => $riwayat_frs,
             'riwayat_srs'        => $riwayat_srs,
@@ -432,11 +514,60 @@ class ihcController extends BaseController
     public function edit_print($id_ihc)
     {
         // Ambil data ihc berdasarkan ID
-        $ihc = $this->ihcModel->getihcWithRelationsProses($id_ihc);
-        // Ambil data pembacaan IHC jika tersedia
+        $ihc = $this->ihcModel->getIhcWithRelationsProses($id_ihc);
+        $id_pasien = $ihc['id_pasien'];
+        // --- Riwayat API ---
+        if (!empty($ihc['norm_pasien'])) {
+            $riwayat_api_response = $this->simrsModel->getPemeriksaanPasien($ihc['norm_pasien']);
+            if (!empty($riwayat_api_response['code']) && $riwayat_api_response['code'] == 200) {
+                $riwayat_api = $riwayat_api_response['data'];
+            }
+        }
+        $riwayat_hpa = $this->hpaModel->riwayatPemeriksaanhpa($id_pasien);
+        $riwayat_frs = $this->frsModel->riwayatPemeriksaanfrs($id_pasien);
+        $riwayat_srs = $this->srsModel->riwayatPemeriksaansrs($id_pasien);
+        $riwayat_ihc = $this->ihcModel->riwayatPemeriksaanihc($id_pasien);
+
+        // Jika field mulai_pemverifikasi_ihc masih kosong dan ada id_pemverifikasi_ihc
+        if (!empty($ihc['id_pemverifikasi_ihc']) && empty($ihc['mulai_pemverifikasi_ihc'])) {
+            $this->pemverifikasi_ihc->update($ihc['id_pemverifikasi_ihc'], [
+                'mulai_pemverifikasi_ihc' => date('Y-m-d H:i:s'),
+                'id_user_pemverifikasi_ihc' => session()->get('id_user'),
+                'status_pemverifikasi_ihc' => 'Proses Pemverifikasi',
+            ]);
+
+            // Refresh data
+            $ihc = $this->ihcModel->getIhcWithRelationsProses($id_ihc);
+        }
+
+        // Jika field mulai_authorized_ihc masih kosong dan ada id_authorized_ihc
+        if (!empty($ihc['id_authorized_ihc']) && empty($ihc['mulai_authorized_ihc'])) {
+            $this->authorized_ihc->update($ihc['id_authorized_ihc'], [
+                'mulai_authorized_ihc' => date('Y-m-d H:i:s'),
+                'id_user_authorized_ihc' => session()->get('id_user'),
+                'status_authorized_ihc' => 'Proses Authorized',
+            ]);
+
+            // Refresh data
+            $ihc = $this->ihcModel->getIhcWithRelationsProses($id_ihc);
+        }
+
+        // Jika field mulai_pencetakan_ihc masih kosong dan ada id_pencetakan_ihc
+        if (!empty($ihc['id_pencetakan_ihc']) && empty($ihc['mulai_pencetakan_ihc'])) {
+            $this->pencetakan_ihc->update($ihc['id_pencetakan_ihc'], [
+                'mulai_pencetakan_ihc' => date('Y-m-d H:i:s'),
+                'id_user_pencetakan_ihc' => session()->get('id_user'),
+                'status_pencetakan_ihc' => 'Proses Pencetakan',
+            ]);
+
+            // Refresh data
+            $ihc = $this->ihcModel->getIhcWithRelationsProses($id_ihc);
+        }
+
+        // Ambil data pembacaan ihc jika tersedia
+        $pembacaan_ihc = [];
         if (!empty($ihc['id_pembacaan_ihc'])) {
             $pembacaan_ihc = $this->pembacaan_ihc->find($ihc['id_pembacaan_ihc']) ?? [];
-            // Ambil nama dokter dari pembacaan jika tersedia
             if (!empty($pembacaan_ihc['id_user_dokter_pembacaan_ihc'])) {
                 $dokter = $this->usersModel->find($pembacaan_ihc['id_user_dokter_pembacaan_ihc']);
                 $pembacaan_ihc['dokter_nama'] = $dokter ? $dokter['nama_user'] : null;
@@ -444,10 +575,16 @@ class ihcController extends BaseController
                 $pembacaan_ihc['dokter_nama'] = null;
             }
         }
+
         $data = [
             'id_user' => session()->get('id_user'),
             'nama_user' => session()->get('nama_user'),
             'ihc' => $ihc,
+            'riwayat_api'   => $riwayat_api ?? [],
+            'riwayat_hpa'        => $riwayat_hpa,
+            'riwayat_frs'        => $riwayat_frs,
+            'riwayat_srs'        => $riwayat_srs,
+            'riwayat_ihc'        => $riwayat_ihc,
             'pembacaan_ihc' => $pembacaan_ihc,
         ];
 
@@ -665,16 +802,112 @@ class ihcController extends BaseController
             ]);
             return redirect()->to('pemverifikasi_ihc/index')->with('success', 'Data berhasil diverifikasi.');
         }
-        if ($redirect === 'index_authorized_ihc' && isset($_POST['id_authorized_ihc'])) {
-            $id_authorized_ihc = $this->request->getPost('id_authorized_ihc');
-            $this->authorized_ihc->update($id_authorized_ihc, [
-                'id_user_authorized_ihc' => $id_user,
+
+        if ($redirect === 'index_authorized_ihc' && isset($data['id_authorized_ihc'])) {
+            $id_authorized_ihc = $data['id_authorized_ihc'];
+            $selesaiAuthorized = date('Y-m-d H:i:s'); // gunakan untuk diambil & responsetime
+        
+            // --- UPDATE AUTHORIZED ihc ---
+            $updateData = [
+                'id_user_authorized_ihc'        => $id_user,
                 'id_user_dokter_authorized_ihc' => $id_user,
-                'status_authorized_ihc' => 'Selesai Authorized',
-                'selesai_authorized_ihc' => date('Y-m-d H:i:s'),
-            ]);
-            return redirect()->to('authorized_ihc/index')->with('success', 'Data berhasil diauthorized.');
-        }
+                'status_authorized_ihc'         => 'Selesai Authorized',
+                'selesai_authorized_ihc'        => $selesaiAuthorized,
+            ];
+        
+            $update = $this->authorized_ihc->update($id_authorized_ihc, $updateData);
+        
+            if (! $update) {
+                log_message('error', '[AUTHORIZED ihc] Update gagal untuk ID: ' . $id_authorized_ihc 
+                    . ' | Errors: ' . json_encode($this->authorized_ihc->errors()));
+            } else {
+                log_message('debug', '[AUTHORIZED ihc] Update BERHASIL untuk ID: ' . $id_authorized_ihc);
+            }
+        
+            // Ambil data hasil terbaru ihc setelah update
+            $ihcTerbaru = $this->ihcModel->find($id_ihc);
+        
+            // --- HITUNG RESPONSETIME ---
+            $responsetime = null;
+            if (!empty($data['periksa'])) {
+                $start = new \DateTime($data['periksa']);
+                $end   = new \DateTime($selesaiAuthorized);
+                $diff  = $start->diff($end);
+                $responsetime = sprintf(
+                    "%d hari %d jam %d menit %d detik",
+                    $diff->days,
+                    $diff->h,
+                    $diff->i,
+                    $diff->s
+                );
+            }
+        
+            // --- TENTUKAN ID DOKTER PA ---
+            $iddokterpa = null;
+            if (!empty($data['dokterpa'])) {
+                if ($data['dokterpa'] === "dr. Vinna Chrisdianti, Sp.PA") {
+                    $iddokterpa = 1179;
+                } elseif ($data['dokterpa'] === "dr. Ayu Tyasmara Pratiwi, Sp.PA") {
+                    $iddokterpa = 328;
+                }
+            }
+        
+            // --- PERSIAPAN PAYLOAD ---
+            $payload = [
+                'idtransaksi'      => $data['idtransaksi'] ?? null,
+                'tanggal'          => $data['tanggal'] ?? null,
+                'register'         => $data['register'] ?? null,
+                'pemeriksaan'      => $data['pemeriksaan'] ?? null,
+                'idpasien'         => $data['idpasien'] ?? null,
+                'norm'             => $data['norm'] ?? null,
+                'nama'             => $data['nama'] ?? null,
+                'noregister'       => $data['noregister'] ?? null,
+                'datang'           => $data['datang'] ?? null,
+                'periksa'          => $data['periksa'] ?? null,
+                'selesai'          => $data['selesai'] ?? null,
+                'diambil'          => $selesaiAuthorized,
+                'iddokterpa'       => $iddokterpa,
+                'dokterpa'         => $data['dokterpa'] ?? null,
+                'statuslokasi'     => $data['statuslokasi'] ?? null,
+                'diagnosaklinik'   => $data['diagnosaklinik'] ?? null,
+                'diagnosapatologi' => $data['diagnosapatologi'] ?? null,
+                'mutusediaan'      => $data['mutusediaan'] ?? null,
+                'responsetime'     => $responsetime,
+                'hasil'            => $ihcTerbaru['print_ihc'] ?? null,
+                'status'           => !empty($data['idtransaksi']) ? ($data['status'] ?? 'Belum Terkirim') : 'Belum Terdaftar',
+                'updated_at'       => date('Y-m-d H:i:s'),
+            ];
+        
+            log_message('debug', '[PENGIRIMAN SIMRS] Payload siap dikirim: ' . json_encode($payload, JSON_PRETTY_PRINT));
+        
+            try {
+                $client = \Config\Services::curlrequest();
+                $response = $client->post(
+                    'http://172.20.29.240/apibdrs/apibdrs/postPemeriksaan',
+                    [
+                        'headers' => ['Content-Type' => 'application/json'],
+                        'body'    => json_encode($payload)
+                    ]
+                );
+        
+                $responseBody = $response->getBody();
+                log_message('info', '[PENGIRIMAN SIMRS] Response: ' . $responseBody);
+        
+                // simpan ke flashdata agar bisa dicek di halaman redirect
+                session()->setFlashdata('simrs_payload', json_encode($payload));
+                session()->setFlashdata('simrs_response', $responseBody);
+        
+            } catch (\Exception $e) {
+                $errorMessage = $e->getMessage();
+                log_message('error', '[PENGIRIMAN SIMRS] Gagal kirim: ' . $errorMessage);
+        
+                session()->setFlashdata('simrs_error', $errorMessage);
+            }
+        
+            return redirect()->to('authorized_ihc/index')
+                ->with('success', session()->getFlashdata('success') ?? 'Data berhasil diauthorized.');
+        }        
+
         if ($redirect === 'index_pencetakan_ihc' && isset($_POST['id_pencetakan_ihc'])) {
             $id_pencetakan_ihc = $this->request->getPost('id_pencetakan_ihc');
             $this->pencetakan_ihc->update($id_pencetakan_ihc, [
@@ -847,7 +1080,7 @@ class ihcController extends BaseController
             'nama_user'  => session()->get('nama_user'),
             'ihcData' => $ihcData,
         ];
-
+        
         return view('ihc/laporan/laporan_pemeriksaan', $data);
     }
 

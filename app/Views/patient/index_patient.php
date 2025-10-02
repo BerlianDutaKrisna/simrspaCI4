@@ -25,6 +25,7 @@
                         <th>Jenis Kelamin</th>
                         <th>Tanggal Lahir</th>
                         <th>Alamat</th>
+                        <th>Kota</th>
                         <th>Status Pasien</th>
                         <th class="text-center" style="width: 150px;">Aksi</th>
                     </tr>
@@ -53,6 +54,15 @@
                                         echo 'Belum diisi';
                                     } else {
                                         echo esc($row['alamat_pasien']);
+                                    }
+                                    ?>
+                                </td>
+                                <td>
+                                    <?php
+                                    if (empty($row['kota'])) {
+                                        echo 'Belum diisi';
+                                    } else {
+                                        echo esc($row['kota']);
                                     }
                                     ?>
                                 </td>

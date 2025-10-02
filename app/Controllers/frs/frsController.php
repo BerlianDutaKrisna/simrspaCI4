@@ -10,6 +10,8 @@ use App\Models\Ihc\IhcModel;
 use App\Models\UsersModel;
 use App\Models\PatientModel;
 use App\Models\SimrsModel;
+use App\Models\KunjunganModel;
+use App\Models\PengirimanDataSimrsModel;
 use App\Models\Frs\Proses\Penerimaan_frs;
 use App\Models\Frs\Proses\Pembacaan_frs;
 use App\Models\Frs\Proses\Penulisan_frs;
@@ -29,6 +31,8 @@ class FrsController extends BaseController
     protected $usersModel;
     protected $patientModel;
     protected $simrsModel;
+    protected $kunjunganModel;
+    protected $pengirimanDataSimrsModel;
     protected $penerimaan_frs;
     protected $pemotongan_frs;
     protected $pembacaan_frs;
@@ -48,6 +52,8 @@ class FrsController extends BaseController
         $this->usersModel = new UsersModel();
         $this->patientModel = new PatientModel();
         $this->simrsModel = new SimrsModel();
+        $this->kunjunganModel = new KunjunganModel();
+        $this->pengirimanDataSimrsModel = new PengirimanDataSimrsModel();
         $this->penerimaan_frs = new Penerimaan_frs();;
         $this->pembacaan_frs = new Pembacaan_frs();
         $this->penulisan_frs = new Penulisan_frs();
@@ -103,55 +109,70 @@ class FrsController extends BaseController
         }
         $kodefrs = sprintf('FRS.%02d/%s', $nextNumber, $currentYear);
 
-        // Tangkap dari GET parameter
-        $register_api_raw = $this->request->getGet('register_api');
-        $register_api = json_decode($register_api_raw, true);
+        // --- Variabel awal ---
+        $idtransaksi   = $this->request->getGet('idtransaksi');
+        $normPasien    = $this->request->getGet('norm_pasien');
+        $patient       = null;
+        $riwayat_api   = [];
+        $riwayat_hpa   = [];
+        $riwayat_frs   = [];
+        $riwayat_srs   = [];
+        $riwayat_ihc   = [];
 
-        // Ambil data riwayat dari API / Manual
-        // Cek apakah data dari API tersedia
-        if (!empty($register_api) && is_array($register_api)) {
+        // --- Skenario 1: dari idtransaksi ---
+        if ($idtransaksi) {
+            $kunjungan = $this->kunjunganModel->where('idtransaksi', $idtransaksi)->first();
 
-            // Ambil norm
-            $norm = $register_api['norm'] ?? '';
+            if ($kunjungan) {
+                $id_pasien = isset($kunjungan['idpasien']) ? (int) $kunjungan['idpasien'] : null;
 
-            // Ambil riwayat dari API
-            $riwayat_api = [];
-            if ($norm !== '') {
-                $riwayat_api_response = $this->simrsModel->getPemeriksaanPasien($norm);
-                if (!empty($riwayat_api_response['code']) && $riwayat_api_response['code'] == 200) {
-                    $riwayat_api = $riwayat_api_response['data'];
+                $patient = [
+                    'id_pasien'             => $id_pasien,
+                    'norm_pasien'           => $kunjungan['norm'] ?? '',
+                    'nama_pasien'           => $kunjungan['nama'] ?? '',
+                    'alamat_pasien'         => $kunjungan['alamat'] ?? '',
+                    'kota'                  => $kunjungan['kota'] ?? '',
+                    'tanggal_lahir_pasien'  => $kunjungan['tgl_lhr'] ?? '',
+                    'jenis_kelamin_pasien'  => $kunjungan['jeniskelamin'] ?? '',
+                    'status_pasien'         => $kunjungan['jenispasien'] ?? '',
+                    'unitasal'              => $kunjungan['unitasal'] ?? '',
+                    'dokterperujuk'         => $kunjungan['dokterperujuk'] ?? '',
+                    'pemeriksaan'           => $kunjungan['pemeriksaan'] ?? '',
+                    'lokasi_spesimen'       => $kunjungan['statuslokasi'] ?? '',
+                    'diagnosa_klinik'       => $kunjungan['diagnosaklinik'] ?? '',
+                    'tindakan_spesimen'     => $kunjungan['pemeriksaan'] ?? '',
+                    'id_transaksi'          => isset($kunjungan['idtransaksi']) ? (int) $kunjungan['idtransaksi'] : null,
+                    'tanggal_transaksi'     => $kunjungan['tanggal'] ?? '',
+                    'no_register'           => $kunjungan['register'] ?? ''
+                ];
+
+                if ($id_pasien) {
+                    $riwayat_hpa = $this->hpaModel->riwayatPemeriksaanhpa($id_pasien);
+                    $riwayat_frs = $this->frsModel->riwayatPemeriksaanfrs($id_pasien);
+                    $riwayat_srs = $this->srsModel->riwayatPemeriksaansrs($id_pasien);
+                    $riwayat_ihc = $this->ihcModel->riwayatPemeriksaanihc($id_pasien);
                 }
             }
+        }
+        // --- Skenario 2: dari norm_pasien ---
+        elseif ($normPasien) {
+            $patient   = $this->patientModel->where('norm_pasien', $normPasien)->first();
+            $id_pasien = $patient['id_pasien'] ?? null;
 
-            // Map ke array $patient
-            $patient = [
-                'id_pasien'             => isset($register_api['idpasien']) ? (int) $register_api['idpasien'] : null,
-                'norm_pasien'           => $register_api['norm'] ?? '',
-                'nama_pasien'           => $register_api['nama'] ?? '',
-                'alamat_pasien'         => $register_api['alamat'] ?? '',
-                'tanggal_lahir_pasien'  => $register_api['tgl_lhr'] ?? '',
-                'jenis_kelamin_pasien'  => $register_api['jeniskelamin'] ?? '',
-                'status_pasien'         => $register_api['jenispasien'] ?? '',
-                'unitasal'              => $register_api['unitasal'] ?? '',
-                'dokterperujuk'         => $register_api['dokterperujuk'] ?? '',
-                'pemeriksaan'           => $register_api['pemeriksaan'] ?? '',
-                'id_transaksi_simrs'    => $register_api['idtransaksi'] ?? '',
-                'lokasi_spesimen'       => $register_api['statuslokasi'] ?? '',
-                'diagnosa_klinik'       => $register_api['diagnosaklinik'] ?? '',
-                'tindakan_spesimen'     => $register_api['pemeriksaan'] ?? '',
-                'id_transaksi'          => isset($register_api['idtransaksi']) ? (int) $register_api['idtransaksi'] : null,
-                'tanggal_transaksi'     => $register_api['tanggal'] ?? '',
-                'no_register'           => $register_api['register'] ?? ''
-            ];
-        } elseif ($normPasien = $this->request->getGet('norm_pasien')) {
+            if ($id_pasien) {
+                $riwayat_hpa = $this->hpaModel->riwayatPemeriksaanhpa($id_pasien);
+                $riwayat_frs = $this->frsModel->riwayatPemeriksaanfrs($id_pasien);
+                $riwayat_srs = $this->srsModel->riwayatPemeriksaansrs($id_pasien);
+                $riwayat_ihc = $this->ihcModel->riwayatPemeriksaanihc($id_pasien);
+            }
+        }
 
-            // Ambil data pasien dari DB jika norm_pasien tersedia di GET
-            $patient = $this->patientModel->where('norm_pasien', $normPasien)->first();
-            $riwayat_api = [];
-        } else {
-            // Jika tidak ada sumber data sama sekali
-            $patient = null;
-            $riwayat_api = [];
+        // --- Panggil API di semua kondisi ---
+        if (!empty($patient['norm_pasien'])) {
+            $riwayat_api_response = $this->simrsModel->getPemeriksaanPasien($patient['norm_pasien']);
+            if (!empty($riwayat_api_response['code']) && $riwayat_api_response['code'] == 200) {
+                $riwayat_api = $riwayat_api_response['data'];
+            }
         }
 
         $data = [
@@ -160,8 +181,12 @@ class FrsController extends BaseController
             'kode_frs'      => $kodefrs,
             'patient'       => $patient,
             'riwayat_api'   => $riwayat_api,
+            'riwayat_hpa'   => $riwayat_hpa,
+            'riwayat_frs'   => $riwayat_frs,
+            'riwayat_srs'   => $riwayat_srs,
+            'riwayat_ihc'   => $riwayat_ihc,
         ];
-        
+
         return view('frs/Register', $data);
     }
 
@@ -180,7 +205,7 @@ class FrsController extends BaseController
             ]);
             // Jalankan validasi
             $data = $this->request->getPost();
-            
+
             if (!$this->validation->run($data)) {
                 return redirect()->back()->withInput()->with('error', $this->validation->getErrors());
             }
@@ -208,6 +233,7 @@ class FrsController extends BaseController
                 'norm_pasien'  => $norm_pasien,
                 'nama_pasien'  => $data['nama_pasien'] ?? '',
                 'alamat_pasien' => $data['alamat_pasien'] ?? '',
+                'kota' => $data['kota'] ?? '',
                 'tanggal_lahir_pasien' => $data['tanggal_lahir_pasien'] ?? null,
                 'jenis_kelamin_pasien' => $data['jenis_kelamin_pasien'] ?? '',
                 'status_pasien' => $data['status_pasien'] ?? '',
@@ -241,10 +267,29 @@ class FrsController extends BaseController
                 'no_register' => $data['no_register'] ?? '',
                 'status_frs' => 'Penerimaan',
             ];
-            
+
             // Simpan data frs
             if (!$this->frsModel->insert($frsData)) {
                 throw new Exception('Gagal menyimpan data frs: ' . $this->frsModel->errors());
+            }
+            // Jika ada id_transaksi, update kunjungan
+            $idtransaksi = $data['id_transaksi'] ?? null;
+            if (!empty($idtransaksi)) {
+                // Ambil register dari idtransaksi
+                $kunjungan = $this->kunjunganModel
+                    ->select('register')
+                    ->where('idtransaksi', $idtransaksi)
+                    ->first();
+
+                if ($kunjungan && !empty($kunjungan['register'])) {
+                    $register = $kunjungan['register'];
+
+                    // Update semua hasil untuk register tersebut
+                    $this->kunjunganModel
+                        ->where('register', $register)
+                        ->set(['status' => 'Terdaftar'])
+                        ->update();
+                }
             }
             // Mendapatkan ID frs yang baru diinsert
             $id_frs = $this->frsModel->getInsertID();
@@ -342,6 +387,13 @@ class FrsController extends BaseController
         // Ambil data frs berdasarkan ID
         $frs = $this->frsModel->getfrsWithRelationsProses($id_frs);
         $id_pasien = $frs['id_pasien'];
+        // --- Riwayat API ---
+        if (!empty($frs['norm_pasien'])) {
+            $riwayat_api_response = $this->simrsModel->getPemeriksaanPasien($frs['norm_pasien']);
+            if (!empty($riwayat_api_response['code']) && $riwayat_api_response['code'] == 200) {
+                $riwayat_api = $riwayat_api_response['data'];
+            }
+        }
         $riwayat_hpa = $this->hpaModel->riwayatPemeriksaanhpa($id_pasien);
         $riwayat_frs = $this->frsModel->riwayatPemeriksaanfrs($id_pasien);
         $riwayat_srs = $this->srsModel->riwayatPemeriksaansrs($id_pasien);
@@ -349,6 +401,17 @@ class FrsController extends BaseController
         if (!$frs) {
             return redirect()->back()->with('message', ['error' => 'frs tidak ditemukan.']);
         }
+        // Jika field mulai_penerimaan_frs masih kosong dan ada id_penerimaan_frs
+        if (!empty($frs['id_penerimaan_frs']) && empty($frs['mulai_penerimaan_frs'])) {
+            $this->penerimaan_frs->update($frs['id_penerimaan_frs'], [
+                'mulai_penerimaan_frs' => date('Y-m-d H:i:s'),
+                'id_user_penerimaan_frs'  => $this->session->get('id_user'),
+                'status_penerimaan_frs' => 'Proses Penerimaan',
+            ]);
+            // Refresh data
+            $frs = $this->frsModel->getfrsWithRelationsProses($id_frs);
+        }
+        // Ambil data penerimaan berdasarkan ID
         $id_penerimaan_frs = $frs['id_penerimaan_frs'];
         // Ambil data penerimaan berdasarkan id_penerimaan_frs
         $penerimaan = $this->penerimaan_frs->find($id_penerimaan_frs);
@@ -357,6 +420,7 @@ class FrsController extends BaseController
         // Persiapkan data yang akan dikirim ke view
         $data = [
             'frs'        => $frs,
+            'riwayat_api'   => $riwayat_api ?? [],
             'riwayat_hpa'        => $riwayat_hpa,
             'riwayat_frs'        => $riwayat_frs,
             'riwayat_srs'        => $riwayat_srs,
@@ -376,12 +440,29 @@ class FrsController extends BaseController
         // Ambil data frs berdasarkan ID
         $frs = $this->frsModel->getfrsWithRelationsProses($id_frs);
         $id_pasien = $frs['id_pasien'];
+        // --- Riwayat API ---
+        if (!empty($frs['norm_pasien'])) {
+            $riwayat_api_response = $this->simrsModel->getPemeriksaanPasien($frs['norm_pasien']);
+            if (!empty($riwayat_api_response['code']) && $riwayat_api_response['code'] == 200) {
+                $riwayat_api = $riwayat_api_response['data'];
+            }
+        }
         $riwayat_hpa = $this->hpaModel->riwayatPemeriksaanhpa($id_pasien);
         $riwayat_frs = $this->frsModel->riwayatPemeriksaanfrs($id_pasien);
         $riwayat_srs = $this->srsModel->riwayatPemeriksaansrs($id_pasien);
         $riwayat_ihc = $this->ihcModel->riwayatPemeriksaanihc($id_pasien);
         if (!$frs) {
             return redirect()->back()->with('message', ['error' => 'frs tidak ditemukan.']);
+        }
+        // Jika field mulai_pembacaan_frs masih kosong dan ada id_pembacaan_frs
+        if (!empty($frs['id_pembacaan_frs']) && empty($frs['mulai_pembacaan_frs'])) {
+            $this->pembacaan_frs->update($frs['id_pembacaan_frs'], [
+                'mulai_pembacaan_frs' => date('Y-m-d H:i:s'),
+                'id_user_pembacaan_frs'  => $this->session->get('id_user'),
+                'status_pembacaan_frs' => 'Proses Pembacaan',
+            ]);
+            // Refresh data
+            $frs = $this->frsModel->getfrsWithRelationsProses($id_frs);
         }
         // Ambil data pemotongan dan pembacaan_frs berdasarkan ID
         $id_pembacaan_frs = $frs['id_pembacaan_frs'];
@@ -392,6 +473,7 @@ class FrsController extends BaseController
         // Persiapkan data yang akan dikirim ke view
         $data = [
             'frs'             => $frs,
+            'riwayat_api'   => $riwayat_api ?? [],
             'riwayat_hpa'        => $riwayat_hpa,
             'riwayat_frs'        => $riwayat_frs,
             'riwayat_srs'        => $riwayat_srs,
@@ -413,6 +495,17 @@ class FrsController extends BaseController
         if (!$frs) {
             return redirect()->back()->with('message', ['error' => 'frs tidak ditemukan.']);
         }
+        // Jika field mulai_penulisan_frs masih kosong dan ada id_penulisan_frs
+        if (!empty($frs['id_penulisan_frs']) && empty($frs['mulai_penulisan_frs'])) {
+            $this->penulisan_frs->update($frs['id_penulisan_frs'], [
+                'mulai_penulisan_frs' => date('Y-m-d H:i:s'),
+                'id_user_penulisan_frs'  => $this->session->get('id_user'),
+                'status_penulisan_frs' => 'Proses Penulisan',
+            ]);
+
+            // Refresh data
+            $frs = $this->frsModel->getfrsWithRelationsProses($id_frs);
+        }
         // Inisialisasi array untuk pembacaan dan penulisan frs
         $pembacaan_frs = [];
         $penulisan_frs = [];
@@ -433,6 +526,13 @@ class FrsController extends BaseController
         }
         // Ambil daftar user dengan status "Dokter"
         $users = $this->usersModel->where('status_user', 'Dokter')->findAll();
+        // --- Riwayat API ---
+        if (!empty($frs['norm_pasien'])) {
+            $riwayat_api_response = $this->simrsModel->getPemeriksaanPasien($frs['norm_pasien']);
+            if (!empty($riwayat_api_response['code']) && $riwayat_api_response['code'] == 200) {
+                $riwayat_api = $riwayat_api_response['data'];
+            }
+        }
         $riwayat_hpa = $this->hpaModel->riwayatPemeriksaanhpa($id_pasien);
         $riwayat_frs = $this->frsModel->riwayatPemeriksaanfrs($id_pasien);
         $riwayat_srs = $this->srsModel->riwayatPemeriksaansrs($id_pasien);
@@ -442,6 +542,7 @@ class FrsController extends BaseController
             'id_user' => session()->get('id_user'),
             'nama_user' => session()->get('nama_user'),
             'frs' => $frs,
+            'riwayat_api'   => $riwayat_api ?? [],
             'riwayat_hpa'        => $riwayat_hpa,
             'riwayat_frs'        => $riwayat_frs,
             'riwayat_srs'        => $riwayat_srs,
@@ -457,11 +558,59 @@ class FrsController extends BaseController
     public function edit_print($id_frs)
     {
         // Ambil data frs berdasarkan ID
-        $frs = $this->frsModel->getfrsWithRelationsProses($id_frs);
-        // Ambil data pembacaan FRS jika tersedia
+        $frs = $this->frsModel->getFrsWithRelationsProses($id_frs);
+        $id_pasien = $frs['id_pasien'];
+        if (!empty($frs['norm_pasien'])) {
+            $riwayat_api_response = $this->simrsModel->getPemeriksaanPasien($frs['norm_pasien']);
+            if (!empty($riwayat_api_response['code']) && $riwayat_api_response['code'] == 200) {
+                $riwayat_api = $riwayat_api_response['data'];
+            }
+        }
+        $riwayat_hpa = $this->hpaModel->riwayatPemeriksaanhpa($id_pasien);
+        $riwayat_frs = $this->frsModel->riwayatPemeriksaanfrs($id_pasien);
+        $riwayat_srs = $this->srsModel->riwayatPemeriksaansrs($id_pasien);
+        $riwayat_ihc = $this->ihcModel->riwayatPemeriksaanihc($id_pasien);
+
+        // Jika field mulai_pemverifikasi_frs masih kosong dan ada id_pemverifikasi_frs
+        if (!empty($frs['id_pemverifikasi_frs']) && empty($frs['mulai_pemverifikasi_frs'])) {
+            $this->pemverifikasi_frs->update($frs['id_pemverifikasi_frs'], [
+                'mulai_pemverifikasi_frs' => date('Y-m-d H:i:s'),
+                'id_user_pemverifikasi_frs'  => $this->session->get('id_user'),
+                'status_pemverifikasi_frs' => 'Proses Pemverifikasi',
+            ]);
+
+            // Refresh data
+            $frs = $this->frsModel->getFrsWithRelationsProses($id_frs);
+        }
+
+        // Jika field mulai_authorized_frs masih kosong dan ada id_authorized_frs
+        if (!empty($frs['id_authorized_frs']) && empty($frs['mulai_authorized_frs'])) {
+            $this->authorized_frs->update($frs['id_authorized_frs'], [
+                'mulai_authorized_frs' => date('Y-m-d H:i:s'),
+                'id_user_authorized_frs'  => $this->session->get('id_user'),
+                'status_authorized_frs' => 'Proses Authorized',
+            ]);
+
+            // Refresh data
+            $frs = $this->frsModel->getFrsWithRelationsProses($id_frs);
+        }
+
+        // Jika field mulai_pencetakan_frs masih kosong dan ada id_pencetakan_frs
+        if (!empty($frs['id_pencetakan_frs']) && empty($frs['mulai_pencetakan_frs'])) {
+            $this->pencetakan_frs->update($frs['id_pencetakan_frs'], [
+                'mulai_pencetakan_frs' => date('Y-m-d H:i:s'),
+                'id_user_pencetakan_frs'  => $this->session->get('id_user'),
+                'status_pencetakan_frs' => 'Proses Pencetakan',
+            ]);
+
+            // Refresh data
+            $frs = $this->frsModel->getFrsWithRelationsProses($id_frs);
+        }
+
+        // Ambil data pembacaan frs jika tersedia
+        $pembacaan_frs = [];
         if (!empty($frs['id_pembacaan_frs'])) {
             $pembacaan_frs = $this->pembacaan_frs->find($frs['id_pembacaan_frs']) ?? [];
-            // Ambil nama dokter dari pembacaan jika tersedia
             if (!empty($pembacaan_frs['id_user_dokter_pembacaan_frs'])) {
                 $dokter = $this->usersModel->find($pembacaan_frs['id_user_dokter_pembacaan_frs']);
                 $pembacaan_frs['dokter_nama'] = $dokter ? $dokter['nama_user'] : null;
@@ -469,13 +618,19 @@ class FrsController extends BaseController
                 $pembacaan_frs['dokter_nama'] = null;
             }
         }
+
         $data = [
             'id_user' => session()->get('id_user'),
             'nama_user' => session()->get('nama_user'),
             'frs' => $frs,
+            'riwayat_api'   => $riwayat_api ?? [],
+            'riwayat_hpa'        => $riwayat_hpa,
+            'riwayat_frs'        => $riwayat_frs,
+            'riwayat_srs'        => $riwayat_srs,
+            'riwayat_ihc'        => $riwayat_ihc,
             'pembacaan_frs' => $pembacaan_frs,
         ];
-
+        
         return view('frs/edit_print', $data);
     }
 
@@ -508,12 +663,6 @@ class FrsController extends BaseController
         // Mengambil data dari form
         $data = $this->request->getPost();
         $page_source = $this->request->getPost('page_source');
-        // Mengubah 'jumlah_slide' jika memilih 'lainnya'
-        if ($this->request->getPost('jumlah_slide') === 'lainnya') {
-            $data['jumlah_slide'] = $this->request->getPost('jumlah_slide') === 'lainnya'
-                ? $this->request->getPost('jumlah_slide_custom')
-                : $this->request->getPost('jumlah_slide');
-        }
         // Proses update tabel frs
         if ($this->frsModel->update($id_frs, $data)) {
             // Update data pembacaan jika id_user_dokter_pembacaan_frs ada
@@ -665,10 +814,18 @@ class FrsController extends BaseController
         if (!$id_frs) {
             return redirect()->back()->with('error', 'Terjadi kesalahan: ID frs tidak ditemukan.');
         }
-        // Mengambil data dari POST dan melakukan update
+        // Ambil semua data POST
         $data = $this->request->getPost();
-        $this->frsModel->update($id_frs, $data);
-        $redirect = $this->request->getPost('redirect');
+
+        // Simpan nilai redirect lalu hapus dari array $data (biar tidak ikut update frs)
+        $redirect = $data['redirect'] ?? null;
+        unset($data['redirect']);
+
+        // Jika masih ada sisa field lain selain redirect → update ke frs
+        if (!empty($data)) {
+            $this->frsModel->update($id_frs, $data);
+        }
+
         if (!$redirect) {
             return redirect()->back()->with('error', 'Terjadi kesalahan: Halaman asal tidak ditemukan.');
         }
@@ -692,16 +849,112 @@ class FrsController extends BaseController
             ]);
             return redirect()->to('pemverifikasi_frs/index')->with('success', 'Data berhasil diverifikasi.');
         }
-        if ($redirect === 'index_authorized_frs' && isset($_POST['id_authorized_frs'])) {
-            $id_authorized_frs = $this->request->getPost('id_authorized_frs');
-            $this->authorized_frs->update($id_authorized_frs, [
-                'id_user_authorized_frs' => $id_user,
+        
+        if ($redirect === 'index_authorized_frs' && isset($data['id_authorized_frs'])) {
+            $id_authorized_frs = $data['id_authorized_frs'];
+            $selesaiAuthorized = date('Y-m-d H:i:s'); // gunakan untuk diambil & responsetime
+        
+            // --- UPDATE AUTHORIZED frs ---
+            $updateData = [
+                'id_user_authorized_frs'        => $id_user,
                 'id_user_dokter_authorized_frs' => $id_user,
-                'status_authorized_frs' => 'Selesai Authorized',
-                'selesai_authorized_frs' => date('Y-m-d H:i:s'),
-            ]);
-            return redirect()->to('authorized_frs/index')->with('success', 'Data berhasil diauthorized.');
+                'status_authorized_frs'         => 'Selesai Authorized',
+                'selesai_authorized_frs'        => $selesaiAuthorized,
+            ];
+        
+            $update = $this->authorized_frs->update($id_authorized_frs, $updateData);
+        
+            if (! $update) {
+                log_message('error', '[AUTHORIZED frs] Update gagal untuk ID: ' . $id_authorized_frs 
+                    . ' | Errors: ' . json_encode($this->authorized_frs->errors()));
+            } else {
+                log_message('debug', '[AUTHORIZED frs] Update BERHASIL untuk ID: ' . $id_authorized_frs);
+            }
+        
+            // Ambil data hasil terbaru frs setelah update
+            $frsTerbaru = $this->frsModel->find($id_frs);
+        
+            // --- HITUNG RESPONSETIME ---
+            $responsetime = null;
+            if (!empty($data['periksa'])) {
+                $start = new \DateTime($data['periksa']);
+                $end   = new \DateTime($selesaiAuthorized);
+                $diff  = $start->diff($end);
+                $responsetime = sprintf(
+                    "%d hari %d jam %d menit %d detik",
+                    $diff->days,
+                    $diff->h,
+                    $diff->i,
+                    $diff->s
+                );
+            }
+        
+            // --- TENTUKAN ID DOKTER PA ---
+            $iddokterpa = null;
+            if (!empty($data['dokterpa'])) {
+                if ($data['dokterpa'] === "dr. Vinna Chrisdianti, Sp.PA") {
+                    $iddokterpa = 1179;
+                } elseif ($data['dokterpa'] === "dr. Ayu Tyasmara Pratiwi, Sp.PA") {
+                    $iddokterpa = 328;
+                }
+            }
+        
+            // --- PERSIAPAN PAYLOAD ---
+            $payload = [
+                'idtransaksi'      => $data['idtransaksi'] ?? null,
+                'tanggal'          => $data['tanggal'] ?? null,
+                'register'         => $data['register'] ?? null,
+                'pemeriksaan'      => $data['pemeriksaan'] ?? null,
+                'idpasien'         => $data['idpasien'] ?? null,
+                'norm'             => $data['norm'] ?? null,
+                'nama'             => $data['nama'] ?? null,
+                'noregister'       => $data['noregister'] ?? null,
+                'datang'           => $data['datang'] ?? null,
+                'periksa'          => $data['periksa'] ?? null,
+                'selesai'          => $data['selesai'] ?? null,
+                'diambil'          => $selesaiAuthorized,
+                'iddokterpa'       => $iddokterpa,
+                'dokterpa'         => $data['dokterpa'] ?? null,
+                'statuslokasi'     => $data['statuslokasi'] ?? null,
+                'diagnosaklinik'   => $data['diagnosaklinik'] ?? null,
+                'diagnosapatologi' => $data['diagnosapatologi'] ?? null,
+                'mutusediaan'      => $data['mutusediaan'] ?? null,
+                'responsetime'     => $responsetime,
+                'hasil'            => $frsTerbaru['print_frs'] ?? null,
+                'status'           => !empty($data['idtransaksi']) ? ($data['status'] ?? 'Belum Terkirim') : 'Belum Terdaftar',
+                'updated_at'       => date('Y-m-d H:i:s'),
+            ];
+        
+            log_message('debug', '[PENGIRIMAN SIMRS] Payload siap dikirim: ' . json_encode($payload, JSON_PRETTY_PRINT));
+        
+            try {
+                $client = \Config\Services::curlrequest();
+                $response = $client->post(
+                    'http://172.20.29.240/apibdrs/apibdrs/postPemeriksaan',
+                    [
+                        'headers' => ['Content-Type' => 'application/json'],
+                        'body'    => json_encode($payload)
+                    ]
+                );
+        
+                $responseBody = $response->getBody();
+                log_message('info', '[PENGIRIMAN SIMRS] Response: ' . $responseBody);
+        
+                // simpan ke flashdata agar bisa dicek di halaman redirect
+                session()->setFlashdata('simrs_payload', json_encode($payload));
+                session()->setFlashdata('simrs_response', $responseBody);
+        
+            } catch (\Exception $e) {
+                $errorMessage = $e->getMessage();
+                log_message('error', '[PENGIRIMAN SIMRS] Gagal kirim: ' . $errorMessage);
+        
+                session()->setFlashdata('simrs_error', $errorMessage);
+            }
+        
+            return redirect()->to('authorized_frs/index')
+                ->with('success', session()->getFlashdata('success') ?? 'Data berhasil diauthorized.');
         }
+
         if ($redirect === 'index_pencetakan_frs' && isset($_POST['id_pencetakan_frs'])) {
             $id_pencetakan_frs = $this->request->getPost('id_pencetakan_frs');
             $this->pencetakan_frs->update($id_pencetakan_frs, [
@@ -728,6 +981,27 @@ class FrsController extends BaseController
         $this->frsModel->update($id_frs, $data);
         // Redirect dengan pesan sukses
         return redirect()->to('frs/index')->with('success', 'Status FRS berhasil disimpan.');
+    }
+
+    public function update_jumlah_slide()
+    {
+        if ($this->request->isAJAX()) {
+            $id_frs = $this->request->getPost('id_frs');
+            $jumlah_slide = $this->request->getPost('jumlah_slide');
+
+            if ($id_frs && $jumlah_slide !== null) {
+                $this->frsModel->update($id_frs, ['jumlah_slide' => $jumlah_slide]);
+                return $this->response->setJSON([
+                    'status' => 'success',
+                    'message' => 'Jumlah slide berhasil disimpan.'
+                ]);
+            } else {
+                return $this->response->setJSON([
+                    'status' => 'error',
+                    'message' => 'Data tidak lengkap.'
+                ]);
+            }
+        }
     }
 
     public function uploadFotoMakroskopis($id_frs)
@@ -874,7 +1148,7 @@ class FrsController extends BaseController
             'nama_user'  => session()->get('nama_user'),
             'frsData' => $frsData,
         ];
-
+        
         return view('frs//laporan/laporan_pemeriksaan', $data);
     }
 

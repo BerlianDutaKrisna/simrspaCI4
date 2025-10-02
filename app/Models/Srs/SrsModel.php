@@ -51,26 +51,6 @@ class SrsModel extends Model
     {
         return $this->where('status_srs', 'Penerimaan')->countAllResults() ?? 0;
     }
-    public function countPengirisansrs()
-    {
-        return $this->where('status_srs =', 'Pengirisan')->countAllResults() ?? 0;
-    }
-    public function countPemotongansrs()
-    {
-        return $this->where('status_srs =', 'Pemotongan')->countAllResults() ?? 0;
-    }
-    public function countPemprosesansrs()
-    {
-        return $this->where('status_srs =', 'Pemprosesan')->countAllResults() ?? 0;
-    }
-    public function countPenanamansrs()
-    {
-        return $this->where('status_srs =', 'Penanaman')->countAllResults() ?? 0;
-    }
-    public function countPemotonganTipissrs()
-    {
-        return $this->where('status_srs =', 'Pemotongan Tipis')->countAllResults() ?? 0;
-    }
     public function countPewarnaansrs()
     {
         return $this->where('status_srs =', 'Pewarnaan')->countAllResults() ?? 0;
@@ -116,6 +96,7 @@ class SrsModel extends Model
             srs.*, 
             patient.*, 
             penerimaan_srs.id_penerimaan_srs AS id_penerimaan,
+            pewarnaan_srs.id_pewarnaan_srs AS id_pewarnaan,
             pembacaan_srs.id_pembacaan_srs AS id_pembacaan,
             penulisan_srs.id_penulisan_srs AS id_penulisan,
             pemverifikasi_srs.id_pemverifikasi_srs AS id_pemverifikasi,
@@ -125,6 +106,7 @@ class SrsModel extends Model
         ')
             ->join('patient', 'patient.id_pasien = srs.id_pasien', 'left')
             ->join('penerimaan_srs', 'penerimaan_srs.id_srs = srs.id_srs', 'left')
+            ->join('pewarnaan_srs', 'pewarnaan_srs.id_srs = srs.id_srs', 'left')
             ->join('pembacaan_srs', 'pembacaan_srs.id_srs = srs.id_srs', 'left')
             ->join('penulisan_srs', 'penulisan_srs.id_srs = srs.id_srs', 'left')
             ->join('pemverifikasi_srs', 'pemverifikasi_srs.id_srs = srs.id_srs', 'left')
@@ -224,14 +206,14 @@ class SrsModel extends Model
             patient.*, 
             users.nama_user AS dokter_pembaca,
             penerimaan_srs.mulai_penerimaan_srs,
-            pemverifikasi_srs.selesai_pemverifikasi_srs,
+            penulisan_srs.selesai_penulisan_srs,
             mutu_srs.total_nilai_mutu_srs
         ')
             ->join('patient', 'patient.id_pasien = srs.id_pasien')
             ->join('pembacaan_srs', 'pembacaan_srs.id_srs = srs.id_srs', 'left')
             ->join('users', 'users.id_user = pembacaan_srs.id_user_dokter_pembacaan_srs', 'left')
             ->join('penerimaan_srs', 'penerimaan_srs.id_srs = srs.id_srs', 'left')
-            ->join('pemverifikasi_srs', 'pemverifikasi_srs.id_srs = srs.id_srs', 'left')
+            ->join('penulisan_srs', 'penulisan_srs.id_srs = srs.id_srs', 'left')
             ->join('mutu_srs', 'mutu_srs.id_srs = srs.id_srs', 'left')
             ->where('srs.tanggal_permintaan >=', $previousMonthStart)
             ->where('srs.tanggal_permintaan <=', date('Y-m-t'))

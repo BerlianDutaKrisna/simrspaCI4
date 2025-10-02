@@ -31,6 +31,11 @@ class Patient extends Migration
                 'default'    => 'Belum Diisi',
                 'null' => true,
             ],
+            'kota' => [
+                'type'       => 'VARCHAR',
+                'constraint' => 100,
+                'null'       => true
+            ],
             'tanggal_lahir_pasien' => [
                 'type' => 'DATE',
                 'null' => true,
@@ -61,7 +66,7 @@ class Patient extends Migration
         $this->forge->createTable('patient');
     }
 
-    // ALTER TABLE frs DROP FOREIGN KEY frs_id_pasien_foreign;
+    //ALTER TABLE frs DROP FOREIGN KEY frs_id_pasien_foreign;
     // ALTER TABLE hpa DROP FOREIGN KEY hpa_id_pasien_foreign;
     // ALTER TABLE srs DROP FOREIGN KEY srs_id_pasien_foreign;
     // ALTER TABLE ihc DROP FOREIGN KEY ihc_id_pasien_foreign;

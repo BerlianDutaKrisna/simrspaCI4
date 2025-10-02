@@ -124,15 +124,15 @@
                 <td rowspan="2" style="width: 20%; font-size: 15px; font-weight: bold; text-align: center;">
                     Kode frs: <?= esc($frs['kode_frs'] ?? '') ?>
                 </td>
-                <td style="width: 20%;">Nama Pasien: <?= esc($frs['nama_pasien'] ?? '') ?></td>
-                <td style="width: 20%;">Dokter Pengirim: <?= esc($frs['dokter_pengirim'] ?? '') ?></td>
-                <td style="width: 20%;">Diagnosa Klinik: <?= esc($frs['diagnosa_klinik'] ?? '') ?></td>
+                <td style="width: 20%;">Nama Pasien: <?= esc($frs['nama_pasien'] ?? '', 'js') ?></td>
+                <td style="width: 20%;">Dokter Pengirim: <?= esc($frs['dokter_pengirim'] ?? '', 'js') ?></td>
+                <td style="width: 20%;">Diagnosa Klinik: <?= esc($frs['diagnosa_klinik'] ?? '', 'js') ?></td>
                 <td style="width: 20%;">Tanggal Permintaan: <?= isset($frs['tanggal_permintaan']) ? date('d-m-Y', strtotime($frs['tanggal_permintaan'])) : ''; ?></td>
             </tr>
             <tr>
                 <td>Norm: <?= esc($frs['norm_pasien'] ?? '') ?></td>
-                <td>Unit Asal: <?= esc($frs['unit_asal'] ?? '') ?></td>
-                <td>Lokasi Spesimen: <?= esc($frs['lokasi_spesimen'] ?? '') ?></td>
+                <td>Unit Asal: <?= esc($frs['unit_asal'] ?? '', 'js') ?></td>
+                <td>Lokasi Spesimen: <?= esc($frs['lokasi_spesimen'] ?? '', 'js') ?></td>
                 <td>Estimasi Hasil: <?= isset($frs['tanggal_hasil']) ? date('d-m-Y', strtotime($frs['tanggal_hasil'])) : ''; ?></td>
             </tr>
         </table>

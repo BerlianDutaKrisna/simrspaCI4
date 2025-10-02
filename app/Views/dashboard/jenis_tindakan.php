@@ -66,7 +66,16 @@
             <!-- Tombol 6: Pewarnaan -->
             <div class="col">
                 <a href="<?= base_url('pewarnaan_hpa/index') ?>" class="btn btn-primary btn-icon-split btn-sm d-flex justify-content-between m-2">
-                    <span class="text"><b style="color: white"><?= esc($counts['countPewarnaanhpa'] ?? 0); ?></b> Pewarnaan</span>
+                    <span class="text"><b style="color: white">
+                            <?php
+                            $contsTotalPewarnaan =
+                                ($counts['countPewarnaanhpa'] ?? 0) +
+                                ($counts['countPewarnaanfrs'] ?? 0) +
+                                ($counts['countPewarnaansrs'] ?? 0) +
+                                ($counts['countPewarnaanihc'] ?? 0);
+                            ?>
+                            <?= esc($contsTotalPewarnaan ?? 0) ?>
+                        </b> Pewarnaan</span>
                     <span class="icon text-white-50">
                         <i class="fas fa-fill-drip"></i> <!-- Ikon untuk Pewarnaan -->
                     </span>
@@ -77,7 +86,7 @@
             <div class="col">
                 <a href="<?= base_url('pembacaan_hpa/index') ?>" class="btn btn-info btn-icon-split btn-sm d-flex justify-content-between m-2">
                     <span class="text"><b style="color: white">
-                    <?php
+                            <?php
                             $contsTotalPembacaan =
                                 ($counts['countPembacaanhpa'] ?? 0) +
                                 ($counts['countPembacaanfrs'] ?? 0) +
@@ -85,7 +94,7 @@
                                 ($counts['countPembacaanihc'] ?? 0);
                             ?>
                             <?= esc($contsTotalPembacaan ?? 0) ?>
-                    </b> Screening / Pembacaan</span>
+                        </b> Screening / Pembacaan</span>
                     <span class="icon text-white-50">
                         <i class="fas fa-microscope"></i> <!-- Ikon untuk Pembacaan -->
                     </span>
@@ -96,7 +105,7 @@
             <div class="col">
                 <a href="<?= base_url('penulisan_hpa/index') ?>" class="btn btn-secondary btn-icon-split btn-sm d-flex justify-content-between m-2">
                     <span class="text"><b style="color: white">
-                    <?php
+                            <?php
                             $contsTotalPenulisan =
                                 ($counts['countPenulisanhpa'] ?? 0) +
                                 ($counts['countPenulisanfrs'] ?? 0) +
@@ -104,7 +113,7 @@
                                 ($counts['countPenulisanihc'] ?? 0);
                             ?>
                             <?= esc($contsTotalPenulisan ?? 0) ?>
-                    </b> Penulisan</span>
+                        </b> Penulisan</span>
                     <span class="icon text-white-50">
                         <i class="fas fa-keyboard"></i> <!-- Ikon untuk Penulisan -->
                     </span>
@@ -115,12 +124,12 @@
             <div class="col">
                 <a href="<?= base_url('pemverifikasi_hpa/index') ?>" class="btn btn-success btn-icon-split btn-sm d-flex justify-content-between m-2">
                     <span class="text"><b style="color: white"><?php
-                            $contsTotalPemverifikasi =
-                                ($counts['countPemverifikasihpa'] ?? 0) +
-                                ($counts['countPemverifikasifrs'] ?? 0) +
-                                ($counts['countPemverifikasisrs'] ?? 0) +
-                                ($counts['countPemverifikasiihc'] ?? 0);
-                            ?>
+                                                                $contsTotalPemverifikasi =
+                                                                    ($counts['countPemverifikasihpa'] ?? 0) +
+                                                                    ($counts['countPemverifikasifrs'] ?? 0) +
+                                                                    ($counts['countPemverifikasisrs'] ?? 0) +
+                                                                    ($counts['countPemverifikasiihc'] ?? 0);
+                                                                ?>
                             <?= esc($contsTotalPemverifikasi ?? 0) ?></b> Pemverifikasi</span>
                     <span class="icon text-white-50">
                         <i class="fas fa-check-square"></i>
@@ -132,12 +141,12 @@
             <div class="col">
                 <a href="<?= base_url('authorized_hpa/index') ?>" class="btn btn-info btn-icon-split btn-sm d-flex justify-content-between m-2">
                     <span class="text"><b style="color: white"><?php
-                            $contsTotalAuthorised =
-                                ($counts['countAuthorizedhpa'] ?? 0) +
-                                ($counts['countAuthorizedfrs'] ?? 0) +
-                                ($counts['countAuthorizedsrs'] ?? 0) +
-                                ($counts['countAuthorizedihc'] ?? 0);
-                            ?>
+                                                                $contsTotalAuthorised =
+                                                                    ($counts['countAuthorizedhpa'] ?? 0) +
+                                                                    ($counts['countAuthorizedfrs'] ?? 0) +
+                                                                    ($counts['countAuthorizedsrs'] ?? 0) +
+                                                                    ($counts['countAuthorizedihc'] ?? 0);
+                                                                ?>
                             <?= esc($contsTotalAuthorised ?? 0) ?></b> Authorized</span>
                     <span class="icon text-white-50">
                         <i class="fas fa-vote-yea"></i>
@@ -149,7 +158,7 @@
             <div class="col">
                 <a href="<?= base_url('pencetakan_hpa/index') ?>" class="btn btn-secondary btn-icon-split btn-sm d-flex justify-content-between m-2">
                     <span class="text"><b style="color: white">
-                    <?php
+                            <?php
                             $contsTotalPencetakan =
                                 ($counts['countPencetakanhpa'] ?? 0) +
                                 ($counts['countPencetakanfrs'] ?? 0) +
@@ -157,7 +166,7 @@
                                 ($counts['countPencetakanihc'] ?? 0);
                             ?>
                             <?= esc($contsTotalPencetakan ?? 0) ?>
-                    </b> Pencetakan</span>
+                        </b> Pencetakan</span>
                     <span class="icon text-white-50">
                         <i class="fas fa-print"></i>
                     </span>

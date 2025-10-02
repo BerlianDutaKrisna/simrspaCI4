@@ -16,9 +16,11 @@
                 <input type="hidden" name="id_hpa" value="<?= $hpa['id_hpa'] ?>">
                 <input type="hidden" name="id_pemotongan_hpa" value="<?= $pemotongan_hpa['id_pemotongan_hpa'] ?>">
                 <input type="hidden" name="id_pembacaan_hpa" value="<?= $pembacaan_hpa['id_pembacaan_hpa'] ?>">
+                <input type="hidden" name="id_user_pembacaan_hpa" value="<?= esc($id_user) ?>">
                 <input type="hidden" name="id_mutu_hpa" value="<?= $mutu_hpa['id_mutu_hpa'] ?>">
-                <input type="hidden" name="page_source" value="edit_mikroskopis">
                 <input type="hidden" name="total_nilai_mutu_hpa" value="<?= $mutu_hpa['total_nilai_mutu_hpa']; ?>">
+                <input type="hidden" name="page_source" value="edit_mikroskopis">
+                
 
 
                 <!-- Kolom Kode HPA dan Diagnosa -->
@@ -86,101 +88,7 @@
                     </div>
                 </div>
 
-                <button class="btn btn-outline-info mb-3" type="button" data-toggle="collapse" data-target="#riwayatCollapse" aria-expanded="false" aria-controls="riwayatCollapse">
-                    <i class="fas fa-book-medical"></i> Riwayat Pemeriksaan
-                </button>
-
-                <div class="collapse" id="riwayatCollapse">
-                    <div class="form-group row">
-                        <!-- Riwayat Pemeriksaan Histopatologi (HPA) -->
-                        <div class="col-md-3">
-                            <label class="col-form-label">Riwayat Pemeriksaan <b>Histopatologi</b></label>
-                            <?php if (!empty($riwayat_hpa)) : ?>
-                                <?php foreach ($riwayat_hpa as $row) : ?>
-                                    <div class="border p-2 mb-2">
-                                        <strong>Tanggal Permintaan:</strong> <?= isset($row['tanggal_permintaan']) ? date('d-m-Y', strtotime($row['tanggal_permintaan'])) : '-' ?><br>
-                                        <strong>Kode HPA:</strong> <?= esc($row['kode_hpa'] ?? '-') ?><br>
-                                        <strong>Lokasi Spesimen:</strong> <?= esc($row['lokasi_spesimen'] ?? '-') ?><br>
-                                        <strong>Hasil HPA:</strong> <?= esc(strip_tags($row['hasil_hpa'])) ?? '-' ?><br>
-                                        <strong>Dokter Pembaca:</strong> <?= esc($row['dokter_nama'] ?? 'Belum Dibaca') ?><br>
-                                        <button type="button" class="btn btn-info btn-sm"
-                                            onclick="tampilkanModal('<?= nl2br(esc($row['print_hpa'] ?? 'Tidak ada hasil', 'js')) ?>')">
-                                            Lihat Detail
-                                        </button>
-                                    </div>
-                                <?php endforeach; ?>
-                            <?php else : ?>
-                                <p>Tidak ada riwayat pemeriksaan HPA.</p>
-                            <?php endif; ?>
-                        </div>
-
-                        <!-- Riwayat Pemeriksaan FRS -->
-                        <div class="col-md-3">
-                            <label class="col-form-label">Riwayat Pemeriksaan <b>Fine Needle Aspiration Biopsy</b></label>
-                            <?php if (!empty($riwayat_frs)) : ?>
-                                <?php foreach ($riwayat_frs as $row) : ?>
-                                    <div class="border p-2 mb-2">
-                                        <strong>Tanggal Permintaan:</strong> <?= isset($row['tanggal_permintaan']) ? date('d-m-Y', strtotime($row['tanggal_permintaan'])) : '-' ?><br>
-                                        <strong>Kode FRS:</strong> <?= esc($row['kode_frs'] ?? '-') ?><br>
-                                        <strong>Lokasi Spesimen:</strong> <?= esc($row['lokasi_spesimen'] ?? '-') ?><br>
-                                        <strong>Hasil FRS:</strong> <?= esc(strip_tags($row['hasil_frs'])) ?? '-' ?><br>
-                                        <strong>Dokter Pembaca:</strong> <?= esc($row['dokter_nama'] ?? 'Belum Dibaca') ?><br>
-                                        <button type="button" class="btn btn-info btn-sm"
-                                            onclick="tampilkanModal('<?= nl2br(esc($row['print_frs'] ?? 'Tidak ada hasil', 'js')) ?>')">
-                                            Lihat Detail
-                                        </button>
-                                    </div>
-                                <?php endforeach; ?>
-                            <?php else : ?>
-                                <p>Tidak ada riwayat pemeriksaan FRS.</p>
-                            <?php endif; ?>
-                        </div>
-
-                        <!-- Riwayat Pemeriksaan SRS -->
-                        <div class="col-md-3">
-                            <label class="col-form-label">Riwayat Pemeriksaan <b>Sitologi</b></label>
-                            <?php if (!empty($riwayat_srs)) : ?>
-                                <?php foreach ($riwayat_srs as $row) : ?>
-                                    <div class="border p-2 mb-2">
-                                        <strong>Tanggal Permintaan:</strong> <?= isset($row['tanggal_permintaan']) ? date('d-m-Y', strtotime($row['tanggal_permintaan'])) : '-' ?><br>
-                                        <strong>Kode SRS:</strong> <?= esc($row['kode_srs'] ?? '-') ?><br>
-                                        <strong>Lokasi Spesimen:</strong> <?= esc($row['lokasi_spesimen'] ?? '-') ?><br>
-                                        <strong>Hasil SRS:</strong> <?= esc(strip_tags($row['hasil_srs'])) ?? '-' ?><br>
-                                        <strong>Dokter Pembaca:</strong> <?= esc($row['dokter_nama'] ?? 'Belum Dibaca') ?><br>
-                                        <button type="button" class="btn btn-info btn-sm"
-                                            onclick="tampilkanModal('<?= nl2br(esc($row['print_srs'] ?? 'Tidak ada hasil', 'js')) ?>')">
-                                            Lihat Detail
-                                        </button>
-                                    </div>
-                                <?php endforeach; ?>
-                            <?php else : ?>
-                                <p>Tidak ada riwayat pemeriksaan SRS.</p>
-                            <?php endif; ?>
-                        </div>
-
-                        <!-- Riwayat Pemeriksaan IHC -->
-                        <div class="col-md-3">
-                            <label class="col-form-label">Riwayat Pemeriksaan <b>Imunohistokimia</b></label>
-                            <?php if (!empty($riwayat_ihc)) : ?>
-                                <?php foreach ($riwayat_ihc as $row) : ?>
-                                    <div class="border p-2 mb-2">
-                                        <strong>Tanggal Permintaan:</strong> <?= isset($row['tanggal_permintaan']) ? date('d-m-Y', strtotime($row['tanggal_permintaan'])) : '-' ?><br>
-                                        <strong>Kode IHC:</strong> <?= esc($row['kode_ihc'] ?? '-') ?><br>
-                                        <strong>Lokasi Spesimen:</strong> <?= esc($row['lokasi_spesimen'] ?? '-') ?><br>
-                                        <strong>Hasil IHC:</strong> <?= esc(strip_tags($row['hasil_ihc'])) ?? '-' ?><br>
-                                        <strong>Dokter Pembaca:</strong> <?= esc($row['dokter_nama'] ?? 'Belum Dibaca') ?><br>
-                                        <button type="button" class="btn btn-info btn-sm"
-                                            onclick="tampilkanModal('<?= nl2br(esc($row['print_ihc'] ?? 'Tidak ada hasil', 'js')) ?>')">
-                                            Lihat Detail
-                                        </button>
-                                    </div>
-                                <?php endforeach; ?>
-                            <?php else : ?>
-                                <p>Tidak ada riwayat pemeriksaan IHC.</p>
-                            <?php endif; ?>
-                        </div>
-                    </div>
-                </div>
+                <?= $this->include('templates/exam/riwayat'); ?>
 
                 <!-- Kolom Foto Makroskopis -->
                 <div class="form-group row">
@@ -208,6 +116,17 @@
                     <label class="col-sm-2 col-form-label">Makroskopis</label>
                     <div class="col-sm-10">
                         <textarea class="form-control summernote" name="makroskopis_hpa" id="makroskopis_hpa"><?= $hpa['makroskopis_hpa'] ?? '' ?></textarea>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label class="col-sm-2 col-form-label" for="jumlah_slide">Jumlah Slide</label>
+                    <div class="col-sm-2">
+                        <input type="number" name="jumlah_slide" id="jumlah_slide"
+                            class="form-control form-control-sm jumlah-slide-input"
+                            data-id="<?= $hpa['id_hpa']; ?>"
+                            value="<?= $hpa['jumlah_slide']; ?>"
+                            min="0" step="1" style="width:100px;">
                     </div>
                 </div>
 
@@ -253,7 +172,7 @@
                 <div class="form-group row">
                     <label class="col-sm-2 col-form-label" for="jumlah_slide">Dokter yang membaca</label>
                     <div class="col-sm-4">
-                        <select class="form-control" id="id_user_dokter_pemotongan_hpa" name="id_user_dokter_pemotongan_hpa">
+                        <select class="form-control" id="id_user_dokter_pembacaan_hpa" name="id_user_dokter_pembacaan_hpa">
                             <option value="" <?= empty($pemotongan_hpa['id_user_dokter_pemotongan_hpa']) ? 'selected' : '' ?>>-- Pilih Dokter --</option>
                             <?php foreach ($users as $user): ?>
                                 <?php if ($user['status_user'] === 'Dokter'): ?>
@@ -268,15 +187,75 @@
                 </div>
 
                 <div class="form-group row">
-                    <label class="col-sm-2 col-form-label">mutu_hpa</label>
+                    <label class="col-sm-2 col-form-label" for="jumlah_slide">Potong ulang</label>
+                    <div class="col-sm-2">
+                        <label class="col-form-label" for="PUG">Potong ulang Gross (PUG)</label>
+                        <?php
+                        $options = ['0', '1', '2', '3'];
+                        $pugValue = isset($hpa['PUG']) ? (string)$hpa['PUG'] : '';
+                        ?>
+                        <select class="form-control" id="PUG" name="PUG" onchange="handlePugChange(this)">
+                            <?php foreach ($options as $opt): ?>
+                                <option value="<?= $opt ?>" <?= ($pugValue === $opt) ? 'selected' : '' ?>><?= $opt ?></option>
+                            <?php endforeach; ?>
+                            <option value="lainnya" <?= (!in_array($pugValue, $options) && $pugValue !== '') ? 'selected' : '' ?>>Lainnya</option>
+                        </select>
+                        <input
+                            type="text"
+                            class="form-control mt-2 <?= (!in_array($pugValue, $options) && $pugValue !== '') ? '' : 'd-none' ?>"
+                            id="pug_custom"
+                            name="pug_custom"
+                            placeholder="Masukkan nilai PUG lainnya"
+                            value="<?= (!in_array($pugValue, $options) && $pugValue !== '') ? esc($pugValue) : '' ?>">
+                    </div>
+                    <div class="col-sm-2">
+                        <label class="col-form-label" for="PUB">Potong ulang Block (PUB)</label>
+                        <?php
+                        $pubValue = isset($hpa['PUB']) ? (string)$hpa['PUB'] : '';
+                        ?>
+                        <select class="form-control" id="PUB" name="PUB" onchange="handlePUBChange(this)">
+                            <?php foreach ($options as $opt): ?>
+                                <option value="<?= $opt ?>" <?= ($pubValue === $opt) ? 'selected' : '' ?>><?= $opt ?></option>
+                            <?php endforeach; ?>
+                            <option value="lainnya" <?= (!in_array($pubValue, $options) && $pubValue !== '') ? 'selected' : '' ?>>Lainnya</option>
+                        </select>
+                        <input
+                            type="text"
+                            class="form-control mt-2 <?= (!in_array($pubValue, $options) && $pubValue !== '') ? '' : 'd-none' ?>"
+                            id="PUB_custom"
+                            name="PUB_custom"
+                            placeholder="Masukkan nilai PUB lainnya"
+                            value="<?= (!in_array($pubValue, $options) && $pubValue !== '') ? esc($pubValue) : '' ?>">
+                    </div>
+                </div>
+
+                <script>
+                    function handlePugChange(select) {
+                        if ($(select).val() === 'lainnya') {
+                            $('#pug_custom').removeClass('d-none');
+                        } else {
+                            $('#pug_custom').addClass('d-none').val('');
+                        }
+                    }
+
+                    function handlePUBChange(select) {
+                        if ($(select).val() === 'lainnya') {
+                            $('#PUB_custom').removeClass('d-none');
+                        } else {
+                            $('#PUB_custom').addClass('d-none').val('');
+                        }
+                    }
+                </script>
+
+                <div class="form-group row">
+                    <label class="col-sm-2 col-form-label">mutu hpa</label>
                     <div class="col-sm-4">
                         <div class="form-check">
                             <input type="checkbox" id="checkAll_<?= $mutu_hpa['id_mutu_hpa']; ?>" class="form-check-input">
                             <label class="form-check-label" for="checkAll_<?= $mutu_hpa['id_mutu_hpa']; ?>">
-                                Pilih Semua
+                                <b>Pilih Semua</b>
                             </label>
                         </div>
-
                         <div class="form-check">
                             <input type="checkbox"
                                 name="indikator_4"
@@ -285,10 +264,9 @@
                                 class="form-check-input child-checkbox"
                                 <?= ($mutu_hpa['indikator_4'] !== "0") ? 'checked' : ''; ?>>
                             <label class="form-check-label" for="indikator_4_<?= $mutu_hpa['id_mutu_hpa']; ?>">
-                                Sediaan tanpa lipatan?
+                                Jaringan terfiksasi merata?
                             </label>
                         </div>
-
                         <div class="form-check">
                             <input type="checkbox"
                                 name="indikator_5"
@@ -297,10 +275,9 @@
                                 class="form-check-input child-checkbox"
                                 <?= ($mutu_hpa['indikator_5'] !== "0") ? 'checked' : ''; ?>>
                             <label class="form-check-label" for="indikator_5_<?= $mutu_hpa['id_mutu_hpa']; ?>">
-                                Sediaan tanpa goresan mata pisau?
+                                Potongan tipis dan merata?
                             </label>
                         </div>
-
                         <div class="form-check">
                             <input type="checkbox"
                                 name="indikator_6"
@@ -309,10 +286,9 @@
                                 class="form-check-input child-checkbox"
                                 <?= ($mutu_hpa['indikator_6'] !== "0") ? 'checked' : ''; ?>>
                             <label class="form-check-label" for="indikator_6_<?= $mutu_hpa['id_mutu_hpa']; ?>">
-                                Kontras warna sediaan cukup jelas?
+                                Sediaan tanpa lipatan?
                             </label>
                         </div>
-
                         <div class="form-check">
                             <input type="checkbox"
                                 name="indikator_7"
@@ -321,10 +297,9 @@
                                 class="form-check-input child-checkbox"
                                 <?= ($mutu_hpa['indikator_7'] !== "0") ? 'checked' : ''; ?>>
                             <label class="form-check-label" for="indikator_7_<?= $mutu_hpa['id_mutu_hpa']; ?>">
-                                Sediaan tanpa gelembung udara?
+                                Sediaan tanpa goresan mata pisau?
                             </label>
                         </div>
-
                         <div class="form-check">
                             <input type="checkbox"
                                 name="indikator_8"
@@ -333,7 +308,29 @@
                                 class="form-check-input child-checkbox"
                                 <?= ($mutu_hpa['indikator_8'] !== "0") ? 'checked' : ''; ?>>
                             <label class="form-check-label" for="indikator_8_<?= $mutu_hpa['id_mutu_hpa']; ?>">
-                                Sediaan tanpa bercak / sidik jari?
+                                Kontras warna sediaan cukup jelas?
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input type="checkbox"
+                                name="indikator_9"
+                                value="10"
+                                id="indikator_9_<?= $mutu_hpa['id_mutu_hpa']; ?>"
+                                class="form-check-input child-checkbox"
+                                <?= ($mutu_hpa['indikator_9'] !== "0") ? 'checked' : ''; ?>>
+                            <label class="form-check-label" for="indikator_9_<?= $mutu_hpa['id_mutu_hpa']; ?>">
+                                Sediaan tanpa gelembung udara?
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input type="checkbox"
+                                name="indikator_10"
+                                value="10"
+                                id="indikator_10_<?= $mutu_hpa['id_mutu_hpa']; ?>"
+                                class="form-check-input child-checkbox"
+                                <?= ($mutu_hpa['indikator_10'] !== "0") ? 'checked' : ''; ?>>
+                            <label class="form-check-label" for="indikator_10_<?= $mutu_hpa['id_mutu_hpa']; ?>">
+                                Sediaan tanpa bercak jari?
                             </label>
                         </div>
 
@@ -360,6 +357,7 @@
                                 checkAll.checked = Array.from(checkboxes).every(checkbox => checkbox.checked);
                             });
                         </script>
+
                     </div>
                 </div>
 
@@ -420,37 +418,44 @@
     </div>
 </div>
 
-<!-- Modal Riwayat -->
-<div class="modal fade" id="modalDetail" tabindex="-1" aria-labelledby="modalDetailLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="modalDetailLabel">Detail Pemeriksaan</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body" id="modal-body-content">
-                <!-- Isi modal akan dimasukkan melalui JavaScript -->
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- javascript untuk menampilkan modal -->
-<script>
-    function tampilkanModal(isi) {
-        // Masukkan isi ke dalam modal
-        document.getElementById("modal-body-content").innerHTML = isi;
-        // Tampilkan modal
-        var myModal = new bootstrap.Modal(document.getElementById("modalDetail"));
-        myModal.show();
-    }
-</script>
-
 <?= $this->include('templates/notifikasi') ?>
 <?= $this->include('templates/hpa/footer_edit'); ?>
 <?= $this->include('templates/hpa/cetak_proses'); ?>
+
+// jumlah slide ajax
+<script>
+    $(document).ready(function() {
+        $(".jumlah-slide-input").on("change", function() {
+            let input = $(this);
+            let id_hpa = input.data("id");
+            let jumlah_slide = input.val();
+
+            $.ajax({
+                url: "<?= base_url('hpa/update_jumlah_slide'); ?>",
+                type: "POST",
+                data: {
+                    id_hpa: id_hpa,
+                    jumlah_slide: jumlah_slide,
+                    <?= csrf_token() ?>: "<?= csrf_hash() ?>" // CSRF protection
+                },
+                dataType: "json",
+                success: function(res) {
+                    if (res.status === "success") {
+                        console.log("Jumlah slide berhasil diperbarui");
+
+                        // Update tombol cetak di baris yang sama
+                        let btnCetak = input.closest("tr").find(".btn-cetak-stiker");
+                        if (btnCetak.length) {
+                            btnCetak.data("slide", jumlah_slide);
+                        }
+                    } else {
+                        alert("Gagal memperbarui jumlah slide!");
+                    }
+                },
+                error: function(xhr, status, error) {
+                    alert("Terjadi kesalahan: " + error);
+                }
+            });
+        });
+    });
+</script>

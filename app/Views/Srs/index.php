@@ -67,6 +67,7 @@
                                             $prosesList = [
                                                 'mutu' => $row['id_mutu'] ?? null,
                                                 'penerimaan' => $row['id_penerimaan'] ?? null,
+                                                'pewarnaan' => $row['id_pewarnaan'] ?? null,
                                                 'pembacaan' => $row['id_pembacaan'] ?? null,
                                                 'penulisan' => $row['id_penulisan'] ?? null,
                                                 'pemverifikasi' => $row['id_pemverifikasi'] ?? null,

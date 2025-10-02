@@ -37,6 +37,7 @@ class Pemprosesan extends BaseController
     {
         $pemprosesanData_hpa = $this->pemprosesan_hpa->getpemprosesan_hpa();
         $data = [
+            'id_user' => session()->get('id_user'),
             'nama_user' => $this->session->get('nama_user'),
             'counts' => $this->getCounts(),
             'pemprosesanDatahpa' => $pemprosesanData_hpa,

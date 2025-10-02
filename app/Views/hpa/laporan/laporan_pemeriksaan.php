@@ -70,6 +70,31 @@
             }
         </script>
 
+<div class="row justify-content-center mb-3">
+            <div class="col-auto">
+                <h5 class="text-center font-weight-bold">Potong Ulang</h5>
+            </div>
+        </div>
+
+        <div class="row justify-content-center">
+            <div class="col-auto">
+                <a href="<?= base_url('hpa/laporan_PUG'); ?>" class="btn btn-secondary btn-icon-split m-2">
+                    <span class="text"><b style="color: white;">PUG</b></span>
+                    <span class="icon text-white-50">
+                        <i class="fas fa-plus-circle"></i>
+                    </span>
+                </a>
+            </div>
+            <div class="col-auto">
+                <a href="<?= base_url('hpa/laporan_PUB'); ?>" class="btn btn-secondary btn-icon-split m-2">
+                    <span class="text"><b style="color: white;">PUB</b></span>
+                    <span class="icon text-white-50">
+                        <i class="fas fa-plus-circle"></i>
+                    </span>
+                </a>
+            </div>
+        </div>
+
         <div class="mb-3">
             <strong>Total Data Pasien:</strong> <?= count($hpaData) ?>
         </div>
@@ -127,9 +152,9 @@
                                 <td><?= esc($row['total_nilai_mutu_hpa'] ?? 'Belum Diisi') ?>%</td>
                                 <td>
                                     <?php
-                                    if (!empty($row['mulai_penerimaan_hpa']) && !empty($row['selesai_pemverifikasi_hpa'])) {
+                                    if (!empty($row['mulai_penerimaan_hpa']) && !empty($row['selesai_penulisan_hpa'])) {
                                         $start = new DateTime($row['mulai_penerimaan_hpa']);
-                                        $end = new DateTime($row['selesai_pemverifikasi_hpa']);
+                                        $end = new DateTime($row['selesai_penulisan_hpa']);
                                         $interval = $start->diff($end);
                                         echo $interval->format('%a hari %h jam %i menit %s detik');
                                     } else {
@@ -139,9 +164,9 @@
                                 </td>
                                 <td>
                                     <?php
-                                    if (!empty($row['mulai_penerimaan_hpa']) && !empty($row['selesai_pemverifikasi_hpa'])) {
+                                    if (!empty($row['mulai_penerimaan_hpa']) && !empty($row['selesai_penulisan_hpa'])) {
                                         $start = new DateTime($row['mulai_penerimaan_hpa']);
-                                        $end = new DateTime($row['selesai_pemverifikasi_hpa']);
+                                        $end = new DateTime($row['selesai_penulisan_hpa']);
                                         $interval = $start->diff($end);
                                         if ($interval->days <= 7) {
                                             echo '<span class="text-success">Tepat Waktu</span>';

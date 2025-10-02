@@ -18,45 +18,72 @@
                 <input type="hidden" name="id_pencetakan_hpa" value="<?= $hpa['id_pencetakan_hpa'] ?? '' ?>">
                 <input type="hidden" name="redirect" value="<?= $_GET['redirect'] ?? '' ?>">
 
-                <!-- Tombol Kembali  -->
-                <a href="javascript:history.back()" class="btn btn-primary mb-3"><i class="fas fa-reply"></i> Kembali</a>
+                <!-- data yang dikirim untuk SIMRS -->
+                <input type="hidden" name="idtransaksi" value="<?= isset($hpa['id_transaksi']) ? (int) $hpa['id_transaksi'] : '' ?>">
+                <input type="hidden" name="tanggal" value="<?= !empty($hpa['tanggal_transaksi']) ? esc($hpa['tanggal_transaksi']) : '' ?>">
+                <input type="hidden" name="register" value="<?= isset($hpa['no_register']) ? esc($hpa['no_register']) : '' ?>">
+                <input type="hidden" name="pemeriksaan" value="<?= isset($hpa['tindakan_spesimen']) ? esc($hpa['tindakan_spesimen']) : '' ?>">
+                <input type="hidden" name="idpasien" value="<?= isset($hpa['id_pasien']) ? (int) $hpa['id_pasien'] : '' ?>">
+                <input type="hidden" name="norm" value="<?= isset($hpa['norm_pasien']) ? esc($hpa['norm_pasien']) : '' ?>">
+                <input type="hidden" name="nama" value="<?= isset($hpa['nama_pasien']) ? esc($hpa['nama_pasien']) : '' ?>">
+                <!-- kolom noregister sesuai DB -->
+                <input type="hidden" name="noregister" value="<?= isset($hpa['kode_hpa']) ? esc($hpa['kode_hpa']) : '' ?>">
+                <!-- datetime fields -->
+                <input type="hidden" name="datang" value="<?= isset($hpa['mulai_penerimaan_hpa']) ? esc($hpa['mulai_penerimaan_hpa']) : '' ?>">
+                <input type="hidden" name="periksa" value="<?= isset($hpa['mulai_penerimaan_hpa']) ? esc($hpa['mulai_penerimaan_hpa']) : '' ?>">
+                <input type="hidden" name="selesai" value="<?= isset($hpa['selesai_penulisan_hpa']) ? esc($hpa['selesai_penulisan_hpa']) : '' ?>">
+                <!-- dokter PA text -->
+                <input type="hidden" name="dokterpa" value="<?= isset($pembacaan_hpa['dokter_nama']) ? esc($pembacaan_hpa['dokter_nama']) : '' ?>">
+                <!-- status lokasi text -->
+                <input type="hidden" name="statuslokasi" value="<?= isset($hpa['lokasi_spesimen']) ? esc($hpa['lokasi_spesimen']) : '' ?>">
+                <!-- diagnosa & mutu -->
+                <input type="hidden" name="diagnosaklinik" value="<?= isset($hpa['diagnosa_klinik']) ? esc($hpa['diagnosa_klinik']) : '' ?>">
+                <input type="hidden" name="diagnosapatologi" value="<?= isset($hpa['hasil_hpa']) ? esc($hpa['hasil_hpa']) : '' ?>">
+                <input type="hidden" name="mutusediaan" value="<?= isset($hpa['total_nilai_mutu_hpa']) ? esc($hpa['total_nilai_mutu_hpa']) : '' ?>">
+
+                <input type="hidden" name="status" value="Belum Terkirim">
+
+                <!-- Tombol Kembali -->
+                <div class="mb-3">
+                    <a href="javascript:history.back()" class="btn btn-primary">
+                        <i class="fas fa-reply"></i> Kembali
+                    </a>
+                </div>
+
+                <?= $this->include('templates/exam/riwayat'); ?>
 
                 <!-- Kolom print -->
-                <div class="form-group row">
-                    <div class="col-sm-12">
-                        <textarea class="form-control summernote_print" name="print_hpa" id="print_hpa" rows="5">
-                            <font size="5" face="verdana"><?= $hpa['print_hpa'] ?? '' ?></font>
-                        </textarea>
+                <div class="form-group row mt-4">
+                    <div class="col-12">
+                        <textarea class="form-control summernote_print" name="print_hpa" id="print_hpa" rows="6">
+                    <font size="5" face="verdana"><?= $hpa['print_hpa'] ?? '' ?></font>
+                </textarea>
                     </div>
                 </div>
-                <div class="form-group row">
-                    <div class="col-sm-4 text-center">
-                        <button type="submit"
-                            class="btn btn-success btn-user w-100"
+
+                <!-- Tombol aksi -->
+                <div class="row text-center g-3">
+                    <div class="col-12 col-md-4 mb-3">
+                        <button type="submit" class="btn btn-success w-100"
                             formaction="<?= base_url('hpa/update_print/' . $hpa['id_hpa']); ?>"
                             <?= (($_GET['redirect'] ?? '') === 'index_pemverifikasi_hpa') ? '' : 'disabled' ?>>
                             <i class="fas fa-check-square"></i> Verifikasi
                         </button>
                     </div>
-
-                    <div class="col-sm-4 text-center">
-                        <button type="submit"
-                            class="btn btn-info btn-user w-100"
+                    <div class="col-12 col-md-4 mb-3">
+                        <button type="submit" class="btn btn-info w-100"
                             formaction="<?= base_url('hpa/update_print/' . $hpa['id_hpa']); ?>"
                             <?= (($_GET['redirect'] ?? '') === 'index_authorized_hpa') ? '' : 'disabled' ?>>
                             <i class="fas fa-vote-yea"></i> Authorized
                         </button>
                     </div>
-
-                    <div class="col-sm-4 text-center">
-                        <button type="submit"
-                            class="btn btn-success btn-user w-100 mb-3"
+                    <div class="col-12 col-md-4 mb-3">
+                        <button type="submit" class="btn btn-success w-100 mb-2"
                             formaction="<?= base_url('hpa/update_print/' . $hpa['id_hpa']); ?>"
                             <?= (($_GET['redirect'] ?? '') === 'index_pencetakan_hpa') ? '' : 'disabled' ?>>
                             <i class="fas fa-save"></i> Simpan
                         </button>
-                        <button type="button"
-                            class="btn btn-primary btn-user w-100 w-md-auto"
+                        <button type="button" class="btn btn-primary w-100"
                             onclick="cetakPrintHpa()"
                             <?= (($_GET['redirect'] ?? '') === 'index_pencetakan_hpa') ? '' : 'disabled' ?>>
                             <i class="fas fa-print"></i> Cetak

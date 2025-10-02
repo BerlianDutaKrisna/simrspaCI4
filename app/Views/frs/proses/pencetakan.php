@@ -22,12 +22,38 @@
                     <thead>
                         <tr>
                             <th>No</th>
-                            <th>Aksi</th>
+                            <th class="align-middle text-center">
+                                <div class="custom-control custom-checkbox d-inline-block">
+                                    <input type="checkbox" class="custom-control-input" id="checkAll">
+                                    <label class="custom-control-label" for="checkAll">Aksi Check Semua</label>
+                                </div>
+                            </th>
+                            <script>
+                                document.getElementById('checkAll').addEventListener('change', function() {
+                                    let checkboxes = document.querySelectorAll('.checkbox-item');
+                                    checkboxes.forEach(cb => {
+                                        cb.checked = this.checked;
+
+                                        // Paksa trigger event 'change' agar logika lain ikut jalan (misal toggleButtons)
+                                        cb.dispatchEvent(new Event('change'));
+
+                                        // Opsional: akses data-status jika dibutuhkan langsung
+                                        if (this.checked && cb.dataset.status) {
+                                            let statusObj = JSON.parse(cb.dataset.status);
+                                            console.log(statusObj); // Untuk debugging
+                                            // Kamu bisa push ke array atau proses data di sini
+                                        }
+                                    });
+                                });
+                            </script>
                             <th>Detail</th>
                             <th>Kode FRS</th>
                             <th>Nama Pasien</th>
+                            <th>Dokter</th>
+                            <th>Lokasi Spesimen</th>
+                            <th>Diagnosa Klinik</th>
                             <th>Status pencetakan</th>
-                            <th>Admin</th>
+                            <th>User</th>
                             <th>Mulai pencetakan</th>
                             <th>Selesai pencetakan</th>
                             <th>Deadline Hasil</th>
@@ -49,27 +75,26 @@
                                                             ]) ?>'
                                             autocomplete="off">
                                     </td>
-                                    <?php if (in_array($row['status_pencetakan_frs'], ["Proses Pencetakan"])): ?>
+                                    <?php if (in_array($row['status_pencetakan_frs'], ["Proses Pencetakan", "Belum Pencetakan"])): ?>
                                         <td>
-                                            <a href="<?= base_url('frs/edit_print/' .
-                                                            esc($row['id_frs']) .
-                                                            '?redirect=index_pencetakan_frs') ?>" class="btn btn-warning btn-sm">
-                                                <i class="fas fa-print"></i> Cetak Hasil
+                                            <a href="<?= esc(base_url('frs/edit_print/' . esc($row['id_frs']) . '?redirect=index_pencetakan_frs')) ?>"
+                                                class="btn btn-warning btn-sm">
+                                                <i class="fas fa-eye"></i> Cetak Hasil
                                             </a>
                                         </td>
-                                    <?php elseif (in_array($row['status_pencetakan_frs'], ["Selesai Pencetakan"])): ?>
+                                    <?php elseif ($row['status_pencetakan_frs'] === "Selesai Pencetakan"): ?>
                                         <td>
-                                            <a href="<?= base_url('frs/edit_print/' .
-                                                            esc($row['id_frs']) .
-                                                            '?redirect=index_pencetakan_frs') ?>" class="btn btn-success btn-sm">
-                                                <i class="fas fa-print"></i> Cetak Hasil
+                                            <a href="<?= esc(base_url('frs/edit_print/' . esc($row['id_frs']) . '?redirect=index_pencetakan_frs')) ?>"
+                                                class="btn btn-success btn-sm">
+                                                <i class="fas fa-eye"></i> Cetak Hasil
                                             </a>
                                         </td>
-                                    <?php else: ?>
-                                        <td></td>
                                     <?php endif; ?>
                                     <td><?= $row['kode_frs']; ?></td>
-                                    <td><?= $row['nama_pasien']; ?></td>
+                                    <td><b><?= esc($row['nama_pasien']); ?></b> (<?= esc($row['norm_pasien']); ?>)</td>
+                                    <td><?= $row['nama_user_dokter_pembacaan']; ?></td>
+                                    <td><?= $row['lokasi_spesimen']; ?></td>
+                                    <td><?= $row['diagnosa_klinik']; ?></td>
                                     <td><?= $row['status_pencetakan_frs']; ?></td>
                                     <td><?= $row['nama_user_pencetakan_frs']; ?></td>
                                     <td>

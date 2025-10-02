@@ -1,3 +1,34 @@
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        function syncPengirimanSimrs() {
+            fetch('<?= base_url("api/pengiriman-data-simrs/kirim") ?>', {
+                    method: 'GET',
+                    headers: { 'Accept': 'application/json' }
+                })
+                .then(res => res.json())
+                .then(data => {
+                    console.log("[SIMRS] Hasil pengiriman:", data);
+                    if (data.detail) {
+                        data.detail.forEach(item => {
+                            if (item.status === 'success') {
+                                console.log(`✅ ID ${item.id} berhasil terkirim.`, item.response);
+                            } else {
+                                console.error(`❌ ID ${item.id} gagal terkirim.`, item.error);
+                            }
+                        });
+                    }
+                })
+                .catch(error => console.error("[SIMRS] Gagal sinkronisasi:", error));
+        }
+
+        // Jalankan pertama kali
+        syncPengirimanSimrs();
+
+        // Jalankan tiap 60 detik
+        setInterval(syncPengirimanSimrs, 60000);
+    });
+</script>
+<!-- Footer -->
 <footer class="sticky-footer bg-danger text-white">
     <div class="container my-auto">
         <div class="row">

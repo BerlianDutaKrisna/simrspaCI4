@@ -57,6 +57,14 @@ class UserSeeder extends Seeder
                 'status_user'   => 'Analis',
                 'created_at'    => date('Y-m-d H:i:s'),
                 'updated_at'    => date('Y-m-d H:i:s')
+            ],
+            [
+                'username'      => 'agil',
+                'password_user' => password_hash('agil', PASSWORD_DEFAULT),  // Enkripsi password
+                'nama_user'     => 'dr, Agil Kusumawati',
+                'status_user'   => 'Dokter',
+                'created_at'    => date('Y-m-d H:i:s'),
+                'updated_at'    => date('Y-m-d H:i:s')
             ]
         ];
 

@@ -46,7 +46,7 @@
                             <th>Kualitas Sediaan</th>
                             <th>Kode HPA</th>
                             <th>Nama Pasien</th>
-                            <th>Analis</th>
+                            <th>User</th>
                             <th>Mulai Penerimaan</th>
                             <th>Selesai Penerimaan</th>
                             <th>Deadline Hasil</th>
@@ -78,7 +78,7 @@
                                                     id="indikator_1_<?= esc($row['id_mutu_hpa']); ?>"
                                                     class="form-check-input">
                                                 <label class="form-check-label" for="indikator_1_<?= esc($row['id_mutu_hpa']); ?>">
-                                                    Vol cairan fiksasi sesuai?
+                                                Cek Kesesuaian ID?
                                                 </label>
                                             </div>
                                             <div class="form-check">
@@ -88,17 +88,7 @@
                                                     id="indikator_2_<?= esc($row['id_mutu_hpa']); ?>"
                                                     class="form-check-input">
                                                 <label class="form-check-label" for="indikator_2_<?= esc($row['id_mutu_hpa']); ?>">
-                                                    Jaringan terfiksasi merata?
-                                                </label>
-                                            </div>
-                                            <div class="form-check">
-                                                <input type="checkbox"
-                                                    name="indikator_9"
-                                                    value="10"
-                                                    id="indikator_9_<?= esc($row['id_mutu_hpa']); ?>"
-                                                    class="form-check-input">
-                                                <label class="form-check-label" for="indikator_9_<?= esc($row['id_mutu_hpa']); ?>">
-                                                    Cek Kesesuaian ID?
+                                                Vol cairan fiksasi sesuai?
                                                 </label>
                                             </div>
                                         <?php else: ?>
@@ -106,7 +96,7 @@
                                         <?php endif; ?>
                                     </td>
                                     <td><?= esc($row['kode_hpa']); ?></td>
-                                    <td><?= esc($row['nama_pasien']); ?></td>
+                                    <td><b><?= esc($row['nama_pasien']); ?></b> (<?= esc($row['norm_pasien']); ?>)</td>
                                     <td><?= esc($row['nama_user_penerimaan_hpa']); ?></td>
                                     <td>
                                         <?= empty($row['mulai_penerimaan_hpa']) ? '-' : esc(date('H:i, d-m-Y', strtotime($row['mulai_penerimaan_hpa']))); ?>

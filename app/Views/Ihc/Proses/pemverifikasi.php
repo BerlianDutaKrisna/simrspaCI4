@@ -22,12 +22,35 @@
                     <thead>
                         <tr>
                             <th>No</th>
-                            <th>Aksi</th>
+                            <th class="align-middle text-center">
+                                <div class="custom-control custom-checkbox d-inline-block">
+                                    <input type="checkbox" class="custom-control-input" id="checkAll">
+                                    <label class="custom-control-label" for="checkAll">Aksi Check Semua</label>
+                                </div>
+                            </th>
+                            <script>
+                                document.getElementById('checkAll').addEventListener('change', function() {
+                                    let checkboxes = document.querySelectorAll('.checkbox-item');
+                                    checkboxes.forEach(cb => {
+                                        cb.checked = this.checked;
+
+                                        // Paksa trigger event 'change' agar logika lain ikut jalan (misal toggleButtons)
+                                        cb.dispatchEvent(new Event('change'));
+
+                                        // Opsional: akses data-status jika dibutuhkan langsung
+                                        if (this.checked && cb.dataset.status) {
+                                            let statusObj = JSON.parse(cb.dataset.status);
+                                            console.log(statusObj); // Untuk debugging
+                                            // Kamu bisa push ke array atau proses data di sini
+                                        }
+                                    });
+                                });
+                            </script>
                             <th>Detail</th>
                             <th>Kode IHC</th>
                             <th>Nama Pasien</th>
                             <th>Status pemverifikasi</th>
-                            <th>Analis</th>
+                            <th>User</th>
                             <th>Mulai pemverifikasi</th>
                             <th>Selesai pemverifikasi</th>
                             <th>Deadline Hasil</th>
@@ -49,25 +72,23 @@
                                                             ]) ?>'
                                             autocomplete="off">
                                     </td>
-                                    <?php if (in_array($row['status_pemverifikasi_ihc'], ["Proses Pemverifikasi"])): ?>
+                                    <?php if (in_array($row['status_pemverifikasi_ihc'], ["Proses Pemverifikasi", "Belum Pemverifikasi"])): ?>
                                         <td>
                                             <a href="<?= esc(base_url('ihc/edit_print/' . esc($row['id_ihc']) . '?redirect=index_pemverifikasi_ihc')) ?>"
                                                 class="btn btn-warning btn-sm">
                                                 <i class="fas fa-eye"></i> Cek Penulisan
                                             </a>
                                         </td>
-                                    <?php elseif (in_array($row['status_pemverifikasi_ihc'], ["Selesai Pemverifikasi"])): ?>
+                                    <?php elseif ($row['status_pemverifikasi_ihc'] === "Selesai Pemverifikasi"): ?>
                                         <td>
                                             <a href="<?= esc(base_url('ihc/edit_print/' . esc($row['id_ihc']) . '?redirect=index_pemverifikasi_ihc')) ?>"
                                                 class="btn btn-success btn-sm">
                                                 <i class="fas fa-eye"></i> Cek Penulisan
                                             </a>
                                         </td>
-                                    <?php else: ?>
-                                        <td></td>
                                     <?php endif; ?>
                                     <td><?= $row['kode_ihc']; ?></td>
-                                    <td><?= $row['nama_pasien']; ?></td>
+                                    <td><b><?= esc($row['nama_pasien']); ?></b> (<?= esc($row['norm_pasien']); ?>)</td>
                                     <td><?= $row['status_pemverifikasi_ihc']; ?></td>
                                     <td><?= $row['nama_user_pemverifikasi_ihc']; ?></td>
                                     <td>

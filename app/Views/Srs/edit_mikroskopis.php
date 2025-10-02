@@ -7,7 +7,7 @@
             <h6 class="m-0 font-weight-bold text-primary">Edit Mikroskopis</h6>
         </div>
         <div class="card-body">
-            <h1>Edit Data Mikroskopis Fine Needle Aspiration Biopsy</h1>
+            <h1>Edit Data Mikroskopis Sitologi</h1>
             <a href="<?= base_url('pembacaan_srs/index') ?>" class="btn btn-primary mb-3"><i class="fas fa-reply"></i> Kembali</a>
 
             <!-- Form -->
@@ -15,6 +15,9 @@
                 <?= csrf_field(); ?>
                 <input type="hidden" name="id_srs" value="<?= $srs['id_srs'] ?>">
                 <input type="hidden" name="id_pembacaan_srs" value="<?= $pembacaan_srs['id_pembacaan_srs'] ?>">
+                <input type="hidden" name="id_user_pembacaan_srs" value="<?= esc($id_user) ?>">
+                <input type="hidden" name="id_mutu_srs" value="<?= $mutu_srs['id_mutu_srs'] ?>">
+                <input type="hidden" name="total_nilai_mutu_srs" value="<?= $mutu_srs['total_nilai_mutu_srs']; ?>">
                 <input type="hidden" name="page_source" value="edit_mikroskopis">
 
                 <!-- Kolom Kode SRS dan Diagnosa -->
@@ -82,101 +85,7 @@
                     </div>
                 </div>
 
-                <button class="btn btn-outline-info mb-3" type="button" data-toggle="collapse" data-target="#riwayatCollapse" aria-expanded="false" aria-controls="riwayatCollapse">
-                    <i class="fas fa-book-medical"></i> Riwayat Pemeriksaan
-                </button>
-
-                <div class="collapse" id="riwayatCollapse">
-                    <div class="form-group row">
-                        <!-- Riwayat Pemeriksaan Histopatologi (HPA) -->
-                        <div class="col-md-3">
-                            <label class="col-form-label">Riwayat Pemeriksaan <b>Histopatologi</b></label>
-                            <?php if (!empty($riwayat_hpa)) : ?>
-                                <?php foreach ($riwayat_hpa as $row) : ?>
-                                    <div class="border p-2 mb-2">
-                                        <strong>Tanggal Permintaan:</strong> <?= isset($row['tanggal_permintaan']) ? date('d-m-Y', strtotime($row['tanggal_permintaan'])) : '-' ?><br>
-                                        <strong>Kode HPA:</strong> <?= esc($row['kode_hpa'] ?? '-') ?><br>
-                                        <strong>Lokasi Spesimen:</strong> <?= esc($row['lokasi_spesimen'] ?? '-') ?><br>
-                                        <strong>Hasil HPA:</strong> <?= esc(strip_tags($row['hasil_hpa'])) ?? '-' ?><br>
-                                        <strong>Dokter Pembaca:</strong> <?= esc($row['dokter_nama'] ?? 'Belum Dibaca') ?><br>
-                                        <button type="button" class="btn btn-info btn-sm"
-                                            onclick="tampilkanModal('<?= nl2br(esc($row['print_hpa'] ?? 'Tidak ada hasil', 'js')) ?>')">
-                                            Lihat Detail
-                                        </button>
-                                    </div>
-                                <?php endforeach; ?>
-                            <?php else : ?>
-                                <p>Tidak ada riwayat pemeriksaan HPA.</p>
-                            <?php endif; ?>
-                        </div>
-
-                        <!-- Riwayat Pemeriksaan FRS -->
-                        <div class="col-md-3">
-                            <label class="col-form-label">Riwayat Pemeriksaan <b>Fine Needle Aspiration Biopsy</b></label>
-                            <?php if (!empty($riwayat_frs)) : ?>
-                                <?php foreach ($riwayat_frs as $row) : ?>
-                                    <div class="border p-2 mb-2">
-                                        <strong>Tanggal Permintaan:</strong> <?= isset($row['tanggal_permintaan']) ? date('d-m-Y', strtotime($row['tanggal_permintaan'])) : '-' ?><br>
-                                        <strong>Kode FRS:</strong> <?= esc($row['kode_frs'] ?? '-') ?><br>
-                                        <strong>Lokasi Spesimen:</strong> <?= esc($row['lokasi_spesimen'] ?? '-') ?><br>
-                                        <strong>Hasil FRS:</strong> <?= esc(strip_tags($row['hasil_frs'])) ?? '-' ?><br>
-                                        <strong>Dokter Pembaca:</strong> <?= esc($row['dokter_nama'] ?? 'Belum Dibaca') ?><br>
-                                        <button type="button" class="btn btn-info btn-sm"
-                                            onclick="tampilkanModal('<?= nl2br(esc($row['print_frs'] ?? 'Tidak ada hasil', 'js')) ?>')">
-                                            Lihat Detail
-                                        </button>
-                                    </div>
-                                <?php endforeach; ?>
-                            <?php else : ?>
-                                <p>Tidak ada riwayat pemeriksaan FRS.</p>
-                            <?php endif; ?>
-                        </div>
-
-                        <!-- Riwayat Pemeriksaan SRS -->
-                        <div class="col-md-3">
-                            <label class="col-form-label">Riwayat Pemeriksaan <b>Sitologi</b></label>
-                            <?php if (!empty($riwayat_srs)) : ?>
-                                <?php foreach ($riwayat_srs as $row) : ?>
-                                    <div class="border p-2 mb-2">
-                                        <strong>Tanggal Permintaan:</strong> <?= isset($row['tanggal_permintaan']) ? date('d-m-Y', strtotime($row['tanggal_permintaan'])) : '-' ?><br>
-                                        <strong>Kode SRS:</strong> <?= esc($row['kode_srs'] ?? '-') ?><br>
-                                        <strong>Lokasi Spesimen:</strong> <?= esc($row['lokasi_spesimen'] ?? '-') ?><br>
-                                        <strong>Hasil SRS:</strong> <?= esc(strip_tags($row['hasil_srs'])) ?? '-' ?><br>
-                                        <strong>Dokter Pembaca:</strong> <?= esc($row['dokter_nama'] ?? 'Belum Dibaca') ?><br>
-                                        <button type="button" class="btn btn-info btn-sm"
-                                            onclick="tampilkanModal('<?= nl2br(esc($row['print_srs'] ?? 'Tidak ada hasil', 'js')) ?>')">
-                                            Lihat Detail
-                                        </button>
-                                    </div>
-                                <?php endforeach; ?>
-                            <?php else : ?>
-                                <p>Tidak ada riwayat pemeriksaan SRS.</p>
-                            <?php endif; ?>
-                        </div>
-
-                        <!-- Riwayat Pemeriksaan IHC -->
-                        <div class="col-md-3">
-                            <label class="col-form-label">Riwayat Pemeriksaan <b>Imunohistokimia</b></label>
-                            <?php if (!empty($riwayat_ihc)) : ?>
-                                <?php foreach ($riwayat_ihc as $row) : ?>
-                                    <div class="border p-2 mb-2">
-                                        <strong>Tanggal Permintaan:</strong> <?= isset($row['tanggal_permintaan']) ? date('d-m-Y', strtotime($row['tanggal_permintaan'])) : '-' ?><br>
-                                        <strong>Kode IHC:</strong> <?= esc($row['kode_ihc'] ?? '-') ?><br>
-                                        <strong>Lokasi Spesimen:</strong> <?= esc($row['lokasi_spesimen'] ?? '-') ?><br>
-                                        <strong>Hasil IHC:</strong> <?= esc(strip_tags($row['hasil_ihc'])) ?? '-' ?><br>
-                                        <strong>Dokter Pembaca:</strong> <?= esc($row['dokter_nama'] ?? 'Belum Dibaca') ?><br>
-                                        <button type="button" class="btn btn-info btn-sm"
-                                            onclick="tampilkanModal('<?= nl2br(esc($row['print_ihc'] ?? 'Tidak ada hasil', 'js')) ?>')">
-                                            Lihat Detail
-                                        </button>
-                                    </div>
-                                <?php endforeach; ?>
-                            <?php else : ?>
-                                <p>Tidak ada riwayat pemeriksaan IHC.</p>
-                            <?php endif; ?>
-                        </div>
-                    </div>
-                </div>
+                <?= $this->include('templates/exam/riwayat'); ?>
 
                 <!-- Kolom Foto Makroskopis -->
                 <div class="form-group row">
@@ -204,6 +113,17 @@
                     <label class="col-sm-2 col-form-label">Makroskopis</label>
                     <div class="col-sm-10">
                         <textarea class="form-control summernote" name="makroskopis_srs" id="makroskopis_srs"><?= $srs['makroskopis_srs'] ?? '' ?></textarea>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label class="col-sm-2 col-form-label" for="jumlah_slide">Jumlah Slide</label>
+                    <div class="col-sm-2">
+                        <input type="number" name="jumlah_slide" id="jumlah_slide"
+                            class="form-control form-control-sm jumlah-slide-input"
+                            data-id="<?= $srs['id_srs']; ?>"
+                            value="<?= $srs['jumlah_slide']; ?>"
+                            min="0" step="1" style="width:100px;">
                     </div>
                 </div>
 
@@ -262,6 +182,98 @@
                         </select>
                     </div>
                 </div>
+                
+                <div class="form-group row">
+                    <label class="col-sm-2 col-form-label">mutu srs</label>
+                    <div class="col-sm-4">
+                        <div class="form-check">
+                            <input type="checkbox" id="checkAll_<?= $mutu_srs['id_mutu_srs']; ?>" class="form-check-input">
+                            <label class="form-check-label" for="checkAll_<?= $mutu_srs['id_mutu_srs']; ?>">
+                                Pilih Semua
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input type="checkbox"
+                                name="indikator_4"
+                                value="10"
+                                id="indikator_4_<?= $mutu_srs['id_mutu_srs']; ?>"
+                                class="form-check-input child-checkbox"
+                                <?= ($mutu_srs['indikator_4'] !== "0") ? 'checked' : ''; ?>>
+                            <label class="form-check-label" for="indikator_4_<?= $mutu_srs['id_mutu_srs']; ?>">
+                                Sediaan tanpa lipatan?
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input type="checkbox"
+                                name="indikator_5"
+                                value="10"
+                                id="indikator_5_<?= $mutu_srs['id_mutu_srs']; ?>"
+                                class="form-check-input child-checkbox"
+                                <?= ($mutu_srs['indikator_5'] !== "0") ? 'checked' : ''; ?>>
+                            <label class="form-check-label" for="indikator_5_<?= $mutu_srs['id_mutu_srs']; ?>">
+                                Sediaan tanpa goresan mata pisau?
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input type="checkbox"
+                                name="indikator_6"
+                                value="10"
+                                id="indikator_6_<?= $mutu_srs['id_mutu_srs']; ?>"
+                                class="form-check-input child-checkbox"
+                                <?= ($mutu_srs['indikator_6'] !== "0") ? 'checked' : ''; ?>>
+                            <label class="form-check-label" for="indikator_6_<?= $mutu_srs['id_mutu_srs']; ?>">
+                                Kontras warna sediaan cukup jelas?
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input type="checkbox"
+                                name="indikator_7"
+                                value="10"
+                                id="indikator_7_<?= $mutu_srs['id_mutu_srs']; ?>"
+                                class="form-check-input child-checkbox"
+                                <?= ($mutu_srs['indikator_7'] !== "0") ? 'checked' : ''; ?>>
+                            <label class="form-check-label" for="indikator_7_<?= $mutu_srs['id_mutu_srs']; ?>">
+                                Sediaan tanpa gelembung udara?
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input type="checkbox"
+                                name="indikator_8"
+                                value="10"
+                                id="indikator_8_<?= $mutu_srs['id_mutu_srs']; ?>"
+                                class="form-check-input child-checkbox"
+                                <?= ($mutu_srs['indikator_8'] !== "0") ? 'checked' : ''; ?>>
+                            <label class="form-check-label" for="indikator_8_<?= $mutu_srs['id_mutu_srs']; ?>">
+                                Sediaan tanpa bercak / sidik jari?
+                            </label>
+                        </div>
+
+                        <script>
+                            document.addEventListener('DOMContentLoaded', function() {
+                                const checkAll = document.getElementById('checkAll_<?= $mutu_srs['id_mutu_srs']; ?>');
+                                const checkboxes = document.querySelectorAll('.child-checkbox');
+
+                                // Ketika "Pilih Semua" dicentang/ditandai
+                                checkAll.addEventListener('change', function() {
+                                    checkboxes.forEach(checkbox => {
+                                        checkbox.checked = checkAll.checked; // Semua checkbox mengikuti status "Pilih Semua"
+                                    });
+                                });
+
+                                // Update status "Pilih Semua" berdasarkan checkbox lainnya
+                                checkboxes.forEach(checkbox => {
+                                    checkbox.addEventListener('change', function() {
+                                        checkAll.checked = Array.from(checkboxes).every(checkbox => checkbox.checked);
+                                    });
+                                });
+
+                                // Cek apakah semua checkbox sudah dicentang, lalu centang "Pilih Semua" jika iya
+                                checkAll.checked = Array.from(checkboxes).every(checkbox => checkbox.checked);
+                            });
+                        </script>
+
+                    </div>
+                </div>
 
                 <!-- Tombol Simpan -->
                 <div class="form-group row">
@@ -274,10 +286,10 @@
                     </div>
                     <!-- Tombol Cetak -->
                     <div class="col-sm-6 text-center">
-                    <button type="button" class="btn btn-info btn-user w-100 w-md-auto" onclick="cetakProses()">
-                        <i class="fas fa-print"></i> Cetak
-                    </button>
-                </div>
+                        <button type="button" class="btn btn-info btn-user w-100 w-md-auto" onclick="cetakProses()">
+                            <i class="fas fa-print"></i> Cetak
+                        </button>
+                    </div>
                 </div>
             </form>
         </div>
@@ -319,37 +331,44 @@
     </div>
 </div>
 
-<!-- Modal Riwayat -->
-<div class="modal fade" id="modalDetail" tabindex="-1" aria-labelledby="modalDetailLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="modalDetailLabel">Detail Pemeriksaan</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body" id="modal-body-content">
-                <!-- Isi modal akan dimasukkan melalui JavaScript -->
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- javascript untuk menampilkan modal -->
-<script>
-    function tampilkanModal(isi) {
-        // Masukkan isi ke dalam modal
-        document.getElementById("modal-body-content").innerHTML = isi;
-        // Tampilkan modal
-        var myModal = new bootstrap.Modal(document.getElementById("modalDetail"));
-        myModal.show();
-    }
-</script>
-
 <?= $this->include('templates/notifikasi') ?>
 <?= $this->include('templates/srs/footer_edit'); ?>
 <?= $this->include('templates/srs/cetak_proses'); ?>
+
+// jumlah slide ajax
+<script>
+    $(document).ready(function() {
+        $(".jumlah-slide-input").on("change", function() {
+            let input = $(this);
+            let id_srs = input.data("id");
+            let jumlah_slide = input.val();
+
+            $.ajax({
+                url: "<?= base_url('srs/update_jumlah_slide'); ?>",
+                type: "POST",
+                data: {
+                    id_srs: id_srs,
+                    jumlah_slide: jumlah_slide,
+                    <?= csrf_token() ?>: "<?= csrf_hash() ?>" // CSRF protection
+                },
+                dataType: "json",
+                success: function(res) {
+                    if (res.status === "success") {
+                        console.log("Jumlah slide berhasil diperbarui");
+
+                        // Update tombol cetak di baris yang sama
+                        let btnCetak = input.closest("tr").find(".btn-cetak-stiker");
+                        if (btnCetak.length) {
+                            btnCetak.data("slide", jumlah_slide);
+                        }
+                    } else {
+                        alert("Gagal memperbarui jumlah slide!");
+                    }
+                },
+                error: function(xhr, status, error) {
+                    alert("Terjadi kesalahan: " + error);
+                }
+            });
+        });
+    });
+</script>

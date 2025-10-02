@@ -8,6 +8,7 @@
     <div class="card-body">
         <h1>Daftar Pewarnaan Histopatologi</h1>
         <a href="<?= base_url('/dashboard') ?>" class="btn btn-primary mb-3"><i class="fas fa-reply"></i> Kembali</a>
+        <?= $this->include('templates/proses/button_pewarnaan'); ?>
 
         <!-- Form -->
         <form id="mainForm" action="<?= base_url('pewarnaan_hpa/proses_pewarnaan'); ?>" method="POST">
@@ -49,7 +50,7 @@
                             <th>jumlah slide</th>
                             <th>Aksi Cetak Stiker</th>
                             <th>Status Pewarnaan</th>
-                            <th>Analis</th>
+                            <th>User</th>
                             <th>Mulai Pewarnaan</th>
                             <th>Selesai Pewarnaan</th>
                             <th>Deadline Hasil</th>
@@ -72,16 +73,18 @@
                                             autocomplete="off">
                                     </td>
                                     <td><?= $row['kode_hpa']; ?></td>
-                                    <td><?= $row['nama_pasien']; ?></td>
-                                    <td><?= $row['jumlah_slide']; ?></td>
-                                    <?php
-                                    $slide = $row['jumlah_slide'];
-                                    $jumlahSlide = is_numeric($slide) ? (int)$slide : 1;
-                                    ?>
+                                    <td><b><?= esc($row['nama_pasien']); ?></b> (<?= esc($row['norm_pasien']); ?>)</td>
+                                    <td>
+                                        <input type="number"
+                                            class="form-control form-control-sm jumlah-slide-input"
+                                            data-id="<?= $row['id_hpa']; ?>"
+                                            value="<?= $row['jumlah_slide']; ?>"
+                                            min="0" step="1" style="width:100px;">
+                                    </td>
                                     <td>
                                         <button type="button" class="btn btn-outline-info btn-sm btn-cetak-stiker"
-                                            data-kode="<?= esc($row['kode_hpa']); ?>"
-                                            data-slide="<?= $jumlahSlide; ?>">
+                                            data-id="<?= esc($row['id_hpa']); ?>"
+                                            data-kode="<?= esc($row['kode_hpa']); ?>">
                                             <i class="fas fa-print"></i> Cetak Stiker
                                         </button>
                                     </td>
@@ -123,8 +126,45 @@
                     </tbody>
                 </table>
             </div>
-            <?= $this->include('templates/notifikasi'); ?>                
+            <?= $this->include('templates/notifikasi'); ?>
             <?= $this->include('templates/hpa/cetak_stiker'); ?>
             <?= $this->include('templates/proses/button_proses'); ?>
             <?= $this->include('dashboard/jenis_tindakan'); ?>
             <?= $this->include('templates/dashboard/footer_dashboard'); ?>
+
+            <script>
+                $(document).ready(function() {
+                    $(".jumlah-slide-input").on("change", function() {
+                        let input = $(this);
+                        let id_hpa = input.data("id");
+                        let jumlah_slide = input.val();
+
+                        $.ajax({
+                            url: "<?= base_url('hpa/update_jumlah_slide'); ?>",
+                            type: "POST",
+                            data: {
+                                id_hpa: id_hpa,
+                                jumlah_slide: jumlah_slide,
+                                <?= csrf_token() ?>: "<?= csrf_hash() ?>" // CSRF protection
+                            },
+                            dataType: "json",
+                            success: function(res) {
+                                if (res.status === "success") {
+                                    console.log("Jumlah slide berhasil diperbarui");
+
+                                    // Update tombol cetak di baris yang sama
+                                    let btnCetak = input.closest("tr").find(".btn-cetak-stiker");
+                                    if (btnCetak.length) {
+                                        btnCetak.data("slide", jumlah_slide);
+                                    }
+                                } else {
+                                    alert("Gagal memperbarui jumlah slide!");
+                                }
+                            },
+                            error: function(xhr, status, error) {
+                                alert("Terjadi kesalahan: " + error);
+                            }
+                        });
+                    });
+                });
+            </script>

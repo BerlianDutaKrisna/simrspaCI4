@@ -89,6 +89,7 @@
                         <th>Dokter Pengirim</th>
                         <th>Unit Asal</th>
                         <th>Diagnosa Klinik</th>
+                        <th>Tanggal Hasil</th>
                         <th>Hasil</th>
                         <th>Status</th>
                         <th>Penerima</th>
@@ -193,6 +194,9 @@
                                 <td><?= esc($row['dokter_pengirim'] ?? 'Belum Diisi') ?></td>
                                 <td><?= esc($row['unit_asal'] ?? 'Belum Diisi') ?></td>
                                 <td><?= esc($row['diagnosa_klinik'] ?? 'Belum Diisi') ?></td>
+                                <td>
+                                    <?= empty($row['tanggal_hasil']) ? 'Belum Diisi' : esc(date('d-m-Y', strtotime($row['tanggal_hasil']))); ?>
+                                </td>
                                 <td><?= esc(strip_tags($row['hasil'] ?? 'Belum Ada Hasil')) ?></td>
                                 <td><strong class="<?= in_array($row['status'] ?? '', ['Authorized', 'Selesai']) ? 'text-success' : '' ?>"><?= esc($row['status'] ?? 'Belum Diisi') ?></strong></td>
                                 <td><?= esc($row['penerima'] ?? 'Belum Diterima') ?></td>
@@ -204,7 +208,7 @@
                         <?php endforeach; ?>
                     <?php else : ?>
                         <tr>
-                            <td colspan="16" class="text-center">Tidak ada data yang tersedia</td>
+                            <td colspan="15" class="text-center">Tidak ada data yang tersedia</td>
                         </tr>
                     <?php endif; ?>
                 </tbody>

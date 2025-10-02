@@ -60,6 +60,8 @@
                                 statuses.status_penanaman_hpa === "Belum Penanaman" ||
                                 statuses.status_pemotongan_tipis_hpa === "Belum Pemotongan Tipis" ||
                                 statuses.status_pewarnaan_hpa === "Belum Pewarnaan" ||
+                                statuses.status_pewarnaan_frs === "Belum Pewarnaan" ||
+                                statuses.status_pewarnaan_srs === "Belum Pewarnaan" ||
                                 statuses.status_pembacaan_hpa === "Belum Pembacaan" ||
                                 statuses.status_pembacaan_frs === "Belum Pembacaan" ||
                                 statuses.status_pembacaan_srs === "Belum Pembacaan" ||
@@ -100,6 +102,8 @@
                                 statuses.status_penanaman_hpa === "Proses Penanaman" ||
                                 statuses.status_pemotongan_tipis_hpa === "Proses Pemotongan Tipis" ||
                                 statuses.status_pewarnaan_hpa === "Proses Pewarnaan" ||
+                                statuses.status_pewarnaan_frs === "Proses Pewarnaan" ||
+                                statuses.status_pewarnaan_srs === "Proses Pewarnaan" ||
                                 statuses.status_pembacaan_hpa === "Proses Pembacaan" ||
                                 statuses.status_pembacaan_frs === "Proses Pembacaan" ||
                                 statuses.status_pembacaan_srs === "Proses Pembacaan" ||
@@ -143,6 +147,8 @@
                                 statuses.status_penanaman_hpa === "Selesai Penanaman" ||
                                 statuses.status_pemotongan_tipis_hpa === "Selesai Pemotongan Tipis" ||
                                 statuses.status_pewarnaan_hpa === "Selesai Pewarnaan" ||
+                                statuses.status_pewarnaan_frs === "Selesai Pewarnaan" ||
+                                statuses.status_pewarnaan_srs === "Selesai Pewarnaan" ||
                                 statuses.status_pembacaan_hpa === "Belum Pembacaan" ||
                                 statuses.status_pembacaan_hpa === "Proses Pembacaan" ||
                                 statuses.status_pembacaan_hpa === "Selesai Pembacaan" ||

@@ -18,8 +18,39 @@
                 <input type="hidden" name="id_pencetakan_srs" value="<?= $srs['id_pencetakan_srs'] ?? '' ?>">
                 <input type="hidden" name="redirect" value="<?= $_GET['redirect'] ?? '' ?>">
 
-                <!-- Tombol Kembali  -->
-                <a href="javascript:history.back()" class="btn btn-primary mb-3"><i class="fas fa-reply"></i> Kembali</a>
+                <!-- data yang dikirim untuk SIMRS -->
+                <input type="hidden" name="idtransaksi" value="<?= isset($srs['id_transaksi']) ? (int) $srs['id_transaksi'] : '' ?>">
+                <input type="hidden" name="tanggal" value="<?= !empty($srs['tanggal_transaksi']) ? esc($srs['tanggal_transaksi']) : '' ?>">
+                <input type="hidden" name="register" value="<?= isset($srs['no_register']) ? esc($srs['no_register']) : '' ?>">
+                <input type="hidden" name="pemeriksaan" value="<?= isset($srs['tindakan_spesimen']) ? esc($srs['tindakan_spesimen']) : '' ?>">
+                <input type="hidden" name="idpasien" value="<?= isset($srs['id_pasien']) ? (int) $srs['id_pasien'] : '' ?>">
+                <input type="hidden" name="norm" value="<?= isset($srs['norm_pasien']) ? esc($srs['norm_pasien']) : '' ?>">
+                <input type="hidden" name="nama" value="<?= isset($srs['nama_pasien']) ? esc($srs['nama_pasien']) : '' ?>">
+                <!-- kolom noregister sesuai DB -->
+                <input type="hidden" name="noregister" value="<?= isset($srs['kode_srs']) ? esc($srs['kode_srs']) : '' ?>">
+                <!-- datetime fields -->
+                <input type="hidden" name="datang" value="<?= isset($srs['mulai_penerimaan_srs']) ? esc($srs['mulai_penerimaan_srs']) : '' ?>">
+                <input type="hidden" name="periksa" value="<?= isset($srs['mulai_penerimaan_srs']) ? esc($srs['mulai_penerimaan_srs']) : '' ?>">
+                <input type="hidden" name="selesai" value="<?= isset($srs['selesai_penulisan_srs']) ? esc($srs['selesai_penulisan_srs']) : '' ?>">
+                <!-- dokter PA text -->
+                <input type="hidden" name="dokterpa" value="<?= isset($pembacaan_srs['dokter_nama']) ? esc($pembacaan_srs['dokter_nama']) : '' ?>">
+                <!-- status lokasi text -->
+                <input type="hidden" name="statuslokasi" value="<?= isset($srs['lokasi_spesimen']) ? esc($srs['lokasi_spesimen']) : '' ?>">
+                <!-- diagnosa & mutu -->
+                <input type="hidden" name="diagnosaklinik" value="<?= isset($srs['diagnosa_klinik']) ? esc($srs['diagnosa_klinik']) : '' ?>">
+                <input type="hidden" name="diagnosapatologi" value="<?= isset($srs['hasil_srs']) ? esc($srs['hasil_srs']) : '' ?>">
+                <input type="hidden" name="mutusediaan" value="<?= isset($srs['total_nilai_mutu_srs']) ? esc($srs['total_nilai_mutu_srs']) : '' ?>">
+
+                <input type="hidden" name="status" value="Belum Terkirim">
+
+                <!-- Tombol Kembali -->
+                <div class="mb-3">
+                    <a href="javascript:history.back()" class="btn btn-primary">
+                        <i class="fas fa-reply"></i> Kembali
+                    </a>
+                </div>
+
+                <?= $this->include('templates/exam/riwayat'); ?>
 
                 <!-- Kolom print -->
                 <div class="form-group row">

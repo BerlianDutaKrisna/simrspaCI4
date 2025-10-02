@@ -47,9 +47,9 @@
                             <th>Kualitas Sediaan</th>
                             <th>Kode HPA</th>
                             <th>Nama Pasien</th>
-                            <th>Status Penanaman</th>
                             <th>Jumlah Slide</th>
-                            <th>Analis</th>
+                            <th>Status Penanaman</th>
+                            <th>User</th>
                             <th>Mulai Penanaman</th>
                             <th>Selesai Penanaman</th>
                             <th>Deadline Hasil</th>
@@ -91,9 +91,9 @@
                                         <?php endif; ?>
                                     </td>
                                     <td><?= $row['kode_hpa']; ?></td>
-                                    <td><?= $row['nama_pasien']; ?></td>
-                                    <td><?= $row['status_penanaman_hpa']; ?></td>
+                                    <td><b><?= esc($row['nama_pasien']); ?></b> (<?= esc($row['norm_pasien']); ?>)</td>
                                     <td><?= $row['jumlah_slide']; ?></td>
+                                    <td><?= $row['status_penanaman_hpa']; ?></td>
                                     <td><?= $row['nama_user_penanaman_hpa']; ?></td>
                                     <td>
                                         <?= empty($row['mulai_penanaman_hpa']) ? '-' : esc(date('H:i , d-m-Y', strtotime($row['mulai_penanaman_hpa']))); ?>

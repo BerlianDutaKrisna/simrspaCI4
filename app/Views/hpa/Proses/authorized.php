@@ -72,29 +72,25 @@
                                                             ]) ?>'
                                             autocomplete="off">
                                     </td>
-                                    <?php if (in_array($row['status_authorized_hpa'], ["Proses Authorized"])): ?>
+                                    <?php if (in_array($row['status_authorized_hpa'], ["Proses Authorized", "Belum Authorized"])): ?>
                                         <td>
-                                            <a href="<?= base_url('hpa/edit_print/' .
-                                                            esc($row['id_hpa']) .
-                                                            '?redirect=index_authorized_hpa') ?>" class="btn btn-warning btn-sm">
+                                            <a href="<?= esc(base_url('hpa/edit_print/' . esc($row['id_hpa']) . '?redirect=index_authorized_hpa')) ?>"
+                                                class="btn btn-warning btn-sm">
                                                 <i class="fas fa-eye"></i> Cek Verifikasi
                                             </a>
                                         </td>
-                                    <?php elseif (in_array($row['status_authorized_hpa'], ["Selesai Authorized"])): ?>
+                                    <?php elseif ($row['status_authorized_hpa'] === "Selesai Authorized"): ?>
                                         <td>
-                                            <a href="<?= base_url('hpa/edit_print/' .
-                                                            esc($row['id_hpa']) .
-                                                            '?redirect=index_authorized_hpa') ?>" class="btn btn-success btn-sm">
+                                            <a href="<?= esc(base_url('hpa/edit_print/' . esc($row['id_hpa']) . '?redirect=index_authorized_hpa')) ?>"
+                                                class="btn btn-success btn-sm">
                                                 <i class="fas fa-eye"></i> Cek Verifikasi
                                             </a>
                                         </td>
-                                    <?php else: ?>
-                                        <td></td>
                                     <?php endif; ?>
                                     <td><?= $row['kode_hpa']; ?></td>
-                                    <td><?= $row['nama_pasien']; ?></td>
+                                    <td><b><?= esc($row['nama_pasien']); ?></b> (<?= esc($row['norm_pasien']); ?>)</td>
                                     <td><?= $row['status_authorized_hpa']; ?></td>
-                                    <td><?= $row['nama_user_authorized_hpa']; ?></td>
+                                    <td><?= $row['nama_user_dokter_pembacaan']; ?></td>
                                     <td>
                                         <?= empty($row['mulai_authorized_hpa']) ? '-' : esc(date('H:i , d-m-Y', strtotime($row['mulai_authorized_hpa']))); ?>
                                     </td>

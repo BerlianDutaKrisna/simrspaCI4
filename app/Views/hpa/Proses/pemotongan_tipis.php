@@ -48,7 +48,7 @@
                             <th>Nama Pasien</th>
                             <th>Status Pemotongan Tipis</th>
                             <th>Diagnosa Klinik</th>
-                            <th>Analis</th>
+                            <th>User</th>
                             <th>Mulai Pemotongan Tipis</th>
                             <th>Selesai Pemotongan Tipis</th>
                             <th>Deadline Hasil</th>
@@ -71,9 +71,8 @@
                                             autocomplete="off">
                                     </td>
                                     <td><?= $row['kode_hpa']; ?></td>
-                                    <td><?= $row['nama_pasien']; ?></td>
+                                    <td><b><?= esc($row['nama_pasien']); ?></b> (<?= esc($row['norm_pasien']); ?>)</td>
                                     <td><?= $row['status_pemotongan_tipis_hpa']; ?></td>
-
                                     <td><?= $row['diagnosa_klinik']; ?></td>
                                     <td><?= $row['nama_user_pemotongan_tipis_hpa']; ?></td>
                                     <td>

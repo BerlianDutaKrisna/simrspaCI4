@@ -37,6 +37,7 @@ class Penulisan extends BaseController
     {
         $penulisanData_ihc = $this->penulisan_ihc->getpenulisan_ihc();
         $data = [
+            'id_user' => session()->get('id_user'),
             'nama_user' => $this->session->get('nama_user'),
             'counts' => $this->getCounts(),
             'penulisanDataihc' => $penulisanData_ihc,

@@ -51,26 +51,6 @@ class FrsModel extends Model
     {
         return $this->where('status_frs', 'Penerimaan')->countAllResults() ?? 0;
     }
-    public function countPengirisanfrs()
-    {
-        return $this->where('status_frs =', 'Pengirisan')->countAllResults() ?? 0;
-    }
-    public function countPemotonganfrs()
-    {
-        return $this->where('status_frs =', 'Pemotongan')->countAllResults() ?? 0;
-    }
-    public function countPemprosesanfrs()
-    {
-        return $this->where('status_frs =', 'Pemprosesan')->countAllResults() ?? 0;
-    }
-    public function countPenanamanfrs()
-    {
-        return $this->where('status_frs =', 'Penanaman')->countAllResults() ?? 0;
-    }
-    public function countPemotonganTipisfrs()
-    {
-        return $this->where('status_frs =', 'Pemotongan Tipis')->countAllResults() ?? 0;
-    }
     public function countPewarnaanfrs()
     {
         return $this->where('status_frs =', 'Pewarnaan')->countAllResults() ?? 0;
@@ -116,6 +96,7 @@ class FrsModel extends Model
             frs.*, 
             patient.*, 
             penerimaan_frs.id_penerimaan_frs AS id_penerimaan,
+            pewarnaan_frs.id_pewarnaan_frs AS id_pewarnaan,
             pembacaan_frs.id_pembacaan_frs AS id_pembacaan,
             penulisan_frs.id_penulisan_frs AS id_penulisan,
             pemverifikasi_frs.id_pemverifikasi_frs AS id_pemverifikasi,
@@ -125,6 +106,7 @@ class FrsModel extends Model
         ')
             ->join('patient', 'patient.id_pasien = frs.id_pasien', 'left')
             ->join('penerimaan_frs', 'penerimaan_frs.id_frs = frs.id_frs', 'left')
+            ->join('pewarnaan_frs', 'pewarnaan_frs.id_frs = frs.id_frs', 'left')
             ->join('pembacaan_frs', 'pembacaan_frs.id_frs = frs.id_frs', 'left')
             ->join('penulisan_frs', 'penulisan_frs.id_frs = frs.id_frs', 'left')
             ->join('pemverifikasi_frs', 'pemverifikasi_frs.id_frs = frs.id_frs', 'left')
@@ -263,14 +245,14 @@ class FrsModel extends Model
             patient.*, 
             users.nama_user AS dokter_pembaca,
             penerimaan_frs.mulai_penerimaan_frs,
-            pemverifikasi_frs.selesai_pemverifikasi_frs,
+            penulisan_frs.selesai_penulisan_frs,
             mutu_frs.total_nilai_mutu_frs
         ')
             ->join('patient', 'patient.id_pasien = frs.id_pasien')
             ->join('pembacaan_frs', 'pembacaan_frs.id_frs = frs.id_frs', 'left')
             ->join('users', 'users.id_user = pembacaan_frs.id_user_dokter_pembacaan_frs', 'left')
             ->join('penerimaan_frs', 'penerimaan_frs.id_frs = frs.id_frs', 'left')
-            ->join('pemverifikasi_frs', 'pemverifikasi_frs.id_frs = frs.id_frs', 'left')
+            ->join('penulisan_frs', 'penulisan_frs.id_frs = frs.id_frs', 'left')
             ->join('mutu_frs', 'mutu_frs.id_frs = frs.id_frs', 'left')
             ->where('frs.tanggal_permintaan >=', $previousMonthStart)
             ->where('frs.tanggal_permintaan <=', date('Y-m-t'))

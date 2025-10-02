@@ -35,15 +35,25 @@ class Authorized extends BaseController
 
     public function index()
     {
-        $authorizedData_hpa = $this->authorized_hpa->getauthorized_hpa();
+        $namaUser = $this->session->get('nama_user');
+
+        // Jika user adalah salah satu dokter, filter data sesuai nama dokter
+        if (in_array($namaUser, ["dr. Vinna Chrisdianti, Sp.PA", "dr. Ayu Tyasmara Pratiwi, Sp.PA"])) {
+            $authorizedData_hpa = $this->authorized_hpa->getauthorized_hpa_by_dokter($namaUser);
+        } else {
+            $authorizedData_hpa = $this->authorized_hpa->getauthorized_hpa();
+        }
+
         $data = [
-            'nama_user' => $this->session->get('nama_user'),
+            'id_user' => session()->get('id_user'),
+            'nama_user' => $namaUser,
             'counts' => $this->getCounts(),
             'authorizedDatahpa' => $authorizedData_hpa,
         ];
 
         return view('Hpa/Proses/authorized', $data);
     }
+
 
     public function proses_authorized()
     {
@@ -199,7 +209,7 @@ class Authorized extends BaseController
     public function delete()
     {
         try {
-            $id_authorized = $this->request->getPost('id_authorized'); 
+            $id_authorized = $this->request->getPost('id_authorized');
             $id_hpa = $this->request->getPost('id_hpa');
             if (!$id_authorized || !$id_hpa) {
                 throw new \Exception('ID tidak lengkap. Gagal menghapus data.');

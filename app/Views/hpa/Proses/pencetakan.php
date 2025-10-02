@@ -49,8 +49,11 @@
                             <th>Detail</th>
                             <th>Kode HPA</th>
                             <th>Nama Pasien</th>
+                            <th>Dokter</th>
+                            <th>Lokasi Spesimen</th>
+                            <th>Diagnosa Klinik</th>
                             <th>Status pencetakan</th>
-                            <th>Admin</th>
+                            <th>User</th>
                             <th>Mulai pencetakan</th>
                             <th>Selesai pencetakan</th>
                             <th>Deadline Hasil</th>
@@ -72,27 +75,26 @@
                                                             ]) ?>'
                                             autocomplete="off">
                                     </td>
-                                    <?php if (in_array($row['status_pencetakan_hpa'], ["Proses Pencetakan"])): ?>
+                                    <?php if (in_array($row['status_pencetakan_hpa'], ["Proses Pencetakan", "Belum Pencetakan"])): ?>
                                         <td>
-                                            <a href="<?= base_url('hpa/edit_print/' .
-                                                            esc($row['id_hpa']) .
-                                                            '?redirect=index_pencetakan_hpa') ?>" class="btn btn-warning btn-sm">
-                                                <i class="fas fa-print"></i> Cetak Hasil
+                                            <a href="<?= esc(base_url('hpa/edit_print/' . esc($row['id_hpa']) . '?redirect=index_pencetakan_hpa')) ?>"
+                                                class="btn btn-warning btn-sm">
+                                                <i class="fas fa-eye"></i> Cetak Hasil
                                             </a>
                                         </td>
-                                    <?php elseif (in_array($row['status_pencetakan_hpa'], ["Selesai Pencetakan"])): ?>
+                                    <?php elseif ($row['status_pencetakan_hpa'] === "Selesai Pencetakan"): ?>
                                         <td>
-                                            <a href="<?= base_url('hpa/edit_print/' .
-                                                            esc($row['id_hpa']) .
-                                                            '?redirect=index_pencetakan_hpa') ?>" class="btn btn-success btn-sm">
-                                                <i class="fas fa-print"></i> Cetak Hasil
+                                            <a href="<?= esc(base_url('hpa/edit_print/' . esc($row['id_hpa']) . '?redirect=index_pencetakan_hpa')) ?>"
+                                                class="btn btn-success btn-sm">
+                                                <i class="fas fa-eye"></i> Cetak Hasil
                                             </a>
                                         </td>
-                                    <?php else: ?>
-                                        <td></td>
                                     <?php endif; ?>
                                     <td><?= $row['kode_hpa']; ?></td>
-                                    <td><?= $row['nama_pasien']; ?></td>
+                                    <td><b><?= esc($row['nama_pasien']); ?></b> (<?= esc($row['norm_pasien']); ?>)</td>
+                                    <td><?= $row['nama_user_dokter_pembacaan']; ?></td>
+                                    <td><?= $row['lokasi_spesimen']; ?></td>
+                                    <td><?= $row['diagnosa_klinik']; ?></td>
                                     <td><?= $row['status_pencetakan_hpa']; ?></td>
                                     <td><?= $row['nama_user_pencetakan_hpa']; ?></td>
                                     <td>

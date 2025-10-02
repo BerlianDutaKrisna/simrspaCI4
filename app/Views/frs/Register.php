@@ -43,53 +43,10 @@
                 <p class="form-control-plaintext"><?= isset($patient['status_pasien']) ? esc($patient['status_pasien']) : ''; ?></p>
             </div>
         </div>
-
-        <button class="btn btn-outline-info mb-3" type="button" data-toggle="collapse" data-target="#riwayatCollapse" aria-expanded="false" aria-controls="riwayatCollapse">
-            <i class="fas fa-book-medical"></i> Riwayat Pemeriksaan
-        </button>
-
-        <!-- Area collapse -->
-        <div class="collapse show" id="riwayatCollapse">
-            <div class="card card-body">
-                <?php if (!empty($riwayat_api)) : ?>
-                    <div class="table-responsive">
-                        <table class="table table-bordered table-striped table-sm">
-                            <thead class="thead-dark">
-                                <tr>
-                                    <th>No</th>
-                                    <th>Tanggal</th>
-                                    <th>Dokter</th>
-                                    <th>Diagnosa Klinik</th>
-                                    <th>Pemeriksaan</th>
-                                    <th>Aksi</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?php foreach ($riwayat_api as $i => $row) : ?>
-                                    <tr>
-                                        <td><?= $i + 1 ?></td>
-                                        <td><?= (!empty($row['tanggal']) && strtotime($row['tanggal'])) ? date('d-m-Y', strtotime($row['tanggal'])) : '-' ?></td>
-                                        <td><?= esc($row['dokterpa'] ?? '-') ?></td>
-                                        <td><?= esc($row['diagnosaklinik'] ?? '-') ?></td>
-                                        <td><?= esc($row['pemeriksaan'] ?? '-') ?></td>
-                                        <td>
-                                            <button type="button" class="btn btn-info btn-sm"
-                                                onclick="tampilkanModal(`<?= nl2br(esc($row['hasil'] ?? 'Tidak ada hasil', 'js')) ?>`)">
-                                                Lihat Detail
-                                            </button>
-                                        </td>
-                                    </tr>
-                                <?php endforeach ?>
-                            </tbody>
-                        </table>
-                    </div>
-                <?php else : ?>
-                    <p class="text-muted">Tidak ada data riwayat pemeriksaan tersedia.</p>
-                <?php endif ?>
-            </div>
-        </div>
     </div>
 </div>
+
+<?= $this->include('templates/exam/riwayat'); ?>
 
 <div class="card shadow mb-4">
     <div class="card-header py-3">
@@ -103,6 +60,7 @@
             <input type="hidden" name="norm_pasien" value="<?= isset($patient['norm_pasien']) ? esc($patient['norm_pasien']) : ''; ?>">
             <input type="hidden" name="nama_pasien" value="<?= isset($patient['nama_pasien']) ? esc($patient['nama_pasien']) : ''; ?>">
             <input type="hidden" name="alamat_pasien" value="<?= isset($patient['alamat_pasien']) ? esc($patient['alamat_pasien']) : ''; ?>">
+            <input type="hidden" name="kota" value="<?= isset($patient['kota']) ? esc($patient['kota']) : ''; ?>">
             <input type="hidden" name="tanggal_lahir_pasien" value="<?= isset($patient['tanggal_lahir_pasien']) ? esc(date('Y-m-d', strtotime($patient['tanggal_lahir_pasien']))) : ''; ?>">
             <input type="hidden" name="jenis_kelamin_pasien" value="<?= isset($patient['jenis_kelamin_pasien']) ? esc($patient['jenis_kelamin_pasien']) : ''; ?>">
             <input type="hidden" name="status_pasien" value="<?= isset($patient['status_pasien']) ? esc($patient['status_pasien']) : ''; ?>">
@@ -122,8 +80,8 @@
                 <div class="form-group col-md-3">
                     <label for="unit_asal">Unit Asal</label>
                     <select class="form-control" id="unit_asal" name="unit_asal" onchange="handleUnitAsalChange(this)">
-                        <option value="<?= esc($patient['dokterperujuk'] ?? 'Belum Dipilih') ?>" selected>
-                            <?= esc($patient['dokterperujuk'] ?? 'Belum Dipilih') ?>
+                        <option value="<?= esc($patient['unitasal'] ?? 'Belum Dipilih') ?>" selected>
+                            <?= esc($patient['unitasal'] ?? 'Belum Dipilih') ?>
                         </option>
                         <option value="Klinik Bedah">Klinik Bedah</option>
                         <option value="Klinik Bedah Onkologi">Klinik Bedah Onkologi</option>
@@ -217,37 +175,6 @@
         </form>
     </div>
 </div>
-
-<!-- Modal Riweyat -->
-<div class="modal fade" id="modalDetail" tabindex="-1" aria-labelledby="modalDetailLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="modalDetailLabel">Detail Pemeriksaan</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body" id="modal-body-content">
-                <!-- Isi modal akan dimasukkan melalui JavaScript -->
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- javascript untuk menampilkan modal -->
-<script>
-    function tampilkanModal(isi) {
-        // Masukkan isi ke dalam modal
-        document.getElementById("modal-body-content").innerHTML = isi;
-        // Tampilkan modal
-        var myModal = new bootstrap.Modal(document.getElementById("modalDetail"));
-        myModal.show();
-    }
-</script>
 
 <script>
     // Function to set Tanggal Hasil based on Tanggal Permintaan

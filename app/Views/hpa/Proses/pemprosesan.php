@@ -47,7 +47,7 @@
                             <th>Kode HPA</th>
                             <th>Nama Pasien</th>
                             <th>Status Pemprosesan</th>
-                            <th>Analis</th>
+                            <th>User</th>
                             <th>Mulai Pemprosesan</th>
                             <th>Selesai Pemprosesan</th>
                             <th>Deadline Hasil</th>
@@ -70,7 +70,7 @@
                                             autocomplete="off">
                                     </td>
                                     <td><?= $row['kode_hpa']; ?></td>
-                                    <td><?= $row['nama_pasien']; ?></td>
+                                    <td><b><?= esc($row['nama_pasien']); ?></b> (<?= esc($row['norm_pasien']); ?>)</td>
                                     <td><?= $row['status_pemprosesan_hpa']; ?></td>
                                     <td><?= $row['nama_user_pemprosesan_hpa']; ?></td>
                                     <td>

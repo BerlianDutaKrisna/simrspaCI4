@@ -33,6 +33,7 @@ class Dashboard extends BaseController
     public function index()
     {
         $data = [
+            'id_user' => $this->session->get('id_user'),
             'nama_user' => $this->session->get('nama_user'),
             'counts' => $this->getCounts(),
 
