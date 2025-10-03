@@ -3,12 +3,13 @@
 namespace App\Controllers\Ihc\Proses;
 
 use App\Controllers\BaseController;
-use App\Models\Ihc\ihcModel;
+use App\Models\Ihc\IhcModel;
 use App\Models\UsersModel;
 use App\Models\PatientModel;
 use App\Models\Ihc\Proses\Authorized_ihc;
 use App\Models\Ihc\Proses\Pencetakan_ihc;
 use App\Models\Ihc\Mutu_ihc;
+use CodeIgniter\I18n\Time;
 use Exception;
 
 class Authorized extends BaseController
@@ -78,45 +79,60 @@ class Authorized extends BaseController
 
     private function processAction($action, $id_authorized_ihc, $id_ihc, $id_user, $id_mutu_ihc)
     {
-        date_default_timezone_set('Asia/Jakarta');
+        $now = Time::now('Asia/Jakarta', 'id_ID')->toDateTimeString();
 
         try {
             switch ($action) {
                 case 'mulai':
                     $this->authorized_ihc->update($id_authorized_ihc, [
-                        'id_user_authorized_ihc' => $id_user,
+                        'id_user_authorized_ihc'        => $id_user,
                         'id_user_dokter_authorized_ihc' => $id_user,
-                        'status_authorized_ihc' => 'Proses Authorized',
-                        'mulai_authorized_ihc' => date('Y-m-d H:i:s'),
+                        'status_authorized_ihc'         => 'Proses Authorized',
+                        'mulai_authorized_ihc'          => $now,
                     ]);
+
+                    $this->kirimKeSimrs($id_ihc, null);
                     break;
+
                 case 'selesai':
                     $this->authorized_ihc->update($id_authorized_ihc, [
-                        'id_user_authorized_ihc' => $id_user,
+                        'id_user_authorized_ihc'        => $id_user,
                         'id_user_dokter_authorized_ihc' => $id_user,
-                        'status_authorized_ihc' => 'Selesai Authorized',
-                        'selesai_authorized_ihc' => date('Y-m-d H:i:s'),
+                        'status_authorized_ihc'         => 'Selesai Authorized',
+                        'selesai_authorized_ihc'        => $now,
                     ]);
+
+                    $this->kirimKeSimrs($id_ihc, $now);
                     break;
+
                 case 'reset':
                     $this->authorized_ihc->update($id_authorized_ihc, [
-                        'id_user_authorized_ihc' => null,
+                        'id_user_authorized_ihc'        => null,
                         'id_user_dokter_authorized_ihc' => null,
-                        'status_authorized_ihc' => 'Belum Authorized',
-                        'mulai_authorized_ihc' => null,
-                        'selesai_authorized_ihc' => null,
+                        'status_authorized_ihc'         => 'Belum Authorized',
+                        'mulai_authorized_ihc'          => null,
+                        'selesai_authorized_ihc'        => null,
                     ]);
                     break;
+
                 case 'lanjut':
                     $this->ihcModel->update($id_ihc, ['status_ihc' => 'Pencetakan']);
-                    $pencetakanData = [
-                        'id_ihc'            => $id_ihc,
-                        'status_pencetakan_ihc' => 'Belum Pencetakan',
-                    ];
-                    if (!$this->pencetakan_ihc->insert($pencetakanData)) {
-                        throw new Exception('Gagal menyimpan data pencetakan.');
+
+                    // Cek dulu agar tidak insert ganda
+                    $exists = $this->pencetakan_ihc->where('id_ihc', $id_ihc)->first();
+                    if (!$exists) {
+                        $pencetakanData = [
+                            'id_ihc'                 => $id_ihc,
+                            'status_pencetakan_ihc'  => 'Belum Pencetakan',
+                        ];
+                        if (!$this->pencetakan_ihc->insert($pencetakanData)) {
+                            throw new Exception('Gagal menyimpan data pencetakan.');
+                        }
                     }
+
+                    $this->kirimKeSimrs($id_ihc, $now);
                     break;
+
                 case 'kembalikan':
                     $this->authorized_ihc->delete($id_authorized_ihc);
                     $this->ihcModel->update($id_ihc, [
@@ -127,6 +143,111 @@ class Authorized extends BaseController
         } catch (Exception $e) {
             log_message('error', 'Error in processAction: ' . $e->getMessage());
             throw new Exception('Terjadi kesalahan saat memproses aksi: ' . $e->getMessage());
+        }
+    }
+
+    private function kirimKeSimrs($id_ihc, $selesaiAuthorized = null)
+    {
+        $ihcTerbaru = $this->ihcModel->getihcWithRelationsProses($id_ihc);
+        if (!$ihcTerbaru) {
+            log_message('error', '[PENGIRIMAN SIMRS] Data ihc tidak ditemukan untuk ID: ' . $id_ihc);
+            return;
+        }
+
+        $data = $ihcTerbaru;
+        
+        // --- HITUNG RESPONSETIME ---
+        $responsetime = null;
+        if (!empty($data['mulai_penerimaan_ihc']) && !empty($data['selesai_penulisan_ihc'])) {
+            try {
+                $start = new \DateTime($data['mulai_penerimaan_ihc']);
+                $end   = new \DateTime($data['selesai_penulisan_ihc']);
+                $diff  = $start->diff($end);
+                $responsetime = sprintf(
+                    "%d hari %d jam %d menit %d detik",
+                    $diff->days,
+                    $diff->h,
+                    $diff->i,
+                    $diff->s
+                );
+            } catch (\Exception $e) {
+                log_message('error', '[PENGIRIMAN SIMRS] Error hitung responsetime: ' . $e->getMessage());
+            }
+        }
+
+        // --- TENTUKAN ID DOKTER PA ---
+        $iddokterpa = null;
+        $dokterpa   = null;
+
+        $idDokterPembacaan = $data['id_user_dokter_pembacaan_ihc'] ?? null;
+
+        if (!empty($idDokterPembacaan)) {
+            switch ($idDokterPembacaan) {
+                case '1':
+                    $iddokterpa = 1179;
+                    $dokterpa   = "dr. Vinna Chrisdianti, Sp.PA";
+                    break;
+                case '2':
+                    $iddokterpa = 328;
+                    $dokterpa   = "dr. Ayu Tyasmara Pratiwi, Sp.PA";
+                    break;
+                default:
+                    $iddokterpa = null;
+                    $dokterpa   = $data['dokterpa'] ?? null;
+                    break;
+            }
+        }
+
+        // --- PERSIAPAN PAYLOAD ---
+        $payload = [
+            'idtransaksi'      => $data['id_transaksi'] ?? '',
+            'tanggal'          => $data['tanggal_transaksi'] ?? '',
+            'register'         => $data['no_register'] ?? '',
+            'noregister'       => $data['kode_ihc'] ?? '',
+            'idpasien'         => $data['id_pasien'] ?? '',
+            'norm'             => $data['norm_pasien'] ?? '',
+            'nama'             => $data['nama_pasien'] ?? '',
+            'datang'           => $data['mulai_penerimaan_ihc'] ?? '',
+            'periksa'          => $data['mulai_penerimaan_ihc'] ?? '',
+            'selesai'          => $data['selesai_penulisan_ihc'] ?? '',
+            'diambil' => $selesaiAuthorized
+                ?? ($data['selesai_authorized_ihc'] ?? $data['selesai_penulisan_ihc'] ?? ''),
+            'iddokterpa' => $iddokterpa,
+            'dokterpa'   => $dokterpa,
+            'statuslokasi'     => $data['unit_asal'] ?? '',
+            'diagnosaklinik'   => $data['diagnosa_klinik'] ?? '',
+            'diagnosapatologi' => $data['hasil_ihc'] ?? '',
+            'mutusediaan'      => $data['total_nilai_mutu_ihc'] ?? '',
+            'responsetime'     => $responsetime ?? '',
+            'hasil'            => $data['print_ihc'] ?? '',
+            'status'           => !empty($data['id_transaksi'])
+                ? ($data['status_ihc'] ?? 'Belum Terkirim')
+                : 'Belum Terdaftar',
+            'updated_at'       => date('Y-m-d H:i:s'),
+        ];
+
+        log_message('debug', '[PENGIRIMAN SIMRS] Payload siap dikirim: ' . json_encode($payload, JSON_PRETTY_PRINT));
+
+        try {
+            $client = \Config\Services::curlrequest();
+            $response = $client->post(
+                'http://172.20.29.240/apibdrs/apibdrs/postPemeriksaan',
+                [
+                    'headers' => ['Content-Type' => 'application/json'],
+                    'body'    => json_encode($payload)
+                ]
+            );
+
+            $responseBody = $response->getBody();
+            log_message('info', '[PENGIRIMAN SIMRS] Response: ' . $responseBody);
+
+            session()->setFlashdata('simrs_payload', json_encode($payload));
+            session()->setFlashdata('simrs_response', $responseBody);
+        } catch (\Exception $e) {
+            $errorMessage = $e->getMessage();
+            log_message('error', '[PENGIRIMAN SIMRS] Gagal kirim: ' . $errorMessage);
+
+            session()->setFlashdata('simrs_error', $errorMessage);
         }
     }
 

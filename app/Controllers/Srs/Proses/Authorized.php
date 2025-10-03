@@ -3,12 +3,13 @@
 namespace App\Controllers\Srs\Proses;
 
 use App\Controllers\BaseController;
-use App\Models\Srs\srsModel;
+use App\Models\Srs\SrsModel;
 use App\Models\UsersModel;
 use App\Models\PatientModel;
 use App\Models\Srs\Proses\Authorized_srs;
 use App\Models\Srs\Proses\Pencetakan_srs;
 use App\Models\Srs\Mutu_srs;
+use CodeIgniter\I18n\Time;
 use Exception;
 
 class Authorized extends BaseController
@@ -78,45 +79,60 @@ class Authorized extends BaseController
 
     private function processAction($action, $id_authorized_srs, $id_srs, $id_user, $id_mutu_srs)
     {
-        date_default_timezone_set('Asia/Jakarta');
+        $now = Time::now('Asia/Jakarta', 'id_ID')->toDateTimeString();
 
         try {
             switch ($action) {
                 case 'mulai':
                     $this->authorized_srs->update($id_authorized_srs, [
-                        'id_user_authorized_srs' => $id_user,
+                        'id_user_authorized_srs'        => $id_user,
                         'id_user_dokter_authorized_srs' => $id_user,
-                        'status_authorized_srs' => 'Proses Authorized',
-                        'mulai_authorized_srs' => date('Y-m-d H:i:s'),
+                        'status_authorized_srs'         => 'Proses Authorized',
+                        'mulai_authorized_srs'          => $now,
                     ]);
+
+                    $this->kirimKeSimrs($id_srs, null);
                     break;
+
                 case 'selesai':
                     $this->authorized_srs->update($id_authorized_srs, [
-                        'id_user_authorized_srs' => $id_user,
+                        'id_user_authorized_srs'        => $id_user,
                         'id_user_dokter_authorized_srs' => $id_user,
-                        'status_authorized_srs' => 'Selesai Authorized',
-                        'selesai_authorized_srs' => date('Y-m-d H:i:s'),
+                        'status_authorized_srs'         => 'Selesai Authorized',
+                        'selesai_authorized_srs'        => $now,
                     ]);
+
+                    $this->kirimKeSimrs($id_srs, $now);
                     break;
+
                 case 'reset':
                     $this->authorized_srs->update($id_authorized_srs, [
-                        'id_user_authorized_srs' => null,
+                        'id_user_authorized_srs'        => null,
                         'id_user_dokter_authorized_srs' => null,
-                        'status_authorized_srs' => 'Belum Authorized',
-                        'mulai_authorized_srs' => null,
-                        'selesai_authorized_srs' => null,
+                        'status_authorized_srs'         => 'Belum Authorized',
+                        'mulai_authorized_srs'          => null,
+                        'selesai_authorized_srs'        => null,
                     ]);
                     break;
+
                 case 'lanjut':
                     $this->srsModel->update($id_srs, ['status_srs' => 'Pencetakan']);
-                    $pencetakanData = [
-                        'id_srs'            => $id_srs,
-                        'status_pencetakan_srs' => 'Belum Pencetakan',
-                    ];
-                    if (!$this->pencetakan_srs->insert($pencetakanData)) {
-                        throw new Exception('Gagal menyimpan data pencetakan.');
+
+                    // Cek dulu agar tidak insert ganda
+                    $exists = $this->pencetakan_srs->where('id_srs', $id_srs)->first();
+                    if (!$exists) {
+                        $pencetakanData = [
+                            'id_srs'                 => $id_srs,
+                            'status_pencetakan_srs'  => 'Belum Pencetakan',
+                        ];
+                        if (!$this->pencetakan_srs->insert($pencetakanData)) {
+                            throw new Exception('Gagal menyimpan data pencetakan.');
+                        }
                     }
+
+                    $this->kirimKeSimrs($id_srs, $now);
                     break;
+
                 case 'kembalikan':
                     $this->authorized_srs->delete($id_authorized_srs);
                     $this->srsModel->update($id_srs, [
@@ -127,6 +143,111 @@ class Authorized extends BaseController
         } catch (Exception $e) {
             log_message('error', 'Error in processAction: ' . $e->getMessage());
             throw new Exception('Terjadi kesalahan saat memproses aksi: ' . $e->getMessage());
+        }
+    }
+
+    private function kirimKeSimrs($id_srs, $selesaiAuthorized = null)
+    {
+        $srsTerbaru = $this->srsModel->getsrsWithRelationsProses($id_srs);
+        if (!$srsTerbaru) {
+            log_message('error', '[PENGIRIMAN SIMRS] Data srs tidak ditemukan untuk ID: ' . $id_srs);
+            return;
+        }
+
+        $data = $srsTerbaru;
+        
+        // --- HITUNG RESPONSETIME ---
+        $responsetime = null;
+        if (!empty($data['mulai_penerimaan_srs']) && !empty($data['selesai_penulisan_srs'])) {
+            try {
+                $start = new \DateTime($data['mulai_penerimaan_srs']);
+                $end   = new \DateTime($data['selesai_penulisan_srs']);
+                $diff  = $start->diff($end);
+                $responsetime = sprintf(
+                    "%d hari %d jam %d menit %d detik",
+                    $diff->days,
+                    $diff->h,
+                    $diff->i,
+                    $diff->s
+                );
+            } catch (\Exception $e) {
+                log_message('error', '[PENGIRIMAN SIMRS] Error hitung responsetime: ' . $e->getMessage());
+            }
+        }
+
+        // --- TENTUKAN ID DOKTER PA ---
+        $iddokterpa = null;
+        $dokterpa   = null;
+
+        $idDokterPembacaan = $data['id_user_dokter_pembacaan_srs'] ?? null;
+
+        if (!empty($idDokterPembacaan)) {
+            switch ($idDokterPembacaan) {
+                case '1':
+                    $iddokterpa = 1179;
+                    $dokterpa   = "dr. Vinna Chrisdianti, Sp.PA";
+                    break;
+                case '2':
+                    $iddokterpa = 328;
+                    $dokterpa   = "dr. Ayu Tyasmara Pratiwi, Sp.PA";
+                    break;
+                default:
+                    $iddokterpa = null;
+                    $dokterpa   = $data['dokterpa'] ?? null;
+                    break;
+            }
+        }
+
+        // --- PERSIAPAN PAYLOAD ---
+        $payload = [
+            'idtransaksi'      => $data['id_transaksi'] ?? '',
+            'tanggal'          => $data['tanggal_transaksi'] ?? '',
+            'register'         => $data['no_register'] ?? '',
+            'noregister'       => $data['kode_srs'] ?? '',
+            'idpasien'         => $data['id_pasien'] ?? '',
+            'norm'             => $data['norm_pasien'] ?? '',
+            'nama'             => $data['nama_pasien'] ?? '',
+            'datang'           => $data['mulai_penerimaan_srs'] ?? '',
+            'periksa'          => $data['mulai_penerimaan_srs'] ?? '',
+            'selesai'          => $data['selesai_penulisan_srs'] ?? '',
+            'diambil' => $selesaiAuthorized
+                ?? ($data['selesai_authorized_srs'] ?? $data['selesai_penulisan_srs'] ?? ''),
+            'iddokterpa' => $iddokterpa,
+            'dokterpa'   => $dokterpa,
+            'statuslokasi'     => $data['unit_asal'] ?? '',
+            'diagnosaklinik'   => $data['diagnosa_klinik'] ?? '',
+            'diagnosapatologi' => $data['hasil_srs'] ?? '',
+            'mutusediaan'      => $data['total_nilai_mutu_srs'] ?? '',
+            'responsetime'     => $responsetime ?? '',
+            'hasil'            => $data['print_srs'] ?? '',
+            'status'           => !empty($data['id_transaksi'])
+                ? ($data['status_srs'] ?? 'Belum Terkirim')
+                : 'Belum Terdaftar',
+            'updated_at'       => date('Y-m-d H:i:s'),
+        ];
+
+        log_message('debug', '[PENGIRIMAN SIMRS] Payload siap dikirim: ' . json_encode($payload, JSON_PRETTY_PRINT));
+
+        try {
+            $client = \Config\Services::curlrequest();
+            $response = $client->post(
+                'http://172.20.29.240/apibdrs/apibdrs/postPemeriksaan',
+                [
+                    'headers' => ['Content-Type' => 'application/json'],
+                    'body'    => json_encode($payload)
+                ]
+            );
+
+            $responseBody = $response->getBody();
+            log_message('info', '[PENGIRIMAN SIMRS] Response: ' . $responseBody);
+
+            session()->setFlashdata('simrs_payload', json_encode($payload));
+            session()->setFlashdata('simrs_response', $responseBody);
+        } catch (\Exception $e) {
+            $errorMessage = $e->getMessage();
+            log_message('error', '[PENGIRIMAN SIMRS] Gagal kirim: ' . $errorMessage);
+
+            session()->setFlashdata('simrs_error', $errorMessage);
         }
     }
 
