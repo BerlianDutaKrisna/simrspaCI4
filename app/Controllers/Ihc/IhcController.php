@@ -282,17 +282,17 @@ class ihcController extends BaseController
                     ->select('register')
                     ->where('idtransaksi', $idtransaksi)
                     ->first();
-            
+
                 if ($kunjungan && !empty($kunjungan['register'])) {
                     $register = $kunjungan['register'];
-            
+
                     // Update semua hasil untuk register tersebut
                     $this->kunjunganModel
                         ->where('register', $register)
                         ->set(['status' => 'Terdaftar'])
                         ->update();
                 }
-            }            
+            }
             // Mendapatkan ID ihc yang baru diinsert
             $id_ihc = $this->ihcModel->getInsertID();
             // Data penerimaan
@@ -736,7 +736,7 @@ class ihcController extends BaseController
                                 <font size="5" face="verdana"><b>KESIMPULAN :</b> Blok Parafin No. ' . nl2br(htmlspecialchars(str_replace(['<p>', '</p>'], '', $kode_block_ihc))) . ', ' . nl2br(htmlspecialchars(str_replace(['<p>', '</p>'], '', $tindakan_spesimen))) . ':</b></font>
                             </div>
                             <div>
-                                <font size="5" face="verdana"><b>' . strtoupper(htmlspecialchars(str_replace(['<p>', '</p>'], '', $hasil_ihc))) . '</b></font>
+                                <font size="5" face="verdana"><b>' . strtoupper(htmlspecialchars(str_replace(['<p>', '</p>'], '', $hasil_ihc), ENT_QUOTES, 'UTF-8')) . '</b></font>
                             </div>
                             <br>';
                     // Simpan print_ihc setelah semua data yang dibutuhkan telah ada
@@ -806,7 +806,7 @@ class ihcController extends BaseController
         if ($redirect === 'index_authorized_ihc' && isset($data['id_authorized_ihc'])) {
             $id_authorized_ihc = $data['id_authorized_ihc'];
             $selesaiAuthorized = date('Y-m-d H:i:s'); // gunakan untuk diambil & responsetime
-        
+
             // --- UPDATE AUTHORIZED ihc ---
             $updateData = [
                 'id_user_authorized_ihc'        => $id_user,
@@ -814,19 +814,19 @@ class ihcController extends BaseController
                 'status_authorized_ihc'         => 'Selesai Authorized',
                 'selesai_authorized_ihc'        => $selesaiAuthorized,
             ];
-        
+
             $update = $this->authorized_ihc->update($id_authorized_ihc, $updateData);
-        
+
             if (! $update) {
-                log_message('error', '[AUTHORIZED ihc] Update gagal untuk ID: ' . $id_authorized_ihc 
+                log_message('error', '[AUTHORIZED ihc] Update gagal untuk ID: ' . $id_authorized_ihc
                     . ' | Errors: ' . json_encode($this->authorized_ihc->errors()));
             } else {
                 log_message('debug', '[AUTHORIZED ihc] Update BERHASIL untuk ID: ' . $id_authorized_ihc);
             }
-        
+
             // Ambil data hasil terbaru ihc setelah update
             $ihcTerbaru = $this->ihcModel->find($id_ihc);
-        
+
             // --- HITUNG RESPONSETIME ---
             $responsetime = null;
             if (!empty($data['periksa'])) {
@@ -841,7 +841,7 @@ class ihcController extends BaseController
                     $diff->s
                 );
             }
-        
+
             // --- TENTUKAN ID DOKTER PA ---
             $iddokterpa = null;
             if (!empty($data['dokterpa'])) {
@@ -851,7 +851,7 @@ class ihcController extends BaseController
                     $iddokterpa = 328;
                 }
             }
-        
+
             // --- PERSIAPAN PAYLOAD ---
             $payload = [
                 'idtransaksi'      => $data['idtransaksi'] ?? null,
@@ -877,9 +877,9 @@ class ihcController extends BaseController
                 'status'           => !empty($data['idtransaksi']) ? ($data['status'] ?? 'Belum Terkirim') : 'Belum Terdaftar',
                 'updated_at'       => date('Y-m-d H:i:s'),
             ];
-        
+
             log_message('debug', '[PENGIRIMAN SIMRS] Payload siap dikirim: ' . json_encode($payload, JSON_PRETTY_PRINT));
-        
+
             try {
                 $client = \Config\Services::curlrequest();
                 $response = $client->post(
@@ -889,24 +889,23 @@ class ihcController extends BaseController
                         'body'    => json_encode($payload)
                     ]
                 );
-        
+
                 $responseBody = $response->getBody();
                 log_message('info', '[PENGIRIMAN SIMRS] Response: ' . $responseBody);
-        
+
                 // simpan ke flashdata agar bisa dicek di halaman redirect
                 session()->setFlashdata('simrs_payload', json_encode($payload));
                 session()->setFlashdata('simrs_response', $responseBody);
-        
             } catch (\Exception $e) {
                 $errorMessage = $e->getMessage();
                 log_message('error', '[PENGIRIMAN SIMRS] Gagal kirim: ' . $errorMessage);
-        
+
                 session()->setFlashdata('simrs_error', $errorMessage);
             }
-        
+
             return redirect()->to('authorized_ihc/index')
                 ->with('success', session()->getFlashdata('success') ?? 'Data berhasil diauthorized.');
-        }        
+        }
 
         if ($redirect === 'index_pencetakan_ihc' && isset($_POST['id_pencetakan_ihc'])) {
             $id_pencetakan_ihc = $this->request->getPost('id_pencetakan_ihc');
@@ -1080,7 +1079,7 @@ class ihcController extends BaseController
             'nama_user'  => session()->get('nama_user'),
             'ihcData' => $ihcData,
         ];
-        
+
         return view('ihc/laporan/laporan_pemeriksaan', $data);
     }
 
