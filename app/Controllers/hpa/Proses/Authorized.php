@@ -225,7 +225,7 @@ class Authorized extends BaseController
                 ?? ($data['selesai_authorized_hpa'] ?? $data['selesai_penulisan_hpa'] ?? ''),
             'iddokterpa' => $iddokterpa,
             'dokterpa'   => $dokterpa,
-            'statuslokasi'     => $data['unit_asal'] ?? '',
+            'statuslokasi'     => $data['lokasi_spesimen'] ?? '',
             'diagnosaklinik'   => $data['diagnosa_klinik'] ?? '',
             'diagnosapatologi' => $data['hasil_hpa'] ?? '',
             'mutusediaan'      => $data['total_nilai_mutu_hpa'] ?? '',
