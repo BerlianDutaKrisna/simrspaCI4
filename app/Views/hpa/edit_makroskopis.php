@@ -107,28 +107,79 @@
                         <p class="loading-text">Mengunggah, harap tunggu...</p>
                     </div>
 
-                    <!-- Tombol Upload -->
-                    <button type="submit" class="btn btn-primary mt-2" id="uploadButton"
+                    <!-- Tombol Upload Foto Makroskopis -->
+                    <button type="submit"
+                        class="btn btn-primary mt-2 btn-upload"
+                        id="uploadFotoButton"
                         formaction="<?= base_url('hpa/uploadFotoMakroskopis/' . $hpa['id_hpa']) ?>">
                         <i class="fas fa-cloud-upload-alt"></i> Upload
                     </button>
                 </div>
             </div>
 
-            <!-- JavaScript -->
+            <!-- Kolom Gambar Makroskopis -->
+            <div class="form-group row">
+                <label class="col-sm-2 col-form-label">Gambar Makroskopis</label>
+                <div class="col-sm-6">
+
+                    <!-- Preview Gambar Makroskopis -->
+                    <img src="<?= esc(
+                                    isset($gambar['nama_file']) && $gambar['nama_file'] !== null
+                                        ? base_url('uploads/hpa/gambar/' . $gambar['nama_file'])
+                                        : base_url('img/no_photo.jpg')
+                                ) ?>"
+                        width="200"
+                        alt="Gambar Makroskopis"
+                        class="img-thumbnail">
+
+                    <!-- Input file untuk upload gambar -->
+                    <input type="file"
+                        name="gambar_makroskopis_hpa"
+                        id="gambar_makroskopis_hpa"
+                        class="form-control form-control-user mt-2">
+
+                    <!-- TIDAK perlu hidden id_hpa_gambar, karena id_hpa sudah ada di atas -->
+
+                    <!-- Keterangan gambar (INPUT TEXT, VARCHAR) -->
+                    <label class="mt-3">Keterangan Gambar Makroskopis</label>
+                    <input type="text"
+                        class="form-control"
+                        name="keterangan_gambar_makroskopis"
+                        id="keterangan_gambar_makroskopis"
+                        value="<?= $gambar['keterangan'] ?? '' ?>">
+
+                    <!-- Tombol Upload Gambar Makroskopis -->
+                    <button type="submit"
+                        class="btn btn-primary mt-2 btn-upload"
+                        id="uploadGambarButton"
+                        formaction="<?= base_url('Gambar/UploadGambarMakroskopis/' . $hpa['id_hpa']) ?>">
+                        <i class="fas fa-cloud-upload-alt"></i> Upload
+                    </button>
+                </div>
+            </div>
+
+            <!-- JavaScript Upload + Overlay -->
             <script>
                 document.addEventListener("DOMContentLoaded", function() {
                     const form = document.getElementById("form-hpa");
-                    const uploadButton = document.getElementById("uploadButton");
                     const loadingOverlay = document.getElementById("loading-overlay");
 
-                    uploadButton.addEventListener("click", function() {
-                        // Tampilkan overlay loading
-                        loadingOverlay.classList.remove("d-none");
+                    // Semua tombol upload (foto & gambar) pakai class ini
+                    const uploadButtons = document.querySelectorAll(".btn-upload");
 
-                        // Kirim form secara langsung
-                        form.action = this.getAttribute("formaction");
-                        form.submit();
+                    uploadButtons.forEach(function(button) {
+                        button.addEventListener("click", function(e) {
+                            e.preventDefault(); // cegah submit default
+
+                            // Tampilkan overlay loading
+                            if (loadingOverlay) {
+                                loadingOverlay.classList.remove("d-none");
+                            }
+
+                            // Set action form sesuai formaction pada tombol
+                            form.action = this.getAttribute("formaction");
+                            form.submit();
+                        });
                     });
                 });
 
@@ -204,7 +255,7 @@
                 </div>
             </div>
 
-            <!-- Tombol Simpan -->
+            <!-- Tombol Simpan & Cetak -->
             <div class="form-group row">
                 <div class="col-sm-6 text-center mb-3">
                     <button type="submit"
@@ -247,7 +298,7 @@
 <?= $this->include('templates/hpa/footer_edit'); ?>
 <?= $this->include('templates/hpa/cetak_proses'); ?>
 
-// jumlah slide ajax
+<!-- jumlah slide ajax -->
 <script>
     $(document).ready(function() {
         $(".jumlah-slide-input").on("change", function() {

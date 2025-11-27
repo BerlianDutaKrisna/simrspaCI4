@@ -97,6 +97,8 @@ $routes->group('hpa', ['namespace' => 'App\Controllers\Hpa'], function ($routes)
     $routes->get('filter', 'HpaController::filter');
 });
 
+$routes->post('Gambar/UploadGambarMakroskopis/(:num)', 'Gambar::uploadGambarMakroskopis/$1');
+
 // Route untuk frs
 $routes->group('frs', ['namespace' => 'App\Controllers\Frs'], function ($routes) {
     $routes->get('index', 'FrsController::index');

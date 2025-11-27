@@ -20,6 +20,7 @@ use App\Models\Hpa\Proses\Pemverifikasi_hpa;
 use App\Models\Hpa\Proses\Authorized_hpa;
 use App\Models\Hpa\Proses\Pencetakan_hpa;
 use App\Models\Hpa\Mutu_hpa;
+use App\Models\GambarModel;
 use CodeIgniter\Exceptions\PageNotFoundException;
 use Exception;
 
@@ -43,6 +44,7 @@ class HpaController extends BaseController
     protected $authorized_hpa;
     protected $pencetakan_hpa;
     protected $mutu_hpa;
+    protected $gambarModel;
     protected $validation;
 
     public function __construct()
@@ -64,6 +66,7 @@ class HpaController extends BaseController
         $this->authorized_hpa = new Authorized_hpa();
         $this->pencetakan_hpa = new Pencetakan_hpa();
         $this->mutu_hpa = new Mutu_hpa();
+        $this->gambarModel = new GambarModel();
         $this->validation =  \Config\Services::validation();
     }
 
@@ -432,6 +435,11 @@ class HpaController extends BaseController
             }
         }
 
+        $gambar = $this->gambarModel
+            ->where('id_hpa', $id_hpa)
+            ->orderBy('id_gambar', 'DESC')
+            ->first();
+
         $data = [
             'id_user'          => session()->get('id_user'),
             'nama_user'        => session()->get('nama_user'),
@@ -447,8 +455,9 @@ class HpaController extends BaseController
             'penulisan_hpa'    => $penulisan_hpa,
             'users'            => $users,
             'mutu_hpa'         => $mutu_hpa,
+            'gambar'           => $gambar,
         ];
-
+        
         return view('hpa/edit', $data);
     }
 
@@ -500,6 +509,10 @@ class HpaController extends BaseController
         // Ambil data pengguna dengan status "Dokter"
         $users = $this->usersModel->where('status_user', 'Dokter')->findAll();
         // Persiapkan data yang akan dikirim ke view
+        $gambar = $this->gambarModel
+            ->where('id_hpa', $id_hpa)
+            ->orderBy('id_gambar', 'DESC')
+            ->first();
 
         $data = [
             'hpa'        => $hpa,
@@ -512,6 +525,7 @@ class HpaController extends BaseController
             'users'      => $users,
             'id_user'    => $this->session->get('id_user'),
             'nama_user'  => $this->session->get('nama_user'),
+            'gambar'     => $gambar,
         ];
 
         return view('hpa/edit_makroskopis', $data);
@@ -1361,7 +1375,7 @@ class HpaController extends BaseController
             'nama_user'  => session()->get('nama_user'),
             'hpaData' => $hpaData,
         ];
-
+        
         return view('hpa/laporan/laporan_pemeriksaan', $data);
     }
 

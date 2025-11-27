@@ -1,10 +1,10 @@
 <script>
-function cetakProses() {
-    var detailMakroskopis = document.getElementById('makroskopis_hpa') ? document.getElementById('makroskopis_hpa').value : '';
-    var detailMikroskopis = document.getElementById('mikroskopis_hpa') ? document.getElementById('mikroskopis_hpa').value : '';
-    var printWindow = window.open('', '', 'height=500,width=800');
+    function cetakProses() {
+        var detailMakroskopis = document.getElementById('makroskopis_hpa') ? document.getElementById('makroskopis_hpa').value : '';
+        var detailMikroskopis = document.getElementById('mikroskopis_hpa') ? document.getElementById('mikroskopis_hpa').value : '';
+        var printWindow = window.open('', '', 'height=500,width=800');
 
-    const html = `
+        const html = `
 <!doctype html>
 <html>
 <head>
@@ -65,7 +65,9 @@ function cetakProses() {
                 ['data' => $riwayat_ihc ?? []]
             ];
             $totalRiwayat = 0;
-            foreach ($riwayat_pemeriksaan as $pemeriksaan) { $totalRiwayat += count($pemeriksaan['data']); }
+            foreach ($riwayat_pemeriksaan as $pemeriksaan) {
+                $totalRiwayat += count($pemeriksaan['data']);
+            }
             $firstRow = true;
             if ($totalRiwayat > 0) :
                 foreach ($riwayat_pemeriksaan as $pemeriksaan) :
@@ -88,7 +90,9 @@ function cetakProses() {
                                 <?php $firstRow = false; ?>
                             <?php endif; ?>
                         </tr>
-                <?php endforeach; endforeach; else: ?>
+                <?php endforeach;
+                endforeach;
+            else: ?>
                 <tr>
                     <td class="no-border">Tidak ada riwayat pemeriksaan.</td>
                     <td class="foto-makroskopis">
@@ -127,15 +131,54 @@ function cetakProses() {
         </tr>
     </table>
 
+    <?php
+    $gambarFile = isset($gambar['nama_file']) ? $gambar['nama_file'] : null;
+    $gambarKeterangan = isset($gambar['keterangan']) ? $gambar['keterangan'] : '';
+    $gambarPath = $gambarFile ? FCPATH . 'uploads/hpa/gambar/' . $gambarFile : null;
+    $gambarExists = $gambarPath && file_exists($gambarPath);
+    ?>
+
+    <?php if ($gambarExists): ?>
+
+    <table width="100%" style="margin-top:20px; border-collapse:collapse;">
+        <tr>
+            <th colspan="8" style="border:1px solid #000; padding:10px; font-size:14px; text-align:center;">
+                Gambar Makroskopis
+            </th>
+        </tr>
+
+        <tr>
+            <td colspan="8" style="border:1px solid #000; padding:10px; text-align:center;">
+                <img src="<?= base_url('uploads/hpa/gambar/' . $gambarFile); ?>"
+                    style="
+                        max-width: 100%;
+                        height: 120px;
+                        object-fit: contain;
+                        display: block;
+                        margin: 0 auto;
+                    ">
+                <div style="margin-top:8px; font-size:12px; font-style:italic;">
+                    <?= esc($gambarKeterangan) ?>
+                </div>
+            </td>
+        </tr>
+    </table>
+
+    <?php else: ?>
+
     <table class="gambar-table">
         <tr><th colspan="8">Gambar</th></tr>
         <?php
-        $jumlah_slide = $hpa['jumlah_slide']; $kolom_per_baris = 8; $max_kolom = 16;
-        $angka_romawi = ["I","II","III","IV","V","VI","VII","VIII","IX","X","XI","XII","XIII","XIV","XV","XVI"];
+        $jumlah_slide = $hpa['jumlah_slide'];
+        $kolom_per_baris = 8;
+        $max_kolom = 16;
+        $angka_romawi = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI", "XII", "XIII", "XIV", "XV", "XVI"];
+
         for ($baris = 0; $baris < ceil($max_kolom / $kolom_per_baris); $baris++) {
             echo '<tr>';
             for ($kolom = 0; $kolom < $kolom_per_baris; $kolom++) {
                 $indeks = ($baris * $kolom_per_baris) + $kolom;
+
                 if ($indeks < $jumlah_slide && $indeks < $max_kolom) {
                     echo '<td><span class="romawi">' . $angka_romawi[$indeks] . '</span></td>';
                 } else {
@@ -143,8 +186,10 @@ function cetakProses() {
                 }
             }
             echo '</tr>';
-        } ?>
+        }
+        ?>
     </table>
+    <?php endif; ?>
 
     <script>
         // Cetak setelah konten siap (aman untuk Firefox/Chrome)
@@ -168,8 +213,8 @@ function cetakProses() {
 </body>
 </html>`;
 
-    printWindow.document.open();
-    printWindow.document.write(html);
-    printWindow.document.close();
-}
+        printWindow.document.open();
+        printWindow.document.write(html);
+        printWindow.document.close();
+    }
 </script>
