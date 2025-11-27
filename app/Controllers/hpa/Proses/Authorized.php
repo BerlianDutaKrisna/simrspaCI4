@@ -39,10 +39,6 @@ class Authorized extends BaseController
     {
         $namaUser = $this->session->get('nama_user');
 
-<<<<<<< HEAD
-        // Jika user adalah salah satu dokter, filter data sesuai nama dokter
-=======
->>>>>>> dd47376b993a2f24fde3d9858cefb3149107efca
         if (in_array($namaUser, ["dr. Vinna Chrisdianti, Sp.PA", "dr. Ayu Tyasmara Pratiwi, Sp.PA"])) {
             $authorizedData_hpa = $this->authorized_hpa->getauthorized_hpa_by_dokter($namaUser);
         } else {
@@ -50,17 +46,10 @@ class Authorized extends BaseController
         }
 
         $data = [
-<<<<<<< HEAD
-            'id_user' => session()->get('id_user'),
-            'nama_user' => $namaUser,
-            'counts' => $this->getCounts(),
-            'authorizedDatahpa' => $authorizedData_hpa,
-=======
             'id_user'            => session()->get('id_user'),
             'nama_user'          => $namaUser,
             'counts'             => $this->getCounts(),
             'authorizedDatahpa'  => $authorizedData_hpa,
->>>>>>> dd47376b993a2f24fde3d9858cefb3149107efca
         ];
 
         return view('Hpa/Proses/authorized', $data);
@@ -108,17 +97,10 @@ class Authorized extends BaseController
             switch ($action) {
                 case 'mulai':
                     $this->authorized_hpa->update($id_authorized_hpa, [
-<<<<<<< HEAD
-                        'id_user_authorized_hpa' => $id_user,
-                        'id_user_dokter_authorized_hpa' => $id_user,
-                        'status_authorized_hpa' => 'Proses Authorized',
-                        'mulai_authorized_hpa' => date('Y-m-d H:i:s'),
-=======
                         'id_user_authorized_hpa'        => $id_user,
                         'id_user_dokter_authorized_hpa' => $id_user,
                         'status_authorized_hpa'         => 'Proses Authorized',
                         'mulai_authorized_hpa'          => $now,
->>>>>>> dd47376b993a2f24fde3d9858cefb3149107efca
                     ]);
 
                     $this->kirimKeSimrs($id_hpa, null);
@@ -126,17 +108,10 @@ class Authorized extends BaseController
 
                 case 'selesai':
                     $this->authorized_hpa->update($id_authorized_hpa, [
-<<<<<<< HEAD
-                        'id_user_authorized_hpa' => $id_user,
-                        'id_user_dokter_authorized_hpa' => $id_user,
-                        'status_authorized_hpa' => 'Selesai Authorized',
-                        'selesai_authorized_hpa' => date('Y-m-d H:i:s'),
-=======
                         'id_user_authorized_hpa'        => $id_user,
                         'id_user_dokter_authorized_hpa' => $id_user,
                         'status_authorized_hpa'         => 'Selesai Authorized',
                         'selesai_authorized_hpa'        => $now,
->>>>>>> dd47376b993a2f24fde3d9858cefb3149107efca
                     ]);
 
                     $this->kirimKeSimrs($id_hpa, $now);
@@ -144,19 +119,11 @@ class Authorized extends BaseController
 
                 case 'reset':
                     $this->authorized_hpa->update($id_authorized_hpa, [
-<<<<<<< HEAD
-                        'id_user_authorized_hpa' => null,
-                        'id_user_dokter_authorized_hpa' => null,
-                        'status_authorized_hpa' => 'Belum Authorized',
-                        'mulai_authorized_hpa' => null,
-                        'selesai_authorized_hpa' => null,
-=======
                         'id_user_authorized_hpa'        => null,
                         'id_user_dokter_authorized_hpa' => null,
                         'status_authorized_hpa'         => 'Belum Authorized',
                         'mulai_authorized_hpa'          => null,
                         'selesai_authorized_hpa'        => null,
->>>>>>> dd47376b993a2f24fde3d9858cefb3149107efca
                     ]);
                     break;
 
@@ -193,23 +160,6 @@ class Authorized extends BaseController
 
     private function kirimKeSimrs($id_hpa, $selesaiAuthorized = null)
     {
-<<<<<<< HEAD
-        $id_authorized_hpa = $this->request->getGet('id_authorized_hpa');
-
-        if ($id_authorized_hpa) {
-            $data = $this->authorized_hpa->detailsauthorized_hpa($id_authorized_hpa);
-
-            if ($data) {
-                return $this->response->setJSON($data);
-            } else {
-                return $this->response->setJSON(['error' => 'Data tidak ditemukan.']);
-            }
-        } else {
-            return $this->response->setJSON(['error' => 'Coba ulangi kembali..']);
-        }
-    }
-
-=======
         $hpaTerbaru = $this->hpaModel->getHpaWithRelationsProses($id_hpa);
         if (!$hpaTerbaru) {
             log_message('error', '[PENGIRIMAN SIMRS] Data HPA tidak ditemukan untuk ID: ' . $id_hpa);
@@ -328,7 +278,6 @@ class Authorized extends BaseController
         return $this->response->setJSON(['error' => 'Coba ulangi kembali..']);
     }
 
->>>>>>> dd47376b993a2f24fde3d9858cefb3149107efca
     public function edit()
     {
         $id_authorized_hpa = $this->request->getGet('id_authorized_hpa');
@@ -343,10 +292,6 @@ class Authorized extends BaseController
             throw new \CodeIgniter\Exceptions\PageNotFoundException('Data authorized tidak ditemukan.');
         }
 
-<<<<<<< HEAD
-        // Ambil data user
-=======
->>>>>>> dd47376b993a2f24fde3d9858cefb3149107efca
         $users = $this->userModel->findAll();
 
         $data = [
@@ -367,29 +312,17 @@ class Authorized extends BaseController
             return redirect()->back()->with('error', 'ID tidak ditemukan.')->withInput();
         }
 
-<<<<<<< HEAD
-        // Gabungkan input tanggal dan waktu
-        $mulai_authorized_hpa = $this->request->getPost('mulai_authorized_hpa_date') . ' ' . $this->request->getPost('mulai_authorized_hpa_time');
-=======
         $mulai_authorized_hpa   = $this->request->getPost('mulai_authorized_hpa_date') . ' ' . $this->request->getPost('mulai_authorized_hpa_time');
->>>>>>> dd47376b993a2f24fde3d9858cefb3149107efca
         $selesai_authorized_hpa = $this->request->getPost('selesai_authorized_hpa_date') . ' ' . $this->request->getPost('selesai_authorized_hpa_time');
 
         $id_user = $this->request->getPost('id_user_dokter_authorized_hpa');
 
         $data = [
             'id_user_dokter_authorized_hpa' => $id_user === '' ? null : $id_user,
-<<<<<<< HEAD
-            'status_authorized_hpa'  => $this->request->getPost('status_authorized_hpa'),
-            'mulai_authorized_hpa'   => $mulai_authorized_hpa,
-            'selesai_authorized_hpa' => $selesai_authorized_hpa,
-            'updated_at'             => date('Y-m-d H:i:s'),
-=======
             'status_authorized_hpa'         => $this->request->getPost('status_authorized_hpa'),
             'mulai_authorized_hpa'          => $mulai_authorized_hpa,
             'selesai_authorized_hpa'        => $selesai_authorized_hpa,
             'updated_at'                    => date('Y-m-d H:i:s'),
->>>>>>> dd47376b993a2f24fde3d9858cefb3149107efca
         ];
 
         if (!$this->authorized_hpa->update($id_authorized_hpa, $data)) {
@@ -404,15 +337,6 @@ class Authorized extends BaseController
     {
         try {
             $id_authorized = $this->request->getPost('id_authorized');
-<<<<<<< HEAD
-            $id_hpa = $this->request->getPost('id_hpa');
-            if (!$id_authorized || !$id_hpa) {
-                throw new \Exception('ID tidak lengkap. Gagal menghapus data.');
-            }
-            // Hapus data authorized
-            if ($this->authorized_hpa->delete($id_authorized)) {
-                // Update status_hpa ke tahap sebelumnya
-=======
             $id_hpa        = $this->request->getPost('id_hpa');
 
             if (!$id_authorized || !$id_hpa) {
@@ -420,7 +344,6 @@ class Authorized extends BaseController
             }
 
             if ($this->authorized_hpa->delete($id_authorized)) {
->>>>>>> dd47376b993a2f24fde3d9858cefb3149107efca
                 $this->hpaModel->update($id_hpa, [
                     'status_hpa' => 'Pemverifikasi',
                 ]);

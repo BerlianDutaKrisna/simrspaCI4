@@ -3,20 +3,13 @@
 namespace App\Controllers\Ihc\Proses;
 
 use App\Controllers\BaseController;
-<<<<<<< HEAD
-use App\Models\Ihc\ihcModel;
-=======
 use App\Models\Ihc\IhcModel;
->>>>>>> dd47376b993a2f24fde3d9858cefb3149107efca
 use App\Models\UsersModel;
 use App\Models\PatientModel;
 use App\Models\Ihc\Proses\Authorized_ihc;
 use App\Models\Ihc\Proses\Pencetakan_ihc;
 use App\Models\Ihc\Mutu_ihc;
-<<<<<<< HEAD
-=======
 use CodeIgniter\I18n\Time;
->>>>>>> dd47376b993a2f24fde3d9858cefb3149107efca
 use Exception;
 
 class Authorized extends BaseController
@@ -86,51 +79,12 @@ class Authorized extends BaseController
 
     private function processAction($action, $id_authorized_ihc, $id_ihc, $id_user, $id_mutu_ihc)
     {
-<<<<<<< HEAD
-        date_default_timezone_set('Asia/Jakarta');
-=======
         $now = Time::now('Asia/Jakarta', 'id_ID')->toDateTimeString();
->>>>>>> dd47376b993a2f24fde3d9858cefb3149107efca
 
         try {
             switch ($action) {
                 case 'mulai':
                     $this->authorized_ihc->update($id_authorized_ihc, [
-<<<<<<< HEAD
-                        'id_user_authorized_ihc' => $id_user,
-                        'id_user_dokter_authorized_ihc' => $id_user,
-                        'status_authorized_ihc' => 'Proses Authorized',
-                        'mulai_authorized_ihc' => date('Y-m-d H:i:s'),
-                    ]);
-                    break;
-                case 'selesai':
-                    $this->authorized_ihc->update($id_authorized_ihc, [
-                        'id_user_authorized_ihc' => $id_user,
-                        'id_user_dokter_authorized_ihc' => $id_user,
-                        'status_authorized_ihc' => 'Selesai Authorized',
-                        'selesai_authorized_ihc' => date('Y-m-d H:i:s'),
-                    ]);
-                    break;
-                case 'reset':
-                    $this->authorized_ihc->update($id_authorized_ihc, [
-                        'id_user_authorized_ihc' => null,
-                        'id_user_dokter_authorized_ihc' => null,
-                        'status_authorized_ihc' => 'Belum Authorized',
-                        'mulai_authorized_ihc' => null,
-                        'selesai_authorized_ihc' => null,
-                    ]);
-                    break;
-                case 'lanjut':
-                    $this->ihcModel->update($id_ihc, ['status_ihc' => 'Pencetakan']);
-                    $pencetakanData = [
-                        'id_ihc'            => $id_ihc,
-                        'status_pencetakan_ihc' => 'Belum Pencetakan',
-                    ];
-                    if (!$this->pencetakan_ihc->insert($pencetakanData)) {
-                        throw new Exception('Gagal menyimpan data pencetakan.');
-                    }
-                    break;
-=======
                         'id_user_authorized_ihc'        => $id_user,
                         'id_user_dokter_authorized_ihc' => $id_user,
                         'status_authorized_ihc'         => 'Proses Authorized',
@@ -179,7 +133,6 @@ class Authorized extends BaseController
                     $this->kirimKeSimrs($id_ihc, $now);
                     break;
 
->>>>>>> dd47376b993a2f24fde3d9858cefb3149107efca
                 case 'kembalikan':
                     $this->authorized_ihc->delete($id_authorized_ihc);
                     $this->ihcModel->update($id_ihc, [
@@ -193,8 +146,6 @@ class Authorized extends BaseController
         }
     }
 
-<<<<<<< HEAD
-=======
     private function kirimKeSimrs($id_ihc, $selesaiAuthorized = null)
     {
         $ihcTerbaru = $this->ihcModel->getihcWithRelationsProses($id_ihc);
@@ -300,7 +251,6 @@ class Authorized extends BaseController
         }
     }
 
->>>>>>> dd47376b993a2f24fde3d9858cefb3149107efca
     public function authorized_details()
     {
         $id_authorized_ihc = $this->request->getGet('id_authorized_ihc');

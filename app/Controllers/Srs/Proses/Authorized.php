@@ -3,20 +3,13 @@
 namespace App\Controllers\Srs\Proses;
 
 use App\Controllers\BaseController;
-<<<<<<< HEAD
-use App\Models\Srs\srsModel;
-=======
 use App\Models\Srs\SrsModel;
->>>>>>> dd47376b993a2f24fde3d9858cefb3149107efca
 use App\Models\UsersModel;
 use App\Models\PatientModel;
 use App\Models\Srs\Proses\Authorized_srs;
 use App\Models\Srs\Proses\Pencetakan_srs;
 use App\Models\Srs\Mutu_srs;
-<<<<<<< HEAD
-=======
 use CodeIgniter\I18n\Time;
->>>>>>> dd47376b993a2f24fde3d9858cefb3149107efca
 use Exception;
 
 class Authorized extends BaseController
@@ -86,51 +79,12 @@ class Authorized extends BaseController
 
     private function processAction($action, $id_authorized_srs, $id_srs, $id_user, $id_mutu_srs)
     {
-<<<<<<< HEAD
-        date_default_timezone_set('Asia/Jakarta');
-=======
         $now = Time::now('Asia/Jakarta', 'id_ID')->toDateTimeString();
->>>>>>> dd47376b993a2f24fde3d9858cefb3149107efca
 
         try {
             switch ($action) {
                 case 'mulai':
                     $this->authorized_srs->update($id_authorized_srs, [
-<<<<<<< HEAD
-                        'id_user_authorized_srs' => $id_user,
-                        'id_user_dokter_authorized_srs' => $id_user,
-                        'status_authorized_srs' => 'Proses Authorized',
-                        'mulai_authorized_srs' => date('Y-m-d H:i:s'),
-                    ]);
-                    break;
-                case 'selesai':
-                    $this->authorized_srs->update($id_authorized_srs, [
-                        'id_user_authorized_srs' => $id_user,
-                        'id_user_dokter_authorized_srs' => $id_user,
-                        'status_authorized_srs' => 'Selesai Authorized',
-                        'selesai_authorized_srs' => date('Y-m-d H:i:s'),
-                    ]);
-                    break;
-                case 'reset':
-                    $this->authorized_srs->update($id_authorized_srs, [
-                        'id_user_authorized_srs' => null,
-                        'id_user_dokter_authorized_srs' => null,
-                        'status_authorized_srs' => 'Belum Authorized',
-                        'mulai_authorized_srs' => null,
-                        'selesai_authorized_srs' => null,
-                    ]);
-                    break;
-                case 'lanjut':
-                    $this->srsModel->update($id_srs, ['status_srs' => 'Pencetakan']);
-                    $pencetakanData = [
-                        'id_srs'            => $id_srs,
-                        'status_pencetakan_srs' => 'Belum Pencetakan',
-                    ];
-                    if (!$this->pencetakan_srs->insert($pencetakanData)) {
-                        throw new Exception('Gagal menyimpan data pencetakan.');
-                    }
-                    break;
-=======
                         'id_user_authorized_srs'        => $id_user,
                         'id_user_dokter_authorized_srs' => $id_user,
                         'status_authorized_srs'         => 'Proses Authorized',
@@ -179,7 +133,6 @@ class Authorized extends BaseController
                     $this->kirimKeSimrs($id_srs, $now);
                     break;
 
->>>>>>> dd47376b993a2f24fde3d9858cefb3149107efca
                 case 'kembalikan':
                     $this->authorized_srs->delete($id_authorized_srs);
                     $this->srsModel->update($id_srs, [
@@ -193,8 +146,6 @@ class Authorized extends BaseController
         }
     }
 
-<<<<<<< HEAD
-=======
     private function kirimKeSimrs($id_srs, $selesaiAuthorized = null)
     {
         $srsTerbaru = $this->srsModel->getsrsWithRelationsProses($id_srs);
@@ -300,7 +251,6 @@ class Authorized extends BaseController
         }
     }
 
->>>>>>> dd47376b993a2f24fde3d9858cefb3149107efca
     public function authorized_details()
     {
         $id_authorized_srs = $this->request->getGet('id_authorized_srs');
