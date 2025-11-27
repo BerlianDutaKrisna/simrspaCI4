@@ -7,7 +7,11 @@
     <div class="card-body">
         <h1 class="h4 text-gray-900 mb-4">Edit Data Mutu</h1>
 
+<<<<<<<< HEAD:app/Views/hpa/edit_mutu.php
         <a href="<?= base_url('hpa/index') ?>" class="btn btn-primary mb-3"><i class="fas fa-reply"></i> Kembali</a>
+========
+        <a href="<?= base_url('exam/index_exam') ?>" class="btn btn-primary mb-3"><i class="fas fa-reply"></i> Kembali</a>
+>>>>>>>> dd47376b993a2f24fde3d9858cefb3149107efca:app/Views/mutu/edit_mutu.php
 
         <form action="<?= base_url('mutu_hpa/update') ?>" method="POST">
             <input type="hidden" name="id_mutu_hpa" value="<?= $mutuData['id_mutu_hpa'] ?>">

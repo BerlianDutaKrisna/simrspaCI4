@@ -5,6 +5,15 @@
         <i class="fas fa-book"></i>
         </span>
     </a>
+<<<<<<< HEAD
+=======
+    <a href="<?= base_url('hpa/laporan_mutu'); ?>" class="btn btn-info btn-icon-split m-3">
+        <span class="text"><b style="color: white"></b>Laporan Mutu</span>
+        <span class="icon text-white-50">
+        <i class="fas fa-thumbs-up"></i>
+        </span>
+    </a>
+>>>>>>> dd47376b993a2f24fde3d9858cefb3149107efca
     <a href="<?= base_url('hpa/laporan_kerja'); ?>" class="btn btn-info btn-icon-split m-3">
         <span class="text"><b style="color: white"></b>Laporan Kerja</span>
         <span class="icon text-white-50">

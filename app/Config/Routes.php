@@ -88,6 +88,10 @@ $routes->group('hpa', ['namespace' => 'App\Controllers\Hpa'], function ($routes)
     $routes->post('uploadFotoMakroskopis/(:segment)', 'HpaController::uploadFotoMakroskopis/$1');
     $routes->post('uploadFotoMikroskopis/(:segment)', 'HpaController::uploadFotoMikroskopis/$1');
     $routes->get('laporan_pemeriksaan', 'HpaController::laporan_pemeriksaan');
+<<<<<<< HEAD
+=======
+    $routes->get('laporan_mutu', 'HpaController::laporan_mutu');
+>>>>>>> dd47376b993a2f24fde3d9858cefb3149107efca
     $routes->get('laporan_kerja', 'HpaController::laporan_kerja');
     $routes->get('laporan_oprasional', 'HpaController::laporan_oprasional');
     $routes->get('laporan_BHP', 'HpaController::laporan_BHP');
