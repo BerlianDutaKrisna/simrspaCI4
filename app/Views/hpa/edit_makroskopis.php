@@ -88,75 +88,198 @@
             <div class="form-group row">
                 <label class="col-sm-2 col-form-label">Foto Makroskopis</label>
                 <div class="col-sm-6">
-                    <img src="<?= esc($hpa['foto_makroskopis_hpa'] !== null
-                                    ? base_url('uploads/hpa/makroskopis/' . $hpa['foto_makroskopis_hpa'])
-                                    : base_url('img/no_photo.jpg')) ?>"
-                        width="200"
-                        alt="Foto Makroskopis"
-                        class="img-thumbnail"
-                        id="fotoMakroskopis"
-                        data-toggle="modal"
-                        data-target="#fotoModal">
 
-                    <!-- Form Upload -->
-                    <input type="file" name="foto_makroskopis_hpa" id="foto_makroskopis_hpa" class="form-control form-control-user mt-2">
+                    <!-- Input file -->
+                    <input type="file"
+                        name="foto_makroskopis_file"
+                        id="foto_makroskopis_file"
+                        class="form-control form-control-user">
 
-                    <!-- Overlay Loading -->
-                    <div id="loading-overlay" class="d-none">
-                        <div class="spinner"></div>
-                        <p class="loading-text">Mengunggah, harap tunggu...</p>
-                    </div>
+                    <!-- Input keterangan -->
+                    <label class="mt-3">Keterangan Foto Makroskopis</label>
+                    <input type="text"
+                        class="form-control"
+                        name="keterangan_foto_makroskopis"
+                        id="keterangan_foto_makroskopis">
 
-                    <!-- Tombol Upload Foto Makroskopis -->
+                    <!-- Tombol Upload -->
                     <button type="submit"
-                        class="btn btn-primary mt-2 btn-upload"
+                        class="btn btn-primary mt-3 btn-upload"
                         id="uploadFotoButton"
-                        formaction="<?= base_url('hpa/uploadFotoMakroskopis/' . $hpa['id_hpa']) ?>">
-                        <i class="fas fa-cloud-upload-alt"></i> Upload
+                        formaction="<?= base_url('FotoMakroskopis/upload/' . $hpa['id_hpa']) ?>">
+                        <i class="fas fa-cloud-upload-alt"></i> Upload Foto
                     </button>
+
+                    <hr>
+
+                    <!-- ================================ -->
+                    <!-- DAFTAR SEMUA FOTO (GRID CARD) -->
+                    <!-- ================================ -->
+                    <h6 class="mt-4">Daftar Foto Makroskopis:</h6>
+
+                    <div class="row mt-3">
+                        <?php if (!empty($foto)): ?>
+                            <?php foreach ($foto as $f): ?>
+                                <div class="col-md-4 mb-3">
+                                    <div class="card shadow-sm">
+
+                                        <div class="image-wrapper">
+                                            <img src="<?= base_url('uploads/hpa/foto/' . $f['nama_file']) ?>"
+                                                class="card-img-top uniform-img"
+                                                alt="Foto Makroskopis">
+                                        </div>
+
+                                        <div class="card-body">
+                                            <p class="card-text mb-2">
+                                                <?= esc($f['keterangan'] ?? 'Tidak ada keterangan') ?>
+                                            </p>
+
+                                            <!-- Tombol Hapus -->
+                                            <a href="<?= base_url('FotoMakroskopis/delete/' . $f['id_foto_makroskopis']) ?>"
+                                                class="btn btn-danger btn-sm"
+                                                onclick="return confirm('Hapus foto ini?')">
+                                                <i class="fas fa-trash"></i> Hapus
+                                            </a>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            <?php endforeach; ?>
+                        <?php else: ?>
+                            <div class="col-12">
+                                <p class="text-muted">Belum ada foto makroskopis.</p>
+                            </div>
+                        <?php endif; ?>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Kolom Makroskopis -->
+            <div class="form-group row">
+                <label class="col-sm-2 col-form-label">Makroskopis</label>
+                <div class="col-sm-10">
+                    <textarea class="form-control summernote" name="makroskopis_hpa" id="makroskopis_hpa"><?= $hpa['makroskopis_hpa'] ?? '' ?></textarea>
+                </div>
+            </div>
+
+            <!-- Kolom Dokter dan Jumlah Slide -->
+            <div class="form-group row">
+                <label class="col-sm-2 col-form-label">Dokter Makroskopis</label>
+                <div class="col-sm-4">
+                    <select class="form-control" id="id_user_dokter_pemotongan_hpa" name="id_user_dokter_pemotongan_hpa">
+                        <option value="" <?= empty($hpa['id_user_dokter_pemotongan_hpa']) ? 'selected' : '' ?>>-- Pilih Dokter --</option>
+                        <?php foreach ($users as $user): ?>
+                            <?php if ($user['status_user'] === 'Dokter'): ?>
+                                <option value="<?= $user['id_user'] ?>"
+                                    <?= isset($pemotongan['id_user_dokter_pemotongan_hpa']) && $user['id_user'] == $pemotongan['id_user_dokter_pemotongan_hpa'] ? 'selected' : '' ?>>
+                                    <?= $user['nama_user'] ?>
+                                </option>
+                            <?php endif; ?>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+                <label class="col-sm-2 col-form-label" for="jumlah_slide">Jumlah Slide</label>
+                <div class="col-sm-4">
+                    <input type="number"
+                        class="form-control form-control-sm jumlah-slide-input"
+                        data-id="<?= $hpa['id_hpa']; ?>"
+                        value="<?= $hpa['jumlah_slide']; ?>"
+                        min="0" step="1" style="width:100px;">
                 </div>
             </div>
 
             <!-- Kolom Gambar Makroskopis -->
             <div class="form-group row">
                 <label class="col-sm-2 col-form-label">Gambar Makroskopis</label>
+
                 <div class="col-sm-6">
 
-                    <!-- Preview Gambar Makroskopis -->
-                    <img src="<?= esc(
-                                    isset($gambar['nama_file']) && $gambar['nama_file'] !== null
-                                        ? base_url('uploads/hpa/gambar/' . $gambar['nama_file'])
-                                        : base_url('img/no_photo.jpg')
-                                ) ?>"
-                        width="200"
-                        alt="Gambar Makroskopis"
-                        class="img-thumbnail">
-
-                    <!-- Input file untuk upload gambar -->
+                    <!-- Input File -->
                     <input type="file"
                         name="gambar_makroskopis_hpa"
                         id="gambar_makroskopis_hpa"
-                        class="form-control form-control-user mt-2">
+                        class="form-control form-control-user">
 
-                    <!-- TIDAK perlu hidden id_hpa_gambar, karena id_hpa sudah ada di atas -->
-
-                    <!-- Keterangan gambar (INPUT TEXT, VARCHAR) -->
+                    <!-- Input Keterangan -->
                     <label class="mt-3">Keterangan Gambar Makroskopis</label>
                     <input type="text"
                         class="form-control"
                         name="keterangan_gambar_makroskopis"
-                        id="keterangan_gambar_makroskopis"
-                        value="<?= $gambar['keterangan'] ?? '' ?>">
+                        id="keterangan_gambar_makroskopis">
 
-                    <!-- Tombol Upload Gambar Makroskopis -->
+                    <!-- Tombol Upload -->
                     <button type="submit"
-                        class="btn btn-primary mt-2 btn-upload"
-                        id="uploadGambarButton"
+                        class="btn btn-primary mt-3 btn-upload"
                         formaction="<?= base_url('Gambar/UploadGambarMakroskopis/' . $hpa['id_hpa']) ?>">
-                        <i class="fas fa-cloud-upload-alt"></i> Upload
+                        <i class="fas fa-cloud-upload-alt"></i> Upload Foto
                     </button>
+
+                    <hr>
+
+                    <!-- ================================ -->
+                    <!-- DAFTAR SEMUA GAMBAR (GRID CARD) -->
+                    <!-- ================================ -->
+                    <h6 class="mt-4">Daftar Semua Gambar:</h6>
+
+                    <div class="row mt-3">
+
+                        <?php if (!empty($gambar)): ?>
+                            <?php foreach ($gambar as $g): ?>
+                                <div class="col-md-4 mb-3">
+                                    <div class="card shadow-sm">
+
+                                        <!-- Wrapper agar ukuran seragam -->
+                                        <div class="image-wrapper">
+                                            <img src="<?= base_url('uploads/hpa/gambar/' . $g['nama_file']) ?>"
+                                                class="card-img-top uniform-img"
+                                                alt="Gambar HPA">
+                                        </div>
+
+                                        <div class="card-body">
+                                            <p class="card-text mb-2">
+                                                <?= esc($g['keterangan'] ?? 'Tidak ada keterangan') ?>
+                                            </p>
+
+                                            <!-- Tombol Hapus -->
+                                            <a href="<?= base_url('Gambar/Delete/' . $g['id_gambar']) ?>"
+                                                class="btn btn-danger btn-sm"
+                                                onclick="return confirm('Hapus gambar ini?')">
+                                                <i class="fas fa-trash"></i> Hapus
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            <?php endforeach; ?>
+
+                        <?php else: ?>
+                            <div class="col-12">
+                                <p class="text-muted">Belum ada gambar makroskopis.</p>
+                            </div>
+                        <?php endif; ?>
+
+                    </div>
+
                 </div>
             </div>
+
+            <!-- CSS CARD GAMBAR SERAGAM -->
+            <style>
+                .image-wrapper {
+                    width: 100%;
+                    height: 180px;
+                    /* Tinggi seragam */
+                    overflow: hidden;
+                    border-bottom: 1px solid #eee;
+                }
+
+                .uniform-img {
+                    width: 100%;
+                    height: 100%;
+                    object-fit: cover;
+                    /* Proporsional memenuhi area */
+                    object-position: center;
+                }
+            </style>
 
             <!-- JavaScript Upload + Overlay -->
             <script>
@@ -220,40 +343,6 @@
                 `;
                 document.head.appendChild(style);
             </script>
-
-            <!-- Kolom Makroskopis -->
-            <div class="form-group row">
-                <label class="col-sm-2 col-form-label">Makroskopis</label>
-                <div class="col-sm-10">
-                    <textarea class="form-control summernote" name="makroskopis_hpa" id="makroskopis_hpa"><?= $hpa['makroskopis_hpa'] ?? '' ?></textarea>
-                </div>
-            </div>
-
-            <!-- Kolom Dokter dan Jumlah Slide -->
-            <div class="form-group row">
-                <label class="col-sm-2 col-form-label">Dokter Makroskopis</label>
-                <div class="col-sm-4">
-                    <select class="form-control" id="id_user_dokter_pemotongan_hpa" name="id_user_dokter_pemotongan_hpa">
-                        <option value="" <?= empty($hpa['id_user_dokter_pemotongan_hpa']) ? 'selected' : '' ?>>-- Pilih Dokter --</option>
-                        <?php foreach ($users as $user): ?>
-                            <?php if ($user['status_user'] === 'Dokter'): ?>
-                                <option value="<?= $user['id_user'] ?>"
-                                    <?= isset($pemotongan['id_user_dokter_pemotongan_hpa']) && $user['id_user'] == $pemotongan['id_user_dokter_pemotongan_hpa'] ? 'selected' : '' ?>>
-                                    <?= $user['nama_user'] ?>
-                                </option>
-                            <?php endif; ?>
-                        <?php endforeach; ?>
-                    </select>
-                </div>
-                <label class="col-sm-2 col-form-label" for="jumlah_slide">Jumlah Slide</label>
-                <div class="col-sm-4">
-                    <input type="number"
-                        class="form-control form-control-sm jumlah-slide-input"
-                        data-id="<?= $hpa['id_hpa']; ?>"
-                        value="<?= $hpa['jumlah_slide']; ?>"
-                        min="0" step="1" style="width:100px;">
-                </div>
-            </div>
 
             <!-- Tombol Simpan & Cetak -->
             <div class="form-group row">

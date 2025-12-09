@@ -21,6 +21,7 @@ use App\Models\Hpa\Proses\Authorized_hpa;
 use App\Models\Hpa\Proses\Pencetakan_hpa;
 use App\Models\Hpa\Mutu_hpa;
 use App\Models\GambarModel;
+use App\Models\FotoMakroskopisModel;
 use CodeIgniter\Exceptions\PageNotFoundException;
 use Exception;
 
@@ -45,6 +46,7 @@ class HpaController extends BaseController
     protected $pencetakan_hpa;
     protected $mutu_hpa;
     protected $gambarModel;
+    protected $fotoModel;
     protected $validation;
 
     public function __construct()
@@ -67,6 +69,7 @@ class HpaController extends BaseController
         $this->pencetakan_hpa = new Pencetakan_hpa();
         $this->mutu_hpa = new Mutu_hpa();
         $this->gambarModel = new GambarModel();
+        $this->fotoModel = new FotoMakroskopisModel();
         $this->validation =  \Config\Services::validation();
     }
 
@@ -509,10 +512,8 @@ class HpaController extends BaseController
         // Ambil data pengguna dengan status "Dokter"
         $users = $this->usersModel->where('status_user', 'Dokter')->findAll();
         // Persiapkan data yang akan dikirim ke view
-        $gambar = $this->gambarModel
-            ->where('id_hpa', $id_hpa)
-            ->orderBy('id_gambar', 'DESC')
-            ->first();
+        $gambar = $this->gambarModel->getByHpa($id_hpa);
+        $foto = $this->fotoModel->getByHpa($id_hpa);
 
         $data = [
             'hpa'        => $hpa,
@@ -526,8 +527,9 @@ class HpaController extends BaseController
             'id_user'    => $this->session->get('id_user'),
             'nama_user'  => $this->session->get('nama_user'),
             'gambar'     => $gambar,
+            'foto'       => $foto,
         ];
-
+        
         return view('hpa/edit_makroskopis', $data);
     }
 
