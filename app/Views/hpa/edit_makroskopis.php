@@ -91,8 +91,8 @@
 
                     <!-- Input file -->
                     <input type="file"
-                        name="foto_makroskopis_file"
-                        id="foto_makroskopis_file"
+                        name="foto_makroskopis_hpa"
+                        id="foto_makroskopis_hpa"
                         class="form-control form-control-user">
 
                     <!-- Input keterangan -->
@@ -125,8 +125,9 @@
 
                                         <div class="image-wrapper">
                                             <img src="<?= base_url('uploads/hpa/foto/' . $f['nama_file']) ?>"
-                                                class="card-img-top uniform-img"
-                                                alt="Foto Makroskopis">
+                                                class="card-img-top uniform-img foto-thumbnail"
+                                                alt="Foto Makroskopis"
+                                                style="cursor:pointer;">
                                         </div>
 
                                         <div class="card-body">
@@ -231,8 +232,9 @@
                                         <!-- Wrapper agar ukuran seragam -->
                                         <div class="image-wrapper">
                                             <img src="<?= base_url('uploads/hpa/gambar/' . $g['nama_file']) ?>"
-                                                class="card-img-top uniform-img"
-                                                alt="Gambar HPA">
+                                                class="card-img-top uniform-img foto-thumbnail"
+                                                alt="Gambar Makroskopis"
+                                                style="cursor:pointer;">
                                         </div>
 
                                         <div class="card-body">
@@ -367,21 +369,37 @@
 
 <!-- Modal untuk Menampilkan Gambar yang Diperbesar -->
 <div class="modal fade" id="fotoModal" tabindex="-1" aria-labelledby="fotoModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-lg"> <!-- ukuran lebih besar -->
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="fotoModalLabel">Foto Makroskopis</h5>
+                <h5 class="modal-title" id="fotoModalLabel">Preview Gambar</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <div class="modal-body">
-                <!-- Gambar yang akan ditampilkan lebih besar di modal -->
-                <img src="<?= base_url('uploads/hpa/makroskopis/' . $hpa['foto_makroskopis_hpa']); ?>" class="img-fluid" alt="Foto Makroskopis" id="fotoZoom">
+            <div class="modal-body text-center">
+                <img src="" class="img-fluid" id="fotoZoom" alt="Preview Gambar">
             </div>
         </div>
     </div>
 </div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const thumbnails = document.querySelectorAll(".foto-thumbnail");
+        const fotoZoom = document.getElementById("fotoZoom");
+
+        thumbnails.forEach(function(img) {
+            img.addEventListener("click", function() {
+                const src = this.getAttribute("src");
+                fotoZoom.setAttribute("src", src);
+                $('#fotoModal').modal('show'); // buka modal Bootstrap
+            });
+        });
+    });
+</script>
+
+
 
 <?= $this->include('templates/notifikasi') ?>
 <?= $this->include('templates/hpa/footer_edit'); ?>

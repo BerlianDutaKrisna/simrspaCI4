@@ -37,8 +37,7 @@ class Gambar extends BaseController
                 'rules' => 'uploaded[gambar_makroskopis_hpa]|ext_in[gambar_makroskopis_hpa,jpg,jpeg,png]|max_size[gambar_makroskopis_hpa,4096]',
                 'errors' => [
                     'uploaded' => 'Harap unggah file gambar makroskopis.',
-                    'ext_in' => 'File harus berformat JPG atau PNG.',
-                    'max_size' => 'Ukuran file maksimal 4MB.'
+                    'ext_in' => 'File harus berformat JPG atau PNG.'
                 ],
             ],
         ]);

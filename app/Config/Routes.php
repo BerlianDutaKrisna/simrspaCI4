@@ -85,7 +85,6 @@ $routes->group('hpa', ['namespace' => 'App\Controllers\Hpa'], function ($routes)
     $routes->post('update_buku_penerima', 'HpaController::update_buku_penerima');
     $routes->post('update_status', 'HpaController::update_status');
     $routes->post('update_jumlah_slide', 'HpaController::update_jumlah_slide');
-    $routes->post('uploadFotoMakroskopis/(:segment)', 'HpaController::uploadFotoMakroskopis/$1');
     $routes->post('uploadFotoMikroskopis/(:segment)', 'HpaController::uploadFotoMikroskopis/$1');
     $routes->get('laporan_pemeriksaan', 'HpaController::laporan_pemeriksaan');
     $routes->get('laporan_mutu', 'HpaController::laporan_mutu');
