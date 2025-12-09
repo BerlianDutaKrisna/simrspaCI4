@@ -34,7 +34,7 @@ class Gambar extends BaseController
         $validation = \Config\Services::validation();
         $validation->setRules([
             'gambar_makroskopis_hpa' => [
-                'rules' => 'uploaded[gambar_makroskopis_hpa]|ext_in[gambar_makroskopis_hpa,jpg,jpeg,png]|max_size[gambar_makroskopis_hpa,4096]',
+                'rules' => 'uploaded[gambar_makroskopis_hpa]|ext_in[gambar_makroskopis_hpa,jpg,jpeg,png]',
                 'errors' => [
                     'uploaded' => 'Harap unggah file gambar makroskopis.',
                     'ext_in' => 'File harus berformat JPG atau PNG.'

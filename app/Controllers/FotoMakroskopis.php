@@ -34,7 +34,7 @@ class FotoMakroskopis extends BaseController
         $validation = \Config\Services::validation();
         $validation->setRules([
             'foto_makroskopis_hpa' => [
-                'rules'  => 'uploaded[foto_makroskopis_hpa]|ext_in[foto_makroskopis_hpa,jpg,jpeg,png]|max_size[foto_makroskopis_hpa,4096]',
+                'rules'  => 'uploaded[foto_makroskopis_hpa]|ext_in[foto_makroskopis_hpa,jpg,jpeg,png]',
                 'errors' => [
                     'uploaded' => 'Harap unggah file foto makroskopis.',
                     'ext_in'   => 'File harus JPG atau PNG.'
