@@ -84,7 +84,7 @@
                                 <div style="display:flex; flex-wrap:wrap; gap:1px; justify-content:flex-start;">
                                     <?php if (!empty($foto) && is_array($foto)): ?>
                                         <?php foreach ($foto as $f): ?>
-                                            <div style="flex:0 0 45%; border:1px solid #000; padding:1px; box-sizing:border-box; text-align:center; margin-bottom:1px;">
+                                            <div style="flex:0 0 45%; padding:1px; box-sizing:border-box; text-align:center; margin-bottom:1px;">
                                                 <div style="width:100%; height:100px; overflow:hidden; display:flex; align-items:center; justify-content:center; margin-bottom:1px;">
                                                     <img src="<?= base_url('uploads/hpa/foto/' . $f['nama_file']) ?>" 
                                                         style="max-width:100%; max-height:100%; object-fit:cover;">
@@ -111,7 +111,7 @@
                     <div style="display:flex; flex-wrap:wrap; gap:1px; justify-content:flex-start;">
                         <?php if (!empty($foto) && is_array($foto)): ?>
                             <?php foreach ($foto as $f): ?>
-                                <div style="flex:0 0 45%; border:1px solid #000; padding:1px; box-sizing:border-box; text-align:center; margin-bottom:1px;">
+                                <div style="flex:0 0 45%; padding:1px; box-sizing:border-box; text-align:center; margin-bottom:1px;">
                                     <div style="width:100%; height:100px; overflow:hidden; display:flex; align-items:center; justify-content:center; margin-bottom:1px;">
                                         <img src="<?= base_url('uploads/hpa/foto/' . $f['nama_file']) ?>" 
                                             style="max-width:100%; max-height:100%; object-fit:cover;">
@@ -169,7 +169,7 @@
     <h6 style="text-align:center; margin-bottom:1px;">Gambar Makroskopis</h6>
         <div style="display:flex; flex-wrap:wrap; gap:1px;">
             <?php foreach ($gambar as $g): ?>
-            <div style="flex: 0 0 22%; border:1px solid #000; padding:1px; box-sizing:border-box; text-align:center; margin-bottom:1px;">
+            <div style="flex: 0 0 22%; padding:1px; box-sizing:border-box; text-align:center; margin-bottom:1px;">
                 <div style="width:100%; height:120px; overflow:hidden; display:flex; align-items:center; justify-content:center; margin-bottom:1px;">
                     <img src="<?= base_url('uploads/hpa/gambar/' . $g['nama_file']) ?>" 
                         style="max-width:100%; max-height:100%; object-fit:contain;" />
