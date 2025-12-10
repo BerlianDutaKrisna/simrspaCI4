@@ -264,53 +264,74 @@
                 </div>
             </div>
 
-            <!-- CSS CARD GAMBAR SERAGAM -->
-            <style>
-                .image-wrapper {
-                    width: 100%;
-                    height: 180px;
-                    /* Tinggi seragam */
-                    overflow: hidden;
-                    border-bottom: 1px solid #eee;
+            <!-- Tombol Simpan & Cetak -->
+            <div class="form-group row">
+                <div class="col-sm-6 text-center mb-3">
+                    <button type="submit"
+                        class="btn btn-success btn-user w-100"
+                        formaction="<?= base_url('hpa/update/' . $hpa['id_hpa']); ?>">
+                        Simpan
+                    </button>
+                </div>
+                <div class="col-sm-6 text-center">
+                    <!-- Tombol Cetak -->
+                    <button type="button" class="btn btn-info btn-user w-100 w-md-auto" onclick="cetakProses()">
+                        <i class="fas fa-print"></i> Cetak
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+</div>
+
+<!-- CSS CARD GAMBAR SERAGAM -->
+<style>
+    .image-wrapper {
+        width: 100%;
+        height: 180px;
+        /* Tinggi seragam */
+        overflow: hidden;
+        border-bottom: 1px solid #eee;
+    }
+
+    .uniform-img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        /* Proporsional memenuhi area */
+        object-position: center;
+    }
+</style>
+
+<!-- JavaScript Upload + Overlay -->
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const form = document.getElementById("form-hpa");
+        const loadingOverlay = document.getElementById("loading-overlay");
+
+        // Semua tombol upload (foto & gambar) pakai class ini
+        const uploadButtons = document.querySelectorAll(".btn-upload");
+
+        uploadButtons.forEach(function(button) {
+            button.addEventListener("click", function(e) {
+                e.preventDefault(); // cegah submit default
+
+                // Tampilkan overlay loading
+                if (loadingOverlay) {
+                    loadingOverlay.classList.remove("d-none");
                 }
 
-                .uniform-img {
-                    width: 100%;
-                    height: 100%;
-                    object-fit: cover;
-                    /* Proporsional memenuhi area */
-                    object-position: center;
-                }
-            </style>
+                // Set action form sesuai formaction pada tombol
+                form.action = this.getAttribute("formaction");
+                form.submit();
+            });
+        });
+    });
 
-            <!-- JavaScript Upload + Overlay -->
-            <script>
-                document.addEventListener("DOMContentLoaded", function() {
-                    const form = document.getElementById("form-hpa");
-                    const loadingOverlay = document.getElementById("loading-overlay");
-
-                    // Semua tombol upload (foto & gambar) pakai class ini
-                    const uploadButtons = document.querySelectorAll(".btn-upload");
-
-                    uploadButtons.forEach(function(button) {
-                        button.addEventListener("click", function(e) {
-                            e.preventDefault(); // cegah submit default
-
-                            // Tampilkan overlay loading
-                            if (loadingOverlay) {
-                                loadingOverlay.classList.remove("d-none");
-                            }
-
-                            // Set action form sesuai formaction pada tombol
-                            form.action = this.getAttribute("formaction");
-                            form.submit();
-                        });
-                    });
-                });
-
-                // Tambahkan CSS untuk overlay dan spinner
-                const style = document.createElement("style");
-                style.innerHTML = `
+    // Tambahkan CSS untuk overlay dan spinner
+    const style = document.createElement("style");
+    style.innerHTML = `
                 #loading-overlay {
                     position: fixed;
                     top: 0;
@@ -343,29 +364,8 @@
                     100% { transform: rotate(360deg); }
                 }
                 `;
-                document.head.appendChild(style);
-            </script>
-
-            <!-- Tombol Simpan & Cetak -->
-            <div class="form-group row">
-                <div class="col-sm-6 text-center mb-3">
-                    <button type="submit"
-                        class="btn btn-success btn-user w-100"
-                        formaction="<?= base_url('hpa/update/' . $hpa['id_hpa']); ?>">
-                        Simpan
-                    </button>
-                </div>
-                <div class="col-sm-6 text-center">
-                    <!-- Tombol Cetak -->
-                    <button type="button" class="btn btn-info btn-user w-100 w-md-auto" onclick="cetakProses()">
-                        <i class="fas fa-print"></i> Cetak
-                    </button>
-                </div>
-            </div>
-        </form>
-    </div>
-</div>
-</div>
+    document.head.appendChild(style);
+</script>
 
 <!-- Modal untuk Menampilkan Gambar yang Diperbesar -->
 <div class="modal fade" id="fotoModal" tabindex="-1" aria-labelledby="fotoModalLabel" aria-hidden="true">
@@ -398,8 +398,6 @@
         });
     });
 </script>
-
-
 
 <?= $this->include('templates/notifikasi') ?>
 <?= $this->include('templates/hpa/footer_edit'); ?>

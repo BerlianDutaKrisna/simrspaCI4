@@ -20,7 +20,7 @@
                 <input type="hidden" name="id_mutu_hpa" value="<?= $mutu_hpa['id_mutu_hpa'] ?>">
                 <input type="hidden" name="total_nilai_mutu_hpa" value="<?= $mutu_hpa['total_nilai_mutu_hpa']; ?>">
                 <input type="hidden" name="page_source" value="edit_mikroskopis">
-                
+
 
 
                 <!-- Kolom Kode HPA dan Diagnosa -->
@@ -94,20 +94,70 @@
                 <div class="form-group row">
                     <label class="col-sm-2 col-form-label">Foto Makroskopis</label>
                     <div class="col-sm-6">
-                        <img src="<?= $hpa['foto_makroskopis_hpa'] !== null
-                                        ? base_url('uploads/hpa/makroskopis/' . $hpa['foto_makroskopis_hpa'])
-                                        : base_url('img/no_photo.jpg') ?>"
-                            width="200"
-                            alt="Foto Makroskopis"
-                            class="img-thumbnail"
-                            id="fotoMakroskopis"
-                            data-toggle="modal"
-                            data-target="#fotoModal">
-                        <input type="file" name="foto_makroskopis_hpa" id="foto_makroskopis_hpa" class="form-control form-control-user mt-2">
-                        <button type="submit" class="btn btn-primary mt-2"
-                            formaction="<?= base_url('hpa/uploadFotoMakroskopis/' . $hpa['id_hpa']); ?>">
-                            <i class="fas fa-cloud-upload-alt"></i> Upload
+
+                        <!-- Input file -->
+                        <input type="file"
+                            name="foto_makroskopis_hpa"
+                            id="foto_makroskopis_hpa"
+                            class="form-control form-control-user">
+
+                        <!-- Input keterangan -->
+                        <label class="mt-3">Keterangan Foto Makroskopis</label>
+                        <input type="text"
+                            class="form-control"
+                            name="keterangan_foto_makroskopis"
+                            id="keterangan_foto_makroskopis">
+
+                        <!-- Tombol Upload -->
+                        <button type="submit"
+                            class="btn btn-primary mt-3 btn-upload"
+                            id="uploadFotoButton"
+                            formaction="<?= base_url('FotoMakroskopis/upload/' . $hpa['id_hpa']) ?>">
+                            <i class="fas fa-cloud-upload-alt"></i> Upload Foto
                         </button>
+
+                        <hr>
+
+                        <!-- ================================ -->
+                        <!-- DAFTAR SEMUA FOTO (GRID CARD) -->
+                        <!-- ================================ -->
+                        <h6 class="mt-4">Daftar Foto Makroskopis:</h6>
+
+                        <div class="row mt-3">
+                            <?php if (!empty($foto)): ?>
+                                <?php foreach ($foto as $f): ?>
+                                    <div class="col-md-4 mb-3">
+                                        <div class="card shadow-sm">
+
+                                            <div class="image-wrapper">
+                                                <img src="<?= base_url('uploads/hpa/foto/' . $f['nama_file']) ?>"
+                                                    class="card-img-top uniform-img foto-thumbnail"
+                                                    alt="Foto Makroskopis"
+                                                    style="cursor:pointer;">
+                                            </div>
+
+                                            <div class="card-body">
+                                                <p class="card-text mb-2">
+                                                    <?= esc($f['keterangan'] ?? 'Tidak ada keterangan') ?>
+                                                </p>
+
+                                                <!-- Tombol Hapus -->
+                                                <a href="<?= base_url('FotoMakroskopis/delete/' . $f['id_foto_makroskopis']) ?>"
+                                                    class="btn btn-danger btn-sm"
+                                                    onclick="return confirm('Hapus foto ini?')">
+                                                    <i class="fas fa-trash"></i> Hapus
+                                                </a>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                <?php endforeach; ?>
+                            <?php else: ?>
+                                <div class="col-12">
+                                    <p class="text-muted">Belum ada foto makroskopis.</p>
+                                </div>
+                            <?php endif; ?>
+                        </div>
                     </div>
                 </div>
 
@@ -382,80 +432,157 @@
     </div>
 </div>
 
-<!-- Modal untuk Menampilkan Gambar yang Diperbesar -->
-<div class="modal fade" id="fotoModal" tabindex="-1" aria-labelledby="fotoModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="fotoModalLabel">Foto Makroskopis</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <!-- Gambar yang akan ditampilkan lebih besar di modal -->
-                <img src="<?= base_url('uploads/hpa/makroskopis/' . $hpa['foto_makroskopis_hpa']); ?>" class="img-fluid" alt="Foto Makroskopis" id="fotoZoom">
-            </div>
-        </div>
-    </div>
-</div>
+<!-- CSS CARD GAMBAR SERAGAM -->
+<style>
+    .image-wrapper {
+        width: 100%;
+        height: 180px;
+        /* Tinggi seragam */
+        overflow: hidden;
+        border-bottom: 1px solid #eee;
+    }
 
-<!-- Modal untuk Menampilkan Gambar yang Diperbesar -->
-<div class="modal fade" id="fotoModalMikroskopis" tabindex="-1" aria-labelledby="fotoModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="fotoModalLabel">Foto Mikroskopis</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <!-- Gambar yang akan ditampilkan lebih besar di modal -->
-                <img src="<?= base_url('uploads/hpa/mikroskopis/' . $hpa['foto_mikroskopis_hpa']); ?>" class="img-fluid" alt="Foto Mikroskopis" id="fotoZoom">
-            </div>
-        </div>
-    </div>
-</div>
+    .uniform-img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        /* Proporsional memenuhi area */
+        object-position: center;
+    }
+</style>
 
-<?= $this->include('templates/notifikasi') ?>
-<?= $this->include('templates/hpa/footer_edit'); ?>
-<?= $this->include('templates/hpa/cetak_proses'); ?>
-
-// jumlah slide ajax
+<!-- JavaScript Upload + Overlay -->
 <script>
-    $(document).ready(function() {
-        $(".jumlah-slide-input").on("change", function() {
-            let input = $(this);
-            let id_hpa = input.data("id");
-            let jumlah_slide = input.val();
+    document.addEventListener("DOMContentLoaded", function() {
+        const form = document.getElementById("form-hpa");
+        const loadingOverlay = document.getElementById("loading-overlay");
 
-            $.ajax({
-                url: "<?= base_url('hpa/update_jumlah_slide'); ?>",
-                type: "POST",
-                data: {
-                    id_hpa: id_hpa,
-                    jumlah_slide: jumlah_slide,
-                    <?= csrf_token() ?>: "<?= csrf_hash() ?>" // CSRF protection
-                },
-                dataType: "json",
-                success: function(res) {
-                    if (res.status === "success") {
-                        console.log("Jumlah slide berhasil diperbarui");
+        // Semua tombol upload (foto & gambar) pakai class ini
+        const uploadButtons = document.querySelectorAll(".btn-upload");
 
-                        // Update tombol cetak di baris yang sama
-                        let btnCetak = input.closest("tr").find(".btn-cetak-stiker");
-                        if (btnCetak.length) {
-                            btnCetak.data("slide", jumlah_slide);
-                        }
-                    } else {
-                        alert("Gagal memperbarui jumlah slide!");
-                    }
-                },
-                error: function(xhr, status, error) {
-                    alert("Terjadi kesalahan: " + error);
+        uploadButtons.forEach(function(button) {
+            button.addEventListener("click", function(e) {
+                e.preventDefault(); // cegah submit default
+
+                // Tampilkan overlay loading
+                if (loadingOverlay) {
+                    loadingOverlay.classList.remove("d-none");
                 }
+
+                // Set action form sesuai formaction pada tombol
+                form.action = this.getAttribute("formaction");
+                form.submit();
             });
         });
     });
+
+    // Tambahkan CSS untuk overlay dan spinner
+    const style = document.createElement("style");
+    style.innerHTML = `
+                #loading-overlay {
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    background: rgba(0, 0, 0, 0.5);
+                    z-index: 9999;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    flex-direction: column;
+                }
+                .spinner {
+                    width: 60px;
+                    height: 60px;
+                    border: 8px solid #f3f3f3;
+                    border-top: 8px solid #3498db;
+                    border-radius: 50%;
+                    animation: spin 1s linear infinite;
+                }
+                .loading-text {
+                    color: white;
+                    margin-top: 10px;
+                    font-size: 18px;
+                    font-weight: bold;
+                }
+                @keyframes spin {
+                    0% { transform: rotate(0deg); }
+                    100% { transform: rotate(360deg); }
+                }
+                `;
+    document.head.appendChild(style);
 </script>
+
+<!-- Modal untuk Menampilkan Gambar yang Diperbesar -->
+    <div class="modal fade" id="fotoModal" tabindex="-1" aria-labelledby="fotoModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg"> <!-- ukuran lebih besar -->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="fotoModalLabel">Preview Gambar</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body text-center">
+                    <img src="" class="img-fluid" id="fotoZoom" alt="Preview Gambar">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const thumbnails = document.querySelectorAll(".foto-thumbnail");
+            const fotoZoom = document.getElementById("fotoZoom");
+
+            thumbnails.forEach(function(img) {
+                img.addEventListener("click", function() {
+                    const src = this.getAttribute("src");
+                    fotoZoom.setAttribute("src", src);
+                    $('#fotoModal').modal('show'); // buka modal Bootstrap
+                });
+            });
+        });
+    </script>
+
+    <?= $this->include('templates/notifikasi') ?>
+    <?= $this->include('templates/hpa/footer_edit'); ?>
+    <?= $this->include('templates/hpa/cetak_proses'); ?>
+
+    <script>
+        $(document).ready(function() {
+            $(".jumlah-slide-input").on("change", function() {
+                let input = $(this);
+                let id_hpa = input.data("id");
+                let jumlah_slide = input.val();
+
+                $.ajax({
+                    url: "<?= base_url('hpa/update_jumlah_slide'); ?>",
+                    type: "POST",
+                    data: {
+                        id_hpa: id_hpa,
+                        jumlah_slide: jumlah_slide,
+                        <?= csrf_token() ?>: "<?= csrf_hash() ?>" // CSRF protection
+                    },
+                    dataType: "json",
+                    success: function(res) {
+                        if (res.status === "success") {
+                            console.log("Jumlah slide berhasil diperbarui");
+
+                            // Update tombol cetak di baris yang sama
+                            let btnCetak = input.closest("tr").find(".btn-cetak-stiker");
+                            if (btnCetak.length) {
+                                btnCetak.data("slide", jumlah_slide);
+                            }
+                        } else {
+                            alert("Gagal memperbarui jumlah slide!");
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        alert("Terjadi kesalahan: " + error);
+                    }
+                });
+            });
+        });
+    </script>

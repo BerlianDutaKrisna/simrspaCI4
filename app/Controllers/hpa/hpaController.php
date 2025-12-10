@@ -438,10 +438,8 @@ class HpaController extends BaseController
             }
         }
 
-        $gambar = $this->gambarModel
-            ->where('id_hpa', $id_hpa)
-            ->orderBy('id_gambar', 'DESC')
-            ->first();
+        $gambar = $this->gambarModel->getByHpa($id_hpa);
+        $foto = $this->fotoModel->getByHpa($id_hpa);
 
         $data = [
             'id_user'          => session()->get('id_user'),
@@ -459,6 +457,7 @@ class HpaController extends BaseController
             'users'            => $users,
             'mutu_hpa'         => $mutu_hpa,
             'gambar'           => $gambar,
+            'foto'             => $foto,
         ];
         
         return view('hpa/edit', $data);
@@ -604,6 +603,8 @@ class HpaController extends BaseController
         ];
         // Ambil data pengguna dengan status "Dokter"
         $users = $this->usersModel->where('status_user', 'Dokter')->findAll();
+        $gambar = $this->gambarModel->getByHpa($id_hpa);
+        $foto = $this->fotoModel->getByHpa($id_hpa);
         // Persiapkan data yang akan dikirim ke view
         $data = [
             'id_user'  => session()->get('id_user'),
@@ -618,6 +619,8 @@ class HpaController extends BaseController
             'pembacaan_hpa'   => $pembacaan_hpa,
             'mutu_hpa'        => $mutu_hpa,
             'users'           => $users,
+            'gambar'          => $gambar,
+            'foto'            => $foto,
         ];
 
         return view('hpa/edit_mikroskopis', $data);
