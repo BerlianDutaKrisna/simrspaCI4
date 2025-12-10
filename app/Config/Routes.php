@@ -97,7 +97,7 @@ $routes->group('hpa', ['namespace' => 'App\Controllers\Hpa'], function ($routes)
 });
 
 $routes->post('FotoMakroskopis/upload/(:num)', 'FotoMakroskopis::upload/$1');
-$routes->get('FotoMakroskopis/Delete/(:num)', 'FotoMakroskopis::delete/$1');
+$routes->get('FotoMakroskopis/delete/(:num)', 'FotoMakroskopis::delete/$1');
 $routes->post('Gambar/UploadGambarMakroskopis/(:num)', 'Gambar::UploadGambarMakroskopis/$1');
 $routes->get('Gambar/Delete/(:num)', 'Gambar::delete/$1');
 
