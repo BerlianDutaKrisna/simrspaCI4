@@ -219,7 +219,7 @@
                         </button>
                     </div>
                     <div class="col-sm-4 text-center">
-                        <button type="button" class="btn btn-primary btn-user w-100 w-md-auto" onclick="cetakPrintHpa()">
+                        <button type="button" class="btn btn-primary btn-user w-100 w-md-auto" onclick="cetakPrintsrs()">
                             <i class="fas fa-print"></i> Cetak Hasil
                         </button>
                     </div>
