@@ -120,4 +120,31 @@ class FotoMakroskopis extends BaseController
 
         return redirect()->back()->with('success', 'Foto makroskopis berhasil dihapus.');
     }
+
+    public function update($id_foto)
+    {
+        if (!$this->request->isAJAX()) {
+            return $this->response->setJSON([
+                'status' => 'error',
+                'message' => 'Invalid request'
+            ]);
+        }
+
+        $keterangan = $this->request->getPost('keterangan');
+
+        if ($keterangan === null) {
+            return $this->response->setJSON([
+                'status' => 'error',
+                'message' => 'Keterangan kosong'
+            ]);
+        }
+
+        $this->fotoMakroModel->update($id_foto, [
+            'keterangan' => $keterangan
+        ]);
+
+        return $this->response->setJSON([
+            'status' => 'success'
+        ]);
+    }
 }

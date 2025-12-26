@@ -98,8 +98,10 @@ $routes->group('hpa', ['namespace' => 'App\Controllers\Hpa'], function ($routes)
 
 $routes->post('FotoMakroskopis/upload/(:num)', 'FotoMakroskopis::upload/$1');
 $routes->get('FotoMakroskopis/delete/(:num)', 'FotoMakroskopis::delete/$1');
-$routes->post('Gambar/UploadGambarMakroskopis/(:num)', 'Gambar::UploadGambarMakroskopis/$1');
+$routes->post('FotoMakroskopis/update/(:num)', 'FotoMakroskopis::update/$1');
+$routes->post('Gambar/Upload/(:num)', 'Gambar::Upload/$1');
 $routes->get('Gambar/Delete/(:num)', 'Gambar::delete/$1');
+$routes->post('Gambar/update/(:num)', 'Gambar::update/$1');
 
 // Route untuk frs
 $routes->group('frs', ['namespace' => 'App\Controllers\Frs'], function ($routes) {
