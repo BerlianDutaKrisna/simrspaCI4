@@ -94,73 +94,135 @@
                 <div class="form-group row">
                     <label class="col-sm-2 col-form-label">Foto Makroskopis</label>
                     <div class="col-sm-6">
-
-                        <!-- Input file -->
-                        <input type="file"
-                            name="foto_makroskopis_hpa"
-                            id="foto_makroskopis_hpa"
-                            class="form-control form-control-user">
-
-                        <!-- Input keterangan -->
-                        <label class="mt-3">Keterangan Foto Makroskopis</label>
-                        <input type="text"
-                            class="form-control"
-                            name="keterangan_foto_makroskopis"
-                            id="keterangan_foto_makroskopis">
-
-                        <!-- Tombol Upload -->
-                        <button type="submit"
-                            class="btn btn-primary mt-3 btn-upload"
-                            id="uploadFotoButton"
-                            formaction="<?= base_url('FotoMakroskopis/upload/' . $hpa['id_hpa']) ?>">
-                            <i class="fas fa-cloud-upload-alt"></i> Upload Foto
-                        </button>
-
-                        <hr>
-
-                        <!-- ================================ -->
-                        <!-- DAFTAR SEMUA FOTO (GRID CARD) -->
-                        <!-- ================================ -->
                         <h6 class="mt-4">Daftar Foto Makroskopis:</h6>
-
                         <div class="row mt-3">
-                            <?php if (!empty($foto)): ?>
-                                <?php foreach ($foto as $f): ?>
+                            <?php if (!empty($foto)) : ?>
+                                <?php foreach ($foto as $f) : ?>
                                     <div class="col-md-4 mb-3">
                                         <div class="card shadow-sm">
-
                                             <div class="image-wrapper">
-                                                <img src="<?= base_url('uploads/hpa/foto/' . $f['nama_file']) ?>"
+                                                <img
+                                                    src="<?= base_url('uploads/hpa/foto/' . $f['nama_file']) ?>"
                                                     class="card-img-top uniform-img foto-thumbnail"
-                                                    alt="Foto Makroskopis"
-                                                    style="cursor:pointer;">
+                                                    alt="Foto Makroskopis">
                                             </div>
-
                                             <div class="card-body">
-                                                <p class="card-text mb-2">
-                                                    <?= esc($f['keterangan'] ?? 'Tidak ada keterangan') ?>
-                                                </p>
-
-                                                <!-- Tombol Hapus -->
-                                                <a href="<?= base_url('FotoMakroskopis/delete/' . $f['id_foto_makroskopis']) ?>"
-                                                    class="btn btn-danger btn-sm"
-                                                    onclick="return confirm('Hapus foto ini?')">
-                                                    <i class="fas fa-trash"></i> Hapus
-                                                </a>
+                                                <!-- INPUT KETERANGAN (EDIT LANGSUNG) -->
+                                                <input type="text"
+                                                    class="form-control mb-2 keterangan-input"
+                                                    data-id="<?= $f['id_foto_makroskopis'] ?>"
+                                                    value="<?= esc($f['keterangan'] ?? '') ?>">
+                                                <div class="d-flex justify-content-between">
+                                                    <!-- HAPUS -->
+                                                    <a href="<?= base_url('FotoMakroskopis/delete/' . $f['id_foto_makroskopis']) ?>"
+                                                        class="btn btn-danger btn-sm"
+                                                        onclick="return confirm('Hapus foto ini?')">
+                                                        <i class="fas fa-trash"></i> Hapus
+                                                    </a>
+                                                    <!-- SIMPAN KETERANGAN -->
+                                                    <button type="button"
+                                                        class="btn btn-success btn-sm btn-update-keterangan"
+                                                        data-id="<?= $f['id_foto_makroskopis'] ?>">
+                                                        <i class="fas fa-save"></i> Simpan
+                                                    </button>
+                                                </div>
                                             </div>
-
                                         </div>
                                     </div>
                                 <?php endforeach; ?>
-                            <?php else: ?>
+                            <?php else : ?>
                                 <div class="col-12">
                                     <p class="text-muted">Belum ada foto makroskopis.</p>
                                 </div>
                             <?php endif; ?>
                         </div>
+                        <hr>
+                        <!-- Input file -->
+                        <input
+                            type="file"
+                            name="foto_makroskopis_hpa"
+                            class="form-control">
+                        <!-- Input keterangan -->
+                        <label class="mt-3">Keterangan Foto Makroskopis</label>
+                        <input
+                            type="text"
+                            name="keterangan_foto_makroskopis"
+                            class="form-control">
+                        <!-- Tombol Upload -->
+                        <button
+                            type="submit"
+                            class="btn btn-primary mt-3 btn-upload"
+                            formaction="<?= base_url('FotoMakroskopis/upload/' . $hpa['id_hpa']) ?>">
+                            <i class="fas fa-cloud-upload-alt"></i> Upload Foto
+                        </button>
                     </div>
                 </div>
-
+                <!-- Kolom Gambar Makroskopis -->
+                <div class="form-group row">
+                    <label class="col-sm-2 col-form-label">Gambar Makroskopis</label>
+                    <div class="col-sm-6">
+                        <h6 class="mt-4">Daftar Semua Gambar:</h6>
+                        <div class="row mt-3">
+                            <?php if (!empty($gambar)): ?>
+                                <?php foreach ($gambar as $g): ?>
+                                    <div class="col-md-4 mb-3">
+                                        <div class="card shadow-sm">
+                                            <!-- Gambar -->
+                                            <div class="image-wrapper text-center">
+                                            <img src="<?= base_url('uploads/hpa/gambar/' . $g['nama_file']) ?>"
+                                                class="card-img-top uniform-img foto-thumbnail"
+                                                alt="Gambar Makroskopis"
+                                                style="object-fit:cover;height:200px;">
+                                            </div>
+                                            <div class="card-body">
+                                                <!-- INPUT KETERANGAN -->
+                                                <input type="text"
+                                                    class="form-control mb-2 keterangan-gambar-input"
+                                                    data-id="<?= $g['id_gambar'] ?>"
+                                                    value="<?= esc($g['keterangan']) ?>">
+                                                <!-- HAPUS -->
+                                                <a href="<?= base_url('Gambar/Delete/' . $g['id_gambar']) ?>"
+                                                    class="btn btn-danger btn-sm"
+                                                    onclick="return confirm('Hapus gambar ini?')">
+                                                    <i class="fas fa-trash"></i> Hapus
+                                                </a>
+                                                <!-- SIMPAN KETERANGAN -->
+                                                <button type="button"
+                                                    class="btn btn-success btn-sm btn-update-keterangan-gambar float-right"
+                                                    data-id="<?= $g['id_gambar'] ?>">
+                                                    <i class="fas fa-save"></i> Simpan
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                <?php endforeach; ?>
+                            <?php else: ?>
+                                <div class="col-12">
+                                    <p class="text-muted">Belum ada gambar makroskopis.</p>
+                                </div>
+                            <?php endif; ?>
+                        </div>
+                        <hr>
+                        <!-- Input File -->
+                        <input type="file"
+                            name="gambar_makroskopis_hpa"
+                            id="gambar_makroskopis_hpa"
+                            class="form-control form-control-user">
+                        <!-- Input Keterangan -->
+                        <label class="mt-3">Keterangan Gambar Makroskopis</label>
+                        <input type="text"
+                            class="form-control"
+                            name="keterangan_gambar_makroskopis"
+                            id="keterangan_gambar_makroskopis">
+                        <!-- Tombol Upload -->
+                        <button type="submit"
+                            class="btn btn-primary mt-3 btn-upload"
+                            formaction="<?= base_url('Gambar/Upload/' . $hpa['id_hpa']) ?>">
+                            <i class="fas fa-cloud-upload-alt"></i> Upload Gambar
+                        </button>
+                    </div>
+                </div>
+                
                 <!-- Kolom Makroskopis -->
                 <div class="form-group row">
                     <label class="col-sm-2 col-form-label">Makroskopis</label>
@@ -432,7 +494,7 @@
     </div>
 </div>
 
-<!-- CSS CARD GAMBAR SERAGAM -->
+<!-- CSS CARD FOTO & GAMBAR SERAGAM -->
 <style>
     .image-wrapper {
         width: 100%;
@@ -450,7 +512,6 @@
         object-position: center;
     }
 </style>
-
 <!-- JavaScript Upload + Overlay -->
 <script>
     document.addEventListener("DOMContentLoaded", function() {
@@ -513,76 +574,152 @@
                 `;
     document.head.appendChild(style);
 </script>
-
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        document.querySelectorAll(".btn-update-keterangan").forEach(btn => {
+            btn.addEventListener("click", function() {
+                const id = this.dataset.id;
+                const input = document.querySelector(
+                    '.keterangan-input[data-id="' + id + '"]'
+                );
+                if (!input) {
+                    alert("Input tidak ditemukan");
+                    return;
+                }
+                fetch("<?= base_url('FotoMakroskopis/update/') ?>" + id, {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/x-www-form-urlencoded",
+                            "X-Requested-With": "XMLHttpRequest"
+                        },
+                        body: new URLSearchParams({
+                            keterangan: input.value,
+                            "<?= csrf_token() ?>": "<?= csrf_hash() ?>"
+                        })
+                    })
+                    .then(res => res.json())
+                    .then(res => {
+                        if (res.status === "success") {
+                            alert("Keterangan berhasil disimpan");
+                        } else {
+                            alert(res.message ?? "Gagal menyimpan");
+                        }
+                    })
+                    .catch(err => {
+                        console.error(err);
+                        alert("Terjadi kesalahan server");
+                    });
+            });
+        });
+    });
+</script>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        document.querySelectorAll(".btn-update-keterangan-gambar").forEach(button => {
+            button.addEventListener("click", function() {
+                const id = this.dataset.id;
+                const input = document.querySelector(
+                    '.keterangan-gambar-input[data-id="' + id + '"]'
+                );
+                if (!input) {
+                    alert("Input keterangan tidak ditemukan");
+                    return;
+                }
+                fetch("<?= base_url('Gambar/update/') ?>" + id, {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/x-www-form-urlencoded",
+                            "X-Requested-With": "XMLHttpRequest"
+                        },
+                        body: new URLSearchParams({
+                            keterangan: input.value,
+                            "<?= csrf_token() ?>": "<?= csrf_hash() ?>"
+                        })
+                    })
+                    .then(response => response.json())
+                    .then(result => {
+                        if (result.status === "success") {
+                            alert("Keterangan gambar berhasil disimpan");
+                        } else {
+                            alert(result.message ?? "Gagal menyimpan keterangan");
+                        }
+                    })
+                    .catch(error => {
+                        console.error(error);
+                        alert("Terjadi kesalahan server");
+                    });
+            });
+        });
+    });
+</script>
 <!-- Modal untuk Menampilkan Gambar yang Diperbesar -->
-    <div class="modal fade" id="fotoModal" tabindex="-1" aria-labelledby="fotoModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg"> <!-- ukuran lebih besar -->
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="fotoModalLabel">Preview Gambar</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body text-center">
-                    <img src="" class="img-fluid" id="fotoZoom" alt="Preview Gambar">
-                </div>
+<div class="modal fade" id="fotoModal" tabindex="-1" aria-labelledby="fotoModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="fotoModalLabel">Preview Gambar</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body text-center">
+                <img src="" class="img-fluid" id="fotoZoom" alt="Preview Gambar">
             </div>
         </div>
     </div>
+</div>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const thumbnails = document.querySelectorAll(".foto-thumbnail");
+        const fotoZoom = document.getElementById("fotoZoom");
 
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            const thumbnails = document.querySelectorAll(".foto-thumbnail");
-            const fotoZoom = document.getElementById("fotoZoom");
-
-            thumbnails.forEach(function(img) {
-                img.addEventListener("click", function() {
-                    const src = this.getAttribute("src");
-                    fotoZoom.setAttribute("src", src);
-                    $('#fotoModal').modal('show'); // buka modal Bootstrap
-                });
+        thumbnails.forEach(function(img) {
+            img.addEventListener("click", function() {
+                const src = this.getAttribute("src");
+                fotoZoom.setAttribute("src", src);
+                $('#fotoModal').modal('show');
             });
         });
-    </script>
+    });
+</script>
 
-    <?= $this->include('templates/notifikasi') ?>
-    <?= $this->include('templates/hpa/footer_edit'); ?>
-    <?= $this->include('templates/hpa/cetak_proses'); ?>
+<?= $this->include('templates/notifikasi') ?>
+<?= $this->include('templates/hpa/footer_edit'); ?>
+<?= $this->include('templates/hpa/cetak_proses'); ?>
 
-    <script>
-        $(document).ready(function() {
-            $(".jumlah-slide-input").on("change", function() {
-                let input = $(this);
-                let id_hpa = input.data("id");
-                let jumlah_slide = input.val();
+<script>
+    $(document).ready(function() {
+        $(".jumlah-slide-input").on("change", function() {
+            let input = $(this);
+            let id_hpa = input.data("id");
+            let jumlah_slide = input.val();
 
-                $.ajax({
-                    url: "<?= base_url('hpa/update_jumlah_slide'); ?>",
-                    type: "POST",
-                    data: {
-                        id_hpa: id_hpa,
-                        jumlah_slide: jumlah_slide,
-                        <?= csrf_token() ?>: "<?= csrf_hash() ?>" // CSRF protection
-                    },
-                    dataType: "json",
-                    success: function(res) {
-                        if (res.status === "success") {
-                            console.log("Jumlah slide berhasil diperbarui");
+            $.ajax({
+                url: "<?= base_url('hpa/update_jumlah_slide'); ?>",
+                type: "POST",
+                data: {
+                    id_hpa: id_hpa,
+                    jumlah_slide: jumlah_slide,
+                    <?= csrf_token() ?>: "<?= csrf_hash() ?>" // CSRF protection
+                },
+                dataType: "json",
+                success: function(res) {
+                    if (res.status === "success") {
+                        console.log("Jumlah slide berhasil diperbarui");
 
-                            // Update tombol cetak di baris yang sama
-                            let btnCetak = input.closest("tr").find(".btn-cetak-stiker");
-                            if (btnCetak.length) {
-                                btnCetak.data("slide", jumlah_slide);
-                            }
-                        } else {
-                            alert("Gagal memperbarui jumlah slide!");
+                        // Update tombol cetak di baris yang sama
+                        let btnCetak = input.closest("tr").find(".btn-cetak-stiker");
+                        if (btnCetak.length) {
+                            btnCetak.data("slide", jumlah_slide);
                         }
-                    },
-                    error: function(xhr, status, error) {
-                        alert("Terjadi kesalahan: " + error);
+                    } else {
+                        alert("Gagal memperbarui jumlah slide!");
                     }
-                });
+                },
+                error: function(xhr, status, error) {
+                    alert("Terjadi kesalahan: " + error);
+                }
             });
         });
-    </script>
+    });
+</script>

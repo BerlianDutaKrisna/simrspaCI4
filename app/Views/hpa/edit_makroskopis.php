@@ -198,32 +198,33 @@
                         min="0" step="1" style="width:100px;">
                 </div>
             </div>
-
-            <!-- Tombol Simpan & Cetak -->
+            <!-- Kolom simapan & cetak -->
             <div class="form-group row">
-                <div class="col-sm-6 text-center mb-3">
-                    <button type="submit"
-                        class="btn btn-success btn-user w-100"
-                        formaction="<?= base_url('hpa/update/' . $hpa['id_hpa']); ?>">
-                        <i class="fas fa-save"></i> Simpan
-                    </button>
-                </div>
-                <div class="col-sm-6 text-center">
-                    <!-- Tombol Cetak -->
-                    <button type="button" class="btn btn-info btn-user w-100 w-md-auto" onclick="cetakProses()">
-                        <i class="fas fa-print"></i> Cetak
-                    </button>
+                <label class="col-sm-2 col-form-label"></label>
+                <div class="col-sm-6">
+                    <!-- Tombol Simpan & Cetak -->
+                    <div class="form-group row">
+                        <div class="col-sm-6 text-center mb-3">
+                            <button type="submit"
+                                class="btn btn-success btn-user w-100"
+                                formaction="<?= base_url('hpa/update/' . $hpa['id_hpa']); ?>">
+                                <i class="fas fa-save"></i> Simpan
+                            </button>
+                        </div>
+                        <div class="col-sm-6 text-center">
+                            <!-- Tombol Cetak -->
+                            <button type="button" class="btn btn-info btn-user w-100 w-md-auto" onclick="cetakProses()">
+                                <i class="fas fa-print"></i> Cetak
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
-
             <!-- Kolom Gambar Makroskopis -->
             <div class="form-group row">
                 <label class="col-sm-2 col-form-label">Gambar Makroskopis</label>
                 <div class="col-sm-6">
-
-
                     <h6 class="mt-4">Daftar Semua Gambar:</h6>
-
                     <div class="row mt-3">
                         <?php if (!empty($gambar)): ?>
                             <?php foreach ($gambar as $g): ?>
@@ -232,7 +233,7 @@
                                         <!-- Gambar -->
                                         <div class="image-wrapper text-center">
                                             <img src="<?= base_url('uploads/hpa/gambar/' . $g['nama_file']) ?>"
-                                                class="card-img-top uniform-img"
+                                                class="card-img-top uniform-img foto-thumbnail"
                                                 alt="Gambar Makroskopis"
                                                 style="object-fit:cover;height:200px;">
                                         </div>
@@ -294,7 +295,7 @@
 </div>
 </div>
 
-<!-- CSS CARD GAMBAR SERAGAM -->
+<!-- CSS CARD FOTO & GAMBAR SERAGAM -->
 <style>
     .image-wrapper {
         width: 100%;
@@ -312,7 +313,6 @@
         object-position: center;
     }
 </style>
-
 <!-- JavaScript Upload + Overlay -->
 <script>
     document.addEventListener("DOMContentLoaded", function() {
@@ -375,7 +375,6 @@
                 `;
     document.head.appendChild(style);
 </script>
-
 <script>
     document.addEventListener("DOMContentLoaded", function() {
         document.querySelectorAll(".btn-update-keterangan").forEach(btn => {
@@ -415,7 +414,6 @@
         });
     });
 </script>
-
 <script>
     document.addEventListener("DOMContentLoaded", function() {
         document.querySelectorAll(".btn-update-keterangan-gambar").forEach(button => {
@@ -455,8 +453,6 @@
         });
     });
 </script>
-
-
 <!-- Modal untuk Menampilkan Gambar yang Diperbesar -->
 <div class="modal fade" id="fotoModal" tabindex="-1" aria-labelledby="fotoModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
@@ -473,7 +469,6 @@
         </div>
     </div>
 </div>
-
 <script>
     document.addEventListener("DOMContentLoaded", function() {
         const thumbnails = document.querySelectorAll(".foto-thumbnail");
