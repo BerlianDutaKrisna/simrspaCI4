@@ -524,3 +524,6 @@ $routes->group('mutu_ihc', ['namespace' => 'App\Controllers\Ihc'], function ($ro
     $routes->get('edit', 'mutu::edit');
     $routes->post('update', 'mutu::update');
 });
+
+$routes->get('icdo-topografi/search', 'IcdoController::searchTopografi');
+$routes->get('icdo-morfologi/search', 'IcdoController::searchMorfologi');

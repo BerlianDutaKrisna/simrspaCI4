@@ -61,6 +61,23 @@
                     </div>
                 </div>
 
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="topografi">Topografi ICD-O</label>
+                            <input type="text" id="topografi" class="form-control" placeholder="Cari topografi ICD-O">
+                            <ul id="topografi-list" class="list-group" style="position: absolute; z-index: 1000; width: 100%; display: none;"></ul>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="morfologi">Morfologi ICD-O</label>
+                            <input type="text" id="morfologi" class="form-control" placeholder="Cari morfologi ICD-O">
+                            <ul id="morfologi-list" class="list-group" style="position: absolute; z-index: 1000; width: 100%; display: none;"></ul>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- Tombol aksi -->
                 <div class="row text-center g-3">
                     <div class="col-12 col-md-4 mb-3">
@@ -98,3 +115,59 @@
 <?= $this->include('templates/notifikasi') ?>
 <?= $this->include('templates/hpa/footer_cetak'); ?>
 <?= $this->include('templates/hpa/cetak_print'); ?>
+
+<script>
+    $(function() {
+
+        function setupAutocomplete(inputSelector, listSelector, url) {
+            const $input = $(inputSelector);
+            const $list = $(listSelector);
+
+            $input.on('input', function() {
+                const query = $(this).val();
+                if (query.length < 1) {
+                    $list.hide();
+                    return;
+                }
+
+                $.ajax({
+                    url: url,
+                    data: {
+                        q: query
+                    },
+                    dataType: 'json',
+                    success: function(data) {
+                        $list.empty();
+                        if (data.length > 0) {
+                            data.forEach(function(item) {
+                                $list.append(`<li class="list-group-item list-group-item-action" data-id="${item.id}">${item.text}</li>`);
+                            });
+                            $list.show();
+                        } else {
+                            $list.hide();
+                        }
+                    }
+                });
+            });
+
+            $list.on('click', 'li', function() {
+                $input.val($(this).text());
+                $input.data('selected-id', $(this).data('id'));
+                $list.hide();
+            });
+
+            $(document).on('click', function(e) {
+                if (!$(e.target).closest('.form-group').length) {
+                    $list.hide();
+                }
+            });
+        }
+
+        // Topografi
+        setupAutocomplete('#topografi', '#topografi-list', '<?= base_url("icdo-topografi/search") ?>');
+
+        // Morfologi
+        setupAutocomplete('#morfologi', '#morfologi-list', '<?= base_url("icdo-morfologi/search") ?>');
+
+    });
+</script>
