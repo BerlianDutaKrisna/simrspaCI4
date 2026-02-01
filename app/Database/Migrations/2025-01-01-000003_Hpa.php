@@ -134,6 +134,18 @@ class Hpa extends Migration
                 'default'    => 'Belum Diisi',
                 'null' => true,
             ],
+            'topografi_hpa' => [
+                'type' => 'VARCHAR',
+                'constraint' => 255,
+                'default'    => 'Belum Diisi',
+                'null' => true,
+            ],
+            'morfologi_hpa' => [
+                'type' => 'VARCHAR',
+                'constraint' => 255,
+                'default'    => 'Belum Diisi',
+                'null' => true,
+            ],
             'created_at' => [
                 'type' => 'DATETIME',
                 'null' => true,

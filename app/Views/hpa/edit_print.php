@@ -65,14 +65,14 @@
                     <div class="col-md-6">
                         <div class="form-group">
                             <label for="topografi">Topografi ICD-O</label>
-                            <input type="text" id="topografi" class="form-control" placeholder="Cari topografi ICD-O">
+                            <input type="text" name="topografi_hpa" id="topografi" class="form-control" placeholder="Cari topografi ICD-O" value="<?= esc($hpa['topografi_hpa'] ?? '') ?>">
                             <ul id="topografi-list" class="list-group" style="position: absolute; z-index: 1000; width: 100%; display: none;"></ul>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="form-group">
                             <label for="morfologi">Morfologi ICD-O</label>
-                            <input type="text" id="morfologi" class="form-control" placeholder="Cari morfologi ICD-O">
+                            <input type="text" name="morfologi_hpa" id="morfologi" class="form-control" placeholder="Cari morfologi ICD-O" value="<?= esc($hpa['morfologi_hpa'] ?? '') ?>">
                             <ul id="morfologi-list" class="list-group" style="position: absolute; z-index: 1000; width: 100%; display: none;"></ul>
                         </div>
                     </div>

@@ -33,6 +33,8 @@ class HpaModel extends Model
         'id_transaksi',
         'tanggal_transaksi',
         'no_register',
+        'topografi_hpa',
+        'morfologi_hpa',
         'created_at',
         'updated_at',
     ];
