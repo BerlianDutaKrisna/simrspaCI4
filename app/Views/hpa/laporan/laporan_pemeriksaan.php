@@ -117,8 +117,10 @@
                         <th>UNIT ASAL</th>
                         <th>PEMERIKSAAN</th>
                         <th>STATUS LOKASI</th>
+                        <th>Topography ICD-O</th>
                         <th>DIAGNOSA KLINIK</th>
                         <th>DIAGNOSA PATOLOGI</TH>
+                        <th>Morphology ICD-O</th>
                         <th>MUTU SEDIAAN</th>
                         <th>RESPONSE TIME</th>
                         <th>7 HARI</th>
@@ -147,8 +149,10 @@
                                 <td><?= esc($row['unit_asal'] ?? 'Belum Diisi') ?></td>
                                 <td><?= esc($row['tindakan_spesimen'] ?? 'Belum Diisi') ?></td>
                                 <td><?= esc($row['lokasi_spesimen'] ?? 'Belum Diisi') ?></td>
+                                <td><?= esc($row['topologi_hpa'] ?? 'Belum Diisi') ?></td>
                                 <td><?= esc($row['diagnosa_klinik'] ?? 'Belum Diisi') ?></td>
                                 <td><?= esc(strip_tags($row['hasil_hpa'] ?? 'Belum Ada Hasil')) ?></td>
+                                <td><?= esc($row['morfologi_hpa'] ?? 'Belum Diisi') ?></td>
                                 <td><?= esc($row['total_nilai_mutu_hpa'] ?? 'Belum Diisi') ?>%</td>
                                 <td>
                                     <?php

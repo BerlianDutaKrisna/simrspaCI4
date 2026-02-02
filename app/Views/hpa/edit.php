@@ -158,8 +158,8 @@
                     </div>
                     <!-- Kolom Kanan -->
                     <div class="col-sm-6">
-                         <!-- Kolom Gambar Makroskopis -->
-                         <div class="form-group row">
+                        <!-- Kolom Gambar Makroskopis -->
+                        <div class="form-group row">
                             <label class="col-sm-2 col-form-label">Gambar Makroskopis</label>
                             <div class="col-sm-6">
                                 <h6 class="mt-4">Daftar Semua Gambar:</h6>
@@ -526,6 +526,22 @@
                                 </select>
                             </div>
                         </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="topografi">Topografi ICD-O</label>
+                                    <input type="text" name="topografi_hpa" id="topografi" class="form-control" placeholder="Cari topografi ICD-O" value="<?= esc($hpa['topografi_hpa'] ?? '') ?>">
+                                    <ul id="topografi-list" class="list-group" style="position: absolute; z-index: 1000; width: 100%; display: none;"></ul>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="morfologi">Morfologi ICD-O</label>
+                                    <input type="text" name="morfologi_hpa" id="morfologi" class="form-control" placeholder="Cari morfologi ICD-O" value="<?= esc($hpa['morfologi_hpa'] ?? '') ?>">
+                                    <ul id="morfologi-list" class="list-group" style="position: absolute; z-index: 1000; width: 100%; display: none;"></ul>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -784,5 +800,60 @@
                 }
             });
         });
+    });
+</script>
+<script>
+    $(function() {
+
+        function setupAutocomplete(inputSelector, listSelector, url) {
+            const $input = $(inputSelector);
+            const $list = $(listSelector);
+
+            $input.on('input', function() {
+                const query = $(this).val();
+                if (query.length < 1) {
+                    $list.hide();
+                    return;
+                }
+
+                $.ajax({
+                    url: url,
+                    data: {
+                        q: query
+                    },
+                    dataType: 'json',
+                    success: function(data) {
+                        $list.empty();
+                        if (data.length > 0) {
+                            data.forEach(function(item) {
+                                $list.append(`<li class="list-group-item list-group-item-action" data-id="${item.id}">${item.text}</li>`);
+                            });
+                            $list.show();
+                        } else {
+                            $list.hide();
+                        }
+                    }
+                });
+            });
+
+            $list.on('click', 'li', function() {
+                $input.val($(this).text());
+                $input.data('selected-id', $(this).data('id'));
+                $list.hide();
+            });
+
+            $(document).on('click', function(e) {
+                if (!$(e.target).closest('.form-group').length) {
+                    $list.hide();
+                }
+            });
+        }
+
+        // Topografi
+        setupAutocomplete('#topografi', '#topografi-list', '<?= base_url("icdo-topografi/search") ?>');
+
+        // Morfologi
+        setupAutocomplete('#morfologi', '#morfologi-list', '<?= base_url("icdo-morfologi/search") ?>');
+
     });
 </script>
