@@ -5,12 +5,10 @@ $nip = '-';
 
 if ($pembacaan_ihc['dokter_nama'] === "dr. Ayu Tyasmara Pratiwi, Sp.PA") {
     $src = base_url('img/ttd_dr_ayu.png');
-    $pangkat = 'Penata';
     $nip = '198407022009022014';
 } elseif ($pembacaan_ihc['dokter_nama'] === "dr. Vinna Chrisdianti, Sp.PA") {
     $src = base_url('img/ttd_dr_vinna.png');
-    $pangkat = '-';
-    $nip = '-';
+    $nip = '198303152023212002';
 }
 ?>
 <script>
@@ -110,8 +108,8 @@ if ($pembacaan_ihc['dokter_nama'] === "dr. Ayu Tyasmara Pratiwi, Sp.PA") {
                 ];
 
                 // Cek apakah tanggal selesai_penulisan ada dan valid
-                if (!empty($srs['selesai_authorized_ihc'])) {
-                    $timestamp = strtotime($srs['selesai_authorized_ihc']);
+                if (!empty($ihc['selesai_authorized_ihc'])) {
+                    $timestamp = strtotime($ihc['selesai_authorized_ihc']);
                     $tanggal = date('d', $timestamp);
                     $bulanIndo = $bulan[date('n', $timestamp) - 1];
                     $tahun = date('Y', $timestamp);
@@ -134,7 +132,6 @@ if ($pembacaan_ihc['dokter_nama'] === "dr. Ayu Tyasmara Pratiwi, Sp.PA") {
                     <br>
                     <br>
                     <p style="margin: 0; font-size: 20px; font-weight: bold;"><?= esc($pembacaan_ihc['dokter_nama'] ?? '____________________') ?></p>
-                    <p style="margin: 5px 0 0;"><?= $pangkat ?></p>
                     <p style="margin: 0;">NIP. <?= $nip ?></p>
                 </td>
             </tr>
