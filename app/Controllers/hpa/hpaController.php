@@ -1050,7 +1050,7 @@ class HpaController extends BaseController
                         <font size="5" face="verdana"><b>KESIMPULAN :</b> ' . htmlspecialchars($lokasi_spesimen) . ', ' . htmlspecialchars($tindakan_spesimen) . ':</b></font>
                     </div>
                     <div>
-                        <font size="5" face="verdana"><b style="white-space: pre-wrap;">' . strtoupper(nl2br(htmlspecialchars(str_replace(["\xC2\xA0", '&nbsp;', '<p>', '</p>'], [' ', ' ', '', ''], $hasil_hpa)))) . '</b></font>
+                        <font size="5" face="verdana"><b>' . strtoupper(nl2br(htmlspecialchars(str_replace(['&nbsp;', '<p>', '</p>'], [' ', ' ', '', ''], $hasil_hpa)))) . '</b></font>
                     </div>
                     <br>
                     <div>

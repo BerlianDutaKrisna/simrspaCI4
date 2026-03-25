@@ -189,7 +189,7 @@
                                 <font size="5" face="verdana"><b>KESIMPULAN :</b> <?= $frs['lokasi_spesimen'] ?? '' ?>, <?= $frs['tindakan_spesimen'] ?? '' ?>:</b></font>
                             </div>
                             <div>
-                            <font size="5" face="verdana"><b style="white-space: pre-wrap;"><?= strtoupper(nl2br(htmlspecialchars(str_replace(["\xC2\xA0", '&nbsp;', '<p>', '</p>'], [' ', ' ', '', ''], $frs['hasil_frs'] ?? '')))) ?></b></font>
+                            <font size="5" face="verdana"><b><?= strtoupper(nl2br(htmlspecialchars(str_replace(['&nbsp;', '<p>', '</p>'], [' ', ' ', '', ''], $frs['hasil_frs'] ?? '')))) ?></b></font>
                             </div>
                             <br>
                         </textarea>
