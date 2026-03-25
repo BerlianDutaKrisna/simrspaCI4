@@ -179,7 +179,7 @@
                                 <font size="5" face="verdana"><b>KESIMPULAN :</b> <?= $srs['lokasi_spesimen'] ?? '' ?>, <?= $srs['tindakan_spesimen'] ?? '' ?>:</b></font>
                             </div>
                             <div>
-                                <font size="5" face="verdana"><b><?= strtoupper($srs['hasil_srs'] ?? '') ?></b></font>
+                            <font size="5" face="verdana"><b style="white-space: pre-wrap;"><?= strtoupper(nl2br(htmlspecialchars(str_replace(["\xC2\xA0", '&nbsp;', '<p>', '</p>'], [' ', ' ', '', ''], $srs['hasil_srs'] ?? '')))) ?></b></font>
                             </div>
                             <br>
                         </textarea>

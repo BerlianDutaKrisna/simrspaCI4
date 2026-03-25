@@ -814,7 +814,7 @@ class srsController extends BaseController
                         <font size="5" face="verdana"><b>KESIMPULAN :</b> ' . htmlspecialchars($lokasi_spesimen) . ', ' . htmlspecialchars($tindakan_spesimen) . ':</b></font>
                     </div>
                     <div>
-                        <font size="5" face="verdana"><b>' . strtoupper(htmlspecialchars(str_replace(['<p>', '</p>'], '', $hasil_srs))) . '</b></font>
+                        <font size="5" face="verdana"><b style="white-space: pre-wrap;">' . strtoupper(nl2br(htmlspecialchars(str_replace(["\xC2\xA0", '&nbsp;', '<p>', '</p>'], [' ', ' ', '', ''], $hasil_srs)))) . '</b></font>
                     </div>
                     <br>';
                     // Simpan print_srs setelah semua data yang dibutuhkan telah ada

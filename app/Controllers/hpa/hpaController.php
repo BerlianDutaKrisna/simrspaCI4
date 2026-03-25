@@ -637,6 +637,7 @@ class HpaController extends BaseController
                 $riwayat_api = $riwayat_api_response['data'];
             }
         }
+        $id_mutu_hpa = $hpa['id_mutu_hpa'];
         $riwayat_hpa = $this->hpaModel->riwayatPemeriksaanhpa($id_pasien);
         $riwayat_frs = $this->frsModel->riwayatPemeriksaanfrs($id_pasien);
         $riwayat_srs = $this->srsModel->riwayatPemeriksaansrs($id_pasien);
@@ -674,7 +675,19 @@ class HpaController extends BaseController
         if (!empty($hpa['id_penulisan_hpa'])) {
             $penulisan_hpa = $this->penulisan_hpa->find($hpa['id_penulisan_hpa']) ?? [];
         }
-
+        $mutu_hpa = $id_mutu_hpa ? $this->mutu_hpa->find($id_mutu_hpa) : null;
+        // Pastikan mutu tidak kosong sebelum mengambil indikator
+        $mutu_hpa = [
+            'id_mutu_hpa' => $id_mutu_hpa ?? null,
+            'indikator_4' => $mutu_hpa['indikator_4'] ?? "0",
+            'indikator_5' => $mutu_hpa['indikator_5'] ?? "0",
+            'indikator_6' => $mutu_hpa['indikator_6'] ?? "0",
+            'indikator_7' => $mutu_hpa['indikator_7'] ?? "0",
+            'indikator_8' => $mutu_hpa['indikator_8'] ?? "0",
+            'indikator_9' => $mutu_hpa['indikator_9'] ?? "0",
+            'indikator_10' => $mutu_hpa['indikator_10'] ?? "0",
+            'total_nilai_mutu_hpa' => $mutu_hpa['total_nilai_mutu_hpa'] ?? "0"
+        ];
         // Ambil daftar user dengan status "Dokter"
         $users = $this->usersModel->where('status_user', 'Dokter')->findAll();
         // Data yang akan dikirim ke view
@@ -687,6 +700,7 @@ class HpaController extends BaseController
             'riwayat_frs'        => $riwayat_frs,
             'riwayat_srs'        => $riwayat_srs,
             'riwayat_ihc'        => $riwayat_ihc,
+            'mutu_hpa'        => $mutu_hpa,
             'pembacaan' => $pembacaan_hpa,
             'penulisan' => $penulisan_hpa,
             'users' => $users,
@@ -939,7 +953,26 @@ class HpaController extends BaseController
                         'status_penulisan_hpa' => 'Selesai Penulisan',
                         'selesai_penulisan_hpa' => date('Y-m-d H:i:s'),
                     ]);
-
+                    $id_mutu_hpa = $this->request->getPost('id_mutu_hpa');
+                    $indikator_4 = (string) ($this->request->getPost('indikator_4') ?? '0');
+                    $indikator_5 = (string) ($this->request->getPost('indikator_5') ?? '0');
+                    $indikator_6 = (string) ($this->request->getPost('indikator_6') ?? '0');
+                    $indikator_7 = (string) ($this->request->getPost('indikator_7') ?? '0');
+                    $indikator_8 = (string) ($this->request->getPost('indikator_8') ?? '0');
+                    $indikator_9 = (string) ($this->request->getPost('indikator_9') ?? '0');
+                    $indikator_10 = (string) ($this->request->getPost('indikator_10') ?? '0');
+                    $total_nilai_mutu_hpa = (string) ($this->request->getPost('total_nilai_mutu_hpa') ?? '0');
+                    $keseluruhan_nilai_mutu = $total_nilai_mutu_hpa + (int)$indikator_4 + (int)$indikator_5 + (int)$indikator_6 + (int)$indikator_7 + (int)$indikator_8 + (int)$indikator_9 + (int)$indikator_10;
+                    $this->mutu_hpa->update($id_mutu_hpa, [
+                        'indikator_4' => $indikator_4,
+                        'indikator_5' => $indikator_5,
+                        'indikator_6' => $indikator_6,
+                        'indikator_7' => $indikator_7,
+                        'indikator_8' => $indikator_8,
+                        'indikator_9' => $indikator_9,
+                        'indikator_10' => $indikator_10,
+                        'total_nilai_mutu_hpa' => $keseluruhan_nilai_mutu,
+                    ]);
                     // Ambil data dari form
                     $lokasi_spesimen = $this->request->getPost('lokasi_spesimen');
                     $diagnosa_klinik = $this->request->getPost('diagnosa_klinik');
@@ -1017,7 +1050,7 @@ class HpaController extends BaseController
                         <font size="5" face="verdana"><b>KESIMPULAN :</b> ' . htmlspecialchars($lokasi_spesimen) . ', ' . htmlspecialchars($tindakan_spesimen) . ':</b></font>
                     </div>
                     <div>
-                        <font size="5" face="verdana"><b>' . strtoupper(htmlspecialchars(str_replace(['<p>', '</p>'], '', $hasil_hpa))) . '</b></font>
+                        <font size="5" face="verdana"><b style="white-space: pre-wrap;">' . strtoupper(nl2br(htmlspecialchars(str_replace(["\xC2\xA0", '&nbsp;', '<p>', '</p>'], [' ', ' ', '', ''], $hasil_hpa)))) . '</b></font>
                     </div>
                     <br>
                     <div>
