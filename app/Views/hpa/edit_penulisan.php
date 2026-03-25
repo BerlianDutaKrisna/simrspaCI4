@@ -187,7 +187,7 @@
                         </script>
 
                         <div class="form-group row">
-                            <label class="col-sm-2 col-form-label">mutu hpa</label>
+                            <label class="col-sm-2 col-form-label">Mutu HPA</label>
                             <div class="col-sm-4">
                                 <div class="form-check">
                                     <input type="checkbox" id="checkAll_<?= $mutu_hpa['id_mutu_hpa']; ?>" class="form-check-input">
