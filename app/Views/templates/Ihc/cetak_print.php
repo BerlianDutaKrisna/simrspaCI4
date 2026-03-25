@@ -123,7 +123,7 @@ if ($pembacaan_ihc['dokter_nama'] === "dr. Ayu Tyasmara Pratiwi, Sp.PA") {
             <tr>
                 <!-- Kolom gambar -->
                 <td width="170" align="center" style="padding-right: 10px;">
-                    <img src="<?= $src ?>" alt="Tanda Tangan" style="width: 200px;">
+                    <img src="<?= $src ?>" alt="Tanda Tangan" style="width: 150px;">
                 </td>
                 <!-- Kolom teks -->
                 <td style="vertical-align: middle;">
