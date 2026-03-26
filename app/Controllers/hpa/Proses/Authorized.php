@@ -167,7 +167,6 @@ class Authorized extends BaseController
         }
 
         $data = $hpaTerbaru;
-        dd($data);
         
         // --- HITUNG RESPONSETIME ---
         $responsetime = null;
