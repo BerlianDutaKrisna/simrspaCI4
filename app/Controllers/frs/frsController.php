@@ -766,7 +766,7 @@ class FrsController extends BaseController
                         <font size="5" face="verdana"><b>KESIMPULAN :</b> ' . htmlspecialchars($lokasi_spesimen) . ', ' . htmlspecialchars($tindakan_spesimen) . ':</b></font>
                     </div>
                     <div>
-                        <font size="5" face="verdana"><b">' . strtoupper(nl2br(htmlspecialchars(str_replace(['&nbsp;', '<p>', '</p>'], [' ', ' ', '', ''], $hasil_frs)))) . '</b></font>
+                        <font size="5" face="verdana"><b>' . strtoupper(nl2br(htmlspecialchars(str_replace(['&nbsp;', '<p>', '</p>'], [' ', ' ', '', ''], $hasil_frs)))) . '</b></font>
                     </div>
                     <br>';
                     // Simpan print_frs setelah semua data yang dibutuhkan telah ada
