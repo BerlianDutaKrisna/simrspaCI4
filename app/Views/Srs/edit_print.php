@@ -7,7 +7,7 @@
             <h6 class="m-0 font-weight-bold text-primary">Edit Print</h6>
         </div>
         <div class="card-body">
-            <h1 class="h3 mb-4">Form Print Sitologi</h1>
+            <h1 class="h3 mb-4">Form Print Fine Needle Aspiration Biopsy</h1>
 
             <!-- Form -->
             <form id="form-srs" method="POST" enctype="multipart/form-data">
