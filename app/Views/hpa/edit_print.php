@@ -33,7 +33,7 @@
                 <input type="hidden" name="periksa" value="<?= isset($hpa['mulai_penerimaan_hpa']) ? esc($hpa['mulai_penerimaan_hpa']) : '' ?>">
                 <input type="hidden" name="selesai" value="<?= isset($hpa['selesai_penulisan_hpa']) ? esc($hpa['selesai_penulisan_hpa']) : '' ?>">
                 <!-- dokter PA text -->
-                <input type="text" name="dokterpa" value="<?= isset($pembacaan_hpa['dokter_nama']) ? esc($pembacaan_hpa['dokter_nama']) : '' ?>">
+                <input type="hidden" name="dokterpa" value="<?= isset($pembacaan_hpa['dokter_nama']) ? esc($pembacaan_hpa['dokter_nama']) : '' ?>">
                 <!-- status lokasi text -->
                 <input type="hidden" name="statuslokasi" value="<?= isset($hpa['lokasi_spesimen']) ? esc($hpa['lokasi_spesimen']) : '' ?>">
                 <!-- diagnosa & mutu -->

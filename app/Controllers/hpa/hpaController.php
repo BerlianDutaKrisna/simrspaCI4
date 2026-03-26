@@ -1161,6 +1161,14 @@ class HpaController extends BaseController
             // mapping ke ID
             $iddokterpa = $mappingDokter[$dokterpa] ?? null;
 
+            // Batasan Diagnosa Patologi
+            $diagnosa = strip_tags($data['diagnosapatologi'] ?? '');
+            $diagnosa = trim($diagnosa);
+
+            if (mb_strlen($diagnosa) > 25) {
+                $diagnosa = mb_substr($diagnosa, 0, 20) . '...';
+            }
+
             // --- PERSIAPAN PAYLOAD ---
             $payload = [
                 'idtransaksi'      => $data['idtransaksi'] ?? null,
@@ -1179,7 +1187,7 @@ class HpaController extends BaseController
                 'dokterpa'   => $dokterpa,
                 'statuslokasi'     => $data['statuslokasi'] ?? null,
                 'diagnosaklinik'   => $data['diagnosaklinik'] ?? null,
-                'diagnosapatologi' => $data['diagnosapatologi'] ?? null,
+                'diagnosapatologi' => $diagnosa,
                 'mutusediaan'      => $data['mutusediaan'] ?? null,
                 'responsetime'     => $responsetime,
                 'hasil'            => $hpaTerbaru['print_hpa'] ?? null,
