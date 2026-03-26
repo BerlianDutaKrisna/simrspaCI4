@@ -840,15 +840,20 @@ class ihcController extends BaseController
                     $diff->s
                 );
             }
+            
             // --- TENTUKAN ID DOKTER PA ---
-            $iddokterpa = null;
-            if (!empty($data['dokterpa'])) {
-                if ($data['dokterpa'] === "dr. Vinna Chrisdianti, Sp.PA") {
-                    $iddokterpa = 1179;
-                } elseif ($data['dokterpa'] === "dr. Ayu Tyasmara Pratiwi, Sp.PA") {
-                    $iddokterpa = 328;
-                }
-            }
+            $mappingDokter = [
+                strtolower("dr. Vinna Chrisdianti, Sp.PA") => 1179,
+                strtolower("dr. Ayu Tyasmara Pratiwi, Sp.PA") => 328,
+            ];
+
+            // ambil & normalisasi nama dokter
+            $dokterpaRaw = $data['dokterpa'] ?? null;
+            $dokterpa    = strtolower(trim($dokterpaRaw));
+
+            // mapping ke ID
+            $iddokterpa = $mappingDokter[$dokterpa] ?? null;
+
             // --- PERSIAPAN PAYLOAD ---
             $payload = [
                 'idtransaksi'      => $data['idtransaksi'] ?? null,

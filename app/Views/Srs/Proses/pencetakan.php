@@ -49,6 +49,7 @@
                             <th>Detail</th>
                             <th>Kode SRS</th>
                             <th>Nama Pasien</th>
+                            <th>No Register</th>
                             <th>Dokter</th>
                             <th>Lokasi Spesimen</th>
                             <th>Diagnosa Klinik</th>
@@ -92,6 +93,7 @@
                                     <?php endif; ?>
                                     <td><?= $row['kode_srs']; ?></td>
                                     <td><b><?= esc($row['nama_pasien']); ?></b> (<?= esc($row['norm_pasien']); ?>)</td>
+                                    <td><?= $row['no_register']; ?></td>
                                     <td><?= $row['nama_user_dokter_pembacaan']; ?></td>
                                     <td><?= $row['lokasi_spesimen']; ?></td>
                                     <td><?= $row['diagnosa_klinik']; ?></td>

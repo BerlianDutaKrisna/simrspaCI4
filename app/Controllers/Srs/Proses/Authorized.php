@@ -176,27 +176,17 @@ class Authorized extends BaseController
         }
 
         // --- TENTUKAN ID DOKTER PA ---
-        $iddokterpa = null;
-        $dokterpa   = null;
+        $mappingDokter = [
+            strtolower("dr. Vinna Chrisdianti, Sp.PA") => 1179,
+            strtolower("dr. Ayu Tyasmara Pratiwi, Sp.PA") => 328,
+        ];
 
-        $idDokterPembacaan = $data['id_user_dokter_pembacaan_srs'] ?? null;
+        // ambil & normalisasi nama dokter
+        $dokterpaRaw = $data['dokterpa'] ?? null;
+        $dokterpa    = strtolower(trim($dokterpaRaw));
 
-        if (!empty($idDokterPembacaan)) {
-            switch ($idDokterPembacaan) {
-                case '1':
-                    $iddokterpa = 1179;
-                    $dokterpa   = "dr. Vinna Chrisdianti, Sp.PA";
-                    break;
-                case '2':
-                    $iddokterpa = 328;
-                    $dokterpa   = "dr. Ayu Tyasmara Pratiwi, Sp.PA";
-                    break;
-                default:
-                    $iddokterpa = null;
-                    $dokterpa   = $data['dokterpa'] ?? null;
-                    break;
-            }
-        }
+        // mapping ke ID
+        $iddokterpa = $mappingDokter[$dokterpa] ?? null;
 
         // --- PERSIAPAN PAYLOAD ---
         $payload = [
