@@ -51,7 +51,7 @@ class Authorized extends BaseController
             'counts'             => $this->getCounts(),
             'authorizedDatahpa'  => $authorizedData_hpa,
         ];
-        
+
         return view('Hpa/Proses/authorized', $data);
     }
 
@@ -167,7 +167,7 @@ class Authorized extends BaseController
         }
 
         $data = $hpaTerbaru;
-        
+
         // --- HITUNG RESPONSETIME ---
         $responsetime = null;
         if (!empty($data['mulai_penerimaan_hpa']) && !empty($data['selesai_penulisan_hpa'])) {
@@ -187,18 +187,36 @@ class Authorized extends BaseController
             }
         }
 
-        // --- TENTUKAN ID DOKTER PA ---
-        $mappingDokter = [
-            strtolower("dr. Vinna Chrisdianti, Sp.PA") => 1179,
-            strtolower("dr. Ayu Tyasmara Pratiwi, Sp.PA") => 328,
+        // --- TENTUKAN ID DOKTER PA BERDASARKAN ID USER ---
+        $mappingDokterByUser = [
+            '1' => [
+                'nama' => 'dr. Vinna Chrisdianti, Sp.PA',
+                'id'   => 1179,
+            ],
+            '2' => [
+                'nama' => 'dr. Ayu Tyasmara Pratiwi, Sp.PA',
+                'id'   => 328,
+            ],
         ];
+        $idUserDokter = $data['id_user_dokter_pembacaan_hpa'] ?? null;
+        log_message('debug', '[SIMRS] id_user_dokter_pembacaan_hpa: ' . $idUserDokter);
+        $iddokterpa   = null;
+        $dokterpa = null;
+        if ($idUserDokter && isset($mappingDokterByUser[$idUserDokter])) {
+            $iddokterpa   = $mappingDokterByUser[$idUserDokter]['id'];
+            $dokterpa = $mappingDokterByUser[$idUserDokter]['nama'];
+        } else {
+            log_message('error', '[SIMRS] Mapping dokter berdasarkan user tidak ditemukan: ' . $idUserDokter);
+            $iddokterpa   = 0;
+            $dokterpa = '';
+        }
 
-        // ambil & normalisasi nama dokter
-        $dokterpaRaw = $data['dokterpa'] ?? null;
-        $dokterpa    = strtolower(trim($dokterpaRaw));
-
-        // mapping ke ID
-        $iddokterpa = $mappingDokter[$dokterpa] ?? null;
+        //BATASAN DIAGNOSA PATOLOGI
+        $diagnosa = strip_tags($data['hasil_hpa'] ?? '');
+        $diagnosa = trim($diagnosa);
+        if (mb_strlen($diagnosa) > 25) {
+            $diagnosa = mb_substr($diagnosa, 0, 20) . '...';
+        }
 
         // --- PERSIAPAN PAYLOAD ---
         $payload = [
@@ -218,7 +236,7 @@ class Authorized extends BaseController
             'dokterpa'   => $dokterpa,
             'statuslokasi'     => $data['lokasi_spesimen'] ?? '',
             'diagnosaklinik'   => $data['diagnosa_klinik'] ?? '',
-            'diagnosapatologi' => $data['hasil_hpa'] ?? '',
+            'diagnosapatologi' => $diagnosa,
             'mutusediaan'      => $data['total_nilai_mutu_hpa'] ?? '',
             'responsetime'     => $responsetime ?? '',
             'hasil'            => $data['print_hpa'] ?? '',

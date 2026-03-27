@@ -278,10 +278,10 @@ class srsController extends BaseController
                     ->select('register')
                     ->where('idtransaksi', $idtransaksi)
                     ->first();
-            
+
                 if ($kunjungan && !empty($kunjungan['register'])) {
                     $register = $kunjungan['register'];
-            
+
                     // Update semua hasil untuk register tersebut
                     $this->kunjunganModel
                         ->where('register', $register)
@@ -505,7 +505,7 @@ class srsController extends BaseController
             'id_user'         => session()->get('id_user'),
             'nama_user'       => session()->get('nama_user'),
         ];
-        
+
         return view('srs/edit_mikroskopis', $data);
     }
 
@@ -884,7 +884,7 @@ class srsController extends BaseController
         if ($redirect === 'index_authorized_srs' && isset($data['id_authorized_srs'])) {
             $id_authorized_srs = $data['id_authorized_srs'];
             $selesaiAuthorized = date('Y-m-d H:i:s'); // gunakan untuk diambil & responsetime
-        
+
             // --- UPDATE AUTHORIZED srs ---
             $updateData = [
                 'id_user_authorized_srs'        => $id_user,
@@ -892,19 +892,19 @@ class srsController extends BaseController
                 'status_authorized_srs'         => 'Selesai Authorized',
                 'selesai_authorized_srs'        => $selesaiAuthorized,
             ];
-        
+
             $update = $this->authorized_srs->update($id_authorized_srs, $updateData);
-        
+
             if (! $update) {
-                log_message('error', '[AUTHORIZED srs] Update gagal untuk ID: ' . $id_authorized_srs 
+                log_message('error', '[AUTHORIZED srs] Update gagal untuk ID: ' . $id_authorized_srs
                     . ' | Errors: ' . json_encode($this->authorized_srs->errors()));
             } else {
                 log_message('debug', '[AUTHORIZED srs] Update BERHASIL untuk ID: ' . $id_authorized_srs);
             }
-        
+
             // Ambil data hasil terbaru srs setelah update
             $srsTerbaru = $this->srsModel->find($id_srs);
-        
+
             // --- HITUNG RESPONSETIME ---
             $responsetime = null;
             if (!empty($data['periksa'])) {
@@ -919,20 +919,38 @@ class srsController extends BaseController
                     $diff->s
                 );
             }
-        
-            // --- TENTUKAN ID DOKTER PA ---
-            $mappingDokter = [
-                strtolower("dr. Vinna Chrisdianti, Sp.PA") => 1179,
-                strtolower("dr. Ayu Tyasmara Pratiwi, Sp.PA") => 328,
+
+            // --- TENTUKAN ID DOKTER PA BERDASARKAN ID USER ---
+            $mappingDokterByUser = [
+                '1' => [
+                    'nama' => 'dr. Vinna Chrisdianti, Sp.PA',
+                    'id'   => 1179,
+                ],
+                '2' => [
+                    'nama' => 'dr. Ayu Tyasmara Pratiwi, Sp.PA',
+                    'id'   => 328,
+                ],
             ];
+            $idUserDokter = $data['id_user_dokter_pembacaan_hpa'] ?? null;
+            log_message('debug', '[SIMRS] id_user_dokter_pembacaan_hpa: ' . $idUserDokter);
+            $iddokterpa   = null;
+            $dokterpa = null;
+            if ($idUserDokter && isset($mappingDokterByUser[$idUserDokter])) {
+                $iddokterpa   = $mappingDokterByUser[$idUserDokter]['id'];
+                $dokterpa = $mappingDokterByUser[$idUserDokter]['nama'];
+            } else {
+                log_message('error', '[SIMRS] Mapping dokter berdasarkan user tidak ditemukan: ' . $idUserDokter);
+                $iddokterpa   = 0;
+                $dokterpa = '';
+            }
 
-            // ambil & normalisasi nama dokter
-            $dokterpaRaw = $data['dokterpa'] ?? null;
-            $dokterpa    = strtolower(trim($dokterpaRaw));
+            //BATASAN DIAGNOSA PATOLOGI
+            $diagnosa = strip_tags($data['hasil_srs'] ?? '');
+            $diagnosa = trim($diagnosa);
+            if (mb_strlen($diagnosa) > 25) {
+                $diagnosa = mb_substr($diagnosa, 0, 20) . '...';
+            }
 
-            // mapping ke ID
-            $iddokterpa = $mappingDokter[$dokterpa] ?? null;
-        
             // --- PERSIAPAN PAYLOAD ---
             $payload = [
                 'idtransaksi'      => $data['idtransaksi'] ?? null,
@@ -951,16 +969,16 @@ class srsController extends BaseController
                 'dokterpa'         => $data['dokterpa'] ?? null,
                 'statuslokasi'     => $data['statuslokasi'] ?? null,
                 'diagnosaklinik'   => $data['diagnosaklinik'] ?? null,
-                'diagnosapatologi' => $data['diagnosapatologi'] ?? null,
+                'diagnosapatologi' => $diagnosa,
                 'mutusediaan'      => $data['mutusediaan'] ?? null,
                 'responsetime'     => $responsetime,
                 'hasil'            => $srsTerbaru['print_srs'] ?? null,
                 'status'           => !empty($data['idtransaksi']) ? ($data['status'] ?? 'Belum Terkirim') : 'Belum Terdaftar',
                 'updated_at'       => date('Y-m-d H:i:s'),
             ];
-        
+
             log_message('debug', '[PENGIRIMAN SIMRS] Payload siap dikirim: ' . json_encode($payload, JSON_PRETTY_PRINT));
-        
+
             try {
                 $client = \Config\Services::curlrequest();
                 $response = $client->post(
@@ -970,21 +988,20 @@ class srsController extends BaseController
                         'body'    => json_encode($payload)
                     ]
                 );
-        
+
                 $responseBody = $response->getBody();
                 log_message('info', '[PENGIRIMAN SIMRS] Response: ' . $responseBody);
-        
+
                 // simpan ke flashdata agar bisa dicek di halaman redirect
                 session()->setFlashdata('simrs_payload', json_encode($payload));
                 session()->setFlashdata('simrs_response', $responseBody);
-        
             } catch (\Exception $e) {
                 $errorMessage = $e->getMessage();
                 log_message('error', '[PENGIRIMAN SIMRS] Gagal kirim: ' . $errorMessage);
-        
+
                 session()->setFlashdata('simrs_error', $errorMessage);
             }
-        
+
             return redirect()->to('authorized_srs/index')
                 ->with('success', session()->getFlashdata('success') ?? 'Data berhasil diauthorized.');
         }

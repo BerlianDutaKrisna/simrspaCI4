@@ -1148,23 +1148,33 @@ class HpaController extends BaseController
                 );
             }
 
-            // --- TENTUKAN ID DOKTER PA ---
-            $mappingDokter = [
-                strtolower("dr. Vinna Chrisdianti, Sp.PA") => 1179,
-                strtolower("dr. Ayu Tyasmara Pratiwi, Sp.PA") => 328,
+            // --- TENTUKAN ID DOKTER PA BERDASARKAN ID USER ---
+            $mappingDokterByUser = [
+                '1' => [
+                    'nama' => 'dr. Vinna Chrisdianti, Sp.PA',
+                    'id'   => 1179,
+                ],
+                '2' => [
+                    'nama' => 'dr. Ayu Tyasmara Pratiwi, Sp.PA',
+                    'id'   => 328,
+                ],
             ];
+            $idUserDokter = $data['id_user_dokter_pembacaan_hpa'] ?? null;
+            log_message('debug', '[SIMRS] id_user_dokter_pembacaan_hpa: ' . $idUserDokter);
+            $iddokterpa   = null;
+            $dokterpa = null;
+            if ($idUserDokter && isset($mappingDokterByUser[$idUserDokter])) {
+                $iddokterpa   = $mappingDokterByUser[$idUserDokter]['id'];
+                $dokterpa = $mappingDokterByUser[$idUserDokter]['nama'];
+            } else {
+                log_message('error', '[SIMRS] Mapping dokter berdasarkan user tidak ditemukan: ' . $idUserDokter);
+                $iddokterpa   = 0;
+                $dokterpa = '';
+            }
 
-            // ambil & normalisasi nama dokter
-            $dokterpaRaw = $data['dokterpa'] ?? null;
-            $dokterpa    = strtolower(trim($dokterpaRaw));
-
-            // mapping ke ID
-            $iddokterpa = $mappingDokter[$dokterpa] ?? null;
-
-            // Batasan Diagnosa Patologi
-            $diagnosa = strip_tags($data['diagnosapatologi'] ?? '');
+            //BATASAN DIAGNOSA PATOLOGI
+            $diagnosa = strip_tags($data['hasil_hpa'] ?? '');
             $diagnosa = trim($diagnosa);
-
             if (mb_strlen($diagnosa) > 25) {
                 $diagnosa = mb_substr($diagnosa, 0, 20) . '...';
             }
