@@ -33,12 +33,13 @@
                 <input type="hidden" name="periksa" value="<?= isset($srs['mulai_penerimaan_srs']) ? esc($srs['mulai_penerimaan_srs']) : '' ?>">
                 <input type="hidden" name="selesai" value="<?= isset($srs['selesai_penulisan_srs']) ? esc($srs['selesai_penulisan_srs']) : '' ?>">
                 <!-- dokter PA text -->
+                <input type="hidden" name="id_user_dokter_pembacaan_srs" value="<?= $srs['id_user_dokter_pembacaan_srs'] ?? '' ?>">
                 <input type="hidden" name="dokterpa" value="<?= isset($pembacaan_srs['dokter_nama']) ? esc($pembacaan_srs['dokter_nama']) : '' ?>">
                 <!-- status lokasi text -->
                 <input type="hidden" name="statuslokasi" value="<?= isset($srs['lokasi_spesimen']) ? esc($srs['lokasi_spesimen']) : '' ?>">
                 <!-- diagnosa & mutu -->
                 <input type="hidden" name="diagnosaklinik" value="<?= isset($srs['diagnosa_klinik']) ? esc($srs['diagnosa_klinik']) : '' ?>">
-                <input type="hidden" name="diagnosapatologi" value="<?= isset($srs['hasil_srs']) ? esc($srs['hasil_srs']) : '' ?>">
+                <input type="hidden" name="hasil_srs" value="<?= isset($srs['hasil_srs']) ? esc($srs['hasil_srs']) : '' ?>">
                 <input type="hidden" name="mutusediaan" value="<?= isset($srs['total_nilai_mutu_srs']) ? esc($srs['total_nilai_mutu_srs']) : '' ?>">
 
                 <input type="hidden" name="status" value="Belum Terkirim">

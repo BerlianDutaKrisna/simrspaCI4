@@ -33,12 +33,13 @@
                 <input type="hidden" name="periksa" value="<?= isset($ihc['mulai_penerimaan_ihc']) ? esc($ihc['mulai_penerimaan_ihc']) : '' ?>">
                 <input type="hidden" name="selesai" value="<?= isset($ihc['selesai_penulisan_ihc']) ? esc($ihc['selesai_penulisan_ihc']) : '' ?>">
                 <!-- dokter PA text -->
+                <input type="hidden" name="id_user_dokter_pembacaan_ihc" value="<?= $ihc['id_user_dokter_pembacaan_ihc'] ?? '' ?>">
                 <input type="hidden" name="dokterpa" value="<?= isset($pembacaan_ihc['dokter_nama']) ? esc($pembacaan_ihc['dokter_nama']) : '' ?>">
                 <!-- status lokasi text -->
                 <input type="hidden" name="statuslokasi" value="<?= isset($ihc['lokasi_spesimen']) ? esc($ihc['lokasi_spesimen']) : '' ?>">
                 <!-- diagnosa & mutu -->
                 <input type="hidden" name="diagnosaklinik" value="<?= isset($ihc['diagnosa_klinik']) ? esc($ihc['diagnosa_klinik']) : '' ?>">
-                <input type="hidden" name="diagnosapatologi" value="<?= isset($ihc['hasil_ihc']) ? esc($ihc['hasil_ihc']) : '' ?>">
+                <input type="hidden" name="hasil_ihc" value="<?= isset($ihc['hasil_ihc']) ? esc($ihc['hasil_ihc']) : '' ?>">
                 <input type="hidden" name="mutusediaan" value="<?= isset($ihc['total_nilai_mutu_ihc']) ? esc($ihc['total_nilai_mutu_ihc']) : '' ?>">
 
                 <input type="hidden" name="status" value="Belum Terkirim">

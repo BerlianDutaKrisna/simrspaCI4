@@ -33,12 +33,13 @@
                 <input type="hidden" name="periksa" value="<?= isset($frs['mulai_penerimaan_frs']) ? esc($frs['mulai_penerimaan_frs']) : '' ?>">
                 <input type="hidden" name="selesai" value="<?= isset($frs['selesai_penulisan_frs']) ? esc($frs['selesai_penulisan_frs']) : '' ?>">
                 <!-- dokter PA text -->
+                <input type="hidden" name="id_user_dokter_pembacaan_frs" value="<?= $frs['id_user_dokter_pembacaan_frs'] ?? '' ?>">
                 <input type="hidden" name="dokterpa" value="<?= isset($pembacaan_frs['dokter_nama']) ? esc($pembacaan_frs['dokter_nama']) : '' ?>">
                 <!-- status lokasi text -->
                 <input type="hidden" name="statuslokasi" value="<?= isset($frs['lokasi_spesimen']) ? esc($frs['lokasi_spesimen']) : '' ?>">
                 <!-- diagnosa & mutu -->
                 <input type="hidden" name="diagnosaklinik" value="<?= isset($frs['diagnosa_klinik']) ? esc($frs['diagnosa_klinik']) : '' ?>">
-                <input type="hidden" name="diagnosapatologi" value="<?= isset($frs['hasil_frs']) ? esc($frs['hasil_frs']) : '' ?>">
+                <input type="hidden" name="hasil_frs" value="<?= isset($frs['hasil_frs']) ? esc($frs['hasil_frs']) : '' ?>">
                 <input type="hidden" name="mutusediaan" value="<?= isset($frs['total_nilai_mutu_frs']) ? esc($frs['total_nilai_mutu_frs']) : '' ?>">
 
                 <input type="hidden" name="status" value="Belum Terkirim">
