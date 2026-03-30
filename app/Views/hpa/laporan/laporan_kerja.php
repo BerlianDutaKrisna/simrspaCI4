@@ -81,10 +81,12 @@
                         <th>TANGGAL TRANSAKSI</th>
                         <th>PENERIMAAN</th>
                         <th>PEMOTONGAN</th>
+                        <th>PEMPROSESAN</th>
                         <th>PENANAMAN</th>
                         <th>PEMOTONGAN TIPIS</th>
-                        <th>PENULISAN</th>
+                        <th>PEWARNAAN</th>
                         <th>PEMBACAAN</th>
+                        <th>PENULISAN</th>
                         <th>PEMVERIFIKASI</th>
                         <th>AUTHORISED</th>
                         <th>PENCETAKAN</th>
@@ -104,16 +106,46 @@
                                     <?= empty($row['tanggal_permintaan']) ? 'Belum Diisi' : esc(date('d-m-Y', strtotime($row['tanggal_permintaan']))); ?>
                                 </td>
 
-                                <td><?= esc($row['durasi_penerimaan_hpa'] ?? 'Data Belum Lengkap') ?></td>
-                                <td><?= esc($row['durasi_pemotongan_hpa'] ?? 'Data Belum Lengkap') ?></td>
-                                <td><?= esc($row['durasi_penanaman_hpa'] ?? 'Data Belum Lengkap') ?></td>
-                                <td><?= esc($row['durasi_pemotongan_tipis_hpa'] ?? 'Data Belum Lengkap') ?></td>
-                                <td><?= esc($row['durasi_penulisan_hpa'] ?? 'Data Belum Lengkap') ?></td>
-                                <td><?= esc($row['durasi_pembacaan_hpa'] ?? 'Data Belum Lengkap') ?></td>
-                                <td><?= esc($row['durasi_pemverifikasi_hpa'] ?? 'Data Belum Lengkap') ?></td>
-                                <td><?= esc($row['durasi_authorized_hpa'] ?? 'Data Belum Lengkap') ?></td>
-                                <td><?= esc($row['durasi_pencetakan_hpa'] ?? 'Data Belum Lengkap') ?></td>
-                                <td><?= esc($row['total_waktu_kerja'] ?? 'Data Belum Lengkap') ?></td>
+                                <?php
+                                if (!function_exists('formatTanggalIndo')) {
+                                    function formatTanggalIndo($datetime)
+                                    {
+                                        if (empty($datetime)) return 'Belum Diisi';
+
+                                        $timestamp = strtotime($datetime);
+
+                                        $hariInggris = date('l', $timestamp);
+                                        $hariIndonesia = [
+                                            'Sunday' => 'Minggu',
+                                            'Monday' => 'Senin',
+                                            'Tuesday' => 'Selasa',
+                                            'Wednesday' => 'Rabu',
+                                            'Thursday' => 'Kamis',
+                                            'Friday' => 'Jumat',
+                                            'Saturday' => 'Sabtu'
+                                        ];
+
+                                        $hari = $hariIndonesia[$hariInggris];
+                                        $tanggal = date('d-m-Y', $timestamp);
+                                        $jam = date('H:i', $timestamp);
+
+                                        return '<b>' . esc($hari) . '<br>' . esc($tanggal) . '</b><br>' . esc($jam);
+                                    }
+                                }
+                                ?>
+
+                                <td><?= esc($row['durasi_penerimaan_hpa'] ?? '') ?><br><?= formatTanggalIndo($row['mulai_penerimaan_hpa']) ?></td>
+                                <td><?= esc($row['durasi_pemotongan_hpa'] ?? '') ?><br><?= formatTanggalIndo($row['mulai_pemotongan_hpa']) ?></td>
+                                <td><?= esc($row['durasi_pemprosesan_hpa'] ?? '') ?><br><?= formatTanggalIndo($row['mulai_pemprosesan_hpa']) ?></td>
+                                <td><?= esc($row['durasi_penanaman_hpa'] ?? '') ?><br><?= formatTanggalIndo($row['mulai_penanaman_hpa']) ?></td>
+                                <td><?= esc($row['durasi_pemotongan_tipis_hpa'] ?? '') ?><br><?= formatTanggalIndo($row['mulai_pemotongan_tipis_hpa']) ?></td>
+                                <td><?= esc($row['durasi_pewarnaan_hpa'] ?? '') ?><br><?= formatTanggalIndo($row['mulai_pewarnaan_hpa']) ?></td>
+                                <td><?= esc($row['durasi_pembacaan_hpa'] ?? '') ?><br><?= formatTanggalIndo($row['mulai_pembacaan_hpa']) ?></td>
+                                <td><?= esc($row['durasi_penulisan_hpa'] ?? '') ?><br><?= formatTanggalIndo($row['mulai_penulisan_hpa']) ?></td>
+                                <td><?= esc($row['durasi_pemverifikasi_hpa'] ?? '') ?><br><?= formatTanggalIndo($row['mulai_pemverifikasi_hpa']) ?></td>
+                                <td><?= esc($row['durasi_authorized_hpa'] ?? '') ?><br><?= formatTanggalIndo($row['mulai_authorized_hpa']) ?></td>
+                                <td><?= esc($row['durasi_pencetakan_hpa'] ?? '') ?><br><?= formatTanggalIndo($row['mulai_pencetakan_hpa']) ?></td>
+                                <td><?= esc($row['total_waktu_kerja'] ?? '') ?></td>
                             </tr>
                             <?php $i++; ?>
                         <?php endforeach; ?>

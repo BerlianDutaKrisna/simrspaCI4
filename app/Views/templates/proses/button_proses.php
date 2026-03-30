@@ -139,8 +139,6 @@
                                 statuses.status_penerimaan_frs === "Selesai Penerimaan" ||
                                 statuses.status_penerimaan_srs === "Selesai Penerimaan" ||
                                 statuses.status_penerimaan_ihc === "Selesai Penerimaan" ||
-                                statuses.status_pengirisan_hpa === "Belum Pengirisan" ||
-                                statuses.status_pengirisan_hpa === "Proses Pengirisan" ||
                                 statuses.status_pengirisan_hpa === "Selesai Pengirisan" ||
                                 statuses.status_pemotongan_hpa === "Selesai Pemotongan" ||
                                 statuses.status_pemprosesan_hpa === "Selesai Pemprosesan" ||
@@ -149,57 +147,25 @@
                                 statuses.status_pewarnaan_hpa === "Selesai Pewarnaan" ||
                                 statuses.status_pewarnaan_frs === "Selesai Pewarnaan" ||
                                 statuses.status_pewarnaan_srs === "Selesai Pewarnaan" ||
-                                statuses.status_pembacaan_hpa === "Belum Pembacaan" ||
-                                statuses.status_pembacaan_hpa === "Proses Pembacaan" ||
                                 statuses.status_pembacaan_hpa === "Selesai Pembacaan" ||
-                                statuses.status_pembacaan_frs === "Belum Pembacaan" ||
-                                statuses.status_pembacaan_frs === "Proses Pembacaan" ||
                                 statuses.status_pembacaan_frs === "Selesai Pembacaan" ||
-                                statuses.status_pembacaan_srs === "Belum Pembacaan" ||
-                                statuses.status_pembacaan_srs === "Proses Pembacaan" ||
                                 statuses.status_pembacaan_srs === "Selesai Pembacaan" ||
-                                statuses.status_pembacaan_ihc === "Belum Pembacaan" ||
-                                statuses.status_pembacaan_ihc === "Proses Pembacaan" ||
                                 statuses.status_pembacaan_ihc === "Selesai Pembacaan" ||
                                 statuses.status_penulisan_hpa === "Selesai Penulisan" ||
                                 statuses.status_penulisan_frs === "Selesai Penulisan" ||
                                 statuses.status_penulisan_srs === "Selesai Penulisan" ||
                                 statuses.status_penulisan_ihc === "Selesai Penulisan" ||
-                                statuses.status_pemverifikasi_hpa === "Belum Pemverifikasi" ||
-                                statuses.status_pemverifikasi_hpa === "Proses Pemverifikasi" ||
                                 statuses.status_pemverifikasi_hpa === "Selesai Pemverifikasi" ||
-                                statuses.status_pemverifikasi_frs === "Belum Pemverifikasi" ||
-                                statuses.status_pemverifikasi_frs === "Proses Pemverifikasi" ||
                                 statuses.status_pemverifikasi_frs === "Selesai Pemverifikasi" ||
-                                statuses.status_pemverifikasi_srs === "Belum Pemverifikasi" ||
-                                statuses.status_pemverifikasi_srs === "Proses Pemverifikasi" ||
                                 statuses.status_pemverifikasi_srs === "Selesai Pemverifikasi" ||
-                                statuses.status_pemverifikasi_ihc === "Belum Pemverifikasi" ||
-                                statuses.status_pemverifikasi_ihc === "Proses Pemverifikasi" ||
                                 statuses.status_pemverifikasi_ihc === "Selesai Pemverifikasi" ||
-                                statuses.status_authorized_hpa === "Belum Authorized" ||
-                                statuses.status_authorized_hpa === "Proses Authorized" ||
                                 statuses.status_authorized_hpa === "Selesai Authorized" ||
-                                statuses.status_authorized_frs === "Belum Authorized" ||
-                                statuses.status_authorized_frs === "Proses Authorized" ||
                                 statuses.status_authorized_frs === "Selesai Authorized" ||
-                                statuses.status_authorized_srs === "Belum Authorized" ||
-                                statuses.status_authorized_srs === "Proses Authorized" ||
                                 statuses.status_authorized_srs === "Selesai Authorized" ||
-                                statuses.status_authorized_ihc === "Belum Authorized" ||
-                                statuses.status_authorized_ihc === "Proses Authorized" ||
                                 statuses.status_authorized_ihc === "Selesai Authorized" ||
-                                statuses.status_pencetakan_hpa === "Belum Pencetakan" ||
-                                statuses.status_pencetakan_hpa === "Proses Pencetakan" ||
                                 statuses.status_pencetakan_hpa === "Selesai Pencetakan"||
-                                statuses.status_pencetakan_frs === "Belum Pencetakan" ||
-                                statuses.status_pencetakan_frs === "Proses Pencetakan" ||
                                 statuses.status_pencetakan_frs === "Selesai Pencetakan"||
-                                statuses.status_pencetakan_srs === "Belum Pencetakan" ||
-                                statuses.status_pencetakan_srs === "Proses Pencetakan" ||
                                 statuses.status_pencetakan_srs === "Selesai Pencetakan"||
-                                statuses.status_pencetakan_ihc === "Belum Pencetakan" ||
-                                statuses.status_pencetakan_ihc === "Proses Pencetakan" ||
                                 statuses.status_pencetakan_ihc === "Selesai Pencetakan";
                         }
                         return false;

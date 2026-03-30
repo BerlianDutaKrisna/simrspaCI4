@@ -1447,7 +1447,7 @@ class HpaController extends BaseController
             'nama_user'  => session()->get('nama_user'),
             'hpaData' => $hpaData,
         ];
-
+        
         return view('hpa/laporan/laporan_kerja', $data);
     }
 
