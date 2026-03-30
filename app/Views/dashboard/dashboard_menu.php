@@ -225,6 +225,7 @@ document.getElementById('formCariRiwayat').addEventListener('submit', function(e
     fetch(`<?= base_url('api/pemeriksaan/norm_pasien') ?>/${norm}`)
     .then(res => res.json())
     .then(data => {
+        console.log("FULL RESPONSE:", data);
 
         if (data.status !== "success" || data.data.length === 0) {
             container.innerHTML = `<p class="text-muted">Tidak ada data tersedia.</p>`;
@@ -261,7 +262,7 @@ document.getElementById('formCariRiwayat').addEventListener('submit', function(e
                 <td>
                     <button class="btn btn-info btn-sm"
                         onclick='tampilkanModal(${JSON.stringify(row)})'>
-                        <i class="fas fa-eye"></i>
+                        Lihat detail / Cetak
                     </button>
                 </td>
             </tr>`;
@@ -284,6 +285,7 @@ document.getElementById('formCariRiwayat').addEventListener('submit', function(e
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
             </div>
 
+            <!-- 🔥 HASIL LANGSUNG DARI API -->
             <div class="modal-body" id="detailHasilContent"></div>
 
             <div class="modal-footer">
@@ -297,24 +299,19 @@ document.getElementById('formCariRiwayat').addEventListener('submit', function(e
     </div>
 </div>
 
+
 <script>
 let currentRow = null;
 
 function tampilkanModal(row) {
-    currentRow = row;
+    currentRow = row; // 🔥 simpan untuk print
 
-    let isi = row.hasil ?? 'Tidak ada hasil';
+    let isi = row.hasil ?? '<i>Tidak ada hasil</i>';
 
-    isi = isi
-        .replace(/\n\s*:\s*\n/g, ' : ')
-        .replace(/\n{2,}/g, '\n')
-        .replace(/[ \t]+/g, ' ')
-        .replace(/\n/g, "<br>");
+    // 🔥 LANGSUNG tampilkan HTML dari API
+    document.getElementById("detailHasilContent").innerHTML = isi;
 
-    document.getElementById("detailHasilContent").innerHTML =
-        '<div style="white-space:pre-line; line-height:1.4;">' + isi + '</div>';
-
-    // 🔥 inject ke hidden input untuk cetak
+    // 🔥 simpan untuk print
     if (!document.getElementById('print_hpa')) {
         let input = document.createElement("input");
         input.type = "hidden";
@@ -328,26 +325,11 @@ function tampilkanModal(row) {
 }
 </script>
 
+
 <script>
 function cetakPrintHpa() {
     if (!currentRow) return;
 
-    // =======================
-    // FORMAT HASIL
-    // =======================
-    let isi = currentRow.hasil ?? 'Tidak ada hasil';
-
-    isi = isi
-        .replace(/\r/g, '')
-        .replace(/\n+\s*:\s*\n+/g, ' : ')
-        .replace(/[ \t]+/g, ' ')
-        .replace(/\n{2,}/g, '\n')
-        .split('\n').map(line => line.trim()).join('\n')
-        .replace(/\n/g, "<br>");
-
-    // =======================
-    // TTD DOKTER
-    // =======================
     let src = '';
     let nip = '-';
 
@@ -359,9 +341,6 @@ function cetakPrintHpa() {
         nip = "198303152023212002";
     }
 
-    // =======================
-    // TANGGAL INDONESIA
-    // =======================
     const bulan = [
         'Januari','Februari','Maret','April','Mei','Juni',
         'Juli','Agustus','September','Oktober','November','Desember'
@@ -373,34 +352,27 @@ function cetakPrintHpa() {
         tgl = `${d.getDate()} ${bulan[d.getMonth()]} ${d.getFullYear()}`;
     }
 
-    // =======================
-    // PRINT WINDOW
-    // =======================
     let printWindow = window.open('', '', 'height=700,width=900');
 
     printWindow.document.write(`
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta charset="utf-8">
 <title>Laporan Patologi Anatomi</title>
 <style>
     body {
-        width: 346px;
-        font-size: 24px;
+        width: 900px;
+        font-size: 22px;
     }
     table, tr, td {
         border: none;
-        margin: 15px;
-        font-size: 22px;
+        margin: 10px;
+        font-size: 20px;
     }
     td {
-        height: 10px;
         padding: 0;
-    }
-    .bordered_table, .bordered_table tr, .bordered_table td {
-        border: none;
-        border-collapse: collapse;
+        vertical-align: top;
     }
 </style>
 </head>
@@ -408,10 +380,9 @@ function cetakPrintHpa() {
 <body onload="window.print()">
 
 <table width="900">
-
 <!-- HEADER -->
 <tr>
-    <td align="center" nowrap style="font-size:24px;">
+    <td align="center" colspan="2" style="font-size:24px;">
         <b>RSUD DR. M. SOEWANDHIE</b><br/>
         Jl. Tambakrejo No. 45 - 47, KOTA SURABAYA
     </td>
@@ -420,26 +391,27 @@ function cetakPrintHpa() {
 <!-- IDENTITAS -->
 <tr>
     <td>
-        <table width="500">
-            <tr><td width="100">No RM</td><td>:</td><td>${currentRow.norm_pasien ?? ''}</td></tr>
+        <table width="100%">
+            <tr><td width="150">No RM</td><td>:</td><td>${currentRow.norm ?? ''}</td></tr>
             <tr><td>No Register</td><td>:</td><td>${currentRow.noregister ?? ''}</td></tr>
-            <tr><td>Nama</td><td>:</td><td>${currentRow.nama_pasien ?? ''}</td></tr>
+            <tr><td>Nama</td><td>:</td><td>${currentRow.nama ?? ''}</td></tr>
             <tr><td>Alamat</td><td>:</td><td>${currentRow.alamat ?? ''}</td></tr>
-            <tr><td>Jenis / Tgl Lahir</td><td>:</td><td>${currentRow.jenis_kelamin ?? ''} / ${currentRow.tanggal_lahir ?? ''}</td></tr>
+            <tr><td>Jenis / Tgl Lahir</td><td>:</td>
+                <td>${currentRow.jenispasien ?? ''} / ${currentRow.tanggal ?? ''}</td></tr>
             <tr><td>Permintaan</td><td>:</td><td>${currentRow.pemeriksaan ?? ''}</td></tr>
-            <tr><td>Unit Asal</td><td>:</td><td>${currentRow.unit_asal ?? ''}</td></tr>
-            <tr><td>Dokter Pengirim</td><td>:</td><td>${currentRow.dokter_pengirim ?? ''}</td></tr>
+            <tr><td>Unit Asal</td><td>:</td><td>${currentRow.unitasal ?? ''}</td></tr>
+            <tr><td>Dokter Pengirim</td><td>:</td><td>${currentRow.dokterperujuk ?? ''}</td></tr>
         </table>
     </td>
 
     <td>
-        <table width="500">
+        <table width="100%">
             <tr>
-                <td align="center" colspan="3"><h3>UNIT PATOLOGI ANATOMI</h3></td>
+                <td align="center" colspan="3"><b>UNIT PATOLOGI ANATOMI</b></td>
             </tr>
             <tr><td colspan="3">&nbsp;</td></tr>
             <tr>
-                <td>Tanggal Terima</td><td>:</td>
+                <td width="150">Tanggal Terima</td><td>:</td>
                 <td>${currentRow.tanggal ?? ''}</td>
             </tr>
             <tr>
@@ -450,41 +422,25 @@ function cetakPrintHpa() {
     </td>
 </tr>
 
-<!-- HASIL -->
+<!-- JUDUL HASIL -->
 <tr>
     <td align="center" colspan="2"><b>HASIL PEMERIKSAAN</b></td>
 </tr>
 
+<!-- ISI HASIL DARI API -->
 <tr>
-    <td colspan="2" valign="top">
-        ${isi}
+    <td colspan="2">
+        ${currentRow.hasil ?? ''}
     </td>
 </tr>
 
-<!-- TTD -->
 <tr>
-<td width="650">&nbsp;</td>
+<td></td>
 <td>
-    <table>
-        <tr>
-            <td></td>
-            <td>Surabaya, ${tgl}</td>
-        </tr>
-        <tr>
-            <td width="170" align="center">
-                <img src="${src}" style="width:150px;">
-            </td>
-            <td>
-                <p style="margin:0;font-size:14px;">Hasil lab ini telah ditandatangani secara elektronik oleh:</p>
-                <p style="margin:0;font-size:20px;">Dokter Spesialis Patologi Anatomi,</p>
-                <br><br>
-                <p style="margin:0;font-size:20px;font-weight:bold;">
-                    ${currentRow.dokterpa ?? '____________________'}
-                </p>
-                <p style="margin:0;">NIP. ${nip}</p>
-            </td>
-        </tr>
-    </table>
+Surabaya, ${tgl}<br><br>
+<img src="${src}" style="width:150px;"><br>
+<b>${currentRow.dokterpa ?? ''}</b><br>
+NIP. ${nip}
 </td>
 </tr>
 
