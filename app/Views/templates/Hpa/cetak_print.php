@@ -20,7 +20,7 @@ if ($pembacaan_hpa['dokter_nama'] === "dr. Ayu Tyasmara Pratiwi, Sp.PA") {
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Laporan Radiologi</title>
+    <title>Laporan Patologi Anatomi</title>
     <style>
         body {
             width: 346px;
