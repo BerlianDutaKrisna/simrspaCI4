@@ -239,6 +239,7 @@ document.getElementById('formCariRiwayat').addEventListener('submit', function(e
         <tr>
             <th>No</th>
             <th>Tanggal</th>
+            <th>Nama Pasien</th>
             <th>Kode</th>
             <th>Dokter</th>
             <th>Pemeriksaan</th>
@@ -256,6 +257,7 @@ document.getElementById('formCariRiwayat').addEventListener('submit', function(e
             <tr>
                 <td>${i+1}</td>
                 <td>${tgl}</td>
+                <td>${row.nama ?? '-'}</td>
                 <td>${row.noregister ?? '-'}</td>
                 <td>${row.dokterpa ?? '-'}</td>
                 <td>${row.pemeriksaan ?? '-'}</td>
