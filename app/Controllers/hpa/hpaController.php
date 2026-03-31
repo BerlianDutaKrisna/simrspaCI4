@@ -1421,7 +1421,7 @@ class HpaController extends BaseController
             'nama_user'  => session()->get('nama_user'),
             'hpaData' => $hpaData,
         ];
-
+        
         return view('hpa/laporan/laporan_pemeriksaan', $data);
     }
 
@@ -1509,7 +1509,7 @@ class HpaController extends BaseController
             'nama_user'  => session()->get('nama_user'),
             'hpaData'       => $filteredData,
         ];
-
+        
         return view('hpa/laporan/laporan_pemeriksaan', $data);
     }
 }
