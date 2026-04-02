@@ -90,7 +90,6 @@
                         <th>PEMVERIFIKASI</th>
                         <th>AUTHORISED</th>
                         <th>PENCETAKAN</th>
-                        <th>TOTAL WAKTU</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -145,7 +144,6 @@
                                 <td><?= esc($row['durasi_pemverifikasi_hpa'] ?? '') ?><br><?= formatTanggalIndo($row['mulai_pemverifikasi_hpa']) ?></td>
                                 <td><?= esc($row['durasi_authorized_hpa'] ?? '') ?><br><?= formatTanggalIndo($row['mulai_authorized_hpa']) ?></td>
                                 <td><?= esc($row['durasi_pencetakan_hpa'] ?? '') ?><br><?= formatTanggalIndo($row['mulai_pencetakan_hpa']) ?></td>
-                                <td><?= esc($row['total_waktu_kerja'] ?? '') ?></td>
                             </tr>
                             <?php $i++; ?>
                         <?php endforeach; ?>
