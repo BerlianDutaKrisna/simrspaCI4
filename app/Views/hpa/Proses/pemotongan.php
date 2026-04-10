@@ -44,9 +44,10 @@
                                     });
                                 });
                             </script>
-                            <th>Detail</th>
+                            <th>Aksi</th>
+                            <th>Kode HPA</th>
                             <th>Nama Pasien</th>
-                            <th>Detail</th>
+                            <th>Jumlah Slide</th>
                             <th>Status Pemotongan</th>
                             <th>User</th>
                             <th>Mulai Pemotongan</th>
@@ -87,6 +88,7 @@
                                     <?php endif; ?>
                                     <td><?= $row['kode_hpa']; ?></td>
                                     <td><b><?= esc($row['nama_pasien']); ?></b> (<?= esc($row['norm_pasien']); ?>)</td>
+                                    <td><?= $row['jumlah_slide']; ?></td>
                                     <td><?= $row['status_pemotongan_hpa']; ?></td>
                                     <td><?= $row['nama_user_pemotongan_hpa']; ?></td>
                                     <td>
