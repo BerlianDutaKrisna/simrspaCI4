@@ -1099,6 +1099,7 @@ class HpaController extends BaseController
         // Ambil data dari POST dan update HPA lebih dulu
         $data = $this->request->getPost();
         $this->hpaModel->update($id_hpa, $data);
+        // update pembacaan
         $id_pembacaan_hpa = $data['id_pembacaan_hpa'] ?? null;
         $id_user_dokter_pembacaan_hpa = !empty($data['id_user_dokter_pembacaan_hpa']) ? (int) $data['id_user_dokter_pembacaan_hpa'] : null;
         // Update tabel pembacaan_hpa

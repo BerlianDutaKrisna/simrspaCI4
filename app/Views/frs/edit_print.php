@@ -33,6 +33,7 @@
                 <input type="hidden" name="periksa" value="<?= isset($frs['mulai_penerimaan_frs']) ? esc($frs['mulai_penerimaan_frs']) : '' ?>">
                 <input type="hidden" name="selesai" value="<?= isset($frs['selesai_penulisan_frs']) ? esc($frs['selesai_penulisan_frs']) : '' ?>">
                 <!-- dokter PA text -->
+                <input type="hidden" name="id_pembacaan_frs" value="<?= $frs['id_pembacaan_frs'] ?? '' ?>">
                 <input type="hidden" name="id_user_dokter_pembacaan_frs" value="<?= $frs['id_user_dokter_pembacaan_frs'] ?? '' ?>">
                 <input type="hidden" name="dokterpa" value="<?= isset($pembacaan_frs['dokter_nama']) ? esc($pembacaan_frs['dokter_nama']) : '' ?>">
                 <!-- status lokasi text -->
@@ -61,6 +62,30 @@
                         </textarea>
                     </div>
                 </div>
+
+                <!-- Kolom Hasil frs dan Dokter -->
+                <div class="form-group row">
+                    <label class="col-sm-2 col-form-label"></label>
+                    <div class="col-sm-4">
+
+                    </div>
+
+                    <label class="col-sm-2 col-form-label">Dokter yang membaca</label>
+                    <div class="col-sm-4">
+                        <select class="form-control" id="id_user_dokter_pembacaan_frs" name="id_user_dokter_pembacaan_frs" required>
+                            <option value="" disabled selected hidden>-- Pilih Dokter --</option>
+                            <?php foreach ($users as $user): ?>
+                                <?php if ($user['status_user'] === 'Dokter'): ?>
+                                    <option value="<?= $user['id_user'] ?>"
+                                        <?= isset($pembacaan_frs['id_user_dokter_pembacaan_frs']) && $user['id_user'] == $pembacaan_frs['id_user_dokter_pembacaan_frs'] ? 'selected' : '' ?>>
+                                        <?= $user['nama_user'] ?>
+                                    </option>
+                                <?php endif; ?>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+                </div>
+
                 <div class="form-group row">
                     <div class="col-sm-4 text-center">
                         <button type="submit"

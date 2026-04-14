@@ -559,6 +559,8 @@ class FrsController extends BaseController
     {
         // Ambil data frs berdasarkan ID
         $frs = $this->frsModel->getFrsWithRelationsProses($id_frs);
+        // Ambil daftar user dengan status "Dokter"
+        $users = $this->usersModel->where('status_user', 'Dokter')->findAll();
         $id_pasien = $frs['id_pasien'];
         if (!empty($frs['norm_pasien'])) {
             $riwayat_api_response = $this->simrsModel->getPemeriksaanPasien($frs['norm_pasien']);
@@ -629,6 +631,7 @@ class FrsController extends BaseController
             'riwayat_srs'        => $riwayat_srs,
             'riwayat_ihc'        => $riwayat_ihc,
             'pembacaan_frs' => $pembacaan_frs,
+            'users' => $users,
         ];
 
         return view('frs/edit_print', $data);
@@ -816,7 +819,21 @@ class FrsController extends BaseController
         }
         // Ambil semua data POST
         $data = $this->request->getPost();
+        // update pembacaan
+        $id_pembacaan_frs = $data['id_pembacaan_frs'] ?? null;
+        $id_user_dokter_pembacaan_frs = !empty($data['id_user_dokter_pembacaan_frs']) ? (int) $data['id_user_dokter_pembacaan_frs'] : null;
+        // Update tabel pembacaan_frs
+        $pembacaan = $this->pembacaan_frs->where('id_pembacaan_frs', $id_pembacaan_frs)->first();
+        if ($pembacaan) {
+            $updatePembacaan = [];
 
+            if ($id_user_dokter_pembacaan_frs !== null) {
+                $updatePembacaan['id_user_dokter_pembacaan_frs'] = $id_user_dokter_pembacaan_frs;
+            }
+            if (!empty($updatePembacaan)) {
+                $this->pembacaan_frs->update($pembacaan['id_pembacaan_frs'], $updatePembacaan);
+            }
+        }
         // Simpan nilai redirect lalu hapus dari array $data (biar tidak ikut update frs)
         $redirect = $data['redirect'] ?? null;
         unset($data['redirect']);

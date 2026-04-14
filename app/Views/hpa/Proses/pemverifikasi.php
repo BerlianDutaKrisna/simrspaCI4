@@ -49,7 +49,7 @@
                             <th>Detail</th>
                             <th>Kode HPA</th>
                             <th>Nama Pasien</th>
-                            <th>Dokter</th>
+                            <th>Dokter PA</th>
                             <th>Status pemverifikasi</th>
                             <th>User Verifikasi</th>
                             <th>Mulai pemverifikasi</th>

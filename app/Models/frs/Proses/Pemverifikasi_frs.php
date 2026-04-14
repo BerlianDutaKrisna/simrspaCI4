@@ -40,7 +40,7 @@ class Pemverifikasi_frs extends Model // Update nama model
         mutu_frs.total_nilai_mutu_frs,
         penerimaan_frs.id_penerimaan_frs,
         pembacaan_frs.id_pembacaan_frs,
-        pembacaan_frs.id_pembacaan_frs, 
+        pembacaan_frs.id_user_dokter_pembacaan_frs, 
         authorized_frs.id_authorized_frs,
         pencetakan_frs.id_pencetakan_frs'
         )
