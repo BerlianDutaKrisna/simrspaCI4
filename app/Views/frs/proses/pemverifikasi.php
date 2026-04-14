@@ -51,7 +51,7 @@
                             <th>Nama Pasien</th>
                             <th>Dokter PA</th>
                             <th>Status pemverifikasi</th>
-                            <th>User Verifikasi</th>
+                            <th>User pemverifikasi</th>
                             <th>Mulai pemverifikasi</th>
                             <th>Selesai pemverifikasi</th>
                             <th>Deadline Hasil</th>

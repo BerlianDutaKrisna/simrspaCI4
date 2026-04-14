@@ -515,6 +515,8 @@ class ihcController extends BaseController
     {
         // Ambil data ihc berdasarkan ID
         $ihc = $this->ihcModel->getIhcWithRelationsProses($id_ihc);
+        // Ambil daftar user dengan status "Dokter"
+        $users = $this->usersModel->where('status_user', 'Dokter')->findAll();
         $id_pasien = $ihc['id_pasien'];
         // --- Riwayat API ---
         if (!empty($ihc['norm_pasien'])) {
@@ -586,6 +588,7 @@ class ihcController extends BaseController
             'riwayat_srs'        => $riwayat_srs,
             'riwayat_ihc'        => $riwayat_ihc,
             'pembacaan_ihc' => $pembacaan_ihc,
+            'users' => $users,
         ];
 
         return view('ihc/edit_print', $data);
@@ -787,6 +790,21 @@ class ihcController extends BaseController
         }
         // Mengambil data dari POST dan melakukan update
         $data = $this->request->getPost();
+        // update pembacaan
+        $id_pembacaan_ihc = $data['id_pembacaan_ihc'] ?? null;
+        $id_user_dokter_pembacaan_ihc = !empty($data['id_user_dokter_pembacaan_ihc']) ? (int) $data['id_user_dokter_pembacaan_ihc'] : null;
+        // Update tabel pembacaan_ihc
+        $pembacaan = $this->pembacaan_ihc->where('id_pembacaan_ihc', $id_pembacaan_ihc)->first();
+        if ($pembacaan) {
+            $updatePembacaan = [];
+
+            if ($id_user_dokter_pembacaan_ihc !== null) {
+                $updatePembacaan['id_user_dokter_pembacaan_ihc'] = $id_user_dokter_pembacaan_ihc;
+            }
+            if (!empty($updatePembacaan)) {
+                $this->pembacaan_ihc->update($pembacaan['id_pembacaan_ihc'], $updatePembacaan);
+            }
+        }
         $this->ihcModel->update($id_ihc, $data);
         $redirect = $this->request->getPost('redirect');
         if (!$redirect) {
@@ -852,8 +870,8 @@ class ihcController extends BaseController
                     'id'   => 328,
                 ],
             ];
-            $idUserDokter = $data['id_user_dokter_pembacaan_hpa'] ?? null;
-            log_message('debug', '[SIMRS] id_user_dokter_pembacaan_hpa: ' . $idUserDokter);
+            $idUserDokter = $data['id_user_dokter_pembacaan_ihc'] ?? null;
+            log_message('debug', '[SIMRS] id_user_dokter_pembacaan_ihc: ' . $idUserDokter);
             $iddokterpa   = null;
             $dokterpa = null;
             if ($idUserDokter && isset($mappingDokterByUser[$idUserDokter])) {

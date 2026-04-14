@@ -40,7 +40,7 @@ class Pemverifikasi_srs extends Model // Update nama model
         mutu_srs.total_nilai_mutu_srs,
         penerimaan_srs.id_penerimaan_srs,
         pembacaan_srs.id_pembacaan_srs,
-        pembacaan_srs.id_pembacaan_srs, 
+        pembacaan_srs.id_user_dokter_pembacaan_srs, 
         authorized_srs.id_authorized_srs,
         pencetakan_srs.id_pencetakan_srs'
         )

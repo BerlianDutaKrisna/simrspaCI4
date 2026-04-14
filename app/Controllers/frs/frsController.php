@@ -917,8 +917,8 @@ class FrsController extends BaseController
                     'id'   => 328,
                 ],
             ];
-            $idUserDokter = $data['id_user_dokter_pembacaan_hpa'] ?? null;
-            log_message('debug', '[SIMRS] id_user_dokter_pembacaan_hpa: ' . $idUserDokter);
+            $idUserDokter = $data['id_user_dokter_pembacaan_frs'] ?? null;
+            log_message('debug', '[SIMRS] id_user_dokter_pembacaan_frs: ' . $idUserDokter);
             $iddokterpa   = null;
             $dokterpa = null;
             if ($idUserDokter && isset($mappingDokterByUser[$idUserDokter])) {

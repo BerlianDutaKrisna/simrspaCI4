@@ -49,8 +49,9 @@
                             <th>Detail</th>
                             <th>Kode SRS</th>
                             <th>Nama Pasien</th>
+                            <th>Dokter PA</th>
                             <th>Status pemverifikasi</th>
-                            <th>User</th>
+                            <th>User pemverifikasi</th>
                             <th>Mulai pemverifikasi</th>
                             <th>Selesai pemverifikasi</th>
                             <th>Deadline Hasil</th>
@@ -81,7 +82,7 @@
                                         </td>
                                     <?php elseif ($row['status_pemverifikasi_srs'] === "Selesai Pemverifikasi"): ?>
                                         <td>
-                                            <a href="<?= esc(base_url('srs/edit_print/' . esc($row['id_srs']) . '?redirect=index_pemverifikasi_frs')) ?>"
+                                            <a href="<?= esc(base_url('srs/edit_print/' . esc($row['id_srs']) . '?redirect=index_pemverifikasi_srs')) ?>"
                                                 class="btn btn-success btn-sm">
                                                 <i class="fas fa-eye"></i> Cek Penulisan
                                             </a>
@@ -89,6 +90,9 @@
                                     <?php endif; ?>
                                     <td><?= $row['kode_srs']; ?></td>
                                     <td><b><?= esc($row['nama_pasien']); ?></b> (<?= esc($row['norm_pasien']); ?>)</td>
+                                    <td>
+                                        <?= $row['id_user_dokter_pembacaan_srs'] == 1 ? 'dr. Vinna Chrisdianti, Sp.PA' : ($row['id_user_dokter_pembacaan_srs'] == 2 ? 'dr. Ayu Tyasmara Pratiwi, Sp.PA' : '') ?>
+                                    </td>
                                     <td><?= $row['status_pemverifikasi_srs']; ?></td>
                                     <td><?= $row['nama_user_pemverifikasi_srs']; ?></td>
                                     <td>

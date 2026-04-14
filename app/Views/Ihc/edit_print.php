@@ -33,6 +33,7 @@
                 <input type="hidden" name="periksa" value="<?= isset($ihc['mulai_penerimaan_ihc']) ? esc($ihc['mulai_penerimaan_ihc']) : '' ?>">
                 <input type="hidden" name="selesai" value="<?= isset($ihc['selesai_penulisan_ihc']) ? esc($ihc['selesai_penulisan_ihc']) : '' ?>">
                 <!-- dokter PA text -->
+                <input type="hidden" name="id_pembacaan_ihc" value="<?= $ihc['id_pembacaan_ihc'] ?? '' ?>">
                 <input type="hidden" name="id_user_dokter_pembacaan_ihc" value="<?= $ihc['id_user_dokter_pembacaan_ihc'] ?? '' ?>">
                 <input type="hidden" name="dokterpa" value="<?= isset($pembacaan_ihc['dokter_nama']) ? esc($pembacaan_ihc['dokter_nama']) : '' ?>">
                 <!-- status lokasi text -->
@@ -59,6 +60,28 @@
                         <textarea class="form-control summernote_print" name="print_ihc" id="print_ihc" rows="5">
                             <font size="5" face="verdana"><?= $ihc['print_ihc'] ?? '' ?></font>
                         </textarea>
+                    </div>
+                </div>
+                <!-- Kolom Hasil ihc dan Dokter -->
+                <div class="form-group row">
+                    <label class="col-sm-2 col-form-label"></label>
+                    <div class="col-sm-4">
+
+                    </div>
+
+                    <label class="col-sm-2 col-form-label">Dokter yang membaca</label>
+                    <div class="col-sm-4">
+                        <select class="form-control" id="id_user_dokter_pembacaan_ihc" name="id_user_dokter_pembacaan_ihc" required>
+                            <option value="" disabled selected hidden>-- Pilih Dokter --</option>
+                            <?php foreach ($users as $user): ?>
+                                <?php if ($user['status_user'] === 'Dokter'): ?>
+                                    <option value="<?= $user['id_user'] ?>"
+                                        <?= isset($pembacaan_ihc['id_user_dokter_pembacaan_ihc']) && $user['id_user'] == $pembacaan_ihc['id_user_dokter_pembacaan_ihc'] ? 'selected' : '' ?>>
+                                        <?= $user['nama_user'] ?>
+                                    </option>
+                                <?php endif; ?>
+                            <?php endforeach; ?>
+                        </select>
                     </div>
                 </div>
                 <div class="form-group row">

@@ -33,6 +33,7 @@
                 <input type="hidden" name="periksa" value="<?= isset($srs['mulai_penerimaan_srs']) ? esc($srs['mulai_penerimaan_srs']) : '' ?>">
                 <input type="hidden" name="selesai" value="<?= isset($srs['selesai_penulisan_srs']) ? esc($srs['selesai_penulisan_srs']) : '' ?>">
                 <!-- dokter PA text -->
+                <input type="hidden" name="id_pembacaan_srs" value="<?= $srs['id_pembacaan_srs'] ?? '' ?>">
                 <input type="hidden" name="id_user_dokter_pembacaan_srs" value="<?= $srs['id_user_dokter_pembacaan_srs'] ?? '' ?>">
                 <input type="hidden" name="dokterpa" value="<?= isset($pembacaan_srs['dokter_nama']) ? esc($pembacaan_srs['dokter_nama']) : '' ?>">
                 <!-- status lokasi text -->
@@ -59,6 +60,28 @@
                         <textarea class="form-control summernote_print" name="print_srs" id="print_srs" rows="5">
                             <font size="5" face="verdana"><?= $srs['print_srs'] ?? '' ?></font>
                         </textarea>
+                    </div>
+                </div>
+                <!-- Kolom Hasil srs dan Dokter -->
+                <div class="form-group row">
+                    <label class="col-sm-2 col-form-label"></label>
+                    <div class="col-sm-4">
+
+                    </div>
+
+                    <label class="col-sm-2 col-form-label">Dokter yang membaca</label>
+                    <div class="col-sm-4">
+                        <select class="form-control" id="id_user_dokter_pembacaan_srs" name="id_user_dokter_pembacaan_srs" required>
+                            <option value="" disabled selected hidden>-- Pilih Dokter --</option>
+                            <?php foreach ($users as $user): ?>
+                                <?php if ($user['status_user'] === 'Dokter'): ?>
+                                    <option value="<?= $user['id_user'] ?>"
+                                        <?= isset($pembacaan_srs['id_user_dokter_pembacaan_srs']) && $user['id_user'] == $pembacaan_srs['id_user_dokter_pembacaan_srs'] ? 'selected' : '' ?>>
+                                        <?= $user['nama_user'] ?>
+                                    </option>
+                                <?php endif; ?>
+                            <?php endforeach; ?>
+                        </select>
                     </div>
                 </div>
                 <div class="form-group row">

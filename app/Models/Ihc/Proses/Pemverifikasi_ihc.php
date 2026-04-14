@@ -40,7 +40,7 @@ class Pemverifikasi_ihc extends Model // Update nama model
         mutu_ihc.total_nilai_mutu_ihc,
         penerimaan_ihc.id_penerimaan_ihc,
         pembacaan_ihc.id_pembacaan_ihc,
-        pembacaan_ihc.id_pembacaan_ihc, 
+        pembacaan_srs.id_user_dokter_pembacaan_ihc,  
         authorized_ihc.id_authorized_ihc,
         pencetakan_ihc.id_pencetakan_ihc'
         )

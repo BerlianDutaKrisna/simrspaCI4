@@ -581,6 +581,8 @@ class srsController extends BaseController
     {
         // Ambil data srs berdasarkan ID
         $srs = $this->srsModel->getSrsWithRelationsProses($id_srs);
+        // Ambil daftar user dengan status "Dokter"
+        $users = $this->usersModel->where('status_user', 'Dokter')->findAll();
         $id_pasien = $srs['id_pasien'];
         if (!empty($srs['norm_pasien'])) {
             $riwayat_api_response = $this->simrsModel->getPemeriksaanPasien($srs['norm_pasien']);
@@ -651,6 +653,7 @@ class srsController extends BaseController
             'riwayat_srs'        => $riwayat_srs,
             'riwayat_ihc'        => $riwayat_ihc,
             'pembacaan_srs' => $pembacaan_srs,
+            'users' => $users,
         ];
 
         return view('srs/edit_print', $data);
@@ -865,6 +868,21 @@ class srsController extends BaseController
         }
         // Mengambil data dari POST dan melakukan update
         $data = $this->request->getPost();
+        // update pembacaan
+        $id_pembacaan_srs = $data['id_pembacaan_srs'] ?? null;
+        $id_user_dokter_pembacaan_srs = !empty($data['id_user_dokter_pembacaan_srs']) ? (int) $data['id_user_dokter_pembacaan_srs'] : null;
+        // Update tabel pembacaan_srs
+        $pembacaan = $this->pembacaan_srs->where('id_pembacaan_srs', $id_pembacaan_srs)->first();
+        if ($pembacaan) {
+            $updatePembacaan = [];
+
+            if ($id_user_dokter_pembacaan_srs !== null) {
+                $updatePembacaan['id_user_dokter_pembacaan_srs'] = $id_user_dokter_pembacaan_srs;
+            }
+            if (!empty($updatePembacaan)) {
+                $this->pembacaan_srs->update($pembacaan['id_pembacaan_srs'], $updatePembacaan);
+            }
+        }
         $this->srsModel->update($id_srs, $data);
         $redirect = $this->request->getPost('redirect');
         if (!$redirect) {
@@ -931,8 +949,8 @@ class srsController extends BaseController
                     'id'   => 328,
                 ],
             ];
-            $idUserDokter = $data['id_user_dokter_pembacaan_hpa'] ?? null;
-            log_message('debug', '[SIMRS] id_user_dokter_pembacaan_hpa: ' . $idUserDokter);
+            $idUserDokter = $data['id_user_dokter_pembacaan_srs'] ?? null;
+            log_message('debug', '[SIMRS] id_user_dokter_pembacaan_srs: ' . $idUserDokter);
             $iddokterpa   = null;
             $dokterpa = null;
             if ($idUserDokter && isset($mappingDokterByUser[$idUserDokter])) {

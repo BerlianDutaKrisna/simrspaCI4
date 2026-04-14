@@ -12,6 +12,7 @@
                         <tr>
                             <th>No</th>
                             <th>Tanggal</th>
+                            <th>Nama</th>
                             <th>Kode</th>
                             <th>Dokter</th>
                             <th>Diagnosa Klinik</th>
@@ -24,6 +25,7 @@
                             <tr>
                                 <td><?= $i + 1 ?></td>
                                 <td><?= (!empty($row['tanggal']) && strtotime($row['tanggal'])) ? date('d-m-Y', strtotime($row['tanggal'])) : '-' ?></td>
+                                <td><?= esc($row['nama'] ?? '-') ?></td>
                                 <td><?= esc($row['noregister'] ?? '-') ?></td>
                                 <td><?= esc($row['dokterpa'] ?? '-') ?></td>
                                 <td><?= esc($row['diagnosaklinik'] ?? '-') ?></td>
