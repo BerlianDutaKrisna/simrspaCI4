@@ -49,8 +49,9 @@
                             <th>Detail</th>
                             <th>Kode HPA</th>
                             <th>Nama Pasien</th>
+                            <th>Dokter</th>
                             <th>Status pemverifikasi</th>
-                            <th>User</th>
+                            <th>User Verifikasi</th>
                             <th>Mulai pemverifikasi</th>
                             <th>Selesai pemverifikasi</th>
                             <th>Deadline Hasil</th>
@@ -89,6 +90,9 @@
                                     <?php endif; ?>
                                     <td><?= $row['kode_hpa']; ?></td>
                                     <td><b><?= esc($row['nama_pasien']); ?></b> (<?= esc($row['norm_pasien']); ?>)</td>
+                                    <td>
+                                        <?= $row['id_user_dokter_pembacaan_hpa'] == 1 ? 'dr. Vinna Chrisdianti, Sp.PA' : ($row['id_user_dokter_pembacaan_hpa'] == 2 ? 'dr. Ayu Tyasmara Pratiwi, Sp.PA' : '') ?>
+                                    </td>
                                     <td><?= $row['status_pemverifikasi_hpa']; ?></td>
                                     <td><?= $row['nama_user_pemverifikasi_hpa']; ?></td>
                                     <td>

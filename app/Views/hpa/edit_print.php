@@ -33,6 +33,7 @@
                 <input type="hidden" name="periksa" value="<?= isset($hpa['mulai_penerimaan_hpa']) ? esc($hpa['mulai_penerimaan_hpa']) : '' ?>">
                 <input type="hidden" name="selesai" value="<?= isset($hpa['selesai_penulisan_hpa']) ? esc($hpa['selesai_penulisan_hpa']) : '' ?>">
                 <!-- dokter PA text -->
+                <input type="hidden" name="id_pembacaan_hpa" value="<?= $hpa['id_pembacaan_hpa'] ?? '' ?>">
                 <input type="hidden" name="id_user_dokter_pembacaan_hpa" value="<?= $hpa['id_user_dokter_pembacaan_hpa'] ?? '' ?>">
                 <input type="hidden" name="dokterpa" value="<?= isset($pembacaan_hpa['dokter_nama']) ? esc($pembacaan_hpa['dokter_nama']) : '' ?>">
                 <!-- status lokasi text -->
@@ -59,6 +60,29 @@
                         <textarea class="form-control summernote_print" name="print_hpa" id="print_hpa" rows="6">
                     <font size="5" face="verdana"><?= $hpa['print_hpa'] ?? '' ?></font>
                 </textarea>
+                    </div>
+                </div>
+
+                <!-- Kolom Hasil HPA dan Dokter -->
+                <div class="form-group row">
+                    <label class="col-sm-2 col-form-label"></label>
+                    <div class="col-sm-4">
+
+                    </div>
+
+                    <label class="col-sm-2 col-form-label">Dokter yang membaca</label>
+                    <div class="col-sm-4">
+                        <select class="form-control" id="id_user_dokter_pembacaan_hpa" name="id_user_dokter_pembacaan_hpa" required>
+                            <option value="" disabled selected hidden>-- Pilih Dokter --</option>
+                            <?php foreach ($users as $user): ?>
+                                <?php if ($user['status_user'] === 'Dokter'): ?>
+                                    <option value="<?= $user['id_user'] ?>"
+                                        <?= isset($pembacaan_hpa['id_user_dokter_pembacaan_hpa']) && $user['id_user'] == $pembacaan_hpa['id_user_dokter_pembacaan_hpa'] ? 'selected' : '' ?>>
+                                        <?= $user['nama_user'] ?>
+                                    </option>
+                                <?php endif; ?>
+                            <?php endforeach; ?>
+                        </select>
                     </div>
                 </div>
 

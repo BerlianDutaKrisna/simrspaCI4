@@ -40,6 +40,7 @@ class Pemverifikasi_hpa extends Model // Update nama model
         mutu_hpa.total_nilai_mutu_hpa,
         penerimaan_hpa.id_penerimaan_hpa,
         pembacaan_hpa.id_pembacaan_hpa,
+        pembacaan_hpa.id_user_dokter_pembacaan_hpa,
         pembacaan_hpa.id_pembacaan_hpa, 
         authorized_hpa.id_authorized_hpa,
         pencetakan_hpa.id_pencetakan_hpa'

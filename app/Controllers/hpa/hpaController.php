@@ -715,6 +715,9 @@ class HpaController extends BaseController
         // Ambil data hpa berdasarkan ID
         $hpa = $this->hpaModel->getHpaWithRelationsProses($id_hpa);
         $id_pasien = $hpa['id_pasien'];
+        // Ambil daftar user dengan status "Dokter"
+        $users = $this->usersModel->where('status_user', 'Dokter')->findAll();
+
         if (!empty($hpa['norm_pasien'])) {
             $riwayat_api_response = $this->simrsModel->getPemeriksaanPasien($hpa['norm_pasien']);
             if (!empty($riwayat_api_response['code']) && $riwayat_api_response['code'] == 200) {
@@ -784,8 +787,9 @@ class HpaController extends BaseController
             'riwayat_srs'        => $riwayat_srs,
             'riwayat_ihc'        => $riwayat_ihc,
             'pembacaan_hpa' => $pembacaan_hpa,
+            'users' => $users,
         ];
-
+        
         return view('hpa/edit_print', $data);
     }
 
@@ -1086,6 +1090,7 @@ class HpaController extends BaseController
     {
         date_default_timezone_set('Asia/Jakarta');
         $id_user = session()->get('id_user');
+        
 
         if (!$id_hpa) {
             return redirect()->back()->with('error', 'Terjadi kesalahan: ID HPA tidak ditemukan.');
@@ -1094,6 +1099,20 @@ class HpaController extends BaseController
         // Ambil data dari POST dan update HPA lebih dulu
         $data = $this->request->getPost();
         $this->hpaModel->update($id_hpa, $data);
+        $id_pembacaan_hpa = $data['id_pembacaan_hpa'] ?? null;
+        $id_user_dokter_pembacaan_hpa = !empty($data['id_user_dokter_pembacaan_hpa']) ? (int) $data['id_user_dokter_pembacaan_hpa'] : null;
+        // Update tabel pembacaan_hpa
+        $pembacaan = $this->pembacaan_hpa->where('id_pembacaan_hpa', $id_pembacaan_hpa)->first();
+        if ($pembacaan) {
+            $updatePembacaan = [];
+
+            if ($id_user_dokter_pembacaan_hpa !== null) {
+                $updatePembacaan['id_user_dokter_pembacaan_hpa'] = $id_user_dokter_pembacaan_hpa;
+            }
+            if (!empty($updatePembacaan)) {
+                $this->pembacaan_hpa->update($pembacaan['id_pembacaan_hpa'], $updatePembacaan);
+            }
+        }
 
         $redirect = $this->request->getPost('redirect');
         if (!$redirect) {

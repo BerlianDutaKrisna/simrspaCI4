@@ -42,7 +42,7 @@ class Pemverifikasi extends BaseController
             'counts' => $this->getCounts(),
             'pemverifikasiDatahpa' => $pemverifikasiData_hpa,
         ];
-
+        
         return view('Hpa/Proses/pemverifikasi', $data);
     }
 
