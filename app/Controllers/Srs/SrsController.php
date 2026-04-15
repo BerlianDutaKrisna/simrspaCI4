@@ -810,14 +810,14 @@ class srsController extends BaseController
                         <font size="5" face="verdana"><b>MIKROSKOPIK :</b><br></font>
                     </div>
                     <div>
-                        <font size="5" face="verdana">' . nl2br(htmlspecialchars(str_replace(['<p>', '</p>'], '', $mikroskopis_srs))) . '</font>
+                        <font size="5" face="verdana">' . nl2br(htmlspecialchars(trim(preg_replace("/\s*\n\s*/", "\n",str_replace(['<p>', '</p>', '<br>'],['', '', "\n"],$mikroskopis_srs))))) . '</font>
                     </div>
                     <br>
                     <div>
                         <font size="5" face="verdana"><b>KESIMPULAN :</b> ' . htmlspecialchars($lokasi_spesimen) . ', ' . htmlspecialchars($tindakan_spesimen) . ':</b></font>
                     </div>
                     <div>
-                        <font size="5" face="verdana"><b>' . strtoupper(nl2br(htmlspecialchars(str_replace(['&nbsp;', '<p>', '</p>'], [' ', ' ', '', ''], $hasil_srs)))) . '</b></font>
+                        <font size="5" face="verdana"><b>' . strtoupper(nl2br(htmlspecialchars(str_replace(['&nbsp;', '<p>', '</p>', '<br>'], [' ', ' ', '', ''], $hasil_srs)))) . '</b></font>
                     </div>
                     <br>';
                     // Simpan print_srs setelah semua data yang dibutuhkan telah ada

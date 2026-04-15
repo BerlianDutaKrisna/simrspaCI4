@@ -86,6 +86,7 @@
                 </div>
 
                 <?= $this->include('templates/exam/riwayat'); ?>
+                <?= $this->include('templates/srs/papsmear'); ?>
 
                 <div class="form-group row">
                     <!-- Kolom Kiri -->
@@ -179,7 +180,7 @@
                                 <font size="5" face="verdana"><b>KESIMPULAN :</b> <?= $srs['lokasi_spesimen'] ?? '' ?>, <?= $srs['tindakan_spesimen'] ?? '' ?>:</b></font>
                             </div>
                             <div>
-                            <font size="5" face="verdana"><b><?= strtoupper(nl2br(htmlspecialchars(str_replace(['&nbsp;', '<p>', '</p>'], [' ', ' ', '', ''], $srs['hasil_srs'] ?? '')))) ?></b></font>
+                            <font size="5" face="verdana"><b><?= strtoupper(preg_replace('/\s+/',' ',htmlspecialchars(str_replace(['&nbsp;', '<p>', '</p>'],[' ', ' ', '', ''],$srs['hasil_srs'] ?? '')))) ?></b></font>
                             </div>
                             <br>
                         </textarea>
