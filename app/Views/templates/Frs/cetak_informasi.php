@@ -1,13 +1,87 @@
+<?php
+$ttd_dokter = '';
+
+if (($frs['dokter_pemeriksa'] ?? '') === "dr. Ayu Tyasmara Pratiwi, Sp.PA") {
+    $ttd_dokter = base_url('img/ttdAyuPNG.png');
+} elseif (($frs['dokter_pemeriksa'] ?? '') === "dr. Vinna Chrisdianti, Sp.PA") {
+    $ttd_dokter = base_url('img/ttdVinaPNG.png');
+}
+
+$analis_pemeriksa = '';
+if (($frs['id_user_penerimaan_frs'] ?? '') === "3") {
+    $analis_pemeriksa = "Endar Pratiwi, S.Si";
+} elseif (($frs['id_user_penerimaan_frs'] ?? '') === "4") {
+    $analis_pemeriksa = "Arlina Kartika, A.Md.AK";
+} elseif (($frs['id_user_penerimaan_frs'] ?? '') === "5") {
+    $analis_pemeriksa = "Ilham Tyas Ismadi, A.Md.Kes";
+} elseif (($frs['id_user_penerimaan_frs'] ?? '') === "6") {
+    $analis_pemeriksa = "Berlian Duta Krisna, S.Tr.Kes";
+}
+
+$ttd_analis = '';
+if (($frs['id_user_penerimaan_frs'] ?? '') === "3") {
+    $ttd_analis = base_url('img/ttdEndarPNG.png');
+} elseif (($frs['id_user_penerimaan_frs'] ?? '') === "4") {
+    $ttd_analis = base_url('img/ttdArlinaPNG.png');
+} elseif (($frs['id_user_penerimaan_frs'] ?? '') === "5") {
+    $ttd_analis = base_url('img/ttdIlhamPNG.png');
+} elseif (($frs['id_user_penerimaan_frs'] ?? '') === "6") {
+    $ttd_analis = base_url('img/ttdBerlianPNG.png');
+}
+?>
 <script>
     function cetakProses() {
-        var dokter_pemeriksa = document.getElementById('dokter_pemeriksa') ? document.getElementById('dokter_pemeriksa').value : '____________________';
+        var dokter_pemeriksa = document.getElementById('dokter_pemeriksa') ?
+            document.getElementById('dokter_pemeriksa').value :
+            '(____________________)';
+
+        var ttd_dokter_ayu = "<?= base_url('img/ttdAyuPNG.png'); ?>";
+        var ttd_dokter_vinna = "<?= base_url('img/ttdVinaPNG.png'); ?>";
+
+        var ttd_dokter_html = '<br><br><br><br>';
+
+        if (dokter_pemeriksa === "dr. Ayu Tyasmara Pratiwi, Sp.PA") {
+            ttd_dokter_html = '<img src="' + ttd_dokter_ayu + '" style="width:100px; height:auto;"><br>';
+        } else if (dokter_pemeriksa === "dr. Vinna Chrisdianti, Sp.PA") {
+            ttd_dokter_html = '<img src="' + ttd_dokter_vinna + '" style="width:50px; height:auto;"><br>';
+        }
+        var analis = document.getElementById('analis_priksa') ?
+            document.getElementById('analis_priksa').value :
+            '';
+        var analis_nama = "(____________________)";
+
+        if (analis === "3") {
+            analis_nama = "Endar Pratiwi, S.Si";
+        } else if (analis === "4") {
+            analis_nama = "Arlina Kartika, A.Md.AK";
+        } else if (analis === "5") {
+            analis_nama = "Ilham Tyas Ismadi, A.Md.Kes";
+        } else if (analis === "6") {
+            analis_nama = "Berlian Duta Krisna, S.Tr.Kes";
+        }
+        var ttd_analis_endar = "<?= base_url('img/ttdEndarPNG.png'); ?>";
+        var ttd_analis_arlina = "<?= base_url('img/ttdArlinaPNG.png'); ?>";
+        var ttd_analis_ilham = "<?= base_url('img/ttdIlhamPNG.png'); ?>";
+        var ttd_analis_berlian = "<?= base_url('img/ttdBerlianPNG.png'); ?>";
+
+        var ttd_analis_html = '<br><br><br><br>';
+
+        if (analis === "3") {
+            ttd_analis_html = '<img src="' + ttd_analis_endar + '" style="width:150px; height:auto;"><br>';
+        } else if (analis === "4") {
+            ttd_analis_html = '<img src="' + ttd_analis_arlina + '" style="width:100px; height:auto;"><br>';
+        } else if (analis === "5") {
+            ttd_analis_html = '<img src="' + ttd_analis_ilham + '" style="width:100px; height:auto;"><br>';
+        } else if (analis === "6") {
+            ttd_analis_html = '<img src="' + ttd_analis_berlian + '" style="width:200px; height:auto;"><br>';
+        }
         var nama_hubungan_pasien = document.getElementById('nama_hubungan_pasien') ?
             (document.getElementById('nama_hubungan_pasien').value === 'lainnya' ?
                 document.getElementById('nama_lainnya').value || "____________________" :
                 document.getElementById('nama_hubungan_pasien').value) :
             "____________________";
         var hubungan_dengan_pasien = document.getElementById('hubungan_dengan_pasien') ? document.getElementById('hubungan_dengan_pasien').value : '____________________';
-        var jenis_kelamin_hubungann_pasien = document.getElementById('jenis_kelamin_hubungann_pasien') ? document.getElementById('jenis_kelamin_hubungann_pasien').value : '';
+        var jenis_kelamin_hubungann_pasien = document.getElementById('jenis_kelamin_hubungann_pasien') ? document.getElementById('jenis_kelamin_hubungan_pasien').value : '';
         var usia_hubungan_pasien = document.getElementById('usia_hubungan_pasien') ? document.getElementById('usia_hubungan_pasien').value : '';
         var printWindow = window.open('', '', 'height=500,width=800');
         printWindow.document.write(`
@@ -172,9 +246,7 @@
                 <td style="text-align: center;">
                 Tanda Tangan
                 <br>
-                <br>
-                <br>
-                <br>
+                ${ttd_dokter_html}
                 ${dokter_pemeriksa}
                 </td>
             </tr>
@@ -204,7 +276,7 @@
             </tr>
             <tr>
                 <td>Umur</td>
-                <td>${usia_hubungan_pasien} tahun, ${jenis_kelamin_hubungann_pasien}</td>
+                <td>${usia_hubungan_pasien} tahun, ${jenis_kelamin_hubungan_pasien}</td>
             </tr>
             <tr>
                 <td>Alamat</td>
@@ -255,19 +327,20 @@
                 <p>Yang menyatakan</p>
                 <br>
                 <br>
+                <br>
+                <br>
+                <br>
                 <p>(${nama_hubungan_pasien})</p>
             </div>
             <div>
                 <p>Saksi I (Dokter)</p>
-                <br>
-                <br>
+                ${ttd_dokter_html}
                 <p>(${dokter_pemeriksa})</p>
             </div>
             <div>
                 <p>Saksi II (Analis)</p>
-                <br>
-                <br>
-                <p>(<?= esc($nama_user) ?? ""; ?>)</p>
+                ${ttd_analis_html}
+                <p>(${analis_nama})</p>
             </div>
         </div>
     </div>
@@ -275,17 +348,17 @@
 </html>
     `);
 
-    printWindow.document.close();
+        printWindow.document.close();
         printWindow.focus();
         printWindow.print();
 
         // Tutup otomatis setelah selesai print
-        printWindow.onafterprint = function () {
+        printWindow.onafterprint = function() {
             printWindow.close();
         };
 
         // Fallback, jika onafterprint tidak jalan
-        setTimeout(function () {
+        setTimeout(function() {
             if (!printWindow.closed) {
                 printWindow.close();
             }

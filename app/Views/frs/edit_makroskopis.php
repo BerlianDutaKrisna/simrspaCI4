@@ -110,6 +110,32 @@
                         </div>
 
                         <div class="form-group col-md-3">
+                            <label for="analis_priksa">Analis Pemeriksa</label>
+                            <select class="form-control" id="analis_priksa" name="analis_priksa">
+                                <option value="____________________"
+                                    <?= empty($frs['id_user_penerimaan_frs']) ? 'selected' : '' ?>>
+                                    -- Pilih Analis --
+                                </option>
+                                <option value="3"
+                                    <?= ($frs['id_user_penerimaan_frs'] ?? '') === "3" ? 'selected' : '' ?>>
+                                    Endar Pratiwi, S.Si
+                                </option>
+                                <option value="4"
+                                    <?= ($frs['id_user_penerimaan_frs'] ?? '') === "4" ? 'selected' : '' ?>>
+                                    Arlina Kartika, A.Md.AK
+                                </option>
+                                <option value="5"
+                                    <?= ($frs['id_user_penerimaan_frs'] ?? '') === "5" ? 'selected' : '' ?>>
+                                    Ilham Tyas Ismadi, A.Md.Kes
+                                </option>
+                                <option value="6"
+                                    <?= ($frs['id_user_penerimaan_frs'] ?? '') === "6" ? 'selected' : '' ?>>
+                                    Berlian Duta Krisna, S.Tr.Kes
+                                </option>
+                            </select>
+                        </div>
+
+                        <div class="form-group col-md-3">
                             <label for="usia_hubungan_pasien">Usia Hubungan Pasien</label>
                             <input type="number" class="form-control" id="usia_hubungan_pasien" name="usia_hubungan_pasien" value="">
                         </div>

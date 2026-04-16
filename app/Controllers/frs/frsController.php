@@ -430,7 +430,7 @@ class FrsController extends BaseController
             'id_user'    => $this->session->get('id_user'),
             'nama_user'  => $this->session->get('nama_user'),
         ];
-
+        
         return view('frs/edit_makroskopis', $data);
     }
 
@@ -483,7 +483,7 @@ class FrsController extends BaseController
             'id_user'         => session()->get('id_user'),
             'nama_user'       => session()->get('nama_user'),
         ];
-
+        
         return view('frs/edit_mikroskopis', $data);
     }
 
