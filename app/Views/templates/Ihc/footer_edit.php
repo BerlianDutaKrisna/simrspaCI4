@@ -84,7 +84,7 @@
                 ER: <br>
                 PR: <br>
                 Her2 Neu: <br>
-                Ki-67 : <br>
+                Ki-67: Indeks Proliferasi <br>
         `);
             }
         }
@@ -97,7 +97,7 @@
                 <div><font size="5" face="verdana">ER: <br></font></div>
                 <div><font size="5" face="verdana">PR: <br></font> </div>
                 <div><font size="5" face="verdana">HER2 NEU: <br></font></div>
-                <div><font size="5" face="verdana">KI-67: INDEKS PROLIFERASI <br></font></div>
+                <div><font size="5" face="verdana">KI-67: Indeks Proliferasi <br></font></div>
             `);
             }
         }
