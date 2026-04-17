@@ -92,7 +92,15 @@
                                         </td>
                                     <?php endif; ?>
                                     <td><?= $row['kode_hpa']; ?></td>
-                                    <td><b><?= esc($row['nama_pasien']); ?></b> (<?= esc($row['norm_pasien']); ?>)</td>
+                                    <td><b><?= esc($row['nama_pasien']); ?></b><br>(
+                                        <span
+                                            class="copy-norm"
+                                            data-text="<?= esc($row['norm_pasien']); ?>"
+                                            style="cursor:pointer; color:black;">
+                                            <?= esc($row['norm_pasien']); ?>
+                                        </span>
+                                        )
+                                    </td>
                                     <td><?= $row['no_register']; ?></td>
                                     <td><?= $row['nama_user_dokter_pembacaan']; ?></td>
                                     <td><?= $row['lokasi_spesimen']; ?></td>
@@ -135,8 +143,6 @@
                     </tbody>
                 </table>
             </div>
-
-
             <?= $this->include('templates/proses/button_proses'); ?>
             <?= $this->include('dashboard/jenis_tindakan'); ?>
             <?= $this->include('templates/notifikasi'); ?>

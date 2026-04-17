@@ -81,7 +81,7 @@ if (($frs['id_user_penerimaan_frs'] ?? '') === "3") {
                 document.getElementById('nama_hubungan_pasien').value) :
             "____________________";
         var hubungan_dengan_pasien = document.getElementById('hubungan_dengan_pasien') ? document.getElementById('hubungan_dengan_pasien').value : '____________________';
-        var jenis_kelamin_hubungann_pasien = document.getElementById('jenis_kelamin_hubungann_pasien') ? document.getElementById('jenis_kelamin_hubungan_pasien').value : '';
+        var jenis_kelamin_hubungan_pasien = document.getElementById('jenis_kelamin_hubungan_pasien') ? document.getElementById('jenis_kelamin_hubungan_pasien').value : '';
         var usia_hubungan_pasien = document.getElementById('usia_hubungan_pasien') ? document.getElementById('usia_hubungan_pasien').value : '';
         var printWindow = window.open('', '', 'height=500,width=800');
         printWindow.document.write(`
@@ -98,7 +98,7 @@ if (($frs['id_user_penerimaan_frs'] ?? '') === "3") {
             padding: 0;
         }
         .container {
-            width: 850px;
+            width: 900px;
             margin: 20px auto;
             padding: 20px;
         }
@@ -139,9 +139,9 @@ if (($frs['id_user_penerimaan_frs'] ?? '') === "3") {
         .rm-paragraph {
         display: flex;
         justify-content: space-between;
-        font-size: 14px;
+        font-size: 12px;
         font-weight: bold;
-        margin-bottom: 10px;
+        margin-bottom: 5px;
         }
         .left-text {
             text-align: left;
@@ -170,7 +170,7 @@ if (($frs['id_user_penerimaan_frs'] ?? '') === "3") {
                     TELP. 0313717141, 3725905<br><br>
                     <b>INFORMED CONSENT TINDAKAN FNAB</b>
                 </td>
-                <td style="width: 50%; font-size: 16px; text-align: left;">
+                <td style="width: 50%; font-size: 12px; text-align: left;">
                     Nama (<?= esc($frs['jenis_kelamin_pasien'] ?? '') ?>): <?= esc($frs['nama_pasien'] ?? '') ?><br>
                     No. RM: <?= esc($frs['norm_pasien'] ?? '') ?><br>
                     Tgl. Lahir: <?= isset($frs['tanggal_lahir_pasien']) ? date('d-m-Y', strtotime($frs['tanggal_lahir_pasien'])) : '' ?><br>

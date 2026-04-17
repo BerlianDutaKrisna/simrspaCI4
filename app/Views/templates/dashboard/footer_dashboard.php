@@ -1,4 +1,56 @@
 <script>
+    // fungsi copy
+    function copyToClipboard(text) {
+        let textArea = document.createElement("textarea");
+        textArea.value = text;
+        document.body.appendChild(textArea);
+        textArea.select();
+        document.execCommand("copy");
+        textArea.remove();
+
+        showToast("Copied: " + text);
+    }
+
+    // toast
+    function showToast(message) {
+        const toast = document.createElement("div");
+        toast.innerText = message;
+
+        toast.style.position = "fixed";
+        toast.style.top = "20px";
+        toast.style.left = "50%";
+        toast.style.transform = "translateX(-50%)";
+        toast.style.background = "#1cc88a";
+        toast.style.color = "#fff";
+        toast.style.padding = "10px 20px";
+        toast.style.borderRadius = "5px";
+        toast.style.boxShadow = "0 0 10px rgba(0,0,0,0.2)";
+        toast.style.zIndex = "9999";
+        toast.style.opacity = "0";
+        toast.style.transition = "opacity 0.3s";
+
+        document.body.appendChild(toast);
+
+        setTimeout(() => {
+            toast.style.opacity = "1";
+        }, 100);
+
+        setTimeout(() => {
+            toast.style.opacity = "0";
+            setTimeout(() => {
+                toast.remove();
+            }, 300);
+        }, 2000);
+    }
+
+    // event delegation (WAJIB untuk DataTable)
+    document.addEventListener("click", function(e) {
+        if (e.target.classList.contains("copy-norm")) {
+            copyToClipboard(e.target.dataset.text);
+        }
+    });
+</script>
+<script>
     document.addEventListener("DOMContentLoaded", function() {
         function syncKunjunganHariIni() {
             fetch('<?= base_url("api/kunjungan/getKunjunganHariIni") ?>', {

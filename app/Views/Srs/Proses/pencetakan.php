@@ -92,8 +92,12 @@
                                         </td>
                                     <?php endif; ?>
                                     <td><?= $row['kode_srs']; ?></td>
-                                    <td><b><?= esc($row['nama_pasien']); ?></b> (<?= esc($row['norm_pasien']); ?>)</td>
-                                    <td><?= $row['no_register']; ?></td>
+                                    <td><b><?= esc($row['nama_pasien']); ?></b><br>(<span
+                                            class="copy-norm"
+                                            data-text="<?= esc($row['norm_pasien']); ?>"
+                                            style="cursor:pointer; color:black;">
+                                            <?= esc($row['norm_pasien']); ?>
+                                        </span>)</td>
                                     <td><?= $row['nama_user_dokter_pembacaan']; ?></td>
                                     <td><?= $row['lokasi_spesimen']; ?></td>
                                     <td><?= $row['diagnosa_klinik']; ?></td>
