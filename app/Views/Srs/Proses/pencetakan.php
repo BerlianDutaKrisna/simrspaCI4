@@ -98,6 +98,15 @@
                                             style="cursor:pointer; color:black;">
                                             <?= esc($row['norm_pasien']); ?>
                                         </span>)</td>
+                                    <td>
+                                        <?php if (empty($row['no_register']) || $row['no_register'] == ""): ?>
+                                            <span class="badge badge-danger" style="font-size: 100%;">
+                                                <i class="fa fa-exclamation-triangle"></i> Harap Copas Manual di SIMRS
+                                            </span>
+                                        <?php else: ?>
+                                            <?= $row['no_register']; ?>
+                                        <?php endif; ?>
+                                    </td>
                                     <td><?= $row['nama_user_dokter_pembacaan']; ?></td>
                                     <td><?= $row['lokasi_spesimen']; ?></td>
                                     <td><?= $row['diagnosa_klinik']; ?></td>

@@ -98,7 +98,19 @@
                                             style="cursor:pointer; color:black;">
                                             <?= esc($row['norm_pasien']); ?>
                                         </span>)</td>
-                                    <td><?= $row['no_register']; ?></td>
+                                    <td>
+                                        <?php if (empty($row['no_register'])): ?>
+                                            <span class="badge badge-danger" style="font-size: 100%;">
+                                                <i class="fa fa-exclamation-triangle"></i> Harap Copas Manual di SIMRS dan copas 4x
+                                            </span>
+                                        <?php else: ?>
+                                            <?= $row['no_register']; ?>
+                                            <br>
+                                            <span class="badge badge-warning" style="margin-top: 5px;">
+                                                <i class="fa fa-copy"></i> Copas 4x pada SIMRS
+                                            </span>
+                                        <?php endif; ?>
+                                    </td>
                                     <td><?= $row['nama_user_dokter_pembacaan']; ?></td>
                                     <td><?= $row['lokasi_spesimen']; ?></td>
                                     <td><?= $row['diagnosa_klinik']; ?></td>

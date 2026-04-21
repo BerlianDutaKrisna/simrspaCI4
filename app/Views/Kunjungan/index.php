@@ -77,7 +77,12 @@
                                         <?php endif; ?>
                                     </td>
                                     <td><?= esc($row['register'] ?? '') ?></td>
-                                    <td><?= esc($row['norm'] ?? '') ?></td>
+                                    <td><span
+                                            class="copy-norm"
+                                            data-text="<?= esc($row['norm']); ?>"
+                                            style="cursor:pointer; color:black;">
+                                            <?= esc($row['norm']); ?>
+                                        </span></td>
                                     <td><?= esc($row['nama'] ?? '') ?></td>
                                     <td><?= esc(($row['jeniskelamin'] ?? '') . ' / ' . ($row['pasien_usia'] ?? '')) ?></td>
                                     <td><?= !empty($row['tgl_lhr']) ? esc(date('d-m-Y', strtotime($row['tgl_lhr']))) : '-' ?></td>
