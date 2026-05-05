@@ -139,6 +139,60 @@
                             <label for="usia_hubungan_pasien">Usia Hubungan Pasien</label>
                             <input type="number" class="form-control" id="usia_hubungan_pasien" name="usia_hubungan_pasien" value="">
                         </div>
+
+                        <div class="form-group col-md-3">
+                            <label for="singnature"> Tanda tangan digital Pasien</label>
+                            <button type="button"
+                                class="btn btn-primary btn-user w-100 w-md-auto"
+                                onclick="openSignatureModal()">
+                                <i class="fas fa-signature"></i> Tanda tangan digital Pasien
+                            </button>
+                        </div>
+                        <script>
+                            let signaturePad;
+                            let canvas;
+
+                            function openSignatureModal() {
+                                $('#signatureModal').modal('show');
+
+                                setTimeout(() => {
+                                    canvas = document.getElementById('signature-pad');
+
+                                    if (!canvas) {
+                                        console.error("Canvas tidak ditemukan!");
+                                        return;
+                                    }
+
+                                    resizeCanvas();
+                                    signaturePad = new SignaturePad(canvas);
+                                }, 300);
+                            }
+
+                            function resizeCanvas() {
+                                const ratio = Math.max(window.devicePixelRatio || 1, 1);
+                                canvas.width = canvas.offsetWidth * ratio;
+                                canvas.height = 300 * ratio;
+                                canvas.getContext("2d").scale(ratio, ratio);
+                            }
+
+                            function clearSignature() {
+                                if (signaturePad) {
+                                    signaturePad.clear();
+                                }
+                            }
+
+                            function saveSignature() {
+                                if (!signaturePad || signaturePad.isEmpty()) {
+                                    alert("Tanda tangan masih kosong!");
+                                    return;
+                                }
+
+                                let dataURL = signaturePad.toDataURL();
+                                console.log(dataURL);
+
+                                $('#signatureModal').modal('hide');
+                            }
+                        </script>
                     </div>
                 </div>
             </div>
@@ -211,11 +265,35 @@
                 <div class="col-sm-6 text-center">
                     <!-- Tombol Cetak -->
                     <button type="button" class="btn btn-info btn-user w-100 w-md-auto" onclick="cetakProses()">
-                        <i class="fas fa-print"></i> Cetak
+                        <i class="fas fa-print"></i> Cetak<i class="fas fa-signature"></i>
                     </button>
                 </div>
             </div>
         </form>
+    </div>
+</div>
+
+<div class="modal fade" id="signatureModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title">Tanda Tangan Digital</h5>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+
+            <div class="modal-body">
+                <div class="border rounded p-2">
+                    <canvas id="signature-pad" style="width:100%; height:300px;"></canvas>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" onclick="clearSignature()">Reset</button>
+                <button type="button" class="btn btn-primary" onclick="saveSignature()">Simpan</button>
+            </div>
+
+        </div>
     </div>
 </div>
 

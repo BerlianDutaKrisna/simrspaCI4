@@ -37,6 +37,8 @@
 <script src="<?= base_url('assets/bootstrap/js/bootstrap.bundle.min.js') ?>"></script>
 <!-- CDN Summernote JS (Versi terbaru) -->
 <script src="<?= base_url('assets/summernote/summernote.js') ?>"></script>
+<!-- CDN Signature Pad JS (Versi terbaru) -->
+<script src="<?= base_url('assets/signature/signature.min.js') ?>"></script>
 <!-- Inisialisasi Summernote -->
 <script>
     function handleJumlahSlideChange(selectElement) {
