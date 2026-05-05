@@ -265,7 +265,7 @@
                 <div class="col-sm-6 text-center">
                     <!-- Tombol Cetak -->
                     <button type="button" class="btn btn-info btn-user w-100 w-md-auto" onclick="cetakProses()">
-                        <i class="fas fa-print"></i> Cetak<i class="fas fa-signature"></i>
+                        <i class="fas fa-print"></i> Cetak
                     </button>
                 </div>
             </div>
