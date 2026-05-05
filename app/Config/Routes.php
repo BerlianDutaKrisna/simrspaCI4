@@ -62,6 +62,8 @@ $routes->group('api', ['namespace' => 'App\Controllers\Api'], function ($routes)
     $routes->resource('koneksi', ['only' => ['index']]);
 });
 
+$routes->post('signature/save', 'Signature::save');
+
 // Route untuk exam
 $routes->group('exam', ['namespace' => 'App\Controllers\Exam'], function ($routes) {
     $routes->get('index', 'ExamController::index');
