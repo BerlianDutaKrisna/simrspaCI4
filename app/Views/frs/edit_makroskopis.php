@@ -5,18 +5,22 @@
     <div class="card-header py-3">
         <h6 class="m-0 font-weight-bold text-primary">Edit Makroskopis</h6>
     </div>
+
     <div class="card-body">
         <h1>Edit Data Makroskopis Fine Needle Aspiration Biopsy</h1>
-        <a href="<?= base_url('penerimaan_frs/index') ?>" class="btn btn-primary mb-3"><i class="fas fa-reply"></i> Kembali</a>
 
-        <!-- Form Utama -->
+        <a href="<?= base_url('penerimaan_frs/index') ?>" class="btn btn-primary mb-3">
+            <i class="fas fa-reply"></i> Kembali
+        </a>
+
         <form id="form-frs" method="POST" enctype="multipart/form-data">
             <?= csrf_field(); ?>
+
             <input type="hidden" name="id_frs" value="<?= $frs['id_frs'] ?? '' ?>">
             <input type="hidden" name="id_penerimaan_frs" value="<?= $frs['id_penerimaan_frs'] ?? '' ?>">
             <input type="hidden" name="redirect" value="edit_makroskopis">
 
-            <!-- Kode FRS dan Diagnosa -->
+            <!-- Kode & Diagnosa -->
             <div class="form-group row">
                 <label class="col-sm-2 col-form-label">Kode FRS</label>
                 <div class="col-sm-4">
@@ -29,7 +33,7 @@
                 </div>
             </div>
 
-            <!-- Nama Pasien dan Dokter Pengirim -->
+            <!-- Pasien -->
             <div class="form-group row">
                 <label class="col-sm-2 col-form-label">Nama Pasien</label>
                 <div class="col-sm-4">
@@ -42,7 +46,6 @@
                 </div>
             </div>
 
-            <!-- Norm Pasien dan Unit Asal -->
             <div class="form-group row">
                 <label class="col-sm-2 col-form-label">Norm Pasien</label>
                 <div class="col-sm-4">
@@ -57,245 +60,226 @@
 
             <?= $this->include('templates/exam/riwayat'); ?>
 
-            <!-- Informed Consent -->
+            <!-- INFORMED CONSENT -->
             <div class="card shadow mb-4">
                 <div class="card-header py-3">
                     <h6 class="m-0 font-weight-bold text-primary">Informed Consent Tindakan FNAB</h6>
                 </div>
+
                 <div class="card-body">
-                    <?= csrf_field(); ?>
-                    <input type="hidden" name="id_pasien" value="<?= esc($frs['id_pasien'] ?? ''); ?>">
+                    <input type="hidden" name="idtransaksi" value="<?= (int)($frs['id_transaksi'] ?? 0) ?>">
+                    <input type="hidden" name="tanggal" value="<?= esc($frs['tanggal_transaksi'] ?? '') ?>">
+                    <input type="hidden" name="register" value="<?= esc($frs['no_register'] ?? '') ?>">
+
+                    <input type="hidden" name="id_pasien" value="<?= esc($frs['id_pasien'] ?? '') ?>">
+                    <input type="hidden" name="norm_pasien" value="<?= esc($frs['norm_pasien'] ?? '') ?>">
+                    <input type="hidden" name="nama_pasien" value="<?= esc($frs['nama_pasien'] ?? '') ?>">
+                    <input type="hidden" name="tanggal_lahir_pasien" value="<?= esc($frs['tanggal_lahir_pasien'] ?? '') ?>">
+                    <input type="hidden" name="jenis_kelamin_pasien" value="<?= esc($frs['jenis_kelamin_pasien'] ?? '') ?>">
+                    <input type="hidden" name="alamat_pasien" value="<?= esc($frs['alamat_pasien'] ?? '') ?>">
 
                     <div class="form-row">
+
+                        <!-- Dokter -->
                         <div class="form-group col-md-3">
-                            <label for="dokter_pemeriksa">Dokter Pemeriksa</label>
-                            <select class="form-control" id="dokter_pemeriksa" name="dokter_pemeriksa">
-                                <option value="____________________">-- Pilih Dokter --</option>
-                                <option value="dr. Vinna Chrisdianti, Sp.PA">dr. Vinna Chrisdianti, Sp.PA</option>
-                                <option value="dr. Ayu Tyasmara Pratiwi, Sp.PA">dr. Ayu Tyasmara Pratiwi, Sp.PA</option>
+                            <label>Dokter Pemeriksa</label>
+                            <select class="form-control" name="dokter_pemeriksa">
+                                <option value="">-- Pilih Dokter --</option>
+                                <option value="dr. Vinna Chrisdianti, Sp.PA"
+                                    <?= ($frs['dokter_pemeriksa'] ?? '') == 'dr. Vinna Chrisdianti, Sp.PA' ? 'selected' : '' ?>>
+                                    dr. Vinna Chrisdianti, Sp.PA
+                                </option>
+                                <option value="dr. Ayu Tyasmara Pratiwi, Sp.PA"
+                                    <?= ($frs['dokter_pemeriksa'] ?? '') == 'dr. Ayu Tyasmara Pratiwi, Sp.PA' ? 'selected' : '' ?>>
+                                    dr. Ayu Tyasmara Pratiwi, Sp.PA
+                                </option>
                             </select>
                         </div>
 
+                        <!-- Hubungan -->
                         <div class="form-group col-md-3">
-                            <label for="nama_hubungan_pasien">Nama Hubungan Pasien</label>
-                            <select class="form-control" id="nama_hubungan_pasien" name="nama_hubungan_pasien" onchange="toggleSearchValue()">
-                                <option value="____________________">-- Pilih Penandatangan --</option>
+                            <label>Nama Hubungan</label>
+                            <select class="form-control" id="nama_hubungan_pasien" name="nama_hubungan_pasien">
+                                <option value="">-- Pilih --</option>
                                 <option value="<?= esc($frs['nama_pasien'] ?? '') ?>">Pasien Sendiri</option>
                                 <option value="lainnya">Lainnya</option>
                             </select>
-                            <input type="text" class="form-control mt-2 d-none" id="nama_lainnya" name="nama_lainnya" placeholder="Masukkan Nama Lainnya">
+
+                            <input type="text" id="nama_lainnya" name="nama_lainnya"
+                                class="form-control mt-2 d-none" placeholder="Masukkan Nama">
                         </div>
 
                         <div class="form-group col-md-3">
-                            <label for="hubungan_dengan_pasien">Hubungan dengan Pasien</label>
+                            <label>Hubungan</label>
                             <select class="form-control" id="hubungan_dengan_pasien" name="hubungan_dengan_pasien">
-                                <option value="____________________">-- Pilih Hubungan --</option>
-                                <option value="Pasien Sendiri">Pasien Sendiri</option>
-                                <option value="Orang tua">Orang tua</option>
-                                <option value="Anak">Anak</option>
-                                <option value="Istri">Istri</option>
-                                <option value="Suami">Suami</option>
-                                <option value="Saudara">Saudara</option>
-                                <option value="Pengantar">Pengantar</option>
+                                <option value="">-- Pilih --</option>
+                                <option>Pasien Sendiri</option>
+                                <option>Orang tua</option>
+                                <option>Anak</option>
+                                <option>Istri</option>
+                                <option>Suami</option>
+                                <option>Saudara</option>
+                                <option>Pengantar</option>
                             </select>
                         </div>
 
                         <div class="form-group col-md-3">
-                            <label for="jenis_kelamin_hubungan_pasien">Jenis Kelamin</label>
+                            <label>Jenis Kelamin</label>
                             <select class="form-control" id="jenis_kelamin_hubungan_pasien" name="jenis_kelamin_hubungan_pasien">
-                                <option value="____________________">-- Pilih Jenis Kelamin --</option>
+                                <option value="">-- Pilih --</option>
                                 <option value="L">Laki-laki</option>
                                 <option value="P">Perempuan</option>
                             </select>
                         </div>
 
+                        <!-- Analis -->
                         <div class="form-group col-md-3">
-                            <label for="analis_priksa">Analis Pemeriksa</label>
-                            <select class="form-control" id="analis_priksa" name="analis_priksa">
-                                <option value="____________________"
-                                    <?= empty($frs['id_user_penerimaan_frs']) ? 'selected' : '' ?>>
-                                    -- Pilih Analis --
-                                </option>
-                                <option value="3"
-                                    <?= ($frs['id_user_penerimaan_frs'] ?? '') === "3" ? 'selected' : '' ?>>
-                                    Endar Pratiwi, S.Si
-                                </option>
-                                <option value="4"
-                                    <?= ($frs['id_user_penerimaan_frs'] ?? '') === "4" ? 'selected' : '' ?>>
-                                    Arlina Kartika, A.Md.AK
-                                </option>
-                                <option value="5"
-                                    <?= ($frs['id_user_penerimaan_frs'] ?? '') === "5" ? 'selected' : '' ?>>
-                                    Ilham Tyas Ismadi, A.Md.Kes
-                                </option>
-                                <option value="6"
-                                    <?= ($frs['id_user_penerimaan_frs'] ?? '') === "6" ? 'selected' : '' ?>>
-                                    Berlian Duta Krisna, S.Tr.Kes
-                                </option>
+                            <label>Analis Pemeriksa</label>
+                            <select class="form-control" name="analis_periksa">
+                                <option value="">-- Pilih --</option>
+                                <?php
+                                $analisList = [
+                                    "3" => "Endar Pratiwi, S.Si",
+                                    "4" => "Arlina Kartika, A.Md.AK",
+                                    "5" => "Ilham Tyas Ismadi, A.Md.Kes",
+                                    "6" => "Berlian Duta Krisna, S.Tr.Kes"
+                                ];
+                                foreach ($analisList as $key => $val): ?>
+                                    <option value="<?= $key ?>" <?= ($frs['id_user_penerimaan_frs'] ?? '') == $key ? 'selected' : '' ?>>
+                                        <?= $val ?>
+                                    </option>
+                                <?php endforeach; ?>
                             </select>
                         </div>
 
                         <div class="form-group col-md-3">
-                            <label for="usia_hubungan_pasien">Usia Hubungan Pasien</label>
-                            <input type="number" class="form-control" id="usia_hubungan_pasien" name="usia_hubungan_pasien" value="">
+                            <label>Usia</label>
+                            <input type="number" id="usia_hubungan_pasien" name="usia_hubungan_pasien" class="form-control">
+                        </div>
+
+                        <!-- Signature -->
+                        <div class="form-group col-md-3">
+                            <button type="button" class="btn btn-primary w-100" onclick="openSignatureModal()">
+                                <i class="fas fa-signature"></i> Tanda Tangan
+                            </button>
                         </div>
 
                         <div class="form-group col-md-3">
-                            <label for="singnature"> Tanda tangan digital Pasien</label>
-                            <button type="button"
-                                class="btn btn-primary btn-user w-100 w-md-auto"
-                                onclick="openSignatureModal()">
-                                <i class="fas fa-signature"></i> Tanda tangan digital Pasien
-                            </button>
+                            <div class="border text-center p-3">
+                                <img id="signaturePreview" style="max-width:100%; display:none;">
+                                <small id="noSignatureText">Belum ada tanda tangan</small>
+                            </div>
+                            <input type="hidden" name="consentSignaturePasien" id="consentSignaturePasien">
                         </div>
-                        <script>
-                            let signaturePad;
-                            let canvas;
 
-                            function openSignatureModal() {
-                                $('#signatureModal').modal('show');
-
-                                setTimeout(() => {
-                                    canvas = document.getElementById('signature-pad');
-
-                                    if (!canvas) {
-                                        console.error("Canvas tidak ditemukan!");
-                                        return;
-                                    }
-
-                                    resizeCanvas();
-                                    signaturePad = new SignaturePad(canvas);
-                                }, 300);
-                            }
-
-                            function resizeCanvas() {
-                                const ratio = Math.max(window.devicePixelRatio || 1, 1);
-                                canvas.width = canvas.offsetWidth * ratio;
-                                canvas.height = 300 * ratio;
-                                canvas.getContext("2d").scale(ratio, ratio);
-                            }
-
-                            function clearSignature() {
-                                if (signaturePad) {
-                                    signaturePad.clear();
-                                }
-                            }
-
-                            function saveSignature() {
-                                if (!signaturePad || signaturePad.isEmpty()) {
-                                    alert("Tanda tangan masih kosong!");
-                                    return;
-                                }
-
-                                let dataURL = signaturePad.toDataURL();
-                                console.log(dataURL);
-
-                                $('#signatureModal').modal('hide');
-                            }
-                        </script>
                     </div>
                 </div>
             </div>
 
-            <script>
-                function toggleSearchValue() {
-                    let namaHubungan = document.getElementById("nama_hubungan_pasien").value;
-                    let inputNamaLainnya = document.getElementById("nama_lainnya");
-                    let hubunganPasien = document.getElementById("hubungan_dengan_pasien");
-                    let jenisKelamin = document.getElementById("jenis_kelamin_hubungan_pasien");
-                    let usiaPasien = document.getElementById("usia_hubungan_pasien");
-
-                    if (namaHubungan === "<?= esc($frs['nama_pasien'] ?? '') ?>") {
-                        hubunganPasien.value = "Pasien Sendiri";
-                        jenisKelamin.value = "<?= esc($frs['jenis_kelamin_pasien'] ?? '') ?>";
-                        usiaPasien.value = hitungUsia("<?= esc($frs['tanggal_lahir_pasien'] ?? '') ?>");
-                    } else {
-                        hubunganPasien.value = "";
-                        jenisKelamin.value = "";
-                        usiaPasien.value = "";
-                    }
-
-                    // Tampilkan atau sembunyikan input nama lainnya
-                    if (namaHubungan === "lainnya") {
-                        inputNamaLainnya.classList.remove("d-none");
-                        inputNamaLainnya.focus();
-                    } else {
-                        inputNamaLainnya.classList.add("d-none");
-                        inputNamaLainnya.value = ""; // Reset nilai input jika tidak dipilih "Lainnya"
-                    }
-                }
-
-                function hitungUsia(tanggalLahir) {
-                    if (!tanggalLahir) return "";
-                    let birthDate = new Date(tanggalLahir);
-                    let today = new Date();
-                    let age = today.getFullYear() - birthDate.getFullYear();
-                    let monthDiff = today.getMonth() - birthDate.getMonth();
-                    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
-                        age--;
-                    }
-                    return age;
-                }
-
-                function getNamaHubunganPasien() {
-                    let selectElement = document.getElementById("nama_hubungan_pasien").value;
-                    let inputNamaLainnya = document.getElementById("nama_lainnya").value;
-
-                    // Jika "Lainnya" dipilih, gunakan nilai input, jika tidak, gunakan nilai dropdown
-                    return selectElement === "lainnya" ? inputNamaLainnya : selectElement;
-                }
-
-                // Event listener untuk menangkap perubahan nilai
-                document.getElementById("nama_hubungan_pasien").addEventListener("change", function() {
-                    console.log("Nama Hubungan Pasien:", getNamaHubunganPasien());
-                });
-
-                document.getElementById("nama_lainnya").addEventListener("input", function() {
-                    console.log("Nama Hubungan Pasien (input lainnya):", getNamaHubunganPasien());
-                });
-            </script>
-
-            <!-- Tombol Tutup -->
+            <!-- BUTTON -->
             <div class="form-group row">
-                <div class="col-sm-6 text-center mb-3">
-                    <button type="submit" class="btn btn-success btn-user w-100 mb-3" formaction="<?= base_url('frs/update_print/' . ($frs['id_frs'] ?? '')); ?>">
-                        <i class="fas fa-window-close"></i> Tutup
+                <div class="col-sm-6">
+                    <button type="submit" class="btn btn-success w-100"
+                        formaction="<?= base_url('frs/update_print/' . ($frs['id_frs'] ?? '')) ?>">
+                        Tutup
                     </button>
                 </div>
-                <div class="col-sm-6 text-center">
-                    <!-- Tombol Cetak -->
-                    <button type="button" class="btn btn-info btn-user w-100 w-md-auto" onclick="cetakProses()">
-                        <i class="fas fa-print"></i> Cetak
+
+                <div class="col-sm-6">
+                    <button type="button" class="btn btn-info w-100" onclick="cetakProses()">
+                        Cetak
                     </button>
                 </div>
             </div>
+
         </form>
     </div>
 </div>
 
-<div class="modal fade" id="signatureModal" tabindex="-1" role="dialog">
-    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+<!-- MODAL -->
+<div class="modal fade" id="signatureModal">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content">
 
             <div class="modal-header">
-                <h5 class="modal-title">Tanda Tangan Digital</h5>
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h5>Tanda Tangan</h5>
+                <button class="close" data-dismiss="modal">&times;</button>
             </div>
 
             <div class="modal-body">
-                <div class="border rounded p-2">
-                    <canvas id="signature-pad" style="width:100%; height:300px;"></canvas>
-                </div>
+                <canvas id="signature-pad" style="width:100%; height:200px;"></canvas>
             </div>
 
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" onclick="clearSignature()">Reset</button>
-                <button type="button" class="btn btn-primary" onclick="saveSignature()">Simpan</button>
+                <button class="btn btn-secondary" onclick="clearSignature()">Reset</button>
+                <button class="btn btn-primary" onclick="saveSignature()">Simpan</button>
             </div>
 
         </div>
     </div>
 </div>
+
+<!-- JS -->
+<script>
+    let signaturePad, canvas;
+
+    function openSignatureModal() {
+        $('#signatureModal').modal('show');
+
+        setTimeout(() => {
+            canvas = document.getElementById('signature-pad');
+            if (!canvas) return;
+
+            const ratio = Math.max(window.devicePixelRatio || 1, 1);
+            canvas.width = canvas.offsetWidth * ratio;
+            canvas.height = 200 * ratio;
+            canvas.getContext("2d").scale(ratio, ratio);
+
+            signaturePad = new SignaturePad(canvas);
+        }, 300);
+    }
+
+    function clearSignature() {
+        if (signaturePad) signaturePad.clear();
+    }
+
+    function hitungUsia(tanggalLahir) {
+        if (!tanggalLahir) return "";
+        let birth = new Date(tanggalLahir);
+        let today = new Date();
+        let age = today.getFullYear() - birth.getFullYear();
+        if (today < new Date(today.getFullYear(), birth.getMonth(), birth.getDate())) age--;
+        return age;
+    }
+
+    document.getElementById("nama_hubungan_pasien").addEventListener("change", function() {
+        let val = this.value;
+
+        document.getElementById("nama_lainnya").classList.toggle("d-none", val !== "lainnya");
+
+        if (val === "<?= esc($frs['nama_pasien'] ?? '') ?>") {
+            document.getElementById("hubungan_dengan_pasien").value = "Pasien Sendiri";
+            document.getElementById("jenis_kelamin_hubungan_pasien").value = "<?= esc($frs['jenis_kelamin_pasien'] ?? '') ?>";
+            document.getElementById("usia_hubungan_pasien").value = hitungUsia("<?= esc($frs['tanggal_lahir_pasien'] ?? '') ?>");
+        }
+    });
+
+    function saveSignature() {
+        if (!signaturePad || signaturePad.isEmpty()) {
+            alert("Tanda tangan kosong!");
+            return;
+        }
+
+        let dataURL = signaturePad.toDataURL();
+
+        document.getElementById('signaturePreview').src = dataURL;
+        document.getElementById('signaturePreview').style.display = 'block';
+        document.getElementById('noSignatureText').style.display = 'none';
+        document.getElementById('consentSignaturePasien').value = dataURL;
+
+        $('#signatureModal').modal('hide');
+    }
+</script>
 
 <?= $this->include('templates/notifikasi') ?>
 <?= $this->include('templates/frs/footer_edit'); ?>
