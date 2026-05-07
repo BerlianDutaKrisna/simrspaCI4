@@ -14,6 +14,7 @@ class Penerimaan_frs extends Model
     protected $allowedFields = [
         'id_frs',
         'id_user_penerimaan_frs',
+        'id_user_dokter_penerimaan_frs',
         'status_penerimaan_frs',
         'mulai_penerimaan_frs',
         'selesai_penerimaan_frs',

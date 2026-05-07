@@ -75,16 +75,25 @@
                     <input type="hidden" name="jenis_kelamin_pasien" value="<?= esc($frs['jenis_kelamin_pasien'] ?? ''); ?>">
                     <input type="hidden" name="alamat_pasien" value="<?= esc($frs['alamat_pasien'] ?? ''); ?>">
 
-                    
+
 
 
                     <div class="form-row">
                         <div class="form-group col-md-3">
                             <label for="dokter_pemeriksa">Dokter Pemeriksa</label>
                             <select class="form-control" id="dokter_pemeriksa" name="dokter_pemeriksa">
-                                <option value="____________________">-- Pilih Dokter --</option>
-                                <option value="dr. Vinna Chrisdianti, Sp.PA">dr. Vinna Chrisdianti, Sp.PA</option>
-                                <option value="dr. Ayu Tyasmara Pratiwi, Sp.PA">dr. Ayu Tyasmara Pratiwi, Sp.PA</option>
+                                <option value="____________________"
+                                    <?= empty($frs['id_user_dokter_penerimaan_frs']) ? 'selected' : '' ?>>
+                                    -- Pilih Dokter --
+                                </option>
+                                <option value="1"
+                                    <?= ($frs['id_user_dokter_penerimaan_frs'] ?? '') === "1" ? 'selected' : '' ?>>
+                                    dr. Vinna Chrisdianti, Sp.PA
+                                </option>
+                                <option value="2"
+                                    <?= ($frs['id_user_dokter_penerimaan_frs'] ?? '') === "2" ? 'selected' : '' ?>>
+                                    dr. Ayu Tyasmara Pratiwi, Sp.PA
+                                </option>
                             </select>
                         </div>
 
@@ -175,56 +184,55 @@
                             <!-- Hidden input untuk simpan base64 -->
                             <input type="hidden" name="concentSignaturePasien" id="concentSignaturePasien">
                         </div>
-                        <script>
-                            let signaturePad;
-                            let canvas;
-
-                            function openSignatureModal() {
-                                $('#signatureModal').modal('show');
-
-                                setTimeout(() => {
-                                    canvas = document.getElementById('signature-pad');
-
-                                    if (!canvas) {
-                                        console.error("Canvas tidak ditemukan!");
-                                        return;
-                                    }
-
-                                    resizeCanvas();
-                                    signaturePad = new SignaturePad(canvas);
-                                }, 300);
-                            }
-
-                            function resizeCanvas() {
-                                const ratio = Math.max(window.devicePixelRatio || 1, 1);
-                                canvas.width = canvas.offsetWidth * ratio;
-                                canvas.height = 300 * ratio;
-                                canvas.getContext("2d").scale(ratio, ratio);
-                            }
-
-                            function clearSignature() {
-                                if (signaturePad) {
-                                    signaturePad.clear();
-                                }
-                            }
-
-                            function saveSignature() {
-                                if (!signaturePad || signaturePad.isEmpty()) {
-                                    alert("Tanda tangan masih kosong!");
-                                    return;
-                                }
-
-                                let dataURL = signaturePad.toDataURL();
-                                console.log(dataURL);
-
-                                $('#signatureModal').modal('hide');
-                            }
-                        </script>
                     </div>
                 </div>
             </div>
 
             <script>
+                let signaturePad;
+                let canvas;
+
+                function openSignatureModal() {
+                    $('#signatureModal').modal('show');
+
+                    setTimeout(() => {
+                        canvas = document.getElementById('signature-pad');
+
+                        if (!canvas) {
+                            console.error("Canvas tidak ditemukan!");
+                            return;
+                        }
+
+                        resizeCanvas();
+                        signaturePad = new SignaturePad(canvas);
+                    }, 200);
+                }
+
+                function resizeCanvas() {
+                    const ratio = Math.max(window.devicePixelRatio || 1, 1);
+                    canvas.width = canvas.offsetWidth * ratio;
+                    canvas.height = 200 * ratio;
+                    canvas.getContext("2d").scale(ratio, ratio);
+                }
+
+                function clearSignature() {
+                    if (signaturePad) {
+                        signaturePad.clear();
+                    }
+                }
+
+                function saveSignature() {
+                    if (!signaturePad || signaturePad.isEmpty()) {
+                        alert("Tanda tangan masih kosong!");
+                        return;
+                    }
+
+                    let dataURL = signaturePad.toDataURL();
+                    console.log(dataURL);
+
+                    $('#signatureModal').modal('hide');
+                }
+
                 function toggleSearchValue() {
                     let namaHubungan = document.getElementById("nama_hubungan_pasien").value;
                     let inputNamaLainnya = document.getElementById("nama_lainnya");
@@ -311,7 +319,7 @@
 
             <div class="modal-body">
                 <div class="border rounded p-2">
-                    <canvas id="signature-pad" style="width:100%; height:300px;"></canvas>
+                    <canvas id="signature-pad" style="width:100%; height:200px;"></canvas>
                 </div>
             </div>
 
@@ -325,136 +333,153 @@
 </div>
 
 <script>
-function saveSignature() {
-    if (!signaturePad || signaturePad.isEmpty()) {
-        alert("Tanda tangan masih kosong!");
-        return;
-    }
-
-    // =========================
-    // 1. Signature Pasien
-    // =========================
-    let dataURL = signaturePad.toDataURL();
-
-    document.getElementById('signaturePreview').src = dataURL;
-    document.getElementById('signaturePreview').style.display = 'block';
-    document.getElementById('noSignatureText').style.display = 'none';
-    document.getElementById('concentSignaturePasien').value = dataURL;
-
-    // =========================
-    // 2. Ambil Form
-    // =========================
-    const form = document.querySelector('form');
-    const formData = new FormData(form);
-
-    let data = {};
-    formData.forEach((value, key) => {
-        data[key] = value;
-    });
-
-    // =========================
-    // 3. Signature Dokter
-    // =========================
-    let concentSignatureDokter = "";
-    let dokter = data.dokter_pemeriksa || "";
-
-    if (dokter.includes("Vinna")) {
-        concentSignatureDokter = "<?= base_url('img/ttdVinaPNG.png'); ?>";
-    } else if (dokter.includes("Ayu")) {
-        concentSignatureDokter = "<?= base_url('img/ttdAyuPNG.png'); ?>";
-    }
-
-    // =========================
-    // 4. Signature Petugas
-    // =========================
-    let concentSignaturePetugas = "";
-    let analis = data.analis_priksa || "";
-
-    if (analis === "3") {
-        concentSignaturePetugas = "<?= base_url('img/ttdEndarPNG.png'); ?>";
-    } else if (analis === "4") {
-        concentSignaturePetugas = "<?= base_url('img/ttdArlinaPNG.png'); ?>";
-    } else if (analis === "5") {
-        concentSignaturePetugas = "<?= base_url('img/ttdIlhamPNG.png'); ?>";
-    } else if (analis === "6") {
-        concentSignaturePetugas = "<?= base_url('img/ttdBerlianPNG.png'); ?>";
-    }
-
-    // =========================
-    // 5. Waktu Jakarta
-    // =========================
-    let dateTimeSignature = new Date().toLocaleString('sv-SE', {
-        timeZone: 'Asia/Jakarta'
-    }).replace('T', ' ');
-
-    // =========================
-    // 6. PAYLOAD
-    // =========================
-    let payload = {
-        id_transaksi: data.idtransaksi,
-        tanggal: data.tanggal,
-        register: data.register,
-        noregister: data.kode_frs,
-
-        idpasien: data.id_pasien,
-        norm: data.norm_pasien,
-        nama: data.nama_pasien,
-        tgl_lahir: data.tanggal_lahir_pasien,
-        jenis_kelamin: data.jenis_kelamin_pasien,
-        alamat: data.alamat_pasien,
-
-        dokter_pelaksana: data.dokter_pemeriksa,
-        petugas_pelaksana: data.analis_priksa,
-        pemberi_informasi: data.dokter_pemeriksa,
-
-        hubungan_dengan_pasien: data.nama_hubungan_pasien,
-        nama_hubungan_pasien: data.hubungan_dengan_pasien,
-
-        tgl_lahir_hubungan_pasien: null,
-        alamat_hubungan_pasien: null,
-
-        diagnosis_kerja: data.diagnosa_klinik,
-
-        concentSignaturePasien: dataURL,
-        concentSignatureDokter: concentSignatureDokter,
-        concentSignaturePetugas: concentSignaturePetugas,
-
-        dateTimeSignature: dateTimeSignature
-    };
-
-    // =========================
-    // DEBUG
-    // =========================
-    console.log("=== JSON ===");
-    console.log(JSON.stringify(payload, null, 2));
-
-    // =========================
-    // 7. KIRIM KE CI4
-    // =========================
-    fetch("<?= base_url('signature/save') ?>", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-            "X-CSRF-TOKEN": document.querySelector('[name=csrf_test_name]').value
-        },
-        body: JSON.stringify(payload)
-    })
-    .then(response => response.json())
-    .then(res => {
-        console.log("Response:", res);
-
-        if (res.status === 'success') {
-            alert("Data berhasil disimpan!");
-        } else {
-            alert("Gagal menyimpan!");
+    function saveSignature() {
+        if (!signaturePad || signaturePad.isEmpty()) {
+            alert("Tanda tangan masih kosong!");
+            return;
         }
-    })
-    .catch(err => {
-        console.error("Error:", err);
-    });
 
-    $('#signatureModal').modal('hide');
-}
+        // =========================
+        // 1. Signature Pasien
+        // =========================
+        let dataURL = signaturePad.toDataURL();
+
+        document.getElementById('signaturePreview').src = dataURL;
+        document.getElementById('signaturePreview').style.display = 'block';
+        document.getElementById('noSignatureText').style.display = 'none';
+        document.getElementById('concentSignaturePasien').value = dataURL;
+
+        // =========================
+        // 2. Ambil Form
+        // =========================
+        const form = document.querySelector('form');
+        const formData = new FormData(form);
+
+        let data = {};
+        formData.forEach((value, key) => {
+            data[key] = value;
+        });
+
+        // =========================
+        // 3. Mapping Dokter & Analis
+        // =========================
+        const dokterMap = {
+            "1": {
+                nama: "dr. Vinna Chrisdianti, Sp.PA",
+                ttd: "<?= base_url('img/ttdVinaPNG.png'); ?>"
+            },
+            "2": {
+                nama: "dr. Ayu Tyasmara Pratiwi, Sp.PA",
+                ttd: "<?= base_url('img/ttdAyuPNG.png'); ?>"
+            }
+        };
+
+        const analisMap = {
+            "3": {
+                nama: "Endar Pratiwi, S.Si",
+                ttd: "<?= base_url('img/ttdEndarPNG.png'); ?>"
+            },
+            "4": {
+                nama: "Arlina Kartika, A.Md.AK",
+                ttd: "<?= base_url('img/ttdArlinaPNG.png'); ?>"
+            },
+            "5": {
+                nama: "Ilham Tyas Ismadi, A.Md.Kes",
+                ttd: "<?= base_url('img/ttdIlhamPNG.png'); ?>"
+            },
+            "6": {
+                nama: "Berlian Duta Krisna, S.Tr.Kes",
+                ttd: "<?= base_url('img/ttdBerlianPNG.png'); ?>"
+            }
+        };
+
+        // =========================
+        // 4. Ambil ID dari Form
+        // =========================
+        let dokterId = data.dokter_pemeriksa || "";
+        let analisId = data.analis_priksa || "";
+
+        // =========================
+        // 5. Ambil Data Dokter
+        // =========================
+        let dokterNama = dokterMap[dokterId]?.nama || "";
+        let concentSignatureDokter = dokterMap[dokterId]?.ttd || "";
+
+        // =========================
+        // 6. Ambil Data Analis
+        // =========================
+        let analisNama = analisMap[analisId]?.nama || "";
+        let concentSignaturePetugas = analisMap[analisId]?.ttd || "";
+
+        // =========================
+        // 5. Waktu Jakarta
+        // =========================
+        let dateTimeSignature = new Date().toLocaleString('sv-SE', {
+            timeZone: 'Asia/Jakarta'
+        }).replace('T', ' ');
+
+        // =========================
+        // 6. PAYLOAD
+        // =========================
+        let payload = {
+            id_transaksi: data.idtransaksi,
+            tanggal: data.tanggal,
+            register: data.register,
+            noregister: data.kode_frs,
+
+            idpasien: data.id_pasien,
+            norm: data.norm_pasien,
+            nama: data.nama_pasien,
+            tgl_lahir: data.tanggal_lahir_pasien,
+            jenis_kelamin: data.jenis_kelamin_pasien,
+            alamat: data.alamat_pasien,
+
+            dokter_pelaksana: dokterNama,
+            petugas_pelaksana: analisNama,
+            pemberi_informasi: dokterNama,
+
+            hubungan_dengan_pasien: data.hubungan_dengan_pasien,
+            nama_hubungan_pasien: data.hubungan_dengan_pasien,
+
+            tgl_lahir_hubungan_pasien: data.tanggal_lahir_pasien,
+            alamat_hubungan_pasien: data.alamat_pasien,
+
+            diagnosis_kerja: data.diagnosa_klinik,
+
+            concentSignaturePasien: dataURL,
+            concentSignatureDokter: concentSignatureDokter,
+            concentSignaturePetugas: concentSignaturePetugas,
+
+            dateTimeSignature: dateTimeSignature
+        };
+
+        // =========================
+        // DEBUG
+        // =========================
+        console.log("=== JSON ===");
+        console.log(JSON.stringify(payload, null, 2));
+
+        // =========================
+        // 7. KIRIM KE CI4
+        // =========================
+        fetch("<?= base_url('signature/save') ?>", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRF-TOKEN": document.querySelector('[name=csrf_test_name]').value
+                },
+                body: JSON.stringify(payload)
+            })
+            .then(response => response.json())
+            .then(res => {
+                console.log("Response:", res);
+            })
+            .catch(err => {
+                console.error("Error:", err);
+            });
+
+        $('#signatureModal').modal('hide');
+    }
 </script>
 
 <?= $this->include('templates/notifikasi') ?>

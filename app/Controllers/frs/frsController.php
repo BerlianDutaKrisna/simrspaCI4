@@ -813,12 +813,14 @@ class FrsController extends BaseController
     {
         date_default_timezone_set('Asia/Jakarta');
         $id_user = session()->get('id_user');
+        $id_user_dokter = (int) $this->request->getPost('dokter_pemeriksa');
         // Mendapatkan id_frs dari POST
         if (!$id_frs) {
             return redirect()->back()->with('error', 'Terjadi kesalahan: ID frs tidak ditemukan.');
         }
         // Ambil semua data POST
         $data = $this->request->getPost();
+        
         // update pembacaan
         $id_pembacaan_frs = $data['id_pembacaan_frs'] ?? null;
         $id_user_dokter_pembacaan_frs = !empty($data['id_user_dokter_pembacaan_frs']) ? (int) $data['id_user_dokter_pembacaan_frs'] : null;
@@ -851,6 +853,7 @@ class FrsController extends BaseController
             $id_penerimaan_frs = $this->request->getPost('id_penerimaan_frs');
             $this->penerimaan_frs->update($id_penerimaan_frs, [
                 'id_user_penerimaan_frs' => $id_user,
+                'id_user_dokter_penerimaan_frs' => $id_user_dokter,
                 'status_penerimaan_frs' => 'Selesai Penerimaan',
                 'selesai_penerimaan_frs' => date('Y-m-d H:i:s'),
             ]);
