@@ -188,108 +188,6 @@
                 </div>
             </div>
 
-            <script>
-                let signaturePad;
-                let canvas;
-
-                function openSignatureModal() {
-                    $('#signatureModal').modal('show');
-
-                    setTimeout(() => {
-                        canvas = document.getElementById('signature-pad');
-
-                        if (!canvas) {
-                            console.error("Canvas tidak ditemukan!");
-                            return;
-                        }
-
-                        resizeCanvas();
-                        signaturePad = new SignaturePad(canvas);
-                    }, 200);
-                }
-
-                function resizeCanvas() {
-                    const ratio = Math.max(window.devicePixelRatio || 1, 1);
-                    canvas.width = canvas.offsetWidth * ratio;
-                    canvas.height = 200 * ratio;
-                    canvas.getContext("2d").scale(ratio, ratio);
-                }
-
-                function clearSignature() {
-                    if (signaturePad) {
-                        signaturePad.clear();
-                    }
-                }
-
-                function saveSignature() {
-                    if (!signaturePad || signaturePad.isEmpty()) {
-                        alert("Tanda tangan masih kosong!");
-                        return;
-                    }
-
-                    let dataURL = signaturePad.toDataURL();
-                    console.log(dataURL);
-
-                    $('#signatureModal').modal('hide');
-                }
-
-                function toggleSearchValue() {
-                    let namaHubungan = document.getElementById("nama_hubungan_pasien").value;
-                    let inputNamaLainnya = document.getElementById("nama_lainnya");
-                    let hubunganPasien = document.getElementById("hubungan_dengan_pasien");
-                    let jenisKelamin = document.getElementById("jenis_kelamin_hubungan_pasien");
-                    let usiaPasien = document.getElementById("usia_hubungan_pasien");
-
-                    if (namaHubungan === "<?= esc($frs['nama_pasien'] ?? '') ?>") {
-                        hubunganPasien.value = "Pasien Sendiri";
-                        jenisKelamin.value = "<?= esc($frs['jenis_kelamin_pasien'] ?? '') ?>";
-                        usiaPasien.value = hitungUsia("<?= esc($frs['tanggal_lahir_pasien'] ?? '') ?>");
-                    } else {
-                        hubunganPasien.value = "";
-                        jenisKelamin.value = "";
-                        usiaPasien.value = "";
-                    }
-
-                    // Tampilkan atau sembunyikan input nama lainnya
-                    if (namaHubungan === "lainnya") {
-                        inputNamaLainnya.classList.remove("d-none");
-                        inputNamaLainnya.focus();
-                    } else {
-                        inputNamaLainnya.classList.add("d-none");
-                        inputNamaLainnya.value = ""; // Reset nilai input jika tidak dipilih "Lainnya"
-                    }
-                }
-
-                function hitungUsia(tanggalLahir) {
-                    if (!tanggalLahir) return "";
-                    let birthDate = new Date(tanggalLahir);
-                    let today = new Date();
-                    let age = today.getFullYear() - birthDate.getFullYear();
-                    let monthDiff = today.getMonth() - birthDate.getMonth();
-                    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
-                        age--;
-                    }
-                    return age;
-                }
-
-                function getNamaHubunganPasien() {
-                    let selectElement = document.getElementById("nama_hubungan_pasien").value;
-                    let inputNamaLainnya = document.getElementById("nama_lainnya").value;
-
-                    // Jika "Lainnya" dipilih, gunakan nilai input, jika tidak, gunakan nilai dropdown
-                    return selectElement === "lainnya" ? inputNamaLainnya : selectElement;
-                }
-
-                // Event listener untuk menangkap perubahan nilai
-                document.getElementById("nama_hubungan_pasien").addEventListener("change", function() {
-                    console.log("Nama Hubungan Pasien:", getNamaHubunganPasien());
-                });
-
-                document.getElementById("nama_lainnya").addEventListener("input", function() {
-                    console.log("Nama Hubungan Pasien (input lainnya):", getNamaHubunganPasien());
-                });
-            </script>
-
             <!-- Tombol Tutup -->
             <div class="form-group row">
                 <div class="col-sm-6 text-center mb-3">
@@ -332,7 +230,121 @@
     </div>
 </div>
 
+// Script untuk mengelola dropdown dan input lainnya
 <script>
+    function toggleSearchValue() {
+        let namaHubungan = document.getElementById("nama_hubungan_pasien").value;
+        let inputNamaLainnya = document.getElementById("nama_lainnya");
+        let hubunganPasien = document.getElementById("hubungan_dengan_pasien");
+        let jenisKelamin = document.getElementById("jenis_kelamin_hubungan_pasien");
+        let usiaPasien = document.getElementById("usia_hubungan_pasien");
+
+        if (namaHubungan === "<?= esc($frs['nama_pasien'] ?? '') ?>") {
+            hubunganPasien.value = "Pasien Sendiri";
+            jenisKelamin.value = "<?= esc($frs['jenis_kelamin_pasien'] ?? '') ?>";
+            usiaPasien.value = hitungUsia("<?= esc($frs['tanggal_lahir_pasien'] ?? '') ?>");
+        } else {
+            hubunganPasien.value = "";
+            jenisKelamin.value = "";
+            usiaPasien.value = "";
+        }
+
+        // Tampilkan atau sembunyikan input nama lainnya
+        if (namaHubungan === "lainnya") {
+            inputNamaLainnya.classList.remove("d-none");
+            inputNamaLainnya.focus();
+        } else {
+            inputNamaLainnya.classList.add("d-none");
+            inputNamaLainnya.value = ""; // Reset nilai input jika tidak dipilih "Lainnya"
+        }
+    }
+
+    function hitungUsia(tanggalLahir) {
+        if (!tanggalLahir) return "";
+        let birthDate = new Date(tanggalLahir);
+        let today = new Date();
+        let age = today.getFullYear() - birthDate.getFullYear();
+        let monthDiff = today.getMonth() - birthDate.getMonth();
+        if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+            age--;
+        }
+        return age;
+    }
+
+    function getNamaHubunganPasien() {
+        let selectElement = document.getElementById("nama_hubungan_pasien").value;
+        let inputNamaLainnya = document.getElementById("nama_lainnya").value;
+
+        // Jika "Lainnya" dipilih, gunakan nilai input, jika tidak, gunakan nilai dropdown
+        return selectElement === "lainnya" ? inputNamaLainnya : selectElement;
+    }
+
+    // Event listener untuk menangkap perubahan nilai
+    document.getElementById("nama_hubungan_pasien").addEventListener("change", function() {
+        console.log("Nama Hubungan Pasien:", getNamaHubunganPasien());
+    });
+
+    document.getElementById("nama_lainnya").addEventListener("input", function() {
+        console.log("Nama Hubungan Pasien (input lainnya):", getNamaHubunganPasien());
+    });
+</script>
+
+// Script untuk tanda tangan digital
+<script>
+    let signaturePad;
+    let canvas;
+
+    function openSignatureModal() {
+        $('#signatureModal').modal('show');
+
+        setTimeout(() => {
+            canvas = document.getElementById('signature-pad');
+
+            if (!canvas) {
+                console.error("Canvas tidak ditemukan!");
+                return;
+            }
+
+            resizeCanvas();
+            signaturePad = new SignaturePad(canvas);
+        }, 200);
+    }
+
+    function resizeCanvas() {
+
+        // Kurangi resolusi internal canvas
+        const ratio = 1;
+
+        // Ukuran tampilan tetap besar
+        canvas.style.width = "100%";
+        canvas.style.height = "200px";
+
+        // Ukuran pixel internal
+        canvas.width = canvas.offsetWidth * ratio;
+        canvas.height = 200 * ratio;
+
+        // Scale context
+        canvas.getContext("2d").scale(ratio, ratio);
+    }
+
+    function clearSignature() {
+        if (signaturePad) {
+            signaturePad.clear();
+        }
+    }
+
+    function saveSignature() {
+        if (!signaturePad || signaturePad.isEmpty()) {
+            alert("Tanda tangan masih kosong!");
+            return;
+        }
+
+        let dataURL = signaturePad.toDataURL();
+        console.log(dataURL);
+
+        $('#signatureModal').modal('hide');
+    }
+
     function saveSignature() {
         if (!signaturePad || signaturePad.isEmpty()) {
             alert("Tanda tangan masih kosong!");
