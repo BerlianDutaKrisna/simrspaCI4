@@ -15,6 +15,8 @@
             <input type="hidden" name="id_frs" value="<?= $frs['id_frs'] ?? '' ?>">
             <input type="hidden" name="id_penerimaan_frs" value="<?= $frs['id_penerimaan_frs'] ?? '' ?>">
             <input type="hidden" name="redirect" value="edit_makroskopis">
+            <input type="hidden" name="dokter_pengirim" value="<?= $frs['dokter_pengirim'] ?? '' ?>">
+            
 
             <!-- Kode FRS dan Diagnosa -->
             <div class="form-group row">
@@ -74,9 +76,6 @@
                     <input type="hidden" name="tanggal_lahir_pasien" value="<?= esc($frs['tanggal_lahir_pasien'] ?? ''); ?>">
                     <input type="hidden" name="jenis_kelamin_pasien" value="<?= esc($frs['jenis_kelamin_pasien'] ?? ''); ?>">
                     <input type="hidden" name="alamat_pasien" value="<?= esc($frs['alamat_pasien'] ?? ''); ?>">
-
-
-
 
                     <div class="form-row">
                         <div class="form-group col-md-3">
@@ -433,36 +432,75 @@
         // =========================
         // 6. PAYLOAD
         // =========================
-        let payload = {
-            id_transaksi: data.idtransaksi,
-            tanggal: data.tanggal,
-            register: data.register,
-            noregister: data.kode_frs,
+        const informedData = {
+            risiko: "Terjadi pneumothorax saat FNAB dengan CT SCAN Guiding",
+            tujuan: "Untuk memastikan diagnosis",
+            indikasi: "Nodul / massa",
+            tata_cara: "SWAB dengan kapas alkohol, suntik dengan jarum 25G / 27G atau Spinal 25G",
+            komplikasi: "Infeksi, perdarahan ditempat suntikan",
+            lain_lain: "",
 
-            idpasien: data.id_pasien,
-            norm: data.norm_pasien,
-            nama: data.nama_pasien,
-            tgl_lahir: data.tanggal_lahir_pasien,
-            jenis_kelamin: data.jenis_kelamin_pasien,
-            alamat: data.alamat_pasien,
+            dpjp_awal: document.querySelector('input[name="dokter_pengirim"]').value,
+            dpjp_awal_id: "",
 
+            inform_nama: dokterNama,
+            informed_nama: analisNama
+        };
+
+        const consentData = {
             dokter_pelaksana: dokterNama,
             petugas_pelaksana: analisNama,
             pemberi_informasi: dokterNama,
 
             hubungan_dengan_pasien: data.hubungan_dengan_pasien,
-            nama_hubungan_pasien: data.hubungan_dengan_pasien,
+            nama_hubungan_pasien: getNamaHubunganPasien(),
+
+            jenis_kelamin_hubungan_pasien: data.jenis_kelamin_hubungan_pasien,
+            usia_hubungan_pasien: data.usia_hubungan_pasien,
 
             tgl_lahir_hubungan_pasien: data.tanggal_lahir_pasien,
             alamat_hubungan_pasien: data.alamat_pasien,
 
             diagnosis_kerja: data.diagnosa_klinik,
 
-            concentSignaturePasien: dataURL,
-            concentSignatureDokter: concentSignatureDokter,
-            concentSignaturePetugas: concentSignaturePetugas,
+            signature_pasien: dataURL,
+            signature_dokter: concentSignatureDokter,
+            signature_petugas: concentSignaturePetugas,
 
-            dateTimeSignature: dateTimeSignature
+            tanggal_signature: dateTimeSignature
+        };
+
+        const payload = {
+
+            formrm_jenis: "INFORMED FNAB",
+            formrm_kode: "09PA",
+
+            m_pasien_id: "",
+            t_pendaftaran_id: data.idtransaksi,
+            formrm_norm: data.norm_pasien,
+
+            formrm_created_by: analisNama,
+            formrm_created_date: dateTimeSignature.replace(' ', 'T'),
+
+            formrm_json: {
+
+                id_transaksi: data.idtransaksi,
+                tanggal: data.tanggal,
+                register: data.register,
+                noregister: data.kode_frs,
+
+                nama: data.nama_pasien,
+                no_rm: data.norm_pasien,
+                alamat: data.alamat_pasien,
+                tgl_lahir: data.tanggal_lahir_pasien,
+                jenis_kelamin: data.jenis_kelamin_pasien,
+
+                informed_data: informedData,
+
+                consent_data: consentData
+
+            }
+
         };
 
         // =========================
