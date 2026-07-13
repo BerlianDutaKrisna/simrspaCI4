@@ -100,7 +100,7 @@
                             <label for="nama_hubungan_pasien">Nama Hubungan Pasien</label>
                             <select class="form-control" id="nama_hubungan_pasien" name="nama_hubungan_pasien" onchange="toggleSearchValue()">
                                 <option value="____________________">-- Pilih Penandatangan --</option>
-                                <option value="<?= esc($frs['nama_pasien'] ?? '') ?>">Pasien Sendiri</option>
+                                <option value="<?= esc($frs['nama_pasien'] ?? '') ?>">Pasien</option>
                                 <option value="lainnya">Lainnya</option>
                             </select>
                             <input type="text" class="form-control mt-2 d-none" id="nama_lainnya" name="nama_lainnya" placeholder="Masukkan Nama Lainnya">
@@ -110,12 +110,13 @@
                             <label for="hubungan_dengan_pasien">Hubungan dengan Pasien</label>
                             <select class="form-control" id="hubungan_dengan_pasien" name="hubungan_dengan_pasien">
                                 <option value="____________________">-- Pilih Hubungan --</option>
-                                <option value="Pasien Sendiri">Pasien Sendiri</option>
-                                <option value="Orang tua">Orang tua</option>
+                                <option value="Pasien">Pasien</option>
+                                <option value="Orang tua">Orang Tua</option>
                                 <option value="Anak">Anak</option>
                                 <option value="Istri">Istri</option>
                                 <option value="Suami">Suami</option>
                                 <option value="Saudara">Saudara</option>
+                                <option value="Wali">Wali</option>
                                 <option value="Pengantar">Pengantar</option>
                             </select>
                         </div>
@@ -239,7 +240,7 @@
         let usiaPasien = document.getElementById("usia_hubungan_pasien");
 
         if (namaHubungan === "<?= esc($frs['nama_pasien'] ?? '') ?>") {
-            hubunganPasien.value = "Pasien Sendiri";
+            hubunganPasien.value = "Pasien";
             jenisKelamin.value = "<?= esc($frs['jenis_kelamin_pasien'] ?? '') ?>";
             usiaPasien.value = hitungUsia("<?= esc($frs['tanggal_lahir_pasien'] ?? '') ?>");
         } else {
@@ -403,20 +404,24 @@
             risiko: "Terjadi pneumothorax saat FNAB dengan CT SCAN Guiding",
             tujuan: "Untuk memastikan diagnosis",
             indikasi: "Nodul / massa",
-            tata_cara: "SWAB dengan kapas alkohol, suntik dengan jarum 25G / 27G atau Spinal 25G",
-            komplikasi: "Infeksi, perdarahan ditempat suntikan",
-            lain_lain: "",
-
             dpjp_awal: document.querySelector('input[name="dokter_pengirim"]').value,
             dpjp_awal_id: "",
+            lain_lain: "",
+            tata_cara: "SWAB dengan kapas alkohol, suntik dengan jarum 25G / 27G atau Spinal 25G",
+            komplikasi: "Infeksi, perdarahan ditempat suntikan",
 
             inform_nama: dokterNama,
-            informed_nama: analisNama
-        };
 
-        const consentData = {
+            informed_nama: data.nama_pasien,
+            jenis_kelamin: data.jenis_kelamin_pasien,
+
+            dasar_diagnosis: "Surat rujukan SMF lain",
+            diagnosis_kerja: data.diagnosa_klinik,
+            diagnosis_field2: "",
+            diagnosis_field3: "",
+
             dokter_pelaksana: dokterNama,
-            petugas_pelaksana: analisNama,
+            pegawai_nama: analisNama,
             pemberi_informasi: dokterNama,
 
             hubungan_dengan_pasien: data.hubungan_dengan_pasien,
@@ -427,9 +432,7 @@
 
             tgl_lahir_hubungan_pasien: data.tanggal_lahir_pasien,
             alamat_hubungan_pasien: data.alamat_pasien,
-
-            diagnosis_kerja: data.diagnosa_klinik,
-
+            
             signature_pasien: dataURL,
             signature_dokter: concentSignatureDokter,
             signature_petugas: concentSignaturePetugas,
@@ -445,27 +448,21 @@
             m_pasien_id: "",
             t_pendaftaran_id: data.idtransaksi,
             formrm_norm: data.norm_pasien,
+            tanggal: data.tanggal,
+            register: data.register,
+            noregister: data.kode_frs,
 
             formrm_created_by: analisNama,
             formrm_created_date: dateTimeSignature.replace(' ', 'T'),
 
             formrm_json: {
-
-                id_transaksi: data.idtransaksi,
-                tanggal: data.tanggal,
-                register: data.register,
-                noregister: data.kode_frs,
-
                 nama: data.nama_pasien,
+                jenis_kelamin: data.jenis_kelamin_pasien,
                 no_rm: data.norm_pasien,
                 alamat: data.alamat_pasien,
                 tgl_lahir: data.tanggal_lahir_pasien,
-                jenis_kelamin: data.jenis_kelamin_pasien,
 
                 informed_data: informedData,
-
-                consent_data: consentData
-
             }
 
         };
