@@ -228,8 +228,8 @@
         </div>
     </div>
 </div>
-
 // Script untuk mengelola dropdown dan input lainnya
+<script src="<?= base_url('js/signatureRepository.js') ?>"></script>
 <script>
     function toggleSearchValue() {
         let namaHubungan = document.getElementById("nama_hubungan_pasien").value;
@@ -370,39 +370,6 @@
         formData.forEach((value, key) => {
             data[key] = value;
         });
-
-        // =========================
-        // 3. Mapping Dokter & Analis
-        // =========================
-        const dokterMap = {
-            "1": {
-                nama: "dr. Vinna Chrisdianti, Sp.PA",
-                ttd: "<?= base_url('img/ttdVinaPNG.png'); ?>"
-            },
-            "2": {
-                nama: "dr. Ayu Tyasmara Pratiwi, Sp.PA",
-                ttd: "<?= base_url('img/ttdAyuPNG.png'); ?>"
-            }
-        };
-
-        const analisMap = {
-            "3": {
-                nama: "Endar Pratiwi, S.Si",
-                ttd: "<?= base_url('img/ttdEndarPNG.png'); ?>"
-            },
-            "4": {
-                nama: "Arlina Kartika, A.Md.AK",
-                ttd: "<?= base_url('img/ttdArlinaPNG.png'); ?>"
-            },
-            "5": {
-                nama: "Ilham Tyas Ismadi, A.Md.Kes",
-                ttd: "<?= base_url('img/ttdIlhamPNG.png'); ?>"
-            },
-            "6": {
-                nama: "Berlian Duta Krisna, S.Tr.Kes",
-                ttd: "<?= base_url('img/ttdBerlianPNG.png'); ?>"
-            }
-        };
 
         // =========================
         // 4. Ambil ID dari Form
