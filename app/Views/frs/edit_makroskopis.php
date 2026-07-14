@@ -70,7 +70,6 @@
                     <input type="hidden" name="tanggal" value="<?= !empty($frs['tanggal_transaksi']) ? esc($frs['tanggal_transaksi']) : '' ?>">
                     <input type="hidden" name="register" value="<?= isset($frs['no_register']) ? esc($frs['no_register']) : '' ?>">
 
-                    <input type="hidden" name="id_pasien" value="<?= esc($frs['id_pasien'] ?? ''); ?>">
                     <input type="hidden" name="norm_pasien" value="<?= esc($frs['norm_pasien'] ?? ''); ?>">
                     <input type="hidden" name="nama_pasien" value="<?= esc($frs['nama_pasien'] ?? ''); ?>">
                     <input type="hidden" name="tanggal_lahir_pasien" value="<?= esc($frs['tanggal_lahir_pasien'] ?? ''); ?>">
@@ -447,6 +446,7 @@
 
             m_pasien_id: "",
             t_pendaftaran_id: data.idtransaksi,
+            id_transaksi: data.idtransaksi,
             formrm_norm: data.norm_pasien,
             tanggal: data.tanggal,
             register: data.register,

@@ -62,7 +62,7 @@ class Signature extends ResourceController
         $client = \Config\Services::curlrequest();
 
         $response = $client->post(
-            'http://10.250.10.107/apibdrs/apibdrs/postinformed', // Ganti dengan URL endpoint SIMRS yang sesuai
+            'http://10.250.10.107/apibdrs/apibdrs/postInformed', // Ganti dengan URL endpoint SIMRS yang sesuai
             [
                 'headers' => ['Content-Type' => 'application/json'],
                 'body'    => json_encode($data)
