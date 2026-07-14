@@ -55,41 +55,70 @@ class Signature extends ResourceController
         $action = 'insert';
     }
 
-    // =========================
-    // 3. KIRIM KE SIMRS
-    // =========================
-    try {
-        $client = \Config\Services::curlrequest();
+     // =========================
+        // 3. KIRIM KE SIMRS
+        // =========================
+        $simrsStatus = false;
+        $simrsResponse = null;
+        $simrsError = null;
 
-        $response = $client->post(
-            'http://10.250.10.107/apibdrs/apibdrs/postInformed', // Ganti dengan URL endpoint SIMRS yang sesuai
-            [
-                'headers' => ['Content-Type' => 'application/json'],
-                'body'    => json_encode($data)
+        try {
+
+            $client = \Config\Services::curlrequest();
+
+            $response = $client->post(
+                'http://10.250.10.107/apibdrs/apibdrs/postInformed',
+                [
+                    'headers' => [
+                        'Content-Type' => 'application/json'
+                    ],
+                    'body' => json_encode($data),
+
+                    // agar response 500 tetap bisa dibaca
+                    'http_errors' => false
+                ]
+            );
+
+            $simrsStatus = $response->getStatusCode() >= 200
+                        && $response->getStatusCode() < 300;
+
+            $simrsResponse = json_decode($response->getBody(), true);
+
+            if ($simrsResponse === null) {
+                $simrsResponse = $response->getBody();
+            }
+
+            log_message(
+                'info',
+                '[SIMRS] HTTP ' . $response->getStatusCode() .
+                ' RESPONSE: ' . $response->getBody()
+            );
+
+        } catch (\Exception $e) {
+
+            $simrsError = $e->getMessage();
+
+            log_message(
+                'error',
+                '[SIMRS] Gagal kirim: ' . $simrsError
+            );
+        }
+
+        // =========================
+        // 4. RESPONSE KE BROWSER
+        // =========================
+        return $this->respond([
+            'status' => true,
+            'action' => $action,
+            'message' => $action === 'update'
+                ? 'Data berhasil diupdate'
+                : 'Data berhasil disimpan',
+
+            'simrs' => [
+                'success' => $simrsStatus,
+                'response' => $simrsResponse,
+                'error' => $simrsError
             ]
-        );
-
-        $responseBody = $response->getBody();
-
-        log_message('info', '[SIMRS] Response: ' . $responseBody);
-
-        session()->setFlashdata('simrs_payload', json_encode($data, JSON_PRETTY_PRINT));
-        session()->setFlashdata('simrs_response', $responseBody);
-
-    } catch (\Exception $e) {
-
-        log_message('error', '[SIMRS] Gagal kirim: ' . $e->getMessage());
-
-        session()->setFlashdata('simrs_error', $e->getMessage());
+        ]);
     }
-
-    // =========================
-    // 4. RESPONSE
-    // =========================
-    return $this->respond([
-        'status' => 'success',
-        'action' => $action,
-        'message' => $action === 'update' ? 'Data berhasil diupdate' : 'Data berhasil disimpan'
-    ]);
-}
 }

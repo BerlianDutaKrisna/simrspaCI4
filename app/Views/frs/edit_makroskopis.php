@@ -16,7 +16,7 @@
             <input type="hidden" name="id_penerimaan_frs" value="<?= $frs['id_penerimaan_frs'] ?? '' ?>">
             <input type="hidden" name="redirect" value="edit_makroskopis">
             <input type="hidden" name="dokter_pengirim" value="<?= $frs['dokter_pengirim'] ?? '' ?>">
-            
+
 
             <!-- Kode FRS dan Diagnosa -->
             <div class="form-group row">
@@ -431,7 +431,7 @@
 
             tgl_lahir_hubungan_pasien: data.tanggal_lahir_pasien,
             alamat_hubungan_pasien: data.alamat_pasien,
-            
+
             signature_pasien: dataURL,
             signature_dokter: concentSignatureDokter,
             signature_petugas: concentSignaturePetugas,
@@ -444,7 +444,7 @@
             formrm_jenis: "INFORMED FNAB",
             formrm_kode: "09PA",
 
-            m_pasien_id: "",
+            m_pasien_id: null,
             t_pendaftaran_id: data.idtransaksi,
             id_transaksi: data.idtransaksi,
             formrm_norm: data.norm_pasien,
@@ -486,13 +486,26 @@
             })
             .then(response => response.json())
             .then(res => {
+
                 console.log("Response:", res);
+
+                if (res.simrs && res.simrs.success) {
+                    console.log("SIMRS berhasil dikirim");
+                    console.log("Response SIMRS:", res.simrs.response);
+                } else {
+                    console.error("SIMRS gagal dikirim");
+                    console.error(
+                        "Error SIMRS:",
+                        res.simrs?.error || res.simrs?.response
+                    );
+                }
+
+                $('#signatureModal').modal('hide');
+
             })
             .catch(err => {
-                console.error("Error:", err);
+                console.error("Error Fetch:", err);
             });
-
-        $('#signatureModal').modal('hide');
     }
 </script>
 
