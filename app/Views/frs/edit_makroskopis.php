@@ -400,44 +400,79 @@
         // 6. PAYLOAD
         // =========================
         const informedData = {
-            risiko: "Terjadi pneumothorax saat FNAB dengan CT SCAN Guiding",
-            tujuan: "Untuk memastikan diagnosis",
-            indikasi: "Nodul / massa",
+            // Dokter Pelaksana Tindakan:
             dpjp_awal: document.querySelector('input[name="dokter_pengirim"]').value,
-            dpjp_awal_id: "",
-            lain_lain: "",
-            tata_cara: "SWAB dengan kapas alkohol, suntik dengan jarum 25G / 27G atau Spinal 25G",
-            komplikasi: "Infeksi, perdarahan ditempat suntikan",
-
+            // Pemberi Informasi:
             inform_nama: dokterNama,
-
-            informed_nama: data.nama_pasien,
-            jenis_kelamin: data.jenis_kelamin_pasien,
-
-            dasar_diagnosis: "Surat rujukan SMF lain",
+            // Hubungan Dengan Pasien:
+            informed_hubungan: data.hubungan_dengan_pasien,
+            // Nama:
+            informed_nama: getNamaHubunganPasien(),
+            // Indormasi Tindakan FNAB
+            // 1. Diagnosis Kerja:
             diagnosis_kerja: data.diagnosa_klinik,
             diagnosis_field2: "",
             diagnosis_field3: "",
+            // 2. Dasar Diagnosis:
+            dasar_diagnosis: "Surat rujukan SMF lain",
+            // 3. Indikasi:
+            indikasi: "Nodul / massa",
+            // 4. Tata Cara:
+            tata_cara: "SWAB dengan kapas alkohol, suntik dengan jarum 25G / 27G atau Spinal 25G",
+            // 5. Tujuan:
+            tujuan: "Untuk memastikan diagnosis",
+            // 6. Risiko:
+            risiko: "Terjadi pneumothorax saat FNAB dengan CT SCAN Guiding",
+            // 7. Komplikasi:
+            komplikasi: "Infeksi, perdarahan ditempat suntikan",
+            // 8. Lain-lain:
+            lain_lain: "",
 
-            dokter_pelaksana: dokterNama,
-            pegawai_nama: analisNama,
-            pemberi_informasi: dokterNama,
-
-            hubungan_dengan_pasien: data.hubungan_dengan_pasien,
-            nama_hubungan_pasien: getNamaHubunganPasien(),
-
-            jenis_kelamin_hubungan_pasien: data.jenis_kelamin_hubungan_pasien,
-            usia_hubungan_pasien: data.usia_hubungan_pasien,
-
-            tgl_lahir_hubungan_pasien: data.tanggal_lahir_pasien,
-            alamat_hubungan_pasien: data.alamat_pasien,
-
-            signature_pasien: dataURL,
-            signature_dokter: concentSignatureDokter,
-            signature_petugas: concentSignaturePetugas,
-
-            tanggal_signature: dateTimeSignature
+            // TANDA TANGAN
+            // Tanda Tangan Dokter:
+            consentSignatureInformed: concentSignatureDokter,
+            consentDokterSignatureName: dokterNama,
+            consentDateInformed: dateTimeSignature.replace(' ', 'T'),
+            // Tanda Tangan Pasien:
+            consentSignaturePersetujuan: dataURL,
+            consentGiverSignatureNamePersetujuan: data.nama_pasien,
+            consentDatePersetujuan: dateTimeSignature.replace(' ', 'T'),
         };
+
+        const consentData = {
+            // Hubungan Dengan Pasien:
+            persetujuan_hubungan: data.hubungan_dengan_pasien,
+            // Nama:
+            persetujuan_nama: getNamaHubunganPasien(),
+            // Tanggal Lahir:
+            persetujuan_tgl_lahir: data.tanggal,
+            // Jenis Kelamin:
+            persetujuan_jk: data.jenis_kelamin_hubungan_pasien === "L" ?
+                "Laki-laki" : data.jenis_kelamin_hubungan_pasien === "P" ?
+                "Perempuan" : "",
+            // Alamat:
+            persetujuan_alamat: data.alamat_pasien,
+            // Dengan Ini menyatakan setuju untuk dilakukan Tindakan FNAB terhadap pasien:
+            pasien_nama: data.nama_pasien,
+            pasien_jk: data.jenis_kelamin_hubungan_pasien === "L" ?
+                "Laki-laki" : data.jenis_kelamin_hubungan_pasien === "P" ?
+                "Perempuan" : "",
+            no_rm: data.norm_pasien,
+            alamat: data.alamat_pasien,
+            pasien_tgl_lahir: data.tanggal_lahir_pasien,
+
+            // TANDA TANGAN
+            consentDatePersetujuan: dateTimeSignature.replace(' ', 'T'),
+            // tanda tangan Pasien:
+            consentSignaturePersetujuan: dataURL,
+            consentGiverSignatureNamePersetujuan: data.nama_pasien,
+            // tanda tangan Dokter:
+            dokterSignaturePersetujuan: concentSignatureDokter,
+            dokterSignatureNamePersetujuan: dokterNama,
+            // tanda tangan Perawat
+            perawatSignaturePersetujuan: concentSignaturePetugas,
+            pegawai_nama: analisNama,
+        }
 
         const payload = {
 
@@ -457,12 +492,15 @@
 
             formrm_json: {
                 nama: data.nama_pasien,
-                jenis_kelamin: data.jenis_kelamin_pasien,
+                jenis_kelamin: data.jenis_kelamin_hubungan_pasien === "L" ?
+                    "Laki-laki" : data.jenis_kelamin_hubungan_pasien === "P" ?
+                    "Perempuan" : "",
                 no_rm: data.norm_pasien,
                 alamat: data.alamat_pasien,
                 tgl_lahir: data.tanggal_lahir_pasien,
 
                 informed_data: informedData,
+                persetujuan_data: consentData,
             }
 
         };
