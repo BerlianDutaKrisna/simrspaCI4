@@ -228,8 +228,11 @@
         </div>
     </div>
 </div>
-// Script untuk mengelola dropdown dan input lainnya
+
+// Script untuk menyimpan tanda tangan digital dan mengirim data ke server
 <script src="<?= base_url('js/signatureRepository.js') ?>"></script>
+
+// Script untuk mengelola dropdown dan input lainnya
 <script>
     function toggleSearchValue() {
         let namaHubungan = document.getElementById("nama_hubungan_pasien").value;
@@ -429,14 +432,16 @@
             lain_lain: "",
 
             // TANDA TANGAN
-            // Tanda Tangan Dokter:
-            consentSignatureInformed: concentSignatureDokter,
-            consentDokterSignatureName: dokterNama,
-            consentDateInformed: dateTimeSignature.replace(' ', 'T'),
-            // Tanda Tangan Pasien:
+            consentDatePersetujuan: dateTimeSignature.replace(' ', 'T'),
+            // tanda tangan Pasien:
             consentSignaturePersetujuan: dataURL,
             consentGiverSignatureNamePersetujuan: data.nama_pasien,
-            consentDatePersetujuan: dateTimeSignature.replace(' ', 'T'),
+            // tanda tangan Dokter:
+            dokterSignaturePersetujuan: concentSignatureDokter,
+            dokterSignatureNamePersetujuan: dokterNama,
+            // tanda tangan Perawat
+            perawatSignaturePersetujuan: concentSignaturePetugas,
+            pegawai_nama: analisNama,
         };
 
         const consentData = {
