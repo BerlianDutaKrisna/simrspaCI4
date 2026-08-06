@@ -10,7 +10,6 @@ class DatabaseSeeder extends Seeder
     {
         // Panggil UserSeeder dan PatientSeeder
         $this->call('App\Database\Seeds\UserSeeder');
-        $this->call('App\Database\Seeds\PatientSeeder');
 
         echo "UserSeeder dan PatientSeeder telah dijalankan.\n";
     }

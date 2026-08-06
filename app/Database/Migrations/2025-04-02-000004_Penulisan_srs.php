@@ -8,6 +8,10 @@ class Penulisan_srs extends Migration
 {
     public function up()
     {
+        if ($this->db->tableExists('penulisan_srs')) {
+            return;
+        }
+
         $this->forge->addField([
             'id_penulisan_srs' => [
                 'type'           => 'INT',
@@ -58,6 +62,8 @@ class Penulisan_srs extends Migration
 
     public function down()
     {
-        $this->forge->dropTable('penulisan_srs');
+        if ($this->db->tableExists('penulisan_srs')) {
+            $this->forge->dropTable('penulisan_srs');
+        }
     }
 }

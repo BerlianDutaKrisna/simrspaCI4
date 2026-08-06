@@ -21,8 +21,8 @@ class Peminjaman extends Migration
                 'unsigned'   => true,
             ],
             'id_pasien' => [
-                'type'       => 'BIGINT',
-                'constraint' => 20,
+                'type'       => 'INT',
+                'constraint' => 11,
                 'unsigned'   => true,
             ],
             'kode_sampel' => [
