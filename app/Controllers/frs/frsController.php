@@ -19,6 +19,7 @@ use App\Models\Frs\Proses\Pemverifikasi_frs;
 use App\Models\Frs\Proses\Authorized_frs;
 use App\Models\Frs\Proses\Pencetakan_frs;
 use App\Models\Frs\Mutu_frs;
+use App\Models\SignatureModel;
 use Exception;
 
 
@@ -41,6 +42,7 @@ class FrsController extends BaseController
     protected $authorized_frs;
     protected $pencetakan_frs;
     protected $mutu_frs;
+    protected $signatureModel;
     protected $validation;
 
     public function __construct()
@@ -54,13 +56,14 @@ class FrsController extends BaseController
         $this->simrsModel = new SimrsModel();
         $this->kunjunganModel = new KunjunganModel();
         $this->pengirimanDataSimrsModel = new PengirimanDataSimrsModel();
-        $this->penerimaan_frs = new Penerimaan_frs();;
+        $this->penerimaan_frs = new Penerimaan_frs();
         $this->pembacaan_frs = new Pembacaan_frs();
         $this->penulisan_frs = new Penulisan_frs();
         $this->pemverifikasi_frs = new Pemverifikasi_frs();
         $this->authorized_frs = new Authorized_frs();
         $this->pencetakan_frs = new Pencetakan_frs();
         $this->mutu_frs = new Mutu_frs();
+        $this->signatureModel = new SignatureModel();
         $this->validation =  \Config\Services::validation();
     }
 
@@ -417,6 +420,21 @@ class FrsController extends BaseController
         $penerimaan = $this->penerimaan_frs->find($id_penerimaan_frs);
         // Ambil data pengguna dengan status "Dokter"
         $users = $this->usersModel->where('status_user', 'Dokter')->findAll();
+        // Ambil data signature jika ada
+        $signatureData = null;
+        try {
+            if (!empty($frs['id_transaksi'])) {
+                $signatureData = $this->signatureModel->where('id_transaksi', $frs['id_transaksi'])->first();
+            }
+            if (!$signatureData && !empty($frs['kode_frs'])) {
+                $signatureData = $this->signatureModel->where('noregister', $frs['kode_frs'])->first();
+            }
+            if (!$signatureData && !empty($frs['no_register'])) {
+                $signatureData = $this->signatureModel->where('register', $frs['no_register'])->first();
+            }
+        } catch (\Exception $e) {
+            $signatureData = null;
+        }
         // Persiapkan data yang akan dikirim ke view
         $data = [
             'frs'        => $frs,
@@ -429,6 +447,7 @@ class FrsController extends BaseController
             'users'      => $users,
             'id_user'    => $this->session->get('id_user'),
             'nama_user'  => $this->session->get('nama_user'),
+            'signature'  => $signatureData,
         ];
         
         return view('frs/edit_makroskopis', $data);

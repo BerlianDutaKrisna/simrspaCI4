@@ -190,26 +190,27 @@
                             document.addEventListener('DOMContentLoaded', function() {
                                 try {
                                     var sigObj = <?= json_encode($signature) ?> || {};
-
-                                    // Preview signature (top-level column or inside formrm_json)
-                                    var sigImg = sigObj.concentSignaturePasien || (sigObj.formrm_json && (typeof sigObj.formrm_json === 'string' ? (JSON.parse(sigObj.formrm_json).informed_data || {}).consentSignaturePersetujuan : (sigObj.formrm_json.informed_data || {}).consentSignaturePersetujuan)) || null;
-                                    if (sigImg) {
-                                        var img = document.getElementById('signaturePreview');
-                                        var noSig = document.getElementById('noSignatureText');
-                                        img.src = sigImg;
-                                        img.style.display = 'block';
-                                        if (noSig) noSig.style.display = 'none';
-                                        var hidden = document.getElementById('concentSignaturePasien');
-                                        if (hidden) hidden.value = sigImg;
+                                    var parsedJson = {};
+                                    if (sigObj.formrm_json) {
+                                        if (typeof sigObj.formrm_json === 'string') {
+                                            try { parsedJson = JSON.parse(sigObj.formrm_json) || {}; } catch(e) { parsedJson = {}; }
+                                        } else if (typeof sigObj.formrm_json === 'object') {
+                                            parsedJson = sigObj.formrm_json || {};
+                                        }
                                     }
+                                    var informedData = parsedJson.informed_data || {};
+                                    var persetujuanData = parsedJson.persetujuan_data || {};
 
-                                    // Helper to set select by value or text
+                                    // Helper: set select by case-insensitive value or text
                                     function setSelect(selectId, value) {
-                                        if (!value) return;
+                                        if (!value) return false;
                                         var el = document.getElementById(selectId);
-                                        if (!el) return;
+                                        if (!el) return false;
+                                        var valLower = value.toString().trim().toLowerCase();
                                         for (var i = 0; i < el.options.length; i++) {
-                                            if (el.options[i].value === value || el.options[i].text.trim() === value) {
+                                            var optVal = el.options[i].value.trim().toLowerCase();
+                                            var optText = el.options[i].text.trim().toLowerCase();
+                                            if (optVal === valLower || optText === valLower) {
                                                 el.selectedIndex = i;
                                                 return true;
                                             }
@@ -217,69 +218,100 @@
                                         return false;
                                     }
 
-                                    // Use top-level columns first
-                                    if (sigObj.nama_hubungan_pasien) {
-                                        var matched = setSelect('nama_hubungan_pasien', sigObj.nama_hubungan_pasien);
-                                        if (!matched) {
-                                            var sel = document.getElementById('nama_hubungan_pasien');
-                                            sel.value = 'lainnya';
-                                            var inputNama = document.getElementById('nama_lainnya');
-                                            if (inputNama) { inputNama.classList.remove('d-none'); inputNama.value = sigObj.nama_hubungan_pasien; }
+                                    // 1. Preview signature
+                                    var sigImg = sigObj.concentSignaturePasien || persetujuanData.consentSignaturePersetujuan || informedData.consentSignaturePersetujuan || null;
+                                    if (sigImg && sigImg.trim() !== '') {
+                                        var img = document.getElementById('signaturePreview');
+                                        var noSig = document.getElementById('noSignatureText');
+                                        if (img) {
+                                            img.src = sigImg;
+                                            img.style.display = 'block';
+                                        }
+                                        if (noSig) {
+                                            noSig.style.display = 'none';
+                                        }
+                                        var hidden = document.getElementById('concentSignaturePasien');
+                                        if (hidden) {
+                                            hidden.value = sigImg;
                                         }
                                     }
 
-                                    if (sigObj.hubungan_dengan_pasien) {
-                                        var hub = document.getElementById('hubungan_dengan_pasien');
-                                        if (hub) hub.value = sigObj.hubungan_dengan_pasien;
+                                    // 2. Nama Hubungan Pasien
+                                    var namaHub = sigObj.nama_hubungan_pasien || persetujuanData.persetujuan_nama || informedData.informed_nama || '';
+                                    if (namaHub && namaHub.trim() !== '') {
+                                        var patientName = "<?= esc($frs['nama_pasien'] ?? '') ?>";
+                                        if (namaHub.trim().toLowerCase() === patientName.toLowerCase() || namaHub.trim().toLowerCase() === 'pasien') {
+                                            var sel = document.getElementById('nama_hubungan_pasien');
+                                            if (sel) {
+                                                setSelect('nama_hubungan_pasien', patientName);
+                                            }
+                                            var inputNama = document.getElementById('nama_lainnya');
+                                            if (inputNama) {
+                                                inputNama.classList.add('d-none');
+                                                inputNama.value = '';
+                                            }
+                                        } else {
+                                            var sel = document.getElementById('nama_hubungan_pasien');
+                                            if (sel) sel.value = 'lainnya';
+                                            var inputNama = document.getElementById('nama_lainnya');
+                                            if (inputNama) {
+                                                inputNama.classList.remove('d-none');
+                                                inputNama.value = namaHub;
+                                            }
+                                        }
                                     }
 
-                                    // jenis kelamin for hubungan: prefer top-level ttd field or formrm_json
-                                    if (sigObj.jenis_kelamin_hubungan_pasien) {
-                                        var seljk = document.getElementById('jenis_kelamin_hubungan_pasien');
-                                        if (seljk) seljk.value = sigObj.jenis_kelamin_hubungan_pasien;
-                                    } else if (sigObj.jenis_kelamin) {
-                                        var seljk = document.getElementById('jenis_kelamin_hubungan_pasien');
-                                        if (seljk) seljk.value = sigObj.jenis_kelamin === 'Laki-laki' || sigObj.jenis_kelamin === 'L' ? 'L' : sigObj.jenis_kelamin === 'Perempuan' || sigObj.jenis_kelamin === 'P' ? 'P' : seljk.value;
+                                    // 3. Hubungan dengan Pasien
+                                    var hub = sigObj.hubungan_dengan_pasien || persetujuanData.persetujuan_hubungan || informedData.informed_hubungan || '';
+                                    if (hub && hub.trim() !== '') {
+                                        setSelect('hubungan_dengan_pasien', hub);
                                     }
 
-                                    // usia hubungan pasien from top-level tgl_lahir_hubungan_pasien or formrm_json
-                                    var tglHub = sigObj.tgl_lahir_hubungan_pasien || null;
-                                    if (!tglHub && sigObj.formrm_json) {
-                                        try { var parsed = (typeof sigObj.formrm_json === 'string') ? JSON.parse(sigObj.formrm_json) : sigObj.formrm_json; tglHub = parsed.persetujuan_data && parsed.persetujuan_data.persetujuan_tgl_lahir ? parsed.persetujuan_data.persetujuan_tgl_lahir : tglHub; } catch(e){ }
+                                    // 4. Jenis Kelamin Hubungan Pasien
+                                    var jk = sigObj.jenis_kelamin_hubungan_pasien || persetujuanData.persetujuan_jk || parsedJson.jenis_kelamin || sigObj.jenis_kelamin || '';
+                                    if (jk && jk.trim() !== '') {
+                                        var selJk = document.getElementById('jenis_kelamin_hubungan_pasien');
+                                        if (selJk) {
+                                            var jkUpper = jk.trim().toUpperCase();
+                                            if (jkUpper.startsWith('L') || jkUpper === 'LAKI-LAKI') {
+                                                selJk.value = 'L';
+                                            } else if (jkUpper.startsWith('P') || jkUpper === 'PEREMPUAN') {
+                                                selJk.value = 'P';
+                                            }
+                                        }
                                     }
-                                    if (tglHub) {
-                                        var usia = hitungUsia(tglHub);
+
+                                    // 5. Usia Hubungan Pasien
+                                    var usiaVal = sigObj.usia_hubungan_pasien || persetujuanData.usia_hubungan_pasien || persetujuanData.persetujuan_usia || informedData.usia_hubungan_pasien || null;
+                                    if (!usiaVal) {
+                                        var tglLahirHub = sigObj.tgl_lahir_hubungan_pasien || persetujuanData.persetujuan_tgl_lahir || null;
+                                        var tglTrans = "<?= esc($frs['tanggal_transaksi'] ?? '') ?>";
+                                        if (tglLahirHub && tglLahirHub !== tglTrans) {
+                                            var computedAge = hitungUsia(tglLahirHub);
+                                            if (computedAge !== "" && computedAge >= 0) {
+                                                usiaVal = computedAge;
+                                            }
+                                        }
+                                    }
+                                    if (!usiaVal && (hub.toLowerCase() === 'pasien' || namaHub.toLowerCase() === 'pasien' || namaHub.toLowerCase() === "<?= strtolower(esc($frs['nama_pasien'] ?? '')) ?>")) {
+                                        var patientBirth = "<?= esc($frs['tanggal_lahir_pasien'] ?? '') ?>";
+                                        if (patientBirth) {
+                                            usiaVal = hitungUsia(patientBirth);
+                                        }
+                                    }
+                                    if (usiaVal !== null && usiaVal !== "") {
                                         var usiaInput = document.getElementById('usia_hubungan_pasien');
-                                        if (usiaInput) usiaInput.value = usia;
+                                        if (usiaInput) {
+                                            usiaInput.value = usiaVal;
+                                        }
                                     }
 
-                                    // dokter/analis: try to match by text or value
-                                    if (sigObj.dokter_pelaksana) setSelect('dokter_pemeriksa', sigObj.dokter_pelaksana);
-                                    if (sigObj.petugas_pelaksana) setSelect('analis_priksa', sigObj.petugas_pelaksana);
+                                    // 6. Dokter & Analis
+                                    var dok = sigObj.dokter_pelaksana || informedData.inform_nama || null;
+                                    if (dok) setSelect('dokter_pemeriksa', dok);
 
-                                    // fallback: use formrm_json persetujuan_data/informed_data
-                                    if (sigObj.formrm_json) {
-                                        try {
-                                            var parsed = (typeof sigObj.formrm_json === 'string') ? JSON.parse(sigObj.formrm_json) : sigObj.formrm_json;
-                                            var pers = parsed.persetujuan_data || parsed.informed_data || {};
-
-                                            if (!document.getElementById('nama_lainnya').value) {
-                                                if (pers.persetujuan_nama) {
-                                                    var matched2 = setSelect('nama_hubungan_pasien', pers.persetujuan_nama);
-                                                    if (!matched2) { var sel = document.getElementById('nama_hubungan_pasien'); sel.value = 'lainnya'; var inputNama = document.getElementById('nama_lainnya'); if (inputNama) { inputNama.classList.remove('d-none'); inputNama.value = pers.persetujuan_nama; } }
-                                                }
-                                            }
-
-                                            if (!document.getElementById('hubungan_dengan_pasien').value && pers.persetujuan_hubungan) {
-                                                var hub2 = document.getElementById('hubungan_dengan_pasien'); if (hub2) hub2.value = pers.persetujuan_hubungan;
-                                            }
-
-                                            if (!document.getElementById('jenis_kelamin_hubungan_pasien').value && pers.persetujuan_jk) {
-                                                var seljk2 = document.getElementById('jenis_kelamin_hubungan_pasien'); if (seljk2) seljk2.value = pers.persetujuan_jk.startsWith('L') ? 'L' : 'P';
-                                            }
-
-                                        } catch (e) { /* ignore parse errors */ }
-                                    }
+                                    var petugas = sigObj.petugas_pelaksana || informedData.pegawai_nama || null;
+                                    if (petugas) setSelect('analis_priksa', petugas);
 
                                 } catch (e) {
                                     console.error('Error restoring signature preview', e);
@@ -332,10 +364,10 @@
     </div>
 </div>
 
-// Script untuk menyimpan tanda tangan digital dan mengirim data ke server
+<!-- Script untuk menyimpan tanda tangan digital dan data repository -->
 <script src="<?= base_url('js/signatureRepository.js') ?>"></script>
 
-// Script untuk mengelola dropdown dan input lainnya
+<!-- Script untuk mengelola dropdown dan input lainnya -->
 <script>
     function toggleSearchValue() {
         let namaHubungan = document.getElementById("nama_hubungan_pasien").value;
@@ -346,7 +378,8 @@
 
         if (namaHubungan === "<?= esc($frs['nama_pasien'] ?? '') ?>") {
             hubunganPasien.value = "Pasien";
-            jenisKelamin.value = "<?= esc($frs['jenis_kelamin_pasien'] ?? '') ?>";
+            let jkPasien = "<?= esc($frs['jenis_kelamin_pasien'] ?? '') ?>";
+            jenisKelamin.value = (jkPasien.startsWith('L') || jkPasien === 'Laki-laki') ? 'L' : ((jkPasien.startsWith('P') || jkPasien === 'Perempuan') ? 'P' : jkPasien);
             usiaPasien.value = hitungUsia("<?= esc($frs['tanggal_lahir_pasien'] ?? '') ?>");
         } else {
             hubunganPasien.value = "";
@@ -360,31 +393,29 @@
             inputNamaLainnya.focus();
         } else {
             inputNamaLainnya.classList.add("d-none");
-            inputNamaLainnya.value = ""; // Reset nilai input jika tidak dipilih "Lainnya"
+            inputNamaLainnya.value = "";
         }
     }
 
     function hitungUsia(tanggalLahir) {
         if (!tanggalLahir) return "";
         let birthDate = new Date(tanggalLahir);
+        if (isNaN(birthDate.getTime())) return "";
         let today = new Date();
         let age = today.getFullYear() - birthDate.getFullYear();
         let monthDiff = today.getMonth() - birthDate.getMonth();
         if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
             age--;
         }
-        return age;
+        return age >= 0 ? age : "";
     }
 
     function getNamaHubunganPasien() {
         let selectElement = document.getElementById("nama_hubungan_pasien").value;
         let inputNamaLainnya = document.getElementById("nama_lainnya").value;
-
-        // Jika "Lainnya" dipilih, gunakan nilai input, jika tidak, gunakan nilai dropdown
         return selectElement === "lainnya" ? inputNamaLainnya : selectElement;
     }
 
-    // Event listener untuk menangkap perubahan nilai
     document.getElementById("nama_hubungan_pasien").addEventListener("change", function() {
         console.log("Nama Hubungan Pasien:", getNamaHubunganPasien());
     });
@@ -394,7 +425,7 @@
     });
 </script>
 
-// Script untuk tanda tangan digital
+<!-- Script untuk tanda tangan digital -->
 <script>
     let signaturePad;
     let canvas;
@@ -404,31 +435,21 @@
 
         setTimeout(() => {
             canvas = document.getElementById('signature-pad');
-
             if (!canvas) {
                 console.error("Canvas tidak ditemukan!");
                 return;
             }
-
             resizeCanvas();
             signaturePad = new SignaturePad(canvas);
         }, 200);
     }
 
     function resizeCanvas() {
-
-        // Kurangi resolusi internal canvas
         const ratio = 1;
-
-        // Ukuran tampilan tetap besar
         canvas.style.width = "100%";
         canvas.style.height = "200px";
-
-        // Ukuran pixel internal
         canvas.width = canvas.offsetWidth * ratio;
         canvas.height = 200 * ratio;
-
-        // Scale context
         canvas.getContext("2d").scale(ratio, ratio);
     }
 
@@ -444,21 +465,7 @@
             return;
         }
 
-        let dataURL = signaturePad.toDataURL();
-        console.log(dataURL);
-
-        $('#signatureModal').modal('hide');
-    }
-
-    function saveSignature() {
-        if (!signaturePad || signaturePad.isEmpty()) {
-            alert("Tanda tangan masih kosong!");
-            return;
-        }
-
-        // =========================
         // 1. Signature Pasien
-        // =========================
         let dataURL = signaturePad.toDataURL();
 
         document.getElementById('signaturePreview').src = dataURL;
@@ -466,191 +473,15 @@
         document.getElementById('noSignatureText').style.display = 'none';
         document.getElementById('concentSignaturePasien').value = dataURL;
 
-        // =========================
-        // 2. Ambil Form
-        // =========================
-        const form = document.querySelector('form');
-        const formData = new FormData(form);
-
-        let data = {};
-        formData.forEach((value, key) => {
-            data[key] = value;
-        });
-
-        // =========================
-        // 4. Ambil ID dari Form
-        // =========================
-        let dokterId = data.dokter_pemeriksa || "";
-        let analisId = data.analis_priksa || "";
-
-        // =========================
-        // 5. Ambil Data Dokter
-        // =========================
-        let dokterNama = dokterMap[dokterId]?.nama || "";
-        let concentSignatureDokter = dokterMap[dokterId]?.ttd || "";
-
-        // =========================
-        // 6. Ambil Data Analis
-        // =========================
-        let analisNama = analisMap[analisId]?.nama || "";
-        let concentSignaturePetugas = analisMap[analisId]?.ttd || "";
-
-        // =========================
-        // 5. Waktu Jakarta
-        // =========================
-        let dateTimeSignature = new Date().toLocaleString('sv-SE', {
-            timeZone: 'Asia/Jakarta'
-        }).replace('T', ' ');
-
-        // =========================
-        // 6. PAYLOAD
-        // =========================
-        const informedData = {
-            // Dokter Pelaksana Tindakan:
-            dpjp_awal: document.querySelector('input[name="dokter_pengirim"]').value,
-            // Pemberi Informasi:
-            inform_nama: dokterNama,
-            // Hubungan Dengan Pasien:
-            informed_hubungan: data.hubungan_dengan_pasien,
-            // Nama:
-            informed_nama: getNamaHubunganPasien(),
-            // Indormasi Tindakan FNAB
-            // 1. Diagnosis Kerja:
-            diagnosis_kerja: data.diagnosa_klinik,
-            diagnosis_field2: "",
-            diagnosis_field3: "",
-            // 2. Dasar Diagnosis:
-            dasar_diagnosis: "Surat rujukan SMF lain",
-            // 3. Indikasi:
-            indikasi: "Nodul / massa",
-            // 4. Tata Cara:
-            tata_cara: "SWAB dengan kapas alkohol, suntik dengan jarum 25G / 27G atau Spinal 25G",
-            // 5. Tujuan:
-            tujuan: "Untuk memastikan diagnosis",
-            // 6. Risiko:
-            risiko: "Terjadi pneumothorax saat FNAB dengan CT SCAN Guiding",
-            // 7. Komplikasi:
-            komplikasi: "Infeksi, perdarahan ditempat suntikan",
-            // 8. Lain-lain:
-            lain_lain: "",
-
-            // TANDA TANGAN
-            consentDatePersetujuan: dateTimeSignature.replace(' ', 'T'),
-            // tanda tangan Pasien:
-            consentSignaturePersetujuan: dataURL,
-            consentGiverSignatureNamePersetujuan: data.nama_pasien,
-            // tanda tangan Dokter:
-            dokterSignaturePersetujuan: concentSignatureDokter,
-            dokterSignatureNamePersetujuan: dokterNama,
-            // tanda tangan Perawat
-            perawatSignaturePersetujuan: concentSignaturePetugas,
-            pegawai_nama: analisNama,
-        };
-
-        const consentData = {
-            // Hubungan Dengan Pasien:
-            persetujuan_hubungan: data.hubungan_dengan_pasien,
-            // Nama:
-            persetujuan_nama: getNamaHubunganPasien(),
-            // Tanggal Lahir:
-            persetujuan_tgl_lahir: data.tanggal,
-            // Jenis Kelamin:
-            persetujuan_jk: data.jenis_kelamin_hubungan_pasien === "L" ?
-                "Laki-laki" : data.jenis_kelamin_hubungan_pasien === "P" ?
-                "Perempuan" : "",
-            // Alamat:
-            persetujuan_alamat: data.alamat_pasien,
-            // Dengan Ini menyatakan setuju untuk dilakukan Tindakan FNAB terhadap pasien:
-            pasien_nama: data.nama_pasien,
-            pasien_jk: data.jenis_kelamin_hubungan_pasien === "L" ?
-                "Laki-laki" : data.jenis_kelamin_hubungan_pasien === "P" ?
-                "Perempuan" : "",
-            no_rm: data.norm_pasien,
-            alamat: data.alamat_pasien,
-            pasien_tgl_lahir: data.tanggal_lahir_pasien,
-
-            // TANDA TANGAN
-            consentDatePersetujuan: dateTimeSignature.replace(' ', 'T'),
-            // tanda tangan Pasien:
-            consentSignaturePersetujuan: dataURL,
-            consentGiverSignatureNamePersetujuan: data.nama_pasien,
-            // tanda tangan Dokter:
-            dokterSignaturePersetujuan: concentSignatureDokter,
-            dokterSignatureNamePersetujuan: dokterNama,
-            // tanda tangan Perawat
-            perawatSignaturePersetujuan: concentSignaturePetugas,
-            pegawai_nama: analisNama,
-        }
-
-        const payload = {
-
-            formrm_jenis: "INFORMED FNAB",
-            formrm_kode: "09PA",
-
-            m_pasien_id: null,
-            t_pendaftaran_id: data.idtransaksi,
-            id_transaksi: data.idtransaksi,
-            formrm_norm: data.norm_pasien,
-            tanggal: data.tanggal,
-            register: data.register,
-            noregister: data.kode_frs,
-
-            formrm_created_by: analisNama,
-            formrm_created_date: dateTimeSignature.replace(' ', 'T'),
-
-            formrm_json: {
-                nama: data.nama_pasien,
-                jenis_kelamin: data.jenis_kelamin_hubungan_pasien === "L" ?
-                    "Laki-laki" : data.jenis_kelamin_hubungan_pasien === "P" ?
-                    "Perempuan" : "",
-                no_rm: data.norm_pasien,
-                alamat: data.alamat_pasien,
-                tgl_lahir: data.tanggal_lahir_pasien,
-
-                informed_data: informedData,
-                persetujuan_data: consentData,
-            }
-
-        };
-
-        // =========================
-        // DEBUG
-        // =========================
-        console.log("=== JSON ===");
-        console.log(JSON.stringify(payload, null, 2));
-
-        // =========================
-        // 7. KIRIM KE CI4
-        // =========================
-        fetch("<?= base_url('signature/save') ?>", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "X-CSRF-TOKEN": document.querySelector('[name=csrf_test_name]').value
-                },
-                body: JSON.stringify(payload)
-            })
-            .then(response => response.json())
+        // 2. Save via helper
+        buildAndSendSignaturePayload(dataURL)
             .then(res => {
-
-                console.log("Response:", res);
-
-                if (res.simrs && res.simrs.success) {
-                    console.log("SIMRS berhasil dikirim");
-                    console.log("Response SIMRS:", res.simrs.response);
-                } else {
-                    console.error("SIMRS gagal dikirim");
-                    console.error(
-                        "Error SIMRS:",
-                        res.simrs?.error || res.simrs?.response
-                    );
-                }
-
+                console.log("Signature save response:", res);
                 $('#signatureModal').modal('hide');
-
             })
             .catch(err => {
                 console.error("Error Fetch:", err);
+                $('#signatureModal').modal('hide');
             });
     }
 </script>
@@ -669,7 +500,6 @@
             data[key] = value;
         });
 
-        // Build informedData and consentData same structure as existing saveSignature
         let dokterId = data.dokter_pemeriksa || "";
         let analisId = data.analis_priksa || "";
         let dokterNama = (window.dokterMap && dokterMap[dokterId]) ? dokterMap[dokterId].nama : "";
@@ -679,12 +509,18 @@
 
         let dateTimeSignature = new Date().toLocaleString('sv-SE', { timeZone: 'Asia/Jakarta' }).replace('T', ' ');
 
+        let namaHubunganVal = getNamaHubunganPasien();
+        let hubunganVal = data.hubungan_dengan_pasien || "";
+        let jkHubunganVal = document.getElementById('jenis_kelamin_hubungan_pasien').value;
+        let jkHubunganText = jkHubunganVal === 'L' ? 'Laki-laki' : (jkHubunganVal === 'P' ? 'Perempuan' : '');
+        let usiaHubunganVal = document.getElementById('usia_hubungan_pasien').value || "";
+
         const informedData = {
-            dpjp_awal: document.querySelector('input[name="dokter_pengirim"]').value,
+            dpjp_awal: document.querySelector('input[name="dokter_pengirim"]')?.value || "",
             inform_nama: dokterNama,
-            informed_hubungan: data.hubungan_dengan_pasien,
-            informed_nama: (document.getElementById('nama_hubungan_pasien').value === 'lainnya') ? document.getElementById('nama_lainnya').value : document.getElementById('nama_hubungan_pasien').value,
-            diagnosis_kerja: data.diagnosa_klinik,
+            informed_hubungan: hubunganVal,
+            informed_nama: namaHubunganVal,
+            diagnosis_kerja: data.diagnosa_klinik || "",
             diagnosis_field2: "",
             diagnosis_field3: "",
             dasar_diagnosis: "Surat rujukan SMF lain",
@@ -694,6 +530,7 @@
             risiko: "Terjadi pneumothorax saat FNAB dengan CT SCAN Guiding",
             komplikasi: "Infeksi, perdarahan ditempat suntikan",
             lain_lain: "",
+            usia_hubungan_pasien: usiaHubunganVal,
             consentDatePersetujuan: dateTimeSignature.replace(' ', 'T'),
             consentSignaturePersetujuan: dataURL,
             consentGiverSignatureNamePersetujuan: data.nama_pasien,
@@ -704,13 +541,14 @@
         };
 
         const consentData = {
-            persetujuan_hubungan: data.hubungan_dengan_pasien,
-            persetujuan_nama: (document.getElementById('nama_hubungan_pasien').value === 'lainnya') ? document.getElementById('nama_lainnya').value : document.getElementById('nama_hubungan_pasien').value,
+            persetujuan_hubungan: hubunganVal,
+            persetujuan_nama: namaHubunganVal,
             persetujuan_tgl_lahir: data.tanggal,
-            persetujuan_jk: document.getElementById('jenis_kelamin_hubungan_pasien').value === 'L' ? 'Laki-laki' : document.getElementById('jenis_kelamin_hubungan_pasien').value === 'P' ? 'Perempuan' : '',
+            usia_hubungan_pasien: usiaHubunganVal,
+            persetujuan_jk: jkHubunganText,
             persetujuan_alamat: data.alamat_pasien,
             pasien_nama: data.nama_pasien,
-            pasien_jk: document.getElementById('jenis_kelamin_hubungan_pasien').value === 'L' ? 'Laki-laki' : document.getElementById('jenis_kelamin_hubungan_pasien').value === 'P' ? 'Perempuan' : '',
+            pasien_jk: data.jenis_kelamin_pasien || jkHubunganText,
             no_rm: data.norm_pasien,
             alamat: data.alamat_pasien,
             pasien_tgl_lahir: data.tanggal_lahir_pasien,
@@ -735,9 +573,21 @@
             noregister: data.kode_frs,
             formrm_created_by: analisNama,
             formrm_created_date: dateTimeSignature.replace(' ', 'T'),
+            dokter_pelaksana: dokterNama,
+            petugas_pelaksana: analisNama,
+            pemberi_informasi: dokterNama,
+            hubungan_dengan_pasien: hubunganVal,
+            nama_hubungan_pasien: namaHubunganVal,
+            jenis_kelamin_hubungan_pasien: jkHubunganVal,
+            usia_hubungan_pasien: usiaHubunganVal,
+            diagnosis_kerja: data.diagnosa_klinik || "",
+            concentSignaturePasien: dataURL,
+            concentSignatureDokter: concentSignatureDokter,
+            concentSignaturePetugas: concentSignaturePetugas,
+            dateTimeSignature: dateTimeSignature,
             formrm_json: {
                 nama: data.nama_pasien,
-                jenis_kelamin: document.getElementById('jenis_kelamin_hubungan_pasien').value === 'L' ? 'Laki-laki' : document.getElementById('jenis_kelamin_hubungan_pasien').value === 'P' ? 'Perempuan' : '',
+                jenis_kelamin: data.jenis_kelamin_pasien || jkHubunganText,
                 no_rm: data.norm_pasien,
                 alamat: data.alamat_pasien,
                 tgl_lahir: data.tanggal_lahir_pasien,
@@ -746,7 +596,6 @@
             }
         };
 
-        // Send to CI4 signature controller
         return fetch("<?= base_url('signature/save') ?>", {
             method: "POST",
             headers: {
@@ -761,18 +610,15 @@
     function submitWithSignature() {
         try {
             var dataURL = document.getElementById('concentSignaturePasien').value || '';
-            // proceed to send (even if empty) to ensure signature table updated
             buildAndSendSignaturePayload(dataURL)
                 .then(res => {
                     console.log('Signature save response', res);
-                    // Now submit the form to FRS update_print
                     var form = document.querySelector('form');
                     form.action = "<?= base_url('frs/update_print/' . ($frs['id_frs'] ?? '')) ?>";
                     form.submit();
                 })
                 .catch(err => {
                     console.error('Error saving signature:', err);
-                    // still submit form so user changes aren't lost
                     var form = document.querySelector('form');
                     form.action = "<?= base_url('frs/update_print/' . ($frs['id_frs'] ?? '')) ?>";
                     form.submit();

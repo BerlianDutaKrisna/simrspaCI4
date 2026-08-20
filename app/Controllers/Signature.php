@@ -97,11 +97,11 @@ class Signature extends ResourceController
             }
 
             // hubungan / nama penandatangan
-            if (empty($data['hubungan_dengan_pasien']) && isset($decodedJson['persetujuan_data']['persetujuan_hubungan'])) {
-                $data['hubungan_dengan_pasien'] = $decodedJson['persetujuan_data']['persetujuan_hubungan'];
+            if (empty($data['hubungan_dengan_pasien'])) {
+                $data['hubungan_dengan_pasien'] = $decodedJson['persetujuan_data']['persetujuan_hubungan'] ?? $decodedJson['informed_data']['informed_hubungan'] ?? "";
             }
-            if (empty($data['nama_hubungan_pasien']) && isset($decodedJson['persetujuan_data']['persetujuan_nama'])) {
-                $data['nama_hubungan_pasien'] = $decodedJson['persetujuan_data']['persetujuan_nama'];
+            if (empty($data['nama_hubungan_pasien'])) {
+                $data['nama_hubungan_pasien'] = $decodedJson['persetujuan_data']['persetujuan_nama'] ?? $decodedJson['informed_data']['informed_nama'] ?? "";
             }
 
             // dateTimeSignature dari consentDatePersetujuan (format ISO T)
@@ -140,10 +140,18 @@ class Signature extends ResourceController
     }
 
     $idTrans = $data['id_transaksi'] ?? null;
+    $noReg = $data['noregister'] ?? null;
+    $reg = $data['register'] ?? null;
 
     $existing = null;
     if (!empty($idTrans)) {
         $existing = $this->model->where('id_transaksi', $idTrans)->first();
+    }
+    if (!$existing && !empty($noReg)) {
+        $existing = $this->model->where('noregister', $noReg)->first();
+    }
+    if (!$existing && !empty($reg)) {
+        $existing = $this->model->where('register', $reg)->first();
     }
 
     if ($existing && !empty($existing['id'])) {
