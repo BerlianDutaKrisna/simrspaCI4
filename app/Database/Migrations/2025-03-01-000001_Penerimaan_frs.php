@@ -27,6 +27,12 @@ class Penerimaan_frs extends Migration
                 'unsigned'   => true,
                 'null'       => true,
             ],
+            'id_user_dokter_penerimaan_frs' => [
+                'type'       => 'INT',
+                'constraint' => 11,
+                'unsigned'   => true,
+                'null'       => true,
+            ],
             'status_penerimaan_frs' => [
                 'type' => 'VARCHAR',
                 'constraint' => 100,

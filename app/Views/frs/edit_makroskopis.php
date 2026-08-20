@@ -170,14 +170,17 @@
                             </button>
                         </div>
                         <div class="form-group col-md-3">
-                            <label for="signature"> Tampilan digital Pasien</label>
+                            <label for="signature" class="font-weight-bold">Tampilan digital Pasien</label>
                             <!-- Preview Signature -->
-                            <div class="border rounded text-center p-5">
+                            <div class="border rounded text-center p-3 d-flex flex-column justify-content-center align-items-center" 
+                                style="border: 2px dashed #4e73df !important; min-height: 120px; background-color: #f8faff !important; box-shadow: inset 0 1px 3px rgba(0,0,0,0.04);">
                                 <img id="signaturePreview"
                                     src=""
                                     alt="Preview Tanda Tangan"
-                                    style="max-width:100%; display:none;">
-                                <small id="noSignatureText" class="text-muted">Belum ada tanda tangan</small>
+                                    style="max-width:100%; max-height:100px; display:none; object-fit:contain;">
+                                <small id="noSignatureText" class="text-muted">
+                                    <i class="fas fa-signature mr-1 text-secondary"></i>Belum ada tanda tangan
+                                </small>
                             </div>
 
                             <!-- Hidden input untuk simpan base64 -->
@@ -361,8 +364,31 @@
                         saya bertanggungjawab atas segala akibat yang mungkin timbul sebagai akibat dilakukan tindakan kedokteran tersebut.
                     </p>
                 </div>
-                <div class="border rounded p-2">
-                    <canvas id="signature-pad" style="width:100%; height:200px;"></canvas>
+                <!-- Highlighted Signature Pad Box -->
+                <div class="signature-box-wrapper p-3 rounded" style="background-color: #f8faff; border: 2px dashed #4e73df; box-shadow: 0 0 0 3px rgba(78, 115, 223, 0.15);">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <span class="font-weight-bold text-primary small">
+                            <i class="fas fa-pen-nib mr-1"></i> KOLOM TANDA TANGAN DIGITAL
+                        </span>
+                        <span class="badge badge-primary px-2 py-1">
+                            <i class="fas fa-info-circle mr-1"></i> Silakan tanda tangan di dalam kotak berikut
+                        </span>
+                    </div>
+                    
+                    <div class="position-relative bg-white rounded border" style="border-color: #d1d3e2 !important; box-shadow: inset 0 1px 3px rgba(0,0,0,0.06);">
+                        <canvas id="signature-pad" style="width:100%; height:220px; display:block; cursor:crosshair; touch-action:none;"></canvas>
+                        
+                        <!-- Visual Guide Line for Signature -->
+                        <div style="position: absolute; bottom: 25px; left: 20px; right: 20px; border-bottom: 1.5px dashed #cbd5e1; pointer-events: none; display: flex; justify-content: space-between; color: #94a3b8; font-size: 11px; font-weight: 500;">
+                            <span>✕ Tanda tangan di atas garis ini</span>
+                            <span class="d-none d-sm-inline">Area Penandatanganan</span>
+                        </div>
+                    </div>
+                    
+                    <div class="d-flex justify-content-between align-items-center mt-2 px-1 text-muted" style="font-size: 11px;">
+                        <span><i class="fas fa-shield-alt mr-1 text-success"></i> Dokumen Persetujuan Medis</span>
+                        <span><i class="fas fa-mouse-pointer mr-1"></i> Gunakan mouse, stylus, atau sentuhan layar</span>
+                    </div>
                 </div>
             </div>
 
@@ -458,9 +484,9 @@
     function resizeCanvas() {
         const ratio = 1;
         canvas.style.width = "100%";
-        canvas.style.height = "200px";
+        canvas.style.height = "220px";
         canvas.width = canvas.offsetWidth * ratio;
-        canvas.height = 200 * ratio;
+        canvas.height = 220 * ratio;
         canvas.getContext("2d").scale(ratio, ratio);
     }
 

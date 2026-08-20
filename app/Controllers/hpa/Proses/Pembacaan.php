@@ -34,23 +34,16 @@ class Pembacaan extends BaseController
     }
 
     public function index()
-    {
-        $namaUser = $this->session->get('nama_user');
+{
+    $data = [
+        'id_user'          => session()->get('id_user'),
+        'nama_user'        => $this->session->get('nama_user'),
+        'counts'           => $this->getCounts(),
+        'pembacaanDatahpa' => $this->pembacaan_hpa->getpembacaan_hpa(),
+    ];
 
-        if (in_array($namaUser, ["dr. Vinna Chrisdianti, Sp.PA", "dr. Ayu Tyasmara Pratiwi, Sp.PA"])) {
-            $pembacaanData_hpa = $this->pembacaan_hpa->getpembacaan_hpa_by_dokter($namaUser);
-        } else {
-            $pembacaanData_hpa = $this->pembacaan_hpa->getpembacaan_hpa();
-        }
-
-        $data = [
-            'id_user' => session()->get('id_user'),
-            'nama_user' => $namaUser,
-            'counts' => $this->getCounts(),
-            'pembacaanDatahpa' => $pembacaanData_hpa,
-        ];
-        return view('Hpa/Proses/pembacaan', $data);
-    }
+    return view('Hpa/Proses/pembacaan', $data);
+}
 
     public function proses_pembacaan()
     {
