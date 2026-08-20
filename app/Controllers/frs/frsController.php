@@ -470,6 +470,17 @@ class FrsController extends BaseController
         $pembacaan_frs = $id_pembacaan_frs ? $this->pembacaan_frs->find($id_pembacaan_frs) : [];
         // Ambil data pengguna dengan status "Dokter"
         $users = $this->usersModel->where('status_user', 'Dokter')->findAll();
+        // Ambil data signature jika ada
+        $signatureData = null;
+        try {
+            $signatureModel = new \App\Models\SignatureModel();
+            if (!empty($frs['id_transaksi'])) {
+                $signatureData = $signatureModel->where('id_transaksi', $frs['id_transaksi'])->first();
+            }
+        } catch (\Exception $e) {
+            $signatureData = null;
+        }
+
         // Persiapkan data yang akan dikirim ke view
         $data = [
             'frs'             => $frs,
@@ -482,6 +493,7 @@ class FrsController extends BaseController
             'users'           => $users,
             'id_user'         => session()->get('id_user'),
             'nama_user'       => session()->get('nama_user'),
+            'signature'       => $signatureData,
         ];
         
         return view('frs/edit_mikroskopis', $data);

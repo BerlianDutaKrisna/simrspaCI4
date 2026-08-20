@@ -184,14 +184,117 @@
                             <input type="hidden" name="concentSignaturePasien" id="concentSignaturePasien">
                         </div>
                     </div>
+
+                    <?php if (!empty($signature)) : ?>
+                        <script>
+                            document.addEventListener('DOMContentLoaded', function() {
+                                try {
+                                    var sigObj = <?= json_encode($signature) ?> || {};
+
+                                    // Preview signature (top-level column or inside formrm_json)
+                                    var sigImg = sigObj.concentSignaturePasien || (sigObj.formrm_json && (typeof sigObj.formrm_json === 'string' ? (JSON.parse(sigObj.formrm_json).informed_data || {}).consentSignaturePersetujuan : (sigObj.formrm_json.informed_data || {}).consentSignaturePersetujuan)) || null;
+                                    if (sigImg) {
+                                        var img = document.getElementById('signaturePreview');
+                                        var noSig = document.getElementById('noSignatureText');
+                                        img.src = sigImg;
+                                        img.style.display = 'block';
+                                        if (noSig) noSig.style.display = 'none';
+                                        var hidden = document.getElementById('concentSignaturePasien');
+                                        if (hidden) hidden.value = sigImg;
+                                    }
+
+                                    // Helper to set select by value or text
+                                    function setSelect(selectId, value) {
+                                        if (!value) return;
+                                        var el = document.getElementById(selectId);
+                                        if (!el) return;
+                                        for (var i = 0; i < el.options.length; i++) {
+                                            if (el.options[i].value === value || el.options[i].text.trim() === value) {
+                                                el.selectedIndex = i;
+                                                return true;
+                                            }
+                                        }
+                                        return false;
+                                    }
+
+                                    // Use top-level columns first
+                                    if (sigObj.nama_hubungan_pasien) {
+                                        var matched = setSelect('nama_hubungan_pasien', sigObj.nama_hubungan_pasien);
+                                        if (!matched) {
+                                            var sel = document.getElementById('nama_hubungan_pasien');
+                                            sel.value = 'lainnya';
+                                            var inputNama = document.getElementById('nama_lainnya');
+                                            if (inputNama) { inputNama.classList.remove('d-none'); inputNama.value = sigObj.nama_hubungan_pasien; }
+                                        }
+                                    }
+
+                                    if (sigObj.hubungan_dengan_pasien) {
+                                        var hub = document.getElementById('hubungan_dengan_pasien');
+                                        if (hub) hub.value = sigObj.hubungan_dengan_pasien;
+                                    }
+
+                                    // jenis kelamin for hubungan: prefer top-level ttd field or formrm_json
+                                    if (sigObj.jenis_kelamin_hubungan_pasien) {
+                                        var seljk = document.getElementById('jenis_kelamin_hubungan_pasien');
+                                        if (seljk) seljk.value = sigObj.jenis_kelamin_hubungan_pasien;
+                                    } else if (sigObj.jenis_kelamin) {
+                                        var seljk = document.getElementById('jenis_kelamin_hubungan_pasien');
+                                        if (seljk) seljk.value = sigObj.jenis_kelamin === 'Laki-laki' || sigObj.jenis_kelamin === 'L' ? 'L' : sigObj.jenis_kelamin === 'Perempuan' || sigObj.jenis_kelamin === 'P' ? 'P' : seljk.value;
+                                    }
+
+                                    // usia hubungan pasien from top-level tgl_lahir_hubungan_pasien or formrm_json
+                                    var tglHub = sigObj.tgl_lahir_hubungan_pasien || null;
+                                    if (!tglHub && sigObj.formrm_json) {
+                                        try { var parsed = (typeof sigObj.formrm_json === 'string') ? JSON.parse(sigObj.formrm_json) : sigObj.formrm_json; tglHub = parsed.persetujuan_data && parsed.persetujuan_data.persetujuan_tgl_lahir ? parsed.persetujuan_data.persetujuan_tgl_lahir : tglHub; } catch(e){ }
+                                    }
+                                    if (tglHub) {
+                                        var usia = hitungUsia(tglHub);
+                                        var usiaInput = document.getElementById('usia_hubungan_pasien');
+                                        if (usiaInput) usiaInput.value = usia;
+                                    }
+
+                                    // dokter/analis: try to match by text or value
+                                    if (sigObj.dokter_pelaksana) setSelect('dokter_pemeriksa', sigObj.dokter_pelaksana);
+                                    if (sigObj.petugas_pelaksana) setSelect('analis_priksa', sigObj.petugas_pelaksana);
+
+                                    // fallback: use formrm_json persetujuan_data/informed_data
+                                    if (sigObj.formrm_json) {
+                                        try {
+                                            var parsed = (typeof sigObj.formrm_json === 'string') ? JSON.parse(sigObj.formrm_json) : sigObj.formrm_json;
+                                            var pers = parsed.persetujuan_data || parsed.informed_data || {};
+
+                                            if (!document.getElementById('nama_lainnya').value) {
+                                                if (pers.persetujuan_nama) {
+                                                    var matched2 = setSelect('nama_hubungan_pasien', pers.persetujuan_nama);
+                                                    if (!matched2) { var sel = document.getElementById('nama_hubungan_pasien'); sel.value = 'lainnya'; var inputNama = document.getElementById('nama_lainnya'); if (inputNama) { inputNama.classList.remove('d-none'); inputNama.value = pers.persetujuan_nama; } }
+                                                }
+                                            }
+
+                                            if (!document.getElementById('hubungan_dengan_pasien').value && pers.persetujuan_hubungan) {
+                                                var hub2 = document.getElementById('hubungan_dengan_pasien'); if (hub2) hub2.value = pers.persetujuan_hubungan;
+                                            }
+
+                                            if (!document.getElementById('jenis_kelamin_hubungan_pasien').value && pers.persetujuan_jk) {
+                                                var seljk2 = document.getElementById('jenis_kelamin_hubungan_pasien'); if (seljk2) seljk2.value = pers.persetujuan_jk.startsWith('L') ? 'L' : 'P';
+                                            }
+
+                                        } catch (e) { /* ignore parse errors */ }
+                                    }
+
+                                } catch (e) {
+                                    console.error('Error restoring signature preview', e);
+                                }
+                            });
+                        </script>
+                    <?php endif; ?>
                 </div>
             </div>
 
-            <!-- Tombol Tutup -->
+            <!-- Tombol simpan -->
             <div class="form-group row">
                 <div class="col-sm-6 text-center mb-3">
-                    <button type="submit" class="btn btn-success btn-user w-100 mb-3" formaction="<?= base_url('frs/update_print/' . ($frs['id_frs'] ?? '')); ?>">
-                        <i class="fas fa-window-close"></i> Tutup
+                    <button type="button" class="btn btn-success btn-user w-100 mb-3" onclick="submitWithSignature()">
+                        <i class="fas fa-save"></i> Simpan
                     </button>
                 </div>
                 <div class="col-sm-6 text-center">
@@ -555,3 +658,130 @@
 <?= $this->include('templates/notifikasi') ?>
 <?= $this->include('templates/frs/footer_edit'); ?>
 <?= $this->include('templates/frs/cetak_informasi'); ?>
+
+<script>
+    // Helper: build payload and send to signature/save
+    function buildAndSendSignaturePayload(dataURL) {
+        const form = document.querySelector('form');
+        const formData = new FormData(form);
+        let data = {};
+        formData.forEach((value, key) => {
+            data[key] = value;
+        });
+
+        // Build informedData and consentData same structure as existing saveSignature
+        let dokterId = data.dokter_pemeriksa || "";
+        let analisId = data.analis_priksa || "";
+        let dokterNama = (window.dokterMap && dokterMap[dokterId]) ? dokterMap[dokterId].nama : "";
+        let concentSignatureDokter = (window.dokterMap && dokterMap[dokterId]) ? dokterMap[dokterId].ttd : "";
+        let analisNama = (window.analisMap && analisMap[analisId]) ? analisMap[analisId].nama : "";
+        let concentSignaturePetugas = (window.analisMap && analisMap[analisId]) ? analisMap[analisId].ttd : "";
+
+        let dateTimeSignature = new Date().toLocaleString('sv-SE', { timeZone: 'Asia/Jakarta' }).replace('T', ' ');
+
+        const informedData = {
+            dpjp_awal: document.querySelector('input[name="dokter_pengirim"]').value,
+            inform_nama: dokterNama,
+            informed_hubungan: data.hubungan_dengan_pasien,
+            informed_nama: (document.getElementById('nama_hubungan_pasien').value === 'lainnya') ? document.getElementById('nama_lainnya').value : document.getElementById('nama_hubungan_pasien').value,
+            diagnosis_kerja: data.diagnosa_klinik,
+            diagnosis_field2: "",
+            diagnosis_field3: "",
+            dasar_diagnosis: "Surat rujukan SMF lain",
+            indikasi: "Nodul / massa",
+            tata_cara: "SWAB dengan kapas alkohol, suntik dengan jarum 25G / 27G atau Spinal 25G",
+            tujuan: "Untuk memastikan diagnosis",
+            risiko: "Terjadi pneumothorax saat FNAB dengan CT SCAN Guiding",
+            komplikasi: "Infeksi, perdarahan ditempat suntikan",
+            lain_lain: "",
+            consentDatePersetujuan: dateTimeSignature.replace(' ', 'T'),
+            consentSignaturePersetujuan: dataURL,
+            consentGiverSignatureNamePersetujuan: data.nama_pasien,
+            dokterSignaturePersetujuan: concentSignatureDokter,
+            dokterSignatureNamePersetujuan: dokterNama,
+            perawatSignaturePersetujuan: concentSignaturePetugas,
+            pegawai_nama: analisNama,
+        };
+
+        const consentData = {
+            persetujuan_hubungan: data.hubungan_dengan_pasien,
+            persetujuan_nama: (document.getElementById('nama_hubungan_pasien').value === 'lainnya') ? document.getElementById('nama_lainnya').value : document.getElementById('nama_hubungan_pasien').value,
+            persetujuan_tgl_lahir: data.tanggal,
+            persetujuan_jk: document.getElementById('jenis_kelamin_hubungan_pasien').value === 'L' ? 'Laki-laki' : document.getElementById('jenis_kelamin_hubungan_pasien').value === 'P' ? 'Perempuan' : '',
+            persetujuan_alamat: data.alamat_pasien,
+            pasien_nama: data.nama_pasien,
+            pasien_jk: document.getElementById('jenis_kelamin_hubungan_pasien').value === 'L' ? 'Laki-laki' : document.getElementById('jenis_kelamin_hubungan_pasien').value === 'P' ? 'Perempuan' : '',
+            no_rm: data.norm_pasien,
+            alamat: data.alamat_pasien,
+            pasien_tgl_lahir: data.tanggal_lahir_pasien,
+            consentDatePersetujuan: dateTimeSignature.replace(' ', 'T'),
+            consentSignaturePersetujuan: dataURL,
+            consentGiverSignatureNamePersetujuan: data.nama_pasien,
+            dokterSignaturePersetujuan: concentSignatureDokter,
+            dokterSignatureNamePersetujuan: dokterNama,
+            perawatSignaturePersetujuan: concentSignaturePetugas,
+            pegawai_nama: analisNama,
+        };
+
+        const payload = {
+            formrm_jenis: "INFORMED FNAB",
+            formrm_kode: "09PA",
+            m_pasien_id: null,
+            t_pendaftaran_id: data.idtransaksi,
+            id_transaksi: data.idtransaksi,
+            formrm_norm: data.norm_pasien,
+            tanggal: data.tanggal,
+            register: data.register,
+            noregister: data.kode_frs,
+            formrm_created_by: analisNama,
+            formrm_created_date: dateTimeSignature.replace(' ', 'T'),
+            formrm_json: {
+                nama: data.nama_pasien,
+                jenis_kelamin: document.getElementById('jenis_kelamin_hubungan_pasien').value === 'L' ? 'Laki-laki' : document.getElementById('jenis_kelamin_hubungan_pasien').value === 'P' ? 'Perempuan' : '',
+                no_rm: data.norm_pasien,
+                alamat: data.alamat_pasien,
+                tgl_lahir: data.tanggal_lahir_pasien,
+                informed_data: informedData,
+                persetujuan_data: consentData,
+            }
+        };
+
+        // Send to CI4 signature controller
+        return fetch("<?= base_url('signature/save') ?>", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRF-TOKEN": document.querySelector('[name=csrf_test_name]').value
+            },
+            body: JSON.stringify(payload)
+        }).then(response => response.json());
+    }
+
+    // Called by main Simpan button: save signature then submit form to frs/update_print
+    function submitWithSignature() {
+        try {
+            var dataURL = document.getElementById('concentSignaturePasien').value || '';
+            // proceed to send (even if empty) to ensure signature table updated
+            buildAndSendSignaturePayload(dataURL)
+                .then(res => {
+                    console.log('Signature save response', res);
+                    // Now submit the form to FRS update_print
+                    var form = document.querySelector('form');
+                    form.action = "<?= base_url('frs/update_print/' . ($frs['id_frs'] ?? '')) ?>";
+                    form.submit();
+                })
+                .catch(err => {
+                    console.error('Error saving signature:', err);
+                    // still submit form so user changes aren't lost
+                    var form = document.querySelector('form');
+                    form.action = "<?= base_url('frs/update_print/' . ($frs['id_frs'] ?? '')) ?>";
+                    form.submit();
+                });
+        } catch (e) {
+            console.error(e);
+            var form = document.querySelector('form');
+            form.action = "<?= base_url('frs/update_print/' . ($frs['id_frs'] ?? '')) ?>";
+            form.submit();
+        }
+    }
+</script>

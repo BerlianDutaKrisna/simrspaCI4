@@ -37,6 +37,17 @@ class CreateSignatureTable extends Migration
 
             'diagnosis_kerja' => ['type' => 'TEXT', 'null' => true],
 
+            // Metadata / FRS form fields
+            'formrm_jenis' => ['type' => 'VARCHAR', 'constraint' => 100, 'null' => true],
+            'formrm_kode' => ['type' => 'VARCHAR', 'constraint' => 50, 'null' => true],
+            'formrm_norm' => ['type' => 'VARCHAR', 'constraint' => 100, 'null' => true],
+            't_pendaftaran_id' => ['type' => 'VARCHAR', 'constraint' => 50, 'null' => true],
+            'formrm_created_by' => ['type' => 'VARCHAR', 'constraint' => 150, 'null' => true],
+            'formrm_created_date' => ['type' => 'DATETIME', 'null' => true],
+
+            // Payload JSON (simpan struktur formrm_json dari view)
+            'formrm_json' => ['type' => 'LONGTEXT', 'null' => true],
+
             // Signature (base64 JSON)
             'concentSignaturePasien' => ['type' => 'LONGTEXT', 'null' => true],
             'concentSignatureDokter' => ['type' => 'LONGTEXT', 'null' => true],

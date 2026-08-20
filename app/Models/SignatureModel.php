@@ -32,6 +32,14 @@ class SignatureModel extends Model
 
         'diagnosis_kerja',
 
+        'formrm_jenis',
+        'formrm_kode',
+        'formrm_norm',
+        't_pendaftaran_id',
+        'formrm_created_by',
+        'formrm_created_date',
+        'formrm_json',
+
         'concentSignaturePasien',
         'concentSignatureDokter',
         'concentSignaturePetugas',
