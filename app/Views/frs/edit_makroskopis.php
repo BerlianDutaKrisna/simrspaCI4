@@ -350,6 +350,17 @@
             </div>
 
             <div class="modal-body">
+                <div class="alert alert-info">
+                    <p class="mb-2">
+                        Dengan ini menyatakan bahwa saya telah menerima informasi sebagaimana yang saya beri tanda tangan/ parah di kolom ini, dan telah memahaminya
+                    </p>
+                    <p class="mb-2">
+                        Komplikasi yang mungkin timbul apabila tindakan tersebut tidak dilakukan.
+                    </p>
+                    <p class="mb-0">
+                        saya bertanggungjawab atas segala akibat yang mungkin timbul sebagai akibat dilakukan tindakan kedokteran tersebut.
+                    </p>
+                </div>
                 <div class="border rounded p-2">
                     <canvas id="signature-pad" style="width:100%; height:200px;"></canvas>
                 </div>
