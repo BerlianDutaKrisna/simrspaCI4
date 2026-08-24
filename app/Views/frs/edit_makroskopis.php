@@ -44,6 +44,30 @@
                 </div>
             </div>
 
+            <!-- tanggal lahir dan Alamat -->
+            <div class="form-group row">
+                <label class="col-sm-2 col-form-label">Tanggal Lahir</label>
+                <div class="col-sm-4">
+                    <p>&nbsp;<?php
+                                if (!empty($frs['tanggal_lahir_pasien'])) {
+                                    $tgl_lahir = new DateTime($frs['tanggal_lahir_pasien']);
+                                    $today = new DateTime();
+                                    $usia = $today->diff($tgl_lahir)->y;
+
+                                    // Format: DD-MM-YYYY (Usia: X tahun)
+                                    echo $tgl_lahir->format('d-m-Y') . ' (' . $usia . ' thn)';
+                                } else {
+                                    echo '-';
+                                }
+                                ?></p>
+                </div>
+
+                <label class="col-sm-2 col-form-label">Alamat</label>
+                <div class="col-sm-4">
+                    <p>&nbsp;<?= $frs['alamat_pasien'] ?? '' ?></p>
+                </div>
+            </div>
+
             <!-- Norm Pasien dan Unit Asal -->
             <div class="form-group row">
                 <label class="col-sm-2 col-form-label">Norm Pasien</label>
@@ -159,11 +183,6 @@
                             <!-- Hidden input untuk simpan base64 gambar pemeriksaan fisik -->
                             <input type="hidden" name="pemeriksaan_fisik_gambar" id="pemeriksaan_fisik_gambar">
                         </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="font-weight-bold">Catatan Deskripsi Pemeriksaan Fisik</label>
-                        <textarea class="form-control" name="pemeriksaan_fisik" rows="3" placeholder="Tuliskan deskripsi pemeriksaan fisik (misal: lokasi benjolan/nodul, ukuran, konsistensi, batas, mobilitas, nyeri tekan)..."></textarea>
                     </div>
 
                     <!-- DIAGNOSIS, TERAPI, RENCANA, CATATAN -->

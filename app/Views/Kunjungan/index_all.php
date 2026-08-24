@@ -78,7 +78,14 @@
                                     <td><?= esc($row['diagnosaklinik'] ?? '') ?></td>
                                     <td>
                                         <?php if ($row['status'] === 'Belum Terdaftar'): ?>
-                                            <strong class="text-danger"><?= esc($row['status']) ?></strong>
+                                            <strong class="text-danger"><?= esc($row['status']) ?></strong><br>
+                                            <button
+                                                class="btn btn-success btn-xs mt-1 btn-tandai"
+                                                style="font-size:0.75rem;"
+                                                data-id="<?= $row['id'] ?>"
+                                                data-nama="<?= esc($row['nama'] ?? '') ?>">
+                                                <i class="fas fa-check"></i> Tandai Terdaftar
+                                            </button>
                                         <?php elseif ($row['status'] === 'Terdaftar'): ?>
                                             <strong class="text-success"><?= esc($row['status']) ?></strong>
                                         <?php else: ?>
@@ -102,4 +109,45 @@
 </div>
 
 <?= $this->include('templates/notifikasi') ?>
+
+<script>
+document.addEventListener('click', function (e) {
+    const btn = e.target.closest('.btn-tandai');
+    if (!btn) return;
+
+    const id   = btn.dataset.id;
+    const nama = btn.dataset.nama;
+
+    if (!confirm('Tandai pasien "' + nama + '" sebagai Terdaftar?')) return;
+
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Memproses...';
+
+    fetch(`<?= base_url('api/kunjungan/update-status') ?>/${id}`, {
+        method : 'POST',
+        headers: { 'X-Requested-With': 'XMLHttpRequest' }
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.status === 'success') {
+            const td  = btn.closest('td');
+            const tr  = btn.closest('tr');
+            td.innerHTML = '<strong class="text-success">Terdaftar</strong>';
+            tr.classList.remove('table-danger');
+            const tdTgl = tr.querySelector('td:nth-child(2) span');
+            if (tdTgl) tdTgl.classList.replace('text-danger', 'text-success');
+        } else {
+            alert('Gagal: ' + data.message);
+            btn.disabled = false;
+            btn.innerHTML = '<i class="fas fa-check"></i> Tandai Terdaftar';
+        }
+    })
+    .catch(() => {
+        alert('Terjadi kesalahan jaringan.');
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fas fa-check"></i> Tandai Terdaftar';
+    });
+});
+</script>
+
 <?= $this->include('templates/dashboard/footer_dashboard') ?>

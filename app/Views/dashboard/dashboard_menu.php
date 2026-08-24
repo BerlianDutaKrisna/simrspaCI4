@@ -1,3 +1,16 @@
+
+<?php if (isset($count_ok_emergency) && $count_ok_emergency > 0): ?>
+<style>
+@keyframes ok-emg-flash {
+    0%, 100% { opacity: 1; }
+    50%       { opacity: 0.3; }
+}
+.ok-emg-alert {
+    animation: ok-emg-flash 1.4s ease-in-out infinite;
+}
+</style>
+<?php endif; ?>
+
 <!-- Begin Page Content -->
 <div class="container-fluid">
     <div class="row">
@@ -22,16 +35,24 @@
             </a>
         </div>
 
-        <!-- CARD 2 -->
+        <!-- CARD 2: Sampel Terdaftar Hari ini -->
         <div class="col mb-4">
             <a href="<?= base_url('/api/kunjungan/index') ?>" class="stretched-link" style="text-decoration: none;">
-                <div class="card border-left-secondary shadow h-100 py-2">
+                <div class="card <?= (isset($count_ok_emergency) && $count_ok_emergency > 0) ? 'border-left-danger' : 'border-left-secondary' ?> shadow h-100 py-2">
                     <div class="card-body">
                         <div class="row no-gutters align-items-center">
                             <div class="col mr-2">
-                                <div class="text-s font-weight-bold text-danger text-uppercase mb-1">
+                                <div class="text-s font-weight-bold text-secondary text-uppercase mb-1">
                                     Sampel Terdaftar Hari ini
                                 </div>
+                                <?php if (isset($count_ok_emergency) && $count_ok_emergency > 0): ?>
+                                <div class="mt-1 ok-emg-alert">
+                                    <i class="fas fa-exclamation-circle text-danger"></i>
+                                    <small class="text-danger font-weight-bold">
+                                        OK Emergency: <?= $count_ok_emergency ?> Belum Terdaftar
+                                    </small>
+                                </div>
+                                <?php endif; ?>
                             </div>
                             <div class="col-auto">
                                 <i class="fas fa-exclamation fa-4x text-secondary"></i>

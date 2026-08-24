@@ -9,6 +9,7 @@ use App\Models\Srs\SrsModel;
 use App\Models\Ihc\IhcModel;
 use App\Models\UsersModel;
 use App\Models\PatientModel;
+use App\Models\KunjunganModel;
 
 class Dashboard extends BaseController
 {
@@ -18,16 +19,18 @@ class Dashboard extends BaseController
     protected $ihcModel;
     protected $usersModel;
     protected $patientModel;
+    protected $kunjunganModel;
 
     public function __construct()
     {
-        $this->hpaModel = new hpaModel();
-        $this->frsModel = new frsModel();
-        $this->srsModel = new srsModel();
-        $this->ihcModel = new ihcModel();
-        $this->usersModel = new UsersModel();
-        $this->patientModel = new PatientModel();
-        $this->session = \Config\Services::session();
+        $this->hpaModel       = new hpaModel();
+        $this->frsModel       = new frsModel();
+        $this->srsModel       = new srsModel();
+        $this->ihcModel       = new ihcModel();
+        $this->usersModel     = new UsersModel();
+        $this->patientModel   = new PatientModel();
+        $this->kunjunganModel = new KunjunganModel();
+        $this->session        = \Config\Services::session();
     }
 
     public function index()
@@ -61,8 +64,11 @@ class Dashboard extends BaseController
 
             'pieChartDokterData' => [
                 'vinna' => $this->usersModel->getTotalByUserName("dr. Vinna Chrisdianti, Sp.PA"),
-                'ayu' => $this->usersModel->getTotalByUserName("dr. Ayu Tyasmara Pratiwi, Sp.PA"),
-            ]
+                'ayu'   => $this->usersModel->getTotalByUserName("dr. Ayu Tyasmara Pratiwi, Sp.PA"),
+            ],
+
+            // Jumlah pasien OK EMERGENCY yang Belum Terdaftar (untuk notifikasi dashboard)
+            'count_ok_emergency' => $this->kunjunganModel->countOkEmergencyBelumTerdaftar(),
         ];
         
         return view('dashboard/dashboard', $data);

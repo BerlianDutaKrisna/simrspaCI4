@@ -22,6 +22,44 @@
                 </a>
             </div>
             <!-- Tabel Data Kunjungan -->
+            <?php
+                // Hitung jumlah baris OK EMERGENCY yang Belum Terdaftar dari data yang sudah ada
+                $count_ok_emg = 0;
+                if (!empty($data)) {
+                    foreach ($data as $_row) {
+                        if (
+                            isset($_row['unitasal'], $_row['status']) &&
+                            $_row['unitasal'] === 'OK EMERGENCY' &&
+                            $_row['status'] === 'Belum Terdaftar'
+                        ) {
+                            $count_ok_emg++;
+                        }
+                    }
+                }
+            ?>
+            <?php if ($count_ok_emg > 0): ?>
+            <div class="alert alert-danger d-flex align-items-center mb-3 shadow-sm" role="alert"
+                 style="border-left: 6px solid #c0392b; border-radius: 6px;">
+                <span class="icon-pulse-danger mr-3" style="font-size: 1.8rem;">
+                    <i class="fas fa-exclamation-triangle text-danger"></i>
+                </span>
+                <div>
+                    <strong>Perhatian!</strong>
+                    Terdapat <strong><?= $count_ok_emg ?> pasien</strong> dari unit
+                    <strong>OK EMERGENCY</strong> dengan status <strong class="text-danger">Belum Terdaftar</strong>.
+                    Harap segera diproses.
+                </div>
+            </div>
+            <style>
+            @keyframes pulse-danger {
+                0%   { transform: scale(1);   opacity: 1; }
+                50%  { transform: scale(1.2); opacity: 0.7; }
+                100% { transform: scale(1);   opacity: 1; }
+            }
+            .icon-pulse-danger { animation: pulse-danger 1.1s ease-in-out infinite; display: inline-block; }
+            </style>
+            <?php endif; ?>
+            <!-- Tabel Data Kunjungan -->
             <div class="table-responsive">
                 <table class="table table-bordered table-hover text-center shadow-sm" id="dataTable" width="100%" cellspacing="0">
                     <thead class="thead-dark">
@@ -94,7 +132,14 @@
                                     <td><?= esc($row['diagnosaklinik'] ?? '') ?></td>
                                     <td>
                                         <?php if ($row['status'] === 'Belum Terdaftar'): ?>
-                                            <strong class="text-danger"><?= esc($row['status']) ?></strong>
+                                            <strong class="text-danger"><?= esc($row['status']) ?></strong><br>
+                                            <button
+                                                class="btn btn-success btn-xs mt-1 btn-tandai"
+                                                style="font-size:0.75rem;"
+                                                data-id="<?= $row['id'] ?>"
+                                                data-nama="<?= esc($row['nama'] ?? '') ?>">
+                                                <i class="fas fa-check"></i> Tandai Terdaftar
+                                            </button>
                                         <?php elseif ($row['status'] === 'Terdaftar'): ?>
                                             <strong class="text-success"><?= esc($row['status']) ?></strong>
                                         <?php else: ?>
@@ -130,4 +175,46 @@
 </div>
 
 <?= $this->include('templates/notifikasi') ?>
+
+<script>
+document.addEventListener('click', function (e) {
+    const btn = e.target.closest('.btn-tandai');
+    if (!btn) return;
+
+    const id   = btn.dataset.id;
+    const nama = btn.dataset.nama;
+
+    if (!confirm('Tandai pasien "' + nama + '" sebagai Terdaftar?')) return;
+
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Memproses...';
+
+    fetch(`<?= base_url('api/kunjungan/update-status') ?>/${id}`, {
+        method : 'POST',
+        headers: { 'X-Requested-With': 'XMLHttpRequest' }
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.status === 'success') {
+            const td  = btn.closest('td');
+            const tr  = btn.closest('tr');
+            td.innerHTML = '<strong class="text-success">Terdaftar</strong>';
+            tr.classList.remove('table-danger');
+            // update warna jam di kolom tanggal
+            const tdTgl = tr.querySelector('td:nth-child(2) span');
+            if (tdTgl) tdTgl.classList.replace('text-danger', 'text-success');
+        } else {
+            alert('Gagal: ' + data.message);
+            btn.disabled = false;
+            btn.innerHTML = '<i class="fas fa-check"></i> Tandai Terdaftar';
+        }
+    })
+    .catch(() => {
+        alert('Terjadi kesalahan jaringan.');
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fas fa-check"></i> Tandai Terdaftar';
+    });
+});
+</script>
+
 <?= $this->include('templates/dashboard/footer_dashboard') ?>

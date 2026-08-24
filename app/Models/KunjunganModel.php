@@ -113,4 +113,14 @@ class KunjunganModel extends Model
         return $this->orderBy('tanggal', 'DESC')
             ->findAll();
     }
+
+    /**
+     * Hitung jumlah pasien dari OK EMERGENCY yang Belum Terdaftar.
+     */
+    public function countOkEmergencyBelumTerdaftar(): int
+    {
+        return (int) $this->where('unitasal', 'OK EMERGENCY')
+            ->where('status', 'Belum Terdaftar')
+            ->countAllResults();
+    }
 }

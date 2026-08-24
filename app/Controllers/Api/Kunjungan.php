@@ -36,6 +36,34 @@ class Kunjungan extends ResourceController
         return view('Kunjungan/index_all', $data);
     }
 
+    /**
+     * Update status kunjungan dari 'Belum Terdaftar' menjadi 'Terdaftar'.
+     * Dipanggil via POST AJAX dari view.
+     */
+    public function updateStatus($id = null)
+    {
+        if (!$id) {
+            return $this->respond(['status' => 'error', 'message' => 'ID tidak diberikan.'], 400);
+        }
+
+        $kunjungan = $this->model->find($id);
+
+        if (!$kunjungan) {
+            return $this->respond(['status' => 'error', 'message' => 'Data tidak ditemukan.'], 404);
+        }
+
+        if ($kunjungan['status'] !== 'Belum Terdaftar') {
+            return $this->respond(['status' => 'error', 'message' => 'Status sudah Terdaftar.'], 422);
+        }
+
+        $this->model->update($id, ['status' => 'Terdaftar']);
+
+        return $this->respond([
+            'status'  => 'success',
+            'message' => 'Status berhasil diubah menjadi Terdaftar.',
+        ]);
+    }
+
     public function modal_search($norm = null)
     {
         if (!$norm) {
