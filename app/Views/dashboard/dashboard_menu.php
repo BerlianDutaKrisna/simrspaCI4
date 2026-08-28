@@ -1,5 +1,9 @@
 
-<?php if (isset($count_ok_emergency) && $count_ok_emergency > 0): ?>
+<?php
+$_ada_notif = (isset($count_ok_emergency) && $count_ok_emergency > 0)
+           || (isset($count_ok_elektif)   && $count_ok_elektif   > 0);
+?>
+<?php if ($_ada_notif): ?>
 <style>
 @keyframes ok-emg-flash {
     0%, 100% { opacity: 1; }
@@ -38,7 +42,7 @@
         <!-- CARD 2: Sampel Terdaftar Hari ini -->
         <div class="col mb-4">
             <a href="<?= base_url('/api/kunjungan/index') ?>" class="stretched-link" style="text-decoration: none;">
-                <div class="card <?= (isset($count_ok_emergency) && $count_ok_emergency > 0) ? 'border-left-danger' : 'border-left-secondary' ?> shadow h-100 py-2">
+                <div class="card <?= $_ada_notif ? 'border-left-danger' : 'border-left-secondary' ?> shadow h-100 py-2">
                     <div class="card-body">
                         <div class="row no-gutters align-items-center">
                             <div class="col mr-2">
@@ -50,6 +54,14 @@
                                     <i class="fas fa-exclamation-circle text-danger"></i>
                                     <small class="text-danger font-weight-bold">
                                         OK Emergency: <?= $count_ok_emergency ?> Belum Terdaftar
+                                    </small>
+                                </div>
+                                <?php endif; ?>
+                                <?php if (isset($count_ok_elektif) && $count_ok_elektif > 0): ?>
+                                <div class="mt-1 ok-emg-alert">
+                                    <i class="fas fa-exclamation-circle text-danger"></i>
+                                    <small class="text-danger font-weight-bold">
+                                        OK Elektif: <?= $count_ok_elektif ?> Belum Terdaftar
                                     </small>
                                 </div>
                                 <?php endif; ?>

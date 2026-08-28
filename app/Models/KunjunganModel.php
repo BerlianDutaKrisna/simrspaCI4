@@ -123,4 +123,14 @@ class KunjunganModel extends Model
             ->where('status', 'Belum Terdaftar')
             ->countAllResults();
     }
+
+    /**
+     * Hitung jumlah pasien dari OK ELEKTIF yang Belum Terdaftar.
+     */
+    public function countOkElektifBelumTerdaftar(): int
+    {
+        return (int) $this->where('unitasal', 'OK ELEKTIF')
+            ->where('status', 'Belum Terdaftar')
+            ->countAllResults();
+    }
 }

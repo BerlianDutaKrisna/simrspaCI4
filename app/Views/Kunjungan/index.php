@@ -23,22 +23,19 @@
             </div>
             <!-- Tabel Data Kunjungan -->
             <?php
-                // Hitung jumlah baris OK EMERGENCY yang Belum Terdaftar dari data yang sudah ada
-                $count_ok_emg = 0;
+                // Hitung jumlah baris OK EMERGENCY & OK ELEKTIF yang Belum Terdaftar
+                $count_ok_emg  = 0;
+                $count_ok_elkt = 0;
                 if (!empty($data)) {
                     foreach ($data as $_row) {
-                        if (
-                            isset($_row['unitasal'], $_row['status']) &&
-                            $_row['unitasal'] === 'OK EMERGENCY' &&
-                            $_row['status'] === 'Belum Terdaftar'
-                        ) {
-                            $count_ok_emg++;
-                        }
+                        if (!isset($_row['unitasal'], $_row['status']) || $_row['status'] !== 'Belum Terdaftar') continue;
+                        if ($_row['unitasal'] === 'OK EMERGENCY') $count_ok_emg++;
+                        if ($_row['unitasal'] === 'OK ELEKTIF')   $count_ok_elkt++;
                     }
                 }
             ?>
             <?php if ($count_ok_emg > 0): ?>
-            <div class="alert alert-danger d-flex align-items-center mb-3 shadow-sm" role="alert"
+            <div class="alert alert-danger d-flex align-items-center mb-2 shadow-sm" role="alert"
                  style="border-left: 6px solid #c0392b; border-radius: 6px;">
                 <span class="icon-pulse-danger mr-3" style="font-size: 1.8rem;">
                     <i class="fas fa-exclamation-triangle text-danger"></i>
@@ -50,6 +47,22 @@
                     Harap segera diproses.
                 </div>
             </div>
+            <?php endif; ?>
+            <?php if ($count_ok_elkt > 0): ?>
+            <div class="alert alert-danger d-flex align-items-center mb-2 shadow-sm" role="alert"
+                 style="border-left: 6px solid #c0392b; border-radius: 6px;">
+                <span class="icon-pulse-danger mr-3" style="font-size: 1.8rem;">
+                    <i class="fas fa-exclamation-triangle text-danger"></i>
+                </span>
+                <div>
+                    <strong>Perhatian!</strong>
+                    Terdapat <strong><?= $count_ok_elkt ?> pasien</strong> dari unit
+                    <strong>OK ELEKTIF</strong> dengan status <strong class="text-danger">Belum Terdaftar</strong>.
+                    Harap segera diproses.
+                </div>
+            </div>
+            <?php endif; ?>
+            <?php if ($count_ok_emg > 0 || $count_ok_elkt > 0): ?>
             <style>
             @keyframes pulse-danger {
                 0%   { transform: scale(1);   opacity: 1; }
@@ -60,6 +73,7 @@
             </style>
             <?php endif; ?>
             <!-- Tabel Data Kunjungan -->
+
             <div class="table-responsive">
                 <table class="table table-bordered table-hover text-center shadow-sm" id="dataTable" width="100%" cellspacing="0">
                     <thead class="thead-dark">

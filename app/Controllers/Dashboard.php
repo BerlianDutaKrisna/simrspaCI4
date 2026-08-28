@@ -67,8 +67,9 @@ class Dashboard extends BaseController
                 'ayu'   => $this->usersModel->getTotalByUserName("dr. Ayu Tyasmara Pratiwi, Sp.PA"),
             ],
 
-            // Jumlah pasien OK EMERGENCY yang Belum Terdaftar (untuk notifikasi dashboard)
+            // Jumlah pasien OK EMERGENCY & OK ELEKTIF yang Belum Terdaftar (untuk notifikasi dashboard)
             'count_ok_emergency' => $this->kunjunganModel->countOkEmergencyBelumTerdaftar(),
+            'count_ok_elektif'   => $this->kunjunganModel->countOkElektifBelumTerdaftar(),
         ];
         
         return view('dashboard/dashboard', $data);
