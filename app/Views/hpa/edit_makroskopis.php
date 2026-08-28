@@ -43,6 +43,30 @@
                 </div>
             </div>
 
+            <!-- tanggal lahir dan Alamat -->
+            <div class="form-group row">
+                <label class="col-sm-2 col-form-label">Tanggal Lahir</label>
+                <div class="col-sm-4">
+                    <p>&nbsp;<?php
+                                if (!empty($hpa['tanggal_lahir_pasien'])) {
+                                    $tgl_lahir = new DateTime($hpa['tanggal_lahir_pasien']);
+                                    $today = new DateTime();
+                                    $usia = $today->diff($tgl_lahir)->y;
+
+                                    // Format: DD-MM-YYYY (Usia: X tahun)
+                                    echo $tgl_lahir->format('d-m-Y') . ' (' . $usia . ' thn)';
+                                } else {
+                                    echo '-';
+                                }
+                                ?></p>
+                </div>
+
+                <label class="col-sm-2 col-form-label">Alamat</label>
+                <div class="col-sm-4">
+                    <p>&nbsp;<?= $hpa['alamat_pasien'] ?? '' ?></p>
+                </div>
+            </div>
+
             <!-- Kolom Norm Pasien dan Unit Asal -->
             <div class="form-group row">
                 <label class="col-sm-2 col-form-label">Norm Pasien</label>

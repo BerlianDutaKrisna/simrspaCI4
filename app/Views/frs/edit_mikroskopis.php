@@ -30,6 +30,30 @@
                     </div>
                 </div>
 
+                <!-- tanggal lahir dan Alamat -->
+                <div class="form-group row">
+                    <label class="col-sm-2 col-form-label">Tanggal Lahir</label>
+                    <div class="col-sm-4">
+                        <p>&nbsp;<?php
+                                    if (!empty($frs['tanggal_lahir_pasien'])) {
+                                        $tgl_lahir = new DateTime($frs['tanggal_lahir_pasien']);
+                                        $today = new DateTime();
+                                        $usia = $today->diff($tgl_lahir)->y;
+
+                                        // Format: DD-MM-YYYY (Usia: X tahun)
+                                        echo $tgl_lahir->format('d-m-Y') . ' (' . $usia . ' thn)';
+                                    } else {
+                                        echo '-';
+                                    }
+                                    ?></p>
+                    </div>
+
+                    <label class="col-sm-2 col-form-label">Alamat</label>
+                    <div class="col-sm-4">
+                        <p>&nbsp;<?= $frs['alamat_pasien'] ?? '' ?></p>
+                    </div>
+                </div>
+
                 <!-- Kolom Nama Pasien dan Dokter Pengirim -->
                 <div class="form-group row">
                     <label class="col-sm-2 col-form-label">Nama Pasien</label>
