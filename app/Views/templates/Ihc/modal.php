@@ -18,6 +18,7 @@
                 </div>
                 <div class="modal-footer">
                     <button class="btn btn-secondary" type="button" data-dismiss="modal">Batal</button>
+                    <button type="button" class="btn btn-info btn-isi-penerima" data-penerima="Pasien Sendiri">Pasien Sendiri</button>
                     <button type="submit" class="btn btn-primary">Simpan</button>
                 </div>
             </form>

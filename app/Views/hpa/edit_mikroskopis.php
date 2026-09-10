@@ -112,6 +112,7 @@
                     </div>
                 </div>
 
+                <?= $this->include('templates/exam/permintaan'); ?>
                 <?= $this->include('templates/exam/riwayat'); ?>
 
                 <!-- Kolom Foto Makroskopis -->

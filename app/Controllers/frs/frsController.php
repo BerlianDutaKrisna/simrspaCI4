@@ -20,6 +20,7 @@ use App\Models\Frs\Proses\Authorized_frs;
 use App\Models\Frs\Proses\Pencetakan_frs;
 use App\Models\Frs\Mutu_frs;
 use App\Models\SignatureModel;
+use CodeIgniter\Exceptions\PageNotFoundException;
 use Exception;
 
 
@@ -1270,5 +1271,20 @@ class FrsController extends BaseController
         ];
 
         return view('frs/laporan/laporan_pemeriksaan', $data);
+    }
+    public function cetak_hasil($id_frs)
+    {
+        $frs = $this->frsModel->getfrsWithRelationsProses($id_frs);
+
+        if (empty($frs)) {
+            throw PageNotFoundException::forPageNotFound("Data FRS dengan ID $id_frs tidak ditemukan");
+        }
+
+        $penerimaan = $this->penerimaan_frs->where('id_frs', $id_frs)->first() ?? [];
+
+        return view('frs/print_frs', [
+            'frs'        => $frs,
+            'penerimaan' => $penerimaan,
+        ]);
     }
 }

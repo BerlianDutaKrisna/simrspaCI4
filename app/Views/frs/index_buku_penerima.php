@@ -104,12 +104,18 @@
                                 <td><?= esc($nama_dokter) ?></td>
                                 <td class="text-center">
                                     <a href="#"
-                                        class="btn btn-info btn-sm penerima-btn"
+                                        class="btn btn-info btn-sm penerima-btn mr-2 mb-2"
                                         data-toggle="modal"
                                         data-target="#penerimaModal"
                                         data-id_frs="<?= esc($row['id_frs']) ?>"
                                         data-penerima_frs="<?= esc($row['penerima_frs']) ?>">
                                         <i class="fas fa-people-arrows"></i> Penerima
+                                    </a>
+
+                                    <a href="<?= base_url('pencetakan_frs/cetak_hasil/' . esc($row['id_frs'])) ?>"
+                                        target="_blank"
+                                        class="btn btn-success btn-sm mr-2 mb-2">
+                                        <i class="fas fa-print"></i> Cetak Hasil
                                     </a>
                                 </td>
                                 <td><?= esc($row['penerima_frs'] ?? 'Belum Diterima') ?></td>

@@ -32,6 +32,17 @@
             modal.find('#penerima_hpa').val("");
         });
 
+        $('#penerimaModal').on('click', '.btn-isi-penerima', function() {
+            const value = $(this).data('penerima');
+            const modal = $('#penerimaModal');
+            const form = modal.find('form')[0];
+
+            modal.find('#penerima_hpa').val(value);
+            if (form && form.reportValidity()) {
+                form.submit();
+            }
+        });
+
         // ==========================
         // Modal Status HPA
         // ==========================

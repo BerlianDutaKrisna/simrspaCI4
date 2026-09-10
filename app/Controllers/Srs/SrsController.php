@@ -19,6 +19,7 @@ use App\Models\srs\Proses\Pemverifikasi_srs;
 use App\Models\srs\Proses\Authorized_srs;
 use App\Models\srs\Proses\Pencetakan_srs;
 use App\Models\srs\Mutu_srs;
+use CodeIgniter\Exceptions\PageNotFoundException;
 use Exception;
 
 class srsController extends BaseController
@@ -1268,5 +1269,20 @@ class srsController extends BaseController
         ];
 
         return view('srs/laporan/laporan_pemeriksaan', $data);
+    }
+    public function cetak_hasil($id_srs)
+    {
+        $srs = $this->srsModel->getsrsWithRelationsProses($id_srs);
+
+        if (empty($srs)) {
+            throw PageNotFoundException::forPageNotFound("Data SRS dengan ID $id_srs tidak ditemukan");
+        }
+
+        $penerimaan = $this->penerimaan_srs->where('id_srs', $id_srs)->first() ?? [];
+
+        return view('srs/print_srs', [
+            'srs'        => $srs,
+            'penerimaan' => $penerimaan,
+        ]);
     }
 }

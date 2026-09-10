@@ -51,4 +51,35 @@ class SimrsController extends BaseController
             ]);
         }
     }
+
+    public function permintaan($norm = null)
+    {
+        $request = service('request');
+
+        if (empty($norm)) {
+            $json = $request->getJSON();
+            if ($json && isset($json->norm)) {
+                $norm = trim($json->norm);
+            } else {
+                $norm = $request->getGet('norm') ?? $request->getPost('norm');
+            }
+        }
+
+        if (empty($norm)) {
+            return $this->response->setStatusCode(400)->setJSON([
+                'code' => 400,
+                'message' => 'Parameter norm dibutuhkan'
+            ]);
+        }
+
+        try {
+            $result = $this->simrsModel->getPermintaan($norm);
+            return $this->response->setStatusCode($result['code'] ?? 500)->setJSON($result);
+        } catch (\Exception $e) {
+            return $this->response->setStatusCode(500)->setJSON([
+                'code' => 500,
+                'message' => 'Terjadi kesalahan: ' . $e->getMessage()
+            ]);
+        }
+    }
 }

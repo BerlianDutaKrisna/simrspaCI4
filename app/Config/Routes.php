@@ -460,6 +460,7 @@ $routes->group('pencetakan_hpa', ['namespace' => 'App\Controllers\Hpa\Proses'], 
     $routes->post('delete', 'Pencetakan::delete');
     $routes->get('edit', 'Pencetakan::edit');
     $routes->post('update', 'Pencetakan::update');
+    $routes->get('cetak_hasil/(:num)', '\App\Controllers\Hpa\HpaController::cetak_hasil/$1');
 });
 
 // Route untuk Pencetakan frs
@@ -470,6 +471,7 @@ $routes->group('pencetakan_frs', ['namespace' => 'App\Controllers\Frs\Proses'], 
     $routes->post('delete', 'Pencetakan::delete');
     $routes->get('edit', 'Pencetakan::edit');
     $routes->post('update', 'Pencetakan::update');
+    $routes->get('cetak_hasil/(:num)', '\App\Controllers\Frs\FrsController::cetak_hasil/$1');
 });
 
 // Route untuk Pencetakan srs
@@ -480,6 +482,7 @@ $routes->group('pencetakan_srs', ['namespace' => 'App\Controllers\Srs\Proses'], 
     $routes->post('delete', 'Pencetakan::delete');
     $routes->get('edit', 'Pencetakan::edit');
     $routes->post('update', 'Pencetakan::update');
+    $routes->get('cetak_hasil/(:num)', '\App\Controllers\Srs\SrsController::cetak_hasil/$1');
 });
 
 // Route untuk Pencetakan ihc
@@ -490,6 +493,7 @@ $routes->group('pencetakan_ihc', ['namespace' => 'App\Controllers\Ihc\Proses'], 
     $routes->post('delete', 'Pencetakan::delete');
     $routes->get('edit', 'Pencetakan::edit');
     $routes->post('update', 'Pencetakan::update');
+    $routes->get('cetak_hasil/(:num)', '\App\Controllers\Ihc\IhcController::cetak_hasil/$1');
 });
 
 // Router untuk Mutu Hpa

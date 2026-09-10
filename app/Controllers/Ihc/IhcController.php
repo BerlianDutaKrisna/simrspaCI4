@@ -19,6 +19,7 @@ use App\Models\Ihc\Proses\Pemverifikasi_ihc;
 use App\Models\Ihc\Proses\Authorized_ihc;
 use App\Models\Ihc\Proses\Pencetakan_ihc;
 use App\Models\Ihc\Mutu_ihc;
+use CodeIgniter\Exceptions\PageNotFoundException;
 use Exception;
 
 class ihcController extends BaseController
@@ -1220,5 +1221,20 @@ class ihcController extends BaseController
         ];
 
         return view('ihc/laporan/laporan_pemeriksaan', $data);
+    }
+    public function cetak_hasil($id_ihc)
+    {
+        $ihc = $this->ihcModel->getihcWithRelationsProses($id_ihc);
+
+        if (empty($ihc)) {
+            throw PageNotFoundException::forPageNotFound("Data IHC dengan ID $id_ihc tidak ditemukan");
+        }
+
+        $penerimaan = $this->penerimaan_ihc->where('id_ihc', $id_ihc)->first() ?? [];
+
+        return view('ihc/print_ihc', [
+            'ihc'        => $ihc,
+            'penerimaan' => $penerimaan,
+        ]);
     }
 }
