@@ -226,20 +226,24 @@
             <!-- Kolom simapan & cetak -->
             <div class="form-group row">
                 <label class="col-sm-2 col-form-label"></label>
-                <div class="col-sm-6">
+                <div class="col-sm-10">
                     <!-- Tombol Simpan & Cetak -->
                     <div class="form-group row">
-                        <div class="col-sm-6 text-center mb-3">
+                        <div class="col-sm-4 text-center mb-3">
                             <button type="submit"
                                 class="btn btn-success btn-user w-100"
                                 formaction="<?= base_url('hpa/update/' . $hpa['id_hpa']); ?>">
                                 <i class="fas fa-save"></i> Simpan
                             </button>
                         </div>
-                        <div class="col-sm-6 text-center">
-                            <!-- Tombol Cetak -->
-                            <button type="button" class="btn btn-info btn-user w-100 w-md-auto" onclick="cetakProses()">
+                        <div class="col-sm-4 text-center mb-3">
+                            <button type="button" class="btn btn-info btn-user w-100" onclick="cetakProses()">
                                 <i class="fas fa-print"></i> Cetak
+                            </button>
+                        </div>
+                        <div class="col-sm-4 text-center mb-3">
+                            <button type="button" class="btn btn-secondary btn-user w-100" onclick="cetakPermintaanDanProses()">
+                                <i class="fas fa-print"></i> Cetak Permintaan &amp; Proses
                             </button>
                         </div>
                     </div>

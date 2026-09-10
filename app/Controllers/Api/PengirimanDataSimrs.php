@@ -31,11 +31,7 @@ class PengirimanDataSimrs extends ResourceController
             'nama_user' => session()->get('nama_user'),
             'data'      => $allData
         ];
-<<<<<<< HEAD
-
-=======
         
->>>>>>> dd47376b993a2f24fde3d9858cefb3149107efca
         return view('PengirimanData/index', $data);
     }
 

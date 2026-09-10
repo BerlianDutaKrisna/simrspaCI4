@@ -2,8 +2,10 @@
     <i class="fas fa-list-alt"></i> Permintaan SIMRS
 </button>
 
+
 <div class="collapse mb-4" id="permintaanSimrs">
     <div class="card card-body border-dark">
+
         <div id="permintaanContent" class="container-fluid bg-white p-4 border rounded">
             <div class="row border-bottom pb-2 mb-3 text-center align-items-center">
                 <div class="col-12">
@@ -171,8 +173,10 @@
                     <p class="font-weight-bold mb-0"><u><?= esc($permintaan['dpjp_awal'] ?? '-') ?></u></p>
                 </div>
             </div>
-
         </div>
+        <button class="btn btn-outline-info mt-3" type="button" onclick="cetakPermintaan()">
+            <i class="fas fa-print"></i> Cetak Permintaan
+        </button>
     </div>
 </div>
 
@@ -181,5 +185,42 @@
         document.getElementById("modal-body-content").innerHTML = isi;
         var myModal = new bootstrap.Modal(document.getElementById("modalDetail"));
         myModal.show();
+    }
+
+    function cetakPermintaan() {
+        var content = document.getElementById('permintaanContent');
+        if (!content) {
+            alert('Konten permintaan tidak ditemukan.');
+            return;
+        }
+
+        var printWindow = window.open('', '', 'height=800,width=900');
+        printWindow.document.open();
+        printWindow.document.write(`
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Cetak Permintaan PA</title>
+    <link href="<?= base_url('assets/bootstrap/css/bootstrap.min.css') ?>" rel="stylesheet">
+    <style>
+        @page { size: A4; margin: 10mm; }
+        body { font-family: Arial, sans-serif; font-size: 12px; color: #000; }
+        .badge { border: 1px solid #333; color: #000 !important; background: #eee !important; }
+        img { max-width: 100%; height: auto; }
+    </style>
+</head>
+<body>
+    <div id="halaman-permintaan"></div>
+</body>
+</html>`);
+        printWindow.document.close();
+        printWindow.document.getElementById('halaman-permintaan').innerHTML = content.innerHTML;
+        printWindow.addEventListener('afterprint', function() {
+            printWindow.close();
+        });
+        setTimeout(function() {
+            printWindow.focus();
+            printWindow.print();
+        }, 300);
     }
 </script>

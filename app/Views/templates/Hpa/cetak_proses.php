@@ -1,17 +1,32 @@
 <script>
-    function cetakProses() {
+    function cetakPermintaanDanProses() {
+        if (!document.getElementById('permintaanContent')) {
+            alert('Konten permintaan tidak ditemukan.');
+            return;
+        }
+        cetakProses(true);
+    }
+
+    function cetakProses(includePermintaan) {
         var detailMakroskopis = document.getElementById('makroskopis_hpa') ? document.getElementById('makroskopis_hpa').value : '';
         var detailMikroskopis = document.getElementById('mikroskopis_hpa') ? document.getElementById('mikroskopis_hpa').value : '';
-        var printWindow = window.open('', '', 'height=500,width=800');
+        var printWindow = window.open('', '', 'height=800,width=900');
+        var halamanPermintaan = includePermintaan ? '<div class="print-page-1" id="halaman-permintaan"></div>' : '';
+        var bootstrapLink = includePermintaan ? '<link href="<?= base_url('assets/bootstrap/css/bootstrap.min.css') ?>" rel="stylesheet">' : '';
 
         const html = `
 <!doctype html>
 <html>
 <head>
     <title>Cetak Hpa</title>
+    ${bootstrapLink}
     <style>
-        @page { size: 215mm 350mm; margin: 20mm; }
-        body { font-family: Verdana, Arial, sans-serif; margin: 10px; padding: 0; height: 100%; display: flex; flex-direction: column; }
+        @page { size: 215mm 350mm; margin: 12mm; }
+        .print-page-1 { page-break-after: always; break-after: page; }
+        .print-page-1 .badge { border: 1px solid #333; color: #000 !important; background: #eee !important; }
+        .print-page-1 table { table-layout: auto !important; }
+        .print-page-1 td { border: none !important; padding: 2px 4px; vertical-align: top; }
+        body { font-family: Verdana, Arial, sans-serif; margin: 10px; padding: 0; ${includePermintaan ? '' : 'height: 100%; display: flex; flex-direction: column;'} }
         h5 { margin: 5px 0; }
         table { width: 100%; table-layout: fixed; border-collapse: collapse; word-wrap: break-word; }
         td { padding: 5px; text-align: left; vertical-align: middle; border: 1px solid black; }
@@ -34,6 +49,7 @@
     </style>
 </head>
 <body>
+    ${halamanPermintaan}
     <table class="header-table">
         <tr>
             <td rowspan="2" style="width: 20%; font-size: 15px; font-weight: bold; text-align: center;">
@@ -210,12 +226,12 @@
 
     <script>
         // Cetak setelah konten siap (aman untuk Firefox/Chrome)
-        window.addEventListener('load', function () {
+        ${includePermintaan ? '' : `window.addEventListener('load', function () {
             setTimeout(function () {
                 window.focus();
                 window.print();
             }, 0);
-        });
+        });`}
 
         // Tutup otomatis setelah selesai print
         window.addEventListener('afterprint', function () {
@@ -225,7 +241,7 @@
         // Fallback jika afterprint tidak terpanggil (jarang, tapi berjaga-jaga)
         setTimeout(function(){
             try { window.close(); } catch(e) {}
-        }, 3000);
+        }, ${includePermintaan ? 60000 : 3000});
     <\/script>
 </body>
 </html>`;
@@ -233,5 +249,17 @@
         printWindow.document.open();
         printWindow.document.write(html);
         printWindow.document.close();
+
+        if (includePermintaan) {
+            var sumber = document.getElementById('permintaanContent');
+            var tujuan = printWindow.document.getElementById('halaman-permintaan');
+            if (sumber && tujuan) {
+                tujuan.innerHTML = sumber.innerHTML;
+            }
+            setTimeout(function () {
+                printWindow.focus();
+                printWindow.print();
+            }, 400);
+        }
     }
 </script>
