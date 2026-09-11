@@ -31,6 +31,12 @@
         table { width: 100%; table-layout: fixed; border-collapse: collapse; word-wrap: break-word; }
         td { padding: 5px; text-align: left; vertical-align: middle; border: 1px solid black; }
         hr { border: 1px solid #000; margin: 20px 0; }
+        .print-spacer {
+            height: 35mm;
+            width: 100%;
+            display: block;
+            clear: both;
+        }
         .header-table { width: 100%; border-collapse: collapse; margin: 0; font-size: 11px; font-family: Verdana, Arial, sans-serif; }
         .header-table td { padding: 3px 4px; vertical-align: top; border: 1px solid #000; line-height: 1.2; }
         .makroskopis-content-table td, .mikroskopis-content-table td { font-size: 12px; padding: 5px; }
@@ -50,6 +56,7 @@
 </head>
 <body>
     ${halamanPermintaan}
+    <div class="print-spacer"></div> <!-- Pengganjal di bagian atas halaman 2 -->
     <table class="header-table">
         <tr>
             <td rowspan="2" style="width: 20%; font-size: 15px; font-weight: bold; text-align: center;">
@@ -256,7 +263,7 @@
             if (sumber && tujuan) {
                 tujuan.innerHTML = sumber.innerHTML;
             }
-            setTimeout(function () {
+            setTimeout(function() {
                 printWindow.focus();
                 printWindow.print();
             }, 400);
