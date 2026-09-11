@@ -132,6 +132,10 @@
                             <div class="p-2 bg-light rounded border mb-2" style="min-height: 60px;">
                                 <?= esc($permintaan['diagnosis_klinik'] ?? $formrm['diagnosis_klinik'] ?? '-') ?>
                             </div>
+                            <p class="mb-1"><strong>Lain-lain:</strong></p>
+                            <div class="p-2 bg-light rounded border mb-2" style="min-height: 60px;">
+                                <?= esc($permintaan['lain_lain_lab_radiologi'] ?? $formrm['lain_lain_lab_radiologi'] ?? '-') ?>
+                            </div>
                         </div>
                         <div class="col-md-6">
                             <div class="text-center p-2 border rounded bg-light h-100 d-flex flex-column">
