@@ -1222,12 +1222,40 @@ class ihcController extends BaseController
 
         return view('ihc/laporan/laporan_pemeriksaan', $data);
     }
+
     public function cetak_hasil($id_ihc)
     {
-        $ihc = $this->ihcModel->getihcWithRelationsProses($id_ihc);
+        $ihc = $this->ihcModel->getIhcWithRelationsProses($id_ihc);
 
         if (empty($ihc)) {
-            throw PageNotFoundException::forPageNotFound("Data IHC dengan ID $id_ihc tidak ditemukan");
+            return redirect()->back()->with('error', "Data ihc dengan ID $id_ihc tidak ditemukan.");
+        }
+
+        $id_pencetakan_ihc = $ihc['id_pencetakan_ihc'] ?? null;
+
+        if (empty($id_pencetakan_ihc)) {
+            return redirect()->back()->with(
+                'error',
+                "Sampel belum berada pada proses pencetakan. "
+                ."Pastikan sampel telah melalui tahap pencetakan sebelum mencetak hasil."
+            );
+        }
+
+        try {
+            $id_user = session()->get('id_user');
+
+            $this->pencetakan_ihc->update($id_pencetakan_ihc, [
+                'id_user_pencetakan_ihc' => $id_user,
+                'status_pencetakan_ihc'  => 'Selesai Pencetakan',
+                'selesai_pencetakan_ihc' => date('Y-m-d H:i:s'),
+            ]);
+
+            $this->ihcModel->update($id_ihc, [
+                'status_ihc' => 'Selesai',
+            ]);
+        } catch (\Exception $e) {
+            log_message('error', '[cetak_hasil] Gagal update data pencetakan: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Terjadi kesalahan saat memproses pencetakan: ' . $e->getMessage());
         }
 
         $penerimaan = $this->penerimaan_ihc->where('id_ihc', $id_ihc)->first() ?? [];

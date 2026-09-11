@@ -1272,12 +1272,40 @@ class FrsController extends BaseController
 
         return view('frs/laporan/laporan_pemeriksaan', $data);
     }
+
     public function cetak_hasil($id_frs)
     {
-        $frs = $this->frsModel->getfrsWithRelationsProses($id_frs);
+        $frs = $this->frsModel->getFrsWithRelationsProses($id_frs);
 
         if (empty($frs)) {
-            throw PageNotFoundException::forPageNotFound("Data FRS dengan ID $id_frs tidak ditemukan");
+            return redirect()->back()->with('error', "Data frs dengan ID $id_frs tidak ditemukan.");
+        }
+
+        $id_pencetakan_frs = $frs['id_pencetakan_frs'] ?? null;
+
+        if (empty($id_pencetakan_frs)) {
+            return redirect()->back()->with(
+                'error',
+                "Sampel belum berada pada proses pencetakan. "
+                ."Pastikan sampel telah melalui tahap pencetakan sebelum mencetak hasil."
+            );
+        }
+
+        try {
+            $id_user = session()->get('id_user');
+
+            $this->pencetakan_frs->update($id_pencetakan_frs, [
+                'id_user_pencetakan_frs' => $id_user,
+                'status_pencetakan_frs'  => 'Selesai Pencetakan',
+                'selesai_pencetakan_frs' => date('Y-m-d H:i:s'),
+            ]);
+
+            $this->frsModel->update($id_frs, [
+                'status_frs' => 'Selesai',
+            ]);
+        } catch (\Exception $e) {
+            log_message('error', '[cetak_hasil] Gagal update data pencetakan: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Terjadi kesalahan saat memproses pencetakan: ' . $e->getMessage());
         }
 
         $penerimaan = $this->penerimaan_frs->where('id_frs', $id_frs)->first() ?? [];

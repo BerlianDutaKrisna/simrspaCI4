@@ -82,7 +82,7 @@
                                     ?>
                                 </td>
                                 <td><?= esc(strip_tags($row['hasil_ihc'] ?? 'Belum Ada Hasil')) ?></td>
-                                <td><strong class="<?= in_array($row['status_ihc'] ?? '', ['Authorized', 'Selesai']) ? 'text-success' : '' ?>"><?= esc($row['status_ihc'] ?? 'Belum Diisi') ?></strong></td>
+                                <td><strong class="<?= in_array($row['status_ihc'] ?? '', ['Pencetakan', 'Selesai']) ? 'text-success' : '' ?>"><?= esc($row['status_ihc'] ?? 'Belum Diisi') ?></strong></td>
                                 <?php
                                 $nama1 = $row['nama_dokter_pemotongan'] ?? null;
                                 $nama2 = $row['nama_dokter_pembacaan'] ?? null;

@@ -1270,12 +1270,40 @@ class srsController extends BaseController
 
         return view('srs/laporan/laporan_pemeriksaan', $data);
     }
+
     public function cetak_hasil($id_srs)
     {
-        $srs = $this->srsModel->getsrsWithRelationsProses($id_srs);
+        $srs = $this->srsModel->getSrsWithRelationsProses($id_srs);
 
         if (empty($srs)) {
-            throw PageNotFoundException::forPageNotFound("Data SRS dengan ID $id_srs tidak ditemukan");
+            return redirect()->back()->with('error', "Data srs dengan ID $id_srs tidak ditemukan.");
+        }
+
+        $id_pencetakan_srs = $srs['id_pencetakan_srs'] ?? null;
+
+        if (empty($id_pencetakan_srs)) {
+            return redirect()->back()->with(
+                'error',
+                "Sampel belum berada pada proses pencetakan. "
+                ."Pastikan sampel telah melalui tahap pencetakan sebelum mencetak hasil."
+            );
+        }
+
+        try {
+            $id_user = session()->get('id_user');
+
+            $this->pencetakan_srs->update($id_pencetakan_srs, [
+                'id_user_pencetakan_srs' => $id_user,
+                'status_pencetakan_srs'  => 'Selesai Pencetakan',
+                'selesai_pencetakan_srs' => date('Y-m-d H:i:s'),
+            ]);
+
+            $this->srsModel->update($id_srs, [
+                'status_srs' => 'Selesai',
+            ]);
+        } catch (\Exception $e) {
+            log_message('error', '[cetak_hasil] Gagal update data pencetakan: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Terjadi kesalahan saat memproses pencetakan: ' . $e->getMessage());
         }
 
         $penerimaan = $this->penerimaan_srs->where('id_srs', $id_srs)->first() ?? [];

@@ -84,7 +84,7 @@
                                     ?>
                                 </td>
                                 <td><?= esc(strip_tags($row['hasil_frs'] ?? 'Belum Ada Hasil')) ?></td>
-                                <td><strong class="<?= in_array($row['status_frs'] ?? '', ['Authorized', 'Selesai']) ? 'text-success' : '' ?>"><?= esc($row['status_frs'] ?? 'Belum Diisi') ?></strong></td>
+                                <td><strong class="<?= in_array($row['status_frs'] ?? '', ['Pencetakan', 'Selesai']) ? 'text-success' : '' ?>"><?= esc($row['status_frs'] ?? 'Belum Diisi') ?></strong></td>
                                 <?php
                                 $nama1 = $row['nama_dokter_pemotongan'] ?? null;
                                 $nama2 = $row['nama_dokter_pembacaan'] ?? null;

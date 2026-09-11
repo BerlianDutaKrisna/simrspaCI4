@@ -1557,7 +1557,34 @@ class HpaController extends BaseController
         $hpa = $this->hpaModel->getHpaWithRelationsProses($id_hpa);
 
         if (empty($hpa)) {
-            throw PageNotFoundException::forPageNotFound("Data HPA dengan ID $id_hpa tidak ditemukan");
+            return redirect()->back()->with('error', "Data HPA dengan ID $id_hpa tidak ditemukan.");
+        }
+
+        $id_pencetakan_hpa = $hpa['id_pencetakan_hpa'] ?? null;
+
+        if (empty($id_pencetakan_hpa)) {
+            return redirect()->back()->with(
+                'error',
+                "Sampel belum berada pada proses pencetakan. "
+                ."Pastikan sampel telah melalui tahap pencetakan sebelum mencetak hasil."
+            );
+        }
+
+        try {
+            $id_user = session()->get('id_user');
+
+            $this->pencetakan_hpa->update($id_pencetakan_hpa, [
+                'id_user_pencetakan_hpa' => $id_user,
+                'status_pencetakan_hpa'  => 'Selesai Pencetakan',
+                'selesai_pencetakan_hpa' => date('Y-m-d H:i:s'),
+            ]);
+
+            $this->hpaModel->update($id_hpa, [
+                'status_hpa' => 'Selesai',
+            ]);
+        } catch (\Exception $e) {
+            log_message('error', '[cetak_hasil] Gagal update data pencetakan: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Terjadi kesalahan saat memproses pencetakan: ' . $e->getMessage());
         }
 
         $penerimaan = $this->penerimaan_hpa->where('id_hpa', $id_hpa)->first() ?? [];
