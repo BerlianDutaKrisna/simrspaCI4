@@ -8,10 +8,13 @@
 
         <div id="permintaanContent" class="container-fluid bg-white p-4 border rounded">
             <div class="row border-bottom pb-2 mb-3 text-center align-items-center">
-                <div class="col-12">
+                <div class="col-8">
                     <h6 class="font-weight-bold mb-0">PEMERINTAH KOTA SURABAYA</h6>
                     <h5 class="font-weight-bold mb-0">RUMAH SAKIT UMUM DAERAH dr. MOHAMAD SOEWANDHIE</h5>
                     <small>Jl. Tambak Rejo No. 45-47 - Telp. 031 3717141, 3725905</small>
+                </div>
+                <div class="col-4 text-left">
+                    <h1 class="font-weight-bold mb-0"><?= esc($hpa['kode_hpa'] ?? '') ?></h1>
                 </div>
             </div>
 
