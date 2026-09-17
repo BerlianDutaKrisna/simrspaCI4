@@ -420,6 +420,7 @@ $routes->group('authorized_hpa', ['namespace' => 'App\Controllers\Hpa\Proses'], 
     $routes->post('delete', 'Authorized::delete');
     $routes->get('edit', 'Authorized::edit');
     $routes->post('update', 'Authorized::update');
+    $routes->post('kirim_ke_simrs', 'Authorized::kirimKeSimrsAjax'); // Endpoint AJAX dari halaman edit HPA
 });
 
 // Route untuk Authorized frs

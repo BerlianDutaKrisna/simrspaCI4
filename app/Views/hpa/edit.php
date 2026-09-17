@@ -565,6 +565,21 @@
                         </button>
                     </div>
                 </div>
+
+                <!-- Tombol Kirim ke SIMRS -->
+                <div class="form-group row mt-2">
+                    <div class="col-sm-4 text-center">
+                        <button type="button"
+                            id="btn-kirim-simrs"
+                            class="btn btn-warning btn-user w-100"
+                            onclick="kirimKeSimrs()">
+                            <i class="fas fa-paper-plane"></i> Kirim ke SIMRS
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Toast Notifikasi SIMRS -->
+                <div id="simrs-toast-wrapper" style="position:fixed;top:20px;right:20px;z-index:99999;"></div>
             </form>
         </div>
     </div>
@@ -802,6 +817,116 @@
         });
     });
 </script>
+
+<!-- Script: Kirim ke SIMRS via AJAX -->
+<script>
+    /**
+     * Mengirim data HPA saat ini ke SIMRS melalui endpoint AJAX.
+     * id_hpa diambil dari input hidden di dalam form.
+     */
+    function kirimKeSimrs() {
+        const idHpa = document.querySelector('input[name="id_hpa"]').value;
+        const btn   = document.getElementById('btn-kirim-simrs');
+        const csrfToken = '<?= csrf_token() ?>';
+        const csrfHash  = '<?= csrf_hash() ?>';
+
+        if (!idHpa) {
+            tampilkanToastSimrs('danger', 'ID HPA tidak ditemukan pada halaman ini.');
+            return;
+        }
+
+        // Tampilkan loading state pada button
+        btn.disabled = true;
+        btn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Mengirim...';
+
+        const formData = new URLSearchParams();
+        formData.append('id_hpa', idHpa);
+        formData.append(csrfToken, csrfHash);
+
+        fetch('<?= base_url("authorized_hpa/kirim_ke_simrs") ?>', {
+            method: 'POST',
+            headers: {
+                'Content-Type'     : 'application/x-www-form-urlencoded',
+                'X-Requested-With' : 'XMLHttpRequest'
+            },
+            body: formData.toString()
+        })
+        .then(function(response) {
+            return response.json().then(function(data) {
+                return { status: response.status, body: data };
+            });
+        })
+        .then(function(result) {
+            if (result.body.success) {
+                tampilkanToastSimrs('success', result.body.message || 'Data berhasil dikirim ke SIMRS.');
+            } else {
+                tampilkanToastSimrs('danger', result.body.message || 'Gagal mengirim data ke SIMRS.');
+            }
+        })
+        .catch(function(err) {
+            console.error('[kirimKeSimrs] Error:', err);
+            tampilkanToastSimrs('danger', 'Terjadi kesalahan jaringan. Silakan coba lagi.');
+        })
+        .finally(function() {
+            // Kembalikan button ke kondisi semula
+            btn.disabled = false;
+            btn.innerHTML = '<i class="fas fa-paper-plane"></i> Kirim ke SIMRS';
+        });
+    }
+
+    /**
+     * Menampilkan toast notifikasi di pojok kanan atas.
+     * @param {string} type  - 'success' | 'danger' | 'warning' | 'info'
+     * @param {string} pesan - Isi pesan yang ditampilkan
+     */
+    function tampilkanToastSimrs(type, pesan) {
+        const wrapper = document.getElementById('simrs-toast-wrapper');
+        const warnaCls = {
+            success : 'bg-success',
+            danger  : 'bg-danger',
+            warning : 'bg-warning text-dark',
+            info    : 'bg-info'
+        };
+        const ikon = {
+            success : 'fas fa-check-circle',
+            danger  : 'fas fa-times-circle',
+            warning : 'fas fa-exclamation-triangle',
+            info    : 'fas fa-info-circle'
+        };
+
+        const toast = document.createElement('div');
+        toast.style.cssText = [
+            'min-width:280px',
+            'margin-bottom:8px',
+            'padding:14px 18px',
+            'border-radius:8px',
+            'color:#fff',
+            'font-size:14px',
+            'display:flex',
+            'align-items:center',
+            'gap:10px',
+            'box-shadow:0 4px 12px rgba(0,0,0,.25)',
+            'opacity:0',
+            'transition:opacity .3s ease'
+        ].join(';');
+        toast.className = warnaCls[type] || 'bg-secondary';
+        toast.innerHTML = '<i class="' + (ikon[type] || 'fas fa-bell') + '"></i> ' + pesan;
+
+        wrapper.appendChild(toast);
+
+        // Fade in
+        requestAnimationFrame(function() {
+            requestAnimationFrame(function() { toast.style.opacity = '1'; });
+        });
+
+        // Auto-hilang setelah 5 detik
+        setTimeout(function() {
+            toast.style.opacity = '0';
+            setTimeout(function() { toast.remove(); }, 350);
+        }, 5000);
+    }
+</script>
+
 <script>
     $(function() {
 
