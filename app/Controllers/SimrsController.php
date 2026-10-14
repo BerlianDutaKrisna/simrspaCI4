@@ -19,30 +19,33 @@ class SimrsController extends BaseController
         $request = service('request');
         $json = $request->getJSON();
 
-        // Sesuaikan nama key sesuai JS: "norm_simrs"
-        if (!isset($json->norm_simrs)) {
+        $norm = trim($json->norm_simrs ?? $json->norm ?? '');
+        if (empty($norm)) {
+            $norm = trim((string)($request->getVar('norm_simrs') ?? $request->getVar('norm') ?? ''));
+        }
+
+        if (empty($norm)) {
             return $this->response->setJSON([
                 'status' => 'error',
                 'message' => 'Norm pasien tidak dikirim.'
             ]);
         }
 
-        $norm = trim($json->norm_simrs);
 
         try {
-            $data = $this->simrsModel->getKunjunganPasien($norm);
+            $data = $this->simrsModel->getKunjunganPasienByNorm($norm);
 
             if (isset($data['code']) && $data['code'] == 200 && !empty($data['data'])) {
                 // Data dari model berupa array pasien (bisa banyak)
                 return $this->response->setJSON([
                     'status' => 'success',
-                    'data' => $data['data'] // kirim seluruh array pasien
+                    'data' => $data['data'] // kirim seluruh array kunjungan pasien
                 ]);
             }
 
             return $this->response->setJSON([
                 'status' => 'error',
-                'message' => 'Pasien tidak ditemukan.'
+                'message' => $data['message'] ?? 'Data kunjungan pasien tidak ditemukan.'
             ]);
         } catch (\Exception $e) {
             return $this->response->setJSON([

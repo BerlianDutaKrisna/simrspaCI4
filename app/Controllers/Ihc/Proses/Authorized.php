@@ -334,6 +334,60 @@ class Authorized extends BaseController
             ->with('success', 'Data berhasil diperbarui.');
     }
 
+    /**
+     * Endpoint AJAX untuk mengirim data IHC ke SIMRS secara manual dari halaman edit.
+     * Dipanggil via Fetch API dengan method POST, mengharapkan field 'id_ihc'.
+     *
+     * @return \CodeIgniter\HTTP\ResponseInterface
+     */
+    public function kirimKeSimrsAjax()
+    {
+        // Hanya terima request AJAX
+        if (!$this->request->isAJAX()) {
+            return $this->response->setStatusCode(403)->setJSON([
+                'success' => false,
+                'message' => 'Akses tidak diizinkan.',
+            ]);
+        }
+
+        $id_ihc = $this->request->getPost('id_ihc');
+
+        if (!$id_ihc) {
+            return $this->response->setStatusCode(400)->setJSON([
+                'success' => false,
+                'message' => 'ID IHC tidak ditemukan.',
+            ]);
+        }
+
+        try {
+            // Panggil fungsi pengiriman internal (private method)
+            $this->kirimKeSimrs($id_ihc, null);
+
+            // Ambil hasil dari session flashdata yang di-set oleh kirimKeSimrs()
+            $simrsResponse = session()->getFlashdata('simrs_response');
+            $simrsError    = session()->getFlashdata('simrs_error');
+
+            if ($simrsError) {
+                return $this->response->setStatusCode(500)->setJSON([
+                    'success' => false,
+                    'message' => 'Gagal mengirim ke SIMRS: ' . $simrsError,
+                ]);
+            }
+
+            return $this->response->setJSON([
+                'success'  => true,
+                'message'  => 'Data berhasil dikirim ke SIMRS.',
+                'response' => $simrsResponse,
+            ]);
+        } catch (\Exception $e) {
+            log_message('error', '[kirimKeSimrsAjax IHC] ' . $e->getMessage());
+            return $this->response->setStatusCode(500)->setJSON([
+                'success' => false,
+                'message' => 'Terjadi kesalahan: ' . $e->getMessage(),
+            ]);
+        }
+    }
+
     public function delete()
     {
         try {

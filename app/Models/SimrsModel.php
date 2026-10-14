@@ -107,6 +107,36 @@ class SimrsModel extends Model
         ];
     }
 
+    public function getKunjunganPasienByNorm(string $norm): array
+    {
+        $norm = trim($norm);
+        $cacheKey   = "kunjungan_norm_{$norm}";
+        $primaryURL = "{$this->primaryBaseURL}/getKunjunganPasien/{$norm}";
+
+        $result = $this->getDataWithCache($cacheKey, $primaryURL);
+
+        if (
+            isset($result['code']) && $result['code'] == 200 &&
+            isset($result['data']) && is_array($result['data'])
+        ) {
+            return [
+                'code' => 200,
+                'data' => array_values($result['data']),
+            ];
+        }
+
+        return [
+            'code' => $result['code'] ?? 500,
+            'data' => [],
+            'message' => $result['message'] ?? 'Data kunjungan tidak ditemukan.'
+        ];
+    }
+
+    public function getKunjunganPasiebByNorm(string $norm): array
+    {
+        return $this->getKunjunganPasienByNorm($norm);
+    }
+
     public function getKunjunganHariIni(): array
     {
         $tanggal = date('Y-m-d');

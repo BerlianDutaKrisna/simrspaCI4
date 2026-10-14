@@ -267,6 +267,21 @@
                         </button>
                     </div>
                 </div>
+
+                <!-- Tombol Kirim ke SIMRS -->
+                <div class="form-group row mt-2">
+                    <div class="col-sm-4 text-center">
+                        <button type="button"
+                            id="btn-kirim-simrs-ihc"
+                            class="btn btn-warning btn-user w-100"
+                            onclick="bukaModalKunjunganIhc()">
+                            <i class="fas fa-paper-plane"></i> Kirim ke SIMRS
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Toast Notifikasi SIMRS -->
+                <div id="ihc-simrs-toast-wrapper" style="position:fixed;top:20px;right:20px;z-index:99999;"></div>
             </form>
         </div>
     </div>
@@ -276,3 +291,175 @@
 <?= $this->include('templates/ihc/footer_edit'); ?>
 <?= $this->include('templates/ihc/cetak_proses'); ?>
 <?= $this->include('templates/ihc/cetak_print'); ?>
+
+<!-- Modal Pilih Kunjungan Pasien SIMRS (IHC) -->
+<div class="modal fade" id="modalKunjunganSimrsIhc" tabindex="-1" role="dialog" aria-labelledby="modalKunjunganIhcLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-warning">
+                <h5 class="modal-title font-weight-bold" id="modalKunjunganIhcLabel">
+                    <i class="fas fa-hospital"></i> Pilih Kunjungan Pasien - Kirim ke SIMRS (IHC)
+                </h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div id="ihc-kunjungan-loading" class="text-center py-4">
+                    <div class="spinner-border text-warning" role="status"></div>
+                    <p class="mt-2 text-muted">Memuat data kunjungan pasien...</p>
+                </div>
+                <div id="ihc-kunjungan-error" class="alert alert-danger d-none"></div>
+                <div id="ihc-kunjungan-table-wrapper" class="d-none">
+                    <p class="text-muted mb-2">Pilih kunjungan yang sesuai untuk dikirim ke SIMRS:</p>
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-hover table-sm">
+                            <thead class="thead-dark">
+                                <tr>
+                                    <th>ID Transaksi</th>
+                                    <th>Register</th>
+                                    <th>Tanggal</th>
+                                    <th>Norm</th>
+                                    <th>Nama</th>
+                                    <th>Pemeriksaan</th>
+                                    <th>Diagnosa Klinik</th>
+                                    <th>Hasil</th>
+                                    <th>Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody id="ihc-kunjungan-tbody"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Script: Kirim ke SIMRS via Modal Kunjungan (IHC) -->
+<script>
+    var normPasienIhc = '<?= esc($ihc["norm_pasien"] ?? "") ?>';
+    var idIhc         = '<?= esc($ihc["id_ihc"] ?? "") ?>';
+
+    function bukaModalKunjunganIhc() {
+        var norm = normPasienIhc;
+        if (!norm) {
+            tampilkanToastIhc('danger', 'Norm pasien tidak ditemukan.');
+            return;
+        }
+        document.getElementById('ihc-kunjungan-loading').classList.remove('d-none');
+        document.getElementById('ihc-kunjungan-error').classList.add('d-none');
+        document.getElementById('ihc-kunjungan-table-wrapper').classList.add('d-none');
+        document.getElementById('ihc-kunjungan-tbody').innerHTML = '';
+        $('#modalKunjunganSimrsIhc').modal('show');
+        fetch('<?= base_url("simrs/modal_search") ?>', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'X-Requested-With': 'XMLHttpRequest' },
+            body: JSON.stringify({ norm_simrs: norm })
+        })
+        .then(function(res) { return res.json(); })
+        .then(function(result) {
+            document.getElementById('ihc-kunjungan-loading').classList.add('d-none');
+            if (result.status !== 'success' || !result.data || result.data.length === 0) {
+                var errDiv = document.getElementById('ihc-kunjungan-error');
+                errDiv.textContent = result.message || 'Tidak ada data kunjungan untuk pasien ini.';
+                errDiv.classList.remove('d-none'); return;
+            }
+            var tbody = document.getElementById('ihc-kunjungan-tbody');
+            result.data.forEach(function(item) {
+                var hasil = (item.hasil === null || item.hasil === '' || item.hasil === undefined)
+                    ? '<span class="badge badge-secondary">Belum Ada Hasil</span>'
+                    : '<span class="badge badge-success">Ada Hasil</span>';
+                tbody.insertAdjacentHTML('beforeend',
+                    '<tr><td>' + (item.idtransaksi||'-') + '</td><td>' + (item.register||'-') + '</td><td>' + (item.tanggal||'-') + '</td><td>' + (item.norm||'-') + '</td><td>' + (item.nama||'-') + '</td><td>' + (item.pemeriksaan||'-') + '</td><td>' + (item.diagnosaklinik||'-') + '</td><td>' + hasil + '</td><td><button class="btn btn-warning btn-sm" onclick="pilihKunjunganIhc(\'' + item.idtransaksi + '\')"><i class="fas fa-check"></i> Pilih</button></td></tr>'
+                );
+            });
+            document.getElementById('ihc-kunjungan-table-wrapper').classList.remove('d-none');
+        })
+        .catch(function(err) {
+            document.getElementById('ihc-kunjungan-loading').classList.add('d-none');
+            var errDiv = document.getElementById('ihc-kunjungan-error');
+            errDiv.textContent = 'Gagal menghubungi server: ' + err.message;
+            errDiv.classList.remove('d-none');
+        });
+    }
+
+    function pilihKunjunganIhc(idtransaksi) {
+        $('#modalKunjunganSimrsIhc').modal('hide');
+
+        var form = document.getElementById('form-ihc');
+        var btn = document.getElementById('btn-kirim-simrs-ihc');
+        var updateUrl = '<?= base_url("ihc/update/" . $ihc["id_ihc"]) ?>';
+
+        if (btn) {
+            btn.disabled = true;
+            btn.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Menyimpan data form...';
+        }
+        tampilkanToastIhc('info', 'Menyimpan perubahan data form terlebih dahulu...');
+
+        if (window.$ && $.fn && $.fn.summernote) {
+            $('.summernote, .summernote_hasil').each(function() {
+                if ($(this).data('summernote')) {
+                    $(this).val($(this).summernote('code'));
+                }
+            });
+        }
+
+        var formData = new FormData(form);
+
+        fetch(updateUrl, {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        })
+        .then(function() {
+            tampilkanToastIhc('info', 'Data berhasil diperbarui. Mengirim ke SIMRS...');
+            kirimKeSimrsIhc(idtransaksi);
+        })
+        .catch(function(err) {
+            console.warn('Penyimpanan form gagal, lanjut kirim SIMRS:', err);
+            kirimKeSimrsIhc(idtransaksi);
+        });
+    }
+
+
+    function kirimKeSimrsIhc(idtransaksi) {
+        var btn = document.getElementById('btn-kirim-simrs-ihc');
+        var csrfToken = '<?= csrf_token() ?>', csrfHash = '<?= csrf_hash() ?>';
+        btn.disabled = true;
+        btn.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Mengirim...';
+        var fd = new URLSearchParams();
+        fd.append('id_ihc', idIhc); fd.append('idtransaksi', idtransaksi); fd.append(csrfToken, csrfHash);
+        fetch('<?= base_url("authorized_ihc/kirim_ke_simrs") ?>', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded', 'X-Requested-With': 'XMLHttpRequest' },
+            body: fd.toString()
+        })
+        .then(function(r) { return r.json().then(function(d) { return { body: d }; }); })
+        .then(function(result) {
+            result.body.success
+                ? tampilkanToastIhc('success', result.body.message || 'Data berhasil dikirim ke SIMRS.')
+                : tampilkanToastIhc('danger', result.body.message || 'Gagal mengirim data ke SIMRS.');
+        })
+        .catch(function() { tampilkanToastIhc('danger', 'Terjadi kesalahan jaringan.'); })
+        .finally(function() { btn.disabled = false; btn.innerHTML = '<i class="fas fa-paper-plane"></i> Kirim ke SIMRS'; });
+    }
+
+    function tampilkanToastIhc(type, pesan) {
+        var wrapper = document.getElementById('ihc-simrs-toast-wrapper');
+        var warnaCls = { success:'bg-success', danger:'bg-danger', warning:'bg-warning text-dark', info:'bg-info' };
+        var ikon = { success:'fas fa-check-circle', danger:'fas fa-times-circle', warning:'fas fa-exclamation-triangle', info:'fas fa-info-circle' };
+        var toast = document.createElement('div');
+        toast.style.cssText = 'min-width:280px;margin-bottom:8px;padding:14px 18px;border-radius:8px;color:#fff;font-size:14px;display:flex;align-items:center;gap:10px;box-shadow:0 4px 12px rgba(0,0,0,.25);opacity:0;transition:opacity .3s ease';
+        toast.className = warnaCls[type] || 'bg-secondary';
+        toast.innerHTML = '<i class="' + (ikon[type] || 'fas fa-bell') + '"></i> ' + pesan;
+        wrapper.appendChild(toast);
+        requestAnimationFrame(function() { requestAnimationFrame(function() { toast.style.opacity = '1'; }); });
+        setTimeout(function() { toast.style.opacity = '0'; setTimeout(function() { toast.remove(); }, 350); }, 5000);
+    }
+</script>

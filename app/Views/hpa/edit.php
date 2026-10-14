@@ -572,7 +572,7 @@
                         <button type="button"
                             id="btn-kirim-simrs"
                             class="btn btn-warning btn-user w-100"
-                            onclick="kirimKeSimrs()">
+                            onclick="bukaModalKunjunganHpa()">
                             <i class="fas fa-paper-plane"></i> Kirim ke SIMRS
                         </button>
                     </div>
@@ -818,29 +818,193 @@
     });
 </script>
 
-<!-- Script: Kirim ke SIMRS via AJAX -->
+<!-- Modal Pilih Kunjungan Pasien SIMRS (HPA) -->
+<div class="modal fade" id="modalKunjunganSimrsHpa" tabindex="-1" role="dialog" aria-labelledby="modalKunjunganHpaLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-warning">
+                <h5 class="modal-title font-weight-bold" id="modalKunjunganHpaLabel">
+                    <i class="fas fa-hospital"></i> Pilih Kunjungan Pasien - Kirim ke SIMRS (HPA)
+                </h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <!-- Loading -->
+                <div id="hpa-kunjungan-loading" class="text-center py-4">
+                    <div class="spinner-border text-warning" role="status"></div>
+                    <p class="mt-2 text-muted">Memuat data kunjungan pasien...</p>
+                </div>
+                <!-- Error -->
+                <div id="hpa-kunjungan-error" class="alert alert-danger d-none"></div>
+                <!-- Tabel -->
+                <div id="hpa-kunjungan-table-wrapper" class="d-none">
+                    <p class="text-muted mb-2">Pilih kunjungan yang sesuai untuk dikirim ke SIMRS:</p>
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-hover table-sm">
+                            <thead class="thead-dark">
+                                <tr>
+                                    <th>ID Transaksi</th>
+                                    <th>Register</th>
+                                    <th>Tanggal</th>
+                                    <th>Norm</th>
+                                    <th>Nama</th>
+                                    <th>Pemeriksaan</th>
+                                    <th>Diagnosa Klinik</th>
+                                    <th>Hasil</th>
+                                    <th>Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody id="hpa-kunjungan-tbody"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Script: Kirim ke SIMRS via Modal Kunjungan (HPA) -->
 <script>
+    var normPasienHpa = '<?= esc($hpa["norm_pasien"] ?? "") ?>';
+    var idHpa        = '<?= esc($hpa["id_hpa"] ?? "") ?>';
+
     /**
-     * Mengirim data HPA saat ini ke SIMRS melalui endpoint AJAX.
-     * id_hpa diambil dari input hidden di dalam form.
+     * Membuka modal dan fetch data kunjungan pasien dari API BDRS via SimrsController.
      */
-    function kirimKeSimrs() {
-        const idHpa = document.querySelector('input[name="id_hpa"]').value;
-        const btn   = document.getElementById('btn-kirim-simrs');
-        const csrfToken = '<?= csrf_token() ?>';
-        const csrfHash  = '<?= csrf_hash() ?>';
+    function bukaModalKunjunganHpa() {
+        var norm = normPasienHpa;
+        if (!norm) {
+            tampilkanToastSimrs('danger', 'Norm pasien tidak ditemukan.');
+            return;
+        }
+
+        // Reset state modal
+        document.getElementById('hpa-kunjungan-loading').classList.remove('d-none');
+        document.getElementById('hpa-kunjungan-error').classList.add('d-none');
+        document.getElementById('hpa-kunjungan-table-wrapper').classList.add('d-none');
+        document.getElementById('hpa-kunjungan-tbody').innerHTML = '';
+
+        $('#modalKunjunganSimrsHpa').modal('show');
+
+        // Fetch kunjungan dari SimrsController (proxy server-side)
+        fetch('<?= base_url("simrs/modal_search") ?>', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest'
+            },
+            body: JSON.stringify({ norm_simrs: norm })
+        })
+        .then(function(res) { return res.json(); })
+        .then(function(result) {
+            document.getElementById('hpa-kunjungan-loading').classList.add('d-none');
+
+            if (result.status !== 'success' || !result.data || result.data.length === 0) {
+                var errDiv = document.getElementById('hpa-kunjungan-error');
+                errDiv.textContent = result.message || 'Tidak ada data kunjungan untuk pasien ini.';
+                errDiv.classList.remove('d-none');
+                return;
+            }
+
+            var tbody = document.getElementById('hpa-kunjungan-tbody');
+            result.data.forEach(function(item) {
+                var hasil = (item.hasil === null || item.hasil === '' || item.hasil === undefined)
+                    ? '<span class="badge badge-secondary">Belum Ada Hasil</span>'
+                    : '<span class="badge badge-success">Ada Hasil</span>';
+                var row = '<tr>' +
+                    '<td>' + (item.idtransaksi || '-') + '</td>' +
+                    '<td>' + (item.register || '-') + '</td>' +
+                    '<td>' + (item.tanggal || '-') + '</td>' +
+                    '<td>' + (item.norm || '-') + '</td>' +
+                    '<td>' + (item.nama || '-') + '</td>' +
+                    '<td>' + (item.pemeriksaan || '-') + '</td>' +
+                    '<td>' + (item.diagnosaklinik || '-') + '</td>' +
+                    '<td>' + hasil + '</td>' +
+                    '<td><button class="btn btn-warning btn-sm" onclick="pilihKunjunganHpa(\'' + item.idtransaksi + '\')"><i class="fas fa-check"></i> Pilih</button></td>' +
+                    '</tr>';
+                tbody.insertAdjacentHTML('beforeend', row);
+            });
+
+            document.getElementById('hpa-kunjungan-table-wrapper').classList.remove('d-none');
+        })
+        .catch(function(err) {
+            document.getElementById('hpa-kunjungan-loading').classList.add('d-none');
+            var errDiv = document.getElementById('hpa-kunjungan-error');
+            errDiv.textContent = 'Gagal menghubungi server: ' + err.message;
+            errDiv.classList.remove('d-none');
+        });
+    }
+
+    /**
+     * Dipanggil saat user memilih satu kunjungan.
+     * Tutup modal, simpan form terlebih dahulu (fungsi tombol submit), lalu jalankan kirimKeSimrsHpa.
+     */
+    function pilihKunjunganHpa(idtransaksi) {
+        $('#modalKunjunganSimrsHpa').modal('hide');
+
+        var form = document.getElementById('form-hpa');
+        var btn = document.getElementById('btn-kirim-simrs');
+        var updateUrl = '<?= base_url("hpa/update/" . $hpa["id_hpa"]) ?>';
+
+        if (btn) {
+            btn.disabled = true;
+            btn.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Menyimpan data form...';
+        }
+        tampilkanToastSimrs('info', 'Menyimpan perubahan data form terlebih dahulu...');
+
+        // Sinkronisasi Summernote jika ada editor
+        if (window.$ && $.fn && $.fn.summernote) {
+            $('.summernote, .summernote_hasil').each(function() {
+                if ($(this).data('summernote')) {
+                    $(this).val($(this).summernote('code'));
+                }
+            });
+        }
+
+        var formData = new FormData(form);
+
+        fetch(updateUrl, {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        })
+        .then(function() {
+            tampilkanToastSimrs('info', 'Data berhasil diperbarui. Mengirim ke SIMRS...');
+            kirimKeSimrsHpa(idtransaksi);
+        })
+        .catch(function(err) {
+            console.warn('Penyimpanan form gagal, lanjut kirim SIMRS:', err);
+            kirimKeSimrsHpa(idtransaksi);
+        });
+    }
+
+
+    /**
+     * Mengirim data HPA ke SIMRS dengan idtransaksi yang dipilih.
+     */
+    function kirimKeSimrsHpa(idtransaksi) {
+        var btn = document.getElementById('btn-kirim-simrs');
+        var csrfToken = '<?= csrf_token() ?>';
+        var csrfHash  = '<?= csrf_hash() ?>';
 
         if (!idHpa) {
             tampilkanToastSimrs('danger', 'ID HPA tidak ditemukan pada halaman ini.');
             return;
         }
 
-        // Tampilkan loading state pada button
         btn.disabled = true;
         btn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Mengirim...';
 
-        const formData = new URLSearchParams();
+        var formData = new URLSearchParams();
         formData.append('id_hpa', idHpa);
+        formData.append('idtransaksi', idtransaksi);
         formData.append(csrfToken, csrfHash);
 
         fetch('<?= base_url("authorized_hpa/kirim_ke_simrs") ?>', {
@@ -864,11 +1028,10 @@
             }
         })
         .catch(function(err) {
-            console.error('[kirimKeSimrs] Error:', err);
+            console.error('[kirimKeSimrsHpa] Error:', err);
             tampilkanToastSimrs('danger', 'Terjadi kesalahan jaringan. Silakan coba lagi.');
         })
         .finally(function() {
-            // Kembalikan button ke kondisi semula
             btn.disabled = false;
             btn.innerHTML = '<i class="fas fa-paper-plane"></i> Kirim ke SIMRS';
         });
@@ -876,25 +1039,23 @@
 
     /**
      * Menampilkan toast notifikasi di pojok kanan atas.
-     * @param {string} type  - 'success' | 'danger' | 'warning' | 'info'
-     * @param {string} pesan - Isi pesan yang ditampilkan
      */
     function tampilkanToastSimrs(type, pesan) {
-        const wrapper = document.getElementById('simrs-toast-wrapper');
-        const warnaCls = {
+        var wrapper = document.getElementById('simrs-toast-wrapper');
+        var warnaCls = {
             success : 'bg-success',
             danger  : 'bg-danger',
             warning : 'bg-warning text-dark',
             info    : 'bg-info'
         };
-        const ikon = {
+        var ikon = {
             success : 'fas fa-check-circle',
             danger  : 'fas fa-times-circle',
             warning : 'fas fa-exclamation-triangle',
             info    : 'fas fa-info-circle'
         };
 
-        const toast = document.createElement('div');
+        var toast = document.createElement('div');
         toast.style.cssText = [
             'min-width:280px',
             'margin-bottom:8px',
@@ -913,13 +1074,9 @@
         toast.innerHTML = '<i class="' + (ikon[type] || 'fas fa-bell') + '"></i> ' + pesan;
 
         wrapper.appendChild(toast);
-
-        // Fade in
         requestAnimationFrame(function() {
             requestAnimationFrame(function() { toast.style.opacity = '1'; });
         });
-
-        // Auto-hilang setelah 5 detik
         setTimeout(function() {
             toast.style.opacity = '0';
             setTimeout(function() { toast.remove(); }, 350);

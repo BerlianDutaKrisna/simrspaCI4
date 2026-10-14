@@ -241,6 +241,21 @@
                         </button>
                     </div>
                 </div>
+
+                <!-- Tombol Kirim ke SIMRS -->
+                <div class="form-group row mt-2">
+                    <div class="col-sm-4 text-center">
+                        <button type="button"
+                            id="btn-kirim-simrs-frs"
+                            class="btn btn-warning btn-user w-100"
+                            onclick="bukaModalKunjunganFrs()">
+                            <i class="fas fa-paper-plane"></i> Kirim ke SIMRS
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Toast Notifikasi SIMRS -->
+                <div id="frs-simrs-toast-wrapper" style="position:fixed;top:20px;right:20px;z-index:99999;"></div>
             </form>
         </div>
     </div>
@@ -322,4 +337,199 @@
             });
         });
     });
+</script>
+
+<!-- Modal Pilih Kunjungan Pasien SIMRS (FRS) -->
+<div class="modal fade" id="modalKunjunganSimrsFrs" tabindex="-1" role="dialog" aria-labelledby="modalKunjunganFrsLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-warning">
+                <h5 class="modal-title font-weight-bold" id="modalKunjunganFrsLabel">
+                    <i class="fas fa-hospital"></i> Pilih Kunjungan Pasien - Kirim ke SIMRS (FRS)
+                </h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div id="frs-kunjungan-loading" class="text-center py-4">
+                    <div class="spinner-border text-warning" role="status"></div>
+                    <p class="mt-2 text-muted">Memuat data kunjungan pasien...</p>
+                </div>
+                <div id="frs-kunjungan-error" class="alert alert-danger d-none"></div>
+                <div id="frs-kunjungan-table-wrapper" class="d-none">
+                    <p class="text-muted mb-2">Pilih kunjungan yang sesuai untuk dikirim ke SIMRS:</p>
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-hover table-sm">
+                            <thead class="thead-dark">
+                                <tr>
+                                    <th>ID Transaksi</th>
+                                    <th>Register</th>
+                                    <th>Tanggal</th>
+                                    <th>Norm</th>
+                                    <th>Nama</th>
+                                    <th>Pemeriksaan</th>
+                                    <th>Diagnosa Klinik</th>
+                                    <th>Hasil</th>
+                                    <th>Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody id="frs-kunjungan-tbody"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Script: Kirim ke SIMRS via Modal Kunjungan (FRS) -->
+<script>
+    var normPasienFrs = '<?= esc($frs["norm_pasien"] ?? "") ?>';
+    var idFrs         = '<?= esc($frs["id_frs"] ?? "") ?>';
+
+    function bukaModalKunjunganFrs() {
+        var norm = normPasienFrs;
+        if (!norm) {
+            tampilkanToastFrs('danger', 'Norm pasien tidak ditemukan.');
+            return;
+        }
+
+        document.getElementById('frs-kunjungan-loading').classList.remove('d-none');
+        document.getElementById('frs-kunjungan-error').classList.add('d-none');
+        document.getElementById('frs-kunjungan-table-wrapper').classList.add('d-none');
+        document.getElementById('frs-kunjungan-tbody').innerHTML = '';
+
+        $('#modalKunjunganSimrsFrs').modal('show');
+
+        fetch('<?= base_url("simrs/modal_search") ?>', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'X-Requested-With': 'XMLHttpRequest' },
+            body: JSON.stringify({ norm_simrs: norm })
+        })
+        .then(function(res) { return res.json(); })
+        .then(function(result) {
+            document.getElementById('frs-kunjungan-loading').classList.add('d-none');
+            if (result.status !== 'success' || !result.data || result.data.length === 0) {
+                var errDiv = document.getElementById('frs-kunjungan-error');
+                errDiv.textContent = result.message || 'Tidak ada data kunjungan untuk pasien ini.';
+                errDiv.classList.remove('d-none');
+                return;
+            }
+            var tbody = document.getElementById('frs-kunjungan-tbody');
+            result.data.forEach(function(item) {
+                var hasil = (item.hasil === null || item.hasil === '' || item.hasil === undefined)
+                    ? '<span class="badge badge-secondary">Belum Ada Hasil</span>'
+                    : '<span class="badge badge-success">Ada Hasil</span>';
+                var row = '<tr>' +
+                    '<td>' + (item.idtransaksi || '-') + '</td>' +
+                    '<td>' + (item.register || '-') + '</td>' +
+                    '<td>' + (item.tanggal || '-') + '</td>' +
+                    '<td>' + (item.norm || '-') + '</td>' +
+                    '<td>' + (item.nama || '-') + '</td>' +
+                    '<td>' + (item.pemeriksaan || '-') + '</td>' +
+                    '<td>' + (item.diagnosaklinik || '-') + '</td>' +
+                    '<td>' + hasil + '</td>' +
+                    '<td><button class="btn btn-warning btn-sm" onclick="pilihKunjunganFrs(\'' + item.idtransaksi + '\')"><i class="fas fa-check"></i> Pilih</button></td>' +
+                    '</tr>';
+                tbody.insertAdjacentHTML('beforeend', row);
+            });
+            document.getElementById('frs-kunjungan-table-wrapper').classList.remove('d-none');
+        })
+        .catch(function(err) {
+            document.getElementById('frs-kunjungan-loading').classList.add('d-none');
+            var errDiv = document.getElementById('frs-kunjungan-error');
+            errDiv.textContent = 'Gagal menghubungi server: ' + err.message;
+            errDiv.classList.remove('d-none');
+        });
+    }
+
+    function pilihKunjunganFrs(idtransaksi) {
+        $('#modalKunjunganSimrsFrs').modal('hide');
+
+        var form = document.getElementById('form-frs');
+        var btn = document.getElementById('btn-kirim-simrs-frs');
+        var updateUrl = '<?= base_url("frs/update/" . $frs["id_frs"]) ?>';
+
+        if (btn) {
+            btn.disabled = true;
+            btn.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Menyimpan data form...';
+        }
+        tampilkanToastFrs('info', 'Menyimpan perubahan data form terlebih dahulu...');
+
+        // Sinkronisasi Summernote jika ada editor
+        if (window.$ && $.fn && $.fn.summernote) {
+            $('.summernote, .summernote_hasil').each(function() {
+                if ($(this).data('summernote')) {
+                    $(this).val($(this).summernote('code'));
+                }
+            });
+        }
+
+        var formData = new FormData(form);
+
+        // Eksekusi fungsi penyimpanan (seperti tombol submit) terlebih dahulu
+        fetch(updateUrl, {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        })
+        .then(function() {
+            tampilkanToastFrs('info', 'Data berhasil diperbarui. Mengirim ke SIMRS...');
+            kirimKeSimrsFrs(idtransaksi);
+        })
+        .catch(function(err) {
+            console.warn('Penyimpanan form gagal, lanjut kirim SIMRS:', err);
+            kirimKeSimrsFrs(idtransaksi);
+        });
+    }
+
+
+    function kirimKeSimrsFrs(idtransaksi) {
+        var btn = document.getElementById('btn-kirim-simrs-frs');
+        var csrfToken = '<?= csrf_token() ?>';
+        var csrfHash  = '<?= csrf_hash() ?>';
+        btn.disabled = true;
+        btn.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Mengirim...';
+        var formData = new URLSearchParams();
+        formData.append('id_frs', idFrs);
+        formData.append('idtransaksi', idtransaksi);
+        formData.append(csrfToken, csrfHash);
+        fetch('<?= base_url("authorized_frs/kirim_ke_simrs") ?>', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded', 'X-Requested-With': 'XMLHttpRequest' },
+            body: formData.toString()
+        })
+        .then(function(r) { return r.json().then(function(d) { return { status: r.status, body: d }; }); })
+        .then(function(result) {
+            if (result.body.success) {
+                tampilkanToastFrs('success', result.body.message || 'Data berhasil dikirim ke SIMRS.');
+            } else {
+                tampilkanToastFrs('danger', result.body.message || 'Gagal mengirim data ke SIMRS.');
+            }
+        })
+        .catch(function(err) { tampilkanToastFrs('danger', 'Terjadi kesalahan jaringan.'); })
+        .finally(function() {
+            btn.disabled = false;
+            btn.innerHTML = '<i class="fas fa-paper-plane"></i> Kirim ke SIMRS';
+        });
+    }
+
+    function tampilkanToastFrs(type, pesan) {
+        var wrapper = document.getElementById('frs-simrs-toast-wrapper');
+        var warnaCls = { success:'bg-success', danger:'bg-danger', warning:'bg-warning text-dark', info:'bg-info' };
+        var ikon = { success:'fas fa-check-circle', danger:'fas fa-times-circle', warning:'fas fa-exclamation-triangle', info:'fas fa-info-circle' };
+        var toast = document.createElement('div');
+        toast.style.cssText = 'min-width:280px;margin-bottom:8px;padding:14px 18px;border-radius:8px;color:#fff;font-size:14px;display:flex;align-items:center;gap:10px;box-shadow:0 4px 12px rgba(0,0,0,.25);opacity:0;transition:opacity .3s ease';
+        toast.className = warnaCls[type] || 'bg-secondary';
+        toast.innerHTML = '<i class="' + (ikon[type] || 'fas fa-bell') + '"></i> ' + pesan;
+        wrapper.appendChild(toast);
+        requestAnimationFrame(function() { requestAnimationFrame(function() { toast.style.opacity = '1'; }); });
+        setTimeout(function() { toast.style.opacity = '0'; setTimeout(function() { toast.remove(); }, 350); }, 5000);
+    }
 </script>

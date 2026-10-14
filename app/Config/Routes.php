@@ -65,6 +65,11 @@ $routes->group('api', ['namespace' => 'App\Controllers\Api'], function ($routes)
 
 $routes->post('signature/save', 'Signature::save');
 
+// Route untuk SimrsController (proxy API BDRS)
+$routes->post('simrs/modal_search', 'SimrsController::modal_search');
+$routes->get('simrs/permintaan/(:num)', 'SimrsController::permintaan/$1');
+$routes->post('simrs/permintaan', 'SimrsController::permintaan');
+
 // Route untuk exam
 $routes->group('exam', ['namespace' => 'App\Controllers\Exam'], function ($routes) {
     $routes->get('index', 'ExamController::index');
@@ -431,6 +436,7 @@ $routes->group('authorized_frs', ['namespace' => 'App\Controllers\Frs\Proses'], 
     $routes->post('delete', 'Authorized::delete');
     $routes->get('edit', 'Authorized::edit');
     $routes->post('update', 'Authorized::update');
+    $routes->post('kirim_ke_simrs', 'Authorized::kirimKeSimrsAjax'); // Endpoint AJAX dari halaman edit FRS
 });
 
 // Route untuk Authorized srs
@@ -441,6 +447,7 @@ $routes->group('authorized_srs', ['namespace' => 'App\Controllers\Srs\Proses'], 
     $routes->post('delete', 'Authorized::delete');
     $routes->get('edit', 'Authorized::edit');
     $routes->post('update', 'Authorized::update');
+    $routes->post('kirim_ke_simrs', 'Authorized::kirimKeSimrsAjax'); // Endpoint AJAX dari halaman edit SRS
 });
 
 // Route untuk Authorized ihc
@@ -451,6 +458,7 @@ $routes->group('authorized_ihc', ['namespace' => 'App\Controllers\ihc\Proses'], 
     $routes->post('delete', 'Authorized::delete');
     $routes->get('edit', 'Authorized::edit');
     $routes->post('update', 'Authorized::update');
+    $routes->post('kirim_ke_simrs', 'Authorized::kirimKeSimrsAjax'); // Endpoint AJAX dari halaman edit IHC
 });
 
 // Route untuk Pencetakan hpa
