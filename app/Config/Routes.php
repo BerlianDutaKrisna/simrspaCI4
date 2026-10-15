@@ -425,7 +425,8 @@ $routes->group('authorized_hpa', ['namespace' => 'App\Controllers\Hpa\Proses'], 
     $routes->post('delete', 'Authorized::delete');
     $routes->get('edit', 'Authorized::edit');
     $routes->post('update', 'Authorized::update');
-    $routes->post('kirim_ke_simrs', 'Authorized::kirimKeSimrsAjax'); // Endpoint AJAX dari halaman edit HPA
+    $routes->post('kirim_ke_simrs', 'Authorized::kirimKeSimrsAjax'); // Endpoint AJAX lama untuk alur umum
+    $routes->post('kirim_ke_simrs_edit', 'Authorized::kirimKeSimrsEditPage'); // Endpoint khusus halaman edit dengan data modal
 });
 
 // Route untuk Authorized frs
@@ -436,7 +437,8 @@ $routes->group('authorized_frs', ['namespace' => 'App\Controllers\Frs\Proses'], 
     $routes->post('delete', 'Authorized::delete');
     $routes->get('edit', 'Authorized::edit');
     $routes->post('update', 'Authorized::update');
-    $routes->post('kirim_ke_simrs', 'Authorized::kirimKeSimrsAjax'); // Endpoint AJAX dari halaman edit FRS
+    $routes->post('kirim_ke_simrs', 'Authorized::kirimKeSimrsAjax'); // Endpoint AJAX lama untuk alur umum
+    $routes->post('kirim_ke_simrs_edit', 'Authorized::kirimKeSimrsEditPage'); // Endpoint khusus halaman edit dengan data modal
 });
 
 // Route untuk Authorized srs
@@ -447,7 +449,8 @@ $routes->group('authorized_srs', ['namespace' => 'App\Controllers\Srs\Proses'], 
     $routes->post('delete', 'Authorized::delete');
     $routes->get('edit', 'Authorized::edit');
     $routes->post('update', 'Authorized::update');
-    $routes->post('kirim_ke_simrs', 'Authorized::kirimKeSimrsAjax'); // Endpoint AJAX dari halaman edit SRS
+    $routes->post('kirim_ke_simrs', 'Authorized::kirimKeSimrsAjax'); // Endpoint AJAX lama untuk alur umum
+    $routes->post('kirim_ke_simrs_edit', 'Authorized::kirimKeSimrsEditPage'); // Endpoint khusus halaman edit dengan data modal
 });
 
 // Route untuk Authorized ihc
@@ -458,7 +461,8 @@ $routes->group('authorized_ihc', ['namespace' => 'App\Controllers\ihc\Proses'], 
     $routes->post('delete', 'Authorized::delete');
     $routes->get('edit', 'Authorized::edit');
     $routes->post('update', 'Authorized::update');
-    $routes->post('kirim_ke_simrs', 'Authorized::kirimKeSimrsAjax'); // Endpoint AJAX dari halaman edit IHC
+    $routes->post('kirim_ke_simrs', 'Authorized::kirimKeSimrsAjax'); // Endpoint AJAX lama untuk alur umum
+    $routes->post('kirim_ke_simrs_edit', 'Authorized::kirimKeSimrsEditPage'); // Endpoint khusus halaman edit dengan data modal
 });
 
 // Route untuk Pencetakan hpa

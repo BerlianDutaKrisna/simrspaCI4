@@ -340,9 +340,163 @@ class Authorized extends BaseController
      *
      * @return \CodeIgniter\HTTP\ResponseInterface
      */
+    private function kirimKeSimrsDariEdit($id_frs, $selectedIdTransaksi = null, $selectedTanggal = null, $selectedRegister = null, $selesaiAuthorized = null)
+    {
+        $frsTerbaru = $this->frsModel->getfrsWithRelationsProses($id_frs);
+        if (!$frsTerbaru) {
+            log_message('error', '[PENGIRIMAN SIMRS EDIT] Data FRS tidak ditemukan untuk ID: ' . $id_frs);
+            return;
+        }
+
+        $data = $frsTerbaru;
+
+        if ($selectedIdTransaksi !== null && $selectedIdTransaksi !== '') {
+            $data['id_transaksi'] = $selectedIdTransaksi;
+        }
+        if ($selectedTanggal !== null && $selectedTanggal !== '') {
+            $data['tanggal_transaksi'] = $selectedTanggal;
+        }
+        if ($selectedRegister !== null && $selectedRegister !== '') {
+            $data['no_register'] = $selectedRegister;
+        }
+
+        $responsetime = null;
+        if (!empty($data['mulai_penerimaan_frs']) && !empty($data['selesai_penulisan_frs'])) {
+            try {
+                $start = new \DateTime($data['mulai_penerimaan_frs']);
+                $end   = new \DateTime($data['selesai_penulisan_frs']);
+                $diff  = $start->diff($end);
+                $responsetime = sprintf(
+                    "%d hari %d jam %d menit %d detik",
+                    $diff->days,
+                    $diff->h,
+                    $diff->i,
+                    $diff->s
+                );
+            } catch (\Exception $e) {
+                log_message('error', '[PENGIRIMAN SIMRS EDIT] Error hitung responsetime: ' . $e->getMessage());
+            }
+        }
+
+        $mappingDokterByUser = [
+            '1' => ['nama' => 'dr. Vinna Chrisdianti, Sp.PA', 'id' => 1179],
+            '2' => ['nama' => 'dr. Ayu Tyasmara Pratiwi, Sp.PA', 'id' => 328],
+        ];
+        $idUserDokter = $data['id_user_dokter_pembacaan_frs'] ?? null;
+        $iddokterpa = null;
+        $dokterpa = null;
+        if ($idUserDokter && isset($mappingDokterByUser[$idUserDokter])) {
+            $iddokterpa = $mappingDokterByUser[$idUserDokter]['id'];
+            $dokterpa = $mappingDokterByUser[$idUserDokter]['nama'];
+        } else {
+            $iddokterpa = 0;
+            $dokterpa = '';
+        }
+
+        $diagnosa = strip_tags($data['hasil_frs'] ?? '');
+        $diagnosa = trim($diagnosa);
+        if (mb_strlen($diagnosa) > 25) {
+            $diagnosa = mb_substr($diagnosa, 0, 20) . '...';
+        }
+
+        $payload = [
+            'idtransaksi'      => $data['id_transaksi'] ?? '',
+            'tanggal'          => $data['tanggal_transaksi'] ?? '',
+            'register'         => $data['no_register'] ?? '',
+            'noregister'       => $data['kode_frs'] ?? '',
+            'idpasien'         => $data['id_pasien'] ?? '',
+            'norm'             => $data['norm_pasien'] ?? '',
+            'nama'             => $data['nama_pasien'] ?? '',
+            'datang'           => $data['mulai_penerimaan_frs'] ?? '',
+            'periksa'          => $data['mulai_penerimaan_frs'] ?? '',
+            'selesai'          => $data['selesai_penulisan_frs'] ?? '',
+            'diambil'          => $selesaiAuthorized ?? ($data['selesai_authorized_frs'] ?? $data['selesai_penulisan_frs'] ?? ''),
+            'iddokterpa'       => $iddokterpa,
+            'dokterpa'         => $dokterpa,
+            'statuslokasi'     => $data['lokasi_spesimen'] ?? '',
+            'diagnosaklinik'   => $data['diagnosa_klinik'] ?? '',
+            'diagnosapatologi' => $diagnosa,
+            'mutusediaan'      => $data['total_nilai_mutu_frs'] ?? '',
+            'responsetime'     => $responsetime ?? '',
+            'hasil'            => $data['print_frs'] ?? '',
+            'status'           => !empty($data['id_transaksi']) ? ($data['status_frs'] ?? 'Belum Terkirim') : 'Belum Terdaftar',
+            'updated_at'       => date('Y-m-d H:i:s'),
+        ];
+
+        log_message('debug', '[PENGIRIMAN SIMRS EDIT] Payload siap dikirim: ' . json_encode($payload, JSON_PRETTY_PRINT));
+
+        try {
+            $client = \Config\Services::curlrequest();
+            $response = $client->post(
+                'http://172.20.29.240/apibdrs/apibdrs/postPemeriksaan',
+                [
+                    'headers' => ['Content-Type' => 'application/json'],
+                    'body' => json_encode($payload),
+                ]
+            );
+
+            $responseBody = $response->getBody();
+            log_message('info', '[PENGIRIMAN SIMRS EDIT] Response: ' . $responseBody);
+
+            session()->setFlashdata('simrs_payload', json_encode($payload));
+            session()->setFlashdata('simrs_response', $responseBody);
+        } catch (\Exception $e) {
+            $errorMessage = $e->getMessage();
+            log_message('error', '[PENGIRIMAN SIMRS EDIT] Gagal kirim: ' . $errorMessage);
+            session()->setFlashdata('simrs_error', $errorMessage);
+        }
+    }
+
+    public function kirimKeSimrsEditPage()
+    {
+        if (!$this->request->isAJAX()) {
+            return $this->response->setStatusCode(403)->setJSON([
+                'success' => false,
+                'message' => 'Akses tidak diizinkan.',
+            ]);
+        }
+
+        $id_frs = $this->request->getPost('id_frs');
+        if (!$id_frs) {
+            return $this->response->setStatusCode(400)->setJSON([
+                'success' => false,
+                'message' => 'ID FRS tidak ditemukan.',
+            ]);
+        }
+
+        try {
+            $selectedIdTransaksi = $this->request->getPost('idtransaksi');
+            $selectedTanggal = $this->request->getPost('tanggal');
+            $selectedRegister = $this->request->getPost('register');
+
+            $this->kirimKeSimrsDariEdit($id_frs, $selectedIdTransaksi, $selectedTanggal, $selectedRegister, null);
+
+            $simrsResponse = session()->getFlashdata('simrs_response');
+            $simrsError = session()->getFlashdata('simrs_error');
+
+            if ($simrsError) {
+                return $this->response->setStatusCode(500)->setJSON([
+                    'success' => false,
+                    'message' => 'Gagal mengirim ke SIMRS: ' . $simrsError,
+                ]);
+            }
+
+            return $this->response->setJSON([
+                'success' => true,
+                'message' => 'Data berhasil dikirim ke SIMRS.',
+                'response' => $simrsResponse,
+            ]);
+        } catch (\Exception $e) {
+            log_message('error', '[kirimKeSimrsEditPage FRS] ' . $e->getMessage());
+            return $this->response->setStatusCode(500)->setJSON([
+                'success' => false,
+                'message' => 'Terjadi kesalahan: ' . $e->getMessage(),
+            ]);
+        }
+    }
+
     public function kirimKeSimrsAjax()
     {
-        // Hanya terima request AJAX
         if (!$this->request->isAJAX()) {
             return $this->response->setStatusCode(403)->setJSON([
                 'success' => false,
@@ -360,12 +514,9 @@ class Authorized extends BaseController
         }
 
         try {
-            // Panggil fungsi pengiriman internal (private method)
             $this->kirimKeSimrs($id_frs, null);
-
-            // Ambil hasil dari session flashdata yang di-set oleh kirimKeSimrs()
             $simrsResponse = session()->getFlashdata('simrs_response');
-            $simrsError    = session()->getFlashdata('simrs_error');
+            $simrsError = session()->getFlashdata('simrs_error');
 
             if ($simrsError) {
                 return $this->response->setStatusCode(500)->setJSON([
@@ -375,8 +526,8 @@ class Authorized extends BaseController
             }
 
             return $this->response->setJSON([
-                'success'  => true,
-                'message'  => 'Data berhasil dikirim ke SIMRS.',
+                'success' => true,
+                'message' => 'Data berhasil dikirim ke SIMRS.',
                 'response' => $simrsResponse,
             ]);
         } catch (\Exception $e) {

@@ -401,7 +401,7 @@
                     ? '<span class="badge badge-secondary">Belum Ada Hasil</span>'
                     : '<span class="badge badge-success">Ada Hasil</span>';
                 tbody.insertAdjacentHTML('beforeend',
-                    '<tr><td>' + (item.idtransaksi||'-') + '</td><td>' + (item.register||'-') + '</td><td>' + (item.tanggal||'-') + '</td><td>' + (item.norm||'-') + '</td><td>' + (item.nama||'-') + '</td><td>' + (item.pemeriksaan||'-') + '</td><td>' + (item.diagnosaklinik||'-') + '</td><td>' + hasil + '</td><td><button class="btn btn-warning btn-sm" onclick="pilihKunjunganSrs(\'' + item.idtransaksi + '\')"><i class="fas fa-check"></i> Pilih</button></td></tr>'
+                    '<tr><td>' + (item.idtransaksi||'-') + '</td><td>' + (item.register||'-') + '</td><td>' + (item.tanggal||'-') + '</td><td>' + (item.norm||'-') + '</td><td>' + (item.nama||'-') + '</td><td>' + (item.pemeriksaan||'-') + '</td><td>' + (item.diagnosaklinik||'-') + '</td><td>' + hasil + '</td><td><button class="btn btn-warning btn-sm" data-idtransaksi="' + String(item.idtransaksi || '').replace(/"/g, '&quot;').replace(/'/g, '&#039;') + '" data-register="' + String(item.register || '').replace(/"/g, '&quot;').replace(/'/g, '&#039;') + '" data-tanggal="' + String(item.tanggal || '').replace(/"/g, '&quot;').replace(/'/g, '&#039;') + '" onclick="pilihKunjunganSrs(this)"><i class="fas fa-check"></i> Pilih</button></td></tr>'
                 );
             });
             document.getElementById('srs-kunjungan-table-wrapper').classList.remove('d-none');
@@ -414,8 +414,13 @@
         });
     }
 
-    function pilihKunjunganSrs(idtransaksi) {
+    function pilihKunjunganSrs(button) {
         $('#modalKunjunganSimrsSrs').modal('hide');
+
+        var selected = button && button.dataset ? button.dataset : {};
+        var idtransaksi = selected.idtransaksi || '';
+        var tanggal = selected.tanggal || '';
+        var register = selected.register || '';
 
         var form = document.getElementById('form-srs');
         var btn = document.getElementById('btn-kirim-simrs-srs');
@@ -446,23 +451,27 @@
         })
         .then(function() {
             tampilkanToastSrs('info', 'Data berhasil diperbarui. Mengirim ke SIMRS...');
-            kirimKeSimrsSrs(idtransaksi);
+            kirimKeSimrsSrs(idtransaksi, tanggal, register);
         })
         .catch(function(err) {
             console.warn('Penyimpanan form gagal, lanjut kirim SIMRS:', err);
-            kirimKeSimrsSrs(idtransaksi);
+            kirimKeSimrsSrs(idtransaksi, tanggal, register);
         });
     }
 
 
-    function kirimKeSimrsSrs(idtransaksi) {
+    function kirimKeSimrsSrs(idtransaksi, tanggal, register) {
         var btn = document.getElementById('btn-kirim-simrs-srs');
         var csrfToken = '<?= csrf_token() ?>', csrfHash = '<?= csrf_hash() ?>';
         btn.disabled = true;
         btn.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Mengirim...';
         var fd = new URLSearchParams();
-        fd.append('id_srs', idSrs); fd.append('idtransaksi', idtransaksi); fd.append(csrfToken, csrfHash);
-        fetch('<?= base_url("authorized_srs/kirim_ke_simrs") ?>', {
+        fd.append('id_srs', idSrs);
+        fd.append('idtransaksi', idtransaksi || '');
+        fd.append('tanggal', tanggal || '');
+        fd.append('register', register || '');
+        fd.append(csrfToken, csrfHash);
+        fetch('<?= base_url("authorized_srs/kirim_ke_simrs_edit") ?>', {
             method: 'POST',
             headers: { 'Content-Type': 'application/x-www-form-urlencoded', 'X-Requested-With': 'XMLHttpRequest' },
             body: fd.toString()

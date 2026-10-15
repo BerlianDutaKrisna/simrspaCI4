@@ -925,7 +925,7 @@
                     '<td>' + (item.pemeriksaan || '-') + '</td>' +
                     '<td>' + (item.diagnosaklinik || '-') + '</td>' +
                     '<td>' + hasil + '</td>' +
-                    '<td><button class="btn btn-warning btn-sm" onclick="pilihKunjunganHpa(\'' + item.idtransaksi + '\')"><i class="fas fa-check"></i> Pilih</button></td>' +
+                    '<td><button class="btn btn-warning btn-sm" data-idtransaksi="' + String(item.idtransaksi || '').replace(/"/g, '&quot;').replace(/'/g, '&#039;') + '" data-register="' + String(item.register || '').replace(/"/g, '&quot;').replace(/'/g, '&#039;') + '" data-tanggal="' + String(item.tanggal || '').replace(/"/g, '&quot;').replace(/'/g, '&#039;') + '" onclick="pilihKunjunganHpa(this)"><i class="fas fa-check"></i> Pilih</button></td>' +
                     '</tr>';
                 tbody.insertAdjacentHTML('beforeend', row);
             });
@@ -944,8 +944,13 @@
      * Dipanggil saat user memilih satu kunjungan.
      * Tutup modal, simpan form terlebih dahulu (fungsi tombol submit), lalu jalankan kirimKeSimrsHpa.
      */
-    function pilihKunjunganHpa(idtransaksi) {
+    function pilihKunjunganHpa(button) {
         $('#modalKunjunganSimrsHpa').modal('hide');
+
+        var selected = button && button.dataset ? button.dataset : {};
+        var idtransaksi = selected.idtransaksi || '';
+        var tanggal = selected.tanggal || '';
+        var register = selected.register || '';
 
         var form = document.getElementById('form-hpa');
         var btn = document.getElementById('btn-kirim-simrs');
@@ -977,19 +982,19 @@
         })
         .then(function() {
             tampilkanToastSimrs('info', 'Data berhasil diperbarui. Mengirim ke SIMRS...');
-            kirimKeSimrsHpa(idtransaksi);
+            kirimKeSimrsHpa(idtransaksi, tanggal, register);
         })
         .catch(function(err) {
             console.warn('Penyimpanan form gagal, lanjut kirim SIMRS:', err);
-            kirimKeSimrsHpa(idtransaksi);
+            kirimKeSimrsHpa(idtransaksi, tanggal, register);
         });
     }
 
 
     /**
-     * Mengirim data HPA ke SIMRS dengan idtransaksi yang dipilih.
+     * Mengirim data HPA ke SIMRS dengan idtransaksi/tanggal/register yang dipilih dari modal.
      */
-    function kirimKeSimrsHpa(idtransaksi) {
+    function kirimKeSimrsHpa(idtransaksi, tanggal, register) {
         var btn = document.getElementById('btn-kirim-simrs');
         var csrfToken = '<?= csrf_token() ?>';
         var csrfHash  = '<?= csrf_hash() ?>';
@@ -1004,10 +1009,12 @@
 
         var formData = new URLSearchParams();
         formData.append('id_hpa', idHpa);
-        formData.append('idtransaksi', idtransaksi);
+        formData.append('idtransaksi', idtransaksi || '');
+        formData.append('tanggal', tanggal || '');
+        formData.append('register', register || '');
         formData.append(csrfToken, csrfHash);
 
-        fetch('<?= base_url("authorized_hpa/kirim_ke_simrs") ?>', {
+        fetch('<?= base_url("authorized_hpa/kirim_ke_simrs_edit") ?>', {
             method: 'POST',
             headers: {
                 'Content-Type'     : 'application/x-www-form-urlencoded',

@@ -433,7 +433,7 @@
                     '<td>' + (item.pemeriksaan || '-') + '</td>' +
                     '<td>' + (item.diagnosaklinik || '-') + '</td>' +
                     '<td>' + hasil + '</td>' +
-                    '<td><button class="btn btn-warning btn-sm" onclick="pilihKunjunganFrs(\'' + item.idtransaksi + '\')"><i class="fas fa-check"></i> Pilih</button></td>' +
+                    '<td><button class="btn btn-warning btn-sm" data-idtransaksi="' + String(item.idtransaksi || '').replace(/"/g, '&quot;').replace(/'/g, '&#039;') + '" data-register="' + String(item.register || '').replace(/"/g, '&quot;').replace(/'/g, '&#039;') + '" data-tanggal="' + String(item.tanggal || '').replace(/"/g, '&quot;').replace(/'/g, '&#039;') + '" onclick="pilihKunjunganFrs(this)"><i class="fas fa-check"></i> Pilih</button></td>' +
                     '</tr>';
                 tbody.insertAdjacentHTML('beforeend', row);
             });
@@ -447,8 +447,13 @@
         });
     }
 
-    function pilihKunjunganFrs(idtransaksi) {
+    function pilihKunjunganFrs(button) {
         $('#modalKunjunganSimrsFrs').modal('hide');
+
+        var selected = button && button.dataset ? button.dataset : {};
+        var idtransaksi = selected.idtransaksi || '';
+        var tanggal = selected.tanggal || '';
+        var register = selected.register || '';
 
         var form = document.getElementById('form-frs');
         var btn = document.getElementById('btn-kirim-simrs-frs');
@@ -481,16 +486,16 @@
         })
         .then(function() {
             tampilkanToastFrs('info', 'Data berhasil diperbarui. Mengirim ke SIMRS...');
-            kirimKeSimrsFrs(idtransaksi);
+            kirimKeSimrsFrs(idtransaksi, tanggal, register);
         })
         .catch(function(err) {
             console.warn('Penyimpanan form gagal, lanjut kirim SIMRS:', err);
-            kirimKeSimrsFrs(idtransaksi);
+            kirimKeSimrsFrs(idtransaksi, tanggal, register);
         });
     }
 
 
-    function kirimKeSimrsFrs(idtransaksi) {
+    function kirimKeSimrsFrs(idtransaksi, tanggal, register) {
         var btn = document.getElementById('btn-kirim-simrs-frs');
         var csrfToken = '<?= csrf_token() ?>';
         var csrfHash  = '<?= csrf_hash() ?>';
@@ -498,9 +503,11 @@
         btn.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Mengirim...';
         var formData = new URLSearchParams();
         formData.append('id_frs', idFrs);
-        formData.append('idtransaksi', idtransaksi);
+        formData.append('idtransaksi', idtransaksi || '');
+        formData.append('tanggal', tanggal || '');
+        formData.append('register', register || '');
         formData.append(csrfToken, csrfHash);
-        fetch('<?= base_url("authorized_frs/kirim_ke_simrs") ?>', {
+        fetch('<?= base_url("authorized_frs/kirim_ke_simrs_edit") ?>', {
             method: 'POST',
             headers: { 'Content-Type': 'application/x-www-form-urlencoded', 'X-Requested-With': 'XMLHttpRequest' },
             body: formData.toString()
