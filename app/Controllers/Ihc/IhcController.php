@@ -780,6 +780,70 @@ class ihcController extends BaseController
         return redirect()->to('ihc/index_buku_penerima')->with('success', 'Penerima berhasil disimpan.');
     }
 
+    private function getKunjunganTransaksiSamaRegister($normPasien, $register, $idTransaksiSaatIni = null)
+    {
+        $normPasien = trim((string) ($normPasien ?? ''));
+        $register = trim((string) ($register ?? ''));
+        $targetList = [];
+
+        if ($normPasien === '' || $register === '') {
+            if ($idTransaksiSaatIni !== null && $idTransaksiSaatIni !== '') {
+                $targetList[] = [
+                    'idtransaksi' => (string) $idTransaksiSaatIni,
+                    'tanggal' => null,
+                    'register' => $register,
+                ];
+            }
+            return $targetList;
+        }
+
+        try {
+            $client = \Config\Services::curlrequest();
+            $response = $client->get(
+                "http://172.20.29.240/apibdrs/apibdrs/getKunjunganPasien/{$normPasien}",
+                ['timeout' => 10, 'connect_timeout' => 5]
+            );
+
+            $decoded = json_decode($response->getBody(), true);
+            $rows = $decoded['data'] ?? [];
+
+            if (is_array($rows)) {
+                foreach ($rows as $row) {
+                    if (!is_array($row)) {
+                        continue;
+                    }
+
+                    $rowRegister = trim((string) ($row['register'] ?? $row['no_register'] ?? ''));
+                    if ($rowRegister !== $register) {
+                        continue;
+                    }
+
+                    $idtransaksi = $row['idtransaksi'] ?? $row['id_transaksi'] ?? null;
+                    if ($idtransaksi === null || $idtransaksi === '') {
+                        continue;
+                    }
+
+                    $targetList[(string) $idtransaksi] = [
+                        'idtransaksi' => (string) $idtransaksi,
+                        'tanggal' => $row['tanggal'] ?? $row['tanggal_kunjungan'] ?? null,
+                        'register' => $rowRegister,
+                    ];
+                }
+            }
+        } catch (\Exception $e) {
+            log_message('error', '[SIMRS] Gagal mengambil kunjungan same register: ' . $e->getMessage());
+        }
+
+        if (empty($targetList) && $idTransaksiSaatIni !== null && $idTransaksiSaatIni !== '') {
+            $targetList[(string) $idTransaksiSaatIni] = [
+                'idtransaksi' => (string) $idTransaksiSaatIni,
+                'tanggal' => null,
+                'register' => $register,
+            ];
+        }
+
+        return array_values($targetList);
+    }
 
     public function update_print($id_ihc)
     {
@@ -891,55 +955,77 @@ class ihcController extends BaseController
                 $diagnosa = mb_substr($diagnosa, 0, 20) . '...';
             }
 
-            // --- PERSIAPAN PAYLOAD ---
-            $payload = [
-                'idtransaksi'      => $data['idtransaksi'] ?? null,
-                'tanggal'          => $data['tanggal'] ?? null,
-                'register'         => $data['register'] ?? null,
-                'pemeriksaan'      => $data['pemeriksaan'] ?? null,
-                'idpasien'         => $data['idpasien'] ?? null,
-                'norm'             => $data['norm'] ?? null,
-                'nama'             => $data['nama'] ?? null,
-                'noregister'       => $data['noregister'] ?? null,
-                'datang'           => $data['datang'] ?? null,
-                'periksa'          => $data['periksa'] ?? null,
-                'selesai'          => $data['selesai'] ?? null,
-                'diambil'          => $selesaiAuthorized,
-                'iddokterpa'       => $iddokterpa,
-                'dokterpa'         => $data['dokterpa'] ?? null,
-                'statuslokasi'     => $data['statuslokasi'] ?? null,
-                'diagnosaklinik'   => $data['diagnosaklinik'] ?? null,
-                'diagnosapatologi' => $diagnosa,
-                'mutusediaan'      => $data['mutusediaan'] ?? null,
-                'responsetime'     => $responsetime,
-                'hasil'            => $ihcTerbaru['print_ihc'] ?? null,
-                'status'           => !empty($data['idtransaksi']) ? ($data['status'] ?? 'Belum Terkirim') : 'Belum Terdaftar',
-                'updated_at'       => date('Y-m-d H:i:s'),
-            ];
+            $targets = $this->getKunjunganTransaksiSamaRegister(
+                $data['norm'] ?? '',
+                $data['register'] ?? '',
+                $data['idtransaksi'] ?? null
+            );
 
-            log_message('debug', '[PENGIRIMAN SIMRS] Payload siap dikirim: ' . json_encode($payload, JSON_PRETTY_PRINT));
+            if (empty($targets)) {
+                session()->setFlashdata('simrs_warning', 'Tidak ada data transaksi lain dengan register yang sama.');
+                return redirect()->to('authorized_ihc/index')->with('warning', 'Tidak ada data transaksi lain dengan register yang sama.');
+            }
 
-            try {
-                $client = \Config\Services::curlrequest();
-                $response = $client->post(
-                    'http://172.20.29.240/apibdrs/apibdrs/postPemeriksaan',
-                    [
-                        'headers' => ['Content-Type' => 'application/json'],
-                        'body'    => json_encode($payload)
-                    ]
-                );
+            $responsePayloads = [];
+            foreach ($targets as $target) {
+                $targetIdTransaksi = $target['idtransaksi'] ?? ($data['idtransaksi'] ?? null);
+                $targetTanggal = $target['tanggal'] ?? ($data['tanggal'] ?? null);
+                $targetRegister = $target['register'] ?? ($data['register'] ?? null);
 
-                $responseBody = $response->getBody();
-                log_message('info', '[PENGIRIMAN SIMRS] Response: ' . $responseBody);
+                $payload = [
+                    'idtransaksi'      => $targetIdTransaksi,
+                    'tanggal'          => $targetTanggal,
+                    'register'         => $targetRegister,
+                    'pemeriksaan'      => $data['pemeriksaan'] ?? null,
+                    'idpasien'         => $data['idpasien'] ?? null,
+                    'norm'             => $data['norm'] ?? null,
+                    'nama'             => $data['nama'] ?? null,
+                    'noregister'       => $data['noregister'] ?? null,
+                    'datang'           => $data['datang'] ?? null,
+                    'periksa'          => $data['periksa'] ?? null,
+                    'selesai'          => $data['selesai'] ?? null,
+                    'diambil'          => $selesaiAuthorized,
+                    'iddokterpa'       => $iddokterpa,
+                    'dokterpa'         => $data['dokterpa'] ?? null,
+                    'statuslokasi'     => $data['statuslokasi'] ?? null,
+                    'diagnosaklinik'   => $data['diagnosaklinik'] ?? null,
+                    'diagnosapatologi' => $diagnosa,
+                    'mutusediaan'      => $data['mutusediaan'] ?? null,
+                    'responsetime'     => $responsetime,
+                    'hasil'            => $ihcTerbaru['print_ihc'] ?? null,
+                    'status'           => !empty($targetIdTransaksi) ? ($data['status'] ?? 'Belum Terkirim') : 'Belum Terdaftar',
+                    'updated_at'       => date('Y-m-d H:i:s'),
+                ];
 
-                // simpan ke flashdata agar bisa dicek di halaman redirect
-                session()->setFlashdata('simrs_payload', json_encode($payload));
-                session()->setFlashdata('simrs_response', $responseBody);
-            } catch (\Exception $e) {
-                $errorMessage = $e->getMessage();
-                log_message('error', '[PENGIRIMAN SIMRS] Gagal kirim: ' . $errorMessage);
+                log_message('debug', '[PENGIRIMAN SIMRS] Payload siap dikirim untuk idtransaksi ' . ($targetIdTransaksi ?? 'null') . ': ' . json_encode($payload, JSON_PRETTY_PRINT));
 
-                session()->setFlashdata('simrs_error', $errorMessage);
+                try {
+                    $client = \Config\Services::curlrequest();
+                    $response = $client->post(
+                        'http://172.20.29.240/apibdrs/apibdrs/postPemeriksaan',
+                        [
+                            'headers' => ['Content-Type' => 'application/json'],
+                            'body'    => json_encode($payload)
+                        ]
+                    );
+
+                    $responseBody = $response->getBody();
+                    log_message('info', '[PENGIRIMAN SIMRS] Response untuk idtransaksi ' . ($targetIdTransaksi ?? 'null') . ': ' . $responseBody);
+                    $responsePayloads[] = ['payload' => $payload, 'response' => $responseBody];
+
+                    session()->setFlashdata('simrs_payload', json_encode($payload));
+                    session()->setFlashdata('simrs_response', $responseBody);
+                } catch (\Exception $e) {
+                    $errorMessage = $e->getMessage();
+                    log_message('error', '[PENGIRIMAN SIMRS] Gagal kirim untuk idtransaksi ' . ($targetIdTransaksi ?? 'null') . ': ' . $errorMessage);
+                    session()->setFlashdata('simrs_error', $errorMessage);
+                }
+            }
+
+            if (!empty($responsePayloads)) {
+                $lastResponse = end($responsePayloads);
+                session()->setFlashdata('simrs_payload', json_encode($lastResponse['payload']));
+                session()->setFlashdata('simrs_response', $lastResponse['response']);
             }
 
             return redirect()->to('authorized_ihc/index')

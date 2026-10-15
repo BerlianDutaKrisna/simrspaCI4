@@ -146,6 +146,71 @@ class Authorized extends BaseController
         }
     }
 
+    private function getKunjunganTransaksiSamaRegister($normPasien, $register, $idTransaksiSaatIni = null)
+    {
+        $normPasien = trim((string) ($normPasien ?? ''));
+        $register = trim((string) ($register ?? ''));
+        $targetList = [];
+
+        if ($normPasien === '' || $register === '') {
+            if ($idTransaksiSaatIni !== null && $idTransaksiSaatIni !== '') {
+                $targetList[] = [
+                    'idtransaksi' => (string) $idTransaksiSaatIni,
+                    'tanggal' => null,
+                    'register' => $register,
+                ];
+            }
+            return $targetList;
+        }
+
+        try {
+            $client = \Config\Services::curlrequest();
+            $response = $client->get(
+                "http://172.20.29.240/apibdrs/apibdrs/getKunjunganPasien/{$normPasien}",
+                ['timeout' => 10, 'connect_timeout' => 5]
+            );
+
+            $decoded = json_decode($response->getBody(), true);
+            $rows = $decoded['data'] ?? [];
+
+            if (is_array($rows)) {
+                foreach ($rows as $row) {
+                    if (!is_array($row)) {
+                        continue;
+                    }
+
+                    $rowRegister = trim((string) ($row['register'] ?? $row['no_register'] ?? ''));
+                    if ($rowRegister !== $register) {
+                        continue;
+                    }
+
+                    $idtransaksi = $row['idtransaksi'] ?? $row['id_transaksi'] ?? null;
+                    if ($idtransaksi === null || $idtransaksi === '') {
+                        continue;
+                    }
+
+                    $targetList[(string) $idtransaksi] = [
+                        'idtransaksi' => (string) $idtransaksi,
+                        'tanggal' => $row['tanggal'] ?? $row['tanggal_kunjungan'] ?? null,
+                        'register' => $rowRegister,
+                    ];
+                }
+            }
+        } catch (\Exception $e) {
+            log_message('error', '[SIMRS] Gagal mengambil kunjungan same register: ' . $e->getMessage());
+        }
+
+        if (empty($targetList) && $idTransaksiSaatIni !== null && $idTransaksiSaatIni !== '') {
+            $targetList[(string) $idTransaksiSaatIni] = [
+                'idtransaksi' => (string) $idTransaksiSaatIni,
+                'tanggal' => null,
+                'register' => $register,
+            ];
+        }
+
+        return array_values($targetList);
+    }
+
     private function kirimKeSimrs($id_ihc, $selesaiAuthorized = null)
     {
         $ihcTerbaru = $this->ihcModel->getihcWithRelationsProses($id_ihc);
@@ -155,107 +220,128 @@ class Authorized extends BaseController
         }
 
         $data = $ihcTerbaru;
+        $register = trim((string) ($data['no_register'] ?? ''));
+        $normPasien = trim((string) ($data['norm_pasien'] ?? ''));
+        $targets = $this->getKunjunganTransaksiSamaRegister($normPasien, $register, $data['id_transaksi'] ?? null);
 
-        // --- HITUNG RESPONSETIME ---
-        $responsetime = null;
-        if (!empty($data['mulai_penerimaan_ihc']) && !empty($data['selesai_penulisan_ihc'])) {
+        if (empty($targets)) {
+            return;
+        }
+
+        $responsePayloads = [];
+
+        foreach ($targets as $target) {
+            $targetIdTransaksi = $target['idtransaksi'] ?? null;
+            $targetTanggal = $target['tanggal'] ?? ($data['tanggal_transaksi'] ?? null);
+            $targetRegister = $target['register'] ?? $register;
+
+            // --- HITUNG RESPONSETIME ---
+            $responsetime = null;
+            if (!empty($data['mulai_penerimaan_ihc']) && !empty($data['selesai_penulisan_ihc'])) {
+                try {
+                    $start = new \DateTime($data['mulai_penerimaan_ihc']);
+                    $end   = new \DateTime($data['selesai_penulisan_ihc']);
+                    $diff  = $start->diff($end);
+                    $responsetime = sprintf(
+                        "%d hari %d jam %d menit %d detik",
+                        $diff->days,
+                        $diff->h,
+                        $diff->i,
+                        $diff->s
+                    );
+                } catch (\Exception $e) {
+                    log_message('error', '[PENGIRIMAN SIMRS] Error hitung responsetime: ' . $e->getMessage());
+                }
+            }
+
+            // --- TENTUKAN ID DOKTER PA BERDASARKAN ID USER ---
+            $mappingDokterByUser = [
+                '1' => [
+                    'nama' => 'dr. Vinna Chrisdianti, Sp.PA',
+                    'id'   => 1179,
+                ],
+                '2' => [
+                    'nama' => 'dr. Ayu Tyasmara Pratiwi, Sp.PA',
+                    'id'   => 328,
+                ],
+            ];
+            $idUserDokter = $data['id_user_dokter_pembacaan_ihc'] ?? null;
+            log_message('debug', '[SIMRS] id_user_dokter_pembacaan_ihc: ' . $idUserDokter);
+            $iddokterpa   = null;
+            $dokterpa = null;
+            if ($idUserDokter && isset($mappingDokterByUser[$idUserDokter])) {
+                $iddokterpa   = $mappingDokterByUser[$idUserDokter]['id'];
+                $dokterpa = $mappingDokterByUser[$idUserDokter]['nama'];
+            } else {
+                log_message('error', '[SIMRS] Mapping dokter berdasarkan user tidak ditemukan: ' . $idUserDokter);
+                $iddokterpa   = 0;
+                $dokterpa = '';
+            }
+
+            //BATASAN DIAGNOSA PATOLOGI
+            $diagnosa = strip_tags($data['hasil_ihc'] ?? '');
+            $diagnosa = trim($diagnosa);
+            if (mb_strlen($diagnosa) > 25) {
+                $diagnosa = mb_substr($diagnosa, 0, 20) . '...';
+            }
+
+            $payload = [
+                'idtransaksi'      => $targetIdTransaksi ?? ($data['id_transaksi'] ?? ''),
+                'tanggal'          => $targetTanggal ?? ($data['tanggal_transaksi'] ?? ''),
+                'register'         => $targetRegister,
+                'noregister'       => $data['kode_ihc'] ?? '',
+                'idpasien'         => $data['id_pasien'] ?? '',
+                'norm'             => $data['norm_pasien'] ?? '',
+                'nama'             => $data['nama_pasien'] ?? '',
+                'datang'           => $data['mulai_penerimaan_ihc'] ?? '',
+                'periksa'          => $data['mulai_penerimaan_ihc'] ?? '',
+                'selesai'          => $data['selesai_penulisan_ihc'] ?? '',
+                'diambil'          => $selesaiAuthorized
+                    ?? ($data['selesai_authorized_ihc'] ?? $data['selesai_penulisan_ihc'] ?? ''),
+                'iddokterpa'       => $iddokterpa,
+                'dokterpa'         => $dokterpa,
+                'statuslokasi'     => $data['lokasi_spesimen'] ?? '',
+                'diagnosaklinik'   => $data['diagnosa_klinik'] ?? '',
+                'diagnosapatologi' => $diagnosa,
+                'mutusediaan'      => $data['total_nilai_mutu_ihc'] ?? '',
+                'responsetime'     => $responsetime ?? '',
+                'hasil'            => $data['print_ihc'] ?? '',
+                'status'           => !empty($targetIdTransaksi ?? $data['id_transaksi'])
+                    ? ($data['status_ihc'] ?? 'Belum Terkirim')
+                    : 'Belum Terdaftar',
+                'updated_at'       => date('Y-m-d H:i:s'),
+            ];
+
+            log_message('debug', '[PENGIRIMAN SIMRS] Payload siap dikirim untuk idtransaksi ' . ($targetIdTransaksi ?? 'null') . ': ' . json_encode($payload, JSON_PRETTY_PRINT));
+
             try {
-                $start = new \DateTime($data['mulai_penerimaan_ihc']);
-                $end   = new \DateTime($data['selesai_penulisan_ihc']);
-                $diff  = $start->diff($end);
-                $responsetime = sprintf(
-                    "%d hari %d jam %d menit %d detik",
-                    $diff->days,
-                    $diff->h,
-                    $diff->i,
-                    $diff->s
+                $client = \Config\Services::curlrequest();
+                $response = $client->post(
+                    'http://172.20.29.240/apibdrs/apibdrs/postPemeriksaan',
+                    [
+                        'headers' => ['Content-Type' => 'application/json'],
+                        'body'    => json_encode($payload),
+                    ]
                 );
+
+                $responseBody = $response->getBody();
+                log_message('info', '[PENGIRIMAN SIMRS] Response untuk idtransaksi ' . ($targetIdTransaksi ?? 'null') . ': ' . $responseBody);
+
+                $responsePayloads[] = [
+                    'payload' => $payload,
+                    'response' => $responseBody,
+                ];
             } catch (\Exception $e) {
-                log_message('error', '[PENGIRIMAN SIMRS] Error hitung responsetime: ' . $e->getMessage());
+                $errorMessage = $e->getMessage();
+                log_message('error', '[PENGIRIMAN SIMRS] Gagal kirim untuk idtransaksi ' . ($targetIdTransaksi ?? 'null') . ': ' . $errorMessage);
+                session()->setFlashdata('simrs_error', $errorMessage);
             }
         }
 
-        // --- TENTUKAN ID DOKTER PA BERDASARKAN ID USER ---
-        $mappingDokterByUser = [
-            '1' => [
-                'nama' => 'dr. Vinna Chrisdianti, Sp.PA',
-                'id'   => 1179,
-            ],
-            '2' => [
-                'nama' => 'dr. Ayu Tyasmara Pratiwi, Sp.PA',
-                'id'   => 328,
-            ],
-        ];
-        $idUserDokter = $data['id_user_dokter_pembacaan_ihc'] ?? null;
-        log_message('debug', '[SIMRS] id_user_dokter_pembacaan_ihc: ' . $idUserDokter);
-        $iddokterpa   = null;
-        $dokterpa = null;
-        if ($idUserDokter && isset($mappingDokterByUser[$idUserDokter])) {
-            $iddokterpa   = $mappingDokterByUser[$idUserDokter]['id'];
-            $dokterpa = $mappingDokterByUser[$idUserDokter]['nama'];
-        } else {
-            log_message('error', '[SIMRS] Mapping dokter berdasarkan user tidak ditemukan: ' . $idUserDokter);
-            $iddokterpa   = 0;
-            $dokterpa = '';
-        }
-
-        //BATASAN DIAGNOSA PATOLOGI
-        $diagnosa = strip_tags($data['hasil_ihc'] ?? '');
-        $diagnosa = trim($diagnosa);
-        if (mb_strlen($diagnosa) > 25) {
-            $diagnosa = mb_substr($diagnosa, 0, 20) . '...';
-        }
-
-        // --- PERSIAPAN PAYLOAD ---
-        $payload = [
-            'idtransaksi'      => $data['id_transaksi'] ?? '',
-            'tanggal'          => $data['tanggal_transaksi'] ?? '',
-            'register'         => $data['no_register'] ?? '',
-            'noregister'       => $data['kode_ihc'] ?? '',
-            'idpasien'         => $data['id_pasien'] ?? '',
-            'norm'             => $data['norm_pasien'] ?? '',
-            'nama'             => $data['nama_pasien'] ?? '',
-            'datang'           => $data['mulai_penerimaan_ihc'] ?? '',
-            'periksa'          => $data['mulai_penerimaan_ihc'] ?? '',
-            'selesai'          => $data['selesai_penulisan_ihc'] ?? '',
-            'diambil' => $selesaiAuthorized
-                ?? ($data['selesai_authorized_ihc'] ?? $data['selesai_penulisan_ihc'] ?? ''),
-            'iddokterpa' => $iddokterpa,
-            'dokterpa'   => $dokterpa,
-            'statuslokasi'     => $data['lokasi_spesimen'] ?? '',
-            'diagnosaklinik'   => $data['diagnosa_klinik'] ?? '',
-            'diagnosapatologi' => $diagnosa,
-            'mutusediaan'      => $data['total_nilai_mutu_ihc'] ?? '',
-            'responsetime'     => $responsetime ?? '',
-            'hasil'            => $data['print_ihc'] ?? '',
-            'status'           => !empty($data['id_transaksi'])
-                ? ($data['status_ihc'] ?? 'Belum Terkirim')
-                : 'Belum Terdaftar',
-            'updated_at'       => date('Y-m-d H:i:s'),
-        ];
-
-        log_message('debug', '[PENGIRIMAN SIMRS] Payload siap dikirim: ' . json_encode($payload, JSON_PRETTY_PRINT));
-
-        try {
-            $client = \Config\Services::curlrequest();
-            $response = $client->post(
-                'http://172.20.29.240/apibdrs/apibdrs/postPemeriksaan',
-                [
-                    'headers' => ['Content-Type' => 'application/json'],
-                    'body'    => json_encode($payload)
-                ]
-            );
-
-            $responseBody = $response->getBody();
-            log_message('info', '[PENGIRIMAN SIMRS] Response: ' . $responseBody);
-
-            session()->setFlashdata('simrs_payload', json_encode($payload));
-            session()->setFlashdata('simrs_response', $responseBody);
-        } catch (\Exception $e) {
-            $errorMessage = $e->getMessage();
-            log_message('error', '[PENGIRIMAN SIMRS] Gagal kirim: ' . $errorMessage);
-
-            session()->setFlashdata('simrs_error', $errorMessage);
+        if (!empty($responsePayloads)) {
+            $lastResponse = end($responsePayloads);
+            session()->setFlashdata('simrs_payload', json_encode($lastResponse['payload']));
+            session()->setFlashdata('simrs_response', $lastResponse['response']);
         }
     }
 
