@@ -436,14 +436,22 @@ class Authorized extends BaseController
 
         $data = $ihcTerbaru;
 
+        $updateData = [];
         if ($selectedIdTransaksi !== null && $selectedIdTransaksi !== '') {
             $data['id_transaksi'] = $selectedIdTransaksi;
+            $updateData['id_transaksi'] = $selectedIdTransaksi;
         }
         if ($selectedTanggal !== null && $selectedTanggal !== '') {
             $data['tanggal_transaksi'] = $selectedTanggal;
+            $updateData['tanggal_transaksi'] = $selectedTanggal;
         }
         if ($selectedRegister !== null && $selectedRegister !== '') {
             $data['no_register'] = $selectedRegister;
+            $updateData['no_register'] = $selectedRegister;
+        }
+
+        if (!empty($updateData)) {
+            $this->ihcModel->update($id_ihc, $updateData);
         }
 
         $responsetime = null;
