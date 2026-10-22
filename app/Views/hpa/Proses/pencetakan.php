@@ -104,7 +104,7 @@
                                     <td>
                                         <?php if (empty($row['no_register']) || $row['no_register'] == ""): ?>
                                             <span class="badge badge-danger" style="font-size: 100%;">
-                                                <i class="fa fa-exclamation-triangle"></i> Harap Copas Manual di SIMRS
+                                                <i class="fa fa-exclamation-triangle"></i> Harap Kirim Ulang di SIMRS
                                             </span>
                                         <?php else: ?>
                                             <?= $row['no_register']; ?>

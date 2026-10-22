@@ -101,13 +101,13 @@
                                     <td>
                                         <?php if (empty($row['no_register'])): ?>
                                             <span class="badge badge-danger" style="font-size: 100%;">
-                                                <i class="fa fa-exclamation-triangle"></i> Harap Copas Manual di SIMRS dan copas 4x
+                                                <i class="fa fa-exclamation-triangle"></i> Harap Kirim Ulang 4X di SIMRS
                                             </span>
                                         <?php else: ?>
                                             <?= $row['no_register']; ?>
                                             <br>
                                             <span class="badge badge-warning" style="margin-top: 5px;">
-                                                <i class="fa fa-copy"></i> Copas 4x pada SIMRS
+                                                <i class="fa fa-copy"></i> Harap Kirim Ulang 4X di SIMRS
                                             </span>
                                         <?php endif; ?>
                                     </td>
