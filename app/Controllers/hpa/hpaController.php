@@ -468,28 +468,33 @@ class HpaController extends BaseController
         // Ambil data HPA berdasarkan ID
         $hpa = $this->hpaModel->getHpaWithRelationsProses($id_hpa);
         $id_pasien = $hpa['id_pasien'];
+        
         // --- Riwayat API ---
+        $riwayat_api = [];
+        $permintaan = ['code' => 500, 'data' => []]; // Default kosong
+
         if (!empty($hpa['norm_pasien'])) {
             $riwayat_api_response = $this->simrsModel->getPemeriksaanPasien($hpa['norm_pasien']);
             if (!empty($riwayat_api_response['code']) && $riwayat_api_response['code'] == 200) {
                 $riwayat_api = $riwayat_api_response['data'];
             }
-            // Ambil data permintaan dari API SIMRS (jika tersedia)
-            $permintaan_api_response = $this->simrsModel->getPermintaan($hpa['norm_pasien']);
-            if (!empty($permintaan_api_response['code']) && $permintaan_api_response['code'] == 200 && !empty($permintaan_api_response['data'])) {
-                // Ambil entri pertama sebagai permintaan utama
-                $permintaan = $permintaan_api_response['data'][0] ?? $permintaan_api_response['data'];
-            } else {
-                $permintaan = [];
+
+            // Ambil data permintaan dari API SIMRS secara utuh (mempertahankan struktur code & data)
+            $permintaan_response = $this->simrsModel->getPermintaan($hpa['norm_pasien']);
+            if (!empty($permintaan_response['code']) && $permintaan_response['code'] == 200 && !empty($permintaan_response['data'])) {
+                $permintaan = $permintaan_response;
             }
         }
+
         $riwayat_hpa = $this->hpaModel->riwayatPemeriksaanhpa($id_pasien);
         $riwayat_frs = $this->frsModel->riwayatPemeriksaanfrs($id_pasien);
         $riwayat_srs = $this->srsModel->riwayatPemeriksaansrs($id_pasien);
         $riwayat_ihc = $this->ihcModel->riwayatPemeriksaanihc($id_pasien);
+        
         if (!$hpa) {
             return redirect()->back()->with('message', ['error' => 'HPA tidak ditemukan.']);
         }
+
         // Jika field mulai_pemotongan_hpa masih kosong dan ada id_pemotongan_hpa
         if (!empty($hpa['id_pemotongan_hpa']) && empty($hpa['mulai_pemotongan_hpa'])) {
             $this->pemotongan_hpa->update($hpa['id_pemotongan_hpa'], [
@@ -500,11 +505,12 @@ class HpaController extends BaseController
             // Refresh data
             $hpa = $this->hpaModel->getHpaWithRelationsProses($id_hpa);
         }
+
         $id_pemotongan_hpa = $hpa['id_pemotongan_hpa'];
+        
         // Ambil data pemotongan berdasarkan id_pemotongan_hpa
         $pemotongan = $this->pemotongan_hpa->find($id_pemotongan_hpa);
         if (!empty($pemotongan)) {
-            // Ambil nama dokter dan analis jika ID tersedia
             $pemotongan['dokter_nama'] = !empty($pemotongan['id_user_dokter_pemotongan_hpa'])
                 ? ($this->usersModel->find($pemotongan['id_user_dokter_pemotongan_hpa'])['nama_user'] ?? null)
                 : null;
@@ -513,18 +519,19 @@ class HpaController extends BaseController
                 ? ($this->usersModel->find($pemotongan['id_user_pemotongan_hpa'])['nama_user'] ?? null)
                 : null;
         } else {
-            // Jika data pemotongan tidak ditemukan, set sebagai array kosong untuk mencegah error
             $pemotongan = [];
         }
+
         // Ambil data pengguna dengan status "Dokter"
         $users = $this->usersModel->where('status_user', 'Dokter')->findAll();
+        
         // Persiapkan data yang akan dikirim ke view
         $gambar = $this->gambarModel->getByHpa($id_hpa);
         $foto = $this->fotoModel->getByHpa($id_hpa);
 
         $data = [
-            'hpa'        => $hpa,
-            'riwayat_api'   => $riwayat_api ?? [],
+            'hpa'          => $hpa,
+            'riwayat_api'   => $riwayat_api,
             'riwayat_hpa'        => $riwayat_hpa,
             'riwayat_frs'        => $riwayat_frs,
             'riwayat_srs'        => $riwayat_srs,
@@ -535,7 +542,7 @@ class HpaController extends BaseController
             'nama_user'  => $this->session->get('nama_user'),
             'gambar'     => $gambar,
             'foto'       => $foto,
-            'permintaan' => $permintaan ?? [],
+            'permintaan' => $permintaan, // Sekarang variabel ini mengirimkan format ['code' => 200, 'data' => [...]]
         ];
         
         return view('hpa/edit_makroskopis', $data);
