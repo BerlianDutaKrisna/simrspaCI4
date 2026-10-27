@@ -378,6 +378,7 @@ class HpaController extends BaseController
         $id_pasien          = $hpa['id_pasien'];
 
         $riwayat_api = [];
+        $permintaan = ['code' => 500, 'data' => []];
         $riwayat_hpa = $this->hpaModel->riwayatPemeriksaanhpa($id_pasien);
         $riwayat_frs = $this->frsModel->riwayatPemeriksaanfrs($id_pasien);
         $riwayat_srs = $this->srsModel->riwayatPemeriksaansrs($id_pasien);
@@ -436,6 +437,11 @@ class HpaController extends BaseController
             if (!empty($api['code']) && $api['code'] == 200) {
                 $riwayat_api = $api['data'];
             }
+
+            $permintaan_api = $this->simrsModel->getPermintaan($hpa['norm_pasien']);
+            if (!empty($permintaan_api['code']) && $permintaan_api['code'] == 200) {
+                $permintaan = $permintaan_api;
+            }
         }
 
         $gambar = $this->gambarModel->getByHpa($id_hpa);
@@ -458,6 +464,7 @@ class HpaController extends BaseController
             'mutu_hpa'         => $mutu_hpa,
             'gambar'           => $gambar,
             'foto'             => $foto,
+            'permintaan'       => $permintaan,
         ];
 
         return view('hpa/edit', $data);
@@ -572,18 +579,18 @@ class HpaController extends BaseController
         $id_mutu_hpa = $hpa['id_mutu_hpa'];
         $id_pasien = $hpa['id_pasien'];
         // --- Riwayat API ---
+        $riwayat_api = [];
+        $permintaan = ['code' => 500, 'data' => []];
+
         if (!empty($hpa['norm_pasien'])) {
             $riwayat_api_response = $this->simrsModel->getPemeriksaanPasien($hpa['norm_pasien']);
             if (!empty($riwayat_api_response['code']) && $riwayat_api_response['code'] == 200) {
                 $riwayat_api = $riwayat_api_response['data'];
             }
-            // Ambil data permintaan dari API SIMRS (jika tersedia)
+
             $permintaan_api_response = $this->simrsModel->getPermintaan($hpa['norm_pasien']);
-            if (!empty($permintaan_api_response['code']) && $permintaan_api_response['code'] == 200 && !empty($permintaan_api_response['data'])) {
-                // Ambil entri pertama sebagai permintaan utama
-                $permintaan = $permintaan_api_response['data'][0] ?? $permintaan_api_response['data'];
-            } else {
-                $permintaan = [];
+            if (!empty($permintaan_api_response['code']) && $permintaan_api_response['code'] == 200) {
+                $permintaan = $permintaan_api_response;
             }
         }
         $riwayat_hpa = $this->hpaModel->riwayatPemeriksaanhpa($id_pasien);

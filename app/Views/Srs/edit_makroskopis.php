@@ -105,6 +105,7 @@
                 </div>
             </div>
 
+            <?= $this->include('templates/exam/permintaan'); ?>
             <?= $this->include('templates/exam/riwayat'); ?>
 
             <!-- Kolom Foto Makroskopis -->
@@ -215,17 +216,21 @@
 
             <!-- Tombol Simpan -->
             <div class="form-group row">
-                <div class="col-sm-6 text-center mb-3">
+                <div class="col-sm-4 text-center mb-3">
                     <button type="submit"
                         class="btn btn-success btn-user w-100"
                         formaction="<?= base_url('srs/update/' . $srs['id_srs']); ?>">
                         <i class="fas fa-save"></i> Simpan
                     </button>
                 </div>
-                <div class="col-sm-6 text-center">
-                    <!-- Tombol Cetak -->
+                <div class="col-sm-4 text-center">
                     <button type="button" class="btn btn-info btn-user w-100 w-md-auto" onclick="cetakProses()">
                         <i class="fas fa-print"></i> Cetak
+                    </button>
+                </div>
+                <div class="col-sm-4 text-center">
+                    <button type="button" class="btn btn-secondary btn-user w-100" onclick="cetakPermintaanDanProses()">
+                        <i class="fas fa-print"></i> Cetak Permintaan &amp; Proses
                     </button>
                 </div>
             </div>
@@ -251,6 +256,20 @@
         </div>
     </div>
 </div>
+
+<script>
+    function cetakPermintaanDanProses() {
+        if (!document.getElementById('permintaanContent')) {
+            alert('Konten permintaan tidak ditemukan.');
+            return;
+        }
+        if (typeof cetakProses === 'function') {
+            cetakProses(true);
+            return;
+        }
+        alert('Fungsi cetakProses belum tersedia.');
+    }
+</script>
 
 <?= $this->include('templates/notifikasi') ?>
 <?= $this->include('templates/srs/footer_edit'); ?>

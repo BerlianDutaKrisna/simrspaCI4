@@ -386,13 +386,23 @@ class srsController extends BaseController
         // Ambil data srs berdasarkan ID
         $srs = $this->srsModel->getsrsWithRelationsProses($id_srs);
         $id_pasien = $srs['id_pasien'];
+
         // --- Riwayat API ---
+        $riwayat_api = [];
+        $permintaan = ['code' => 500, 'data' => []];
+
         if (!empty($srs['norm_pasien'])) {
             $riwayat_api_response = $this->simrsModel->getPemeriksaanPasien($srs['norm_pasien']);
             if (!empty($riwayat_api_response['code']) && $riwayat_api_response['code'] == 200) {
                 $riwayat_api = $riwayat_api_response['data'];
             }
+
+            $permintaan_api_response = $this->simrsModel->getPermintaan($srs['norm_pasien']);
+            if (!empty($permintaan_api_response['code']) && $permintaan_api_response['code'] == 200) {
+                $permintaan = $permintaan_api_response;
+            }
         }
+
         $riwayat_hpa = $this->hpaModel->riwayatPemeriksaanhpa($id_pasien);
         $riwayat_frs = $this->frsModel->riwayatPemeriksaanfrs($id_pasien);
         $riwayat_srs = $this->srsModel->riwayatPemeriksaansrs($id_pasien);
@@ -417,16 +427,17 @@ class srsController extends BaseController
         $users = $this->usersModel->where('status_user', 'Dokter')->findAll();
         // Persiapkan data yang akan dikirim ke view
         $data = [
-            'srs'        => $srs,
-            'riwayat_api'   => $riwayat_api ?? [],
-            'riwayat_hpa'        => $riwayat_hpa,
-            'riwayat_frs'        => $riwayat_frs,
-            'riwayat_srs'        => $riwayat_srs,
-            'riwayat_ihc'        => $riwayat_ihc,
-            'penerimaan' => $penerimaan,
-            'users'      => $users,
-            'id_user'    => $this->session->get('id_user'),
-            'nama_user'  => $this->session->get('nama_user'),
+            'srs'         => $srs,
+            'riwayat_api' => $riwayat_api ?? [],
+            'riwayat_hpa' => $riwayat_hpa,
+            'riwayat_frs' => $riwayat_frs,
+            'riwayat_srs' => $riwayat_srs,
+            'riwayat_ihc' => $riwayat_ihc,
+            'penerimaan'  => $penerimaan,
+            'users'       => $users,
+            'id_user'     => $this->session->get('id_user'),
+            'nama_user'   => $this->session->get('nama_user'),
+            'permintaan'  => $permintaan,
         ];
 
         return view('srs/edit_makroskopis', $data);

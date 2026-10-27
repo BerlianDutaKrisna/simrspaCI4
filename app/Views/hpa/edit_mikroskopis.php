@@ -500,17 +500,21 @@
 
                 <!-- Tombol Simpan -->
                 <div class="form-group row">
-                    <div class="col-sm-6 text-center mb-3">
+                    <div class="col-sm-4 text-center mb-3">
                         <button type="submit"
                             class="btn btn-success btn-user w-100"
                             formaction="<?= base_url('hpa/update/' . $hpa['id_hpa']); ?>">
                             Simpan
                         </button>
                     </div>
-                    <div class="col-sm-6 text-center">
-                        <!-- Tombol Cetak -->
+                    <div class="col-sm-4 text-center">
                         <button type="button" class="btn btn-info btn-user w-100" onclick="cetakProses()">
                             <i class="fas fa-print"></i> Cetak
+                        </button>
+                    </div>
+                    <div class="col-sm-4 text-center">
+                        <button type="button" class="btn btn-secondary btn-user w-100" onclick="cetakPermintaanDanProses()">
+                            <i class="fas fa-print"></i> Cetak Permintaan &amp; Proses
                         </button>
                     </div>
                 </div>

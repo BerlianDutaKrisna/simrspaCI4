@@ -1,13 +1,24 @@
 <script>
-    function cetakProses() {
+    function cetakPermintaanDanProses() {
+        if (!document.getElementById('permintaanContent')) {
+            alert('Konten permintaan tidak ditemukan.');
+            return;
+        }
+        cetakProses(true);
+    }
+
+    function cetakProses(includePermintaan = false) {
         var detailMakroskopis = document.getElementById('makroskopis_srs') ? document.getElementById('makroskopis_srs').value : '';
         var detailMikroskopis = document.getElementById('mikroskopis_srs') ? document.getElementById('mikroskopis_srs').value : '';
         var detailHasil = document.getElementById('hasil_srs') ? document.getElementById('hasil_srs').value : '';
         var printWindow = window.open('', '', 'height=500,width=800');
+        var halamanPermintaan = includePermintaan ? '<div class="print-page-1" id="halaman-permintaan"></div>' : '';
+        var bootstrapLink = includePermintaan ? '<link href="<?= base_url('assets/bootstrap/css/bootstrap.min.css') ?>" rel="stylesheet">' : '';
         printWindow.document.write(`
     <html>
     <head>
         <title>Cetak Hpa</title>
+        ${bootstrapLink}
         <style>
         @page {
             size: 215mm 350mm;
@@ -138,6 +149,7 @@
         </style>
     </head>
     <body>
+        ${halamanPermintaan}
         <table class="header-table">
             <tr>
                 <td rowspan="2" style="width: 20%; font-size: 15px; font-weight: bold; text-align: center;">

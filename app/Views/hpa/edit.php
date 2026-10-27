@@ -83,6 +83,7 @@
                     </div>
                 </div>
 
+                <?= $this->include('templates/exam/permintaan'); ?>
                 <?= $this->include('templates/exam/riwayat'); ?>
 
                 <div class="form-group row">
@@ -562,6 +563,14 @@
                     <div class="col-sm-4 text-center">
                         <button type="button" class="btn btn-primary btn-user w-100 w-md-auto" onclick="cetakPrintHpa()">
                             <i class="fas fa-print"></i> Cetak Hasil
+                        </button>
+                    </div>
+                </div>
+
+                <div class="form-group row mt-2">
+                    <div class="col-sm-12 text-center">
+                        <button type="button" class="btn btn-secondary btn-user w-100" onclick="cetakPermintaanDanProses()">
+                            <i class="fas fa-print"></i> Cetak Permintaan &amp; Proses
                         </button>
                     </div>
                 </div>
