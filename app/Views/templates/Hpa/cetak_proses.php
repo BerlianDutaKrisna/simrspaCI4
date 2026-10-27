@@ -37,6 +37,7 @@
             display: block;
             clear: both;
         }
+        button { display: none !important; }
         .header-table { width: 100%; border-collapse: collapse; margin: 0; font-size: 11px; font-family: Verdana, Arial, sans-serif; }
         .header-table td { padding: 3px 4px; vertical-align: top; border: 1px solid #000; line-height: 1.2; }
         .makroskopis-content-table td, .mikroskopis-content-table td { font-size: 12px; padding: 5px; }

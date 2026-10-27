@@ -1,4 +1,4 @@
-<button class="btn btn-outline-primary mb-3 ml-2" type="button" data-toggle="collapse" data-target="#permintaanSimrs" aria-expanded="false" aria-controls="permintaanSimrs">
+<button id="permintaanSimrsToggle" class="btn btn-outline-primary mb-3 ml-2" type="button" data-toggle="collapse" data-target="#permintaanSimrs" aria-expanded="false" aria-controls="permintaanSimrs">
     <i class="fas fa-list-alt"></i> Permintaan SIMRS 
     <?php if (!empty($permintaan['data']) && is_array($permintaan['data'])): ?>
         <span class="badge badge-light ml-1"><?= count($permintaan['data']) ?></span>
@@ -10,12 +10,16 @@
 
         <?php 
         $listPermintaan = $permintaan['data'] ?? [];
+        $isSinglePermintaan = false;
+        $firstPermintaanIndex = 0;
         ?>
 
         <?php if (!empty($listPermintaan) && is_array($listPermintaan)): ?>
+            <?php $isSinglePermintaan = (count($listPermintaan) === 1); ?>
+            <?php $firstPermintaanIndex = array_key_first($listPermintaan); ?>
 
             <!-- BAGIAN 1: TABEL RINGKASAN PILIHAN -->
-            <div id="wrapper-tabel-permintaan">
+            <div id="wrapper-tabel-permintaan" class="<?= $isSinglePermintaan ? 'd-none' : '' ?>">
                 <h6 class="font-weight-bold text-primary mb-3">
                     <i class="fas fa-info-circle"></i> Silakan pilih salah satu permintaan di bawah ini:
                 </h6>
@@ -295,6 +299,31 @@
         document.getElementById('wrapper-detail-permintaan').classList.add('d-none');
         document.getElementById('wrapper-tabel-permintaan').classList.remove('d-none');
     }
+
+    <?php if (!empty($listPermintaan) && is_array($listPermintaan)): ?>
+        document.addEventListener('DOMContentLoaded', function () {
+            var isSinglePermintaan = <?= (count($listPermintaan) === 1) ? 'true' : 'false' ?>;
+            var toggleBtn = document.getElementById('permintaanSimrsToggle');
+            var collapseEl = document.getElementById('permintaanSimrs');
+
+            if (!toggleBtn || !collapseEl) {
+                return;
+            }
+
+            toggleBtn.addEventListener('click', function () {
+                if (isSinglePermintaan) {
+                    pilihPermintaan(0);
+                    return;
+                }
+
+                var items = document.querySelectorAll('.detail-item');
+                items.forEach(function (el, idx) {
+                    el.classList.add('d-none');
+                    el.id = 'permintaanContent-' + idx;
+                });
+            });
+        });
+    <?php endif; ?>
 
     // Fungsi cetakPermintaan ASLI milik Anda
     function cetakPermintaan() {
