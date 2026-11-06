@@ -12,6 +12,11 @@
         $listPermintaan = $permintaan['data'] ?? [];
         $isSinglePermintaan = false;
         $firstPermintaanIndex = 0;
+        $pasienData = $srs ?? $hpa ?? $frs ?? $ihc ?? [];
+        $kodePemeriksaan = $pasienData['kode_srs'] ?? $pasienData['kode_hpa'] ?? $pasienData['kode_frs'] ?? $pasienData['kode_ihc'] ?? '';
+        $normPasien = $pasienData['norm_pasien'] ?? '';
+        $namaPasien = $pasienData['nama_pasien'] ?? '';
+        $tanggalLahirPasien = $pasienData['tanggal_lahir_pasien'] ?? '';
         ?>
 
         <?php if (!empty($listPermintaan) && is_array($listPermintaan)): ?>
@@ -79,7 +84,7 @@
                                 <small>Jl. Tambak Rejo No. 45-47 - Telp. 031 3717141, 3725905</small>
                             </div>
                             <div class="col-4 text-left">
-                                <h1 class="font-weight-bold mb-0"><?= esc($hpa['kode_hpa'] ?? '') ?></h1>
+                                <h1 class="font-weight-bold mb-0"><?= esc($kodePemeriksaan) ?></h1>
                             </div>
                         </div>
 
@@ -93,11 +98,11 @@
                                 <table class="table table-sm table-borderless">
                                     <tr>
                                         <td style="width: 35%;"><strong>No. RM</strong></td>
-                                        <td>: <?= esc($formrm['no_rm'] ?? $item['no_rm'] ?? $item['no_rm_pasien'] ?? $hpa['norm_pasien'] ?? '-') ?></td>
+                                        <td>: <?= esc($formrm['no_rm'] ?? $item['no_rm'] ?? $item['no_rm_pasien'] ?? $normPasien ?: '-') ?></td>
                                     </tr>
                                     <tr>
                                         <td><strong>Nama Pasien</strong></td>
-                                        <td>: <?= esc($formrm['nama'] ?? $item['nama_pasien'] ?? $item['nama'] ?? $hpa['nama_pasien'] ?? '-') ?></td>
+                                        <td>: <?= esc($formrm['nama'] ?? $item['nama_pasien'] ?? $item['nama'] ?? $namaPasien ?: '-') ?></td>
                                     </tr>
                                     <tr>
                                         <td><strong>Jenis Kelamin</strong></td>
@@ -105,7 +110,7 @@
                                     </tr>
                                     <tr>
                                         <td><strong>Tgl. Lahir</strong></td>
-                                        <td>: <?= !empty($formrm['tgl_lahir']) ? date('d/m/Y', strtotime($formrm['tgl_lahir'])) : (!empty($item['tanggal_lahir']) ? date('d/m/Y', strtotime($item['tanggal_lahir'])) : (!empty($hpa['tanggal_lahir_pasien']) ? date('d/m/Y', strtotime($hpa['tanggal_lahir_pasien'])) : '-')) ?></td>
+                                        <td>: <?= !empty($formrm['tgl_lahir']) ? date('d/m/Y', strtotime($formrm['tgl_lahir'])) : (!empty($item['tanggal_lahir']) ? date('d/m/Y', strtotime($item['tanggal_lahir'])) : (!empty($tanggalLahirPasien) ? date('d/m/Y', strtotime($tanggalLahirPasien)) : '-')) ?></td>
                                     </tr>
                                     <tr>
                                         <td><strong>Alamat</strong></td>

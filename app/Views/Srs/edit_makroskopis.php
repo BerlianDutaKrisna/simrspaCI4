@@ -257,20 +257,6 @@
     </div>
 </div>
 
-<script>
-    function cetakPermintaanDanProses() {
-        if (!document.getElementById('permintaanContent')) {
-            alert('Konten permintaan tidak ditemukan.');
-            return;
-        }
-        if (typeof cetakProses === 'function') {
-            cetakProses(true);
-            return;
-        }
-        alert('Fungsi cetakProses belum tersedia.');
-    }
-</script>
-
 <?= $this->include('templates/notifikasi') ?>
 <?= $this->include('templates/srs/footer_edit'); ?>
 <?= $this->include('templates/srs/cetak_proses'); ?>
