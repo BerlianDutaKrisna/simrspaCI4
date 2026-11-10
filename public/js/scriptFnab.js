@@ -574,31 +574,18 @@ function buildAndSendSignaturePayload(dataURL) {
 }
 
 /**
- * Handle tombol Simpan utama: simpan signature terlebih dahulu lalu submit form ke frs/update_print
+ * Handle tombol Simpan utama: simpan form ke frs/update_print tanpa mengirim ke endpoint informed
  */
 function submitWithSignature() {
     let updateUrl = (window.fnabConfig && window.fnabConfig.updatePrintUrl) ? window.fnabConfig.updatePrintUrl : "";
-    try {
-        var dataURL = document.getElementById('concentSignaturePasien')?.value || '';
-        buildAndSendSignaturePayload(dataURL)
-            .then(res => {
-                console.log('Signature save response', res);
-                var form = document.getElementById('form-frs') || document.querySelector('form');
-                if (updateUrl && form) form.action = updateUrl;
-                if (form) form.submit();
-            })
-            .catch(err => {
-                console.error('Error saving signature:', err);
-                var form = document.getElementById('form-frs') || document.querySelector('form');
-                if (updateUrl && form) form.action = updateUrl;
-                if (form) form.submit();
-            });
-    } catch (e) {
-        console.error(e);
-        var form = document.getElementById('form-frs') || document.querySelector('form');
-        if (updateUrl && form) form.action = updateUrl;
-        if (form) form.submit();
+    var form = document.getElementById('form-frs') || document.querySelector('form');
+    if (!form) {
+        console.error('Form makroskopis tidak ditemukan.');
+        return;
     }
+
+    if (updateUrl) form.action = updateUrl;
+    form.submit();
 }
 
 // ==========================================
