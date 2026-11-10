@@ -19,6 +19,21 @@ $bulan = [
 ];
 $timestampSurabaya = !empty($tanggalHasil) ? strtotime($tanggalHasil) : time();
 $tanggalSurabaya = date('d', $timestampSurabaya) . ' ' . $bulan[(int) date('n', $timestampSurabaya) - 1] . ' ' . date('Y', $timestampSurabaya);
+
+$dokterNama = trim((string) ($pembacaan_ihc['dokter_nama'] ?? ''));
+$src = '';
+$nip = '';
+$dokterTtdNama = '';
+
+if ($dokterNama === 'dr. Ayu Tyasmara Pratiwi, Sp.PA') {
+    $src = base_url('img/ttd_dr_ayu.png');
+    $nip = '198407022009022014';
+    $dokterTtdNama = 'dr. AYU TYASMARA PRATIWI, Sp.PA';
+} elseif ($dokterNama === 'dr. Vinna Chrisdianti, Sp.PA') {
+    $src = base_url('img/ttd_dr_vinna.png');
+    $nip = '198303152023212002';
+    $dokterTtdNama = 'dr. VINNA CHRISDIANTI, Sp.PA';
+}
 ?>
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -112,16 +127,20 @@ $tanggalSurabaya = date('d', $timestampSurabaya) . ' ' . $bulan[(int) date('n', 
                     </tr>
                     <tr>
                         <td width="170" align="center" style="padding-right: 10px;">
-                            <img src="<?= base_url('img/ttd_dr_ayu.png') ?>" alt="Tanda Tangan" style="width: 200px;">
+                            <?php if (!empty($src)) : ?>
+                                <img src="<?= esc($src) ?>" alt="Tanda Tangan" style="width: 200px;">
+                            <?php endif; ?>
                         </td>
                         <td style="vertical-align: middle;">
                             <p style="margin: 0; font-size: 14px;">Hasil lab ini telah ditandatangani secara elektronik oleh:</p>
                             <p style="margin: 0; font-size: 20px;">Dokter Spesialis Patologi Anatomi,</p>
                             <br>
                             <br>
-                            <p style="margin: 0; font-size: 20px; font-weight: bold;">dr. AYU TYASMARA PRATIWI, Sp.PA</p>
+                            <p style="margin: 0; font-size: 20px; font-weight: bold;">
+                                <?= esc($dokterTtdNama ?: ($pembacaan_ihc['dokter_nama'] ?? '____________________')) ?>
+                            </p>
                             <p style="margin: 5px 0 0;">Penata</p>
-                            <p style="margin: 0;">NIP. 198407022009022014</p>
+                            <p style="margin: 0;">NIP. <?= esc($nip) ?></p>
                         </td>
                     </tr>
                 </table>

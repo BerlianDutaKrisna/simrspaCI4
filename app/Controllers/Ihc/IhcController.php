@@ -1346,9 +1346,22 @@ class ihcController extends BaseController
 
         $penerimaan = $this->penerimaan_ihc->where('id_ihc', $id_ihc)->first() ?? [];
 
+        $pembacaan_ihc = [];
+        if (!empty($ihc['id_pembacaan_ihc'])) {
+            $pembacaan_ihc = $this->pembacaan_ihc->find($ihc['id_pembacaan_ihc']) ?? [];
+
+            if (!empty($pembacaan_ihc['id_user_dokter_pembacaan_ihc'])) {
+                $dokter = $this->usersModel->find($pembacaan_ihc['id_user_dokter_pembacaan_ihc']);
+                $pembacaan_ihc['dokter_nama'] = $dokter ? $dokter['nama_user'] : null;
+            } else {
+                $pembacaan_ihc['dokter_nama'] = null;
+            }
+        }
+
         return view('ihc/print_ihc', [
-            'ihc'        => $ihc,
-            'penerimaan' => $penerimaan,
+            'ihc'            => $ihc,
+            'penerimaan'     => $penerimaan,
+            'pembacaan_ihc'  => $pembacaan_ihc,
         ]);
     }
 }

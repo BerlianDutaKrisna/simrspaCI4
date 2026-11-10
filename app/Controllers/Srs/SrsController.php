@@ -1319,9 +1319,22 @@ class srsController extends BaseController
 
         $penerimaan = $this->penerimaan_srs->where('id_srs', $id_srs)->first() ?? [];
 
+        $pembacaan_srs = [];
+        if (!empty($srs['id_pembacaan_srs'])) {
+            $pembacaan_srs = $this->pembacaan_srs->find($srs['id_pembacaan_srs']) ?? [];
+
+            if (!empty($pembacaan_srs['id_user_dokter_pembacaan_srs'])) {
+                $dokter = $this->usersModel->find($pembacaan_srs['id_user_dokter_pembacaan_srs']);
+                $pembacaan_srs['dokter_nama'] = $dokter ? $dokter['nama_user'] : null;
+            } else {
+                $pembacaan_srs['dokter_nama'] = null;
+            }
+        }
+
         return view('srs/print_srs', [
-            'srs'        => $srs,
-            'penerimaan' => $penerimaan,
+            'srs'            => $srs,
+            'penerimaan'     => $penerimaan,
+            'pembacaan_srs'  => $pembacaan_srs,
         ]);
     }
 }

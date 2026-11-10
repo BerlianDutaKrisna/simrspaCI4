@@ -1603,9 +1603,22 @@ class HpaController extends BaseController
 
         $penerimaan = $this->penerimaan_hpa->where('id_hpa', $id_hpa)->first() ?? [];
 
+        $pembacaan_hpa = [];
+        if (!empty($hpa['id_pembacaan_hpa'])) {
+            $pembacaan_hpa = $this->pembacaan_hpa->find($hpa['id_pembacaan_hpa']) ?? [];
+
+            if (!empty($pembacaan_hpa['id_user_dokter_pembacaan_hpa'])) {
+                $dokter = $this->usersModel->find($pembacaan_hpa['id_user_dokter_pembacaan_hpa']);
+                $pembacaan_hpa['dokter_nama'] = $dokter ? $dokter['nama_user'] : null;
+            } else {
+                $pembacaan_hpa['dokter_nama'] = null;
+            }
+        }
+
         return view('hpa/print_hpa', [
-            'hpa'        => $hpa,
-            'penerimaan' => $penerimaan,
+            'hpa'            => $hpa,
+            'penerimaan'     => $penerimaan,
+            'pembacaan_hpa'  => $pembacaan_hpa,
         ]);
     }
 }

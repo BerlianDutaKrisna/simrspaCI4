@@ -1310,9 +1310,22 @@ class FrsController extends BaseController
 
         $penerimaan = $this->penerimaan_frs->where('id_frs', $id_frs)->first() ?? [];
 
+        $pembacaan_frs = [];
+        if (!empty($frs['id_pembacaan_frs'])) {
+            $pembacaan_frs = $this->pembacaan_frs->find($frs['id_pembacaan_frs']) ?? [];
+
+            if (!empty($pembacaan_frs['id_user_dokter_pembacaan_frs'])) {
+                $dokter = $this->usersModel->find($pembacaan_frs['id_user_dokter_pembacaan_frs']);
+                $pembacaan_frs['dokter_nama'] = $dokter ? $dokter['nama_user'] : null;
+            } else {
+                $pembacaan_frs['dokter_nama'] = null;
+            }
+        }
+
         return view('frs/print_frs', [
-            'frs'        => $frs,
-            'penerimaan' => $penerimaan,
+            'frs'            => $frs,
+            'penerimaan'     => $penerimaan,
+            'pembacaan_frs'  => $pembacaan_frs,
         ]);
     }
 }
